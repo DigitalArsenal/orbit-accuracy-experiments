@@ -157,8 +157,8 @@
       "source": "truth2",
       "group": "P",
       "expected": 755,
-      "completed": 278,
-      "windowErrors": 3
+      "completed": 755,
+      "windowErrors": 5
     },
     {
       "phase": "ffm",
@@ -181,7 +181,7 @@
       "source": "truth",
       "group": "T",
       "expected": 944,
-      "completed": 632,
+      "completed": 944,
       "windowErrors": 0
     }
   ],
@@ -7351,11 +7351,11 @@
       "day": 1,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7365,11 +7365,11 @@
       "day": 2,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7379,11 +7379,11 @@
       "day": 3,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7393,11 +7393,11 @@
       "day": 4,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7407,11 +7407,11 @@
       "day": 5,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7421,11 +7421,11 @@
       "day": 7,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7435,11 +7435,11 @@
       "day": 1,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7449,11 +7449,11 @@
       "day": 2,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7463,11 +7463,11 @@
       "day": 3,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7477,11 +7477,11 @@
       "day": 4,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7491,11 +7491,11 @@
       "day": 5,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -7505,11 +7505,11 @@
       "day": 7,
       "disclosure": null,
       "expected": 755,
-      "scored": 275,
-      "excluded": 3,
-      "missing": 477,
+      "scored": 750,
+      "excluded": 5,
+      "missing": 0,
       "reasons": {
-        "no RSGA issued in the 72 h before the cutoff": 3
+        "no RSGA issued in the 72 h before the cutoff": 5
       }
     },
     {
@@ -8191,9 +8191,9 @@
       "day": 1,
       "disclosure": null,
       "expected": 944,
-      "scored": 632,
+      "scored": 944,
       "excluded": 0,
-      "missing": 312,
+      "missing": 0,
       "reasons": {}
     },
     {
@@ -8203,9 +8203,9 @@
       "day": 2,
       "disclosure": null,
       "expected": 944,
-      "scored": 632,
+      "scored": 944,
       "excluded": 0,
-      "missing": 312,
+      "missing": 0,
       "reasons": {}
     },
     {
@@ -8215,9 +8215,9 @@
       "day": 3,
       "disclosure": null,
       "expected": 944,
-      "scored": 632,
+      "scored": 944,
       "excluded": 0,
-      "missing": 312,
+      "missing": 0,
       "reasons": {}
     },
     {
@@ -8227,9 +8227,9 @@
       "day": 4,
       "disclosure": null,
       "expected": 944,
-      "scored": 632,
+      "scored": 944,
       "excluded": 0,
-      "missing": 312,
+      "missing": 0,
       "reasons": {}
     },
     {
@@ -8239,9 +8239,9 @@
       "day": 5,
       "disclosure": null,
       "expected": 944,
-      "scored": 632,
+      "scored": 944,
       "excluded": 0,
-      "missing": 312,
+      "missing": 0,
       "reasons": {}
     },
     {
@@ -8251,14 +8251,14 @@
       "day": 7,
       "disclosure": null,
       "expected": 944,
-      "scored": 632,
+      "scored": 944,
       "excluded": 0,
-      "missing": 312,
+      "missing": 0,
       "reasons": {}
     }
   ],
   "reproduction": {
-    "compared": 378200,
+    "compared": 398392,
     "different": 0,
     "maxAbsKm": 0,
     "byArm": {
@@ -8283,7 +8283,7 @@
         "maxAbsKm": 0
       },
       "F": {
-        "compared": 59700,
+        "compared": 79892,
         "different": 0,
         "maxAbsKm": 0
       }
@@ -8291,30 +8291,30 @@
     "missingReference": 0
   },
   "inputs": {
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-0.jsonl": "e264afe91e6bf9395c871b03b84cc6a92df5be58975d64a3d4e9d3ec3bd72268",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-1.jsonl": "13b6ac40e7443e569ba45f8f386cda143777c50d507173bca45020dbd74e7551",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-10.jsonl": "9c102d4b26a9e1eb9388b9d0ba8c4cd578a2d38c5493373b44bc017aad1845aa",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-11.jsonl": "b87c1bf9cc85cc21f9020f6775dc578629ed2a955cd877de8e0127b3340735d1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-2.jsonl": "dff4b1fcd9f76c93c8815a30d160e09b7f17eb97a684e8b2323ff32e17c6befd",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-3.jsonl": "e5ea6d021fef79666f4545c6cf18d8d1bb44a1a2b8f83eaf6906ed338ab964dc",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-4.jsonl": "c28be9964a7dadd041c97a8b3cdb770dbe50a58fde0a93fb1655f4f7a1c77747",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-5.jsonl": "2f51c6f0894c562e156d928eb95c15aa5c6df1aef56d01824c514567099efe34",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-6.jsonl": "601119095d40f4bd8ca5e34a25d46384c9d357168ebf4193a8603e6c8c240d05",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-7.jsonl": "a835e841b7a4984e22a1ffc8ba309e0afa18a13e8cf4ca4040f5fc602f7107a6",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-8.jsonl": "ec1748b8175bf5d289e25fb951c430fcf8b6636d439bd9b6673d0e10f9350b66",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-9.jsonl": "cb156c899810886b38e2af2b7aeb9104d4886528838286c4d56dde7779a074d9",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-0.jsonl": "5d3d5cfb8e71392878a93f3c376fafc302b902294ebb9f71c78e3339ffece283",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-1.jsonl": "d4a71277ae226fe5c5d0cc3afe86fbd07dd62e106ea3cac1e53df958fa7cc0ce",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-10.jsonl": "3ec629fcc0b0ece714d77b281a2bf0f9f2f316c22f5ddaad5e5d9a0f8fa76e59",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-11.jsonl": "d8a511a784850812b43ef737cf19330fc3f2897818bd4202a4657e6667846c46",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-2.jsonl": "54fa2476db234440bdc2567fcfb341a2cc9dd6441fcb6e3c59d6bd51651c38f5",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-3.jsonl": "c731f690dacd510190dc6096065c8367435363152247fa6226ab71ba1ae5bd30",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-4.jsonl": "4dbf7b5d62f8b5fea972fc951224ea2fca7bb916eb06e31974b9ed06abf0fedc",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-5.jsonl": "3520a0a9c12b9fbfa72491072b09630bfd89c7c1e089c0d0697a550650b1b2d1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-6.jsonl": "1c6da14821233be36abe9d82cfaa0b5c5446e70b524086ccae3205194ce585c8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-7.jsonl": "017d827c5406d62816e4c9c6bf2060b6bf9afbb608c6751c3ee34b2911b3dffb",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-8.jsonl": "01b978618c172ffc8cb0516a99bfe4e1ffe72c72be947952effe8ba7bfdfbcb4",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-9.jsonl": "d205fbb11db85620e58b6f6cf3814ffcc2e9a663e12d0c7295e875c3920830b5",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-0.jsonl": "fba7bb216237f9bb65ff1518c47936d8261ed41047192748d4c842bca514c9ee",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-1.jsonl": "5aaa31a91890bed5012c295a55577ed940f277325792242fe8a0935578ebfedd",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-10.jsonl": "70b92cb121289e1fd61af82e1762be7ea5085ccd92ad53c95421855fe9272db7",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-11.jsonl": "0d170b079a0b2ab613ef12cd00f4da93e5ef97b424c28c78d9e11caeb0c4b248",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-2.jsonl": "d7e8f459cd0f0435fe3f0c571856580dd07c3d7726792eb0c128e9ee0b1d72cd",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-3.jsonl": "803aa51d252725402eaf7e8dbc2ba24949ba9cc5d23cdf60dd2b2dc9149114a0",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-4.jsonl": "b380068da61c8cd9af1fbf9e5f24b9db9d52640c779f61797b2eae4ffe7992c8",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-5.jsonl": "fe61728cc74bb7be361721ce9aa65f8d57af6be93f3e01c24678370416d59a6b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-6.jsonl": "fe40efd0ba53e5bbea601c9ff7433b9435be16653a1d1e193087c37a1b354578",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-7.jsonl": "67b39d9b425e15e88ccb5ee9f4ee8d47bbaace87b7cfa2a8ce79d43d3c14c4ab",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-8.jsonl": "d590c81d8d66bef4b41a8c0f8dd2bfd866d912f63bfc4a5ea9094cd971cc6302",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-9.jsonl": "8f3d374773217dd6f1205dc4304d93961700ad572b7b6ca76f17e1a449c87976",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-0.jsonl": "5d6382fede03b2c2316d301e0124b7bfbb2c4d4e17acde57f2a78e5f4de16578",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-1.jsonl": "7798ce8211973c019792bd8cb12b90d71e2b0fb925c9af110369df2ecb6dba9e",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-10.jsonl": "91578a4a2b16b41c6f7102921d4bec1988d291fcef29a06f4b3296aecde39d46",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-11.jsonl": "1c8be77de9466468f05008e540638af83a3aa2d1553f690efd48dbbe508caa90",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-2.jsonl": "24b0fed5971036d4ef55a5dc5aaa9a04fb4b7e0481e89ebf0d9aaba30e8f8d8b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-3.jsonl": "5d5d352be0b965b3853a5e648e7f0f9d2a03b0f698e5f21b6d279f3f6c5adef3",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-4.jsonl": "cd5fcfe1d1e707d02dc872010106523fa2f1aaf2d503e68ea502467dcbc1b108",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-5.jsonl": "fa4e9a254f3604b90be28a9fdd662c28bd01193db5aa22fa421ae1c3cf454e6b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-6.jsonl": "f61c44e9cae9286c5c9dd100b298b2fc03847106672462637841bd2adafc83e4",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-7.jsonl": "861bf67d8b363a258894b697e6a4b796a5e3c0e5e4a8053d822f3f7726aa62a0",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-8.jsonl": "64c6636718aca7902d409daddf30c545ffd2e7868d3735c2c3d8aec434738e17",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-9.jsonl": "48afcdd034a98db670039fc92439f13d19c3d517676978ebef8e5f227dd530d0",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-0.jsonl": "1467d26bbfbe9c428b165bd8f7db1952bd29c73369b1fda1f76eee4abc72e08a",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-1.jsonl": "43ba1688f7de3ee81d40b34171a7118c9de1b441224d894b71ae01ae76263a53",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-10.jsonl": "d7339d9ff2d124678f4f5489d0b6a2e19937e06352cf69c97afe023714f3ae0e",
@@ -8339,30 +8339,30 @@
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-7.jsonl": "3fc949438fabe73abb07b89331d125371737e18cfbdc342e2d6a7da5b008dd9d",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-8.jsonl": "c4afdec62039f9c145e1efc3bddb87c28e6138bbd01cd2a6f9bd8d992d778df0",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-9.jsonl": "6d10f94ce6e25a4ddf1141e873b8285ed2a02331b41898c76907b85b389425a8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "fed9b2983f1df83bfa9fd93e7deea5e7d7b9b8d43b91c31dff9836b03af99297",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "fef303cac0293e08b7492481288a71acca0ae17b3ff357f0b6f09bd6b0d110b1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "81dcd32137516b495537f22c93701522f9a69ab876eca56b2d3a755392191a58",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "92435be976e5fa82b2b54e3c8e6d24d59b709d57f2dddb78b94f27b36671a078",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "8e8179e2dbb27d736c81198d5f9b75383aff1e8ef5afffad689a5921814fbf7d",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "ccce659874e9c00821e0b7305a742cc016604e02bf7ceb5ed0ee9fe5fc1e8b5d",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "d278045fba7bbf6446cba8408335d3588fdb53eb253cf07870de3c8d6c165a9e",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "f0efd0bbc3747a64704258f985105ead35ef29dee3f7080100df8a4a9ccc7b67",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "ea271cec9000ee592a3648119fefe96266ab3261742195876eab550e8fef9552",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "3e38157e80db9bc5756fed654aa9701cfcf4cd4238e5a8017d27a97eb982039e",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "407871c5ea360227a8403b280c6046dc1b635994954a8dcbd371966bb0c67e6b",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "a5ebf0c4b5633ea2fb436ede1656c4eab13bedbd770173322da240f405c39ff8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-0.jsonl": "9fd4f3d115d6f61d2a8bdaab04cbf05aac11670edd49f8aa6979c28527fc80ee",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-1.jsonl": "cabbfa421dba89f594f3e6b5568fd4b3fa45bbb53364c9fbb72535d4f6f676c9",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-10.jsonl": "aad35ef31a94896818b5bce3f4b4ccd6112e40550f08401d0f5be6f7efcd4199",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-11.jsonl": "35bdabac499cfa7d7525a4db1b2799908296353fd2dbe6f24e8bc0148e0cc647",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-2.jsonl": "6687beb31315c849856c4385151ba8494c056291f0219c27d1471d224e3c24a1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-3.jsonl": "36f525b5244aaa4abcbac5f5695c7d69a0676fd73702c39e4c2d11a098e8f1ca",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-4.jsonl": "a9e1358c7000673677b53eec9a237117f3d28b499fd073bfe9b06ef7992d01a2",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-5.jsonl": "5d89f89683dc34d1f8a969ea3f455e13251ed91b88c566c4b0502d22b40ec0be",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-6.jsonl": "e413b34883bb5881443f8c4da2585400880471392b74ef1356d7ed04c4fc2ec3",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-7.jsonl": "bcff4bd8ac091d681a90c28877e5d8c17db3fb4f9a0c48fa6a951f0ee47697ed",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-8.jsonl": "99016f1b1754bf30a3f8598b10778d8865bc2a89f358af20d41a1f94e55196fe",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-9.jsonl": "b27c98be309bb42c4c0b4d9d98b50f43ea362dd8eda5e011fb8f34eb94cdccac"
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "2bc867330211efa1eeaca19815b1fdca03ee7acadaf9cd153a9c9ac7189c16e5",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "5bf8f3c690ad8cb0ab1725e7fa428f48d49b4aacb8f7b49d94adb4a04a76c650",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "b3f589ad144844a605aa3a9ed6708c513d8d744d5fb606e9208288bda58b1b16",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "c0f20c82e728c6e668b667bc50aeac316ca6fc0e802634d127cf8a8b0521e010",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "888aa81558a234ef4068c46cec62dba53eb2c6755d916c92fda6c443dcdb53c8",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "26a756f7dc8ebfa5ba068447ff5396b9b97076147d49bdd55e1dd5539ddc3a40",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "c6120c602438758e1aed3775ca550ad4a2c50707adb91a69a79a368c11224036",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "227edddb9f932e12c1ee173e74c332d0c543c3657e4c3a30e07a5740cefa557d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "1da4199804baa04ecaed07b9049002a2c26642cc1fa65c10db9ed2ce0b6a0d7b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "2144ff99d161163433166177d7729de01461374b06c7031ea528df3f2b9d929d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "e213abf7cb96c61c8f50c0ca80317798e225ed77e800788e05825a6f0320ec80",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "dd91c8694e7ada4258bf596b24a411ec2ffdc1ba01d83fb9219002be94cfc533",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-0.jsonl": "35d343cf30211570d4b05a9a6d9c7e64b3a5938fac79ce4c3a43ec4c1d41c31d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-1.jsonl": "bd10db9bdfeed54e4e19f58250e55cf1f6e5b2f0d529f41d0f8da5fea349a718",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-10.jsonl": "9afc86e4d2e6a6d58aadcc480ff152ea6a7924cc6bd45b8680e6cd2df74638f1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-11.jsonl": "026450bf293180f45c9a40d7e597e612eafc3ff3725e70b0417b8aebabe7d899",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-2.jsonl": "0b9539608617442cb04d472df05435595a18d037809bb64921eedf3bf0f18b35",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-3.jsonl": "f67a5a97d16fa8db25222873708364601764370dac516ae2851e43f72819b815",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-4.jsonl": "31064db96357a30d1d9ec1593288eecf373c97a803ebc42ef46d86805ab5ca0f",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-5.jsonl": "2f642c9ee45637a5a359d2b28fa0bf50c9d57cb311b05875eba9082a8d37fe03",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-6.jsonl": "32c6766caf24a29152b7739cc9dc6b4520405ce1a0121775589fcac7a2db6707",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-7.jsonl": "83623048a3807ad4a3aec4749992a6e08ac77cbaf863afeec945f44b003b2727",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-8.jsonl": "e9b3e1213f3e86a7a5a120f7fe1bf1f84497f0a32bbdbcc0d7a2a45330367e32",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-9.jsonl": "e4371d184bb4b0ebdd588d46ccdd37211fdcd77783f7503af97ba971b91c0915"
   },
   "cells": [
     {
@@ -9508,20 +9508,20 @@
       "n": 112,
       "km": {
         "e": {
-          "median": 5.1638226505216425,
+          "median": 5.163822680400445,
           "p95": 25.632774408308222
         },
         "r": {
-          "median": 0.3105619734589892,
-          "p95": 0.8132365117809938
+          "median": 0.3105619737110701,
+          "p95": 0.813236513081457
         },
         "t": {
-          "median": 5.149717264981303,
+          "median": 5.149717292940956,
           "p95": 25.626622338994185
         },
         "n": {
-          "median": 0.17270058484899975,
-          "p95": 0.3591851791460302
+          "median": 0.172700632372614,
+          "p95": 0.3591851824381475
         }
       }
     },
@@ -9682,20 +9682,20 @@
       "n": 112,
       "km": {
         "e": {
-          "median": 1.4148169695283115,
-          "p95": 11.214930933827917
+          "median": 1.4148170432168652,
+          "p95": 11.214930930673217
         },
         "r": {
-          "median": 0.13594111530746528,
-          "p95": 0.26707602498107214
+          "median": 0.1359411077674046,
+          "p95": 0.26707602392197893
         },
         "t": {
-          "median": 1.3920270796593344,
-          "p95": 11.212110631649868
+          "median": 1.3920271772284978,
+          "p95": 11.212110628564881
         },
         "n": {
           "median": 0.16607912231641686,
-          "p95": 0.36207409686959313
+          "p95": 0.3620740116574696
         }
       }
     },
@@ -10726,20 +10726,20 @@
       "n": 43,
       "km": {
         "e": {
-          "median": 0.1121521936814327,
-          "p95": 0.16248051022791574
+          "median": 0.1121526430456553,
+          "p95": 0.16248194518177955
         },
         "r": {
-          "median": 0.023208526140137735,
-          "p95": 0.034644108351036575
+          "median": 0.023127842746869066,
+          "p95": 0.03464041777889054
         },
         "t": {
-          "median": 0.0953575166328789,
-          "p95": 0.15469566636933138
+          "median": 0.09535730493452066,
+          "p95": 0.15469599607731105
         },
         "n": {
-          "median": 0.04571073500051997,
-          "p95": 0.08306412609311055
+          "median": 0.045710376277168265,
+          "p95": 0.08312324098002963
         }
       }
     },
@@ -11596,20 +11596,20 @@
       "n": 33,
       "km": {
         "e": {
-          "median": 0.21207679608675833,
+          "median": 0.21207600774651125,
           "p95": 29.443410001707647
         },
         "r": {
-          "median": 0.033437380400377824,
-          "p95": 3.4149502818072985
+          "median": 0.03343748919840148,
+          "p95": 3.4149501521010945
         },
         "t": {
-          "median": 0.20434795594045732,
+          "median": 0.20434709378758575,
           "p95": 29.2379077782634
         },
         "n": {
-          "median": 0.05582915300520809,
-          "p95": 0.0897379187125012
+          "median": 0.05582832745691171,
+          "p95": 0.08973791988587336
         }
       }
     },
@@ -14728,20 +14728,20 @@
       "n": 7,
       "km": {
         "e": {
-          "median": 9.570866643030518,
-          "p95": 26.788697990158003
+          "median": 9.571016986339995,
+          "p95": 26.788715432835406
         },
         "r": {
-          "median": 4.634800481826251,
-          "p95": 19.359785154660635
+          "median": 4.635216264826804,
+          "p95": 19.35983936972549
         },
         "t": {
-          "median": 8.732507104244949,
-          "p95": 19.024009510262985
+          "median": 8.732616201919605,
+          "p95": 19.023999854402067
         },
         "n": {
-          "median": 1.694664674547897,
-          "p95": 4.872083643958053
+          "median": 1.694628368470205,
+          "p95": 4.872076905845264
         }
       }
     },
@@ -16468,20 +16468,20 @@
       "n": 7,
       "km": {
         "e": {
-          "median": 9.550739892955875,
-          "p95": 25.954698341199904
+          "median": 9.550767792486768,
+          "p95": 25.954863236195017
         },
         "r": {
-          "median": 4.107366101291193,
-          "p95": 15.131297904367766
+          "median": 4.107351556388954,
+          "p95": 15.131415470153335
         },
         "t": {
-          "median": 8.181756579894932,
-          "p95": 21.059227911807028
+          "median": 8.18179993142534,
+          "p95": 21.059343656039868
         },
         "n": {
-          "median": 0.5788476793801167,
-          "p95": 0.8443470134227947
+          "median": 0.5788420180228807,
+          "p95": 0.8443305993159639
         }
       }
     },
@@ -16642,11 +16642,11 @@
       "n": 19,
       "km": {
         "e": {
-          "median": 3.8839134696296624,
+          "median": 3.883913805425034,
           "p95": 14.757721723306842
         },
         "r": {
-          "median": 2.4996639781143704,
+          "median": 2.4996648490582896,
           "p95": 7.593493417287466
         },
         "t": {
@@ -16654,7 +16654,7 @@
           "p95": 12.585887951267186
         },
         "n": {
-          "median": 0.1925865406787455,
+          "median": 0.19258604216772157,
           "p95": 1.5326990511307372
         }
       }
@@ -17686,20 +17686,20 @@
       "n": 60,
       "km": {
         "e": {
-          "median": 0.19645312156689143,
-          "p95": 0.28658555175039996
+          "median": 0.19645259495235207,
+          "p95": 0.2865841252042874
         },
         "r": {
-          "median": 0.02975519127995546,
-          "p95": 0.04837781048116255
+          "median": 0.029755059625219536,
+          "p95": 0.048377762687334416
         },
         "t": {
-          "median": 0.173697871815941,
-          "p95": 0.2830089261060668
+          "median": 0.17369562525525117,
+          "p95": 0.28300747759692707
         },
         "n": {
-          "median": 0.08590734137718961,
-          "p95": 0.14312587574349983
+          "median": 0.08590827080991494,
+          "p95": 0.14312534695728688
         }
       }
     },
@@ -19078,20 +19078,20 @@
       "n": 53,
       "km": {
         "e": {
-          "median": 3.0544310474964194,
-          "p95": 18.582612551229605
+          "median": 3.054431086714473,
+          "p95": 18.5826125792029
         },
         "r": {
-          "median": 0.18712360637744227,
-          "p95": 0.7285996275834921
+          "median": 0.1871236062788035,
+          "p95": 0.7285996295796887
         },
         "t": {
-          "median": 3.0076027429483676,
-          "p95": 18.57780148679332
+          "median": 3.0076027824830076,
+          "p95": 18.577801515493604
         },
         "n": {
-          "median": 0.21852656213699348,
-          "p95": 0.43121620745722544
+          "median": 0.2185265912768734,
+          "p95": 0.4312160400633392
         }
       }
     },
@@ -19253,19 +19253,19 @@
       "km": {
         "e": {
           "median": 0.6924000830706563,
-          "p95": 2.6378852118956106
+          "p95": 2.6378852206864756
         },
         "r": {
-          "median": 0.11805794334820385,
-          "p95": 0.1628167482529253
+          "median": 0.11805794371788904,
+          "p95": 0.16281674846701288
         },
         "t": {
-          "median": 0.5675198065311604,
-          "p95": 2.6307498829293205
+          "median": 0.5675199851379938,
+          "p95": 2.630749891741912
         },
         "n": {
-          "median": 0.23664386367159532,
-          "p95": 0.5214279668348611
+          "median": 0.23664390788853187,
+          "p95": 0.5214262327320889
         }
       }
     },
@@ -20027,28 +20027,28 @@
       "group": "P",
       "arm": "F24",
       "day": 1,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 0.17830102636567632,
-          "p95": 0.8263680862484215
+          "median": 0.14526283582896518,
+          "p95": 0.7013040427641023
         },
         "r": {
-          "median": 0.004152351301339942,
-          "p95": 0.013669571942187743
+          "median": 0.0038967622628697735,
+          "p95": 0.012650078870475421
         },
         "t": {
-          "median": 0.1782504377110411,
-          "p95": 0.8262658602303184
+          "median": 0.1451961807383426,
+          "p95": 0.701201511656684
         },
         "n": {
-          "median": 0.0016647763329227896,
-          "p95": 0.0030272138815420993
+          "median": 0.0017095228146139234,
+          "p95": 0.0029104247904773667
         }
       }
     },
@@ -20056,28 +20056,28 @@
       "group": "P",
       "arm": "F24",
       "day": 2,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 0.9377226720640536,
-          "p95": 3.814798682739713
+          "median": 0.6786399796496798,
+          "p95": 3.3786169939858968
         },
         "r": {
-          "median": 0.008717666415605561,
-          "p95": 0.0309320096444745
+          "median": 0.007789535619103078,
+          "p95": 0.02834638637889283
         },
         "t": {
-          "median": 0.937685175741692,
-          "p95": 3.814681960509933
+          "median": 0.6785658385157767,
+          "p95": 3.378511386330731
         },
         "n": {
-          "median": 0.002078679933642742,
-          "p95": 0.005391567160441363
+          "median": 0.002424603144179976,
+          "p95": 0.004662083087160718
         }
       }
     },
@@ -20085,28 +20085,28 @@
       "group": "P",
       "arm": "F24",
       "day": 3,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 2.0769243735183807,
-          "p95": 9.140879760132707
+          "median": 1.5753242266933805,
+          "p95": 8.092707833964534
         },
         "r": {
-          "median": 0.012485348322838156,
-          "p95": 0.05131425170349181
+          "median": 0.01155431992098156,
+          "p95": 0.04557955391345082
         },
         "t": {
-          "median": 2.076901424212628,
-          "p95": 9.140824725821311
+          "median": 1.575279661407843,
+          "p95": 8.092536780729873
         },
         "n": {
-          "median": 0.002855664238789612,
-          "p95": 0.006643794904693158
+          "median": 0.003427712428314328,
+          "p95": 0.0062819342085956385
         }
       }
     },
@@ -20114,28 +20114,28 @@
       "group": "P",
       "arm": "F24",
       "day": 4,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 4.103642403628605,
-          "p95": 19.1433445305033
+          "median": 2.94090139473621,
+          "p95": 15.638244024361692
         },
         "r": {
-          "median": 0.018976435887479083,
-          "p95": 0.06827786889199539
+          "median": 0.016418030429686703,
+          "p95": 0.05854842302430926
         },
         "t": {
-          "median": 4.103625464275343,
-          "p95": 19.14329428413407
+          "median": 2.9408840670927416,
+          "p95": 15.63817970133939
         },
         "n": {
-          "median": 0.0037162424763076333,
-          "p95": 0.008164532928562743
+          "median": 0.004419314604730454,
+          "p95": 0.00801710024396569
         }
       }
     },
@@ -20143,28 +20143,28 @@
       "group": "P",
       "arm": "F24",
       "day": 5,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 6.583821294103615,
-          "p95": 32.94189758435451
+          "median": 4.929235190145764,
+          "p95": 25.337976001015168
         },
         "r": {
-          "median": 0.025259339211906234,
-          "p95": 0.1074124392864006
+          "median": 0.022277564760063685,
+          "p95": 0.0867169795273218
         },
         "t": {
-          "median": 6.583773860427317,
-          "p95": 32.941882113279625
+          "median": 4.929188604223489,
+          "p95": 25.337717485700356
         },
         "n": {
-          "median": 0.004668493403340712,
-          "p95": 0.00952543408787636
+          "median": 0.0055208855939832945,
+          "p95": 0.009518825320620025
         }
       }
     },
@@ -20172,28 +20172,28 @@
       "group": "P",
       "arm": "F24",
       "day": 7,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 15.219023950970321,
-          "p95": 70.33739231460649
+          "median": 11.480196212260669,
+          "p95": 56.74691097890793
         },
         "r": {
-          "median": 0.03446968188934277,
-          "p95": 0.38122564141043336
+          "median": 0.03128794056884046,
+          "p95": 0.27115373475502097
         },
         "t": {
-          "median": 15.218994185762734,
-          "p95": 70.33665087810049
+          "median": 11.480096485406,
+          "p95": 56.74618176471033
         },
         "n": {
-          "median": 0.006695069754727584,
-          "p95": 0.014454402977713728
+          "median": 0.007462252632212781,
+          "p95": 0.01416436447032001
         }
       }
     },
@@ -20201,28 +20201,28 @@
       "group": "P",
       "arm": "F72",
       "day": 1,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 0.3837899691264764,
-          "p95": 1.5320264254684022
+          "median": 0.3035246400748892,
+          "p95": 1.4528539951861863
         },
         "r": {
-          "median": 0.0062251650547975905,
-          "p95": 0.01960836884214291
+          "median": 0.0063034109143738,
+          "p95": 0.0166981052614012
         },
         "t": {
-          "median": 0.38375191119887425,
-          "p95": 1.5319287371095722
+          "median": 0.30349296140219134,
+          "p95": 1.4527401037480763
         },
         "n": {
-          "median": 0.001963686067160401,
-          "p95": 0.004738811305140955
+          "median": 0.0023372728387219075,
+          "p95": 0.004278031313921983
         }
       }
     },
@@ -20230,28 +20230,28 @@
       "group": "P",
       "arm": "F72",
       "day": 2,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 1.3272941110206748,
-          "p95": 5.433870722501008
+          "median": 1.0489447734803976,
+          "p95": 4.5096875155417075
         },
         "r": {
-          "median": 0.010999825949775045,
-          "p95": 0.03642491013887946
+          "median": 0.010594371765966254,
+          "p95": 0.034648056626363784
         },
         "t": {
-          "median": 1.3272627485746755,
-          "p95": 5.433742347210755
+          "median": 1.0488560635821014,
+          "p95": 4.509586088023494
         },
         "n": {
-          "median": 0.0026206276450600925,
-          "p95": 0.006343209667360199
+          "median": 0.0033530774804964173,
+          "p95": 0.005987226143019127
         }
       }
     },
@@ -20259,28 +20259,28 @@
       "group": "P",
       "arm": "F72",
       "day": 3,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 2.649228363895345,
-          "p95": 10.62424027441035
+          "median": 2.1439515912220695,
+          "p95": 10.197519692222704
         },
         "r": {
-          "median": 0.015104099097116679,
-          "p95": 0.05720465810178524
+          "median": 0.014366360147865815,
+          "p95": 0.04930086004908279
         },
         "t": {
-          "median": 2.6491587072798084,
-          "p95": 10.624146348324318
+          "median": 2.143897114679068,
+          "p95": 10.197456816939024
         },
         "n": {
-          "median": 0.003490179584066963,
-          "p95": 0.007348305014318564
+          "median": 0.004333285504047591,
+          "p95": 0.007374363232868851
         }
       }
     },
@@ -20288,28 +20288,28 @@
       "group": "P",
       "arm": "F72",
       "day": 4,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 4.671473219530887,
-          "p95": 19.905951817127505
+          "median": 3.864978081723396,
+          "p95": 18.07007182372944
         },
         "r": {
-          "median": 0.019975161407769254,
-          "p95": 0.09140189535080989
+          "median": 0.019123021996589384,
+          "p95": 0.07276325220648172
         },
         "t": {
-          "median": 4.671444678094285,
-          "p95": 19.90567195761058
+          "median": 3.8649350890734877,
+          "p95": 18.06984816335583
         },
         "n": {
-          "median": 0.004412199875261472,
-          "p95": 0.008814612407041268
+          "median": 0.005260655930048749,
+          "p95": 0.008981804527121667
         }
       }
     },
@@ -20317,28 +20317,28 @@
       "group": "P",
       "arm": "F72",
       "day": 5,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 7.306757237956191,
-          "p95": 31.999432148834146
+          "median": 5.99984322905423,
+          "p95": 28.985403965699135
         },
         "r": {
-          "median": 0.02600717754926094,
-          "p95": 0.15137320515032884
+          "median": 0.02406271047764374,
+          "p95": 0.11270016003117235
         },
         "t": {
-          "median": 7.306669985319332,
-          "p95": 31.999053016512566
+          "median": 5.999801321884992,
+          "p95": 28.98501333936314
         },
         "n": {
-          "median": 0.005502170343555028,
-          "p95": 0.010741092903917894
+          "median": 0.006193958022062244,
+          "p95": 0.010915775131183868
         }
       }
     },
@@ -20346,28 +20346,28 @@
       "group": "P",
       "arm": "F72",
       "day": 7,
-      "attempted": 275,
+      "attempted": 750,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 275,
+      "n": 750,
       "km": {
         "e": {
-          "median": 15.207408359243942,
-          "p95": 66.52584649916389
+          "median": 12.183161492716009,
+          "p95": 59.07028898412238
         },
         "r": {
-          "median": 0.03612464672692477,
-          "p95": 0.42638806214045805
+          "median": 0.03452811292672812,
+          "p95": 0.3582773134083129
         },
         "t": {
-          "median": 15.207307533016948,
-          "p95": 66.5239244102955
+          "median": 12.183024195843881,
+          "p95": 59.06890953949677
         },
         "n": {
-          "median": 0.007196706574676114,
-          "p95": 0.014327764430777278
+          "median": 0.008197059222530364,
+          "p95": 0.014721046322086899
         }
       }
     },
@@ -20818,19 +20818,19 @@
       "n": 750,
       "km": {
         "e": {
-          "median": 21.943815134764222,
+          "median": 21.943815135684424,
           "p95": 44.31741367037214
         },
         "r": {
-          "median": 0.3894194795369641,
-          "p95": 0.6692346279763046
+          "median": 0.3894194795491617,
+          "p95": 0.6692346279830337
         },
         "t": {
-          "median": 21.94068634878009,
+          "median": 21.94068634970578,
           "p95": 44.31401269180703
         },
         "n": {
-          "median": 0.17006285523912307,
+          "median": 0.1700628482801783,
           "p95": 0.22308483985111827
         }
       }
@@ -20992,19 +20992,19 @@
       "n": 750,
       "km": {
         "e": {
-          "median": 6.195623549456292,
-          "p95": 24.50401183274924
+          "median": 6.195623546661675,
+          "p95": 24.504011799350238
         },
         "r": {
-          "median": 0.3377036476362077,
-          "p95": 0.37673323974552075
+          "median": 0.33770364729120994,
+          "p95": 0.376733239470403
         },
         "t": {
-          "median": 6.1829918243497275,
-          "p95": 24.501465907366306
+          "median": 6.182991821589591,
+          "p95": 24.501465874096393
         },
         "n": {
-          "median": 0.16699594546313468,
+          "median": 0.1669959284586774,
           "p95": 0.17743408979658878
         }
       }
@@ -23333,28 +23333,28 @@
       "group": "T",
       "arm": "F24",
       "day": 1,
-      "attempted": 632,
+      "attempted": 944,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 632,
+      "n": 944,
       "km": {
         "e": {
-          "median": 0.14242360108215874,
-          "p95": 0.6892548663851144
+          "median": 0.1396275326376799,
+          "p95": 0.6476647411386129
         },
         "r": {
-          "median": 0.003960255685869963,
-          "p95": 0.012076760450447368
+          "median": 0.0038605814730330477,
+          "p95": 0.011765822766404041
         },
         "t": {
-          "median": 0.14237128483973704,
-          "p95": 0.6891647179135241
+          "median": 0.13956653096065263,
+          "p95": 0.6475888732508783
         },
         "n": {
-          "median": 0.001575386902681268,
-          "p95": 0.0028256953121745007
+          "median": 0.001571343593613118,
+          "p95": 0.002844751467948883
         }
       }
     },
@@ -23362,28 +23362,28 @@
       "group": "T",
       "arm": "F24",
       "day": 2,
-      "attempted": 632,
+      "attempted": 944,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 632,
+      "n": 944,
       "km": {
         "e": {
-          "median": 0.7179454338667327,
-          "p95": 3.2497039773523486
+          "median": 0.6733644535259122,
+          "p95": 3.2022081634586224
         },
         "r": {
-          "median": 0.008565403193715898,
-          "p95": 0.02797825493781171
+          "median": 0.008107362744752898,
+          "p95": 0.027740898526247934
         },
         "t": {
-          "median": 0.717905451307735,
-          "p95": 3.2496152143646264
+          "median": 0.6733158740800634,
+          "p95": 3.20207665981565
         },
         "n": {
-          "median": 0.0023817028733017376,
-          "p95": 0.00453739404033028
+          "median": 0.0023845355467227982,
+          "p95": 0.004548203512105589
         }
       }
     },
@@ -23391,28 +23391,28 @@
       "group": "T",
       "arm": "F24",
       "day": 3,
-      "attempted": 632,
+      "attempted": 944,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 632,
+      "n": 944,
       "km": {
         "e": {
-          "median": 1.9394309331746715,
-          "p95": 8.383670516469783
+          "median": 1.740843576190295,
+          "p95": 8.326346309147302
         },
         "r": {
-          "median": 0.013883079518398072,
-          "p95": 0.04320878844648134
+          "median": 0.013028342217892258,
+          "p95": 0.04249477684896183
         },
         "t": {
-          "median": 1.9393957172723224,
-          "p95": 8.383556840004609
+          "median": 1.7407996635450593,
+          "p95": 8.32623603594394
         },
         "n": {
-          "median": 0.0033939941252434944,
-          "p95": 0.0054770534225879
+          "median": 0.0034344388884488325,
+          "p95": 0.005588360556717813
         }
       }
     },
@@ -23420,28 +23420,28 @@
       "group": "T",
       "arm": "F24",
       "day": 4,
-      "attempted": 632,
+      "attempted": 944,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 632,
+      "n": 944,
       "km": {
         "e": {
-          "median": 3.737426228316478,
-          "p95": 14.845747896615377
+          "median": 3.374101317351072,
+          "p95": 14.767403854234342
         },
         "r": {
-          "median": 0.018821517395526267,
-          "p95": 0.06077073660621055
+          "median": 0.01785181005441519,
+          "p95": 0.05545842451801026
         },
         "t": {
-          "median": 3.7373740032810288,
-          "p95": 14.84568788495795
+          "median": 3.374062322198405,
+          "p95": 14.767328460420975
         },
         "n": {
-          "median": 0.004690878901500118,
-          "p95": 0.007050667887980322
+          "median": 0.004660451866082544,
+          "p95": 0.007325567633543338
         }
       }
     },
@@ -23449,28 +23449,28 @@
       "group": "T",
       "arm": "F24",
       "day": 5,
-      "attempted": 632,
+      "attempted": 944,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 632,
+      "n": 944,
       "km": {
         "e": {
-          "median": 5.948483973773605,
-          "p95": 23.262149912824956
+          "median": 5.45207973119844,
+          "p95": 23.19698479946105
         },
         "r": {
-          "median": 0.02414320615280814,
-          "p95": 0.07544768668399526
+          "median": 0.023309618546821207,
+          "p95": 0.073885906970106
         },
         "t": {
-          "median": 5.948444766092003,
-          "p95": 23.26209889127088
+          "median": 5.452047293039615,
+          "p95": 23.1969267843419
         },
         "n": {
-          "median": 0.005525595965510583,
-          "p95": 0.009116012936948492
+          "median": 0.00563405270000215,
+          "p95": 0.009137209207945116
         }
       }
     },
@@ -23478,28 +23478,28 @@
       "group": "T",
       "arm": "F24",
       "day": 7,
-      "attempted": 632,
+      "attempted": 944,
       "failed": 0,
       "coverageExcluded": 0,
       "binExcluded": 0,
       "disclosure": null,
-      "n": 632,
+      "n": 944,
       "km": {
         "e": {
-          "median": 12.498977291773961,
-          "p95": 49.06854390758422
+          "median": 12.156394829043258,
+          "p95": 48.88511851265316
         },
         "r": {
-          "median": 0.03481000601938158,
-          "p95": 0.18666026828239546
+          "median": 0.033255276029497245,
+          "p95": 0.19200803703723676
         },
         "t": {
-          "median": 12.498945454474956,
-          "p95": 49.06839892696726
+          "median": 12.156361106745475,
+          "p95": 48.88498896510632
         },
         "n": {
-          "median": 0.007764140964710572,
-          "p95": 0.013186863177105601
+          "median": 0.00801504682918145,
+          "p95": 0.013081631959950296
         }
       }
     },

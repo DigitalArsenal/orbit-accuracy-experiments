@@ -4,11 +4,11 @@
       "/opt/homebrew/Cellar/node/25.4.0/bin/node",
       "/Users/tj/software/private/coordinator-d9/orbit-accuracy-experiments-fiveday/experiments/five-day-ca/statistics.mjs"
     ],
-    "commit": "96129492cbc3265d4f52999d797405a2a8ea5db9",
+    "commit": "20d9b4c83b0ee5507cb42225f45f61ed04764ba6",
     "node": "v25.4.0",
     "host": "claude.local",
     "registrationCommit": "eb143664cad7ab97133184d4d0b217592f81b5a8",
-    "modulesCommit": "f662a3e6726fedfd58214674a49ac5fb4100355b",
+    "modulesCommit": "1ff5f4908005b88799345a8a64b057ed4bf5cef0",
     "pins": {
       "/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
       "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules/propagator/sgp4-xp/dist/isomorphic/module.wasm": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb",
@@ -19,56 +19,67 @@
     },
     "sources": {
       "experiments/five-day-ca/CA-PLAN.md": "8bec5a15c7f7d849a4f91708e395bd35575dece0a78dbae165c645b1906754dc",
-      "experiments/five-day-ca/ENCOUNTERS.md": "35a963ab944abdcaa3cbde3d9145076837eb342e74a86ed50383dbf5a6fd6645",
-      "experiments/five-day-ca/FIVE-DAY.md": "9471af4e59c33d200359fedae3f118732b423936ee2e9ad73f83b2c8e571073c",
-      "experiments/five-day-ca/GRID.md": "ce7ef30a0e9ece64ebefbca3c4ba7b60df78206610f50292668a15a5058e3411",
+      "experiments/five-day-ca/COVARIANCE.md": "8763698d7b57f398b7719312a3d45f3d0ed215031561caca83b7a136ee4eb7bc",
+      "experiments/five-day-ca/ENCOUNTERS.md": "48383fabe4dd0bad5c356d0333827b6fa76b8a9a655872cc3a2d66b73306f4d6",
+      "experiments/five-day-ca/FIVE-DAY.md": "894ddd7e6fcf887844993b3020bc1f4c9f05eee211b466d55e0c4ef9666fb507",
+      "experiments/five-day-ca/GRID.md": "d46f9cc344bad1b7494f4cde3db65d7bd6c6719d3d61c6cf611fc43544482e77",
       "experiments/five-day-ca/PLAN.md": "ffee0315a15f45830494aff0fbdac2952d162f57555f151659692156a4b7c99b",
+      "experiments/five-day-ca/adapt-covariance.mjs": "77edf1d0685a06e82570dc7d9f754ee5a10ac9e64567888fcba54ea4e77c5c72",
       "experiments/five-day-ca/builds.json": "a5b207dd57d1d66669b525cf87299693879ff7c926e8ceec19e8f89a134137b7",
       "experiments/five-day-ca/ca-table.mjs": "3e08dff0c535b2a6b1ad31adb5b5caedb8e5d3e133c857a9367baf7a5a98f288",
-      "experiments/five-day-ca/check.mjs": "46dd495047313761fd2bc62f126fd257ac28727699463ce6a666320870adc64f",
+      "experiments/five-day-ca/check.mjs": "e834056b2cb94c206a6702299d922cb5a185b5489cc974a310d6e2b7fe82d3bf",
       "experiments/five-day-ca/config.json": "bd344de1f25bb98ca8dbec3ffa7fce2b962b212b953110357439681ec154b3fb",
-      "experiments/five-day-ca/coverage.mjs": "9a7831e82e6b5f90950473f04d4e9f07765af7b55aa778d81ad91f974d932814",
-      "experiments/five-day-ca/encounters.mjs": "6c7e164badbb3aefaef3b47f35d97966332c6130dc02056d28a533fa610c787b",
-      "experiments/five-day-ca/five-day.mjs": "b8ab357aa3218f7fb3d7eba17a47629513ef94acc8ff6b467fdac82b7952d19e",
-      "experiments/five-day-ca/guard.mjs": "cc689011f17b77e8174e6df229d27d10fb9a212d78f241e15be4cac826bde78d",
-      "experiments/five-day-ca/lib/ca-reach.mjs": "aa8cb1afc104e3f1b0b3145eb7fa469bf73234d82c820846e66f6f5f90ada7ed",
+      "experiments/five-day-ca/covariance-config.json": "8ef80834b386e4cf6ab7bae34e350ee68306df496e23d4ce6c2683ca2cb7f77b",
+      "experiments/five-day-ca/covariance-products.mjs": "71a2ad69bc0e9aa7c21a9c59068f006084e3161935cdf5d187bdef47af2b451b",
+      "experiments/five-day-ca/coverage.mjs": "cd30f9408c657619270bd71470f543e6e82358e9d2234681c54e253c440f20b5",
+      "experiments/five-day-ca/encounters.mjs": "5198fe16f520da1d3b14caaac32e2b1c647a058d933fc3756ce17e386e0e0b39",
+      "experiments/five-day-ca/five-day.mjs": "818be43b1dac9f8899eb94aaa97405380d8242ed678e033f01a9155984e89e58",
+      "experiments/five-day-ca/gp-products.mjs": "e12e9473eeb0171a85a14a7cb6e2979587a95afde7d969b9911fbf6072d0ca08",
+      "experiments/five-day-ca/gp-sets.mjs": "d313d578ab11dae5d5a71e3b877b23779a6070f7ff521f8802a0a9b91d925f83",
+      "experiments/five-day-ca/guard.mjs": "58b7dbf43a70abda8a27a639afc2d8127f70f0145583874f457738faaaa037d4",
+      "experiments/five-day-ca/install-ussf.mjs": "7a7798b43e90b268e9be82ab5ac0bc5e97eb8e0a110c53d5ebba4d9b07b57731",
+      "experiments/five-day-ca/lib/ca-reach.mjs": "7a78bb609ccd1d6456c177a09ce5e01939b5092b4729110950b6e31c13987a87",
+      "experiments/five-day-ca/lib/covariance-modules.mjs": "9105980aff013555a46c448ef47dfccf7a25202fd9e8d0276052e69a2245ef7b",
+      "experiments/five-day-ca/lib/paired-scores.mjs": "d7566404647b8f09c15a8131bf422404a2251a6ec7f4af9c8e59f71e50d74b2d",
+      "experiments/five-day-ca/lib/product-records.mjs": "74138adfa7829e12973933ba9778417e32a2c85ac136f0c59c0af83e5ed3c757",
       "experiments/five-day-ca/lib/statistics.mjs": "37f1148fb6b13ad3859c783a52d65fe748795dc0b97d9ef0e84054be2fb694a4",
+      "experiments/five-day-ca/lib/window-terms.mjs": "fbeeeba68c7d5a272ff11f69fa2085f1825613874e2d04e19ae5bfbf7e54cd5e",
       "experiments/five-day-ca/map-gp-regimes.mjs": "e8f24aee71f4d65ce7b02ac19bb9bcb401bee125134afe0c4d71931a102800ff",
       "experiments/five-day-ca/map-truth-regimes.mjs": "7f0733284430b7641ce9c5457f17c51028537cbbb1c36659fb91ce5b9c72cf72",
-      "experiments/five-day-ca/regimes.mjs": "a9c408510c1b5cef30e94b7baf780d0fbbc754061c75e95164655ead79ca0378",
+      "experiments/five-day-ca/regimes.mjs": "5d2ad81fe14b9b8f3929213c5efedba8baf94e772a5309d531efc2dd12d92af9",
       "experiments/five-day-ca/repair-ussf.mjs": "4a62acdeaa85bcf60c22f305a3707f896b30ea15c76ede2ac048a4fdcbcb7b18",
       "experiments/five-day-ca/statistics.mjs": "39439a5e8caf7a13ffdd0f7769fdfaa3c30756595eac1083a954d8e4251a7e59",
-      "experiments/five-day-ca/table.mjs": "383c0202b3cfb9ac43f80e78b9a743ae85922f2b79f623ad08d2e1248c70facc",
-      "experiments/five-day-ca/truth.mjs": "b1c394c9eb0a11b369165dffb9d50d00c08c1797db98d7829b16ecebfbb96f2c"
+      "experiments/five-day-ca/table.mjs": "6ceca2b105dcf1a3d0ec6bf58a59b4e1344a905f3864932a817da40b3c390966",
+      "experiments/five-day-ca/truth.mjs": "e0abbe4e9965cd8706d3174c66843266832afe0e7c534bba8098ad80a8d97e31"
     }
   },
   "scope": "available rows; completed-group tables are selected using metrics.json coverage",
   "snapshotStable": true,
   "inputs": {
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-0.jsonl": "e264afe91e6bf9395c871b03b84cc6a92df5be58975d64a3d4e9d3ec3bd72268",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-1.jsonl": "13b6ac40e7443e569ba45f8f386cda143777c50d507173bca45020dbd74e7551",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-10.jsonl": "9c102d4b26a9e1eb9388b9d0ba8c4cd578a2d38c5493373b44bc017aad1845aa",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-11.jsonl": "b87c1bf9cc85cc21f9020f6775dc578629ed2a955cd877de8e0127b3340735d1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-2.jsonl": "dff4b1fcd9f76c93c8815a30d160e09b7f17eb97a684e8b2323ff32e17c6befd",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-3.jsonl": "e5ea6d021fef79666f4545c6cf18d8d1bb44a1a2b8f83eaf6906ed338ab964dc",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-4.jsonl": "c28be9964a7dadd041c97a8b3cdb770dbe50a58fde0a93fb1655f4f7a1c77747",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-5.jsonl": "2f51c6f0894c562e156d928eb95c15aa5c6df1aef56d01824c514567099efe34",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-6.jsonl": "601119095d40f4bd8ca5e34a25d46384c9d357168ebf4193a8603e6c8c240d05",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-7.jsonl": "a835e841b7a4984e22a1ffc8ba309e0afa18a13e8cf4ca4040f5fc602f7107a6",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-8.jsonl": "ec1748b8175bf5d289e25fb951c430fcf8b6636d439bd9b6673d0e10f9350b66",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-9.jsonl": "cb156c899810886b38e2af2b7aeb9104d4886528838286c4d56dde7779a074d9",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-0.jsonl": "5d3d5cfb8e71392878a93f3c376fafc302b902294ebb9f71c78e3339ffece283",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-1.jsonl": "d4a71277ae226fe5c5d0cc3afe86fbd07dd62e106ea3cac1e53df958fa7cc0ce",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-10.jsonl": "3ec629fcc0b0ece714d77b281a2bf0f9f2f316c22f5ddaad5e5d9a0f8fa76e59",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-11.jsonl": "d8a511a784850812b43ef737cf19330fc3f2897818bd4202a4657e6667846c46",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-2.jsonl": "54fa2476db234440bdc2567fcfb341a2cc9dd6441fcb6e3c59d6bd51651c38f5",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-3.jsonl": "c731f690dacd510190dc6096065c8367435363152247fa6226ab71ba1ae5bd30",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-4.jsonl": "4dbf7b5d62f8b5fea972fc951224ea2fca7bb916eb06e31974b9ed06abf0fedc",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-5.jsonl": "3520a0a9c12b9fbfa72491072b09630bfd89c7c1e089c0d0697a550650b1b2d1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-6.jsonl": "1c6da14821233be36abe9d82cfaa0b5c5446e70b524086ccae3205194ce585c8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-7.jsonl": "017d827c5406d62816e4c9c6bf2060b6bf9afbb608c6751c3ee34b2911b3dffb",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-8.jsonl": "01b978618c172ffc8cb0516a99bfe4e1ffe72c72be947952effe8ba7bfdfbcb4",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-9.jsonl": "d205fbb11db85620e58b6f6cf3814ffcc2e9a663e12d0c7295e875c3920830b5",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-0.jsonl": "fba7bb216237f9bb65ff1518c47936d8261ed41047192748d4c842bca514c9ee",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-1.jsonl": "5aaa31a91890bed5012c295a55577ed940f277325792242fe8a0935578ebfedd",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-10.jsonl": "70b92cb121289e1fd61af82e1762be7ea5085ccd92ad53c95421855fe9272db7",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-11.jsonl": "0d170b079a0b2ab613ef12cd00f4da93e5ef97b424c28c78d9e11caeb0c4b248",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-2.jsonl": "d7e8f459cd0f0435fe3f0c571856580dd07c3d7726792eb0c128e9ee0b1d72cd",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-3.jsonl": "803aa51d252725402eaf7e8dbc2ba24949ba9cc5d23cdf60dd2b2dc9149114a0",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-4.jsonl": "b380068da61c8cd9af1fbf9e5f24b9db9d52640c779f61797b2eae4ffe7992c8",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-5.jsonl": "fe61728cc74bb7be361721ce9aa65f8d57af6be93f3e01c24678370416d59a6b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-6.jsonl": "fe40efd0ba53e5bbea601c9ff7433b9435be16653a1d1e193087c37a1b354578",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-7.jsonl": "67b39d9b425e15e88ccb5ee9f4ee8d47bbaace87b7cfa2a8ce79d43d3c14c4ab",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-8.jsonl": "d590c81d8d66bef4b41a8c0f8dd2bfd866d912f63bfc4a5ea9094cd971cc6302",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/regimes/rows-9.jsonl": "8f3d374773217dd6f1205dc4304d93961700ad572b7b6ca76f17e1a449c87976",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-0.jsonl": "5d6382fede03b2c2316d301e0124b7bfbb2c4d4e17acde57f2a78e5f4de16578",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-1.jsonl": "7798ce8211973c019792bd8cb12b90d71e2b0fb925c9af110369df2ecb6dba9e",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-10.jsonl": "91578a4a2b16b41c6f7102921d4bec1988d291fcef29a06f4b3296aecde39d46",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-11.jsonl": "1c8be77de9466468f05008e540638af83a3aa2d1553f690efd48dbbe508caa90",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-2.jsonl": "24b0fed5971036d4ef55a5dc5aaa9a04fb4b7e0481e89ebf0d9aaba30e8f8d8b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-3.jsonl": "5d5d352be0b965b3853a5e648e7f0f9d2a03b0f698e5f21b6d279f3f6c5adef3",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-4.jsonl": "cd5fcfe1d1e707d02dc872010106523fa2f1aaf2d503e68ea502467dcbc1b108",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-5.jsonl": "fa4e9a254f3604b90be28a9fdd662c28bd01193db5aa22fa421ae1c3cf454e6b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-6.jsonl": "f61c44e9cae9286c5c9dd100b298b2fc03847106672462637841bd2adafc83e4",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-7.jsonl": "861bf67d8b363a258894b697e6a4b796a5e3c0e5e4a8053d822f3f7726aa62a0",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-8.jsonl": "64c6636718aca7902d409daddf30c545ffd2e7868d3735c2c3d8aec434738e17",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth2/rows-9.jsonl": "48afcdd034a98db670039fc92439f13d19c3d517676978ebef8e5f227dd530d0",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-0.jsonl": "1467d26bbfbe9c428b165bd8f7db1952bd29c73369b1fda1f76eee4abc72e08a",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-1.jsonl": "43ba1688f7de3ee81d40b34171a7118c9de1b441224d894b71ae01ae76263a53",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/cheap/truth/rows-10.jsonl": "d7339d9ff2d124678f4f5489d0b6a2e19937e06352cf69c97afe023714f3ae0e",
@@ -93,30 +104,30 @@
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-7.jsonl": "3fc949438fabe73abb07b89331d125371737e18cfbdc342e2d6a7da5b008dd9d",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-8.jsonl": "c4afdec62039f9c145e1efc3bddb87c28e6138bbd01cd2a6f9bd8d992d778df0",
     "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/regimes/rows-9.jsonl": "6d10f94ce6e25a4ddf1141e873b8285ed2a02331b41898c76907b85b389425a8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "fed9b2983f1df83bfa9fd93e7deea5e7d7b9b8d43b91c31dff9836b03af99297",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "fef303cac0293e08b7492481288a71acca0ae17b3ff357f0b6f09bd6b0d110b1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "81dcd32137516b495537f22c93701522f9a69ab876eca56b2d3a755392191a58",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "92435be976e5fa82b2b54e3c8e6d24d59b709d57f2dddb78b94f27b36671a078",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "8e8179e2dbb27d736c81198d5f9b75383aff1e8ef5afffad689a5921814fbf7d",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "ccce659874e9c00821e0b7305a742cc016604e02bf7ceb5ed0ee9fe5fc1e8b5d",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "d278045fba7bbf6446cba8408335d3588fdb53eb253cf07870de3c8d6c165a9e",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "f0efd0bbc3747a64704258f985105ead35ef29dee3f7080100df8a4a9ccc7b67",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "ea271cec9000ee592a3648119fefe96266ab3261742195876eab550e8fef9552",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "3e38157e80db9bc5756fed654aa9701cfcf4cd4238e5a8017d27a97eb982039e",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "407871c5ea360227a8403b280c6046dc1b635994954a8dcbd371966bb0c67e6b",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "a5ebf0c4b5633ea2fb436ede1656c4eab13bedbd770173322da240f405c39ff8",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-0.jsonl": "9fd4f3d115d6f61d2a8bdaab04cbf05aac11670edd49f8aa6979c28527fc80ee",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-1.jsonl": "cabbfa421dba89f594f3e6b5568fd4b3fa45bbb53364c9fbb72535d4f6f676c9",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-10.jsonl": "aad35ef31a94896818b5bce3f4b4ccd6112e40550f08401d0f5be6f7efcd4199",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-11.jsonl": "35bdabac499cfa7d7525a4db1b2799908296353fd2dbe6f24e8bc0148e0cc647",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-2.jsonl": "6687beb31315c849856c4385151ba8494c056291f0219c27d1471d224e3c24a1",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-3.jsonl": "36f525b5244aaa4abcbac5f5695c7d69a0676fd73702c39e4c2d11a098e8f1ca",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-4.jsonl": "a9e1358c7000673677b53eec9a237117f3d28b499fd073bfe9b06ef7992d01a2",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-5.jsonl": "5d89f89683dc34d1f8a969ea3f455e13251ed91b88c566c4b0502d22b40ec0be",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-6.jsonl": "e413b34883bb5881443f8c4da2585400880471392b74ef1356d7ed04c4fc2ec3",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-7.jsonl": "bcff4bd8ac091d681a90c28877e5d8c17db3fb4f9a0c48fa6a951f0ee47697ed",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-8.jsonl": "99016f1b1754bf30a3f8598b10778d8865bc2a89f358af20d41a1f94e55196fe",
-    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-9.jsonl": "b27c98be309bb42c4c0b4d9d98b50f43ea362dd8eda5e011fb8f34eb94cdccac"
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-0.jsonl": "2bc867330211efa1eeaca19815b1fdca03ee7acadaf9cd153a9c9ac7189c16e5",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-1.jsonl": "5bf8f3c690ad8cb0ab1725e7fa428f48d49b4aacb8f7b49d94adb4a04a76c650",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-10.jsonl": "b3f589ad144844a605aa3a9ed6708c513d8d744d5fb606e9208288bda58b1b16",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-11.jsonl": "c0f20c82e728c6e668b667bc50aeac316ca6fc0e802634d127cf8a8b0521e010",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-2.jsonl": "888aa81558a234ef4068c46cec62dba53eb2c6755d916c92fda6c443dcdb53c8",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-3.jsonl": "26a756f7dc8ebfa5ba068447ff5396b9b97076147d49bdd55e1dd5539ddc3a40",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-4.jsonl": "c6120c602438758e1aed3775ca550ad4a2c50707adb91a69a79a368c11224036",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-5.jsonl": "227edddb9f932e12c1ee173e74c332d0c543c3657e4c3a30e07a5740cefa557d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-6.jsonl": "1da4199804baa04ecaed07b9049002a2c26642cc1fa65c10db9ed2ce0b6a0d7b",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-7.jsonl": "2144ff99d161163433166177d7729de01461374b06c7031ea528df3f2b9d929d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-8.jsonl": "e213abf7cb96c61c8f50c0ca80317798e225ed77e800788e05825a6f0320ec80",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth2/rows-9.jsonl": "dd91c8694e7ada4258bf596b24a411ec2ffdc1ba01d83fb9219002be94cfc533",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-0.jsonl": "35d343cf30211570d4b05a9a6d9c7e64b3a5938fac79ce4c3a43ec4c1d41c31d",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-1.jsonl": "bd10db9bdfeed54e4e19f58250e55cf1f6e5b2f0d529f41d0f8da5fea349a718",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-10.jsonl": "9afc86e4d2e6a6d58aadcc480ff152ea6a7924cc6bd45b8680e6cd2df74638f1",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-11.jsonl": "026450bf293180f45c9a40d7e597e612eafc3ff3725e70b0417b8aebabe7d899",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-2.jsonl": "0b9539608617442cb04d472df05435595a18d037809bb64921eedf3bf0f18b35",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-3.jsonl": "f67a5a97d16fa8db25222873708364601764370dac516ae2851e43f72819b815",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-4.jsonl": "31064db96357a30d1d9ec1593288eecf373c97a803ebc42ef46d86805ab5ca0f",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-5.jsonl": "2f642c9ee45637a5a359d2b28fa0bf50c9d57cb311b05875eba9082a8d37fe03",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-6.jsonl": "32c6766caf24a29152b7739cc9dc6b4520405ce1a0121775589fcac7a2db6707",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-7.jsonl": "83623048a3807ad4a3aec4749992a6e08ac77cbaf863afeec945f44b003b2727",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-8.jsonl": "e9b3e1213f3e86a7a5a120f7fe1bf1f84497f0a32bbdbcc0d7a2a45330367e32",
+    "/opt/data/sdn-archive/operator-theory/five-day-ca/ffm/truth/rows-9.jsonl": "e4371d184bb4b0ebdd588d46ccdd37211fdcd77783f7503af97ba971b91c0915"
   },
   "units": "km",
   "bootstrap": {
@@ -876,17 +887,17 @@
       "day": 4,
       "disclosure": "read before the statements were registered",
       "n": 53,
-      "median": 3.0544310474964194,
-      "p10": 0.9943710640034833,
-      "p90": 14.71212079938158,
+      "median": 3.054431086714473,
+      "p10": 0.9943711829534978,
+      "p90": 14.712120821336427,
       "ci95": [
         2.2379775433106963,
-        6.259911971523176
+        6.259911919472561
       ],
       "rtnRms": {
-        "r": 0.35333809600109084,
-        "t": 8.886374144168839,
-        "n": 0.2627001027593825
+        "r": 0.35333809617279366,
+        "t": 8.886374144211885,
+        "n": 0.26270005562481635
       }
     },
     {
@@ -991,16 +1002,16 @@
       "disclosure": "read before the statements were registered",
       "n": 53,
       "median": 0.6924000830706563,
-      "p10": 0.5083172250400283,
-      "p90": 2.107632312104066,
+      "p10": 0.5083172846906663,
+      "p90": 2.1076323119448475,
       "ci95": [
-        0.6698526399554516,
-        0.8357747132251341
+        0.6698534185168613,
+        0.8357747124646917
       ],
       "rtnRms": {
-        "r": 0.12591607683030462,
-        "t": 1.2198532593295484,
-        "n": 0.3136755156900576
+        "r": 0.12591607766688745,
+        "t": 1.2198532231734662,
+        "n": 0.3136752913392521
       }
     },
     {
@@ -2016,17 +2027,17 @@
       "day": 4,
       "disclosure": "read before the statements were registered",
       "n": 112,
-      "median": 5.1638226505216425,
-      "p10": 1.79564525962257,
-      "p90": 22.713142303781996,
+      "median": 5.163822680400445,
+      "p10": 1.7956451177143788,
+      "p90": 22.713142311615478,
       "ci95": [
-        4.0305088974286,
-        7.943668889865202
+        4.030508915257378,
+        7.943668916441091
       ],
       "rtnRms": {
-        "r": 96.12534809108014,
-        "t": 356.8986822385526,
-        "n": 0.2781488955492791
+        "r": 96.12534809125181,
+        "t": 356.89868223906166,
+        "n": 0.2781488906351949
       }
     },
     {
@@ -2130,17 +2141,17 @@
       "day": 4,
       "disclosure": "read before the statements were registered",
       "n": 112,
-      "median": 1.4148169695283115,
-      "p10": 0.6671267250391544,
-      "p90": 8.750807774206598,
+      "median": 1.4148170432168652,
+      "p10": 0.6671262799921315,
+      "p90": 8.75080777719429,
       "ci95": [
-        1.233181727343828,
-        1.7721045340652468
+        1.233181730125355,
+        1.7721046419782251
       ],
       "rtnRms": {
-        "r": 94.98799252177832,
-        "t": 355.9281502368633,
-        "n": 0.30381526121537783
+        "r": 94.98799252620469,
+        "t": 355.928150248669,
+        "n": 0.3038152810243688
       }
     },
     {
@@ -2814,17 +2825,17 @@
       "day": 4,
       "disclosure": null,
       "n": 43,
-      "median": 0.1121521936814327,
-      "p10": 0.06790624621206764,
-      "p90": 0.15533237404087502,
+      "median": 0.1121526430456553,
+      "p10": 0.06786353854810609,
+      "p90": 0.1553264288658285,
       "ci95": [
-        0.10528916218745173,
-        0.12046450801119889
+        0.10541785010573358,
+        0.12046182577021204
       ],
       "rtnRms": {
-        "r": 0.023793860114758557,
-        "t": 0.10057645866082464,
-        "n": 0.05236787476969085
+        "r": 0.02379360274168747,
+        "t": 0.10054980786770089,
+        "n": 0.0523675406697293
       }
     },
     {
@@ -3384,17 +3395,17 @@
       "day": 4,
       "disclosure": null,
       "n": 60,
-      "median": 0.19645312156689143,
-      "p10": 0.12845730859369833,
-      "p90": 0.2692953976063897,
+      "median": 0.19645259495235207,
+      "p10": 0.12845819351274104,
+      "p90": 0.2692943418640779,
       "ci95": [
-        0.1931402214850713,
-        0.21306053548586906
+        0.1931415144027331,
+        0.21306228444639877
       ],
       "rtnRms": {
-        "r": 0.0317088584855767,
-        "t": 0.18212412064080907,
-        "n": 0.09078487806903755
+        "r": 0.03170873902342067,
+        "t": 0.1821247071136756,
+        "n": 0.09078506616316119
       }
     },
     {
@@ -3954,17 +3965,17 @@
       "day": 4,
       "disclosure": null,
       "n": 33,
-      "median": 0.21207679608675833,
-      "p10": 0.1495847580212531,
-      "p90": 11.64384350093451,
+      "median": 0.21207600774651125,
+      "p10": 0.14958437895376073,
+      "p90": 11.643839177300226,
       "ci95": [
-        0.18312642160280296,
-        0.2644150741804473
+        0.18312890375401158,
+        0.26441455423747695
       ],
       "rtnRms": {
-        "r": 1.1888890464346176,
-        "t": 20.521642606546482,
-        "n": 0.05796815310729674
+        "r": 1.188889011349693,
+        "t": 20.52164198645934,
+        "n": 0.05796801286394776
       }
     },
     {
@@ -4866,17 +4877,17 @@
       "day": 4,
       "disclosure": null,
       "n": 7,
-      "median": 9.570866643030518,
-      "p10": 4.874366371495252,
-      "p90": 24.995316931636378,
+      "median": 9.571016986339995,
+      "p10": 4.874399979629111,
+      "p90": 24.99533732760276,
       "ci95": [
-        6.886404769156302,
-        22.604142186940866
+        6.886360713805652,
+        22.60416652062589
       ],
       "rtnRms": {
-        "r": 10.279486711977173,
-        "t": 11.43889641753771,
-        "n": 2.7556410594866882
+        "r": 10.279548919485993,
+        "t": 11.438806096501473,
+        "n": 2.755625852963204
       }
     },
     {
@@ -6006,17 +6017,17 @@
       "day": 4,
       "disclosure": null,
       "n": 7,
-      "median": 9.550739892955875,
-      "p10": 3.9097356456544192,
-      "p90": 21.05218946266026,
+      "median": 9.550767792486768,
+      "p10": 3.910059273291693,
+      "p90": 21.05226052822964,
       "ci95": [
-        4.590271757865118,
-        14.515510957940705
+        4.590885941922577,
+        14.515456917609104
       ],
       "rtnRms": {
-        "r": 8.055474270312441,
-        "t": 11.75496891676022,
-        "n": 0.6308455322805594
+        "r": 8.055538672721479,
+        "t": 11.75504134112277,
+        "n": 0.6308328431157089
       }
     },
     {
@@ -6120,17 +6131,17 @@
       "day": 4,
       "disclosure": null,
       "n": 19,
-      "median": 3.8839134696296624,
-      "p10": 1.3359683285514903,
+      "median": 3.883913805425034,
+      "p10": 1.3359678109956759,
       "p90": 11.692918109218342,
       "ci95": [
         2.7751808404641576,
         12.54921222747015
       ],
       "rtnRms": {
-        "r": 3.7619562421030937,
-        "t": 6.456050110137199,
-        "n": 0.8872876580248482
+        "r": 3.7619561156027035,
+        "t": 6.456050053160352,
+        "n": 0.8872876514702117
       }
     },
     {
@@ -6632,18 +6643,18 @@
       "arm": "F24",
       "day": 1,
       "disclosure": null,
-      "n": 275,
-      "median": 0.17830102636567632,
-      "p10": 0.046060031866726206,
-      "p90": 0.6340294435943282,
+      "n": 750,
+      "median": 0.14526283582896518,
+      "p10": 0.031205959263380913,
+      "p90": 0.511779873203519,
       "ci95": [
-        0.14873990978911097,
-        0.2477752453622849
+        0.1185663286035982,
+        0.1855537630405024
       ],
       "rtnRms": {
-        "r": 0.008746358149435971,
-        "t": 0.5553098743768148,
-        "n": 0.001882386875958301
+        "r": 0.007750767828115219,
+        "t": 0.47823880707448774,
+        "n": 0.0018711746939919756
       }
     },
     {
@@ -6651,18 +6662,18 @@
       "arm": "F24",
       "day": 2,
       "disclosure": null,
-      "n": 275,
-      "median": 0.9377226720640536,
-      "p10": 0.1499578797952361,
-      "p90": 3.152126895730555,
+      "n": 750,
+      "median": 0.6786399796496798,
+      "p10": 0.12958408632630028,
+      "p90": 2.568883995322804,
       "ci95": [
-        0.7263490112343546,
-        1.1487116372569326
+        0.5280909199269402,
+        0.8663091950624825
       ],
       "rtnRms": {
-        "r": 0.018364785996378172,
-        "t": 2.4630049325511827,
-        "n": 0.0027801002926306404
+        "r": 0.016098073487656663,
+        "t": 2.1200892395202215,
+        "n": 0.0028493888548857408
       }
     },
     {
@@ -6670,18 +6681,18 @@
       "arm": "F24",
       "day": 3,
       "disclosure": null,
-      "n": 275,
-      "median": 2.0769243735183807,
-      "p10": 0.4696239504999749,
-      "p90": 7.228213013281159,
+      "n": 750,
+      "median": 1.5753242266933805,
+      "p10": 0.34498004752146366,
+      "p90": 6.163559219525302,
       "ci95": [
-        1.587680458517424,
-        2.70249835668845
+        1.2606902710009127,
+        2.0481452215399614
       ],
       "rtnRms": {
-        "r": 0.026107024384651165,
-        "t": 5.765287036762998,
-        "n": 0.003736230569850403
+        "r": 0.02281953548367043,
+        "t": 4.954932941864576,
+        "n": 0.0038740336653359368
       }
     },
     {
@@ -6689,18 +6700,18 @@
       "arm": "F24",
       "day": 4,
       "disclosure": null,
-      "n": 275,
-      "median": 4.103642403628605,
-      "p10": 0.8700200688330709,
-      "p90": 13.58919276238113,
+      "n": 750,
+      "median": 2.94090139473621,
+      "p10": 0.6856482860774974,
+      "p90": 10.999469089286361,
       "ci95": [
-        3.0109335453349733,
-        5.14581394715322
+        2.344143105234438,
+        3.7447169184222817
       ],
       "rtnRms": {
-        "r": 0.04129150977417625,
-        "t": 10.370872786902838,
-        "n": 0.004655212401934824
+        "r": 0.035748896488592995,
+        "t": 8.874342463154965,
+        "n": 0.0049730058974416635
       }
     },
     {
@@ -6708,18 +6719,18 @@
       "arm": "F24",
       "day": 5,
       "disclosure": null,
-      "n": 275,
-      "median": 6.583821294103615,
-      "p10": 1.3770153723180942,
-      "p90": 22.262646746853605,
+      "n": 750,
+      "median": 4.929235190145764,
+      "p10": 1.0327756920069524,
+      "p90": 19.063720096643507,
       "ci95": [
-        5.266673410897357,
-        8.118504509682543
+        4.110777648046141,
+        6.097394058146316
       ],
       "rtnRms": {
-        "r": 0.07871720853715673,
-        "t": 16.5289063729626,
-        "n": 0.005620417453374998
+        "r": 0.06765138309045791,
+        "t": 14.060995901770909,
+        "n": 0.006074541021914072
       }
     },
     {
@@ -6727,18 +6738,18 @@
       "arm": "F24",
       "day": 7,
       "disclosure": null,
-      "n": 275,
-      "median": 15.219023950970321,
-      "p10": 3.22831357840773,
-      "p90": 46.33371049143393,
+      "n": 750,
+      "median": 11.480196212260669,
+      "p10": 2.903924229488131,
+      "p90": 39.65030466917977,
       "ci95": [
-        12.10724264076206,
-        19.423622789569922
+        9.015017004084411,
+        14.51193305316718
       ],
       "rtnRms": {
-        "r": 0.27379792084668964,
-        "t": 34.30104715451756,
-        "n": 0.008056843340878087
+        "r": 0.23419755127339745,
+        "t": 28.90868500431026,
+        "n": 0.008547249081552915
       }
     },
     {
@@ -6746,18 +6757,18 @@
       "arm": "F72",
       "day": 1,
       "disclosure": null,
-      "n": 275,
-      "median": 0.3837899691264764,
-      "p10": 0.10377542251973211,
-      "p90": 1.1342545143231604,
+      "n": 750,
+      "median": 0.3035246400748892,
+      "p10": 0.08165193414812458,
+      "p90": 0.991863260373282,
       "ci95": [
-        0.29123904459144867,
-        0.491804172723637
+        0.26176701048656986,
+        0.387732309218251
       ],
       "rtnRms": {
-        "r": 0.011205845698059713,
-        "t": 0.9061884829874607,
-        "n": 0.0025800246058138225
+        "r": 0.010287137509367819,
+        "t": 0.789700537168965,
+        "n": 0.002662917427448334
       }
     },
     {
@@ -6765,18 +6776,18 @@
       "arm": "F72",
       "day": 2,
       "disclosure": null,
-      "n": 275,
-      "median": 1.3272941110206748,
-      "p10": 0.29201755719733136,
-      "p90": 3.992162534154493,
+      "n": 750,
+      "median": 1.0489447734803976,
+      "p10": 0.23623841653696012,
+      "p90": 3.412670663405321,
       "ci95": [
-        1.1183655492120372,
-        1.6679785241080731
+        0.8331192915417105,
+        1.3656149243156182
       ],
       "rtnRms": {
-        "r": 0.020019453527974115,
-        "t": 2.8988580154664154,
-        "n": 0.003471851945514057
+        "r": 0.01796948699825182,
+        "t": 2.514490396365085,
+        "n": 0.0036911892526752103
       }
     },
     {
@@ -6784,18 +6795,18 @@
       "arm": "F72",
       "day": 3,
       "disclosure": null,
-      "n": 275,
-      "median": 2.649228363895345,
-      "p10": 0.5496768820960848,
-      "p90": 9.137210730047222,
+      "n": 750,
+      "median": 2.1439515912220695,
+      "p10": 0.5024631155756797,
+      "p90": 7.604710576157343,
       "ci95": [
-        2.089426448630753,
-        3.4118881080793515
+        1.6974147812614957,
+        2.889252095021533
       ],
       "rtnRms": {
-        "r": 0.028697846635520507,
-        "t": 6.097401595024149,
-        "n": 0.004325483433967155
+        "r": 0.025314254168597082,
+        "t": 5.2656640786810955,
+        "n": 0.004716588315735179
       }
     },
     {
@@ -6803,18 +6814,18 @@
       "arm": "F72",
       "day": 4,
       "disclosure": null,
-      "n": 275,
-      "median": 4.671473219530887,
-      "p10": 0.788898956166988,
-      "p90": 16.21614588074859,
+      "n": 750,
+      "median": 3.864978081723396,
+      "p10": 0.7077201641443148,
+      "p90": 13.611805916635422,
       "ci95": [
-        3.6567296607621214,
-        6.298145270949734
+        2.947154833551109,
+        4.876022877552639
       ],
       "rtnRms": {
-        "r": 0.04126710231934462,
-        "t": 10.597906729700941,
-        "n": 0.005259364618676884
+        "r": 0.035260312093862343,
+        "t": 9.089879519414811,
+        "n": 0.005786806407302664
       }
     },
     {
@@ -6822,18 +6833,18 @@
       "arm": "F72",
       "day": 5,
       "disclosure": null,
-      "n": 275,
-      "median": 7.306757237956191,
-      "p10": 1.4409548800107173,
-      "p90": 24.770646167024328,
+      "n": 750,
+      "median": 5.99984322905423,
+      "p10": 1.2787549738342248,
+      "p90": 21.080495808524198,
       "ci95": [
-        5.851594247366424,
-        10.075185627609574
+        4.9332967847310165,
+        7.616913031700555
       ],
       "rtnRms": {
-        "r": 0.06568609464761352,
-        "t": 16.6456082574952,
-        "n": 0.006274653961668952
+        "r": 0.05456531615493196,
+        "t": 14.149818677597295,
+        "n": 0.0069037253528591355
       }
     },
     {
@@ -6841,18 +6852,18 @@
       "arm": "F72",
       "day": 7,
       "disclosure": null,
-      "n": 275,
-      "median": 15.207408359243942,
-      "p10": 3.6031633337336197,
-      "p90": 56.562465810314016,
+      "n": 750,
+      "median": 12.183161492716009,
+      "p10": 3.0029400073360333,
+      "p90": 42.210327469308666,
       "ci95": [
-        11.553232967446872,
-        22.543604682248937
+        10.137833263621292,
+        15.691506356588647
       ],
       "rtnRms": {
-        "r": 0.20500193575384573,
-        "t": 33.99353141238194,
-        "n": 0.008620974135172264
+        "r": 0.1689716746079303,
+        "t": 28.471825990044746,
+        "n": 0.009310925854215266
       }
     },
     {
@@ -7146,17 +7157,17 @@
       "day": 4,
       "disclosure": null,
       "n": 750,
-      "median": 21.943815134764222,
-      "p10": 5.076215201692493,
-      "p90": 39.34845175540674,
+      "median": 21.943815135684424,
+      "p10": 5.076215201908396,
+      "p90": 39.34845176668935,
       "ci95": [
-        18.994003120021322,
-        24.25032519902291
+        18.99400311937432,
+        24.250325201658306
       ],
       "rtnRms": {
-        "r": 0.44219554922415566,
-        "t": 26.10389704624452,
-        "n": 0.1764942455582622
+        "r": 0.44219555256265786,
+        "t": 26.103897105433003,
+        "n": 0.17649424259587948
       }
     },
     {
@@ -7260,17 +7271,17 @@
       "day": 4,
       "disclosure": null,
       "n": 750,
-      "median": 6.195623549456292,
-      "p10": 1.591426296522297,
-      "p90": 19.15505378606287,
+      "median": 6.195623546661675,
+      "p10": 1.5914262969018256,
+      "p90": 19.155053730909454,
       "ci95": [
-        4.83964915954673,
-        7.530611653287762
+        4.839649155536272,
+        7.530611648510517
       ],
       "rtnRms": {
-        "r": 0.34070326571253245,
-        "t": 13.031369749859044,
-        "n": 0.1662044525854194
+        "r": 0.3407032659619563,
+        "t": 13.031369740507655,
+        "n": 0.16620445080007798
       }
     },
     {
@@ -8294,9 +8305,9 @@
         34.64022132114665
       ],
       "rtnRms": {
-        "r": 0.7631670472470736,
-        "t": 33.592158674258755,
-        "n": 0.16700475720229002
+        "r": 0.7631670472391944,
+        "t": 33.592158675760906,
+        "n": 0.16700475770689593
       }
     },
     {
@@ -8408,9 +8419,9 @@
         2.3327846655790485
       ],
       "rtnRms": {
-        "r": 0.1592395371176261,
-        "t": 5.215016978609678,
-        "n": 0.1540054794616425
+        "r": 0.159239537115821,
+        "t": 5.215016978629577,
+        "n": 0.15400547949002993
       }
     },
     {
@@ -9938,18 +9949,18 @@
       "arm": "F24",
       "day": 1,
       "disclosure": null,
-      "n": 632,
-      "median": 0.14242360108215874,
-      "p10": 0.0293306667476356,
-      "p90": 0.5084978240840933,
+      "n": 944,
+      "median": 0.1396275326376799,
+      "p10": 0.028061295840225566,
+      "p90": 0.48601156122834743,
       "ci95": [
-        0.12528218460098187,
-        0.18157014909185745
+        0.12176964456913444,
+        0.1687489782419355
       ],
       "rtnRms": {
-        "r": 0.00639721477218523,
-        "t": 0.34843325010809495,
-        "n": 0.0017693770490466872
+        "r": 0.006112893399834214,
+        "t": 0.32615038306726585,
+        "n": 0.0017699971445027357
       }
     },
     {
@@ -9957,18 +9968,18 @@
       "arm": "F24",
       "day": 2,
       "disclosure": null,
-      "n": 632,
-      "median": 0.7179454338667327,
-      "p10": 0.13736069973594214,
-      "p90": 2.340499634000481,
+      "n": 944,
+      "median": 0.6733644535259122,
+      "p10": 0.13104574893324683,
+      "p90": 2.3291351344957625,
       "ci95": [
-        0.5408531330723887,
-        0.9855244492182738
+        0.5438249988472839,
+        0.8375081525711958
       ],
       "rtnRms": {
-        "r": 0.014780579480874509,
-        "t": 1.6405361927212905,
-        "n": 0.0027339143715804917
+        "r": 0.014082449346476763,
+        "t": 1.555209956852106,
+        "n": 0.002734462799396989
       }
     },
     {
@@ -9976,18 +9987,18 @@
       "arm": "F24",
       "day": 3,
       "disclosure": null,
-      "n": 632,
-      "median": 1.9394309331746715,
-      "p10": 0.3635128078486429,
-      "p90": 6.1552750999444115,
+      "n": 944,
+      "median": 1.740843576190295,
+      "p10": 0.3164229669415142,
+      "p90": 5.85801321747814,
       "ci95": [
-        1.4700547680367981,
-        2.5512431455821627
+        1.3799900559110034,
+        2.1771238195162645
       ],
       "rtnRms": {
-        "r": 0.02363103707308452,
-        "t": 4.037294090854643,
-        "n": 0.0036687540003037867
+        "r": 0.022261043193949694,
+        "t": 3.830655639233649,
+        "n": 0.0036990798964314205
       }
     },
     {
@@ -9995,18 +10006,18 @@
       "arm": "F24",
       "day": 4,
       "disclosure": null,
-      "n": 632,
-      "median": 3.737426228316478,
-      "p10": 0.6940786668095787,
-      "p90": 11.877999481326462,
+      "n": 944,
+      "median": 3.374101317351072,
+      "p10": 0.5594225961789412,
+      "p90": 11.341622509734227,
       "ci95": [
-        2.757395701522859,
-        4.7694932469832105
+        2.6997117272900906,
+        4.199545341723303
       ],
       "rtnRms": {
-        "r": 0.03338412039885169,
-        "t": 7.463510026305161,
-        "n": 0.0047876484013747635
+        "r": 0.030974729576076186,
+        "t": 7.115390541218927,
+        "n": 0.004832668662666466
       }
     },
     {
@@ -10014,18 +10025,18 @@
       "arm": "F24",
       "day": 5,
       "disclosure": null,
-      "n": 632,
-      "median": 5.948483973773605,
-      "p10": 1.0707174709579372,
-      "p90": 19.86478675326678,
+      "n": 944,
+      "median": 5.45207973119844,
+      "p10": 1.0134766236275974,
+      "p90": 18.598689966690717,
       "ci95": [
-        4.708893587641811,
-        7.446945009130967
+        4.588244164112745,
+        6.757834457286905
       ],
       "rtnRms": {
-        "r": 0.047374106857993675,
-        "t": 11.912383828610757,
-        "n": 0.00593813043519693
+        "r": 0.04324470158641159,
+        "t": 11.471399351886943,
+        "n": 0.005986201750443685
       }
     },
     {
@@ -10033,18 +10044,18 @@
       "arm": "F24",
       "day": 7,
       "disclosure": null,
-      "n": 632,
-      "median": 12.498977291773961,
-      "p10": 2.550605400779724,
-      "p90": 39.548748862943185,
+      "n": 944,
+      "median": 12.156394829043258,
+      "p10": 2.496014300930548,
+      "p90": 39.0264288261398,
       "ci95": [
-        10.02696346412242,
-        15.127891612673835
+        9.966330663136782,
+        14.794249598465678
       ],
       "rtnRms": {
-        "r": 0.1140428849938346,
-        "t": 24.024756974065806,
-        "n": 0.008325809559943158
+        "r": 0.10420254076361322,
+        "t": 23.70120563147704,
+        "n": 0.008480786683717139
       }
     },
     {
@@ -12236,19 +12247,19 @@
       "secondFailed": 0,
       "sparse": 0,
       "windowExcluded": 5,
-      "unrun": 475,
-      "n": 275,
+      "unrun": 0,
+      "n": 750,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -1.5701662290641007,
+      "medianLogRatio": -1.7690199447799726,
       "ci95": [
-        -2.0200138478861867,
-        -1.1349859037311176
+        -2.062078425127094,
+        -1.4577669114748324
       ],
-      "p95LogRatio": -0.8058925308917338,
+      "p95LogRatio": -0.9607036894885219,
       "p95CI95": [
-        -1.1824895534890698,
-        -0.4726990284766366
+        -1.2843446034651704,
+        -0.586371279379949
       ],
       "rule1": true,
       "rule2": true,
@@ -12263,19 +12274,19 @@
       "secondFailed": 0,
       "sparse": 0,
       "windowExcluded": 5,
-      "unrun": 475,
-      "n": 275,
+      "unrun": 0,
+      "n": 750,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -1.5342735330260193,
+      "medianLogRatio": -1.717141554519738,
       "ci95": [
-        -1.9349462451469623,
-        -1.0789334026863018
+        -2.0076928920629555,
+        -1.3947738962277372
       ],
-      "p95LogRatio": -0.7447436443576404,
+      "p95LogRatio": -0.9357571948939096,
       "p95CI95": [
-        -1.1583998619686173,
-        -0.4312421937567162
+        -1.2356354502968723,
+        -0.5164705317114452
       ],
       "rule1": true,
       "rule2": true,
@@ -12398,19 +12409,19 @@
       "secondFailed": 0,
       "sparse": 0,
       "windowExcluded": 5,
-      "unrun": 475,
-      "n": 275,
+      "unrun": 0,
+      "n": 750,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -0.5105247526122687,
+      "medianLogRatio": -0.51158592742957,
       "ci95": [
-        -0.6828400881039101,
-        -0.30453007598609383
+        -0.6416259555475838,
+        -0.4116169366465312
       ],
-      "p95LogRatio": -0.4578092453730231,
+      "p95LogRatio": -0.2975385453674295,
       "p95CI95": [
-        -0.5978297229101046,
-        0.03917378763863402
+        -0.5112914661979399,
+        -0.16262138215603222
       ],
       "rule1": true,
       "rule2": true,
@@ -12425,19 +12436,19 @@
       "secondFailed": 0,
       "sparse": 0,
       "windowExcluded": 5,
-      "unrun": 475,
-      "n": 275,
+      "unrun": 0,
+      "n": 750,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -0.5032608324917163,
+      "medianLogRatio": -0.5352500236303936,
       "ci95": [
-        -0.6275603330902251,
-        -0.34397489573074447
+        -0.6102818846520633,
+        -0.41516339567589466
       ],
-      "p95LogRatio": -0.3668365723021891,
+      "p95LogRatio": -0.2584321202854458,
       "p95CI95": [
-        -0.5771745857133191,
-        0.061902953539378726
+        -0.4923837070250996,
+        -0.09789753328949458
       ],
       "rule1": true,
       "rule2": true,
@@ -13208,19 +13219,19 @@
       "secondFailed": 0,
       "sparse": 0,
       "windowExcluded": 0,
-      "unrun": 312,
-      "n": 632,
+      "unrun": 0,
+      "n": 944,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -1.479052017294129,
+      "medianLogRatio": -1.6244864094350975,
       "ci95": [
-        -1.8754117982291865,
-        -1.1605503797936176
+        -1.9615700973471104,
+        -1.2953498254037654
       ],
-      "p95LogRatio": -1.0201467396956023,
+      "p95LogRatio": -1.0784624970336782,
       "p95CI95": [
-        -1.30157320248037,
-        -0.776909294617374
+        -1.3075605564574158,
+        -0.8444205296992078
       ],
       "rule1": true,
       "rule2": true,
@@ -13235,19 +13246,19 @@
       "secondFailed": 0,
       "sparse": 0,
       "windowExcluded": 0,
-      "unrun": 312,
-      "n": 632,
+      "unrun": 0,
+      "n": 944,
       "failed": 0,
       "failedShare": 0,
-      "medianLogRatio": -1.4820457522297041,
+      "medianLogRatio": -1.5796378487903744,
       "ci95": [
-        -1.8162284785197913,
-        -1.1177688191300854
+        -1.8648076909852107,
+        -1.2655538747432074
       ],
-      "p95LogRatio": -1.05394949398679,
+      "p95LogRatio": -1.0606233763297641,
       "p95CI95": [
-        -1.2576914473909313,
-        -0.7121411363895236
+        -1.25243775171552,
+        -0.8453359951892084
       ],
       "rule1": true,
       "rule2": true,

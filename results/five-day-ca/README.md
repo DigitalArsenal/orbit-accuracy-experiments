@@ -1,39 +1,41 @@
 # Five-day forecast
 
-Forecast coverage: 20/22 group/phase cells complete. Old-lead reproduction: 378200 scalar comparisons, 0 differences, maximum 0 km. Incomplete runs do not support a group conclusion.
+Forecast coverage: 22/22 group/phase cells complete. Old-lead reproduction: 398392 scalar comparisons, 0 differences, maximum 0 km. Incomplete runs do not support a group conclusion.
 
-At five days (72 h fits; Part T 24 h), 10 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GN, LS; GP x GP reaches 1e-4 in at least one window for DO, GD, LS. 20 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GN, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GN, LS, S1. 50 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1. 100 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1. AP changes the measured reachable fraction relative to XP in DO, HE, HX, LS, P, S1, T; F changes the measured reachable fraction relative to XP in DO, HE, HX, LS, S1; S changes the measured reachable fraction relative to XP in DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; U changes the measured reachable fraction relative to XP in DO, HE, HX, LS, P, S1, T. Every finite nonsingular covariance has positive zero-miss Pc; these are threshold-reach results, not measured alert rates. The table gives each fraction at 1e-4 and 1e-5, including how arms differ. Missing mappings and unfinished runs are not evidence of zero reach. The required multi-arm synthetic comparison remains incomplete, so no operational five-day CA claim follows.
+At five days (across the registered fit arcs), 10 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GN, LS; GP x GP reaches 1e-4 in at least one window for DO, GD, LS; arms changing a reachable fraction relative to XP (AP: DO, HE, LS, P, S1, T; F: DO, HE, HX, LS, P, S1, T; S: DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; U: DO, GN, HE, HX, LS, P, S1, T). 20 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GN, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GN, LS, S1; arms changing a reachable fraction relative to XP (AP: DO, HE, HX, P, S1, T; F: DO, HE, HX, P, S1, T; S: DO, GE, GN, HE, HX, IG, LS, P, S1, T; U: DO, HE, LS, P, S1, T). 50 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1; arms changing a reachable fraction relative to XP (AP: HX, P, S1, T; F: HE, HX, P, S1, T; S: DO, GE, GN, HE, HX, IG, LS, P, S1, T; U: DO, HE, HX, LS, P, S1, T). 100 m: fit x fit reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, P, S1, T; fit x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, HE, HX, IG, LS, S1; GP x GP reaches 1e-4 in at least one window for DO, GD, GE, GN, IG, LS, S1; arms changing a reachable fraction relative to XP (AP: P, S1, T; F: HE, HX, P, S1, T; S: DO, GE, GN, HE, HX, IG, P, S1, T; U: DO, HE, HX, P, S1, T). Every finite nonsingular covariance has positive zero-miss Pc; these are threshold-reach results, not measured alert rates. The table gives each fraction at 1e-4 and 1e-5, including how arms differ. Missing mappings and unfinished runs are not evidence of zero reach. Synthetic encounter rates below describe the registered artificial population and cannot establish operational five-day CA rates.
+
+Arms: AP is the operator-theory propagator, XP is the whiteroom XP fit, U is Space Force XP, S is the SGP4 fit, F is FFM, and GP is a public SGP4 set. AP fits and forecast states use 0.4.0; only its synthetic covariance process-noise table uses shipped 0.4.1, labeled UNVERIFIED. Frozen builds and hashes are in experiments/five-day-ca/config.json, builds.json and covariance-config.json.
 
 LS and DO day-4/day-5 rows are descriptive: read before the statements were registered. FIVE-DAY.md also discloses earlier partial rows in other groups. Subsequent registration does not turn those rows into prospective evidence. All paired results include these disclosed reads; they are descriptive pending separate provenance accounting. Only aggregates are redistributed.
 
-| Phase | Group | Completed / expected | Window errors |
-|---|---|---:|---:|
-| cheap | LS | 75/75 | 0 |
-| cheap | DO | 150/150 | 12 |
-| cheap | GD | 44/44 | 0 |
-| cheap | IG | 60/60 | 0 |
-| cheap | GE | 45/45 | 0 |
-| cheap | HE | 7/7 | 0 |
-| cheap | HX | 19/19 | 0 |
-| cheap | P | 755/755 | 5 |
-| cheap | S1 | 302/302 | 2 |
-| cheap | GN | 755/755 | 5 |
-| cheap | T | 944/944 | 0 |
-| ffm | LS | 75/75 | 0 |
-| ffm | DO | 150/150 | 12 |
-| ffm | GD | 44/44 | 0 |
-| ffm | IG | 60/60 | 0 |
-| ffm | GE | 45/45 | 0 |
-| ffm | HE | 7/7 | 0 |
-| ffm | HX | 19/19 | 0 |
-| ffm | P | 278/755 | 3 |
-| ffm | S1 | 302/302 | 2 |
-| ffm | GN | 755/755 | 5 |
-| ffm | T | 632/944 | 0 |
+| Phase | Group | Completed / expected | Completed share | Missing arm-days | Window errors |
+|---|---|---:|---:|---:|---:|
+| cheap | LS | 75/75 | 1 | 0 | 0 |
+| cheap | DO | 150/150 | 1 | 0 | 12 |
+| cheap | GD | 44/44 | 1 | 0 | 0 |
+| cheap | IG | 60/60 | 1 | 0 | 0 |
+| cheap | GE | 45/45 | 1 | 0 | 0 |
+| cheap | HE | 7/7 | 1 | 0 | 0 |
+| cheap | HX | 19/19 | 1 | 0 | 0 |
+| cheap | P | 755/755 | 1 | 0 | 5 |
+| cheap | S1 | 302/302 | 1 | 0 | 2 |
+| cheap | GN | 755/755 | 1 | 0 | 5 |
+| cheap | T | 944/944 | 1 | 0 | 0 |
+| ffm | LS | 75/75 | 1 | 0 | 0 |
+| ffm | DO | 150/150 | 1 | 0 | 12 |
+| ffm | GD | 44/44 | 1 | 0 | 0 |
+| ffm | IG | 60/60 | 1 | 0 | 0 |
+| ffm | GE | 45/45 | 1 | 0 | 0 |
+| ffm | HE | 7/7 | 1 | 0 | 0 |
+| ffm | HX | 19/19 | 1 | 0 | 0 |
+| ffm | P | 755/755 | 1 | 0 | 5 |
+| ffm | S1 | 302/302 | 1 | 0 | 2 |
+| ffm | GN | 755/755 | 1 | 0 | 5 |
+| ffm | T | 944/944 | 1 | 0 | 0 |
 
 Every expected arm/arc/day cell, including missing work and counted exclusion reasons, is in metrics.json armDayCoverage. A missing run is not a scientific exclusion. Summaries weight windows equally; R/T/N RMS is the square root of the mean squared window axis RMS. Intervals resample ISO weeks 10,000 times.
 
-Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937228 km. Old-lead reproduction remains exact. The saved U day-4/day-5 rows require reconciliation with the runner before acceptance.
+Staged U replay: 1010 windows, 6032 differing scalars, maximum 0.6253305 m against the 1 m allowance; 0 old-lead differences. Installation provenance is in ussf-install.json.
 
 | Group | Arm | Day | n | Median km | p10–p90 km | Median 95% CI km | R/T/N RMS km | Disclosure |
 |---|---|---:|---:|---:|---|---|---|---|
@@ -76,13 +78,13 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | LS | U24 | 1 | 51 | 0.83201 | 0.4165789 to 1.318316 | 0.6579019 to 0.9326478 | 0.1190204/0.9005781/0.1330886 |  |
 | LS | U24 | 2 | 49 | 1.548812 | 0.5866973 to 4.112951 | 1.124615 to 1.787414 | 0.1833948/2.458729/0.1683297 |  |
 | LS | U24 | 3 | 43 | 1.961378 | 0.8296366 to 8.71738 | 1.560324 to 3.378857 | 0.2637831/5.039467/0.212538 |  |
-| LS | U24 | 4 | 53 | 3.054431 | 0.9943711 to 14.71212 | 2.237978 to 6.259912 | 0.3533381/8.886374/0.2627001 | read before the statements were registered |
+| LS | U24 | 4 | 53 | 3.054431 | 0.9943712 to 14.71212 | 2.237978 to 6.259912 | 0.3533381/8.886374/0.2627001 | read before the statements were registered |
 | LS | U24 | 5 | 43 | 2.732599 | 1.022529 to 20.64784 | 2.300719 to 6.471162 | 0.4045773/13.06846/0.3219984 | read before the statements were registered |
 | LS | U24 | 7 | 49 | 4.310999 | 1.098782 to 45.67875 | 3.364485 to 18.25329 | 0.6199334/25.65721/0.4344237 |  |
 | LS | U72 | 1 | 56 | 0.4515383 | 0.3368721 to 0.6573089 | 0.4411517 to 0.4826356 | 0.09630564/0.4758703/0.1650597 |  |
 | LS | U72 | 2 | 54 | 0.5185766 | 0.3944974 to 0.9221319 | 0.508109 to 0.6117145 | 0.1041704/0.6311235/0.2091086 |  |
 | LS | U72 | 3 | 50 | 0.6039037 | 0.4640726 to 1.416934 | 0.5855977 to 0.625057 | 0.1142455/0.9117068/0.2494674 |  |
-| LS | U72 | 4 | 53 | 0.6924001 | 0.5083172 to 2.107632 | 0.6698526 to 0.8357747 | 0.1259161/1.219853/0.3136755 | read before the statements were registered |
+| LS | U72 | 4 | 53 | 0.6924001 | 0.5083173 to 2.107632 | 0.6698534 to 0.8357747 | 0.1259161/1.219853/0.3136753 | read before the statements were registered |
 | LS | U72 | 5 | 48 | 0.8324951 | 0.5700071 to 2.741014 | 0.7855148 to 1.837759 | 0.1415888/1.692369/0.3633023 | read before the statements were registered |
 | LS | U72 | 7 | 56 | 1.162314 | 0.6916393 to 5.558104 | 0.9823291 to 1.768176 | 0.1729345/3.048094/0.4606622 |  |
 | LS | XP24 | 1 | 51 | 0.5594375 | 0.3860477 to 0.851191 | 0.483979 to 0.6529679 | 0.09153825/0.6134519/0.1326893 |  |
@@ -142,7 +144,7 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | DO | U72 | 1 | 136 | 0.5902796 | 0.4758629 to 0.8870765 | 0.5799824 to 0.6038128 | 1.796702/30.09096/0.1786004 |  |
 | DO | U72 | 2 | 132 | 0.712144 | 0.528096 to 2.406054 | 0.6589267 to 0.840124 | 13.57163/124.792/0.2015198 |  |
 | DO | U72 | 3 | 121 | 1.001251 | 0.5864517 to 5.596042 | 0.8647965 to 1.187348 | 43.49487/251.5232/0.2511455 |  |
-| DO | U72 | 4 | 112 | 1.414817 | 0.6671267 to 8.750808 | 1.233182 to 1.772105 | 94.98799/355.9282/0.3038153 | read before the statements were registered |
+| DO | U72 | 4 | 112 | 1.414817 | 0.6671263 to 8.750808 | 1.233182 to 1.772105 | 94.98799/355.9282/0.3038153 | read before the statements were registered |
 | DO | U72 | 5 | 112 | 1.973409 | 0.7245521 to 10.55883 | 1.698592 to 2.579039 | 167.0652/463.0692/0.3706469 | read before the statements were registered |
 | DO | U72 | 7 | 103 | 3.873569 | 1.027984 to 17.61898 | 3.391436 to 5.262625 | 376.798/659.8085/0.552392 |  |
 | DO | XP24 | 1 | 136 | 0.7668726 | 0.4805812 to 1.080789 | 0.6914738 to 0.8236865 | 1.793559/29.64694/0.1361115 |  |
@@ -178,7 +180,7 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | GD | U72 | 1 | 43 | 0.06105861 | 0.03384704 to 0.1365586 | 0.05555585 to 0.081796 | 0.01813176/0.08159941/0.0318865 |  |
 | GD | U72 | 2 | 43 | 0.08740096 | 0.04554654 to 0.1375406 | 0.07159657 to 0.0950726 | 0.01949855/0.08594165/0.03792656 |  |
 | GD | U72 | 3 | 43 | 0.1051552 | 0.05634778 to 0.1424334 | 0.1041196 to 0.1056135 | 0.02149601/0.09197378/0.04466471 |  |
-| GD | U72 | 4 | 43 | 0.1121522 | 0.06790625 to 0.1553324 | 0.1052892 to 0.1204645 | 0.02379386/0.1005765/0.05236787 |  |
+| GD | U72 | 4 | 43 | 0.1121526 | 0.06786354 to 0.1553264 | 0.1054179 to 0.1204618 | 0.0237936/0.1005498/0.05236754 |  |
 | GD | U72 | 5 | 42 | 0.1204013 | 0.07973921 to 0.160122 | 0.1158517 to 0.1352122 | 0.02549605/0.1078514/0.06040498 |  |
 | GD | U72 | 7 | 43 | 0.1488941 | 0.1161034 to 0.1958879 | 0.1379193 to 0.1582894 | 0.0285849/0.1337921/0.07415388 |  |
 | GD | XP72 | 1 | 43 | 0.05175672 | 0.03361531 to 0.1358838 | 0.05175672 to 0.07399337 | 0.01769415/0.08091098/0.02998486 |  |
@@ -208,7 +210,7 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | IG | U72 | 1 | 60 | 0.1658557 | 0.09473204 to 0.2323465 | 0.1273623 to 0.1765845 | 0.03020762/0.169287/0.0431072 |  |
 | IG | U72 | 2 | 60 | 0.1828087 | 0.1093588 to 0.2427465 | 0.1724265 to 0.1844117 | 0.03066473/0.170963/0.05832542 |  |
 | IG | U72 | 3 | 60 | 0.1804405 | 0.1249943 to 0.2501917 | 0.1681156 to 0.2162424 | 0.03102129/0.1743356/0.07452226 |  |
-| IG | U72 | 4 | 60 | 0.1964531 | 0.1284573 to 0.2692954 | 0.1931402 to 0.2130605 | 0.03170886/0.1821241/0.09078488 |  |
+| IG | U72 | 4 | 60 | 0.1964526 | 0.1284582 to 0.2692943 | 0.1931415 to 0.2130623 | 0.03170874/0.1821247/0.09078507 |  |
 | IG | U72 | 5 | 59 | 0.2008921 | 0.1305021 to 0.2918572 | 0.1986538 to 0.2288855 | 0.033253/0.1980491/0.1064234 |  |
 | IG | U72 | 7 | 59 | 0.2322475 | 0.1501116 to 0.4248967 | 0.2272921 to 0.2537509 | 1.622653/29.41981/0.4715451 |  |
 | IG | XP72 | 1 | 60 | 0.03793715 | 0.02474444 to 0.05609372 | 0.03624467 to 0.0384102 | 0.007633496/0.01649356/0.03676679 |  |
@@ -238,7 +240,7 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | GE | U72 | 1 | 32 | 0.2129698 | 0.09527418 to 0.2531428 | 0.1672194 to 0.2147194 | 0.03443765/0.1911834/0.03060295 |  |
 | GE | U72 | 2 | 33 | 0.2097905 | 0.1016666 to 0.2642986 | 0.1443383 to 0.2482752 | 0.7755694/7.015595/0.04078653 |  |
 | GE | U72 | 3 | 30 | 0.1878488 | 0.1227583 to 0.2726613 | 0.179674 to 0.2645671 | 0.8047321/13.55937/0.0483873 |  |
-| GE | U72 | 4 | 33 | 0.2120768 | 0.1495848 to 11.64384 | 0.1831264 to 0.2644151 | 1.188889/20.52164/0.05796815 |  |
+| GE | U72 | 4 | 33 | 0.212076 | 0.1495844 to 11.64384 | 0.1831289 to 0.2644146 | 1.188889/20.52164/0.05796801 |  |
 | GE | U72 | 5 | 32 | 0.2357035 | 0.1705434 to 19.33258 | 0.2067196 to 0.2589331 | 1.229285/29.71256/0.06464473 |  |
 | GE | U72 | 7 | 32 | 0.2935193 | 0.1749101 to 70.92861 | 0.2348501 to 0.3172747 | 1.451925/50.28191/0.07452049 |  |
 | GE | XP72 | 1 | 32 | 0.03701443 | 0.02550408 to 0.04848561 | 0.03345938 to 0.03771677 | 0.01446232/0.02364212/0.02487043 |  |
@@ -286,7 +288,7 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | HE | U336 | 1 | 7 | 2.34928 | 1.181771 to 7.68003 | 1.538385 to 7.221576 | 3.37736/2.832615/0.9602654 |  |
 | HE | U336 | 2 | 7 | 4.945009 | 2.037892 to 12.30964 | 2.786751 to 12.06742 | 5.027323/5.070591/1.593102 |  |
 | HE | U336 | 3 | 7 | 7.345294 | 3.242382 to 18.02393 | 4.522535 to 17.35455 | 7.296281/7.913964/2.229888 |  |
-| HE | U336 | 4 | 7 | 9.570867 | 4.874366 to 24.99532 | 6.886405 to 22.60414 | 10.27949/11.4389/2.755641 |  |
+| HE | U336 | 4 | 7 | 9.571017 | 4.8744 to 24.99534 | 6.886361 to 22.60417 | 10.27955/11.43881/2.755626 |  |
 | HE | U336 | 5 | 7 | 11.86716 | 7.446416 to 34.11709 | 10.5972 to 27.80227 | 13.94079/16.60755/3.097215 |  |
 | HE | U336 | 7 | 7 | 25.86583 | 10.19701 to 64.33051 | 13.97847 to 38.63821 | 14.84649/42.11925/2.155628 |  |
 | HE | U72 | 1 | 7 | 1.805956 | 1.006065 to 2.784668 | 1.014499 to 2.523462 | 1.522133/1.181942/0.5989618 |  |
@@ -346,13 +348,13 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | HX | U168 | 1 | 7 | 2.280529 | 1.496446 to 7.843299 | 1.613795 to 3.52549 | 3.589481/4.652207/0.2292549 |  |
 | HX | U168 | 2 | 7 | 6.641245 | 1.16082 to 15.75152 | 1.451991 to 13.65786 | 4.789252/8.704797/0.4846874 |  |
 | HX | U168 | 3 | 7 | 3.625235 | 1.625421 to 13.98507 | 1.94807 to 13.63232 | 4.343192/7.438206/0.6074325 |  |
-| HX | U168 | 4 | 7 | 9.55074 | 3.909736 to 21.05219 | 4.590272 to 14.51551 | 8.055474/11.75497/0.6308455 |  |
+| HX | U168 | 4 | 7 | 9.550768 | 3.910059 to 21.05226 | 4.590886 to 14.51546 | 8.055539/11.75504/0.6308328 |  |
 | HX | U168 | 5 | 7 | 13.88206 | 4.51262 to 26.13426 | 5.595025 to 23.8638 | 8.990071/14.68089/0.8757368 |  |
 | HX | U168 | 7 | 7 | 17.77326 | 7.3142 to 35.99684 | 9.704177 to 24.34666 | 13.3864/21.05898/0.744525 |  |
 | HX | U72 | 1 | 19 | 0.6389166 | 0.3230125 to 1.995354 | 0.3351541 to 2.093126 | 0.8782502/0.973529/0.3583321 |  |
 | HX | U72 | 2 | 19 | 1.458262 | 0.5292 to 3.103406 | 0.6278051 to 3.015606 | 1.412655/2.150864/0.454065 |  |
 | HX | U72 | 3 | 19 | 2.626095 | 0.6930939 to 4.543275 | 0.5873227 to 3.502973 | 1.839798/2.375452/0.7190907 |  |
-| HX | U72 | 4 | 19 | 3.883913 | 1.335968 to 11.69292 | 2.775181 to 12.54921 | 3.761956/6.45605/0.8872877 |  |
+| HX | U72 | 4 | 19 | 3.883914 | 1.335968 to 11.69292 | 2.775181 to 12.54921 | 3.761956/6.45605/0.8872877 |  |
 | HX | U72 | 5 | 19 | 6.214281 | 2.004974 to 10.17062 | 3.949804 to 10.54748 | 4.330839/6.082346/0.9556939 |  |
 | HX | U72 | 7 | 19 | 9.166352 | 2.200407 to 17.12314 | 4.708346 to 18.2186 | 6.264358/9.274499/1.0645 |  |
 | HX | XP168 | 1 | 7 | 2.074109 | 1.438986 to 7.871468 | 1.545326 to 3.455085 | 3.622438/4.68594/0.2695869 |  |
@@ -379,6 +381,18 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | P | AP72 | 4 | 750 | 3.935151 | 0.7728916 to 14.01549 | 3.058796 to 4.93243 | 0.04037955/9.123701/0.05140837 |  |
 | P | AP72 | 5 | 750 | 6.034951 | 1.258956 to 22.09415 | 4.879209 to 7.439834 | 0.05711957/14.19284/0.06097642 |  |
 | P | AP72 | 7 | 750 | 11.5737 | 2.81522 to 43.18855 | 9.958187 to 15.74838 | 0.1668013/28.51938/0.08035916 |  |
+| P | F24 | 1 | 750 | 0.1452628 | 0.03120596 to 0.5117799 | 0.1185663 to 0.1855538 | 0.007750768/0.4782388/0.001871175 |  |
+| P | F24 | 2 | 750 | 0.67864 | 0.1295841 to 2.568884 | 0.5280909 to 0.8663092 | 0.01609807/2.120089/0.002849389 |  |
+| P | F24 | 3 | 750 | 1.575324 | 0.34498 to 6.163559 | 1.26069 to 2.048145 | 0.02281954/4.954933/0.003874034 |  |
+| P | F24 | 4 | 750 | 2.940901 | 0.6856483 to 10.99947 | 2.344143 to 3.744717 | 0.0357489/8.874342/0.004973006 |  |
+| P | F24 | 5 | 750 | 4.929235 | 1.032776 to 19.06372 | 4.110778 to 6.097394 | 0.06765138/14.061/0.006074541 |  |
+| P | F24 | 7 | 750 | 11.4802 | 2.903924 to 39.6503 | 9.015017 to 14.51193 | 0.2341976/28.90869/0.008547249 |  |
+| P | F72 | 1 | 750 | 0.3035246 | 0.08165193 to 0.9918633 | 0.261767 to 0.3877323 | 0.01028714/0.7897005/0.002662917 |  |
+| P | F72 | 2 | 750 | 1.048945 | 0.2362384 to 3.412671 | 0.8331193 to 1.365615 | 0.01796949/2.51449/0.003691189 |  |
+| P | F72 | 3 | 750 | 2.143952 | 0.5024631 to 7.604711 | 1.697415 to 2.889252 | 0.02531425/5.265664/0.004716588 |  |
+| P | F72 | 4 | 750 | 3.864978 | 0.7077202 to 13.61181 | 2.947155 to 4.876023 | 0.03526031/9.08988/0.005786806 |  |
+| P | F72 | 5 | 750 | 5.999843 | 1.278755 to 21.0805 | 4.933297 to 7.616913 | 0.05456532/14.14982/0.006903725 |  |
+| P | F72 | 7 | 750 | 12.18316 | 3.00294 to 42.21033 | 10.13783 to 15.69151 | 0.1689717/28.47183/0.009310926 |  |
 | P | S24 | 1 | 750 | 1.686683 | 0.8299869 to 2.764866 | 1.556116 to 1.874514 | 0.1484478/1.918219/0.1635862 |  |
 | P | S24 | 2 | 750 | 5.542893 | 1.624729 to 9.77694 | 4.618118 to 6.079497 | 0.2311161/6.534989/0.1693631 |  |
 | P | S24 | 3 | 750 | 11.9052 | 2.876064 to 21.93825 | 10.31702 to 13.37046 | 0.3239887/14.40374/0.1775161 |  |
@@ -394,7 +408,7 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | P | U24 | 1 | 750 | 1.736061 | 0.8398238 to 2.809222 | 1.609488 to 1.926383 | 0.1500595/1.959604/0.1621961 |  |
 | P | U24 | 2 | 750 | 5.839362 | 1.773712 to 9.950285 | 4.940083 to 6.463036 | 0.2390991/6.690551/0.1652359 |  |
 | P | U24 | 3 | 750 | 12.42638 | 2.992432 to 22.17302 | 10.83482 to 13.92386 | 0.337965/14.74276/0.1697051 |  |
-| P | U24 | 4 | 750 | 21.94382 | 5.076215 to 39.34845 | 18.994 to 24.25033 | 0.4421955/26.1039/0.1764942 |  |
+| P | U24 | 4 | 750 | 21.94382 | 5.076215 to 39.34845 | 18.994 to 24.25033 | 0.4421956/26.1039/0.1764942 |  |
 | P | U24 | 5 | 750 | 34.22062 | 7.99412 to 61.95921 | 29.78952 to 37.66873 | 0.5655823/40.85392/0.1853107 |  |
 | P | U24 | 7 | 750 | 65.31932 | 15.79188 to 123.5297 | 58.12366 to 73.22725 | 1.01859/80.73931/0.2086118 |  |
 | P | U72 | 1 | 750 | 0.8734509 | 0.7093828 to 1.764252 | 0.8450775 to 0.9179637 | 0.1660195/1.345902/0.1622854 |  |
@@ -541,6 +555,12 @@ Six-day module replay failed: 4/96 scalars differ, maximum 0.0000019593805697937
 | T | AP24 | 4 | 944 | 3.996465 | 0.6881466 to 11.43689 | 3.261246 to 4.718348 | 0.03701429/7.337153/0.03904947 |  |
 | T | AP24 | 5 | 944 | 6.281049 | 1.261337 to 17.94788 | 5.24176 to 7.586458 | 0.04741934/11.79506/0.04772623 |  |
 | T | AP24 | 7 | 944 | 13.10268 | 2.30373 to 38.99395 | 11.00225 to 15.14186 | 0.1033009/24.25369/0.06542793 |  |
+| T | F24 | 1 | 944 | 0.1396275 | 0.0280613 to 0.4860116 | 0.1217696 to 0.168749 | 0.006112893/0.3261504/0.001769997 |  |
+| T | F24 | 2 | 944 | 0.6733645 | 0.1310457 to 2.329135 | 0.543825 to 0.8375082 | 0.01408245/1.55521/0.002734463 |  |
+| T | F24 | 3 | 944 | 1.740844 | 0.316423 to 5.858013 | 1.37999 to 2.177124 | 0.02226104/3.830656/0.00369908 |  |
+| T | F24 | 4 | 944 | 3.374101 | 0.5594226 to 11.34162 | 2.699712 to 4.199545 | 0.03097473/7.115391/0.004832669 |  |
+| T | F24 | 5 | 944 | 5.45208 | 1.013477 to 18.59869 | 4.588244 to 6.757834 | 0.0432447/11.4714/0.005986202 |  |
+| T | F24 | 7 | 944 | 12.15639 | 2.496014 to 39.02643 | 9.966331 to 14.79425 | 0.1042025/23.70121/0.008480787 |  |
 | T | S24 | 1 | 944 | 1.714879 | 0.7910722 to 2.792446 | 1.431389 to 1.920941 | 0.147212/1.899206/0.1633376 |  |
 | T | S24 | 2 | 944 | 5.53835 | 1.34132 to 9.718262 | 4.407325 to 6.514566 | 0.228998/6.491112/0.1696583 |  |
 | T | S24 | 3 | 944 | 12.20492 | 2.738555 to 21.63079 | 9.61527 to 14.41993 | 0.321842/14.3924/0.1784551 |  |
@@ -632,10 +652,14 @@ Paired AP5 rules, days 4 and 5. Log ratios use first arm / second arm; negative 
 | HX | 72 | XP-S | 5 | 19 | -3.058589 | -4.975826 to -2.418043 | -2.78357 | 0 | true/true/true |  |
 | P | 24 | AP-XP | 4 | 750 | -1.637999 | -1.912028 to -1.31485 | -0.5398878 | 0 | true/true/true |  |
 | P | 24 | AP-XP | 5 | 750 | -1.573046 | -1.88635 to -1.232287 | -0.4956693 | 0 | true/true/true |  |
+| P | 24 | F-XP | 4 | 750 | -1.76902 | -2.062078 to -1.457767 | -0.5863713 | 0 | true/true/true |  |
+| P | 24 | F-XP | 5 | 750 | -1.717142 | -2.007693 to -1.394774 | -0.5164705 | 0 | true/true/true |  |
 | P | 24 | XP-S | 4 | 750 | -0.03371776 | -0.04629259 to -0.02240417 | -0.01402407 | 0 | true/true/true |  |
 | P | 24 | XP-S | 5 | 750 | -0.03615619 | -0.04948365 to -0.02290915 | -0.01142354 | 0 | true/true/true |  |
 | P | 72 | AP-XP | 4 | 750 | -0.5229561 | -0.6104967 to -0.3908841 | -0.1726416 | 0 | true/true/true |  |
 | P | 72 | AP-XP | 5 | 750 | -0.4815075 | -0.5904182 to -0.3884634 | -0.1096225 | 0 | true/true/true |  |
+| P | 72 | F-XP | 4 | 750 | -0.5115859 | -0.641626 to -0.4116169 | -0.1626214 | 0 | true/true/true |  |
+| P | 72 | F-XP | 5 | 750 | -0.53525 | -0.6102819 to -0.4151634 | -0.09789753 | 0 | true/true/true |  |
 | P | 72 | XP-S | 4 | 750 | -0.01533836 | -0.04976606 to 0.0006007195 | 0.03716279 | 0 | false/true/true |  |
 | P | 72 | XP-S | 5 | 750 | -0.01177086 | -0.04635423 to 0.009405081 | 0.04305172 | 0 | false/true/true |  |
 | S1 | 24 | AP-XP | 4 | 275 | -3.319537 | -3.55099 to -3.107665 | -1.328196 | 0 | true/true/true |  |
@@ -664,6 +688,8 @@ Paired AP5 rules, days 4 and 5. Log ratios use first arm / second arm; negative 
 | GN | 72 | XP-S | 5 | 745 | -2.707228 | -2.774497 to -2.635498 | -2.445633 | 0 | true/true/true |  |
 | T | 24 | AP-XP | 4 | 944 | -1.523374 | -1.778584 to -1.235774 | -0.7986413 | 0 | true/true/true |  |
 | T | 24 | AP-XP | 5 | 944 | -1.457916 | -1.737605 to -1.182794 | -0.8042513 | 0 | true/true/true |  |
+| T | 24 | F-XP | 4 | 944 | -1.624486 | -1.96157 to -1.29535 | -0.8444205 | 0 | true/true/true |  |
+| T | 24 | F-XP | 5 | 944 | -1.579638 | -1.864808 to -1.265554 | -0.845336 | 0 | true/true/true |  |
 | T | 24 | XP-S | 4 | 944 | -0.03804234 | -0.04865929 to -0.02762155 | -0.01307798 | 0 | true/true/true |  |
 | T | 24 | XP-S | 5 | 944 | -0.04207396 | -0.0534973 to -0.03150972 | -0.002166995 | 0 | true/true/true |  |
 
@@ -707,10 +733,10 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | LS | U72 | 3 | GP x GP | 20 | 50 | 0 | 0.00105449 | 1 | 1 | 1 | CALIBRATED/UNCALIBRATED |  |
 | LS | U72 | 3 | GP x GP | 50 | 50 | 0 | 0.006561592 | 1 | 1 | 1 | CALIBRATED/UNCALIBRATED |  |
 | LS | U72 | 3 | GP x GP | 100 | 50 | 0 | 0.02583961 | 1 | 1 | 1 | CALIBRATED/UNCALIBRATED |  |
-| LS | U72 | 4 | fit x fit | 10 | 53 | 0 | 0.0004745867 | 1 | 1 | 1 |  | read before the statements were registered |
-| LS | U72 | 4 | fit x fit | 20 | 53 | 0 | 0.001896705 | 1 | 1 | 1 |  | read before the statements were registered |
-| LS | U72 | 4 | fit x fit | 50 | 53 | 0 | 0.01178295 | 1 | 1 | 1 |  | read before the statements were registered |
-| LS | U72 | 4 | fit x fit | 100 | 53 | 0 | 0.04613252 | 1 | 1 | 1 |  | read before the statements were registered |
+| LS | U72 | 4 | fit x fit | 10 | 53 | 0 | 0.0004745874 | 1 | 1 | 1 |  | read before the statements were registered |
+| LS | U72 | 4 | fit x fit | 20 | 53 | 0 | 0.001896708 | 1 | 1 | 1 |  | read before the statements were registered |
+| LS | U72 | 4 | fit x fit | 50 | 53 | 0 | 0.01178297 | 1 | 1 | 1 |  | read before the statements were registered |
+| LS | U72 | 4 | fit x fit | 100 | 53 | 0 | 0.04613259 | 1 | 1 | 1 |  | read before the statements were registered |
 | LS | U72 | 4 | fit x GP | 10 | 53 | 0 | 0.000341594 | 1 | 1 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
 | LS | U72 | 4 | fit x GP | 20 | 53 | 0 | 0.001365361 | 1 | 1 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
 | LS | U72 | 4 | fit x GP | 50 | 53 | 0 | 0.008489325 | 1 | 1 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
@@ -1540,7 +1566,7 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | DO | U72 | 4 | fit x fit | 50 | 112 | 0 | 0.004572572 | 0.9821429 | 0.9821429 | 1 |  | read before the statements were registered |
 | DO | U72 | 4 | fit x fit | 100 | 112 | 0 | 0.01784017 | 0.9821429 | 0.9821429 | 1 |  | read before the statements were registered |
 | DO | U72 | 4 | fit x GP | 10 | 112 | 0 | 0.0001509775 | 0.75 | 0.9821429 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
-| DO | U72 | 4 | fit x GP | 20 | 112 | 0 | 0.0006034829 | 0.9553571 | 0.9821429 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
+| DO | U72 | 4 | fit x GP | 20 | 112 | 0 | 0.0006034828 | 0.9553571 | 0.9821429 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
 | DO | U72 | 4 | fit x GP | 50 | 112 | 0 | 0.003753179 | 0.9821429 | 0.9821429 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
 | DO | U72 | 4 | fit x GP | 100 | 112 | 0 | 0.01475296 | 0.9821429 | 0.9821429 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
 | DO | U72 | 4 | GP x GP | 10 | 112 | 0 | 0.0002637889 | 1 | 1 | 1 | CALIBRATED/UNCALIBRATED | read before the statements were registered |
@@ -1967,14 +1993,14 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | GD | U72 | 3 | GP x GP | 20 | 43 | 0 | 0.0006810397 | 1 | 1 | 1 | UNCALIBRATED |  |
 | GD | U72 | 3 | GP x GP | 50 | 43 | 0 | 0.004243047 | 1 | 1 | 1 | UNCALIBRATED |  |
 | GD | U72 | 3 | GP x GP | 100 | 43 | 0 | 0.0167825 | 1 | 1 | 1 | UNCALIBRATED |  |
-| GD | U72 | 4 | fit x fit | 10 | 43 | 0 | 0.01573683 | 1 | 1 | 1 |  |  |
-| GD | U72 | 4 | fit x fit | 20 | 43 | 0 | 0.06017301 | 1 | 1 | 1 |  |  |
-| GD | U72 | 4 | fit x fit | 50 | 43 | 0 | 0.2888073 | 1 | 1 | 1 |  |  |
-| GD | U72 | 4 | fit x fit | 100 | 43 | 0 | 0.6608072 | 1 | 1 | 1 |  |  |
-| GD | U72 | 4 | fit x GP | 10 | 43 | 0 | 0.0003400465 | 1 | 1 | 1 | UNCALIBRATED |  |
-| GD | U72 | 4 | fit x GP | 20 | 43 | 0 | 0.001358957 | 1 | 1 | 1 | UNCALIBRATED |  |
-| GD | U72 | 4 | fit x GP | 50 | 43 | 0 | 0.008440069 | 1 | 1 | 1 | UNCALIBRATED |  |
-| GD | U72 | 4 | fit x GP | 100 | 43 | 0 | 0.03301654 | 1 | 1 | 1 | UNCALIBRATED |  |
+| GD | U72 | 4 | fit x fit | 10 | 43 | 0 | 0.01573672 | 1 | 1 | 1 |  |  |
+| GD | U72 | 4 | fit x fit | 20 | 43 | 0 | 0.0601726 | 1 | 1 | 1 |  |  |
+| GD | U72 | 4 | fit x fit | 50 | 43 | 0 | 0.28881 | 1 | 1 | 1 |  |  |
+| GD | U72 | 4 | fit x fit | 100 | 43 | 0 | 0.6608118 | 1 | 1 | 1 |  |  |
+| GD | U72 | 4 | fit x GP | 10 | 43 | 0 | 0.0003400472 | 1 | 1 | 1 | UNCALIBRATED |  |
+| GD | U72 | 4 | fit x GP | 20 | 43 | 0 | 0.00135896 | 1 | 1 | 1 | UNCALIBRATED |  |
+| GD | U72 | 4 | fit x GP | 50 | 43 | 0 | 0.008440086 | 1 | 1 | 1 | UNCALIBRATED |  |
+| GD | U72 | 4 | fit x GP | 100 | 43 | 0 | 0.03301661 | 1 | 1 | 1 | UNCALIBRATED |  |
 | GD | U72 | 4 | GP x GP | 10 | 43 | 0 | 0.000170337 | 1 | 1 | 1 | UNCALIBRATED |  |
 | GD | U72 | 4 | GP x GP | 20 | 43 | 0 | 0.0006810397 | 1 | 1 | 1 | UNCALIBRATED |  |
 | GD | U72 | 4 | GP x GP | 50 | 43 | 0 | 0.004243047 | 1 | 1 | 1 | UNCALIBRATED |  |
@@ -2327,10 +2353,10 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | IG | U72 | 3 | GP x GP | 20 | 60 | 0 | 0.00008676278 | 0 | 1 | 1 | UNCALIBRATED |  |
 | IG | U72 | 3 | GP x GP | 50 | 60 | 0 | 0.0005420694 | 1 | 1 | 1 | UNCALIBRATED |  |
 | IG | U72 | 3 | GP x GP | 100 | 60 | 0 | 0.002165454 | 1 | 1 | 1 | UNCALIBRATED |  |
-| IG | U72 | 4 | fit x fit | 10 | 60 | 0 | 0.007380118 | 1 | 1 | 1 |  |  |
-| IG | U72 | 4 | fit x fit | 20 | 60 | 0 | 0.02877756 | 1 | 1 | 1 |  |  |
-| IG | U72 | 4 | fit x fit | 50 | 60 | 0 | 0.1528391 | 1 | 1 | 1 |  |  |
-| IG | U72 | 4 | fit x fit | 100 | 60 | 0 | 0.3942508 | 1 | 1 | 1 |  |  |
+| IG | U72 | 4 | fit x fit | 10 | 60 | 0 | 0.007380101 | 1 | 1 | 1 |  |  |
+| IG | U72 | 4 | fit x fit | 20 | 60 | 0 | 0.02877749 | 1 | 1 | 1 |  |  |
+| IG | U72 | 4 | fit x fit | 50 | 60 | 0 | 0.1528387 | 1 | 1 | 1 |  |  |
+| IG | U72 | 4 | fit x fit | 100 | 60 | 0 | 0.3942529 | 1 | 1 | 1 |  |  |
 | IG | U72 | 4 | fit x GP | 10 | 60 | 0 | 0.00004323767 | 0 | 1 | 1 | UNCALIBRATED |  |
 | IG | U72 | 4 | fit x GP | 20 | 60 | 0 | 0.0001729327 | 1 | 1 | 1 | UNCALIBRATED |  |
 | IG | U72 | 4 | fit x GP | 50 | 60 | 0 | 0.001080042 | 1 | 1 | 1 | UNCALIBRATED |  |
@@ -2687,14 +2713,14 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | GE | U72 | 3 | GP x GP | 20 | 30 | 0 | 0.00008676278 | 0 | 1 | 1 | UNCALIBRATED |  |
 | GE | U72 | 3 | GP x GP | 50 | 30 | 0 | 0.0005420694 | 1 | 1 | 1 | UNCALIBRATED |  |
 | GE | U72 | 3 | GP x GP | 100 | 30 | 0 | 0.002165454 | 1 | 1 | 1 | UNCALIBRATED |  |
-| GE | U72 | 4 | fit x fit | 10 | 33 | 0 | 0.005216251 | 0.8484848 | 0.8787879 | 1 |  |  |
-| GE | U72 | 4 | fit x fit | 20 | 33 | 0 | 0.02044108 | 0.8484848 | 0.9090909 | 1 |  |  |
-| GE | U72 | 4 | fit x fit | 50 | 33 | 0 | 0.1118027 | 0.8787879 | 0.9393939 | 1 |  |  |
-| GE | U72 | 4 | fit x fit | 100 | 33 | 0 | 0.3118164 | 0.9090909 | 0.969697 | 1 |  |  |
-| GE | U72 | 4 | fit x GP | 10 | 33 | 0 | 0.00004315947 | 0 | 0.8787879 | 1 | UNCALIBRATED |  |
-| GE | U72 | 4 | fit x GP | 20 | 33 | 0 | 0.0001726199 | 0.8484848 | 0.9090909 | 1 | UNCALIBRATED |  |
+| GE | U72 | 4 | fit x fit | 10 | 33 | 0 | 0.005216314 | 0.8484848 | 0.8787879 | 1 |  |  |
+| GE | U72 | 4 | fit x fit | 20 | 33 | 0 | 0.02044133 | 0.8484848 | 0.9090909 | 1 |  |  |
+| GE | U72 | 4 | fit x fit | 50 | 33 | 0 | 0.1118039 | 0.8787879 | 0.9393939 | 1 |  |  |
+| GE | U72 | 4 | fit x fit | 100 | 33 | 0 | 0.3118187 | 0.9090909 | 0.969697 | 1 |  |  |
+| GE | U72 | 4 | fit x GP | 10 | 33 | 0 | 0.00004315948 | 0 | 0.8787879 | 1 | UNCALIBRATED |  |
+| GE | U72 | 4 | fit x GP | 20 | 33 | 0 | 0.00017262 | 0.8484848 | 0.9090909 | 1 | UNCALIBRATED |  |
 | GE | U72 | 4 | fit x GP | 50 | 33 | 0 | 0.00107809 | 0.9090909 | 0.9393939 | 1 | UNCALIBRATED |  |
-| GE | U72 | 4 | fit x GP | 100 | 33 | 0 | 0.004301178 | 0.9393939 | 1 | 1 | UNCALIBRATED |  |
+| GE | U72 | 4 | fit x GP | 100 | 33 | 0 | 0.004301179 | 0.9393939 | 1 | 1 | UNCALIBRATED |  |
 | GE | U72 | 4 | GP x GP | 10 | 33 | 0 | 0.00002169183 | 0 | 1 | 1 | UNCALIBRATED |  |
 | GE | U72 | 4 | GP x GP | 20 | 33 | 0 | 0.00008676278 | 0 | 1 | 1 | UNCALIBRATED |  |
 | GE | U72 | 4 | GP x GP | 50 | 33 | 0 | 0.0005420694 | 1 | 1 | 1 | UNCALIBRATED |  |
@@ -3335,14 +3361,14 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | HE | U336 | 3 | GP x GP | 20 | 7 | 0 | 0.00001843238 | 0 | 1 | 1 | UNCALIBRATED |  |
 | HE | U336 | 3 | GP x GP | 50 | 7 | 0 | 0.0001151946 | 1 | 1 | 1 | UNCALIBRATED |  |
 | HE | U336 | 3 | GP x GP | 100 | 7 | 0 | 0.0004606679 | 1 | 1 | 1 | UNCALIBRATED |  |
-| HE | U336 | 4 | fit x fit | 10 | 7 | 0 | 0.000001271899 | 0 | 0.1428571 | 1 |  |  |
-| HE | U336 | 4 | fit x fit | 20 | 7 | 0 | 0.000005087584 | 0.1428571 | 0.2857143 | 1 |  |  |
-| HE | U336 | 4 | fit x fit | 50 | 7 | 0 | 0.00003179695 | 0.1428571 | 0.7142857 | 1 |  |  |
-| HE | U336 | 4 | fit x fit | 100 | 7 | 0 | 0.0001271813 | 0.5714286 | 1 | 1 |  |  |
-| HE | U336 | 4 | fit x GP | 10 | 7 | 0 | 0.000001953672 | 0 | 0 | 1 | UNCALIBRATED |  |
-| HE | U336 | 4 | fit x GP | 20 | 7 | 0 | 0.000007814661 | 0 | 0.1428571 | 1 | UNCALIBRATED |  |
-| HE | U336 | 4 | fit x GP | 50 | 7 | 0 | 0.00004884051 | 0.1428571 | 0.8571429 | 1 | UNCALIBRATED |  |
-| HE | U336 | 4 | fit x GP | 100 | 7 | 0 | 0.0001953461 | 0.7142857 | 1 | 1 | UNCALIBRATED |  |
+| HE | U336 | 4 | fit x fit | 10 | 7 | 0 | 0.000001271867 | 0 | 0.1428571 | 1 |  |  |
+| HE | U336 | 4 | fit x fit | 20 | 7 | 0 | 0.000005087457 | 0.1428571 | 0.2857143 | 1 |  |  |
+| HE | U336 | 4 | fit x fit | 50 | 7 | 0 | 0.00003179615 | 0.1428571 | 0.7142857 | 1 |  |  |
+| HE | U336 | 4 | fit x fit | 100 | 7 | 0 | 0.0001271781 | 0.5714286 | 1 | 1 |  |  |
+| HE | U336 | 4 | fit x GP | 10 | 7 | 0 | 0.000001953613 | 0 | 0 | 1 | UNCALIBRATED |  |
+| HE | U336 | 4 | fit x GP | 20 | 7 | 0 | 0.000007814428 | 0 | 0.1428571 | 1 | UNCALIBRATED |  |
+| HE | U336 | 4 | fit x GP | 50 | 7 | 0 | 0.00004883906 | 0.1428571 | 0.8571429 | 1 | UNCALIBRATED |  |
+| HE | U336 | 4 | fit x GP | 100 | 7 | 0 | 0.0001953403 | 0.7142857 | 1 | 1 | UNCALIBRATED |  |
 | HE | U336 | 4 | GP x GP | 10 | 7 | 0 | 0.000004608139 | 0 | 0 | 1 | UNCALIBRATED |  |
 | HE | U336 | 4 | GP x GP | 20 | 7 | 0 | 0.00001843238 | 0 | 1 | 1 | UNCALIBRATED |  |
 | HE | U336 | 4 | GP x GP | 50 | 7 | 0 | 0.0001151946 | 1 | 1 | 1 | UNCALIBRATED |  |
@@ -3771,10 +3797,10 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | HX | U72 | 4 | fit x fit | 20 | 19 | 0 | 0.00001890202 | 0.2105263 | 0.6842105 | 1 |  |  |
 | HX | U72 | 4 | fit x fit | 50 | 19 | 0 | 0.0001181316 | 0.5789474 | 0.9473684 | 1 |  |  |
 | HX | U72 | 4 | fit x fit | 100 | 19 | 0 | 0.0004724404 | 0.8421053 | 1 | 1 |  |  |
-| HX | U72 | 4 | fit x GP | 10 | 19 | 0 | 0.000004233667 | 0 | 0 | 1 | UNCALIBRATED |  |
+| HX | U72 | 4 | fit x GP | 10 | 19 | 0 | 0.000004233666 | 0 | 0 | 1 | UNCALIBRATED |  |
 | HX | U72 | 4 | fit x GP | 20 | 19 | 0 | 0.00001693455 | 0 | 0.7894737 | 1 | UNCALIBRATED |  |
 | HX | U72 | 4 | fit x GP | 50 | 19 | 0 | 0.000105836 | 0.5789474 | 0.9473684 | 1 | UNCALIBRATED |  |
-| HX | U72 | 4 | fit x GP | 100 | 19 | 0 | 0.0004232733 | 0.8947368 | 1 | 1 | UNCALIBRATED |  |
+| HX | U72 | 4 | fit x GP | 100 | 19 | 0 | 0.0004232732 | 0.8947368 | 1 | 1 | UNCALIBRATED |  |
 | HX | U72 | 4 | GP x GP | 10 | 19 | 0 | 0.000004608139 | 0 | 0 | 1 | UNCALIBRATED |  |
 | HX | U72 | 4 | GP x GP | 20 | 19 | 0 | 0.00001843238 | 0 | 1 | 1 | UNCALIBRATED |  |
 | HX | U72 | 4 | GP x GP | 50 | 19 | 0 | 0.0001151946 | 1 | 1 | 1 | UNCALIBRATED |  |
@@ -4055,14 +4081,14 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | HX | U168 | 3 | GP x GP | 20 | 7 | 0 | 0.00001843238 | 0 | 1 | 1 | UNCALIBRATED |  |
 | HX | U168 | 3 | GP x GP | 50 | 7 | 0 | 0.0001151946 | 1 | 1 | 1 | UNCALIBRATED |  |
 | HX | U168 | 3 | GP x GP | 100 | 7 | 0 | 0.0004606679 | 1 | 1 | 1 | UNCALIBRATED |  |
-| HX | U168 | 4 | fit x fit | 10 | 7 | 0 | 9.424818e-7 | 0 | 0.1428571 | 1 |  |  |
-| HX | U168 | 4 | fit x fit | 20 | 7 | 0 | 0.000003769921 | 0.1428571 | 0.2857143 | 1 |  |  |
-| HX | U168 | 4 | fit x fit | 50 | 7 | 0 | 0.00002356175 | 0.2857143 | 0.7142857 | 1 |  |  |
-| HX | U168 | 4 | fit x fit | 100 | 7 | 0 | 0.00009424332 | 0.4285714 | 0.8571429 | 1 |  |  |
-| HX | U168 | 4 | fit x GP | 10 | 7 | 0 | 0.000001546607 | 0 | 0 | 1 | UNCALIBRATED |  |
-| HX | U168 | 4 | fit x GP | 20 | 7 | 0 | 0.000006186411 | 0 | 0.2857143 | 1 | UNCALIBRATED |  |
-| HX | U168 | 4 | fit x GP | 50 | 7 | 0 | 0.00003866435 | 0.2857143 | 0.8571429 | 1 | UNCALIBRATED |  |
-| HX | U168 | 4 | fit x GP | 100 | 7 | 0 | 0.0001546472 | 0.7142857 | 1 | 1 | UNCALIBRATED |  |
+| HX | U168 | 4 | fit x fit | 10 | 7 | 0 | 9.424891e-7 | 0 | 0.1428571 | 1 |  |  |
+| HX | U168 | 4 | fit x fit | 20 | 7 | 0 | 0.00000376995 | 0.1428571 | 0.2857143 | 1 |  |  |
+| HX | U168 | 4 | fit x fit | 50 | 7 | 0 | 0.00002356193 | 0.2857143 | 0.7142857 | 1 |  |  |
+| HX | U168 | 4 | fit x fit | 100 | 7 | 0 | 0.00009424405 | 0.4285714 | 0.8571429 | 1 |  |  |
+| HX | U168 | 4 | fit x GP | 10 | 7 | 0 | 0.000001546617 | 0 | 0 | 1 | UNCALIBRATED |  |
+| HX | U168 | 4 | fit x GP | 20 | 7 | 0 | 0.00000618645 | 0 | 0.2857143 | 1 | UNCALIBRATED |  |
+| HX | U168 | 4 | fit x GP | 50 | 7 | 0 | 0.0000386646 | 0.2857143 | 0.8571429 | 1 | UNCALIBRATED |  |
+| HX | U168 | 4 | fit x GP | 100 | 7 | 0 | 0.0001546482 | 0.7142857 | 1 | 1 | UNCALIBRATED |  |
 | HX | U168 | 4 | GP x GP | 10 | 7 | 0 | 0.000004608139 | 0 | 0 | 1 | UNCALIBRATED |  |
 | HX | U168 | 4 | GP x GP | 20 | 7 | 0 | 0.00001843238 | 0 | 1 | 1 | UNCALIBRATED |  |
 | HX | U168 | 4 | GP x GP | 50 | 7 | 0 | 0.0001151946 | 1 | 1 | 1 | UNCALIBRATED |  |
@@ -5207,6 +5233,150 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | P | S72 | 7 | GP x GP | 20 | 750 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
 | P | S72 | 7 | GP x GP | 50 | 750 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
 | P | S72 | 7 | GP x GP | 100 | 750 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | fit x fit | 10 | 750 | 0 | 0.04768501 | 0.9973333 | 1 | 1 |  |  |
+| P | F24 | 1 | fit x fit | 20 | 750 | 0 | 0.1066687 | 1 | 1 | 1 |  |  |
+| P | F24 | 1 | fit x fit | 50 | 750 | 0 | 0.2680942 | 1 | 1 | 1 |  |  |
+| P | F24 | 1 | fit x fit | 100 | 750 | 0 | 0.5082589 | 1 | 1 | 1 |  |  |
+| P | F24 | 1 | fit x GP | 10 | 750 | 0 | 0.000001442677 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | fit x GP | 20 | 750 | 0 | 0.000005770315 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | fit x GP | 50 | 750 | 0 | 0.0000360472 | 0.3986667 | 1 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | fit x GP | 100 | 750 | 0 | 0.0001439427 | 1 | 1 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | GP x GP | 10 | 750 | 0 | 7.21355e-7 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | GP x GP | 20 | 750 | 0 | 0.000002885321 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | GP x GP | 50 | 750 | 0 | 0.00001802894 | 0.3986667 | 1 | 1 | UNCALIBRATED |  |
+| P | F24 | 1 | GP x GP | 100 | 750 | 0 | 0.00007205414 | 0.3986667 | 1 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | fit x fit | 10 | 750 | 0 | 0.00639588 | 0.9853333 | 0.9973333 | 1 |  |  |
+| P | F24 | 2 | fit x fit | 20 | 750 | 0 | 0.01940953 | 0.9973333 | 1 | 1 |  |  |
+| P | F24 | 2 | fit x fit | 50 | 750 | 0 | 0.05736802 | 1 | 1 | 1 |  |  |
+| P | F24 | 2 | fit x fit | 100 | 750 | 0 | 0.1160199 | 1 | 1 | 1 |  |  |
+| P | F24 | 2 | fit x GP | 10 | 750 | 0 | 5.170766e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | fit x GP | 20 | 750 | 0 | 2.068304e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | fit x GP | 50 | 750 | 0 | 0.000001292682 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | fit x GP | 100 | 750 | 0 | 0.000005170603 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | GP x GP | 10 | 750 | 0 | 2.585389e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | GP x GP | 20 | 750 | 0 | 1.034155e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | GP x GP | 50 | 750 | 0 | 6.463447e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 2 | GP x GP | 100 | 750 | 0 | 0.000002585348 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | fit x fit | 10 | 750 | 0 | 0.00191018 | 0.9453333 | 0.9946667 | 1 |  |  |
+| P | F24 | 3 | fit x fit | 20 | 750 | 0 | 0.006498181 | 0.992 | 1 | 1 |  |  |
+| P | F24 | 3 | fit x fit | 50 | 750 | 0 | 0.02363623 | 1 | 1 | 1 |  |  |
+| P | F24 | 3 | fit x fit | 100 | 750 | 0 | 0.04994305 | 1 | 1 | 1 |  |  |
+| P | F24 | 3 | fit x GP | 10 | 750 | 0 | 5.313231e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | fit x GP | 20 | 750 | 0 | 2.125292e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | fit x GP | 50 | 750 | 0 | 1.328307e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | fit x GP | 100 | 750 | 0 | 5.313223e-7 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | GP x GP | 10 | 750 | 0 | 2.656621e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | GP x GP | 20 | 750 | 0 | 1.062649e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | GP x GP | 50 | 750 | 0 | 6.641552e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 3 | GP x GP | 100 | 750 | 0 | 2.656619e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | fit x fit | 10 | 750 | 0 | 0.0007931301 | 0.8573333 | 0.992 | 1 |  |  |
+| P | F24 | 4 | fit x fit | 20 | 750 | 0 | 0.002836179 | 0.9746667 | 0.9973333 | 1 |  |  |
+| P | F24 | 4 | fit x fit | 50 | 750 | 0 | 0.01193066 | 0.9973333 | 1 | 1 |  |  |
+| P | F24 | 4 | fit x fit | 100 | 750 | 0 | 0.02623775 | 1 | 1 | 1 |  |  |
+| P | F24 | 4 | fit x GP | 10 | 750 | 0 | 5.313202e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | fit x GP | 20 | 750 | 0 | 2.125281e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | fit x GP | 50 | 750 | 0 | 1.3283e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | fit x GP | 100 | 750 | 0 | 5.313194e-7 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | GP x GP | 10 | 750 | 0 | 2.656621e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | GP x GP | 20 | 750 | 0 | 1.062649e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | GP x GP | 50 | 750 | 0 | 6.641552e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 4 | GP x GP | 100 | 750 | 0 | 2.656619e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | fit x fit | 10 | 750 | 0 | 0.0003270694 | 0.7586667 | 0.968 | 1 |  |  |
+| P | F24 | 5 | fit x fit | 20 | 750 | 0 | 0.001254786 | 0.9293333 | 0.992 | 1 |  |  |
+| P | F24 | 5 | fit x fit | 50 | 750 | 0 | 0.0060824 | 0.992 | 0.9973333 | 1 |  |  |
+| P | F24 | 5 | fit x fit | 100 | 750 | 0 | 0.01520409 | 0.9973333 | 1 | 1 |  |  |
+| P | F24 | 5 | fit x GP | 10 | 750 | 0 | 3.336458e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | fit x GP | 20 | 750 | 0 | 1.334583e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | fit x GP | 50 | 750 | 0 | 8.341144e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | fit x GP | 100 | 750 | 0 | 3.336457e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | GP x GP | 10 | 750 | 0 | 1.668235e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | GP x GP | 20 | 750 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | GP x GP | 50 | 750 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 5 | GP x GP | 100 | 750 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | fit x fit | 10 | 750 | 0 | 0.0000977837 | 0.4973333 | 0.8706667 | 1 |  |  |
+| P | F24 | 7 | fit x fit | 20 | 750 | 0 | 0.0003841809 | 0.7853333 | 0.9546667 | 1 |  |  |
+| P | F24 | 7 | fit x fit | 50 | 750 | 0 | 0.002068977 | 0.932 | 0.9946667 | 1 |  |  |
+| P | F24 | 7 | fit x fit | 100 | 750 | 0 | 0.005678455 | 0.972 | 0.9973333 | 1 |  |  |
+| P | F24 | 7 | fit x GP | 10 | 750 | 0 | 3.336415e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | fit x GP | 20 | 750 | 0 | 1.334566e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | fit x GP | 50 | 750 | 0 | 8.341036e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | fit x GP | 100 | 750 | 0 | 3.336414e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | GP x GP | 10 | 750 | 0 | 1.668235e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | GP x GP | 20 | 750 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | GP x GP | 50 | 750 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F24 | 7 | GP x GP | 100 | 750 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | fit x fit | 10 | 750 | 0 | 0.0164936 | 0.9973333 | 1 | 1 |  |  |
+| P | F72 | 1 | fit x fit | 20 | 750 | 0 | 0.04669975 | 1 | 1 | 1 |  |  |
+| P | F72 | 1 | fit x fit | 50 | 750 | 0 | 0.1292516 | 1 | 1 | 1 |  |  |
+| P | F72 | 1 | fit x fit | 100 | 750 | 0 | 0.2577801 | 1 | 1 | 1 |  |  |
+| P | F72 | 1 | fit x GP | 10 | 750 | 0 | 0.000001442633 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | fit x GP | 20 | 750 | 0 | 0.000005770136 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | fit x GP | 50 | 750 | 0 | 0.00003604609 | 0.3986667 | 1 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | fit x GP | 100 | 750 | 0 | 0.0001439383 | 1 | 1 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | GP x GP | 10 | 750 | 0 | 7.21355e-7 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | GP x GP | 20 | 750 | 0 | 0.000002885321 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | GP x GP | 50 | 750 | 0 | 0.00001802894 | 0.3986667 | 1 | 1 | UNCALIBRATED |  |
+| P | F72 | 1 | GP x GP | 100 | 750 | 0 | 0.00007205414 | 0.3986667 | 1 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | fit x fit | 10 | 750 | 0 | 0.00340579 | 0.984 | 1 | 1 |  |  |
+| P | F72 | 2 | fit x fit | 20 | 750 | 0 | 0.01135366 | 0.9946667 | 1 | 1 |  |  |
+| P | F72 | 2 | fit x fit | 50 | 750 | 0 | 0.0358162 | 1 | 1 | 1 |  |  |
+| P | F72 | 2 | fit x fit | 100 | 750 | 0 | 0.07457979 | 1 | 1 | 1 |  |  |
+| P | F72 | 2 | fit x GP | 10 | 750 | 0 | 5.170744e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | fit x GP | 20 | 750 | 0 | 2.068295e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | fit x GP | 50 | 750 | 0 | 0.000001292676 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | fit x GP | 100 | 750 | 0 | 0.000005170581 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | GP x GP | 10 | 750 | 0 | 2.585389e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | GP x GP | 20 | 750 | 0 | 1.034155e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | GP x GP | 50 | 750 | 0 | 6.463447e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 2 | GP x GP | 100 | 750 | 0 | 0.000002585348 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | fit x fit | 10 | 750 | 0 | 0.001186115 | 0.9213333 | 0.9973333 | 1 |  |  |
+| P | F72 | 3 | fit x fit | 20 | 750 | 0 | 0.004262705 | 0.992 | 1 | 1 |  |  |
+| P | F72 | 3 | fit x fit | 50 | 750 | 0 | 0.01652991 | 1 | 1 | 1 |  |  |
+| P | F72 | 3 | fit x fit | 100 | 750 | 0 | 0.03625321 | 1 | 1 | 1 |  |  |
+| P | F72 | 3 | fit x GP | 10 | 750 | 0 | 5.31322e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | fit x GP | 20 | 750 | 0 | 2.125288e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | fit x GP | 50 | 750 | 0 | 1.328305e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | fit x GP | 100 | 750 | 0 | 5.313212e-7 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | GP x GP | 10 | 750 | 0 | 2.656621e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | GP x GP | 20 | 750 | 0 | 1.062649e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | GP x GP | 50 | 750 | 0 | 6.641552e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 3 | GP x GP | 100 | 750 | 0 | 2.656619e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | fit x fit | 10 | 750 | 0 | 0.0005277366 | 0.832 | 0.9893333 | 1 |  |  |
+| P | F72 | 4 | fit x fit | 20 | 750 | 0 | 0.001993337 | 0.9546667 | 1 | 1 |  |  |
+| P | F72 | 4 | fit x fit | 50 | 750 | 0 | 0.00854259 | 0.9973333 | 1 | 1 |  |  |
+| P | F72 | 4 | fit x fit | 100 | 750 | 0 | 0.01990963 | 1 | 1 | 1 |  |  |
+| P | F72 | 4 | fit x GP | 10 | 750 | 0 | 5.313163e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | fit x GP | 20 | 750 | 0 | 2.125265e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | fit x GP | 50 | 750 | 0 | 1.32829e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | fit x GP | 100 | 750 | 0 | 5.313154e-7 | 0.3986667 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | GP x GP | 10 | 750 | 0 | 2.656621e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | GP x GP | 20 | 750 | 0 | 1.062649e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | GP x GP | 50 | 750 | 0 | 6.641552e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 4 | GP x GP | 100 | 750 | 0 | 2.656619e-7 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | fit x fit | 10 | 750 | 0 | 0.0002635743 | 0.6946667 | 0.9546667 | 1 |  |  |
+| P | F72 | 5 | fit x fit | 20 | 750 | 0 | 0.001019946 | 0.9133333 | 0.992 | 1 |  |  |
+| P | F72 | 5 | fit x fit | 50 | 750 | 0 | 0.004906088 | 0.992 | 1 | 1 |  |  |
+| P | F72 | 5 | fit x fit | 100 | 750 | 0 | 0.01229036 | 1 | 1 | 1 |  |  |
+| P | F72 | 5 | fit x GP | 10 | 750 | 0 | 3.336451e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | fit x GP | 20 | 750 | 0 | 1.33458e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | fit x GP | 50 | 750 | 0 | 8.341128e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | fit x GP | 100 | 750 | 0 | 3.336451e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | GP x GP | 10 | 750 | 0 | 1.668235e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | GP x GP | 20 | 750 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | GP x GP | 50 | 750 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 5 | GP x GP | 100 | 750 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | fit x fit | 10 | 750 | 0 | 0.00008143988 | 0.4613333 | 0.8693333 | 1 |  |  |
+| P | F72 | 7 | fit x fit | 20 | 750 | 0 | 0.0003205552 | 0.7573333 | 0.9386667 | 1 |  |  |
+| P | F72 | 7 | fit x fit | 50 | 750 | 0 | 0.001795134 | 0.9186667 | 0.9906667 | 1 |  |  |
+| P | F72 | 7 | fit x fit | 100 | 750 | 0 | 0.005334429 | 0.9773333 | 1 | 1 |  |  |
+| P | F72 | 7 | fit x GP | 10 | 750 | 0 | 3.336397e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | fit x GP | 20 | 750 | 0 | 1.334559e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | fit x GP | 50 | 750 | 0 | 8.340994e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | fit x GP | 100 | 750 | 0 | 3.336397e-8 | 0 | 0.3986667 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | GP x GP | 10 | 750 | 0 | 1.668235e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | GP x GP | 20 | 750 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | GP x GP | 50 | 750 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| P | F72 | 7 | GP x GP | 100 | 750 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
 | S1 | U24 | 1 | fit x fit | 10 | 276 | 0 | 0.00006749838 | 0.326087 | 1 | 1 |  |  |
 | S1 | U24 | 1 | fit x fit | 20 | 276 | 0 | 0.0002699155 | 1 | 1 | 1 |  |  |
 | S1 | U24 | 1 | fit x fit | 50 | 276 | 0 | 0.001683565 | 1 | 1 | 1 |  |  |
@@ -6935,118 +7105,77 @@ Zero-miss reach: independent members, 90-degree crossing, full projected R/T cov
 | T | S24 | 7 | GP x GP | 20 | 944 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
 | T | S24 | 7 | GP x GP | 50 | 944 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
 | T | S24 | 7 | GP x GP | 100 | 944 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | fit x fit | 10 | 944 | 0 | 0.04729838 | 1 | 1 | 1 |  |  |
+| T | F24 | 1 | fit x fit | 20 | 944 | 0 | 0.1097726 | 1 | 1 | 1 |  |  |
+| T | F24 | 1 | fit x fit | 50 | 944 | 0 | 0.277717 | 1 | 1 | 1 |  |  |
+| T | F24 | 1 | fit x fit | 100 | 944 | 0 | 0.5256611 | 1 | 1 | 1 |  |  |
+| T | F24 | 1 | fit x GP | 10 | 944 | 0 | 0.000001442678 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | fit x GP | 20 | 944 | 0 | 0.000005770317 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | fit x GP | 50 | 944 | 0 | 0.00003604722 | 0.3877119 | 1 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | fit x GP | 100 | 944 | 0 | 0.0001439428 | 1 | 1 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | GP x GP | 10 | 944 | 0 | 7.21355e-7 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | GP x GP | 20 | 944 | 0 | 0.000002885321 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | GP x GP | 50 | 944 | 0 | 0.00001802894 | 0.3877119 | 1 | 1 | UNCALIBRATED |  |
+| T | F24 | 1 | GP x GP | 100 | 944 | 0 | 0.00007205414 | 0.3877119 | 1 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | fit x fit | 10 | 944 | 0 | 0.006211835 | 0.9947034 | 1 | 1 |  |  |
+| T | F24 | 2 | fit x fit | 20 | 944 | 0 | 0.01932286 | 1 | 1 | 1 |  |  |
+| T | F24 | 2 | fit x fit | 50 | 944 | 0 | 0.05732655 | 1 | 1 | 1 |  |  |
+| T | F24 | 2 | fit x fit | 100 | 944 | 0 | 0.1174868 | 1 | 1 | 1 |  |  |
+| T | F24 | 2 | fit x GP | 10 | 944 | 0 | 5.170764e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | fit x GP | 20 | 944 | 0 | 2.068304e-7 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | fit x GP | 50 | 944 | 0 | 0.000001292681 | 0.3877119 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | fit x GP | 100 | 944 | 0 | 0.000005170601 | 0.3877119 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | GP x GP | 10 | 944 | 0 | 2.585389e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | GP x GP | 20 | 944 | 0 | 1.034155e-7 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | GP x GP | 50 | 944 | 0 | 6.463447e-7 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 2 | GP x GP | 100 | 944 | 0 | 0.000002585348 | 0.3877119 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | fit x fit | 10 | 944 | 0 | 0.001659285 | 0.9565678 | 1 | 1 |  |  |
+| T | F24 | 3 | fit x fit | 20 | 944 | 0 | 0.005939031 | 0.9978814 | 1 | 1 |  |  |
+| T | F24 | 3 | fit x fit | 50 | 944 | 0 | 0.02150729 | 1 | 1 | 1 |  |  |
+| T | F24 | 3 | fit x fit | 100 | 944 | 0 | 0.04509127 | 1 | 1 | 1 |  |  |
+| T | F24 | 3 | fit x GP | 10 | 944 | 0 | 5.31323e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | fit x GP | 20 | 944 | 0 | 2.125292e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | fit x GP | 50 | 944 | 0 | 1.328307e-7 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | fit x GP | 100 | 944 | 0 | 5.313222e-7 | 0.3877119 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | GP x GP | 10 | 944 | 0 | 2.656621e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | GP x GP | 20 | 944 | 0 | 1.062649e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | GP x GP | 50 | 944 | 0 | 6.641552e-8 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 3 | GP x GP | 100 | 944 | 0 | 2.656619e-7 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | fit x fit | 10 | 944 | 0 | 0.0005748881 | 0.8485169 | 0.9978814 | 1 |  |  |
+| T | F24 | 4 | fit x fit | 20 | 944 | 0 | 0.002157808 | 0.9798729 | 1 | 1 |  |  |
+| T | F24 | 4 | fit x fit | 50 | 944 | 0 | 0.009663672 | 0.9978814 | 1 | 1 |  |  |
+| T | F24 | 4 | fit x fit | 100 | 944 | 0 | 0.02239531 | 1 | 1 | 1 |  |  |
+| T | F24 | 4 | fit x GP | 10 | 944 | 0 | 5.313194e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | fit x GP | 20 | 944 | 0 | 2.125278e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | fit x GP | 50 | 944 | 0 | 1.328298e-7 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | fit x GP | 100 | 944 | 0 | 5.313186e-7 | 0.3877119 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | GP x GP | 10 | 944 | 0 | 2.656621e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | GP x GP | 20 | 944 | 0 | 1.062649e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | GP x GP | 50 | 944 | 0 | 6.641552e-8 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 4 | GP x GP | 100 | 944 | 0 | 2.656619e-7 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | fit x fit | 10 | 944 | 0 | 0.0002842189 | 0.7298729 | 0.9883475 | 1 |  |  |
+| T | F24 | 5 | fit x fit | 20 | 944 | 0 | 0.001093552 | 0.9459746 | 0.9978814 | 1 |  |  |
+| T | F24 | 5 | fit x fit | 50 | 944 | 0 | 0.005338772 | 0.9978814 | 1 | 1 |  |  |
+| T | F24 | 5 | fit x fit | 100 | 944 | 0 | 0.01335026 | 1 | 1 | 1 |  |  |
+| T | F24 | 5 | fit x GP | 10 | 944 | 0 | 3.336457e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | fit x GP | 20 | 944 | 0 | 1.334583e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | fit x GP | 50 | 944 | 0 | 8.341143e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | fit x GP | 100 | 944 | 0 | 3.336457e-8 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | GP x GP | 10 | 944 | 0 | 1.668235e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | GP x GP | 20 | 944 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | GP x GP | 50 | 944 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 5 | GP x GP | 100 | 944 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | fit x fit | 10 | 944 | 0 | 0.00008724386 | 0.4724576 | 0.8972458 | 1 |  |  |
+| T | F24 | 7 | fit x fit | 20 | 944 | 0 | 0.0003393695 | 0.7722458 | 0.9650424 | 1 |  |  |
+| T | F24 | 7 | fit x fit | 50 | 944 | 0 | 0.001916988 | 0.9555085 | 0.9978814 | 1 |  |  |
+| T | F24 | 7 | fit x fit | 100 | 944 | 0 | 0.005537975 | 0.9957627 | 1 | 1 |  |  |
+| T | F24 | 7 | fit x GP | 10 | 944 | 0 | 3.336419e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | fit x GP | 20 | 944 | 0 | 1.334568e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | fit x GP | 50 | 944 | 0 | 8.341048e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | fit x GP | 100 | 944 | 0 | 3.336419e-8 | 0 | 0.3877119 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | GP x GP | 10 | 944 | 0 | 1.668235e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | GP x GP | 20 | 944 | 0 | 6.672938e-10 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | GP x GP | 50 | 944 | 0 | 4.170586e-9 | 0 | 0 | 1 | UNCALIBRATED |  |
+| T | F24 | 7 | GP x GP | 100 | 944 | 0 | 1.668235e-8 | 0 | 0 | 1 | UNCALIBRATED |  |
 
-Synthetic S fit x fit baseline, RMS STAND-IN covariance. Actual signed endpoint errors, true miss log-uniform 10 m–5 km, HBR 20 m, alert at Pc >=1e-4. The population is artificial and only archived-vector windows enter. Hit means true miss <20 m; false alert means an alert on a non-hit. Conditional rates use hits/non-hits as denominators; JSON also provides all-encounter rates. AP, XP, FFM, U and GP synthetic arms and paired score intervals remain unmeasured.
-
-| Group | Arc h | Day | Vectors / expected windows | Draws | No primary / secondary | Pc failures | n | Hits | Missed given hit | False given non-hit | Brier loss | Log loss | Disclosure |
-|---|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---|
-| LS | 72 | 1 | 56/56 | 3326 | 0/0 | 0 | 3326 | 341 | 0.05571848 | 0.518593 | 0.1022467 | 0.7258272 |  |
-| LS | 72 | 2 | 54/54 | 3444 | 0/0 | 0 | 3444 | 402 | 0.08457711 | 0.5361604 | 0.1164966 | 0.862079 |  |
-| LS | 72 | 3 | 50/50 | 3288 | 0/0 | 0 | 3288 | 381 | 0.1259843 | 0.5352597 | 0.1157193 | 0.911751 |  |
-| LS | 72 | 4 | 53/53 | 3400 | 0/0 | 0 | 3400 | 389 | 0.1928021 | 0.4716041 | 0.1142965 | 0.9366082 | read before the statements were registered |
-| LS | 72 | 5 | 48/48 | 3233 | 0/0 | 0 | 3233 | 403 | 0.3002481 | 0.439576 | 0.1245732 | 1.073656 | read before the statements were registered |
-| LS | 72 | 7 | 56/56 | 3309 | 0/0 | 0 | 3309 | 370 | 0.5054054 | 0.2885335 | 0.1117714 | 1.024224 |  |
-| LS | 24 | 1 | 51/51 | 3359 | 0/0 | 0 | 3359 | 385 | 0.3766234 | 0.362811 | 0.1145081 | 0.9898512 |  |
-| LS | 24 | 2 | 49/49 | 3298 | 0/0 | 0 | 3298 | 347 | 0.573487 | 0.2246696 | 0.1051756 | 0.9817028 |  |
-| LS | 24 | 3 | 43/43 | 3362 | 0/0 | 0 | 3362 | 346 | 0.7687861 | 0.1256631 | 0.1028982 | 1.049098 |  |
-| LS | 24 | 4 | 53/53 | 3377 | 0/0 | 0 | 3377 | 356 | 0.9016854 | 0.0470043 | 0.1054095 | 1.1465 | read before the statements were registered |
-| LS | 24 | 5 | 43/43 | 3296 | 0/0 | 0 | 3296 | 383 | 0.9530026 | 0.01956746 | 0.116196 | 1.362709 | read before the statements were registered |
-| LS | 24 | 7 | 49/49 | 3308 | 0/0 | 0 | 3308 | 372 | 0.9865591 | 0.006811989 | 0.1124526 | 1.454965 |  |
-| DO | 24 | 1 | 136/136 | 3400 | 0/0 | 0 | 3400 | 374 | 0.3342246 | 0.3625248 | 0.1098972 | 0.9771783 |  |
-| DO | 24 | 2 | 132/132 | 3305 | 0/0 | 0 | 3305 | 398 | 0.6482412 | 0.1988304 | 0.120388 | 1.236477 |  |
-| DO | 24 | 3 | 121/121 | 3398 | 0/0 | 0 | 3398 | 372 | 0.8225806 | 0.08526107 | 0.1094609 | 1.189518 |  |
-| DO | 24 | 4 | 112/112 | 3302 | 0/0 | 0 | 3302 | 403 | 0.9602978 | 0.03276992 | 0.1220406 | 1.429981 | read before the statements were registered |
-| DO | 24 | 5 | 112/112 | 3277 | 0/0 | 0 | 3277 | 379 | 0.9841689 | 0.01656315 | 0.1156515 | 1.449011 | read before the statements were registered |
-| DO | 24 | 7 | 103/103 | 3318 | 0/0 | 0 | 3318 | 371 | 0.9973046 | 0.004750594 | 0.111813 | 1.524629 |  |
-| DO | 72 | 1 | 136/136 | 3298 | 0/0 | 0 | 3298 | 367 | 0.1498638 | 0.5284886 | 0.1110813 | 0.8851009 |  |
-| DO | 72 | 2 | 132/132 | 3345 | 0/0 | 0 | 3345 | 400 | 0.28 | 0.4363328 | 0.1194745 | 1.071952 |  |
-| DO | 72 | 3 | 121/121 | 3414 | 0/0 | 0 | 3414 | 410 | 0.4463415 | 0.3831558 | 0.1200323 | 1.141833 |  |
-| DO | 72 | 4 | 112/112 | 3301 | 0/0 | 0 | 3301 | 364 | 0.5741758 | 0.2972421 | 0.1102363 | 1.084383 | read before the statements were registered |
-| DO | 72 | 5 | 112/112 | 3306 | 0/0 | 0 | 3306 | 379 | 0.6965699 | 0.1978135 | 0.1146171 | 1.208035 | read before the statements were registered |
-| DO | 72 | 7 | 103/103 | 3336 | 0/0 | 0 | 3336 | 380 | 0.8842105 | 0.0879567 | 0.1138975 | 1.304162 |  |
-| GD | 72 | 1 | 43/43 | 3365 | 0/0 | 0 | 3365 | 356 | 0.005617978 | 0.5211034 | 0.1048186 | 0.6325675 |  |
-| GD | 72 | 2 | 43/43 | 3284 | 0/0 | 1 | 3283 | 363 | 0.02479339 | 0.5424658 | 0.1099164 | 0.7175861 |  |
-| GD | 72 | 3 | 43/43 | 3330 | 0/0 | 0 | 3330 | 366 | 0.05464481 | 0.5495951 | 0.1095072 | 0.7849593 |  |
-| GD | 72 | 4 | 43/43 | 3375 | 0/0 | 0 | 3375 | 396 | 0.1136364 | 0.5015106 | 0.1170736 | 0.892272 |  |
-| GD | 72 | 5 | 42/42 | 3317 | 0/0 | 0 | 3317 | 346 | 0.1358382 | 0.5005049 | 0.1041091 | 0.8054303 |  |
-| GD | 72 | 7 | 43/43 | 3329 | 0/0 | 0 | 3329 | 358 | 0.2877095 | 0.4251094 | 0.1074363 | 0.9088832 |  |
-| IG | 72 | 1 | 49/49 | 3234 | 0/0 | 0 | 3234 | 375 | 0.888 | 0.07904862 | 0.115945 | 1.233675 |  |
-| IG | 72 | 2 | 49/49 | 3356 | 0/0 | 0 | 3356 | 410 | 0.9926829 | 0.01221996 | 0.1221635 | 1.365515 |  |
-| IG | 72 | 3 | 49/49 | 3341 | 0/0 | 0 | 3341 | 381 | 0.9973753 | 0.001351351 | 0.1140347 | 1.33607 |  |
-| IG | 72 | 4 | 49/49 | 3293 | 0/0 | 0 | 3293 | 342 | 1 | 0 | 0.1038546 | 1.249545 |  |
-| IG | 72 | 5 | 48/48 | 3396 | 0/0 | 0 | 3396 | 370 | 1 | 0 | 0.1089505 | 1.387988 |  |
-| IG | 72 | 7 | 48/48 | 3380 | 0/0 | 0 | 3380 | 369 | 1 | 0 | 0.109171 | 1.488958 |  |
-| GE | 72 | 1 | 32/32 | 3311 | 0/0 | 0 | 3311 | 382 | 0.960733 | 0.03004438 | 0.1153656 | 1.254253 |  |
-| GE | 72 | 2 | 33/33 | 3297 | 0/0 | 0 | 3297 | 376 | 0.981383 | 0.01163985 | 0.1140388 | 1.309453 |  |
-| GE | 72 | 3 | 30/30 | 3314 | 0/0 | 0 | 3314 | 366 | 1 | 0 | 0.1104382 | 1.317806 |  |
-| GE | 72 | 4 | 33/33 | 3402 | 0/0 | 0 | 3402 | 371 | 1 | 0 | 0.1090521 | 1.370678 |  |
-| GE | 72 | 5 | 32/32 | 3356 | 0/0 | 0 | 3356 | 377 | 1 | 0 | 0.112335 | 1.449502 |  |
-| GE | 72 | 7 | 32/32 | 3320 | 0/0 | 0 | 3320 | 403 | 1 | 0 | 0.1213849 | 1.64705 |  |
-| HE | 72 | 1 | 7/7 | 3306 | 0/3306 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 72 | 2 | 7/7 | 3282 | 0/3282 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 72 | 3 | 7/7 | 3439 | 0/3439 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 72 | 4 | 7/7 | 3431 | 0/3431 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 72 | 5 | 7/7 | 3232 | 0/3232 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 72 | 7 | 7/7 | 3310 | 0/3310 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 336 | 1 | 7/7 | 3366 | 0/3366 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 336 | 2 | 7/7 | 3415 | 0/3415 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 336 | 3 | 7/7 | 3284 | 0/3284 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 336 | 4 | 7/7 | 3285 | 0/3285 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 336 | 5 | 7/7 | 3392 | 0/3392 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HE | 336 | 7 | 7/7 | 3258 | 0/3258 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HX | 72 | 1 | 19/19 | 3378 | 0/0 | 0 | 3378 | 377 | 1 | 0 | 0.1116044 | 1.865873 |  |
-| HX | 72 | 2 | 19/19 | 3259 | 0/0 | 0 | 3259 | 372 | 1 | 0 | 0.1141454 | 2.033971 |  |
-| HX | 72 | 3 | 19/19 | 3351 | 0/0 | 0 | 3351 | 403 | 1 | 0 | 0.1202626 | 2.106341 |  |
-| HX | 72 | 4 | 19/19 | 3380 | 0/0 | 0 | 3380 | 384 | 1 | 0 | 0.1136095 | 2.112717 |  |
-| HX | 72 | 5 | 19/19 | 3309 | 0/0 | 0 | 3309 | 387 | 1 | 0 | 0.1169538 | 2.210948 |  |
-| HX | 72 | 7 | 19/19 | 3323 | 0/0 | 0 | 3323 | 400 | 1 | 0 | 0.1203732 | 2.475192 |  |
-| HX | 168 | 1 | 7/7 | 3380 | 0/3380 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HX | 168 | 2 | 7/7 | 3331 | 0/3331 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HX | 168 | 3 | 7/7 | 3243 | 0/3243 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HX | 168 | 4 | 7/7 | 3329 | 0/3329 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HX | 168 | 5 | 7/7 | 3424 | 0/3424 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| HX | 168 | 7 | 7/7 | 3293 | 0/3293 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 24 | 1 | 67/750 | 3373 | 0/3373 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 24 | 2 | 67/750 | 3303 | 0/3303 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 24 | 3 | 67/750 | 3393 | 0/3393 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 24 | 4 | 67/750 | 3339 | 0/3339 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 24 | 5 | 67/750 | 3267 | 0/3267 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 24 | 7 | 67/750 | 3325 | 0/3325 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 72 | 1 | 67/750 | 3330 | 0/3330 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 72 | 2 | 67/750 | 3267 | 0/3267 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 72 | 3 | 67/750 | 3468 | 0/3468 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 72 | 4 | 67/750 | 3400 | 0/3400 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 72 | 5 | 67/750 | 3349 | 0/3349 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| P | 72 | 7 | 67/750 | 3186 | 0/3186 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 24 | 1 | 0/276 | 3387 | 3387/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 24 | 2 | 0/274 | 3240 | 3240/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 24 | 3 | 0/275 | 3389 | 3389/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 24 | 4 | 0/275 | 3300 | 3300/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 24 | 5 | 0/274 | 3289 | 3289/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 24 | 7 | 0/274 | 3395 | 3395/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 72 | 1 | 0/259 | 3322 | 3322/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 72 | 2 | 0/258 | 3323 | 3323/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 72 | 3 | 0/258 | 3270 | 3270/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 72 | 4 | 0/258 | 3323 | 3323/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 72 | 5 | 0/257 | 3370 | 3370/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| S1 | 72 | 7 | 0/257 | 3392 | 3392/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 24 | 1 | 0/694 | 3461 | 3461/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 24 | 2 | 0/693 | 3289 | 3289/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 24 | 3 | 0/693 | 3262 | 3262/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 24 | 4 | 0/693 | 3300 | 3300/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 24 | 5 | 0/693 | 3276 | 3276/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 24 | 7 | 0/693 | 3412 | 3412/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 72 | 1 | 0/745 | 3290 | 3290/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 72 | 2 | 0/745 | 3383 | 3383/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 72 | 3 | 0/745 | 3317 | 3317/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 72 | 4 | 0/745 | 3326 | 3326/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 72 | 5 | 0/745 | 3334 | 3334/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| GN | 72 | 7 | 0/745 | 3350 | 3350/0 | 0 | 0 | 0 | unmeasured | unmeasured | unmeasured | unmeasured |  |
-| T | 24 | 1 | 626/944 | 3390 | 0/0 | 0 | 3390 | 383 | 0.4125326 | 0.3511806 | 0.1129158 | 1.038861 |  |
-| T | 24 | 2 | 626/944 | 3333 | 0/0 | 0 | 3333 | 393 | 0.8575064 | 0.1204082 | 0.1178983 | 1.253706 |  |
-| T | 24 | 3 | 626/944 | 3310 | 0/0 | 0 | 3310 | 333 | 0.966967 | 0.02519315 | 0.1005998 | 1.156362 |  |
-| T | 24 | 4 | 626/944 | 3290 | 0/0 | 0 | 3290 | 348 | 0.9913793 | 0.005098572 | 0.1057728 | 1.296872 |  |
-| T | 24 | 5 | 626/944 | 3288 | 0/0 | 0 | 3288 | 391 | 0.9974425 | 0.0006903693 | 0.1189158 | 1.522635 |  |
-| T | 24 | 7 | 626/944 | 3389 | 0/0 | 0 | 3389 | 359 | 1 | 0 | 0.1059306 | 1.470722 |  |
-
-The complete synthetic comparison remains unfinished. Earlier forecast rows contain daily RMS only. New flights retain signed endpoint errors and FFM fit covariance in the archive, but the registered carried covariance and C3 history terms have not yet been produced. C2 and C3 constants alone cannot reconstruct those products. No RMS surrogate is substituted for XP, FFM, or AP carried covariance. Missing arms and paired score intervals prevent task acceptance.
+The synthetic covariance products or paired scores remain incomplete; missing work prevents task acceptance.
