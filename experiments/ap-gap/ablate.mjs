@@ -158,7 +158,7 @@ for (const o of await objects()) {
       const arc = (hours) => { const raw = between(D0 - hours * HOUR, D0); const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
       const high = Math.hypot(...scored[0].r) >= 8400;
       const pcfAp = o.vacuum ? PCF_AP_VACUUM : PCF_AP;
-      for (const hours of o.arcs) {
+      for (const hours of (method === 'ffm' ? o.arcs.filter(h=>h===72) : o.arcs)) {
         const thin = arc(hours);
         const run = async (name, fn) => {
           const a = { ok: false };

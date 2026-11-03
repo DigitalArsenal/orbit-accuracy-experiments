@@ -32,3 +32,7 @@ GN uses AP5's five named objects and January–May 2026 cutoffs, 24 h fits. AP a
 ## Amendment 2026-11-03: FFM switch mapping
 
 NO_SUN retains Moon; NO_MOON retains Sun. TESS12/TESS31 select the tesseral degree cap, distinct from O12/O31's maximum order. D20 caps all harmonics, so it cannot uniquely attribute an effect to zonals above 20. High-orbit FFM already has degree 20 and no tides; its corresponding subtraction is an identity control. NO_SRP also removes the inactive fitted SRP parameter in high orbit.
+
+## Amendment 2026-11-03: primary FFM arc
+
+Before the first FFM subtraction, restrict method 2 to the task's primary 72 h fits at every AP6 cutoff. The inherited exploratory 24 h, 168 h, and 336 h FFM arcs are not needed to diagnose the specified 72 h gaps. This preserves all primary windows and saves time for the requested 24 h GN fitter arms. AP variants retain the inherited extra arcs.
