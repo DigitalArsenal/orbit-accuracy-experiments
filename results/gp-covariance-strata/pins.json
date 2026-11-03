@@ -1,0 +1,14 @@
+{
+  "recorded": "2026-11-03",
+  "modulesOriginMain": "3ae1eb289d0575c8c6b40259c1d41c0303ca7753",
+  "blobs": {
+    "analysis/gp-error-model/dist/isomorphic/module.wasm": {"sha256": "9635bfd1982874735cc40e6d646ed76fc417d595294f6834c7026da5fa034b73", "gitBlob": "b0ab576755f6ee29130ab2cc1e97d07f7b5edaf7"},
+    "analysis/gp-error-model/plugin-manifest.json": {"sha256": "a58f070327a40300e1d67713dfdd717d4efd05a62f6aaf9b76698f881fd81053", "gitBlob": "b53ba5fa9a56463524d6523718824c600d0e5e05"},
+    "analysis/gp-error-model/data/e14-s3-kc.json": {"sha256": "d705ffcb16da10b9eb9af1afd830d79172723183f32e03e7935f603dadeb2072", "gitBlob": "ede20ecc5241d2e1bd6493ee24dd873c18de8c30"},
+    "analysis/conjunction-assessment/dist/isomorphic/module.wasm": {"sha256": "0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a", "gitBlob": "845bd88c6c4cd4b2d9699d070786793d0ffba1c9"},
+    "analysis/conjunction-assessment/plugin-manifest.json": {"sha256": "2833c53f0fbe8e496c706a9d4989c609676132d710dbd270ee2d300bf18463ec", "gitBlob": "427c3d23cd280ab7f72f0bbcc55901075672e326"},
+    "analysis/conjunction-assessment/src/cpp/src/plugin_invoke_bridge.cpp": {"sha256": "a962ee729372dd1d5f604a16eaf3e8d9b24c846002760393f0e61bfaa664aea3", "gitBlob": "d320843536b7e36618a040f78d2c167d6ea2951e"}
+  },
+  "vendorsMd": {"path": "experiments/operator-theory/VENDORS.md", "experimentsOriginMain": "0cc5436f", "gitBlob": "e9dd6db5b4df53fd9df0132faf59c12cae07947d"},
+  "referenceRootProductDirs": {"SW": 1800, "S": 803, "nsgf": 758, "ESA": 715, "ilrsa": 187, "IGS": 14, "total": 4277}
+}
