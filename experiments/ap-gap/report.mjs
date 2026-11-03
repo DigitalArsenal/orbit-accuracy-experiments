@@ -26,7 +26,15 @@ for(const g of groups) for(const batch of [...new Set(all.map(r=>r.batch))]) {
   }
  }
 }
-const status={status:'partial',methodsComplete:0,methodsRequired:5,completedRows:all.length,groups:Object.fromEntries(groups.map(g=>[g,all.filter(r=>r.group===g).length])),eventCounts:Object.fromEntries(['event','quiet','unknown'].map(x=>[x,events.filter(e=>e.label===x).length])),rowFiles:files.map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))})),missing:['Method 1 completeness and variant control review pending','Method 2 isolated shadow and zonal-only subtraction unavailable in current wrapper','Method 3 pending full fitter coverage','Method 4 resonant terms above degree 5 not implemented in scratch','Method 5 paired event analysis pending'],cells};
+const labels=Object.fromEntries(events.map(e=>[`${e.norad}|${e.cutoff}`,e.label]));
+const eventSplit=['event','quiet','unknown'].map(label=>{const rows=all.filter(r=>r.group==='DO'&&r.batch==='resume-ap'&&labels[`${r.norad}|${r.cutoff}`]===label);return {label,windows:rows.length,days:[1,3,7].map(day=>{const pairs=rows.map(r=>{const f=all.find(x=>x.batch==='resume-ffm'&&x.key===r.key);return {a:r.arms.AP72?.days?.[day]?.e,f:f?.arms.F72?.days?.[day]?.e};}).filter(x=>Number.isFinite(x.a)&&Number.isFinite(x.f));return {day,n:pairs.length,apM:med(pairs.map(p=>p.a*1000)),ffmM:med(pairs.map(p=>p.f*1000)),medianRatio:med(pairs.map(p=>p.a/p.f))};})};});
+const status={status:'partial',methodsComplete:0,methodsRequired:5,completedRows:all.length,eventSplit,groups:Object.fromEntries(groups.map(g=>[g,all.filter(r=>r.group===g).length])),eventCounts:Object.fromEntries(['event','quiet','unknown'].map(x=>[x,events.filter(e=>e.label===x).length])),rowFiles:files.map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))})),missing:['Method 1 completeness and variant control review pending','Method 2 isolated shadow and zonal-only subtraction unavailable in current wrapper','Method 3 pending full fitter coverage','Method 4 resonant terms above degree 5 not implemented in scratch','Method 5 paired event analysis pending'],cells};
+status.builds={};
+for(const kind of ['variants','ussf']){const file=`/Users/tj/software/terrain-work/body-look/codex-apgap-d9/${kind}/manifest.json`;if(fs.existsSync(file))status.builds[kind]={manifestSha256:hash(file),variants:Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(file))).map(([k,v])=>[k,{sha256:v.sha256,returncode:v.returncode,path:v.path}]))};}
+status.inputManifests=fs.readdirSync(root,{recursive:true}).filter(p=>/^resume-[^/]+\/inputs-\d+\.json$/.test(p)).map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))}));
+const completeBatch=(batch,n)=>all.filter(r=>r.batch===batch).length===n;
+status.methodStatus={1:['CONTROL','H03','H05','H07','NOFRAME','CLASS0','CLASS1','CLASS2','CLASS3','CLASS4'].every(v=>completeBatch('resume-'+v,426))?'complete':'partial',2:'partial: shadow and zonal-only isolation unavailable',3:completeBatch('resume-gn',755)&&status.builds.variants?.variants.AGOM_FIXED?.returncode===0&&status.builds.ussf?.variants.FIXED?.returncode===0?'complete':'partial',4:'partial: extended resonant terms not implemented',5:events.length===150&&eventSplit.some(s=>s.days.some(d=>d.n>0))?'complete':'partial'};
+status.methodsComplete=Object.values(status.methodStatus).filter(v=>v==='complete').length;
 const dest=new URL('../../results/ap-gap/',import.meta.url);
 fs.writeFileSync(new URL('status.json',dest),JSON.stringify(status,null,2)+'\n');
 const fmt=x=>x===null?'—':x.toFixed(3);
@@ -38,5 +46,6 @@ for(const g of groups){
  if(!keys.length)text+='| Not measured | — | — | — | — |\n';
  text+='\nCause unresolved; no module change or expected gain established by these partial arms.\n\n';
 }
-text+='## Coverage\n\n'+status.missing.map(x=>'- '+x).join('\n')+'\n\nDO labels: '+JSON.stringify(status.eventCounts)+'. Historical interrupted LS rows are excluded from aggregates. First resumed batch predates the archive-read audit; later batches pin synchronous archive reads. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.\n';
+text+='## DO event split\n\n| Class | Day | AP m | FFM m | Median paired ratio | n |\n| --- | ---: | ---: | ---: | ---: | ---: |\n';for(const s of eventSplit)for(const d of s.days)text+=`| ${s.label} | ${d.day} | ${fmt(d.apM)} | ${fmt(d.ffmM)} | ${fmt(d.medianRatio)} | ${d.n} |\n`;
+text+='\n## Coverage\n\n'+status.missing.map(x=>'- '+x).join('\n')+'\n\nDO labels: '+JSON.stringify(status.eventCounts)+'. Historical interrupted LS rows are excluded from aggregates. First resumed batch predates the archive-read audit; later batches pin synchronous archive reads. Module builds and source hashes are in scratch manifests. No full-task E2E pass or gauntlet receipt is claimed.\n';
 fs.writeFileSync(new URL('README.md',dest),text);console.log(JSON.stringify({rows:all.length,eventCounts:status.eventCounts}));
