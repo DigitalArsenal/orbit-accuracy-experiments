@@ -46,6 +46,8 @@ const onGrid = (lines, stepMs) => {
 };
 // FFM's module takes at most 10,000 samples a call; each call flies from the same fitted state, so batches change nothing.
 const inBatches = async (epochs, fly) => { const out = []; for (let i = 0; i < epochs.length; i += 9000) out.push(...(await fly(epochs.slice(i, i + 9000)))); return out; };
+// A precise-orbit example must hold its reference without a hole of an hour or more; shorter holes are the burns the product leaves out.
+const holed = (epochs) => epochs.some((e, i) => i > 0 && Date.parse(e) - Date.parse(epochs[i - 1]) >= 3600000);
 const nearestMedian = (list, value) => { const v = list.map(value).filter(Number.isFinite).sort((a, b) => a - b); if (!v.length) return []; const m = v[Math.floor((v.length - 1) / 2)]; return [...list].filter((r) => Number.isFinite(value(r))).sort((a, b) => Math.abs(value(a) - m) - Math.abs(value(b) - m) || String(a.key).localeCompare(String(b.key))); };
 
 if (MODE === 'next') {
@@ -315,7 +317,7 @@ if (MODE === 'next') {
     const between = (a, b) => o.lines.filter((_, i) => times[i] >= a && times[i] <= b);
     const stepNative = times[1] - times[0];
     let done = false;
-    for (const pick of ranked.slice(0, 8)) {
+    for (const pick of ranked) {
       try {
         const D0 = Date.parse(pick.cutoff.length === 10 ? `${pick.cutoff}T00:00:00Z` : pick.cutoff);
         const from = D0 - arc * HOUR, to = D0 + 7 * DAY;
@@ -325,6 +327,7 @@ if (MODE === 'next') {
         const step = (high ? 300 : 60) * 1000;
         const whole = between(from, to), t0 = ms(whole[0].epoch);
         const grid = onGrid(whole, step);
+        if (holed(grid.map((l) => l.epoch))) continue;
         const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms), gridB = S.gridBytes(epochs);
         let ex, spw;
         if (!vacuum) {
@@ -408,6 +411,8 @@ if (MODE === 'next') {
           const whole = [...raw, ...T.series(o, D0 + 1, to).lines];
           const t0 = ms(whole[0].epoch);
           const grid = onGrid(whole, step);
+          if (holed(grid.map((l) => l.epoch))) continue;
+        if (holed(grid.map((l) => l.epoch))) continue;
           if (grid.length < 100) continue;
           const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms), gridB = S.gridBytes(epochs);
           const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
