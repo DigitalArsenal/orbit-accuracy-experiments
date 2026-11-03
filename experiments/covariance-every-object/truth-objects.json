@@ -1,870 +1,1034 @@
 {
- "note": "A2 section 3 minus NSGF (LARETS, Starlette, WESTPAC, Stella, LARES, LARES-2, Ajisai), minus Galileo, minus 44350/TerraSAR-X/Sentinel-1D/LAGEOS-1; TDRS unresolved (NAIF id to NORAD not read, V7 truth grade unverified) so excluded; TESS (HEO) not listed",
- "gnssCounts": {
-  "gps": 32,
-  "glonass": 21,
-  "bdsMeo": 27
- },
- "inputs": {
-  "igsMetadataSha256": "2d9918af62fd142a8fb3943ac404904e02cda8a6054aa38e4d9bed4e61e930de",
-  "esaHeaderFile": "ESA0OPSFIN_20260740000_01D_05M_ORB.SP3.gz",
-  "esaHeaderFileSha256": "7d6b7bf4f46ea0df9d4f005adf87a1f1139bd7f1b2e3d8b858e8a2e2231ac7a1"
- },
+ "note": "A2 section 3 minus NSGF (LARETS, Starlette, WESTPAC, Stella, LARES, LARES-2, Ajisai), minus Galileo, minus 44350/TerraSAR-X/Sentinel-1D/LAGEOS-1; TDRS unresolved (NAIF id to NORAD not read, V7 truth grade unverified) so excluded; TESS (HEO) not listed. Rebased on Part 1 placements (PLAN.md amendment 14).",
+ "part1FrozenConstantsSha256": "daf3153ff6baf2596f1dbe1d22489182e69931cba15d7133307497b80638e3ba",
+ "droppedFromEarlierTable": [
+  25544,
+  44349,
+  44351,
+  44353,
+  44358,
+  41589,
+  46114,
+  42709
+ ],
+ "enteredFromPart1": [
+  26360,
+  27704,
+  32275,
+  32276,
+  36111,
+  42738,
+  42965,
+  44204,
+  44337,
+  44709,
+  49336,
+  62876
+ ],
  "objects": [
-  {
-   "name": "Swarm A",
-   "norad": 39452,
-   "cluster": "swarm-ac",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "Swarm C",
-   "norad": 39453,
-   "cluster": "swarm-ac",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "Swarm B",
-   "norad": 39451,
-   "cluster": "swarm-b",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GRACE-FO 1",
-   "norad": 43476,
-   "cluster": "grace-fo",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GRACE-FO 2",
-   "norad": 43477,
-   "cluster": "grace-fo",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "ISS",
-   "norad": 25544,
-   "cluster": "iss",
-   "from": "2022-11-20",
-   "to": "2024-12-31"
-  },
-  {
-   "name": "COSMIC-2 44349",
-   "norad": 44349,
-   "cluster": "cosmic2",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "COSMIC-2 44351",
-   "norad": 44351,
-   "cluster": "cosmic2",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "COSMIC-2 44353",
-   "norad": 44353,
-   "cluster": "cosmic2",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "COSMIC-2 44358",
-   "norad": 44358,
-   "cluster": "cosmic2",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "CryoSat-2",
-   "norad": 36508,
-   "cluster": "cryosat2",
-   "from": "2025-09-26",
-   "to": "2026-09-12"
-  },
-  {
-   "name": "SARAL",
-   "norad": 39086,
-   "cluster": "saral",
-   "from": "2025-09-28",
-   "to": "2026-09-07"
-  },
-  {
-   "name": "Sentinel-1A",
-   "norad": 39634,
-   "cluster": "s1a",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "Sentinel-1C",
-   "norad": 62261,
-   "cluster": "s1c",
-   "from": "2025-10-03",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "Sentinel-3A",
-   "norad": 41335,
-   "cluster": "s3ab",
-   "from": "2025-09-24",
-   "to": "2026-09-20"
-  },
-  {
-   "name": "Sentinel-3B",
-   "norad": 43437,
-   "cluster": "s3ab",
-   "from": "2025-09-25",
-   "to": "2026-09-21"
-  },
-  {
-   "name": "HY-2C",
-   "norad": 46469,
-   "cluster": "hy2c",
-   "from": "2025-09-21",
-   "to": "2026-09-22"
-  },
-  {
-   "name": "HY-2D",
-   "norad": 48621,
-   "cluster": "hy2d",
-   "from": "2025-09-28",
-   "to": "2026-09-10"
-  },
-  {
-   "name": "SWOT",
-   "norad": 54754,
-   "cluster": "swot",
-   "from": "2025-09-25",
-   "to": "2026-09-11"
-  },
-  {
-   "name": "Jason-3",
-   "norad": 41240,
-   "cluster": "jason-s6",
-   "from": "2025-09-23",
-   "to": "2026-08-26"
-  },
-  {
-   "name": "Sentinel-6A",
-   "norad": 46984,
-   "cluster": "jason-s6",
-   "from": "2025-09-27",
-   "to": "2026-09-19"
-  },
-  {
-   "name": "Sentinel-6B",
-   "norad": 66514,
-   "cluster": "jason-s6",
-   "from": "2025-11-23",
-   "to": "2026-09-19"
-  },
-  {
-   "name": "LAGEOS-2",
-   "norad": 22195,
-   "cluster": "lageos2",
-   "from": "2025-10-03",
-   "to": "2026-05-31"
-  },
   {
    "name": "Etalon-1",
    "norad": 19751,
    "cluster": "etalon",
    "from": "2025-10-03",
-   "to": "2026-05-31"
+   "to": "2026-05-31",
+   "part1Regime": "MEO"
   },
   {
    "name": "Etalon-2",
    "norad": 20026,
    "cluster": "etalon",
    "from": "2025-10-03",
-   "to": "2026-05-31"
-  },
-  {
-   "name": "QZS-3",
-   "norad": 42917,
-   "cluster": "qzs3",
-   "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "part1Regime": "MEO"
   },
   {
-   "name": "WAAS PRN131 EUTE 117W B",
-   "norad": 41589,
-   "cluster": "waas",
-   "from": "2026-08-29",
-   "to": "2026-11-02"
-  },
-  {
-   "name": "WAAS PRN133 Galaxy 30",
-   "norad": 46114,
-   "cluster": "waas",
-   "from": "2026-08-29",
-   "to": "2026-11-02"
-  },
-  {
-   "name": "WAAS PRN135 SES-15",
-   "norad": 42709,
-   "cluster": "waas",
-   "from": "2026-08-29",
-   "to": "2026-11-02"
+   "name": "LAGEOS-2",
+   "norad": 22195,
+   "cluster": "lageos2",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "part1Regime": "MEO"
   },
   {
    "name": "GPS 24876",
    "norad": 24876,
-   "cluster": "gps",
+   "cluster": "G6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 26360",
+   "norad": 26360,
+   "cluster": "G6-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GPS 26407",
    "norad": 26407,
-   "cluster": "gps",
+   "cluster": "G5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 32711",
-   "norad": 32711,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 35752",
-   "norad": 35752,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 29486",
-   "norad": 29486,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 28874",
-   "norad": 28874,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 32260",
-   "norad": 32260,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GPS 27663",
    "norad": 27663,
-   "cluster": "gps",
+   "cluster": "G5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GPS 32384",
-   "norad": 32384,
-   "cluster": "gps",
+   "name": "NORAD 27704",
+   "norad": 27704,
+   "cluster": "G5-4",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 29601",
-   "norad": 29601,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GPS 28190",
    "norad": 28190,
-   "cluster": "gps",
+   "cluster": "G5-3",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GPS 28474",
    "norad": 28474,
-   "cluster": "gps",
+   "cluster": "G6-4",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 28874",
+   "norad": 28874,
+   "cluster": "G5-3",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 29486",
+   "norad": 29486,
+   "cluster": "G5-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 29601",
+   "norad": 29601,
+   "cluster": "G5-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 32260",
+   "norad": 32260,
+   "cluster": "G5-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 32275",
+   "norad": 32275,
+   "cluster": "R7-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 32276",
+   "norad": 32276,
+   "cluster": "R7-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 32384",
+   "norad": 32384,
+   "cluster": "G6-3",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 32711",
+   "norad": 32711,
+   "cluster": "G5-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 35752",
+   "norad": 35752,
+   "cluster": "G6-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 36111",
+   "norad": 36111,
+   "cluster": "R6-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "CryoSat-2",
+   "norad": 36508,
+   "cluster": "cryosat2",
+   "from": "2025-09-26",
+   "to": "2026-09-12",
+   "part1Regime": "LEO-M"
   },
   {
    "name": "GPS 36585",
    "norad": 36585,
-   "cluster": "gps",
+   "cluster": "G5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 39533",
-   "norad": 39533,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 38833",
-   "norad": 38833,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 39166",
-   "norad": 39166,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 39741",
-   "norad": 39741,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 40105",
-   "norad": 40105,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 40294",
-   "norad": 40294,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 41328",
-   "norad": 41328,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 40534",
-   "norad": 40534,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 40730",
-   "norad": 40730,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 41019",
-   "norad": 41019,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 43873",
-   "norad": 43873,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 44506",
-   "norad": 44506,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 45854",
-   "norad": 45854,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 46826",
-   "norad": 46826,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 48859",
-   "norad": 48859,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 55268",
-   "norad": 55268,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 62339",
-   "norad": 62339,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 64202",
-   "norad": 64202,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GPS 67588",
-   "norad": 67588,
-   "cluster": "gps",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 40315",
-   "norad": 40315,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 57517",
-   "norad": 57517,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 63130",
-   "norad": 63130,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 46805",
-   "norad": 46805,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 52984",
-   "norad": 52984,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 54031",
-   "norad": 54031,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 65590",
-   "norad": 65590,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
-  },
-  {
-   "name": "GLONASS 37869",
-   "norad": 37869,
-   "cluster": "glonass",
-   "from": "2024-09-24",
-   "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GLONASS 37867",
    "norad": 37867,
-   "cluster": "glonass",
+   "cluster": "R7-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GLONASS 37868",
    "norad": 37868,
-   "cluster": "glonass",
+   "cluster": "R7-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 37869",
+   "norad": 37869,
+   "cluster": "R7-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 38833",
+   "norad": 38833,
+   "cluster": "G5-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "SARAL",
+   "norad": 39086,
+   "cluster": "saral",
+   "from": "2025-09-28",
+   "to": "2026-09-07",
+   "part1Regime": "LEO-M"
   },
   {
    "name": "GLONASS 39155",
    "norad": 39155,
-   "cluster": "glonass",
+   "cluster": "R7-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 41330",
-   "norad": 41330,
-   "cluster": "glonass",
+   "name": "GPS 39166",
+   "norad": 39166,
+   "cluster": "G5-3",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 42939",
-   "norad": 42939,
-   "cluster": "glonass",
+   "name": "Swarm B",
+   "norad": 39451,
+   "cluster": "swarm-B",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-L"
+  },
+  {
+   "name": "Swarm A",
+   "norad": 39452,
+   "cluster": "swarm-AC",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-L"
+  },
+  {
+   "name": "Swarm C",
+   "norad": 39453,
+   "cluster": "swarm-AC",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-L"
+  },
+  {
+   "name": "GPS 39533",
+   "norad": 39533,
+   "cluster": "G5-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GLONASS 39620",
    "norad": 39620,
-   "cluster": "glonass",
+   "cluster": "R7-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "Sentinel-1A",
+   "norad": 39634,
+   "cluster": "s1",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-M"
+  },
+  {
+   "name": "GPS 39741",
+   "norad": 39741,
+   "cluster": "G6-4",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "GLONASS 40001",
    "norad": 40001,
-   "cluster": "glonass",
+   "cluster": "R7-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 43508",
-   "norad": 43508,
-   "cluster": "glonass",
+   "name": "GPS 40105",
+   "norad": 40105,
+   "cluster": "G6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 43687",
-   "norad": 43687,
-   "cluster": "glonass",
+   "name": "GPS 40294",
+   "norad": 40294,
+   "cluster": "G6-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 44299",
-   "norad": 44299,
-   "cluster": "glonass",
+   "name": "GLONASS 40315",
+   "norad": 40315,
+   "cluster": "R6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 44850",
-   "norad": 44850,
-   "cluster": "glonass",
+   "name": "GPS 40534",
+   "norad": 40534,
+   "cluster": "G5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 45358",
-   "norad": 45358,
-   "cluster": "glonass",
+   "name": "GPS 40730",
+   "norad": 40730,
+   "cluster": "G5-3",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
-   "name": "GLONASS 54377",
-   "norad": 54377,
-   "cluster": "glonass",
+   "name": "GPS 41019",
+   "norad": 41019,
+   "cluster": "G6-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "Jason-3",
+   "norad": 41240,
+   "cluster": "jason-s6",
+   "from": "2025-09-23",
+   "to": "2026-08-26",
+   "part1Regime": "LEO-H"
+  },
+  {
+   "name": "GPS 41328",
+   "norad": 41328,
+   "cluster": "G6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 41330",
+   "norad": 41330,
+   "cluster": "R7-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "Sentinel-3A",
+   "norad": 41335,
+   "cluster": "s3",
+   "from": "2025-09-24",
+   "to": "2026-09-20",
+   "part1Regime": "LEO-M"
+  },
+  {
+   "name": "NORAD 42738",
+   "norad": 42738,
+   "cluster": "J4-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
+  },
+  {
+   "name": "QZS-3",
+   "norad": 42917,
+   "cluster": "J0-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
+  },
+  {
+   "name": "GLONASS 42939",
+   "norad": 42939,
+   "cluster": "R6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 42965",
+   "norad": 42965,
+   "cluster": "J4-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
   },
   {
    "name": "BeiDou MEO 43001",
    "norad": 43001,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43002",
    "norad": 43002,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43107",
    "norad": 43107,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43108",
    "norad": 43108,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43207",
    "norad": 43207,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43208",
    "norad": 43208,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43245",
    "norad": 43245,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43246",
    "norad": 43246,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "Sentinel-3B",
+   "norad": 43437,
+   "cluster": "s3",
+   "from": "2025-09-25",
+   "to": "2026-09-21",
+   "part1Regime": "LEO-M"
+  },
+  {
+   "name": "GRACE-FO 1",
+   "norad": 43476,
+   "cluster": "gracefo",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-L"
+  },
+  {
+   "name": "GRACE-FO 2",
+   "norad": 43477,
+   "cluster": "gracefo",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-L"
+  },
+  {
+   "name": "GLONASS 43508",
+   "norad": 43508,
+   "cluster": "R7-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43581",
    "norad": 43581,
-   "cluster": "beidou-meo",
+   "cluster": "C5-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43582",
    "norad": 43582,
-   "cluster": "beidou-meo",
+   "cluster": "C5-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43602",
    "norad": 43602,
-   "cluster": "beidou-meo",
+   "cluster": "C5-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43603",
    "norad": 43603,
-   "cluster": "beidou-meo",
+   "cluster": "C5-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43622",
    "norad": 43622,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43623",
    "norad": 43623,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43647",
    "norad": 43647,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43648",
    "norad": 43648,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 43687",
+   "norad": 43687,
+   "cluster": "R6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43706",
    "norad": 43706,
-   "cluster": "beidou-meo",
+   "cluster": "C5-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 43707",
    "norad": 43707,
-   "cluster": "beidou-meo",
+   "cluster": "C5-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 43873",
+   "norad": 43873,
+   "cluster": "G6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 44204",
+   "norad": 44204,
+   "cluster": "C6-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
+  },
+  {
+   "name": "GLONASS 44299",
+   "norad": 44299,
+   "cluster": "R6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 44337",
+   "norad": 44337,
+   "cluster": "C6-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
+  },
+  {
+   "name": "GPS 44506",
+   "norad": 44506,
+   "cluster": "G6-4",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 44543",
    "norad": 44543,
-   "cluster": "beidou-meo",
+   "cluster": "C5-0",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 44709",
+   "norad": 44709,
+   "cluster": "C5-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
   },
   {
    "name": "BeiDou MEO 44793",
    "norad": 44793,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 44794",
    "norad": 44794,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 44850",
+   "norad": 44850,
+   "cluster": "R7-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 44864",
    "norad": 44864,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 44865",
    "norad": 44865,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 45358",
+   "norad": 45358,
+   "cluster": "R6-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 45854",
+   "norad": 45854,
+   "cluster": "G6-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "HY-2C",
+   "norad": 46469,
+   "cluster": "hy2c",
+   "from": "2025-09-21",
+   "to": "2026-09-22",
+   "part1Regime": "LEO-H"
+  },
+  {
+   "name": "GLONASS 46805",
+   "norad": 46805,
+   "cluster": "R6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 46826",
+   "norad": 46826,
+   "cluster": "G5-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "Sentinel-6A",
+   "norad": 46984,
+   "cluster": "jason-s6",
+   "from": "2025-09-27",
+   "to": "2026-09-19",
+   "part1Regime": "LEO-H"
+  },
+  {
+   "name": "HY-2D",
+   "norad": 48621,
+   "cluster": "hy2d",
+   "from": "2025-09-28",
+   "to": "2026-09-10",
+   "part1Regime": "LEO-H"
+  },
+  {
+   "name": "GPS 48859",
+   "norad": 48859,
+   "cluster": "G6-4",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 49336",
+   "norad": 49336,
+   "cluster": "J4-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
+  },
+  {
+   "name": "GLONASS 52984",
+   "norad": 52984,
+   "cluster": "R6-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 54031",
+   "norad": 54031,
+   "cluster": "R6-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 54377",
+   "norad": 54377,
+   "cluster": "R6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "SWOT",
+   "norad": 54754,
+   "cluster": "swot",
+   "from": "2025-09-25",
+   "to": "2026-09-11",
+   "part1Regime": "LEO-H"
+  },
+  {
+   "name": "GPS 55268",
+   "norad": 55268,
+   "cluster": "G6-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 57517",
+   "norad": 57517,
+   "cluster": "R7-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 58654",
    "norad": 58654,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 58655",
    "norad": 58655,
-   "cluster": "beidou-meo",
+   "cluster": "C6-1",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 61186",
    "norad": 61186,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
   },
   {
    "name": "BeiDou MEO 61187",
    "norad": 61187,
-   "cluster": "beidou-meo",
+   "cluster": "C5-2",
    "from": "2024-09-24",
    "to": "2026-05-31",
-   "c2cal": true
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "Sentinel-1C",
+   "norad": 62261,
+   "cluster": "s1",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-M"
+  },
+  {
+   "name": "GPS 62339",
+   "norad": 62339,
+   "cluster": "G5-4",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 62876",
+   "norad": 62876,
+   "cluster": "J0-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "GEO"
+  },
+  {
+   "name": "GLONASS 63130",
+   "norad": 63130,
+   "cluster": "R7-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GPS 64202",
+   "norad": 64202,
+   "cluster": "G6-0",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "GLONASS 65590",
+   "norad": 65590,
+   "cluster": "R6-2",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "Sentinel-6B",
+   "norad": 66514,
+   "cluster": "jason-s6",
+   "from": "2025-11-23",
+   "to": "2026-09-19",
+   "part1Regime": "LEO-H"
+  },
+  {
+   "name": "GPS 67588",
+   "norad": 67588,
+   "cluster": "G6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
   }
  ]
 }

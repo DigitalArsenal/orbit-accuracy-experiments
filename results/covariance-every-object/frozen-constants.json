@@ -1,103 +1,207 @@
 {
  "status": "DRAFT: items marked PENDING await Part 1",
  "freezeDeadlineUtc": "2026-11-09T23:59:00Z",
- "codeSha256": "3354d7baf12d1e5f30596974a2e6ba11d5511664a9e3e0ba3f19cea3cab9c381",
+ "codeSha256": "02752baf9ca716ce067badc8847662210aa88eb82e0bb92f2f1a1d395cdee78d",
  "codeFilesSha256": {
-  "PLAN.md": "c12bb546d205826dfd2d4edb723019ac20446c0d69961faf9687ed7468ad409a",
+  "PLAN.md": "d9a82f7e86a9475676ec89a4f5449bd0e6c04f3c6c50a4c9a67e5405942519b2",
+  "admission.mjs": "8cb857346ea17cd988bcd2de9f51bd4642df3c73bc9bdd421c0a9ba999301ea9",
   "audit.mjs": "377bda408fedbbc9fbee2ade8e8d8d6ee392294840223045347650dd4f4837b4",
   "build-truth.mjs": "4f7955a687ed77779bf55adb148600c6e68ddbec79b501e0840cc7159ad58401",
-  "daily-worker.mjs": "9d55c61033c37e02882b97a98b7e6e04e1b859505df7278920ca8fad7136f2d4",
+  "daily-worker.mjs": "b0af091d29bfac3faf74aac5a398ac6f0ed2b5b4dcc90153bc2e970b99d52f8c",
   "daily.mjs": "f1acaf89fc1d39613998bb5929ad17f8c3f4607c77eba9da485966840755f554",
   "denominators.mjs": "ec893d3f103da2fd445c6c7b374f160401db287a771541800954912129d4bd38",
-  "freeze.mjs": "ab1f7348bcedbfb87073e5fc802bcddde023004e96d0b9f19e9a8b8c97a0e240",
+  "devs2-worker.mjs": "28dc9ff38d4b30747147ab217d265b72e48a1a0107c68bca0c8fa1e47603fd0d",
+  "devs2.mjs": "f871033e984cac54252ec3b488b97cff8e8c6e65858c3bb55d9cab8717aee065",
+  "freeze.mjs": "28381e9265c032b31ec0b5273b2a67e90babcdbf56edcddc385977f29ef95d8b",
   "index-worker.mjs": "12452a39268f5d88ff4b9a3ac04bb2366e5039959621f90eb9af8098af085025",
   "index.mjs": "7887c0c58e5b8e2fe852694cf5a44bcc07fedc2521b2d8677726ebf1f773f5ef",
   "lib/archive.mjs": "2395e5ff6396f730ebe0570542e328420a08b57b938cb40f78f6dac8346f8209",
   "lib/hold.mjs": "8b995d9e3217a189032ad93bc909dc7809d03574fdfca09909a6aa525be431f4",
   "lib/inflate.mjs": "c6e439b6ac32811a7a199efa36a84aae31ac7dd7425e5b82e01855ba5bc429eb",
   "lib/linalg.mjs": "a9d734397d89c203eba416a696dd1f8700b3ffedfe6eba75701d02d39a25f5ac",
-  "lib/n0sim.mjs": "aa62fc1097e566318f1ca90b4b662cd9da0ebf63be704ac3aacfe603cd2bc176",
-  "lib/pairs.mjs": "36f843f6a173b439bf7526dba118d05ad3fb333bc61c4967aae0574f9d12646a",
-  "lib/s2-synth.mjs": "00b65d6b686e1524a72118160f464d9e01c86d98a3e872f3f3bfe9502494ee60",
-  "lib/s2.mjs": "a1696923ec731139a1695c3bef8eef8612e36b3199e6c0dd3c3b48203d363253",
+  "lib/n0sim.mjs": "b2ec255190a3cc8f3dae91e9b9127616b8028852f6ce75b19e3456e22c44ad63",
+  "lib/pairs.mjs": "7c6a00cf5af1cbd087109e3c68a2d73240aa7acc60fc0f81eb0345b5ba5263f4",
+  "lib/pstrat.mjs": "eefceb830b424efb2ef57d0eaa29f05f9765c83ad60a6fa96c3de072384e0014",
+  "lib/s2-synth.mjs": "1aa6cbffe3d0643865940d4b60ef1a8f70a8baa6f7ef3a7beaa40a4b02bd08bc",
+  "lib/s2.mjs": "6cb9d9592f3d48d3ca08f849f3f8786bd6ac487cf572d1b1a7ddbdb21cee4213",
   "lib/sgp4.mjs": "86471b532bd9885bc4be1b5c449b0b9a74242a191d1c6e4d02447ab1d7a89aa1",
   "lib/synth.mjs": "190e1e81e22fd2c7c0059bfd79d2ef96d12ab8437565b6e9c510243ba478f651",
-  "n0.mjs": "909429279a9928914d805df38bd3d88d51e3e563dcc2849bbe9bc56da8e5a580",
-  "pairs-worker.mjs": "da0b41b92983635c4dd36e869fd9841367af36d038587cf9eabee351cbabcea1",
+  "n0.mjs": "1a7629b6166b138cec22fc919f46c7b56a376e373e7c95d519b7774995954cfd",
+  "pairs-worker.mjs": "87c26276ab0f857816fdbac9dba8fde3eeec761cd24152ad1e88e16e77a5b3a4",
   "pairs.mjs": "4bd93386904f8c02765ecaf8b7191fb73dc3aabffda86e45a58711389c6d14dc",
-  "run.mjs": "c9d9712cc68aa504fa7ea9889814d8157d5a547857821691f531a6621045502e",
-  "truth-objects.json": "5f45018e27985460e5891e7030ee5acd9db48fa9efeb458ad47be3fa57b1e875"
+  "rebase-truth.mjs": "c2329eaadaa72b4cb94e84132eac955846077cc88a9e6c769d062b2e279665d5",
+  "run.mjs": "5c5dd7ce1b8d4f5df8c4a3e886e62a37cfa7147319faa2bea8dac41eba41471a",
+  "s2-shard.mjs": "4707e5d82ebb67747656b0ed6f29a442409f538a2c735b3e1b208bf7a1e86888",
+  "truth-objects.json": "e13665e829b286b4199aa5d5d45a83468d64695d3a5cda3bc7e82cad74007028"
  },
  "inputs": {
-  "provenanceAuditSha256": "70fec72c39270449b4a848c0c962a6ac08fad09c1d6b72019538d1c653e43b5c",
-  "truthObjectsSha256": "5f45018e27985460e5891e7030ee5acd9db48fa9efeb458ad47be3fa57b1e875",
+  "provenanceAuditSha256": "b07ba19280a375d472be07e98d2e0087e823e9c4ee56bdc4ffd2851388cbec5d",
+  "truthObjectsSha256": "e13665e829b286b4199aa5d5d45a83468d64695d3a5cda3bc7e82cad74007028",
   "vendorsBlob": "e9dd6db5b4df53fd9df0132faf59c12cae07947d",
   "sgp4Pins": "lib/sgp4.mjs PINS (space-data-network-modules origin/main 3ae1eb289)"
  },
  "part1FrozenConstantsSha256": {
-  "status": "PENDING",
-  "reason": "Part 1 results/gp-covariance-strata/frozen-constants.json not yet committed"
+  "sha256": "daf3153ff6baf2596f1dbe1d22489182e69931cba15d7133307497b80638e3ba",
+  "source": "origin wip/experiments-gp-covariance-strata-20261103/claude-gpstrata-d9 4bd8021",
+  "provisional": true,
+  "note": "Re-pinned after Part 1 adds its s3.ruling field; the pin in the committed freeze is the one in Part 1's final results/gp-covariance-strata/frozen-constants.json"
  },
- "denominatorsSha256": "e880e5ed71cd1aa84fac1bd54e39f6f264cdbc7f781a4aead2256869073dd861",
+ "denominatorsSha256": "28a3dfa37452f882c16ab9471deea84940d4359bf25d335ae75246e73e210ba2",
  "devValuesUnderAR": {
-  "devPairsManifestSha256": "54d99919ead870ba2ed80031470958c3113be8ccce740e1b5e7221f88c4b7343",
-  "clusterMomentsSha256": "f73b1929e1e94b04810361e9e0a535df5642cf1002e5681669ad09a7a122968d"
+  "devPairsManifestSha256": "c27c079f25536f59816d2e55c6223fccb866d338d3866613e162bfaaf7e5e56c",
+  "clusterMomentsSha256": "4fc2ca59d34efd1ffdb5db710a851a9183c4ea25159f65453b110bc9036c3b29"
  },
  "n0": {
-  "status": "PROVISIONAL: block length and admitted bins await Part 1",
+  "status": "Part 1 block lengths (median over strata with an admitted bin) and SD-admitted bins; the S2.1 null condition is applied in the freeze",
+  "admittedAxisCells": 33,
   "seed": 20261109,
-  "blockDays": 8,
+  "blockDays": 3,
   "histories": 2000,
   "rows": [
    {
     "n0": 5,
-    "histories": 1997,
-    "pFlagU0": 0.20430645968953431,
-    "medianRatioAtLn4": 0.7389943705179227
+    "histories": 2000,
+    "pFlagU0": 0.1535,
+    "medianRatioAtLn4": 0.9548236689685455
    },
    {
     "n0": 10,
-    "histories": 1997,
-    "pFlagU0": 0.19529293940911366,
-    "medianRatioAtLn4": 0.7149592736069321
+    "histories": 2000,
+    "pFlagU0": 0.153,
+    "medianRatioAtLn4": 0.9387373303364798
    },
    {
     "n0": 20,
-    "histories": 1997,
-    "pFlagU0": 0.18377566349524285,
-    "medianRatioAtLn4": 0.6788232379948262
+    "histories": 2000,
+    "pFlagU0": 0.1485,
+    "medianRatioAtLn4": 0.9093321806278997
    },
    {
     "n0": 40,
-    "histories": 1997,
-    "pFlagU0": 0.16725087631447172,
-    "medianRatioAtLn4": 0.6224564446737568
+    "histories": 2000,
+    "pFlagU0": 0.1435,
+    "medianRatioAtLn4": 0.8602676679437194
    }
   ],
   "n0": null,
   "note": "No n0 meets both rules on the provisional run, so Part 2 is report-only if that holds at the freeze"
  },
  "admittedBins": {
-  "status": "PENDING",
-  "reason": "needs Part 1 dev truth moments by cluster"
+  "rule": "SD of ln(pair/truth moment) over >= 3 clusters <= 0.35 (admission.json), then the S2.1 null condition",
+  "admittedBySD": [
+   "LEO-M|2|T",
+   "LEO-M|3|T",
+   "LEO-M|4|T",
+   "LEO-M|5|R",
+   "LEO-M|5|T",
+   "LEO-M|6|R",
+   "LEO-M|6|T",
+   "LEO-L|1|R",
+   "LEO-L|1|T",
+   "LEO-L|1|N",
+   "LEO-L|2|R",
+   "LEO-L|2|T",
+   "LEO-L|2|N",
+   "LEO-L|3|R",
+   "LEO-L|3|T",
+   "LEO-L|3|N",
+   "LEO-L|4|R",
+   "LEO-L|4|T",
+   "LEO-L|4|N",
+   "LEO-L|5|R",
+   "LEO-L|5|T",
+   "LEO-L|5|N",
+   "LEO-L|6|T",
+   "LEO-L|6|N",
+   "LEO-L|0|R",
+   "LEO-L|0|N",
+   "LEO-H|2|N",
+   "LEO-H|3|N",
+   "LEO-H|4|T",
+   "LEO-H|4|N",
+   "LEO-H|5|N",
+   "LEO-H|6|T",
+   "LEO-H|6|N"
+  ],
+  "count": 33,
+  "of": 111,
+  "s21NullFalsePositive": 0.001,
+  "afterNullCondition": [
+   "LEO-M|2|T",
+   "LEO-M|3|T",
+   "LEO-M|4|T",
+   "LEO-M|5|R",
+   "LEO-M|5|T",
+   "LEO-M|6|R",
+   "LEO-M|6|T",
+   "LEO-L|1|R",
+   "LEO-L|1|T",
+   "LEO-L|1|N",
+   "LEO-L|2|R",
+   "LEO-L|2|T",
+   "LEO-L|2|N",
+   "LEO-L|3|R",
+   "LEO-L|3|T",
+   "LEO-L|3|N",
+   "LEO-L|4|R",
+   "LEO-L|4|T",
+   "LEO-L|4|N",
+   "LEO-L|5|R",
+   "LEO-L|5|T",
+   "LEO-L|5|N",
+   "LEO-L|6|T",
+   "LEO-L|6|N",
+   "LEO-L|0|R",
+   "LEO-L|0|N",
+   "LEO-H|2|N",
+   "LEO-H|3|N",
+   "LEO-H|4|T",
+   "LEO-H|4|N",
+   "LEO-H|5|N",
+   "LEO-H|6|T",
+   "LEO-H|6|N"
+  ]
  },
  "s2_1": {
-  "null": {
-   "status": "PENDING",
-   "reason": "needs Part 1 coverage rows"
-  },
-  "power": {
-   "status": "PENDING",
-   "reason": "needs Part 1 coverage rows"
+  "null": 0.001,
+  "power": 1,
+  "flaggedClusters": 10,
+  "params": {
+   "B": 10000,
+   "perms": 1000,
+   "reps": 2000,
+   "inner": 100
   }
+ },
+ "devS2": {
+  "s21": {
+   "state": "FAIL",
+   "interval": [
+    -0.010954085615334952,
+    0.04827271534142911
+   ],
+   "estimate": 0.01441947134005291,
+   "flaggedClusters": 10
+  },
+  "s22": {
+   "state": "FAIL",
+   "interval": [
+    -0.003145070633029453,
+    0.01496572018392417
+   ],
+   "covO": 0.9730439453916482,
+   "covBase": 0.9480681720434152
+  },
+  "s23": {
+   "state": "NOT EVALUABLE",
+   "reason": "no stratum is labeled"
+  },
+  "note": "on Part 1 dev rows, for the freeze record; the states below are PENDING until each stratum's open date"
  },
  "states": {
   "S2_1": "PENDING",
   "S2_2": "PENDING",
   "S2_3": "PENDING"
  },
- "gnssListsFromPart1": {
-  "status": "PENDING",
-  "reason": "GNSS NORAD lists and regime edges recomputed against Part 1 when it freezes; any object changing stratum is flagged"
- }
+ "listsAndRegimes": "Part 1 placements (amendment 14); objects with pairs outside their Part 1 regime are listed in the README"
 }

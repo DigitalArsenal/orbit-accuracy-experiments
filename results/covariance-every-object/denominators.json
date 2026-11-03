@@ -1,255 +1,338 @@
 {
  "note": "a_{s,b,k}: pooled unclipped second moment of rho in j RTN, position, m^2, over dev truth objects on lawful spans (PLAN.md reading 4)",
- "clusterMomentsSha256": "f73b1929e1e94b04810361e9e0a535df5642cf1002e5681669ad09a7a122968d",
+ "clusterMomentsSha256": "4fc2ca59d34efd1ffdb5db710a851a9183c4ea25159f65453b110bc9036c3b29",
  "strata": {
-  "LEO-L|1": {
-   "regime": "LEO-L",
-   "bin": 1,
-   "ageDays": [
-    0.25,
-    0.75
-   ],
-   "pairs": 9016,
-   "clusters": 4,
-   "objects": 6,
-   "a_RTN_m2": [
-    288236.78,
-    192459830,
-    43876.28
-   ],
-   "top10": [
-    {
-     "share": 0.5367,
-     "clusters": {
-      "iss": 10
-     }
-    },
-    {
-     "share": 0.5838,
-     "clusters": {
-      "iss": 10
-     }
-    },
-    {
-     "share": 0.4246,
-     "clusters": {
-      "iss": 10
-     }
-    }
-   ]
-  },
-  "LEO-L|2": {
-   "regime": "LEO-L",
-   "bin": 2,
-   "ageDays": [
-    0.75,
-    1.5
-   ],
-   "pairs": 9155,
-   "clusters": 4,
-   "objects": 6,
-   "a_RTN_m2": [
-    13568210,
-    1888271100,
-    89678.569
-   ],
-   "top10": [
-    {
-     "share": 0.9323,
-     "clusters": {
-      "iss": 10
-     }
-    },
-    {
-     "share": 0.5376,
-     "clusters": {
-      "iss": 10
-     }
-    },
-    {
-     "share": 0.5772,
-     "clusters": {
-      "iss": 10
-     }
-    }
-   ]
-  },
-  "LEO-L|3": {
-   "regime": "LEO-L",
-   "bin": 3,
-   "ageDays": [
-    1.5,
-    2.5
-   ],
-   "pairs": 9150,
-   "clusters": 4,
-   "objects": 6,
-   "a_RTN_m2": [
-    1447279000,
-    12798955000,
-    80649.255
-   ],
-   "top10": [
-    {
-     "share": 0.9917,
-     "clusters": {
-      "iss": 10
-     }
-    },
-    {
-     "share": 0.5452,
-     "clusters": {
-      "iss": 10
-     }
-    },
-    {
-     "share": 0.239,
-     "clusters": {
-      "iss": 10
-     }
-    }
-   ]
-  },
-  "LEO-L|4": {
-   "regime": "LEO-L",
+  "MEO|4": {
+   "regime": "MEO",
    "bin": 4,
    "ageDays": [
     2.5,
     4
    ],
-   "pairs": 9140,
-   "clusters": 4,
-   "objects": 6,
+   "pairs": 44566,
+   "clusters": 20,
+   "objects": 88,
    "a_RTN_m2": [
-    14608000000,
-    40694657000,
-    153142.91
+    1961218100,
+    9342401500,
+    513693600
    ],
    "top10": [
     {
-     "share": 0.9912,
+     "share": 0.9999,
      "clusters": {
-      "iss": 10
+      "R6-2": 4,
+      "C5-2": 1,
+      "G6-1": 2,
+      "G5-3": 1,
+      "C6-1": 2
      }
     },
     {
-     "share": 0.3936,
+     "share": 0.9939,
      "clusters": {
-      "iss": 10
+      "R6-2": 5,
+      "C5-2": 1,
+      "G6-1": 3,
+      "G6-0": 1
      }
     },
     {
-     "share": 0.2626,
+     "share": 0.9999,
      "clusters": {
-      "iss": 10
+      "R6-2": 4,
+      "G6-1": 2,
+      "C6-1": 2,
+      "G5-1": 1,
+      "G5-2": 1
      }
     }
    ]
   },
-  "LEO-L|5": {
-   "regime": "LEO-L",
+  "MEO|5": {
+   "regime": "MEO",
    "bin": 5,
    "ageDays": [
     4,
     6
    ],
-   "pairs": 9106,
-   "clusters": 4,
-   "objects": 6,
+   "pairs": 47561,
+   "clusters": 20,
+   "objects": 88,
    "a_RTN_m2": [
-    43850910000,
-    136741830000,
-    1087665.5
+    14010587000,
+    16684932000,
+    927726240
    ],
    "top10": [
     {
-     "share": 0.9649,
+     "share": 1,
      "clusters": {
-      "iss": 10
+      "R6-2": 4,
+      "C5-2": 2,
+      "G6-1": 2,
+      "G6-4": 2
      }
     },
     {
-     "share": 0.2528,
+     "share": 0.9927,
      "clusters": {
-      "iss": 10
+      "R6-2": 4,
+      "C5-2": 2,
+      "G6-1": 2,
+      "G6-0": 1,
+      "G6-4": 1
      }
     },
     {
-     "share": 0.7233,
+     "share": 1,
      "clusters": {
-      "iss": 10
+      "R6-2": 3,
+      "G6-1": 2,
+      "C6-1": 4,
+      "G5-1": 1
      }
     }
    ]
   },
-  "LEO-L|6": {
-   "regime": "LEO-L",
+  "MEO|6": {
+   "regime": "MEO",
    "bin": 6,
    "ageDays": [
     6,
     8
    ],
-   "pairs": 9061,
-   "clusters": 4,
-   "objects": 6,
+   "pairs": 47127,
+   "clusters": 20,
+   "objects": 88,
    "a_RTN_m2": [
-    126743510000,
-    383274680000,
-    1725281
+    52329939000,
+    46955386000,
+    99571213
    ],
    "top10": [
     {
-     "share": 0.8797,
+     "share": 1,
      "clusters": {
-      "iss": 10
+      "G6-1": 3,
+      "G6-0": 2,
+      "R6-2": 5
      }
     },
     {
-     "share": 0.1059,
+     "share": 0.9904,
      "clusters": {
-      "iss": 10
+      "G6-1": 3,
+      "G6-0": 2,
+      "R6-2": 5
      }
     },
     {
-     "share": 0.5351,
+     "share": 0.9979,
      "clusters": {
-      "iss": 10
+      "R6-2": 4,
+      "G6-1": 4,
+      "G6-0": 2
      }
     }
    ]
   },
-  "LEO-L|0": {
-   "regime": "LEO-L",
+  "MEO|0": {
+   "regime": "MEO",
    "bin": 0,
    "ageDays": [
     0,
     0.25
    ],
-   "pairs": 5372,
-   "clusters": 4,
-   "objects": 6,
+   "pairs": 6451,
+   "clusters": 20,
+   "objects": 88,
    "a_RTN_m2": [
-    61263.765,
-    25115757,
-    50775.773
+    75686.643,
+    16176406,
+    22925.104
    ],
    "top10": [
     {
-     "share": 0.7551,
+     "share": 0.9885,
      "clusters": {
-      "iss": 10
+      "G6-0": 1,
+      "R6-2": 1,
+      "C6-1": 3,
+      "R7-0": 3,
+      "G5-3": 1,
+      "G6-1": 1
      }
     },
     {
-     "share": 0.9062,
+     "share": 0.997,
      "clusters": {
-      "iss": 10
+      "R6-2": 1,
+      "C6-1": 2,
+      "G6-0": 2,
+      "G5-3": 1,
+      "G5-1": 1,
+      "G5-2": 2,
+      "G6-1": 1
      }
     },
     {
-     "share": 0.4994,
+     "share": 0.9829,
      "clusters": {
-      "iss": 10
+      "R7-0": 3,
+      "G6-1": 1,
+      "C6-1": 2,
+      "G6-0": 1,
+      "R6-2": 1,
+      "G5-4": 1,
+      "G6-4": 1
+     }
+    }
+   ]
+  },
+  "MEO|2": {
+   "regime": "MEO",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 36255,
+   "clusters": 20,
+   "objects": 88,
+   "a_RTN_m2": [
+    32266204,
+    727787030,
+    260280470
+   ],
+   "top10": [
+    {
+     "share": 0.9996,
+     "clusters": {
+      "R6-2": 3,
+      "G6-1": 2,
+      "C6-1": 2,
+      "G6-0": 1,
+      "R6-1": 1,
+      "G6-4": 1
+     }
+    },
+    {
+     "share": 0.9973,
+     "clusters": {
+      "R6-2": 3,
+      "G6-1": 4,
+      "G6-4": 1,
+      "G6-0": 1,
+      "G5-3": 1
+     }
+    },
+    {
+     "share": 1,
+     "clusters": {
+      "R6-2": 3,
+      "G6-1": 3,
+      "R7-0": 1,
+      "G5-2": 3
+     }
+    }
+   ]
+  },
+  "MEO|3": {
+   "regime": "MEO",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 39082,
+   "clusters": 20,
+   "objects": 88,
+   "a_RTN_m2": [
+    88657539,
+    1570234300,
+    1032671600
+   ],
+   "top10": [
+    {
+     "share": 0.9994,
+     "clusters": {
+      "R6-2": 4,
+      "C5-2": 1,
+      "C6-1": 2,
+      "G5-3": 2,
+      "G6-4": 1
+     }
+    },
+    {
+     "share": 0.9922,
+     "clusters": {
+      "R6-2": 4,
+      "C5-2": 1,
+      "G6-4": 3,
+      "G6-0": 1,
+      "G6-1": 1
+     }
+    },
+    {
+     "share": 1,
+     "clusters": {
+      "R6-2": 4,
+      "R7-0": 1,
+      "G6-1": 1,
+      "G5-2": 4
+     }
+    }
+   ]
+  },
+  "MEO|1": {
+   "regime": "MEO",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 19149,
+   "clusters": 20,
+   "objects": 88,
+   "a_RTN_m2": [
+    26367351,
+    58415605,
+    389929370
+   ],
+   "top10": [
+    {
+     "share": 0.9999,
+     "clusters": {
+      "R6-2": 1,
+      "R7-0": 1,
+      "G6-4": 3,
+      "G5-1": 1,
+      "G5-2": 2,
+      "G6-1": 1,
+      "R6-1": 1
+     }
+    },
+    {
+     "share": 0.9967,
+     "clusters": {
+      "R6-2": 2,
+      "R7-1": 1,
+      "G6-1": 2,
+      "G5-1": 2,
+      "G6-4": 1,
+      "G5-2": 2
+     }
+    },
+    {
+     "share": 1,
+     "clusters": {
+      "R6-2": 3,
+      "G5-1": 1,
+      "R7-0": 2,
+      "G6-1": 1,
+      "G5-2": 2,
+      "R7-1": 1
      }
     }
    ]
@@ -261,184 +344,35 @@
     0.25,
     0.75
    ],
-   "pairs": 6067,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 6890,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    19700.143,
-    8332177,
-    3529.6361
+    871.58636,
+    100369.35,
+    490.70735
    ],
    "top10": [
     {
-     "share": 0.9515,
+     "share": 0.1041,
      "clusters": {
-      "cosmic2": 5,
-      "s1c": 5
+      "s3": 5,
+      "s1": 5
      }
     },
     {
-     "share": 0.9916,
+     "share": 0.3424,
      "clusters": {
-      "cosmic2": 2,
+      "s3": 3,
       "saral": 3,
-      "s1c": 3,
-      "s1a": 1,
-      "cryosat2": 1
+      "s1": 4
      }
     },
     {
-     "share": 0.09492,
+     "share": 0.331,
      "clusters": {
-      "cosmic2": 6,
-      "s1a": 2,
-      "s1c": 2
-     }
-    }
-   ]
-  },
-  "LEO-M|3": {
-   "regime": "LEO-M",
-   "bin": 3,
-   "ageDays": [
-    1.5,
-    2.5
-   ],
-   "pairs": 6900,
-   "clusters": 5,
-   "objects": 8,
-   "a_RTN_m2": [
-    334843.35,
-    148323030,
-    56306.509
-   ],
-   "top10": [
-    {
-     "share": 0.9605,
-     "clusters": {
-      "cosmic2": 10
-     }
-    },
-    {
-     "share": 0.9862,
-     "clusters": {
-      "cosmic2": 6,
-      "saral": 4
-     }
-    },
-    {
-     "share": 0.01871,
-     "clusters": {
-      "cosmic2": 10
-     }
-    }
-   ]
-  },
-  "LEO-M|4": {
-   "regime": "LEO-M",
-   "bin": 4,
-   "ageDays": [
-    2.5,
-    4
-   ],
-   "pairs": 6949,
-   "clusters": 5,
-   "objects": 8,
-   "a_RTN_m2": [
-    17740844,
-    925808450,
-    133933.37
-   ],
-   "top10": [
-    {
-     "share": 0.9982,
-     "clusters": {
-      "cosmic2": 10
-     }
-    },
-    {
-     "share": 0.9903,
-     "clusters": {
-      "cosmic2": 9,
-      "saral": 1
-     }
-    },
-    {
-     "share": 0.01317,
-     "clusters": {
-      "cosmic2": 10
-     }
-    }
-   ]
-  },
-  "LEO-M|5": {
-   "regime": "LEO-M",
-   "bin": 5,
-   "ageDays": [
-    4,
-    6
-   ],
-   "pairs": 6902,
-   "clusters": 5,
-   "objects": 8,
-   "a_RTN_m2": [
-    2327117300,
-    27682450000,
-    322958.83
-   ],
-   "top10": [
-    {
-     "share": 0.8097,
-     "clusters": {
-      "cosmic2": 10
-     }
-    },
-    {
-     "share": 0.7171,
-     "clusters": {
-      "cosmic2": 10
-     }
-    },
-    {
-     "share": 0.01128,
-     "clusters": {
-      "cosmic2": 10
-     }
-    }
-   ]
-  },
-  "LEO-M|6": {
-   "regime": "LEO-M",
-   "bin": 6,
-   "ageDays": [
-    6,
-    8
-   ],
-   "pairs": 6856,
-   "clusters": 5,
-   "objects": 8,
-   "a_RTN_m2": [
-    16340852000,
-    97781823000,
-    672706.5
-   ],
-   "top10": [
-    {
-     "share": 0.5672,
-     "clusters": {
-      "cosmic2": 10
-     }
-    },
-    {
-     "share": 0.4213,
-     "clusters": {
-      "cosmic2": 10
-     }
-    },
-    {
-     "share": 0.008047,
-     "clusters": {
-      "cosmic2": 10
+      "s3": 6,
+      "s1": 4
      }
     }
    ]
@@ -450,32 +384,182 @@
     0.75,
     1.5
    ],
-   "pairs": 6791,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 7058,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    136151.83,
-    66842003,
-    17108.471
+    3712.9508,
+    568633.01,
+    1342.7571
    ],
    "top10": [
     {
-     "share": 0.967,
+     "share": 0.03225,
      "clusters": {
-      "cosmic2": 10
+      "s3": 5,
+      "s1": 5
      }
     },
     {
-     "share": 0.9941,
+     "share": 0.329,
      "clusters": {
-      "cosmic2": 6,
-      "saral": 4
+      "saral": 5,
+      "s3": 4,
+      "s1": 1
      }
     },
     {
-     "share": 0.03295,
+     "share": 0.2263,
      "clusters": {
-      "cosmic2": 10
+      "s3": 9,
+      "s1": 1
+     }
+    }
+   ]
+  },
+  "LEO-M|3": {
+   "regime": "LEO-M",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 7091,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    11467.066,
+    2403307.3,
+    3611.2357
+   ],
+   "top10": [
+    {
+     "share": 0.014,
+     "clusters": {
+      "s3": 3,
+      "s1": 5,
+      "cryosat2": 2
+     }
+    },
+    {
+     "share": 0.2741,
+     "clusters": {
+      "saral": 9,
+      "s3": 1
+     }
+    },
+    {
+     "share": 0.1398,
+     "clusters": {
+      "s3": 10
+     }
+    }
+   ]
+  },
+  "LEO-M|4": {
+   "regime": "LEO-M",
+   "bin": 4,
+   "ageDays": [
+    2.5,
+    4
+   ],
+   "pairs": 7145,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    28714.554,
+    8396527.9,
+    8949.0399
+   ],
+   "top10": [
+    {
+     "share": 0.008959,
+     "clusters": {
+      "cryosat2": 10
+     }
+    },
+    {
+     "share": 0.2179,
+     "clusters": {
+      "saral": 10
+     }
+    },
+    {
+     "share": 0.09385,
+     "clusters": {
+      "s3": 10
+     }
+    }
+   ]
+  },
+  "LEO-M|5": {
+   "regime": "LEO-M",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 7119,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    70003.673,
+    28355634,
+    21926.702
+   ],
+   "top10": [
+    {
+     "share": 0.008301,
+     "clusters": {
+      "cryosat2": 10
+     }
+    },
+    {
+     "share": 0.1728,
+     "clusters": {
+      "saral": 10
+     }
+    },
+    {
+     "share": 0.06929,
+     "clusters": {
+      "s3": 10
+     }
+    }
+   ]
+  },
+  "LEO-M|6": {
+   "regime": "LEO-M",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 7083,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    149689.19,
+    84261588,
+    46881.229
+   ],
+   "top10": [
+    {
+     "share": 0.007711,
+     "clusters": {
+      "cryosat2": 10
+     }
+    },
+    {
+     "share": 0.1347,
+     "clusters": {
+      "saral": 10
+     }
+    },
+    {
+     "share": 0.06322,
+     "clusters": {
+      "s3": 10
      }
     }
    ]
@@ -487,79 +571,304 @@
     0,
     0.25
    ],
-   "pairs": 3470,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 3805,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    373.65359,
-    19749.488,
-    446.29559
+    292.46538,
+    17416.792,
+    276.12014
    ],
    "top10": [
     {
-     "share": 0.4584,
+     "share": 0.3987,
      "clusters": {
-      "cosmic2": 2,
-      "s1c": 4,
-      "saral": 1,
-      "s1a": 3
+      "s1": 7,
+      "s3": 2,
+      "saral": 1
      }
     },
     {
-     "share": 0.5637,
+     "share": 0.5919,
      "clusters": {
       "saral": 1,
-      "s1c": 6,
-      "cryosat2": 3
+      "s1": 5,
+      "cryosat2": 3,
+      "s3": 1
      }
     },
     {
-     "share": 0.3833,
+     "share": 0.5149,
      "clusters": {
-      "s1a": 3,
-      "cosmic2": 3,
-      "s1c": 4
+      "s1": 5,
+      "s3": 5
      }
     }
    ]
   },
-  "LEO-H|1": {
-   "regime": "LEO-H",
+  "LEO-L|1": {
+   "regime": "LEO-L",
    "bin": 1,
    "ageDays": [
     0.25,
     0.75
    ],
-   "pairs": 9310,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 4653,
+   "clusters": 3,
+   "objects": 5,
    "a_RTN_m2": [
-    658.50197,
-    157190.45,
-    1327.0765
+    2975.9928,
+    59613.577,
+    127.43344
    ],
    "top10": [
     {
-     "share": 0.1186,
+     "share": 0.01054,
      "clusters": {
-      "s3ab": 5,
-      "jason-s6": 5
+      "gracefo": 5,
+      "swarm-AC": 5
      }
     },
     {
-     "share": 0.6066,
+     "share": 0.1467,
      "clusters": {
-      "jason-s6": 2,
-      "swot": 6,
-      "s3ab": 2
+      "swarm-AC": 8,
+      "swarm-B": 2
      }
     },
     {
-     "share": 0.07028,
+     "share": 0.03752,
      "clusters": {
-      "s3ab": 3,
-      "hy2c": 2,
-      "hy2d": 5
+      "swarm-AC": 8,
+      "swarm-B": 2
+     }
+    }
+   ]
+  },
+  "LEO-L|2": {
+   "regime": "LEO-L",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 4722,
+   "clusters": 3,
+   "objects": 5,
+   "a_RTN_m2": [
+    17335.334,
+    577919.6,
+    447.63452
+   ],
+   "top10": [
+    {
+     "share": 0.006757,
+     "clusters": {
+      "swarm-AC": 6,
+      "gracefo": 4
+     }
+    },
+    {
+     "share": 0.2726,
+     "clusters": {
+      "swarm-AC": 7,
+      "swarm-B": 1,
+      "gracefo": 2
+     }
+    },
+    {
+     "share": 0.02826,
+     "clusters": {
+      "swarm-AC": 9,
+      "swarm-B": 1
+     }
+    }
+   ]
+  },
+  "LEO-L|3": {
+   "regime": "LEO-L",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 4721,
+   "clusters": 3,
+   "objects": 5,
+   "a_RTN_m2": [
+    56075.797,
+    3921221.8,
+    1283.222
+   ],
+   "top10": [
+    {
+     "share": 0.005527,
+     "clusters": {
+      "swarm-AC": 6,
+      "gracefo": 4
+     }
+    },
+    {
+     "share": 0.2115,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    },
+    {
+     "share": 0.02093,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    }
+   ]
+  },
+  "LEO-L|4": {
+   "regime": "LEO-L",
+   "bin": 4,
+   "ageDays": [
+    2.5,
+    4
+   ],
+   "pairs": 4714,
+   "clusters": 3,
+   "objects": 5,
+   "a_RTN_m2": [
+    141044.06,
+    22269483,
+    3117.5826
+   ],
+   "top10": [
+    {
+     "share": 0.005749,
+     "clusters": {
+      "swarm-AC": 7,
+      "gracefo": 3
+     }
+    },
+    {
+     "share": 0.1384,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    },
+    {
+     "share": 0.01838,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    }
+   ]
+  },
+  "LEO-L|5": {
+   "regime": "LEO-L",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 4683,
+   "clusters": 3,
+   "objects": 5,
+   "a_RTN_m2": [
+    342228.68,
+    129037930,
+    7481.1828
+   ],
+   "top10": [
+    {
+     "share": 0.006184,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    },
+    {
+     "share": 0.08686,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    },
+    {
+     "share": 0.01438,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    }
+   ]
+  },
+  "LEO-L|6": {
+   "regime": "LEO-L",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 4649,
+   "clusters": 3,
+   "objects": 5,
+   "a_RTN_m2": [
+    811058.4,
+    710003740,
+    16598.387
+   ],
+   "top10": [
+    {
+     "share": 0.0135,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    },
+    {
+     "share": 0.05707,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    },
+    {
+     "share": 0.01146,
+     "clusters": {
+      "swarm-AC": 10
+     }
+    }
+   ]
+  },
+  "LEO-L|0": {
+   "regime": "LEO-L",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 2335,
+   "clusters": 3,
+   "objects": 5,
+   "a_RTN_m2": [
+    410.09808,
+    9289.6573,
+    57.095468
+   ],
+   "top10": [
+    {
+     "share": 0.02791,
+     "clusters": {
+      "swarm-B": 4,
+      "swarm-AC": 5,
+      "gracefo": 1
+     }
+    },
+    {
+     "share": 0.1525,
+     "clusters": {
+      "swarm-B": 4,
+      "swarm-AC": 4,
+      "gracefo": 2
+     }
+    },
+    {
+     "share": 0.09318,
+     "clusters": {
+      "swarm-AC": 7,
+      "swarm-B": 2,
+      "gracefo": 1
      }
     }
    ]
@@ -571,35 +880,35 @@
     0.75,
     1.5
    ],
-   "pairs": 9875,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 7371,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    2498.8647,
-    955522.81,
-    6279.1355
+    2644.6306,
+    1107617.3,
+    7683.5277
    ],
    "top10": [
     {
-     "share": 0.04147,
+     "share": 0.04266,
      "clusters": {
-      "jason-s6": 6,
-      "s3ab": 4
+      "jason-s6": 8,
+      "hy2d": 1,
+      "hy2c": 1
      }
     },
     {
-     "share": 0.7458,
+     "share": 0.8535,
      "clusters": {
       "jason-s6": 7,
-      "swot": 2,
-      "s3ab": 1
+      "swot": 3
      }
     },
     {
-     "share": 0.03476,
+     "share": 0.01652,
      "clusters": {
-      "s3ab": 8,
-      "hy2c": 2
+      "hy2c": 8,
+      "hy2d": 2
      }
     }
    ]
@@ -611,35 +920,35 @@
     1.5,
     2.5
    ],
-   "pairs": 9953,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 7425,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    7486.261,
-    2963022.5,
-    19168.313
+    8020.1053,
+    3263087.6,
+    23807.952
    ],
    "top10": [
     {
-     "share": 0.01606,
+     "share": 0.01719,
      "clusters": {
       "jason-s6": 4,
-      "s3ab": 3,
-      "hy2d": 3
+      "hy2d": 4,
+      "hy2c": 2
      }
     },
     {
-     "share": 0.6613,
+     "share": 0.8049,
      "clusters": {
       "jason-s6": 8,
       "swot": 2
      }
     },
     {
-     "share": 0.01888,
+     "share": 0.0113,
      "clusters": {
-      "s3ab": 8,
-      "hy2c": 2
+      "hy2c": 6,
+      "hy2d": 4
      }
     }
    ]
@@ -651,13 +960,13 @@
     2.5,
     4
    ],
-   "pairs": 10017,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 7471,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    412874480,
-    11459989000,
-    50743.67
+    553570810,
+    15363012000,
+    63198.089
    ],
    "top10": [
     {
@@ -667,13 +976,13 @@
      }
     },
     {
-     "share": 0.7473,
+     "share": 0.7474,
      "clusters": {
       "jason-s6": 10
      }
     },
     {
-     "share": 0.03282,
+     "share": 0.03533,
      "clusters": {
       "jason-s6": 10
      }
@@ -687,13 +996,13 @@
     4,
     6
    ],
-   "pairs": 9987,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 7447,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    325971850,
-    9791421000,
-    117436.79
+    437141360,
+    13123067000,
+    145391.49
    ],
    "top10": [
     {
@@ -703,16 +1012,15 @@
      }
     },
     {
-     "share": 0.751,
+     "share": 0.7515,
      "clusters": {
       "jason-s6": 10
      }
     },
     {
-     "share": 0.01396,
+     "share": 0.01461,
      "clusters": {
-      "jason-s6": 6,
-      "s3ab": 4
+      "jason-s6": 10
      }
     }
    ]
@@ -724,13 +1032,13 @@
     6,
     8
    ],
-   "pairs": 9935,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 7403,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    18589300000,
-    50916942000,
-    244349.14
+    24947251000,
+    68308938000,
+    301575.97
    ],
    "top10": [
     {
@@ -740,16 +1048,58 @@
      }
     },
     {
-     "share": 0.8887,
+     "share": 0.889,
      "clusters": {
       "jason-s6": 10
      }
     },
     {
-     "share": 0.008673,
+     "share": 0.006604,
      "clusters": {
-      "s3ab": 9,
-      "jason-s6": 1
+      "jason-s6": 3,
+      "hy2d": 5,
+      "hy2c": 2
+     }
+    }
+   ]
+  },
+  "LEO-H|1": {
+   "regime": "LEO-H",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 6911,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    688.38311,
+    177012.56,
+    1586.6805
+   ],
+   "top10": [
+    {
+     "share": 0.1036,
+     "clusters": {
+      "jason-s6": 5,
+      "hy2c": 2,
+      "hy2d": 3
+     }
+    },
+    {
+     "share": 0.6886,
+     "clusters": {
+      "jason-s6": 2,
+      "swot": 6,
+      "hy2d": 2
+     }
+    },
+    {
+     "share": 0.04165,
+     "clusters": {
+      "hy2c": 3,
+      "hy2d": 7
      }
     }
    ]
@@ -761,400 +1111,38 @@
     0,
     0.25
    ],
-   "pairs": 5259,
-   "clusters": 5,
-   "objects": 8,
+   "pairs": 4026,
+   "clusters": 4,
+   "objects": 6,
    "a_RTN_m2": [
-    146.28356,
-    14599.694,
-    283.6614
+    152.99336,
+    17260.461,
+    313.21529
    ],
    "top10": [
     {
-     "share": 0.2696,
+     "share": 0.2687,
      "clusters": {
-      "s3ab": 2,
       "hy2d": 3,
       "hy2c": 3,
-      "jason-s6": 2
+      "jason-s6": 2,
+      "swot": 2
      }
     },
     {
-     "share": 0.2213,
+     "share": 0.2037,
      "clusters": {
       "swot": 1,
-      "s3ab": 4,
-      "hy2d": 5
+      "hy2d": 8,
+      "hy2c": 1
      }
     },
     {
-     "share": 0.1775,
+     "share": 0.1459,
      "clusters": {
       "hy2c": 3,
-      "s3ab": 4,
-      "hy2d": 3
-     }
-    }
-   ]
-  },
-  "MEO|0": {
-   "regime": "MEO",
-   "bin": 0,
-   "ageDays": [
-    0,
-    0.25
-   ],
-   "pairs": 5996,
-   "clusters": 5,
-   "objects": 83,
-   "a_RTN_m2": [
-    27233.348,
-    16898094,
-    24188.791
-   ],
-   "top10": [
-    {
-     "share": 0.969,
-     "clusters": {
-      "glonass": 4,
-      "beidou-meo": 3,
-      "gps": 3
-     }
-    },
-    {
-     "share": 0.9976,
-     "clusters": {
-      "glonass": 2,
-      "beidou-meo": 2,
-      "gps": 6
-     }
-    },
-    {
-     "share": 0.9841,
-     "clusters": {
-      "glonass": 5,
-      "gps": 3,
-      "beidou-meo": 2
-     }
-    }
-   ]
-  },
-  "MEO|1": {
-   "regime": "MEO",
-   "bin": 1,
-   "ageDays": [
-    0.25,
-    0.75
-   ],
-   "pairs": 17948,
-   "clusters": 5,
-   "objects": 83,
-   "a_RTN_m2": [
-    28131290,
-    62319453,
-    416021570
-   ],
-   "top10": [
-    {
-     "share": 0.9999,
-     "clusters": {
-      "glonass": 3,
-      "gps": 7
-     }
-    },
-    {
-     "share": 0.9968,
-     "clusters": {
-      "glonass": 3,
-      "gps": 7
-     }
-    },
-    {
-     "share": 1,
-     "clusters": {
-      "glonass": 5,
-      "gps": 5
-     }
-    }
-   ]
-  },
-  "MEO|2": {
-   "regime": "MEO",
-   "bin": 2,
-   "ageDays": [
-    0.75,
-    1.5
-   ],
-   "pairs": 33999,
-   "clusters": 5,
-   "objects": 83,
-   "a_RTN_m2": [
-    34398296,
-    774505160,
-    277551030
-   ],
-   "top10": [
-    {
-     "share": 0.9996,
-     "clusters": {
-      "glonass": 5,
-      "gps": 3,
-      "beidou-meo": 2
-     }
-    },
-    {
-     "share": 0.9977,
-     "clusters": {
-      "glonass": 4,
-      "gps": 6
-     }
-    },
-    {
-     "share": 1,
-     "clusters": {
-      "glonass": 4,
-      "gps": 6
-     }
-    }
-   ]
-  },
-  "MEO|3": {
-   "regime": "MEO",
-   "bin": 3,
-   "ageDays": [
-    1.5,
-    2.5
-   ],
-   "pairs": 36706,
-   "clusters": 5,
-   "objects": 83,
-   "a_RTN_m2": [
-    94394790,
-    1668417900,
-    1099516600
-   ],
-   "top10": [
-    {
-     "share": 0.9994,
-     "clusters": {
-      "glonass": 4,
-      "beidou-meo": 3,
-      "gps": 3
-     }
-    },
-    {
-     "share": 0.9927,
-     "clusters": {
-      "glonass": 5,
-      "beidou-meo": 1,
-      "gps": 4
-     }
-    },
-    {
-     "share": 1,
-     "clusters": {
-      "glonass": 5,
-      "gps": 5
-     }
-    }
-   ]
-  },
-  "MEO|4": {
-   "regime": "MEO",
-   "bin": 4,
-   "ageDays": [
-    2.5,
-    4
-   ],
-   "pairs": 41958,
-   "clusters": 5,
-   "objects": 83,
-   "a_RTN_m2": [
-    2083117700,
-    9913058700,
-    545622680
-   ],
-   "top10": [
-    {
-     "share": 0.9999,
-     "clusters": {
-      "glonass": 4,
-      "beidou-meo": 3,
-      "gps": 3
-     }
-    },
-    {
-     "share": 0.9946,
-     "clusters": {
-      "glonass": 6,
-      "beidou-meo": 1,
-      "gps": 3
-     }
-    },
-    {
-     "share": 0.9999,
-     "clusters": {
-      "glonass": 4,
-      "gps": 4,
-      "beidou-meo": 2
-     }
-    }
-   ]
-  },
-  "MEO|5": {
-   "regime": "MEO",
-   "bin": 5,
-   "ageDays": [
-    4,
-    6
-   ],
-   "pairs": 44795,
-   "clusters": 5,
-   "objects": 83,
-   "a_RTN_m2": [
-    14875704000,
-    17701631000,
-    985010490
-   ],
-   "top10": [
-    {
-     "share": 1,
-     "clusters": {
-      "glonass": 4,
-      "beidou-meo": 2,
-      "gps": 4
-     }
-    },
-    {
-     "share": 0.9934,
-     "clusters": {
-      "glonass": 4,
-      "beidou-meo": 2,
-      "gps": 4
-     }
-    },
-    {
-     "share": 1,
-     "clusters": {
-      "glonass": 3,
-      "gps": 3,
-      "beidou-meo": 4
-     }
-    }
-   ]
-  },
-  "MEO|6": {
-   "regime": "MEO",
-   "bin": 6,
-   "ageDays": [
-    6,
-    8
-   ],
-   "pairs": 44272,
-   "clusters": 5,
-   "objects": 83,
-   "a_RTN_m2": [
-    55704557000,
-    49942611000,
-    105990690
-   ],
-   "top10": [
-    {
-     "share": 1,
-     "clusters": {
-      "gps": 5,
-      "glonass": 5
-     }
-    },
-    {
-     "share": 0.9912,
-     "clusters": {
-      "gps": 5,
-      "glonass": 5
-     }
-    },
-    {
-     "share": 0.9979,
-     "clusters": {
-      "glonass": 4,
-      "gps": 6
-     }
-    }
-   ]
-  },
-  "GEO|0": {
-   "regime": "GEO",
-   "bin": 0,
-   "ageDays": [
-    0,
-    0.25
-   ],
-   "pairs": 956,
-   "clusters": 2,
-   "objects": 4,
-   "a_RTN_m2": [
-    117083.33,
-    1623527.9,
-    17031625
-   ],
-   "top10": [
-    {
-     "share": 0.8898,
-     "clusters": {
-      "qzs3": 2,
-      "waas": 8
-     }
-    },
-    {
-     "share": 0.8508,
-     "clusters": {
-      "waas": 8,
-      "qzs3": 2
-     }
-    },
-    {
-     "share": 0.958,
-     "clusters": {
-      "qzs3": 4,
-      "waas": 6
-     }
-    }
-   ]
-  },
-  "GEO|1": {
-   "regime": "GEO",
-   "bin": 1,
-   "ageDays": [
-    0.25,
-    0.75
-   ],
-   "pairs": 1914,
-   "clusters": 2,
-   "objects": 4,
-   "a_RTN_m2": [
-    276451.54,
-    16061086,
-    15495303
-   ],
-   "top10": [
-    {
-     "share": 0.4682,
-     "clusters": {
-      "qzs3": 7,
-      "waas": 3
-     }
-    },
-    {
-     "share": 0.3148,
-     "clusters": {
-      "qzs3": 10
-     }
-    },
-    {
-     "share": 0.8114,
-     "clusters": {
-      "qzs3": 8,
-      "waas": 2
+      "hy2d": 4,
+      "jason-s6": 3
      }
     }
    ]
@@ -1166,145 +1154,37 @@
     0.75,
     1.5
    ],
-   "pairs": 2186,
-   "clusters": 2,
-   "objects": 4,
+   "pairs": 5484,
+   "clusters": 8,
+   "objects": 8,
    "a_RTN_m2": [
-    385192.58,
-    50521344,
-    37268939
+    179790830000,
+    781770690000,
+    4723057900
    ],
    "top10": [
     {
-     "share": 0.4014,
+     "share": 1,
      "clusters": {
-      "qzs3": 9,
-      "waas": 1
+      "C5-1": 3,
+      "J0-0": 6,
+      "J4-0": 1
      }
     },
     {
-     "share": 0.1813,
+     "share": 1,
      "clusters": {
-      "qzs3": 9,
-      "waas": 1
+      "C5-1": 3,
+      "J0-1": 4,
+      "J0-0": 3
      }
     },
     {
-     "share": 0.62,
+     "share": 0.9962,
      "clusters": {
-      "qzs3": 10
-     }
-    }
-   ]
-  },
-  "GEO|3": {
-   "regime": "GEO",
-   "bin": 3,
-   "ageDays": [
-    1.5,
-    2.5
-   ],
-   "pairs": 2209,
-   "clusters": 2,
-   "objects": 4,
-   "a_RTN_m2": [
-    799857.26,
-    160483250,
-    70946800
-   ],
-   "top10": [
-    {
-     "share": 0.2203,
-     "clusters": {
-      "qzs3": 10
-     }
-    },
-    {
-     "share": 0.1565,
-     "clusters": {
-      "qzs3": 8,
-      "waas": 2
-     }
-    },
-    {
-     "share": 0.4006,
-     "clusters": {
-      "qzs3": 10
-     }
-    }
-   ]
-  },
-  "GEO|6": {
-   "regime": "GEO",
-   "bin": 6,
-   "ageDays": [
-    6,
-    8
-   ],
-   "pairs": 2231,
-   "clusters": 2,
-   "objects": 4,
-   "a_RTN_m2": [
-    4463101.6,
-    3482998800,
-    402487450
-   ],
-   "top10": [
-    {
-     "share": 0.04988,
-     "clusters": {
-      "qzs3": 10
-     }
-    },
-    {
-     "share": 0.06333,
-     "clusters": {
-      "qzs3": 8,
-      "waas": 2
-     }
-    },
-    {
-     "share": 0.09668,
-     "clusters": {
-      "qzs3": 10
-     }
-    }
-   ]
-  },
-  "GEO|5": {
-   "regime": "GEO",
-   "bin": 5,
-   "ageDays": [
-    4,
-    6
-   ],
-   "pairs": 2249,
-   "clusters": 2,
-   "objects": 4,
-   "a_RTN_m2": [
-    2956976.7,
-    1287375900,
-    237871780
-   ],
-   "top10": [
-    {
-     "share": 0.07428,
-     "clusters": {
-      "waas": 1,
-      "qzs3": 9
-     }
-    },
-    {
-     "share": 0.0918,
-     "clusters": {
-      "waas": 3,
-      "qzs3": 7
-     }
-    },
-    {
-     "share": 0.1497,
-     "clusters": {
-      "qzs3": 10
+      "C5-1": 2,
+      "J0-1": 3,
+      "J0-0": 5
      }
     }
    ]
@@ -1316,32 +1196,249 @@
     2.5,
     4
    ],
-   "pairs": 2231,
-   "clusters": 2,
-   "objects": 4,
+   "pairs": 5887,
+   "clusters": 8,
+   "objects": 8,
    "a_RTN_m2": [
-    1623472.4,
-    464209090,
-    133569840
+    974779530000,
+    1091222000000,
+    17671063000
    ],
    "top10": [
     {
-     "share": 0.126,
+     "share": 1,
      "clusters": {
-      "qzs3": 10
+      "J0-1": 7,
+      "C5-1": 2,
+      "J0-0": 1
      }
     },
     {
-     "share": 0.1018,
+     "share": 0.9998,
      "clusters": {
-      "qzs3": 8,
-      "waas": 2
+      "C5-1": 3,
+      "J0-1": 7
      }
     },
     {
-     "share": 0.2429,
+     "share": 0.9953,
      "clusters": {
-      "qzs3": 10
+      "J0-1": 5,
+      "C5-1": 2,
+      "J0-0": 3
+     }
+    }
+   ]
+  },
+  "GEO|5": {
+   "regime": "GEO",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 5962,
+   "clusters": 8,
+   "objects": 8,
+   "a_RTN_m2": [
+    1966891200000,
+    973350800000,
+    4461571400
+   ],
+   "top10": [
+    {
+     "share": 1,
+     "clusters": {
+      "J0-1": 3,
+      "C5-1": 3,
+      "J4-2": 3,
+      "J0-0": 1
+     }
+    },
+    {
+     "share": 0.9992,
+     "clusters": {
+      "C5-1": 4,
+      "J0-1": 3,
+      "J4-2": 3
+     }
+    },
+    {
+     "share": 0.9691,
+     "clusters": {
+      "C5-1": 2,
+      "J0-1": 2,
+      "J0-0": 6
+     }
+    }
+   ]
+  },
+  "GEO|6": {
+   "regime": "GEO",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 5896,
+   "clusters": 8,
+   "objects": 8,
+   "a_RTN_m2": [
+    3383885800000,
+    1276103800000,
+    6720708800
+   ],
+   "top10": [
+    {
+     "share": 1,
+     "clusters": {
+      "J0-1": 4,
+      "C5-1": 2,
+      "J4-2": 4
+     }
+    },
+    {
+     "share": 0.9969,
+     "clusters": {
+      "C5-1": 3,
+      "J0-1": 5,
+      "J4-2": 1,
+      "C6-2": 1
+     }
+    },
+    {
+     "share": 0.9649,
+     "clusters": {
+      "C5-1": 2,
+      "J0-1": 8
+     }
+    }
+   ]
+  },
+  "GEO|1": {
+   "regime": "GEO",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 3396,
+   "clusters": 7,
+   "objects": 7,
+   "a_RTN_m2": [
+    40570904,
+    845970190,
+    16572046
+   ],
+   "top10": [
+    {
+     "share": 0.9983,
+     "clusters": {
+      "J4-2": 1,
+      "J0-1": 3,
+      "J0-0": 6
+     }
+    },
+    {
+     "share": 0.9951,
+     "clusters": {
+      "J4-2": 1,
+      "J0-1": 3,
+      "J0-0": 6
+     }
+    },
+    {
+     "share": 0.8791,
+     "clusters": {
+      "J0-1": 5,
+      "J0-0": 5
+     }
+    }
+   ]
+  },
+  "GEO|3": {
+   "regime": "GEO",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 5570,
+   "clusters": 8,
+   "objects": 8,
+   "a_RTN_m2": [
+    295762440000,
+    1047728300000,
+    10214438000
+   ],
+   "top10": [
+    {
+     "share": 1,
+     "clusters": {
+      "C5-1": 2,
+      "J0-1": 4,
+      "J0-0": 4
+     }
+    },
+    {
+     "share": 0.9999,
+     "clusters": {
+      "C5-1": 2,
+      "J0-1": 4,
+      "J0-0": 4
+     }
+    },
+    {
+     "share": 0.9957,
+     "clusters": {
+      "J0-1": 4,
+      "C5-1": 2,
+      "J0-0": 4
+     }
+    }
+   ]
+  },
+  "GEO|0": {
+   "regime": "GEO",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 1524,
+   "clusters": 8,
+   "objects": 8,
+   "a_RTN_m2": [
+    35636384,
+    829286990,
+    9736999.8
+   ],
+   "top10": [
+    {
+     "share": 0.9999,
+     "clusters": {
+      "J4-1": 1,
+      "J0-0": 3,
+      "J0-1": 3,
+      "C5-1": 1,
+      "C6-2": 1,
+      "J4-2": 1
+     }
+    },
+    {
+     "share": 0.9999,
+     "clusters": {
+      "J4-1": 2,
+      "J0-1": 5,
+      "C5-1": 1,
+      "J0-0": 2
+     }
+    },
+    {
+     "share": 0.9852,
+     "clusters": {
+      "J0-0": 4,
+      "J0-1": 6
      }
     }
    ]
@@ -1353,31 +1450,40 @@
     0,
     0.25
    ],
-   "pairs": 6,
-   "clusters": 1,
-   "objects": 2,
+   "pairs": 8,
+   "clusters": 4,
+   "objects": 4,
    "a_RTN_m2": [
-    119738190,
-    339019560,
-    13809093
+    120900650,
+    337719000,
+    39541993
    ],
    "top10": [
     {
      "share": 1,
      "clusters": {
-      "gps": 6
+      "G6-0": 5,
+      "J0-1": 1,
+      "G6-1": 1,
+      "C5-1": 1
      }
     },
     {
      "share": 1,
      "clusters": {
-      "gps": 6
+      "G6-0": 5,
+      "J0-1": 1,
+      "G6-1": 1,
+      "C5-1": 1
      }
     },
     {
      "share": 1,
      "clusters": {
-      "gps": 6
+      "J0-1": 1,
+      "G6-0": 5,
+      "G6-1": 1,
+      "C5-1": 1
      }
     }
    ]
@@ -1389,31 +1495,34 @@
     0.75,
     1.5
    ],
-   "pairs": 5,
-   "clusters": 1,
-   "objects": 1,
+   "pairs": 7,
+   "clusters": 2,
+   "objects": 2,
    "a_RTN_m2": [
-    3157896300,
-    8688339200,
-    32761045
+    7013413600000,
+    17440559000000,
+    663128340000
    ],
    "top10": [
     {
      "share": 1,
      "clusters": {
-      "gps": 5
+      "J0-1": 2,
+      "G6-0": 5
      }
     },
     {
      "share": 1,
      "clusters": {
-      "gps": 5
+      "J0-1": 2,
+      "G6-0": 5
      }
     },
     {
      "share": 1,
      "clusters": {
-      "gps": 5
+      "J0-1": 2,
+      "G6-0": 5
      }
     }
    ]

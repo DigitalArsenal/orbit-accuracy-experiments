@@ -30,10 +30,11 @@ function history(o, scale, L, r) {
   }
   return out;
 }
-export function simulate(objs, a, { seed = 20261109, histories = 2000, L }) {
+const AX = ['R', 'T', 'N'];
+export function simulate(objs, a, { seed = 20261109, histories = 2000, L, adm = null }) {
   const r = rng(seed), per = objs.map((o) => { // per-object-cell scale factor a / object moment (cells with >= 30 pairs)
     const m = new Map(); for (const [, b, reg, rho] of o.rows) { const k = `${reg}|${b}`, c = m.get(k) ?? { n: 0, s: [0, 0, 0] }; c.n++; for (let i = 0; i < 3; i++) c.s[i] += rho[i] ** 2; m.set(k, c); }
-    const f = new Map(); for (const [k, c] of m) if (c.n >= 30 && a[k] && c.s.every((x) => x > 0)) f.set(k, a[k].map((ak, i) => ak / (c.s[i] / c.n))); return f;
+    const f = new Map(); for (const [k, c] of m) if (c.n >= 30 && a[k] && c.s.every((x) => x > 0) && (!adm || AX.some((ax) => adm.has(`${k}|${ax}`)))) f.set(k, a[k].map((ak, i) => ak / (c.s[i] / c.n))); return f;
   });
   const usable = objs.map((_, i) => i).filter((i) => per[i].size > 0), rows = N0.map((n0) => ({ n0, flagU0: 0, nU0: 0, ratios: [] }));
   for (let h = 0; h < histories; h++) {
@@ -41,7 +42,8 @@ export function simulate(objs, a, { seed = 20261109, histories = 2000, L }) {
     for (const row of rows) for (const world of [0, 1]) {
       const mult = world ? 4 : 1; let flag = false;
       for (let k = 0; k < 3; k++) {
-        const u = uHat(hist.map((x) => x[2][k] * mult), hist.map((x) => a[`${x[1]}|${x[0]}`][k]), row.n0);
+        const h = adm ? hist.filter((x) => adm.has(`${x[1]}|${x[0]}|${AX[k]}`)) : hist; if (!h.length) continue;
+        const u = uHat(h.map((x) => x[2][k] * mult), h.map((x) => a[`${x[1]}|${x[0]}`][k]), row.n0);
         if (world === 0) { if (u > FLAG_U) flag = true; } else row.ratios.push(Math.exp(u) / 4);
       }
       if (world === 0) { row.nU0++; if (flag) row.flagU0++; }

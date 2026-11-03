@@ -1,0 +1,856 @@
+{
+ "rule": "SD over clusters of ln(pair moment / truth moment) <= 0.35, >= 3 clusters; the S2.1 null condition is applied in the freeze",
+ "cells": {
+  "MEO|4": [
+   {
+    "axis": "R",
+    "clusters": 20,
+    "sd": 3.506,
+    "meanLn": -0.3933,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 20,
+    "sd": 3.987,
+    "meanLn": -0.5952,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 20,
+    "sd": 2.849,
+    "meanLn": -0.3329,
+    "admittedBySD": false
+   }
+  ],
+  "MEO|5": [
+   {
+    "axis": "R",
+    "clusters": 20,
+    "sd": 4.104,
+    "meanLn": -0.108,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 20,
+    "sd": 4.408,
+    "meanLn": -0.1294,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 20,
+    "sd": 2.816,
+    "meanLn": 0.1229,
+    "admittedBySD": false
+   }
+  ],
+  "MEO|6": [
+   {
+    "axis": "R",
+    "clusters": 20,
+    "sd": 4.769,
+    "meanLn": 0.6922,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 20,
+    "sd": 3.836,
+    "meanLn": -0.06511,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 20,
+    "sd": 2.829,
+    "meanLn": 0.5238,
+    "admittedBySD": false
+   }
+  ],
+  "MEO|0": [
+   {
+    "axis": "R",
+    "clusters": 20,
+    "sd": 3.078,
+    "meanLn": -4.173,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 20,
+    "sd": 4.32,
+    "meanLn": -3.783,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 20,
+    "sd": 2.208,
+    "meanLn": -3.983,
+    "admittedBySD": false
+   }
+  ],
+  "MEO|2": [
+   {
+    "axis": "R",
+    "clusters": 20,
+    "sd": 3.128,
+    "meanLn": -1.983,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 20,
+    "sd": 3.99,
+    "meanLn": -2.512,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 20,
+    "sd": 3.376,
+    "meanLn": -1.583,
+    "admittedBySD": false
+   }
+  ],
+  "MEO|3": [
+   {
+    "axis": "R",
+    "clusters": 20,
+    "sd": 3.094,
+    "meanLn": -1.21,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 20,
+    "sd": 4.026,
+    "meanLn": -1.455,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 20,
+    "sd": 2.689,
+    "meanLn": -0.9978,
+    "admittedBySD": false
+   }
+  ],
+  "MEO|1": [
+   {
+    "axis": "R",
+    "clusters": 20,
+    "sd": 3.418,
+    "meanLn": -3.188,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 20,
+    "sd": 4.134,
+    "meanLn": -3.613,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 20,
+    "sd": 3.224,
+    "meanLn": -2.411,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-M|1": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 0.6883,
+    "meanLn": -2.729,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.3695,
+    "meanLn": -1.715,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 1.187,
+    "meanLn": -4.389,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-M|2": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 0.6582,
+    "meanLn": -1.411,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.06949,
+    "meanLn": -0.8057,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 1.057,
+    "meanLn": -3.444,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-M|3": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 0.5693,
+    "meanLn": -0.6935,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.0651,
+    "meanLn": -0.564,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 1.057,
+    "meanLn": -2.489,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-M|4": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 0.4518,
+    "meanLn": -0.2745,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.05028,
+    "meanLn": -0.5877,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.9503,
+    "meanLn": -1.799,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-M|5": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 0.1211,
+    "meanLn": 0.005318,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.04399,
+    "meanLn": -0.5792,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.7789,
+    "meanLn": -1.146,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-M|6": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 0.134,
+    "meanLn": 0.192,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.03462,
+    "meanLn": -0.4339,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.631,
+    "meanLn": -0.6639,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-M|0": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 0.7446,
+    "meanLn": -3.711,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.7303,
+    "meanLn": -3.373,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 1.362,
+    "meanLn": -5.181,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-L|1": [
+   {
+    "axis": "R",
+    "clusters": 3,
+    "sd": 0.128,
+    "meanLn": -1.578,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 3,
+    "sd": 0.2588,
+    "meanLn": -2.491,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 3,
+    "sd": 0.1067,
+    "meanLn": -5.316,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-L|2": [
+   {
+    "axis": "R",
+    "clusters": 3,
+    "sd": 0.08399,
+    "meanLn": -0.3591,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 3,
+    "sd": 0.1311,
+    "meanLn": -1.087,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 3,
+    "sd": 0.08056,
+    "meanLn": -4.057,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-L|3": [
+   {
+    "axis": "R",
+    "clusters": 3,
+    "sd": 0.1421,
+    "meanLn": 0.08345,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 3,
+    "sd": 0.1337,
+    "meanLn": -0.9966,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 3,
+    "sd": 0.1931,
+    "meanLn": -3.198,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-L|4": [
+   {
+    "axis": "R",
+    "clusters": 3,
+    "sd": 0.04896,
+    "meanLn": 0.0954,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 3,
+    "sd": 0.1086,
+    "meanLn": -1.062,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 3,
+    "sd": 0.131,
+    "meanLn": -2.329,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-L|5": [
+   {
+    "axis": "R",
+    "clusters": 3,
+    "sd": 0.1608,
+    "meanLn": 0.1294,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 3,
+    "sd": 0.07504,
+    "meanLn": -1.003,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 3,
+    "sd": 0.1183,
+    "meanLn": -1.654,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-L|6": [
+   {
+    "axis": "R",
+    "clusters": 3,
+    "sd": 0.5779,
+    "meanLn": -0.008364,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 3,
+    "sd": 0.1205,
+    "meanLn": -0.7299,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 3,
+    "sd": 0.0595,
+    "meanLn": -1.097,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-L|0": [
+   {
+    "axis": "R",
+    "clusters": 3,
+    "sd": 0.08674,
+    "meanLn": -3.45,
+    "admittedBySD": true
+   },
+   {
+    "axis": "T",
+    "clusters": 3,
+    "sd": 0.3556,
+    "meanLn": -3.934,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 3,
+    "sd": 0.2597,
+    "meanLn": -6.197,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-H|2": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 2.976,
+    "meanLn": -4.296,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 2.789,
+    "meanLn": -2.538,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.2938,
+    "meanLn": -1.665,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-H|3": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 4.189,
+    "meanLn": -4.085,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 3.362,
+    "meanLn": -2.368,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.03908,
+    "meanLn": -0.7585,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-H|4": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 1.656,
+    "meanLn": -1.271,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.2764,
+    "meanLn": -0.3802,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.1546,
+    "meanLn": -0.3776,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-H|5": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 1.446,
+    "meanLn": -1.648,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.3887,
+    "meanLn": -0.7229,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.2343,
+    "meanLn": -0.2056,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-H|6": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 1.059,
+    "meanLn": -0.6409,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 0.05206,
+    "meanLn": -0.5034,
+    "admittedBySD": true
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.3133,
+    "meanLn": -0.04705,
+    "admittedBySD": true
+   }
+  ],
+  "LEO-H|1": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 1.653,
+    "meanLn": -4.519,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 2.561,
+    "meanLn": -2.463,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.4024,
+    "meanLn": -3.047,
+    "admittedBySD": false
+   }
+  ],
+  "LEO-H|0": [
+   {
+    "axis": "R",
+    "clusters": 4,
+    "sd": 1.004,
+    "meanLn": -5.343,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 4,
+    "sd": 2.421,
+    "meanLn": -3.787,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 4,
+    "sd": 0.5319,
+    "meanLn": -4.54,
+    "admittedBySD": false
+   }
+  ],
+  "GEO|2": [
+   {
+    "axis": "R",
+    "clusters": 8,
+    "sd": 6.902,
+    "meanLn": -2.33,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 8,
+    "sd": 6.261,
+    "meanLn": -3.992,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 8,
+    "sd": 4.748,
+    "meanLn": 0.2666,
+    "admittedBySD": false
+   }
+  ],
+  "GEO|4": [
+   {
+    "axis": "R",
+    "clusters": 8,
+    "sd": 8.831,
+    "meanLn": -0.1448,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 8,
+    "sd": 7.035,
+    "meanLn": -2.879,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 8,
+    "sd": 4.67,
+    "meanLn": 1.404,
+    "admittedBySD": false
+   }
+  ],
+  "GEO|5": [
+   {
+    "axis": "R",
+    "clusters": 8,
+    "sd": 8.47,
+    "meanLn": 0.4984,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 8,
+    "sd": 6.151,
+    "meanLn": -2.349,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 8,
+    "sd": 4.124,
+    "meanLn": 0.8635,
+    "admittedBySD": false
+   }
+  ],
+  "GEO|6": [
+   {
+    "axis": "R",
+    "clusters": 8,
+    "sd": 8.19,
+    "meanLn": 0.9882,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 8,
+    "sd": 5.267,
+    "meanLn": -0.8993,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 8,
+    "sd": 4.12,
+    "meanLn": 1.399,
+    "admittedBySD": false
+   }
+  ],
+  "GEO|1": [
+   {
+    "axis": "R",
+    "clusters": 7,
+    "sd": 3.561,
+    "meanLn": -2.858,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 7,
+    "sd": 4.247,
+    "meanLn": -2.694,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 7,
+    "sd": 2.371,
+    "meanLn": -1.854,
+    "admittedBySD": false
+   }
+  ],
+  "GEO|3": [
+   {
+    "axis": "R",
+    "clusters": 8,
+    "sd": 8.725,
+    "meanLn": -0.3931,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 8,
+    "sd": 7.495,
+    "meanLn": -2.822,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 8,
+    "sd": 4.837,
+    "meanLn": 1.195,
+    "admittedBySD": false
+   }
+  ],
+  "GEO|0": [
+   {
+    "axis": "R",
+    "clusters": 8,
+    "sd": 3.383,
+    "meanLn": -3.442,
+    "admittedBySD": false
+   },
+   {
+    "axis": "T",
+    "clusters": 8,
+    "sd": 4.206,
+    "meanLn": -4.825,
+    "admittedBySD": false
+   },
+   {
+    "axis": "N",
+    "clusters": 8,
+    "sd": 2.125,
+    "meanLn": -2.594,
+    "admittedBySD": false
+   }
+  ],
+  "HEO|0": [
+   {
+    "axis": "R",
+    "clusters": 0,
+    "sd": null,
+    "admittedBySD": false,
+    "why": "fewer than 3 clusters with pair and truth rows"
+   },
+   {
+    "axis": "T",
+    "clusters": 0,
+    "sd": null,
+    "admittedBySD": false,
+    "why": "fewer than 3 clusters with pair and truth rows"
+   },
+   {
+    "axis": "N",
+    "clusters": 0,
+    "sd": null,
+    "admittedBySD": false,
+    "why": "fewer than 3 clusters with pair and truth rows"
+   }
+  ],
+  "HEO|2": [
+   {
+    "axis": "R",
+    "clusters": 0,
+    "sd": null,
+    "admittedBySD": false,
+    "why": "fewer than 3 clusters with pair and truth rows"
+   },
+   {
+    "axis": "T",
+    "clusters": 0,
+    "sd": null,
+    "admittedBySD": false,
+    "why": "fewer than 3 clusters with pair and truth rows"
+   },
+   {
+    "axis": "N",
+    "clusters": 0,
+    "sd": null,
+    "admittedBySD": false,
+    "why": "fewer than 3 clusters with pair and truth rows"
+   }
+  ]
+ }
+}

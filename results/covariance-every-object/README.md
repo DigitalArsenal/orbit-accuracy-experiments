@@ -18,3 +18,13 @@ WAAS MT9 data: NASA Crustal Dynamics Data Information System (CDDIS).
 `daily/2026-10-20.json` and its `manifest.json` entry are a smoke test of the daily job on an archived day (first 150 objects of each of 8 workers), not an issue day.
 
 The daily catalog applies the same row predicate as the dev rows, so the ISS, Swarm, GRACE-FO and the other C2 calibration objects are absent from it.
+
+## Part 1's lists, placements and regimes
+
+The dev truth objects are Part 1's 113 placements. Against this file's earlier table, 8 NORADs dropped out (ISS, four COSMIC-2, three WAAS) and 12 entered on the ESA span. A pair's regime follows Part 1's definition (un-Kozai'd mean altitude, WGS-72). Four objects have a few pairs outside their Part 1 regime, all as HEO (a set with eccentricity at or above 0.25): 44709 (1 of 2,847 pairs), 62876 (3 of 6,418), 64202 (10 of 1,080) and 67588 (1 of 297); no object changes stratum otherwise.
+
+## Admission, n0 and S2 on Part 1's dev rows
+
+- `admission.json`: cell-level SD of ln(pair moment / truth moment) over clusters, per regime, age bin and axis.
+- `n0-rows.json`: the n0 simulation with Part 1's block length (median over strata with an admitted bin) and the admitted bins.
+- `dev-s2.json`: S2.1 null and power, and the S2.1 to S2.3 evaluators on Part 1's dev rows. These are dev numbers for the freeze record; the states for the test read PENDING until each stratum's open date.

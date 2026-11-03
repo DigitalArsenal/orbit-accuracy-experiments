@@ -19,7 +19,7 @@ for (const o of TRUTH.objects.filter((_, i) => i % n === k)) {
   }
   const out = fs.createWriteStream(path.join(dir, `${o.norad}.jsonl`));
   let invalid = 0;
-  pairs.forEach((p, i) => { if (!cross[i] || !own[p.j]) { invalid++; return; } const rho = rtn(cross[i], own[p.j]).map((x) => Number(x.toPrecision(9))); out.write(JSON.stringify([sets[p.j].t, p.bin, regime(sets[p.j].el[0], sets[p.j].el[1]), rho]) + '\n'); });
+  pairs.forEach((p, i) => { if (!cross[i] || !own[p.j]) { invalid++; return; } const rho = rtn(cross[i], own[p.j]).map((x) => Number(x.toPrecision(9))); out.write(JSON.stringify([sets[p.j].t, p.bin, regime(sets[p.j].el[0], sets[p.j].el[1], sets[p.j].el[2]), rho.slice(0, 6), sets[p.k].t, sets[p.j].c]) + '\n'); });
   await new Promise((r) => out.end(r));
   fs.writeFileSync(path.join(dir, `${o.norad}.summary.json`), JSON.stringify({ norad: o.norad, sets: sets.length, pairs: pairs.length - invalid, invalidPropagations: invalid }));
 }

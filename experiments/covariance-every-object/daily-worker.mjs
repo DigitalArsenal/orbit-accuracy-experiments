@@ -25,7 +25,7 @@ for (const norad of objs) {
   const r2 = [[], [], []], a = [[], [], []]; let used = 0, lastReg = null;
   pairs.forEach((p, i) => {
     const c = cross.get(i), o = own.get(p.j); if (!c || !o) return;
-    const reg = regime(sets[p.j].el[0], sets[p.j].el[1]); lastReg = reg; const A = cfg.a[`${reg}|${p.bin}`]; if (!A) return;
+    const reg = regime(sets[p.j].el[0], sets[p.j].el[1], sets[p.j].el[2]); lastReg = reg; const A = cfg.a[`${reg}|${p.bin}`]; if (!A) return;
     const rho = rtn(c, o); used++; for (let ax = 0; ax < 3; ax++) { r2[ax].push(rho[ax] ** 2); a[ax].push(A[ax]); }
   });
   if (used === 0) { out.push({ norad, older, pairs: pairs.length, base: true, reason: 'no admitted bin' }); continue; }

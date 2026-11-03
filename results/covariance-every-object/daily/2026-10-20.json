@@ -11,28 +11,28 @@
   "c2-held-object": 2792,
   "iss>=2025-01-01": 816,
   "swarm-gracefo>=2026-10-31": 0,
-  "c2-calibration>=2026-06-01": 39512
+  "c2-calibration>=2026-06-01": 42240
  },
  "byRegime": {
   "MEO": {
-   "objects": 67,
+   "objects": 60,
    "base": 0,
    "flagged": 0
   },
   "LEO-H": {
-   "objects": 777,
+   "objects": 775,
    "base": 0,
-   "flagged": 151
+   "flagged": 108
   },
   "LEO-L": {
    "objects": 11,
    "base": 0,
-   "flagged": 1
+   "flagged": 11
   },
   "LEO-M": {
-   "objects": 223,
+   "objects": 225,
    "base": 0,
-   "flagged": 8
+   "flagged": 178
   },
   "HEO": {
    "objects": 40,
@@ -40,12 +40,12 @@
    "flagged": 0
   },
   "BASE-no-regime": {
-   "objects": 32,
-   "base": 32,
+   "objects": 30,
+   "base": 30,
    "flagged": 0
   },
   "GEO": {
-   "objects": 50,
+   "objects": 59,
    "base": 0,
    "flagged": 0
   }

@@ -7,16 +7,16 @@
  "swarmGraceRowsFromHold": 0,
  "outsideSpanRows": 0,
  "nsgfOrHeldPaths": 0,
- "pairRows": 407932,
+ "pairRows": 398647,
  "dropped": {
-  "name:starlink|galileo|gsat": 26462494,
+  "name:starlink|galileo|gsat": 26462502,
   "c2-held-object": 13304,
   "iss>=2025-01-01": 2833,
   "swarm-gracefo>=2026-10-31": 81,
-  "c2-calibration>=2026-06-01": 25115
+  "c2-calibration>=2026-06-01": 26421
  },
- "inputFiles": 2133,
- "inputFilesSha256": "d82be92d88ddc0bf4121eeabe3e391d3349bf86ff064d52db85dd3a26c0c5507",
- "devPairsManifestSha256": "54d99919ead870ba2ed80031470958c3113be8ccce740e1b5e7221f88c4b7343",
- "truthObjectsSha256": "5f45018e27985460e5891e7030ee5acd9db48fa9efeb458ad47be3fa57b1e875"
+ "inputFiles": 2134,
+ "inputFilesSha256": "3ab8158832cf03020ae8ab332fa81525b178d39e7756f78ffef084da2e6cf5e6",
+ "devPairsManifestSha256": "c27c079f25536f59816d2e55c6223fccb866d338d3866613e162bfaaf7e5e56c",
+ "truthObjectsSha256": "e13665e829b286b4199aa5d5d45a83468d64695d3a5cda3bc7e82cad74007028"
 }

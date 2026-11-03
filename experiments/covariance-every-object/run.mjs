@@ -53,7 +53,8 @@ export async function acceptanceB() {
   if (!fs.existsSync(AR)) return { status: 'PENDING', reason: 'dev pairs under AR absent on this machine; the committed rows are not recomputed' };
   const { loadPairs, simulate, blockDays } = await import('./lib/n0sim.mjs');
   const den = JSON.parse(fs.readFileSync(`${res}denominators.json`)).strata, a = Object.fromEntries(Object.entries(den).map(([k, v]) => [k, v.a_RTN_m2]));
-  const objs = loadPairs(AR, TRUTH), rows = simulate(objs, a, { seed: f.seed, histories: f.histories, L: blockDays(objs, a) });
+  const adm = new Set(Object.entries(JSON.parse(fs.readFileSync(`${res}admission.json`)).cells).flatMap(([c, v]) => v.filter((x) => x.admittedBySD).map((x) => `${c}|${x.axis}`)));
+  const objs = loadPairs(AR, TRUTH), rows = simulate(objs, a, { seed: f.seed, histories: f.histories, L: f.blockDays, adm });
   const worst = Math.max(...rows.map((r, i) => Math.max(Math.abs(r.pFlagU0 - f.rows[i].pFlagU0), Math.abs(r.medianRatioAtLn4 - f.rows[i].medianRatioAtLn4))));
   const failing = rows.filter((r) => !(r.pFlagU0 <= 0.05 && r.medianRatioAtLn4 >= 0.8 && r.medianRatioAtLn4 <= 1.25));
   if (worst > 0.005) return { status: 'FAIL', reason: `recomputed rows differ from the frozen seed's rows by ${worst}` };
@@ -73,14 +74,21 @@ export function s2Code() {
   const ok = nullFP <= 0.1 && power >= 0.8 && s21r.state === 'PASS' && s22.state === 'PASS';
   return { status: ok ? 'PASS' : 'FAIL', note: 'evaluators exercised on synthetic rows only; no Part 1 row is read', nullFalsePositive: nullFP, power, s21: s21r.state, s22: s22.state, s23: s23.state };
 }
+export function acceptanceCE() {
+  const repo = new URL('../../', import.meta.url).pathname, res = `${repo}results/covariance-every-object/`, fz = JSON.parse(fs.readFileSync(`${res}frozen-constants.json`));
+  const bad = fz.admittedBins.afterNullCondition.filter((k) => { const [r, b, ax] = k.split('|'), c = JSON.parse(fs.readFileSync(`${res}admission.json`)).cells[`${r}|${b}`].find((x) => x.axis === ax); return !(c.sd <= 0.35) || !(fz.s2_1.null <= 0.05); });
+  const c = { status: bad.length ? 'FAIL' : 'PASS', admitted: fz.admittedBins.afterNullCondition.length, admittedBySD: fz.admittedBins.count, ofAxisCells: fz.admittedBins.of, s21Null: fz.s2_1.null, s21Power: fz.s2_1.power };
+  const p = fz.part1FrozenConstantsSha256, e = typeof p === 'object' && p.sha256 ? { status: p.provisional ? 'PROVISIONAL' : 'PASS', sha256: p.sha256, note: p.note } : { status: 'PENDING', reason: 'Part 1 pin absent' };
+  return { c, e };
+}
 const PENDING = (why) => ({ status: 'PENDING', reason: why });
 if (process.argv[1] && process.argv[1].endsWith('run.mjs') && process.argv.includes('--check')) {
   const items = {
     a: acceptanceA(),
     b: await acceptanceB(),
-    c: PENDING('admission needs Part 1 truth moments'),
+    c: acceptanceCE().c,
     d: acceptanceD(),
-    e: PENDING('Part 1 frozen-constants.json not yet committed'),
+    e: acceptanceCE().e,
     f: acceptanceF(),
     s2code: s2Code(),
     g: { S2_1: 'PENDING', S2_2: 'PENDING', S2_3: 'PENDING' },

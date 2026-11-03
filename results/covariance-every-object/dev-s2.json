@@ -1,0 +1,74 @@
+{
+ "note": "Part 1 dev rows (not the test): S2 evaluators on dev coverage cells; n0 is report-only if n0-rows.json has none",
+ "sets": {
+  "sets": 67262,
+  "base": 57561,
+  "flagged": 4070,
+  "noCreation": 0
+ },
+ "rows": 2286988,
+ "flaggedRows": 140440,
+ "flaggedClusters": 10,
+ "params": {
+  "B": 10000,
+  "perms": 1000,
+  "reps": 2000,
+  "inner": 100
+ },
+ "s21Null": 0.001,
+ "s21Power": 1,
+ "s21": {
+  "state": "FAIL",
+  "interval": [
+   -0.010954085615334952,
+   0.04827271534142911
+  ],
+  "estimate": 0.01441947134005291,
+  "flaggedClusters": 10
+ },
+ "s22": {
+  "state": "FAIL",
+  "interval": [
+   -0.003145070633029453,
+   0.01496572018392417
+  ],
+  "covO": 0.9730439453916482,
+  "covBase": 0.9480681720434152
+ },
+ "s23": {
+  "state": "NOT EVALUABLE",
+  "reason": "no stratum is labeled"
+ },
+ "coverageDev": {
+  "LEO-L": {
+   "n": 236706,
+   "cov95Base": 0.9489873513979367,
+   "cov95O": 0.961716221811023
+  },
+  "LEO-M": {
+   "n": 232606,
+   "cov95Base": 0.9510459747383988,
+   "cov95O": 0.9557621041589641
+  },
+  "LEO-H": {
+   "n": 237217,
+   "cov95Base": 0.9810173807104887,
+   "cov95O": 0.981755101868753
+  },
+  "MEO": {
+   "n": 1435118,
+   "cov95Base": 0.9498452392068109,
+   "cov95O": 0.9498452392068109
+  },
+  "GEO": {
+   "n": 145306,
+   "cov95Base": 0.9226391202015057,
+   "cov95O": 0.9226391202015057
+  },
+  "HEO": {
+   "n": 35,
+   "cov95Base": 1,
+   "cov95O": 1
+  }
+ }
+}
