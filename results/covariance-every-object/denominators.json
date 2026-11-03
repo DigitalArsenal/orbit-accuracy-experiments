@@ -1,0 +1,598 @@
+{
+ "note": "a_{s,b,k}: pooled unclipped second moment of rho in j RTN, position, m^2, over dev truth objects on lawful spans (PLAN.md reading 4)",
+ "clusterMomentsSha256": "f73b1929e1e94b04810361e9e0a535df5642cf1002e5681669ad09a7a122968d",
+ "strata": {
+  "LEO-L|1": {
+   "regime": "LEO-L",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 9016,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    288236.78,
+    192459830,
+    43876.28
+   ]
+  },
+  "LEO-L|2": {
+   "regime": "LEO-L",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 9155,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    13568210,
+    1888271100,
+    89678.569
+   ]
+  },
+  "LEO-L|3": {
+   "regime": "LEO-L",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 9150,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    1447279000,
+    12798955000,
+    80649.255
+   ]
+  },
+  "LEO-L|4": {
+   "regime": "LEO-L",
+   "bin": 4,
+   "ageDays": [
+    2.5,
+    4
+   ],
+   "pairs": 9140,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    14608000000,
+    40694657000,
+    153142.91
+   ]
+  },
+  "LEO-L|5": {
+   "regime": "LEO-L",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 9106,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    43850910000,
+    136741830000,
+    1087665.5
+   ]
+  },
+  "LEO-L|6": {
+   "regime": "LEO-L",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 9061,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    126743510000,
+    383274680000,
+    1725281
+   ]
+  },
+  "LEO-L|0": {
+   "regime": "LEO-L",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 5372,
+   "clusters": 4,
+   "objects": 6,
+   "a_RTN_m2": [
+    61263.765,
+    25115757,
+    50775.773
+   ]
+  },
+  "LEO-M|1": {
+   "regime": "LEO-M",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 6067,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    19700.143,
+    8332177,
+    3529.6361
+   ]
+  },
+  "LEO-M|3": {
+   "regime": "LEO-M",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 6900,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    334843.35,
+    148323030,
+    56306.509
+   ]
+  },
+  "LEO-M|4": {
+   "regime": "LEO-M",
+   "bin": 4,
+   "ageDays": [
+    2.5,
+    4
+   ],
+   "pairs": 6949,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    17740844,
+    925808450,
+    133933.37
+   ]
+  },
+  "LEO-M|5": {
+   "regime": "LEO-M",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 6902,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    2327117300,
+    27682450000,
+    322958.83
+   ]
+  },
+  "LEO-M|6": {
+   "regime": "LEO-M",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 6856,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    16340852000,
+    97781823000,
+    672706.5
+   ]
+  },
+  "LEO-M|2": {
+   "regime": "LEO-M",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 6791,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    136151.83,
+    66842003,
+    17108.471
+   ]
+  },
+  "LEO-M|0": {
+   "regime": "LEO-M",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 3470,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    373.65359,
+    19749.488,
+    446.29559
+   ]
+  },
+  "LEO-H|1": {
+   "regime": "LEO-H",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 9310,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    658.50197,
+    157190.45,
+    1327.0765
+   ]
+  },
+  "LEO-H|2": {
+   "regime": "LEO-H",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 9875,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    2498.8647,
+    955522.81,
+    6279.1355
+   ]
+  },
+  "LEO-H|3": {
+   "regime": "LEO-H",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 9953,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    7486.261,
+    2963022.5,
+    19168.313
+   ]
+  },
+  "LEO-H|4": {
+   "regime": "LEO-H",
+   "bin": 4,
+   "ageDays": [
+    2.5,
+    4
+   ],
+   "pairs": 10017,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    412874480,
+    11459989000,
+    50743.67
+   ]
+  },
+  "LEO-H|5": {
+   "regime": "LEO-H",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 9987,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    325971850,
+    9791421000,
+    117436.79
+   ]
+  },
+  "LEO-H|6": {
+   "regime": "LEO-H",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 9935,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    18589300000,
+    50916942000,
+    244349.14
+   ]
+  },
+  "LEO-H|0": {
+   "regime": "LEO-H",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 5259,
+   "clusters": 5,
+   "objects": 8,
+   "a_RTN_m2": [
+    146.28356,
+    14599.694,
+    283.6614
+   ]
+  },
+  "MEO|0": {
+   "regime": "MEO",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 5996,
+   "clusters": 5,
+   "objects": 83,
+   "a_RTN_m2": [
+    27233.348,
+    16898094,
+    24188.791
+   ]
+  },
+  "MEO|1": {
+   "regime": "MEO",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 17948,
+   "clusters": 5,
+   "objects": 83,
+   "a_RTN_m2": [
+    28131290,
+    62319453,
+    416021570
+   ]
+  },
+  "MEO|2": {
+   "regime": "MEO",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 33999,
+   "clusters": 5,
+   "objects": 83,
+   "a_RTN_m2": [
+    34398296,
+    774505160,
+    277551030
+   ]
+  },
+  "MEO|3": {
+   "regime": "MEO",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 36706,
+   "clusters": 5,
+   "objects": 83,
+   "a_RTN_m2": [
+    94394790,
+    1668417900,
+    1099516600
+   ]
+  },
+  "MEO|4": {
+   "regime": "MEO",
+   "bin": 4,
+   "ageDays": [
+    2.5,
+    4
+   ],
+   "pairs": 41958,
+   "clusters": 5,
+   "objects": 83,
+   "a_RTN_m2": [
+    2083117700,
+    9913058700,
+    545622680
+   ]
+  },
+  "MEO|5": {
+   "regime": "MEO",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 44795,
+   "clusters": 5,
+   "objects": 83,
+   "a_RTN_m2": [
+    14875704000,
+    17701631000,
+    985010490
+   ]
+  },
+  "MEO|6": {
+   "regime": "MEO",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 44272,
+   "clusters": 5,
+   "objects": 83,
+   "a_RTN_m2": [
+    55704557000,
+    49942611000,
+    105990690
+   ]
+  },
+  "GEO|0": {
+   "regime": "GEO",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 956,
+   "clusters": 2,
+   "objects": 4,
+   "a_RTN_m2": [
+    117083.33,
+    1623527.9,
+    17031625
+   ]
+  },
+  "GEO|1": {
+   "regime": "GEO",
+   "bin": 1,
+   "ageDays": [
+    0.25,
+    0.75
+   ],
+   "pairs": 1914,
+   "clusters": 2,
+   "objects": 4,
+   "a_RTN_m2": [
+    276451.54,
+    16061086,
+    15495303
+   ]
+  },
+  "GEO|2": {
+   "regime": "GEO",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 2186,
+   "clusters": 2,
+   "objects": 4,
+   "a_RTN_m2": [
+    385192.58,
+    50521344,
+    37268939
+   ]
+  },
+  "GEO|3": {
+   "regime": "GEO",
+   "bin": 3,
+   "ageDays": [
+    1.5,
+    2.5
+   ],
+   "pairs": 2209,
+   "clusters": 2,
+   "objects": 4,
+   "a_RTN_m2": [
+    799857.26,
+    160483250,
+    70946800
+   ]
+  },
+  "GEO|6": {
+   "regime": "GEO",
+   "bin": 6,
+   "ageDays": [
+    6,
+    8
+   ],
+   "pairs": 2231,
+   "clusters": 2,
+   "objects": 4,
+   "a_RTN_m2": [
+    4463101.6,
+    3482998800,
+    402487450
+   ]
+  },
+  "GEO|5": {
+   "regime": "GEO",
+   "bin": 5,
+   "ageDays": [
+    4,
+    6
+   ],
+   "pairs": 2249,
+   "clusters": 2,
+   "objects": 4,
+   "a_RTN_m2": [
+    2956976.7,
+    1287375900,
+    237871780
+   ]
+  },
+  "GEO|4": {
+   "regime": "GEO",
+   "bin": 4,
+   "ageDays": [
+    2.5,
+    4
+   ],
+   "pairs": 2231,
+   "clusters": 2,
+   "objects": 4,
+   "a_RTN_m2": [
+    1623472.4,
+    464209090,
+    133569840
+   ]
+  },
+  "HEO|0": {
+   "regime": "HEO",
+   "bin": 0,
+   "ageDays": [
+    0,
+    0.25
+   ],
+   "pairs": 6,
+   "clusters": 1,
+   "objects": 2,
+   "a_RTN_m2": [
+    119738190,
+    339019560,
+    13809093
+   ]
+  },
+  "HEO|2": {
+   "regime": "HEO",
+   "bin": 2,
+   "ageDays": [
+    0.75,
+    1.5
+   ],
+   "pairs": 5,
+   "clusters": 1,
+   "objects": 1,
+   "a_RTN_m2": [
+    3157896300,
+    8688339200,
+    32761045
+   ]
+  }
+ }
+}
