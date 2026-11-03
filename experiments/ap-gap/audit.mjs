@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 // AP5's GN fitter uses XM's spent-window control store and weather configuration.
-if (process.argv[process.argv.indexOf('--method') + 1] === 'gn') process.env.XP2F_CONTROL = '1';
+if (process.argv[process.argv.indexOf('--method') + 1] === 'gn' || process.argv[process.argv.indexOf('--groups') + 1] === 'GN') process.env.XP2F_CONTROL = '1';
 const read = fs.readFileSync.bind(fs);
 const config = JSON.parse(read(new URL('./config.json', import.meta.url)));
 const seen = new Map();
