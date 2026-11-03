@@ -3,13 +3,14 @@ import path from 'node:path';
 import {STATIC} from '../operator-theory/lib/regimes.mjs';
 import {config,registration,analysisProvenance,hash} from './guard.mjs';
 import {readRows} from './statistics.mjs';
+import {arcs as expectedArcs} from './coverage.mjs';
 import {gOf,scaled,axesMleRef,median,truthTerm,availableAt} from '../ffm-covariance-adaptive/lib/model.mjs';
 registration();
 const constants=JSON.parse(fs.readFileSync('results/ffm-covariance-adaptive/frozen-constants.json')).classes;
 const rows=['regimes','truth2','truth'].flatMap(label=>readRows(`${config.store}/covariance/${label}`).map(r=>({...r,labelSource:label}))),inputs={};
 for(const label of ['regimes','truth2','truth']){const dir=`${config.store}/covariance/${label}`;if(fs.existsSync(dir))for(const f of fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));}
 // Pin every stored fit, endpoint, OMM and public-set extraction used by the products.
-for(const phase of ['cheap','ffm','products'])for(const label of ['regimes','truth2','truth']){const dir=`${config.store}/${phase}/${label}`;if(fs.existsSync(dir))for(const f of fs.readdirSync(dir).filter(f=>/^(rows|endpoints|omm-products|fit-products|encounter-errors)-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));}
+for(const phase of ['cheap','ffm','products','gp-products'])for(const label of ['regimes','truth2','truth']){const dir=`${config.store}/${phase}/${label}`;if(fs.existsSync(dir))for(const f of fs.readdirSync(dir).filter(f=>/^(rows|endpoints|omm-products|fit-products|encounter-errors)-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));}
 const gpExtraction={days:0,missing:0,sources:{}};for(const f of fs.readdirSync(`${config.store}/gp-sets`).filter(f=>f.endsWith('.json'))){const file=`${config.store}/gp-sets/${f}`,bytes=fs.readFileSync(file),r=JSON.parse(bytes);inputs[file]=hash(bytes);gpExtraction.days++;gpExtraction.missing+=!!r.missing;if(r.sha256)gpExtraction.sources[r.file]=r.sha256;}
 // NSGF's uncertainty is reference metadata, not a fitted residual or a C2 row.
 const sigmaFiles=new Map();for(const object of STATIC.filter(o=>['LS','GD'].includes(o.group)&&!['stella','lageos1'].includes(o.name))){for(const file of object.files().filter(f=>/nsgf|ilrsa/i.test(f))){const metaFile=path.join(path.dirname(file),'index.json');if(!fs.existsSync(metaFile))continue;const data=fs.readFileSync(metaFile),meta=JSON.parse(data);inputs[metaFile]=hash(data);for(const o of meta.objects??[]){if(!rows.some(r=>r.norad===o.norad))continue;if(!sigmaFiles.has(o.norad))sigmaFiles.set(o.norad,[]);sigmaFiles.get(o.norad).push({file,family:/nsgf/i.test(file)?'nsgf':'ilrsa',start:Date.parse(o.start),stop:Date.parse(o.stop),sigma:meta.statedSigmaM});}}}
@@ -28,5 +29,11 @@ for(const r of rows){const p=constants[r.class];if(!p)continue;const E=Date.pars
 }
 const nominal=new Map();for(const label of ['regimes','truth2','truth'])for(const phase of ['cheap','ffm'])for(const r of readRows(`${config.store}/${phase}/${label}`)){const key=`${label}|${r.key}`;if(!nominal.has(key))nominal.set(key,{arms:{}});Object.assign(nominal.get(key).arms,r.arms);}
 for(const r of rows)for(const [arm,a]of Object.entries(r.arms))for(const day of config.leads)if(!a.days[day]){const source=nominal.get(`${r.labelSource}|${r.key}`)?.arms[arm];a.days[day]={error:a.error??(source&&!source.days?.[day]?'lead grid below 90%':'carried covariance product not run')};}
+const coverage=new Map(),carried=new Map(rows.map(r=>[`${r.labelSource}|${r.key}`,r]));
+const valid=v=>v&&!v.error&&v.errorM?.length===3&&v.covarianceM2?.length===6&&v.errorM.every(Number.isFinite)&&v.covarianceM2.every(Number.isFinite);
+for(const label of ['regimes','truth2','truth']){const gp=new Map(readRows(`${config.store}/gp-products/${label}`).map(r=>[r.key,r]));for(const r of readRows(`${config.store}/cheap/${label}`)){const group=label==='truth'?'T':r.group;if(!coverage.has(group))coverage.set(group,{group,expectedWindows:0,carriedWindows:0,gpWindows:0,fitArmDays:{expected:0,scored:0,excluded:0,missing:0},gpArmDays:{expected:0,scored:0,excluded:0,missing:0}});const c=coverage.get(group),fit=carried.get(`${label}|${r.key}`),g=gp.get(r.key);c.expectedWindows++;c.carriedWindows+=!!fit;c.gpWindows+=!!g;
+ for(const arc of expectedArcs({...r,group}))for(const arm of ['AP','XP','F','S'])for(const day of config.leads){const d=c.fitArmDays,a=fit?.arms[arm+arc],v=a?.days?.[day];d.expected++;if(valid(v))d.scored++;else if(fit&&(fit.error||a))d.excluded++;else d.missing++;}
+ for(const day of config.leads){const d=c.gpArmDays;d.expected++;if(valid(g?.days[day]))d.scored++;else if(g)d.excluded++;else d.missing++;}
+}}
 const out=`${config.store}/adapted-covariance.jsonl`;fs.writeFileSync(out,rows.map(r=>JSON.stringify(r)).join('\n')+'\n');
-fs.writeFileSync('results/five-day-ca/covariance.json',JSON.stringify({provenance:analysisProvenance(),inputs,gpExtraction,counts,rows:rows.length,outputSha256:hash(fs.readFileSync(out)),truthTerm:'used only when estimating history scale; forecast covariance excludes reference measurement variance'},null,2)+'\n');console.log(JSON.stringify(counts));
+fs.writeFileSync('results/five-day-ca/covariance.json',JSON.stringify({provenance:analysisProvenance(),inputs,gpExtraction,counts,coverage:[...coverage.values()],rows:rows.length,outputSha256:hash(fs.readFileSync(out)),truthTerm:'used only when estimating history scale; forecast covariance excludes reference measurement variance'},null,2)+'\n');console.log(JSON.stringify(counts));
