@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import {config} from './guard.mjs';
 import {readRows,disclosure} from './statistics.mjs';
-const arcs=r=>['LS','DO','P','S1','GN'].includes(r.group)?[24,72]:r.group==='T'?[24]:r.group==='HE'?[72,336]:r.group==='HX'&&/CHANDRA/i.test(r.name)?[72,168]:[72];
+export const arcs=r=>['LS','DO','P','S1','GN'].includes(r.group)?[24,72]:r.group==='T'?[24]:r.group==='HE'?[72,336]:r.group==='HX'&&/CHANDRA/i.test(r.name)?[72,168]:[72];
 export function coverage(){
  const cells=new Map();
  for(const label of ['regimes','truth2','truth']){

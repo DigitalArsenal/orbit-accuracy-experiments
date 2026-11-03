@@ -14,3 +14,8 @@ Affected prior rows must be replayed and reproduce exactly before acceptance.
 
 Before the first FFM flight, its original and added grids are also requested
 separately from the identical fit, preserving the old integrator query path.
+
+2026-11-03 resume 5: the coordinator accepts the Space Force library's
+measured query-order dependence up to 1 m per U scalar, with count and
+maximum reported, as registered in FIVE-DAY.md. AP, XP, S and F retain
+exact equality. This replaces the preceding U exact-replay requirement.

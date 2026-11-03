@@ -7,6 +7,7 @@ import {readRows,disclosure} from './statistics.mjs';
 import {rand} from '../operator-theory/lib/compare.mjs';
 import {openPc,wasmSha256} from './lib/ca-reach.mjs';
 import {pairedScores} from './lib/paired-scores.mjs';
+import {arcs as expectedArcs} from './coverage.mjs';
 registration();
 for(const [name,commit]of [['ENCOUNTERS.md','663355c'],['COVARIANCE.md','2748823']])if(execFileSync('git',['show',`${commit}:experiments/five-day-ca/${name}`],{encoding:'utf8'}).trim()!==fs.readFileSync(`experiments/five-day-ca/${name}`,'utf8').trim())throw Error('encounter registration changed');
 const inputs={},covFile=`${config.store}/adapted-covariance.jsonl`,cov=new Map(fs.readFileSync(covFile,'utf8').split('\n').filter(Boolean).map(JSON.parse).map(r=>[`${r.labelSource}|${r.key}`,r]));inputs[covFile]=hash(fs.readFileSync(covFile));inputs["results/five-day-ca/covariance.json"]=hash(fs.readFileSync("results/five-day-ca/covariance.json"));
@@ -14,13 +15,14 @@ const all=[],arms=['AP','XP','F','S','GP'];let expectedProducts=0,covarianceProd
 for(const label of ['regimes','truth2','truth']){
  const gp=new Map(readRows(`${config.store}/gp-products/${label}`).map(r=>[r.key,r]));
  for(const phase of ['cheap','gp-products']){const dir=`${config.store}/${phase}/${label}`;if(fs.existsSync(dir))for(const f of fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));}
- for(const r of readRows(`${config.store}/cheap/${label}`)){const c=cov.get(`${label}|${r.key}`),g=gp.get(r.key);expectedProducts++;covarianceProducts+=!!c;gpProducts+=!!g;const arcs=[...new Set(Object.keys(r.arms).map(a=>+a.match(/\d+/)[0]))];for(const arc of arcs)all.push({key:r.key,object:r.norad,group:label==='truth'?'T':r.group,arc,cutoff:r.cutoff,cov:c,gp:g});}
+ for(const r of readRows(`${config.store}/cheap/${label}`)){const c=cov.get(`${label}|${r.key}`),g=gp.get(r.key);expectedProducts++;covarianceProducts+=!!c;gpProducts+=!!g;const arcs=expectedArcs({...r,group:label==='truth'?'T':r.group});for(const arc of arcs)all.push({key:r.key,object:r.norad,group:label==='truth'?'T':r.group,arc,cutoff:r.cutoff,cov:c,gp:g});}
 }
+const unresolvedProductErrors=[];for(const r of cov.values()){if(/not run/.test(r.error??''))unresolvedProductErrors.push({group:r.group,key:r.key,error:r.error});for(const [arm,a]of Object.entries(r.arms))if(/not run/.test(a.error??''))unresolvedProductErrors.push({group:r.group,key:r.key,arm,error:a.error});}
 const pc=await openPc(),groups=Map.groupBy(all,r=>`${r.group}|${r.arc}`),cells=[],paired=[],out=`${config.store}/encounters`;
 fs.mkdirSync(out,{recursive:true});const rawFile=`${out}/calibrated-${Date.now()}.jsonl`,raw=fs.openSync(rawFile,'w');
 const valid=v=>v&&!v.error&&v.errorM?.every(Number.isFinite)&&v.covarianceM2?.every(Number.isFinite);
 try{for(const [tag,pool]of groups){const [group,arcText]=tag.split('|'),arc=+arcText,byDay=new Map(),scores=new Map();
- for(const day of config.leads)for(const arm of arms){const key=`${day}|${arm}`;byDay.set(key,{group,arc,arm,day,pair:'same-arm x same-arm',disclosure:disclosure(group,day),draws:0,noPrimary:0,noSecondary:0,pcFailed:0,n:0,hits:0,missed:0,falseAlerts:0,brierSum:0,logSum:0,errors:{},labels:{}});}for(const day of config.leads)scores.set(day,[]);
+ for(const day of config.leads)for(const arm of arms){const key=`${day}|${arm}`;byDay.set(key,{group,arc,arm,day,pair:'same-arm x same-arm',disclosure:disclosure(group,day),expectedWindows:pool.length,draws:0,noPrimary:0,noSecondary:0,pcFailed:0,n:0,hits:0,missed:0,falseAlerts:0,brierSum:0,logSum:0,errors:{},labels:{}});}for(const day of config.leads)scores.set(day,[]);
  for(let k=0;k<20000;k++){
   const rng=rand(parseInt(crypto.createHash('sha256').update(`five-day-ca|${group}|${arc}|${k}`).digest('hex').slice(0,8),16));
   const day=config.leads[Math.floor(rng()*config.leads.length)],p=pool[Math.floor(rng()*pool.length)],secondary=pool.filter(s=>s.object!==p.object),u=rng(),s=secondary[Math.floor(u*secondary.length)];
@@ -38,6 +40,6 @@ try{for(const [tag,pool]of groups){const [group,arcText]=tag.split('|'),arc=+arc
  for(const day of config.leads)for(let i=0;i<arms.length;i++)for(let j=i+1;j<arms.length;j++){const a=arms[i],b=arms[j],draws=scores.get(day),records=draws.filter(r=>r.scores[a]&&r.scores[b]).map(r=>({object:r.object,a:r.scores[a],b:r.scores[b]}));paired.push({group,arc,day,contrast:`${a}-${b}`,disclosure:disclosure(group,day),draws:draws.length,unpaired:draws.length-records.length,...pairedScores(records,`${tag}|${day}|${a}-${b}`)});}
  console.log(JSON.stringify({group,arc,scored:cells.filter(c=>c.group===group&&c.arc===arc).reduce((n,c)=>n+c.n,0)}));
 }
- const result={provenance:analysisProvenance(),complete:expectedProducts===covarianceProducts&&expectedProducts===gpProducts,expectedProducts,covarianceProducts,gpProducts,planCommit:'2748823',rawFile,rawSha256:hash(fs.readFileSync(rawFile)),inputs,wasmSha256,arms,unmeasuredArms:[],uArm:'No covariance arm is specified for U; forecast and reach tables retain U.',bootstrap:{draws:10000,cluster:'primary object',interval:[.025,.975],limitation:'does not model additional secondary-object dependence'},scope:'same draws across five covariance arms; missing products and numerical failures counted; artificial rates',cells,paired};
+ const result={provenance:analysisProvenance(),complete:expectedProducts===covarianceProducts&&expectedProducts===gpProducts&&unresolvedProductErrors.length===0,unresolvedProductErrors,expectedProducts,covarianceProducts,gpProducts,planCommit:'2748823',rawFile,rawSha256:hash(fs.readFileSync(rawFile)),inputs,wasmSha256,arms,unmeasuredArms:[],uArm:'No covariance arm is specified for U; forecast and reach tables retain U.',bootstrap:{draws:10000,cluster:'primary object',interval:[.025,.975],limitation:'does not model additional secondary-object dependence'},scope:'same draws across five covariance arms; missing products and numerical failures counted; artificial rates',cells,paired};
  fs.writeFileSync('results/five-day-ca/encounters.json',JSON.stringify(result,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v,2)+'\n');console.log(JSON.stringify({cells:cells.length,paired:paired.length,encounters:cells.reduce((n,c)=>n+c.n,0),complete:result.complete}));
 }finally{fs.closeSync(raw);await pc.close();}

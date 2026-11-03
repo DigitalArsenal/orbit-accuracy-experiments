@@ -31,3 +31,11 @@ AP, XP, FFM, U and GP results remain unmeasured until their required error
 and carried-covariance products exist. The full task E2E must fail while
 those products or paired score intervals remain missing; a partial S table
 is not completion of the synthetic-encounter acceptance.
+
+## Resume 5 execution amendment — 2026-11-03
+
+COVARIANCE.md replaces the partial-S execution status above. The task's
+specified covariance arms are AP, XP, FFM, S and GP. No U covariance is
+specified; U remains in the forecast and reach tables. No U covariance is
+invented. Every registered window stays in the draw pool, including failed
+fits and absent truth, with missing primary/secondary products counted.
