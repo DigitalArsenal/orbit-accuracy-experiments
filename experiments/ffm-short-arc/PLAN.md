@@ -199,3 +199,14 @@ If the tail rule fails only through storm windows, the verdict is no and the rep
   compared exactly; the table rebuilt from the stored rows equal to the committed table.json byte for byte.
 - Cost (8 workers under nice): fits A12 2.6 s, A24 6.1 s, F2 24.5 s median; forecasts about 17 s each; SGP4 fits under 0.3 s. About 150 s
   per group-P window, about 7 h for 1,370 windows.
+
+## Amendment 1, 2026-11-03, before any fresh score: the posterior sigma of B is not stored
+
+XM6's `lib/ffm.mjs` returns the fit record without fit_batch's covariance, and the proof compares whole fit records with XM3's and XM6's
+stored rows byte for byte. Storing the a posteriori sigma would mean changing the pinned file or the record, and either breaks that
+equality. The report-only diagnostic of the arc rule (the posterior sigma of B against its prior) is therefore not computed in this run;
+it attached to no rule and no statement. The arc rule stands on its registered reasons and on every arc being run and printed on every
+group. `lib/sgp4fit.mjs` is XP2's with one import line resolved to this experiment's `common.mjs` (XP2's own redirects XM's store and
+weather), nothing else. `common.mjs` sets `XM_STORE` to this store and points XM's public-set days and RSGA directory at this
+experiment's (XP2's pattern); in proof mode it redirects nothing, so F2, A12 and A24 run in the environment XM3 and XM6 ran in. No cell,
+rule, arm or statistic changes.
