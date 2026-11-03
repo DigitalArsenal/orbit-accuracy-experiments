@@ -29,11 +29,11 @@ for(const g of groups) for(const batch of [...new Set(all.map(r=>r.batch))]) {
   for(const day of [1,3,7]) {
    const pairs=rows.map(r=>{
     const base=all.find(b=>b.key===r.key&&(batch==='resume-gn'||batch.startsWith('resume-frame')?b.batch===batch:batch==='resume-ffm'?b.batch===batch:batch==='resume-ap'||batch==='resume-heo'?b.batch===batch:b.batch==='resume-CONTROL'));
-    const control=batch.startsWith('resume-frame')?'XP72':batch==='resume-ffm'?'F72':g==='GN'&&batch==='resume-gn'?'XP24':'AP72';
-    return {v:r.arms[arm]?.ok?r.arms[arm]?.days?.[day]?.e:undefined,b:base?.arms[control]?.ok?base?.arms[control]?.days?.[day]?.e:undefined};
+    const control=batch.startsWith('resume-frame')?'XP72':batch==='resume-ffm'?'F72':g==='GN'&&batch==='resume-gn'?({AP_FIXED24:'AP24',U_FIXED24:'U_REBUILT24',U_REBUILT24:'U24'}[arm]??'XP24'):'AP72';
+    return {control,v:r.arms[arm]?.ok?r.arms[arm]?.days?.[day]?.e:undefined,b:base?.arms[control]?.ok?base?.arms[control]?.days?.[day]?.e:undefined};
    });
    const values=pairs.filter(p=>Number.isFinite(p.v));const paired=values.filter(p=>Number.isFinite(p.b));
-   cells.push({group:g,batch,arm,day,n:values.length,attempted:rows.filter(r=>Object.hasOwn(r.arms,arm)).length,medianM:med(values.map(p=>p.v*1000)),pairedN:paired.length,pairedDeltaM:med(paired.map(p=>(p.v-p.b)*1000))});
+   cells.push({group:g,batch,arm,control:pairs[0]?.control,day,n:values.length,attempted:rows.filter(r=>Object.hasOwn(r.arms,arm)).length,medianM:med(values.map(p=>p.v*1000)),pairedN:paired.length,pairedDeltaM:med(paired.map(p=>(p.v-p.b)*1000))});
   }
  }
 }
@@ -43,6 +43,7 @@ const status={status:'partial',methodsComplete:0,methodsRequired:5,completedRows
 const counts=xs=>Object.fromEntries([...new Set(xs)].map(x=>[x,xs.filter(v=>v===x).length]));
 status.failures=Object.fromEntries([...new Set(all.map(r=>r.batch))].map(batch=>{const rows=all.filter(r=>r.batch===batch),arms=rows.flatMap(r=>Object.values(r.arms));return [batch,{attemptedRows:rows.length,rowErrors:counts(rows.filter(r=>r.error).map(r=>r.error)),armErrors:counts(arms.filter(a=>a.error).map(a=>a.error)),fitTerminations:counts(arms.filter(a=>a.termination).map(a=>a.termination))}];}));
 status.diagnoses=diagnose(all,groups.filter(g=>g!=='GN')).map(d=>diagnoseAp(all,d)).concat(diagnoseGn(all));
+status.provenance={eventLabels:{path:eventsFile,sha256:hash(eventsFile)},files:fs.readdirSync('experiments/ap-gap').filter(p=>/\.(mjs|py|json|md)$/.test(p)).sort().map(p=>({path:'experiments/ap-gap/'+p,sha256:hash('experiments/ap-gap/'+p)}))};
 status.builds={};
 for(const kind of ['variants','ussf']){const file=`/Users/tj/software/terrain-work/body-look/codex-apgap-d9/${kind}/manifest.json`;if(fs.existsSync(file))status.builds[kind]={manifestSha256:hash(file),variants:Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(file))).map(([k,v])=>[k,{sha256:v.sha256,returncode:v.returncode,path:v.path}]))};}
 status.inputManifests=fs.readdirSync(root,{recursive:true}).filter(p=>/^resume-[^/]+\/inputs-\d+\.json$/.test(p)).map(p=>({path:path.join(root,p),sha256:hash(path.join(root,p))}));
@@ -56,11 +57,11 @@ status.missing.push('Unique causes and measured module gains are not established
 const dest=new URL('../../results/ap-gap/',import.meta.url);
 fs.writeFileSync(new URL('status.json',dest),JSON.stringify(status,null,2)+'\n');
 const fmt=x=>x===null?'—':x.toFixed(3);
-let text='# AP gap diagnosis\n\nExploratory on previously read AP5/AP6 windows. Errors are forward 3D RMS in meters; leads start at fit end. Attempt and failure counts are in status.json; table n counts available forward forecasts from 72 h fits (GN fitter: 24 h). FFM forecasts from unconverged fits remain included as in AP6, with termination counts reported separately. Δ is the median paired error change from the indicated control, not a causal gain estimate.\n\nThe inherited MGEX selector decoded six held Galileo files before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation with filename exclusions; resumed runs use the guarded selector.\n\n';
+let text='# AP gap diagnosis\n\nExploratory on previously read AP5/AP6 windows. Errors are forward 3D RMS in meters; leads start at fit end. Attempt and failure counts are in status.json; variant and historical controls are source-matched CONTROL/AP72; other controls are in the same batch. Table n counts available forward forecasts from 72 h fits (GN fitter: 24 h). FFM forecasts from unconverged fits remain included as in AP6, with termination counts reported separately. Δ is the median paired error change from the indicated control, not a causal gain estimate.\n\nThe inherited MGEX selector decoded six held Galileo files before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation with filename exclusions; resumed runs use the guarded selector.\n\n';
 for(const g of groups){
- text+=`## ${g}\n\n| Batch / arm | Day 1 m (n) | Day 3 m (n) | Day 7 m (n) | Paired Δ day 3 m (n) |\n| --- | ---: | ---: | ---: | ---: |\n`;
+ text+=`## ${g}\n\n| Batch / arm | Control | Day 1 m (n) | Day 3 m (n) | Day 7 m (n) | Δ day 1 m (n) | Δ day 3 m (n) | Δ day 7 m (n) |\n| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |\n`;
  const keys=[...new Set(cells.filter(c=>c.group===g).map(c=>c.batch+'/'+c.arm))];
- for(const key of keys){const cs=cells.filter(c=>c.group===g&&c.batch+'/'+c.arm===key);const d=cs.find(c=>c.day===3);text+=`| ${key} | ${[1,3,7].map(day=>{const c=cs.find(c=>c.day===day);return `${fmt(c.medianM)} (${c.n})`;}).join(' | ')} | ${fmt(d.pairedDeltaM)} (${d.pairedN}) |\n`;}
+ for(const key of keys){const cs=cells.filter(c=>c.group===g&&c.batch+'/'+c.arm===key);const d=cs.find(c=>c.day===3);text+=`| ${key} | ${d.control} | ${[1,3,7].map(day=>{const c=cs.find(c=>c.day===day);return `${fmt(c.medianM)} (${c.n})`;}).join(' | ')} | ${[1,3,7].map(day=>{const c=cs.find(c=>c.day===day);return `${fmt(c.pairedDeltaM)} (${c.pairedN})`;}).join(' | ')} |\n`;}
  if(!keys.length)text+='| Not measured | — | — | — | — |\n';
  const diagnosis=status.diagnoses.find(d=>d.group===g);
  if(g==='HE')text+='\nArchived XP rows provide the AP6 comparison. The resonant extension arm remains unmeasured.\n';
