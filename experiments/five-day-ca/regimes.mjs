@@ -1,3 +1,4 @@
+import {saveEndpoints,saveOmm} from './lib/product-records.mjs';
 import { registration, allowed, manifest } from './guard.mjs';
 registration();
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
@@ -62,7 +63,8 @@ async function objects() {
     const files = o.files();
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
     const series = SRC.chain(files);
-    out.push({ group: o.group, name: series.name || o.name, norad: series.norad, objectId: series.objectId ?? '', lines: series.lines, arcs: o.arcs, cutoffs: o.cutoffs });
+    const productFiles=args.products?files.map(file=>{const x=SRC.readReference(file);return {file,startMs:ms(x.lines[0].epoch),stopMs:ms(x.lines.at(-1).epoch)};}):null;
+    out.push({ group: o.group, name: series.name || o.name, norad: series.norad, objectId: series.objectId ?? '', lines: series.lines, productFiles, arcs: o.arcs, cutoffs: o.cutoffs });
   }
   for (const [group, klass] of [['IG', 'igso'], ['GE', 'geo']]) {
     if (!GROUPS.includes(group)) continue;
@@ -109,6 +111,7 @@ for (const o of await objects()) {
       const entered = LEADS.filter((k) => bins[k].length >= minBin);
       if (!entered.length) throw new Error('no lead bin');
       row.entered = entered;
+    if(args.products)saveEndpoints(OUT,SHARD,row,entered,bins,o.productFiles);
     const scored = entered.flatMap((k) => bins[k]);
       const epochs = scored.map((l) => l.epoch), epochsMs = epochs.map(ms), truth = scored.map((l) => ({ r: l.r, v: l.v })), sizes = entered.map((k) => bins[k].length);
       let ex, spw;
@@ -150,12 +153,14 @@ for (const o of await objects()) {
           }
         await run('AP', async () => {
           const f = await A.fit(oem, pcfAp, ex);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,pcfAp,ex);
           if (!f.ok) throw new Error(f.error);
           const st = await A.propagate(f.omm, gridB, pcfAp, ex, epochs.length);
           return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
         });
         await run('XP', async () => {
           const f = await A.fit(oem, PCF_XP, undefined);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_XP,undefined);
           if (!f.ok) throw new Error(f.error);
           const st = await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length);
           return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };

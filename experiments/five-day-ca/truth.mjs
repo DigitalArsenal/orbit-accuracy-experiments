@@ -1,3 +1,4 @@
+import {saveEndpoints,saveOmm} from './lib/product-records.mjs';
 import { registration, allowed, manifest } from './guard.mjs';
 registration();
 // AP5.md: XP, SGP4 and FFM on AP's precise-orbit windows, its truth, grid and as-issued weather, so rows join to AP's stored rows by window key. Module calls only.
@@ -59,6 +60,7 @@ for (const w of list) {
     const entered = LEADS.filter((k) => bins[k].length >= MIN_BIN);
     if (!entered.length) throw new Error('no lead bin');
     row.entered = entered;
+    if(args.products)saveEndpoints(OUT,SHARD,row,entered,bins,T.productFiles(o));
     const scored = entered.flatMap((k) => bins[k]);
     const epochs = scored.map((l) => l.epoch), epochsMs = epochs.map(ms), truth = scored.map((l) => ({ r: l.r, v: l.v })), sizes = entered.map((k) => bins[k].length);
     const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
@@ -100,12 +102,14 @@ for (const w of list) {
       await run('AP', async () => {
         const ex = { rows: S.spwBytes(O.rows) };
         const f = await A.fit(oem, PCF_AP, ex);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_AP,ex);
         if (!f.ok) throw new Error(f.error);
         const st = await A.propagate(f.omm, gridB, PCF_AP, ex, epochs.length);
         return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
       });
       await run('XP', async () => {
         const f = await A.fit(oem, PCF_XP, undefined);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_XP,undefined);
         if (!f.ok) throw new Error(f.error);
         const st = await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length);
         return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
