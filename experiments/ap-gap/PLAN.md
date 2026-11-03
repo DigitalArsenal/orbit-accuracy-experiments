@@ -24,3 +24,7 @@ The inherited MGEX selector decoded all six held Galileo files in memory before 
 ## Amendment 2026-11-03: isolated builds
 
 Build CONTROL from the current module source copy, H03/H05/H07 changing only kSeriesE, NOFRAME changing only ap_frame to zero, and CLASS0 through CLASS4 forcing band_of to that class at both initialization and evaluation. Compare variants to CONTROL; do not attribute a difference from archived AP 0.4.0 to the changed constant until the rebuild control agrees. Source and wasm hashes stay in the scratch build manifest. Forced classes are diagnostic perturbations, not proposed defaults.
+
+## Amendment 2026-11-03: GN fitter details
+
+GN uses AP5's five named objects and January–May 2026 cutoffs, 24 h fits. AP and whiteroom XP use their baseline priors; XP_PRIOR selects zero means and Gaussian sigmas 0.05 (BTERM) and 0.1 (AGOM) from the Space Force wrapper's fitter. Its residual weighting and bounds still differ, so this tests the prior constants only. AP_FIXED and XP_FIXED use a scratch build with opt.fit_agom=0, preserving the seed. U_FIXED removes parameter 7 from the Space Force wrapper's active fit vector, preserving its zero seed. No third-party library internals are read or changed.
