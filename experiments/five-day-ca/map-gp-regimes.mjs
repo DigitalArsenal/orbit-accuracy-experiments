@@ -12,9 +12,10 @@ const wasmSha256='9635bfd1982874735cc40e6d646ed76fc417d595294f6834c7026da5fa034b
 if(hash(fs.readFileSync(path.join(dir,'dist/isomorphic/module.wasm')))!==wasmSha256)throw Error('regime module changed');
 const {call,json}=await import(pathToFileURL(path.join(dir,'tests/erm-harness.mjs')).href);
 const model=JSON.parse(fs.readFileSync('/opt/data/sdn-archive/gp-error-model/2026-08/model.json'));
+const canonical=s=>({'sentinel6a':'s6michaelfreilich','hy2c':'haiyang2c','hy2d':'haiyang2d'}[s.toLowerCase().replace(/[^a-z0-9]/g,'')]??s.toLowerCase().replace(/[^a-z0-9]/g,''));
 const rows=readRows(`${config.store}/cheap/regimes`),objects=[],inputs={};
 for(const o of STATIC.filter(o=>['LS','DO'].includes(o.group)&&o.name!=='stella')){
- const known=rows.filter(r=>r.group===o.group&&r.name.toLowerCase()===o.name.toLowerCase());
+ const known=rows.filter(r=>r.group===o.group&&canonical(r.name)===canonical(o.name));
  if(!known.length)continue;
  const files=o.files();for(const file of files)inputs[file]=hash(fs.readFileSync(file));
  const s=chain(files);
