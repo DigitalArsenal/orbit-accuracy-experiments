@@ -47,7 +47,7 @@ const ffmHigh = () => ({
 });
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
-fs.writeFileSync(path.join(OUT, `manifest-${SHARD}.json`), JSON.stringify({ command: process.argv, created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance },null,2));
+fs.writeFileSync(path.join(OUT, `manifest-${SHARD}.json`), JSON.stringify({ command: process.argv, created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance },null,2));
 process.on('exit', () => writeAudit(OUT, SHARD));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
@@ -191,12 +191,16 @@ for (const o of await objects()) {
             return { days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
           });
         } else {
-          for (const name of (args.arm ? args.arm.split(',') : ['F','NO_SRP','NO_BODIES','NO_TIDES','D20','O12','O31'])) await run(name, async () => {
+          for (const name of (args.arm ? args.arm.split(',') : ['F','NO_SRP','NO_BODIES','NO_SUN','NO_MOON','NO_TIDES','D20','O12','O31','TESS12','TESS31'])) await run(name, async () => {
             const settings = high ? ffmHigh() : ffmLow();
             if (name === 'NO_SRP') { settings.forces.srp = false; if (high) { settings.parameters = []; settings.apriori = apriori([]); } }
             if (name === 'NO_BODIES') settings.forces.thirdBodies = [];
+            if (name === 'NO_SUN') settings.forces.thirdBodies = [301];
+            if (name === 'NO_MOON') settings.forces.thirdBodies = [10];
             if (name === 'NO_TIDES') settings.forces.solidTides = false;
             if (name === 'D20') { settings.forces.degree = 20; settings.forces.order = Math.min(20, settings.forces.order); }
+            if (name === 'TESS12') settings.forces.tesseral = 12;
+            if (name === 'TESS31') settings.forces.tesseral = Math.min(31,settings.forces.degree);
             if (name === 'O12') settings.forces.order = 12;
             if (name === 'O31') settings.forces.order = Math.min(31,settings.forces.order);
             const f = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
