@@ -1,0 +1,30 @@
+{
+  "manifestSha256": "ddb5c0c0d4adef3511582a903dfe51b6288252fdcf099cd1e83ac65369f0eccc",
+  "variants": {
+    "CONTROL": {
+      "sourceCommit": "9a05d899b95242b358939ab1d68a776170a6b167",
+      "returncode": 0,
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ffm-variants/CONTROL/propagator/ffm/dist/isomorphic/module.wasm",
+      "sha256": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+      "changedSources": {}
+    },
+    "NO_SHADOW": {
+      "sourceCommit": "9a05d899b95242b358939ab1d68a776170a6b167",
+      "returncode": 0,
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ffm-variants/NO_SHADOW/propagator/ffm/dist/isomorphic/module.wasm",
+      "sha256": "4c1130e8cc028b54de2c47b98ef5e67839c5823e22e1a2f9ba57425b32f6d5fd",
+      "changedSources": {
+        "lib/shadow.h": "fdf011c5566744f228a95bfa59e9e4282cdd1b042678aa7d952b6d88279a0415"
+      }
+    },
+    "ZONAL20": {
+      "sourceCommit": "9a05d899b95242b358939ab1d68a776170a6b167",
+      "returncode": 0,
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ffm-variants/ZONAL20/propagator/ffm/dist/isomorphic/module.wasm",
+      "sha256": "5af26170b247efafa8c4a2f62d96413d6f6ca190ac2772219128b04090be0a59",
+      "changedSources": {
+        "lib/egm2008_data.h": "94c0740b54ec6851da338aa90f4ec69a1e38fe1e176cb3cae213be00c88c3e15"
+      }
+    }
+  }
+}
