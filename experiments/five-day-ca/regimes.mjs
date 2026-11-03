@@ -99,7 +99,7 @@ for (const o of await objects()) {
   const between = (a, b) => { const out = []; for (let i = 0; i < times.length; i += 1) if (times[i] >= a && times[i] <= b) out.push(o.lines[i]); return out; };
   for (const D0 of o.cutoffs) {
     const key = windowKey(o.group, o.name, D0);
-    if (!allowed(o.norad, o.name, D0) || !inShard(key) || done.has(key)) continue;
+    if ((args.key && key !== args.key) || !allowed(o.norad, o.name, D0) || !inShard(key) || done.has(key)) continue;
     const row = { key, group: o.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
     try {
       const after = between(D0 + 1, D0 + 7 * DAY);
@@ -153,7 +153,14 @@ for (const o of await objects()) {
         });
         await run('S', async () => {
           const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name: o.name, objectId: o.objectId });
-          const flown = await m.propagateSgp4(el, o.norad, epochsMs, gridMs / 1000);
+          const legacy = entered.filter(k => [1,2,3,7].includes(k)).flatMap(k => bins[k]).map(l=>ms(l.epoch));
+        const added = entered.filter(k => [4,5].includes(k)).flatMap(k => bins[k]).map(l=>ms(l.epoch));
+        const byTime = new Map();
+        for (const times of [legacy, added]) if (times.length) {
+          const states = await m.propagateSgp4(el, o.norad, times, gridMs / 1000);
+          times.forEach((t,i)=>byTime.set(t,states[i]));
+        }
+        const flown = epochsMs.map(t=>byTime.get(t));
           const present = flown.filter(Boolean).length;
           if (present !== flown.length) throw new Error(`SGP4 returned ${present} of ${flown.length} states`);
           return { days: score(await m.rtn(await m.toAxes(flown, epochs, 'GCRF'), truth)) };

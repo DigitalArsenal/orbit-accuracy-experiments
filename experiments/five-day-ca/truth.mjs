@@ -46,7 +46,7 @@ manifest(OUT, SHARD);
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
 const xmWindows = () => Object.entries(XM.config.groups).flatMap(([group, g]) => g.objects.flatMap((o) => XM.daysOf(XM.config.period.from, XM.config.period.to).map((t) => ({ group, o, cutoffMs: t, date: XM.dateOf(t), key: `${group}|${o.norad}|${XM.dateOf(t)}` }))));
-const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => allowed(w.o.norad, w.o.name, w.cutoffMs) && w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
+const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => (!args.key || w.key === args.key) && allowed(w.o.norad, w.o.name, w.cutoffMs) && w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
 
 for (const w of list) {
   const { o, cutoffMs: D0, key } = w;
@@ -103,7 +103,14 @@ for (const w of list) {
       });
       await run('S', async () => {
         const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name: o.name, objectId: o.objectId ?? '' });
-        const flown = await m.propagateSgp4(el, o.norad, epochsMs, GRID / 1000);
+        const legacy = entered.filter(k => [1,2,3,7].includes(k)).flatMap(k => bins[k]).map(l=>ms(l.epoch));
+        const added = entered.filter(k => [4,5].includes(k)).flatMap(k => bins[k]).map(l=>ms(l.epoch));
+        const byTime = new Map();
+        for (const times of [legacy, added]) if (times.length) {
+          const states = await m.propagateSgp4(el, o.norad, times, GRID / 1000);
+          times.forEach((t,i)=>byTime.set(t,states[i]));
+        }
+        const flown = epochsMs.map(t=>byTime.get(t));
         const present = flown.map((x, i) => (x ? i : -1)).filter((i) => i >= 0);
         if (present.length !== flown.length) throw new Error(`SGP4 returned ${present.length} of ${flown.length} states`);
         return { days: score(await m.rtn(await m.toAxes(flown, epochs, 'GCRF'), truth)) };
