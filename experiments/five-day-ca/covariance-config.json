@@ -1,0 +1,39 @@
+{
+  "apNoise": {
+    "version": "0.4.1",
+    "commit": "8b0f5c7e97829cd1b8ec1276613894828a2372fa",
+    "sourceSha256": "97543e1b1b3007bd36b6e7daf469b843bb583675d09fdfe9937c19db4cd22861",
+    "rows": [
+      [
+        0.0030020720101006817,
+        1.3729304605949328e-06,
+        0.00022005794330391744,
+        0.5245440617486178
+      ],
+      [
+        9.696153866117182e-07,
+        8.153112791954473e-07,
+        4.753573962018311e-06,
+        0.0
+      ]
+    ],
+    "label": "UNVERIFIED"
+  },
+  "constants": {
+    "results/ffm-covariance-calibration/frozen-constants.json": "7806980c7e3d655eaf7da31a32a4cb760293be53488a468e99b761b98726c837",
+    "results/ffm-covariance-calibration/sgp4xp/frozen-constants.json": "3f21116ca436d8edb38c47a9ab4661137b618f95e9cce9e52da7523bd9d04992",
+    "results/ffm-covariance-adaptive/frozen-constants.json": "18f57aff75cc542862a3bf0925bd3bb8b26d1a57bdca1f31f199db8aa123d884"
+  },
+  "gpWasmSha256": "9635bfd1982874735cc40e6d646ed76fc417d595294f6834c7026da5fa034b73",
+  "leads": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7
+  ],
+  "stepSeconds": 600,
+  "draws": 20000,
+  "seed": 20261103
+}
