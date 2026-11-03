@@ -1,7 +1,8 @@
 {
-  "source": "the screen logs of each invocation; decision: uptime and ps readings taken by the lane when it stopped the first invocation",
+  "source": "the screens' logs, one per invocation; the decision fields are uptime and preflight readings taken by the lane when it stopped an invocation",
   "invocations": [
     {
+      "label": "Part 1",
       "part": 1,
       "first": true,
       "processes": 4,
@@ -15,6 +16,7 @@
       "ended": "finished"
     },
     {
+      "label": "Part 2",
       "part": 2,
       "first": true,
       "processes": 4,
@@ -28,6 +30,7 @@
       "ended": "stopped"
     },
     {
+      "label": "Part 2",
       "part": 2,
       "first": false,
       "processes": 3,
@@ -39,21 +42,73 @@
       "lastUnit": "2026-11-03T11:20:05.428Z",
       "wallMinutes": 42.18991666666667,
       "ended": "finished"
+    },
+    {
+      "label": "Part 3 console arm",
+      "first": true,
+      "processes": 1,
+      "threads": 4,
+      "unitsOfPart": 64,
+      "unitsToDo": 64,
+      "unitsFinished": 6,
+      "start": "2026-11-03T10:55:36.492Z",
+      "lastUnit": "2026-11-03T11:09:30.215Z",
+      "wallMinutes": null,
+      "ended": "stopped"
+    },
+    {
+      "label": "Part 3 console arm",
+      "first": false,
+      "processes": 3,
+      "threads": 4,
+      "unitsOfPart": 64,
+      "unitsToDo": 58,
+      "unitsFinished": 58,
+      "start": "2026-11-03T11:10:42.067Z",
+      "lastUnit": "2026-11-03T11:57:17.097Z",
+      "wallMinutes": 46.58488333333333,
+      "ended": "finished"
+    },
+    {
+      "label": "Part 3 descriptions arm",
+      "first": true,
+      "processes": 2,
+      "threads": 4,
+      "unitsOfPart": 14,
+      "unitsToDo": 14,
+      "unitsFinished": 14,
+      "start": "2026-11-03T11:06:33.307Z",
+      "lastUnit": "2026-11-03T11:08:58.754Z",
+      "wallMinutes": 2.4271,
+      "ended": "finished"
     }
   ],
   "resumes": [
     {
-      "part": 2,
+      "label": "Part 2",
       "units": 1036,
       "unitsDone": 309,
       "fromProcesses": 4,
       "toProcesses": 3,
       "threads": 4,
       "lastUnitAt": "10:36:45Z",
+      "reason": "load",
       "load1": 48.34,
       "load5": 48.09,
       "loadAt": "10:35:00Z",
       "otherJobsCores": "at least 9"
+    },
+    {
+      "label": "Part 3 console arm",
+      "units": 64,
+      "unitsDone": 6,
+      "fromProcesses": 1,
+      "toProcesses": 3,
+      "threads": 4,
+      "lastUnitAt": "11:09:30Z",
+      "reason": "widened",
+      "load1": 29.76,
+      "loadAt": "11:10:00Z"
     }
   ]
 }

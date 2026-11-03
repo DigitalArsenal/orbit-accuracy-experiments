@@ -1,0 +1,56 @@
+{
+  "baselineVersion": "0.9.0",
+  "baseline": "ca-socrates-gp-parity-screen-20261029T215308Z-console",
+  "run": "ca-socrates-gp-parity-a3-screen-20261103T092938Z-console",
+  "parts": [
+    1
+  ],
+  "baselineEventsSha256": {
+    "part1": "1fbdbc58af88a5a1e15d6395cb0e077d5d88c21c3c31e822ee4b6fbb875bca8d"
+  },
+  "eventsSha256": {
+    "part1": "1fbdbc58af88a5a1e15d6395cb0e077d5d88c21c3c31e822ee4b6fbb875bca8d"
+  },
+  "baselineEvents": 3185,
+  "events": 3185,
+  "paired": 3185,
+  "identicalValues": 3185,
+  "changedValues": 0,
+  "tcaSeconds": {
+    "n": 3185,
+    "median": 0,
+    "p99": 0,
+    "max": 0
+  },
+  "missM": {
+    "n": 3185,
+    "median": 0,
+    "p99": 0,
+    "max": 0
+  },
+  "speedMS": {
+    "n": 3185,
+    "median": 0,
+    "p99": 0,
+    "max": 0
+  },
+  "largestChanges": [],
+  "onlyBaseline": {
+    "count": 0,
+    "rows": []
+  },
+  "onlyThisBuild": {
+    "count": 0,
+    "rows": []
+  },
+  "listings": {
+    "baselineObjects": 7,
+    "objects": 7,
+    "newObjects": [],
+    "goneObjects": [],
+    "baselineByRefusal": {
+      "propagator/sgp4 could not sample it over the window": 7
+    },
+    "changedSlices": []
+  }
+}

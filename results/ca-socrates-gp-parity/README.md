@@ -225,21 +225,59 @@ No call reported failed pair evaluations.
 
 Part 2 was resumed from its 309 finished units (of 1,036) on 3 processes × 4 threads. Its first invocation, on 4 processes, was stopped after its last unit at 10:36:45Z: the 1-minute load stood at 48.34 at 10:35:00Z (5-minute average 48.09), above the 45 that Amendment A3 allows, while other jobs on the host held at least 9 cores. Amendment A3 registers 2 processes for this case; the process count enters no result.
 
+Part 3 console arm was started on 1 process while Part 2 ran, stopped after its 6 finished units (of 64; the last at 11:09:30Z), and resumed from them on 3 processes × 4 threads when the 1-minute load allowed (29.76 at about 11:10:00Z). The process count enters no result.
+
 ## Part 3 (Amendment A1): the console's own path
 
 | Arm | Method | Primaries | Span | Recall against SOCRATES (primary class) | Geometry beyond tolerance (TCA / miss / speed) | Against Part 1, encounter for encounter |
 | --- | --- | ---: | --- | --- | --- | --- |
+| console | SAMPLED_STATES (propagator/sgp4 1.4.1) → prepare_sample_screening_index → screen_window, 30 min windows | 300 (1 block) | 2026-10-28T17:00:00.000Z + 24 h | 590 / 590 (100 %) | 0 / 1 / 0 | equal encounter sets (all differences explained): 3,185 paired, 0 in one arm only |
 | descriptions | SOURCE_DESCRIPTIONS → prepare_screening_index → screen_window, 24 h windows | 600 (2 blocks) | 2026-10-28T17:00:00.000Z + 168 h | 7,319 / 7,319 (100 %) | 0 / 0 / 0 | identical: 66,685 paired, 0 in one arm only |
 
 The same arms on 0.9.0, the last time they ran:
 
 | Arm | Recall against SOCRATES (primary class) | Misses, all classes | Geometry beyond tolerance (TCA / miss / speed) | Against Part 1, encounter for encounter |
 | --- | --- | ---: | --- | --- |
+| console | 590 / 590 (100 %) | 0 | 0 / 1 / 0 | equal encounter sets (all differences explained): 3,185 paired, 0 in one arm only |
 | descriptions | 7,317 / 7,319 (99.973 %) | 4 | 11 / 237 / 0 | identical: 66,691 paired, 0 in one arm only |
 
-Each arm's misses, all classes, on 0.17.0: descriptions 0. Part 3's console arm samples with what the console flies. OrbPro main e199dbb pins modules cfd7ee626: CA 0.17.0 and propagator/sgp4 1.4.1 (AFSPC mode, as CA is), whose isomorphic artifact has this hash at fbda894501 too. A1's 1.3.1 runs in improved mode, a pairing the console never runs. The arm samples the true UTC window, as the console will once its 37 s window defect is fixed (`ui-ca-window-utc-time-scale-20261031`).
+Each arm's misses, all classes, on 0.17.0: console 0, descriptions 0. Part 3's console arm samples with what the console flies. OrbPro main e199dbb pins modules cfd7ee626: CA 0.17.0 and propagator/sgp4 1.4.1 (AFSPC mode, as CA is), whose isomorphic artifact has this hash at fbda894501 too. A1's 1.3.1 runs in improved mode, a pairing the console never runs. The arm samples the true UTC window, as the console will once its 37 s window defect is fixed (`ui-ca-window-utc-time-scale-20261031`).
+
+What moved in console against 0.9.0: 3,185 encounters then, 3,185 now, 3,185 paired within 1 s, 0 only then, 0 only now; |Δmiss| at most 0.00 m (rows in `moved.a3-console.json`).
 
 What moved in descriptions against 0.9.0: 66,691 encounters then, 66,685 now, 66,656 paired within 1 s, 35 only then, 29 only now; |Δmiss| at most 274 m (rows in `moved.a3-descriptions.json`).
+
+How the arms were run: Part 3 console arm, first invocation, stopped: 1 process × 4 threads, 6 of 64 units; Part 3 console arm, the invocation that finished it: 3 processes × 4 threads, 58 of 58 units, 46.6 min; Part 3 descriptions arm, one invocation: 2 processes × 4 threads, 14 of 14 units, 2.43 min.
+
+### Excuses in comparison (ii), and why none can hide a miss
+
+A1 explains a one-arm encounter in three cases. On this run they excuse 0 encounters: none. Unexplained, each a defect: 0. The threshold excuse's width per BSTAR band: 0.0001 <= |B*| < 0.001 6.65 m; |B*| < 0.0001 1.08 m; |B*| >= 0.001 1.90 m.
+
+SOCRATES lists 0 of the 0 excused encounters. An excuse changes only comparison (ii). Comparison (i), against SOCRATES, has no excuse path: a SOCRATES row the arm lacks is a miss whatever (ii) says. `compare-a1.mjs` stops if an excused encounter SOCRATES lists is neither found, a miss nor an edge row in (i). The fabricated listing shows it (`listing-proof.mjs`): 6 one-arm encounters, 3 excused, 3 defects, and the excused one SOCRATES lists is a miss in comparison (i).
+
+### Finding: the console skips an object for the whole span, and does not show its earlier encounters
+
+The console samples each object over the whole span and skips one that cannot be sampled to its end, while `screen_catalog` screens the object up to its last valid instant. In this arm (Part 1's block 0, 7 objects skipped over the first 24 h) that leaves **0 encounters** Part 1 reports and the console does not show. This is a console defect, not only a test excuse.
+
+| Skipped object | First refusal per Part 1 | Form in Part 1 | Reason | Encounters not shown |
+| ---: | --- | --- | --- | ---: |
+| 43834 | 2026-10-29T00:13:29.808Z | refused-part-way | Non-finite or decayed SGP4 state | 0 |
+| 101037 | 2026-10-28T17:00:00.000Z | refused-from-start | SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum) | 0 |
+| 101038 | 2026-10-28T17:00:00.000Z | refused-from-start | SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum) | 0 |
+| 101040 | 2026-10-28T17:00:00.000Z | refused-from-start | SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum) | 0 |
+| 101041 | 2026-10-28T17:00:00.000Z | refused-from-start | SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum) | 0 |
+| 101042 | 2026-10-28T17:00:00.000Z | refused-from-start | SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum) | 0 |
+| 101047 | 2026-10-28T17:00:00.000Z | refused-from-start | SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum) | 0 |
+
+### console: against Part 1's screen_catalog
+
+Part 1 3,185 encounters, console 3,185; paired 3,185. |ΔTCA| max 0.0989 s, |Δmiss| max 6.65 m, |Δspeed| max 1.44 m/s. Rule: encounter-set equality; one-arm encounters explained only by the registered rules.
+
+| BSTAR band (larger of the pair) | Paired | \|ΔTCA\| p99 / max (s) | \|Δmiss\| median / p99 / max (m) | \|Δspeed\| max (m/s) |
+| --- | ---: | --- | --- | ---: |
+| 0.0001 <= |B*| < 0.001 | 2,194 | 0.0000402 / 0.0989 | 0.0331 / 0.233 / 6.65 | 1.21 |
+| |B*| < 0.0001 | 129 | 0.0331 / 0.0373 | 0.0260 / 0.179 / 1.08 | 1.44 |
+| |B*| >= 0.001 | 862 | 0.0000402 / 0.000161 | 0.0403 / 0.680 / 1.90 | 0.460 |
 
 ### descriptions: against Part 1's screen_catalog
 
