@@ -1,0 +1,41 @@
+[
+  {
+    "group": "GD",
+    "parent": "mode-conjunction",
+    "needs": [
+      "experiments-ap-gap-diagnosis-20261103"
+    ],
+    "status": "draft for coordinator; not filed",
+    "hypothesis": "Candidate: solar radiation pressure (shadow not isolated)",
+    "change": "Refine AP solar radiation pressure and shadow after separating their contributions.",
+    "expectedGainM": null,
+    "gainTargetCeilingM": 10.714167065924617,
+    "confirmation": "Register an E2E on unread eligible windows before reading them; compare forward errors at days 1, 3, and 7."
+  },
+  {
+    "group": "HE",
+    "parent": "mode-conjunction",
+    "needs": [
+      "experiments-ap-gap-diagnosis-20261103"
+    ],
+    "status": "draft for coordinator; not filed",
+    "hypothesis": "Candidate: epoch/date frame correction",
+    "change": "Check the mean-element epoch frame and date-frame conversion jointly in fit and propagation.",
+    "expectedGainM": 420.1034907221712,
+    "gainTargetCeilingM": 420.1057917410532,
+    "confirmation": "Register an E2E on unread eligible windows before reading them; compare forward errors at days 1, 3, and 7."
+  },
+  {
+    "group": "GN",
+    "parent": "mode-conjunction",
+    "needs": [
+      "experiments-ap-gap-diagnosis-20261103"
+    ],
+    "status": "draft for coordinator; not filed",
+    "hypothesis": "Candidate: short-arc prior constants",
+    "change": "Use the tested Space Force wrapper prior constants on 24 h GNSS arcs, subject to unread-window confirmation.",
+    "expectedGainM": 58.05431051557045,
+    "gainTargetCeilingM": 56.106669941772424,
+    "confirmation": "Register an E2E on unread eligible windows before reading them; compare forward errors at days 1, 3, and 7."
+  }
+]
