@@ -47,7 +47,7 @@ const ffmHigh = () => ({
 });
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
-fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance },null,2));
+fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, ussf: U?.provenance, ussfFixed: UF?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
 process.on('exit', () => writeAudit(OUT, SHARD));
 process.on('SIGTERM',()=>process.exit(143));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
