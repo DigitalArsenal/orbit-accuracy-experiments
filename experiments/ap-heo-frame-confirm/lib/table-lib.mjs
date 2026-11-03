@@ -128,8 +128,10 @@ const iv = (v, d = 3) => (v ? `[${fmt(v[0], d)}, ${fmt(v[1], d)}]` : '-');
 /** README.md text from the aggregate: every statement with its interval, then the report-only tables. */
 export function render(cfg, metrics) {
   const out = [`# ${cfg.title}`, '', `Registered by the commit named in \`check.mjs\`; ${metrics.windows} windows read. Intervals are the 95 % percentile interval of a 10,000-draw cluster bootstrap by ISO week of the cutoff. Verdicts follow the registered point criterion; \`interval inside\` says whether the whole interval meets it too.`, '', '## Statements', ''];
+  const verdict = (s) => (s.reportOnly ? `REPORT ONLY (${s.pass ? 'criterion met' : 'criterion not met'})` : s.pass ? 'PASS' : 'FAIL');
+  out.push('| Statement | Verdict |', '|---|---|', ...metrics.statements.map((s) => `| ${s.id}. ${s.label} | ${verdict(s)} |`), '');
   for (const s of metrics.statements) {
-    out.push(`### ${s.id}. ${s.label}: ${s.reportOnly ? `REPORT ONLY (${s.pass ? 'criterion met' : 'criterion not met'})` : s.pass ? 'PASS' : 'FAIL'}`, '', s.criterion, '');
+    out.push(`### ${s.id}. ${s.label}: ${verdict(s)}`, '', s.criterion, '');
     for (const c of s.cells) {
       if (c.estimate === null && !c.gain) { out.push(`- day ${c.day}: no windows`); continue; }
       const dropped = Object.entries(c.dropped).filter(([, n]) => n).map(([k, n]) => (k === 'losses' ? `${n} failed fits counted as losses` : `${k} ${n}`)).join(', ');
