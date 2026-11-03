@@ -1,0 +1,78 @@
+{
+  "manifestSha256": "e2fa3a5f29a19a79c3434227e004979637a145589451fbcd8eb30fe3ab15652e",
+  "variants": {
+    "CONTROL": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/CONTROL/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
+      "changedSources": []
+    },
+    "H03": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/H03/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "715ef2fee512e9c91aacf1c977151dbb1eb83c6b1fa0e1a160cba3304a876ec0",
+      "changedSources": []
+    },
+    "H05": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/H05/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "1c2e3a94d137069f553172101fd0619775dbbac2e99d6ecd5159e5796a3d41f3",
+      "changedSources": [
+        "src/resonance.inc"
+      ]
+    },
+    "H07": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/H07/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "ffa6304b2fecefc328b8d994a41b170e2855bac5731bb5acbfe1a27d73b4456f",
+      "changedSources": [
+        "src/resonance.inc"
+      ]
+    },
+    "NOFRAME": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/NOFRAME/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "20bed787062317d94fb128a167b715f2a8b049e25b3970529c9f085f1a49c55c",
+      "changedSources": [
+        "src/xp_theory.inc"
+      ]
+    },
+    "CLASS0": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/CLASS0/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "c3bcf69417e950e41a97c75251f98682de1a22aabffc05b67ca8c8e94c0d8c83",
+      "changedSources": [
+        "src/resonance.inc"
+      ]
+    },
+    "CLASS1": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/CLASS1/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "6a4cac01789f03e537596c3faa2d8a0f0fda9618a0aa0374a500c2ccc3fffda0",
+      "changedSources": [
+        "src/resonance.inc"
+      ]
+    },
+    "CLASS2": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/CLASS2/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "2fc7d6832644e050b2d3724726e95f8d22f85436f6113ba2f5f7081c6228c2c9",
+      "changedSources": [
+        "src/resonance.inc"
+      ]
+    },
+    "CLASS3": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/CLASS3/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "96d77b52dc678b2472f71b9cc44725562022d6e45e119fc860b9862fb96a4b6c",
+      "changedSources": [
+        "src/resonance.inc"
+      ]
+    },
+    "CLASS4": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/CLASS4/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "ad213a6cde21df0ae81d4104592c171aa7dbe851137784e31f7fa101e1f10375",
+      "changedSources": [
+        "src/resonance.inc"
+      ]
+    },
+    "AGOM_FIXED": {
+      "path": "/Users/tj/software/terrain-work/body-look/codex-apgap-d9/variants/AGOM_FIXED/propagator/sdn-ap/dist/isomorphic/module.wasm",
+      "sha256": "5cdc87d890831e4cfa6c226ff609cc42f7809c6167411bcc42819decbe37d3d7",
+      "changedSources": [
+        "src/fit_oem.inc"
+      ]
+    }
+  }
+}
