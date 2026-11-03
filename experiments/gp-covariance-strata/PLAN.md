@@ -105,3 +105,18 @@ Part 1 dev samples: ~49k sets (up to ~2× at CAD's rates) × 7 bins × 5 ages �
 - **V10** [ASSUMED] Debris error ≥ payload error. Unverifiable; a stated limit.
 - **V11** [ASSUMED] CA's lookups are as A1 §3 reads them (bin-center interpolation held beyond the last center; `empiricalPc` stratum by mean altitude, eccentricity and TCA − epoch). Verify: `object_covariance.cpp` and the bridge (~l.1289) at the pinned build.
 - **V12** [ASSUMED] The jobs behind AR/hac/.fetch-stamps (10-09 batch) can rerun as the "existing collectors". Verify: locate each fetch script; report, do not run.
+
+## 10. Amendment 1 (2026-11-03, before the freeze)
+
+Written after the dev operating characteristics of S1 were computed (P(label | correct) at most 0.31 in every stratum) and after S3 was computed. No fresh row exists and nothing was scored. Nothing registered above is replaced or changed in value; S1 stays and its numbers stand. Requested by the coordinator.
+
+**A1.1 S3.** S3 failed at s_lo in both regimes (LEO-L Pc 1.12e-4 at s_lo 1.43, LEO-M 5.7e-4 at s_lo 0.91, both at 170 degrees with HBR 20 m; HBR 10 m and 30 m are in frozen-constants.json). The limit is withdrawn exactly as section 3 says, and nothing is tuned. Statement recorded: "the honest limit as stated is withdrawn: at the smallest covariance the truth does not reject, a zero-miss pair at 5 days in drag LEO can exceed Pc 1e-4". `run.mjs --check` exits 2 until frozen-constants.json carries `s3.ruling` ({words, date}, the owner's words and date); with it, S3 reads FAILED-WITHDRAWN and the check exits 0.
+
+**A1.2 S1p, a second label rule beside S1.** Why it exists: S1's bands (95 % coverage in [0.93, 0.97] on the whole bin and on each half, 99 % at least 0.975, every axis in [0.93, 0.97]) have no power at these cluster counts. Even when the covariance is correct, the registered rule labels it at most 31 % of the time, so a failure to label says nothing about the covariance. S1p is computed and frozen with S1 for every stratum; S1 and its outcomes are reported unchanged. A label under S1p is worded "coverage-calibrated under the powered rule", never "coverage-calibrated" without the qualifier.
+
+- **L1p.** The 95 % coverage point estimate (d^2 <= 7.815, whole bin) lies in 0.95 +- 2 SE. SE is the standard deviation of that point estimate across the cluster-block bootstrap resamples at the stratum's expected fresh design (the n_eff frozen in frozen-constants.json), taken at the "correct" scale; the band half-width 2 SE is frozen per stratum.
+- **L2p.** The 99 % coverage point estimate is at least 0.975 (L2 unchanged).
+- **Half-bin, one-sided.** Each half-bin's 95 % coverage is at least 0.90.
+- **L3p, O1(a).** The pooled per-axis share (the share of all three axes' |z| <= 1.96 together) lies in 0.95 +- 2 SE_pool, SE_pool from the same resamples. The registered per-axis L3 (b) is computed and reported beside it (`l3bRate`), not gated.
+- **T under S1p.** As section 1.4's T, with the operating characteristics: P(label | correct) >= 0.80 and P(label | x0.7) <= 0.05 (the too-small side is unchanged). P(label | x1.4) is reported, not gated. C_min = max(3, the smallest cluster count that passes), from the same scan.
+- **Reported:** TESTABLE counts and operating characteristics under both rules, per stratum, at the registered owner defaults and with O5 granted.
