@@ -2,6 +2,7 @@ import {writeAudit} from './audit.mjs';
 import fs from 'node:fs';
 import {STATIC,windowKey} from '../operator-theory/lib/regimes.mjs';
 import {readReference} from '../sdn-gp-starlink-ffm-match/lib/sources.mjs';
+import {ms} from '../xp-atmosphere-merit/common.mjs';
 import {openModules} from '../xp-atmosphere-merit/lib/modules.mjs';
 const out='/opt/data/sdn-archive/operator-theory/ap-gap/events';fs.mkdirSync(out,{recursive:true});
 const m=await openModules(), rows=[], day=86400000;
@@ -10,9 +11,9 @@ for(const o of STATIC.filter(o=>o.group==='DO')) {
  for(const file of o.files()) {
   const ref=readReference(file);norad=ref.norad;const a=[],b=[],epochs=[];
   for(const l of ref.lines) {
-   const previous=byEpoch.get(l.epoch)||[];
-   for(const p of previous){a.push(l);b.push(p);epochs.push(Date.parse(l.epoch));}
-   previous.push(l);byEpoch.set(l.epoch,previous);
+   const t=ms(l.epoch);const previous=byEpoch.get(t)||[];
+   for(const p of previous){a.push(l);b.push(p);epochs.push(t);}
+   previous.push(l);byEpoch.set(t,previous);
   }
   if(a.length) {const e=await m.rtn(a,b);e.forEach((v,i)=>diffs.push({t:epochs[i],meters:Math.hypot(...v)*1000}));}
  }

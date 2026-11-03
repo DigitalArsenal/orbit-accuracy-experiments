@@ -66,3 +66,7 @@ Even the artifact commit and recorded dependency versions did not reproduce the 
 After most shards finished, pause this lane's stage supervisor and terminate its remaining workers by exact PID. Enumerate only unfinished keys against the completed AP control, run that finite list with at most 12 workers, and append each result once to its original shard. Keep each task's original row, command manifest, and input audit under ap-gap/ffm-tail; tail-index.json records the merge. No arm or window changes, no error-ratio selection, and no self-spawning workers. Resume the stage supervisor only after all tail jobs exit.
 
 Tail merge audit: four original rows completed after the pending-key snapshot. Preserve the merged files with repeats under ffm-tail/merged-with-repeats, retain the first row per window in the canonical shards, and record the repeat comparison in ffm-tail/repeats.json. This selection uses execution order, not error values. The canonical FFM set has 426 unique windows.
+
+## Amendment 2026-11-03: frame reader routing correction
+
+The mixed frame batch used AP6's weather store for GN, producing 740 missing-weather exclusions. Retain that attempt and rerun GN alone with XP2F_CONTROL=1, under resume-frame-gn; IG/GE retain their AP6 configuration. No error ratios were read before this correction. Normalize DO overlap epoch keys with the shared UTC parser before final classification, so equivalent timestamp spellings join correctly.
