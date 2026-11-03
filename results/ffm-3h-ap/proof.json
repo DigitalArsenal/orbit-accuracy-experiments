@@ -80,5 +80,302 @@
       "wallSeconds": 92.534,
       "error": null
     }
-  ]
+  ],
+  "replay": {
+    "at": "2026-11-03T12:30:42.490Z",
+    "ruling": "the coordinator, 2026-11-03: the pass-H rows stored by the launch of 2026-10-31T19:50Z are reused only if a replay of at least 8 of them, across Swarm A, B, C and GRACE-FO 1 and the storm arc (cutoffs 2026-01-22 to 2026-01-26), equals them in every field; one difference discards the whole store",
+    "method": "run.mjs --pass H --shard <chunk>/125 --limit <n> in an empty scratch store, under the committed sources; a replayed row equals the stored row when XM3 common.mjs comparable (the row without timing, sources and build) is the same string; the digests are the SHA-256 of that string",
+    "sources": {
+      "run.mjs": "fa13e17c11f368d287504125057043e5d7c08a5403e627e4bd2d871a25c263ea",
+      "table.mjs": "0a5a2f1c602c18eea83cafe4e2cabd084ce3600a6f25563089c1234dd62f18d6",
+      "common.mjs": "e75bc462ce946e218f66a795c7fe3c9d049345c529af2fb25cd45d3c73e76a53",
+      "lib/ffm.mjs": "f2c1088b307af25e513b0ade8c52d5e583351227dbf83cbd014610416ace6458"
+    },
+    "chunks": [
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        17,
+        1
+      ],
+      [
+        28,
+        6
+      ],
+      [
+        29,
+        1
+      ],
+      [
+        42,
+        1
+      ],
+      [
+        53,
+        6
+      ],
+      [
+        54,
+        1
+      ],
+      [
+        67,
+        1
+      ],
+      [
+        78,
+        6
+      ],
+      [
+        79,
+        1
+      ],
+      [
+        85,
+        1
+      ]
+    ],
+    "windows": [
+      {
+        "key": "P|39451|2026-01-20",
+        "stored": "bf2c74226b7e9b7201c1b91afbeb71ff96fd247e588c33c069d5baf287327c18",
+        "replayed": "bf2c74226b7e9b7201c1b91afbeb71ff96fd247e588c33c069d5baf287327c18",
+        "gcrfSha256": "32e3f2c497f3395799816d7d8cefabe5ffb86e5dee35d05c97bd7604210cf383",
+        "equal": true
+      },
+      {
+        "key": "P|39451|2026-01-21",
+        "stored": "bbf2de1efb399c44a9bc43b7f44518ce01d551e8bd59eb52a9952535e9caa4cb",
+        "replayed": "bbf2de1efb399c44a9bc43b7f44518ce01d551e8bd59eb52a9952535e9caa4cb",
+        "gcrfSha256": "e792331d4cada2950c38ddff1b537350f402dc411cd7d1c1184f8b0d8d9f3faa",
+        "equal": true
+      },
+      {
+        "key": "P|39451|2026-01-22",
+        "stored": "fb0ceb5dc63236a7dbdefbb3956d9e40c4ba5c018af0ff2bb13e9b8e66564ea1",
+        "replayed": "fb0ceb5dc63236a7dbdefbb3956d9e40c4ba5c018af0ff2bb13e9b8e66564ea1",
+        "gcrfSha256": "e7baadbc605bcd68f593be0b8b66127f55b09dfd6f7ad0ad248e2bb81b222136",
+        "equal": true
+      },
+      {
+        "key": "P|39451|2026-01-23",
+        "stored": "06c067e080629139c0b70377e9d876dcd47050f6c34f71533a4708ee735c08da",
+        "replayed": "06c067e080629139c0b70377e9d876dcd47050f6c34f71533a4708ee735c08da",
+        "gcrfSha256": "d46c5535fc28485313d2cc58c9d57e106d64fb4bf2ae9471090d698c981d64e6",
+        "equal": true
+      },
+      {
+        "key": "P|39451|2026-01-24",
+        "stored": "ea88b7b9a8ba4c0bf0f7d0633564045b019437c85e7b3f22474212798144a032",
+        "replayed": "ea88b7b9a8ba4c0bf0f7d0633564045b019437c85e7b3f22474212798144a032",
+        "gcrfSha256": "07f14ad92db4ed25c4ab2f14205841edbf0b00a36eff84d8059a9e230875e6e6",
+        "equal": true
+      },
+      {
+        "key": "P|39451|2026-01-25",
+        "stored": "8149e17c725d6f9e207d2b90021c5deed1ec732ee7267c247965a380b31ab24e",
+        "replayed": "8149e17c725d6f9e207d2b90021c5deed1ec732ee7267c247965a380b31ab24e",
+        "gcrfSha256": "b595daf4dad3a9ef56e52afe7c60c4902741a6711cd79a1fa5a239c1327253a5",
+        "equal": true
+      },
+      {
+        "key": "P|39451|2026-01-26",
+        "stored": "aea0bab0a9d06af9f3c3000e2d6ea666055b28c0085954b9845e9ad9ba3113da",
+        "replayed": "aea0bab0a9d06af9f3c3000e2d6ea666055b28c0085954b9845e9ad9ba3113da",
+        "gcrfSha256": "7db747a4f893e856214acc7c5b7cb07fffde1191cb254d5ab70270d374fc7ad2",
+        "equal": true
+      },
+      {
+        "key": "P|39451|2026-04-14",
+        "stored": "1824cb09400c420d9d437c992ddccd54566c716411dc68fed8a713074a3a5ddc",
+        "replayed": "1824cb09400c420d9d437c992ddccd54566c716411dc68fed8a713074a3a5ddc",
+        "gcrfSha256": "7f2c89feb6bd588c084d49f6fb474a25ebdf68cf1b531812655dc16c69fa66c3",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-01-20",
+        "stored": "679c852c8d498a541346a9f7afe57add34311af885328ba940909f4463d265b9",
+        "replayed": "679c852c8d498a541346a9f7afe57add34311af885328ba940909f4463d265b9",
+        "gcrfSha256": "62a9141fbda9f5176cd2742f2e3a5df1f6b42dec5f4c05f8738191e698514890",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-01-21",
+        "stored": "027058bd7fd8dbb31d091e73571b14215479ad3262d57d74f9c30824f41a4c8a",
+        "replayed": "027058bd7fd8dbb31d091e73571b14215479ad3262d57d74f9c30824f41a4c8a",
+        "gcrfSha256": "3e9715881ddc63cfff6ab176654d531d35b52ec39e815c56e51c4b85af585505",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-01-22",
+        "stored": "e2997fbc75b2b2089622b706ad864c735e8d21e02796bf1468f000f64a46b649",
+        "replayed": "e2997fbc75b2b2089622b706ad864c735e8d21e02796bf1468f000f64a46b649",
+        "gcrfSha256": "aa0c23d1bff37febcc815780480889272d1cfb56f401b8bfef4ecc739754db2c",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-01-23",
+        "stored": "61c23419aea95f9d4a68698705a0d83cad3bb66b09950933fe23a90860b8bf70",
+        "replayed": "61c23419aea95f9d4a68698705a0d83cad3bb66b09950933fe23a90860b8bf70",
+        "gcrfSha256": "d8a5838a878507b70e68e9d7a3cc7ff31ddd3432e5a60998b167f8a78af8084e",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-01-24",
+        "stored": "2e81102a0178d14c68f23e839beb18f1ed990c9db3d261960c5a1316ef823b71",
+        "replayed": "2e81102a0178d14c68f23e839beb18f1ed990c9db3d261960c5a1316ef823b71",
+        "gcrfSha256": "416404a34f8a5899d66dbdd64290bf9c1b6e8e9896f6cdb15b01dd1faea17b59",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-01-25",
+        "stored": "036568a45e1597d31dccf0d881190792c4df3fa69ae34b115ede7fe475c807e3",
+        "replayed": "036568a45e1597d31dccf0d881190792c4df3fa69ae34b115ede7fe475c807e3",
+        "gcrfSha256": "cccfed6ac2225e54b90fe29ef9e634e11bad9ffeea919d135a8017b7968b0ae0",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-01-26",
+        "stored": "c256202157110c932b2878077abc645ce114f31a93447a8874f2b4723868e981",
+        "replayed": "c256202157110c932b2878077abc645ce114f31a93447a8874f2b4723868e981",
+        "gcrfSha256": "da71cb0a76a68999e6db83e73d1991657077bea19cee0213869568bd5a7c5fb6",
+        "equal": true
+      },
+      {
+        "key": "P|39452|2026-04-14",
+        "stored": "9112ed6482e72c4c1153906c0f0d6c2ac3c2cbfd9a7afd8ea0721e3654ba5a8b",
+        "replayed": "9112ed6482e72c4c1153906c0f0d6c2ac3c2cbfd9a7afd8ea0721e3654ba5a8b",
+        "gcrfSha256": "cdff9b56bf5a59be889485046e012debf0250ce774b57504dcc8828e2e4bd91b",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-01-20",
+        "stored": "8cb94c92a6f21c65b7b3b511dff9fcaf46ca88ad6429076a17ffc7d0e2d58ec5",
+        "replayed": "8cb94c92a6f21c65b7b3b511dff9fcaf46ca88ad6429076a17ffc7d0e2d58ec5",
+        "gcrfSha256": "39f3903d0afd4d03d39dede9c5ccbea05fe9f9c7f64e916783e4a15b9edc30dc",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-01-21",
+        "stored": "2009abb8aa1f0b7c7b5d92da39de40762070f00fa006252ee9b5a2457adcd53d",
+        "replayed": "2009abb8aa1f0b7c7b5d92da39de40762070f00fa006252ee9b5a2457adcd53d",
+        "gcrfSha256": "157c5dfa2b4968873401b1f191b5d8dcf865832ce99a00777202ab150c459683",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-01-22",
+        "stored": "61cdef1e720effdd61bc208459edd1c1604f2dc28ff5967d8b6599f0628336ba",
+        "replayed": "61cdef1e720effdd61bc208459edd1c1604f2dc28ff5967d8b6599f0628336ba",
+        "gcrfSha256": "42e8db46dbe116db42c7beb940ad1790d6ac56dc3450eba15d16be7ea29fab34",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-01-23",
+        "stored": "c6390ac011f7e7b56465d9dc21c6c25a73efb09f209e03468d6088f6ed4dc320",
+        "replayed": "c6390ac011f7e7b56465d9dc21c6c25a73efb09f209e03468d6088f6ed4dc320",
+        "gcrfSha256": "5b739cfe6622dfbad8739a6d753ecdb27ca4c4d4f6444d54d0e4921cddbf34f9",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-01-24",
+        "stored": "d845a0b56699e2113e62801113eadc1cd15acd2214d77a56f33ffbdd9e936dc5",
+        "replayed": "d845a0b56699e2113e62801113eadc1cd15acd2214d77a56f33ffbdd9e936dc5",
+        "gcrfSha256": "518bbd7d23421b5bb7e7794ba1ff5ae95059612f27e482c36fe0ebbd53e25623",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-01-25",
+        "stored": "1734671a73c0a7e7599601d99270d7ea3e7c08b1f8d0f4e1bb5fad1101471507",
+        "replayed": "1734671a73c0a7e7599601d99270d7ea3e7c08b1f8d0f4e1bb5fad1101471507",
+        "gcrfSha256": "2a4b7d199f4075dbb931d51a43f250fe63fd9c91d6d1849ec8e86ea97b1902fa",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-01-26",
+        "stored": "5211093f1af4874e8d1241e7458d8c069b9a1d08af06cc372fa686b8f27b8f8d",
+        "replayed": "5211093f1af4874e8d1241e7458d8c069b9a1d08af06cc372fa686b8f27b8f8d",
+        "gcrfSha256": "3d103e9985a75afd5559df9b0fb86a45866a3fca696b1d3c078c079f59df8619",
+        "equal": true
+      },
+      {
+        "key": "P|39453|2026-04-14",
+        "stored": "2aeb163282cec3b3da063455f9ed6851cd630cd5e55e2226d4c0e0ddca5e03f8",
+        "replayed": "2aeb163282cec3b3da063455f9ed6851cd630cd5e55e2226d4c0e0ddca5e03f8",
+        "gcrfSha256": "601df0132af5c4e662dc080010ae140ee19fbe231b261e01f6064c953ee1029c",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-01-20",
+        "stored": "5d40af08d9b1791c7ebcda783ecc44267ac0c4f76ad0ca319b2e92beb306d7bf",
+        "replayed": "5d40af08d9b1791c7ebcda783ecc44267ac0c4f76ad0ca319b2e92beb306d7bf",
+        "gcrfSha256": "13338661862ab8c6b6d9fadc732d01886c02e4ccddf52d76d339765e1e8f95f9",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-01-21",
+        "stored": "1503a252bbb00f84acbd90d23009824d94304f5e2785160120e81d636072c22f",
+        "replayed": "1503a252bbb00f84acbd90d23009824d94304f5e2785160120e81d636072c22f",
+        "gcrfSha256": "fa24927b986ea1b7025c487e3edd8abc92e8ce388fcc8a7bfbd7157c33b82790",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-01-22",
+        "stored": "16f2b7004a47906389d01771080fdca14f25cee19bce00b0a85a3c470b91d5b7",
+        "replayed": "16f2b7004a47906389d01771080fdca14f25cee19bce00b0a85a3c470b91d5b7",
+        "gcrfSha256": "3c632d986fa244fda5403126649e63295d265f53d21c2a3e1207b16c504df7be",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-01-23",
+        "stored": "3fd7f987b1b788356485ddb6e533b085fb5ad4723b29a696fdfefb27f01ddef0",
+        "replayed": "3fd7f987b1b788356485ddb6e533b085fb5ad4723b29a696fdfefb27f01ddef0",
+        "gcrfSha256": "a0da92d4580f5b5cb6cf989890f41873479334c89dfae204bd21f04d5911cade",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-01-24",
+        "stored": "f70baacc8c3ead1370d95382e16afca8a947b7952c6c80a1921a3304d5da397e",
+        "replayed": "f70baacc8c3ead1370d95382e16afca8a947b7952c6c80a1921a3304d5da397e",
+        "gcrfSha256": "0085e95477ad0b37d0426f278559a31bbe9cc0bbf029844a90f91e432bab1cd6",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-01-25",
+        "stored": "54fd3f84a2bfb5af484a20851eab1a4d933fd7ce3fd31db88afdf16340b4c09e",
+        "replayed": "54fd3f84a2bfb5af484a20851eab1a4d933fd7ce3fd31db88afdf16340b4c09e",
+        "gcrfSha256": "a9e056f5d3cf24e53b3444154352b2ca87a5dd54af791f09c4def7256e22afde",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-01-26",
+        "stored": "8f67ae53648d1182aacb97ef4f52620d62e84a7d0d44b3e35d067f5a0c19d1cf",
+        "replayed": "8f67ae53648d1182aacb97ef4f52620d62e84a7d0d44b3e35d067f5a0c19d1cf",
+        "gcrfSha256": "e92192fb17cd412ad5517f136147a710a4412948e902772f883d985f7274cd7b",
+        "equal": true
+      },
+      {
+        "key": "P|43476|2026-03-03",
+        "stored": "4c54007207ab8e0bf05e238aaa3c98910bac15a93edd66573d1b2a9dabc3ab56",
+        "replayed": "4c54007207ab8e0bf05e238aaa3c98910bac15a93edd66573d1b2a9dabc3ab56",
+        "gcrfSha256": "9f1de65be52293e3f8f1353c22fd25722e98fb4ab5f27fae40a6625e3d1985ee",
+        "equal": true
+      }
+    ],
+    "windowsReplayed": 32,
+    "windowsEqual": 32,
+    "objects": {
+      "39451": 8,
+      "39452": 8,
+      "39453": 8,
+      "43476": 8
+    },
+    "stormArcCutoffs": 20,
+    "digest": "87681641b1696f650f2194fe0ff3c211bd432bf5135329ce420b9df1e5ea8186"
+  }
 }
