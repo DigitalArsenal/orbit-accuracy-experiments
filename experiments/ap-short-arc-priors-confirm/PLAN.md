@@ -69,3 +69,7 @@ AP5 and XM read GNSS (five satellites), Swarm, GRACE-FO and Sentinel-1 for 2026-
 - The control runs cutoffs to 2026-05-24 where the module's ran to 05-31, so it will not reproduce the module's figures to the digit.
 
 No arm, window, margin or rule changes after this registration. A deviation is an amendment section at the end of this file, dated, with its reason, and is reported with the results.
+
+## Amendments
+
+1. 2026-11-03, before any window of this task was fitted or scored: the runner fork also carries the fix of `ap-heo-frame-confirm`'s amendment 1 (a kernel sampled less often than the 300 s grid keeps every state; one at the grid or faster keeps the lattice as before). Nothing else of the registration changes.
