@@ -8,7 +8,35 @@ What it means: in low orbit AP's gain is largest early. Against AP 0.3.0, 0.4.0 
 
 What it does not mean: every fit reads precise products, which are not real-time, so this says nothing about a service fed by anything else. The strong-drag pool is 83 % Swarm. The windows were read for AP 0.3.0 and for other arms before 0.4.0, though never for 0.4.0. Near 700 km its 72 h fit still fails its registered statement, on the 95th percentile. In the storm cut, day 7 is about 17 km for every arm in it.
 
-Everything below `## AP 0.4.11
+Everything below `## AP 0.4.0` is AP 0.3.0's record: build 783133149a, wasm 0b021c575466.
+
+## AP 0.4.17
+
+`experiments/operator-theory/AP8.md`, registered at 81d18ff before any fit of this build on these data: modules 3ae1eb289d, wasm 7d4920ee23f4, the same forces, weather and priors as 0.4.11. Each statement is this build against the same arm of 0.4.11, by pair, with AP7.md's rules. Tables: `table-t-0417.md`, `table-t2-0417.md`, `table-l-0417.md`, `table-s-0417.md`, `table-r-0417.md`, the same as JSON beside them.
+
+| Statement | Result |
+|---|---|
+| 1. Part T, `APRa12` and `AP24` do not lose, days 1, 2, 3, 7 | PASS: identical, 0.0 % [0.0, 0.0] at every day |
+| 2. `AP72` in `S1` and `GN` does not lose, days 1, 2, 3, 7 | PASS: identical in `S1`; in `GN` 0.0 % [0.0, 0.0], 95th upper at most +2.5 % |
+| 3. Part L, `low`, 48 h fits, does not lose at 24 h and 72 h | PASS: 0.000 km [0.000, 0.000] at both |
+| 3. Part L, `navigation`, 72 h fits, at 72 h and 168 h | 0.000 km [0.000, 0.000] at both. AP8.md says "do not lose", which this passes; `ap8-verdict.mjs` as committed tests "beats", carried over from AP7, which it fails. Not settled here; it does not change the outcome |
+| 4. `DO`, `AP72` beats 0.4.11: rule 1 at days 1 and 3, rules 2 and 3 at days 1, 2, 3, 7 | **fail**: day 1 -0.9 % [-41.0, -0.2] passes rule 1; day 3 0.0 % [-0.9, 0.0] does not; 95th upper +13.1 % at day 2 and +12.6 % at day 7, over rule 2's bound |
+| 5. `LS` and `GD` do not lose, days 1, 2, 3, 7 | PASS: both 0.0 % [0.0, 0.0]; `LS` 95th upper at most -10.1 % |
+| 6. `DO`, `AP72` beats `XP72` at 0.4.17, report either way | fail: -93.8 % [-94.5, -92.2] at day 1, -74.0 % at day 3, but 95th upper +11.7 % at day 2 |
+
+Altimetry (`DO`), median km, 95th in brackets, 138 windows:
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP72 0.4.17 | 0.034 (2.54) | 0.094 (4.96) | 0.248 (7.48) | 1.335 (28.9) |
+| AP72 0.4.11 | 0.078 (2.55) | 0.223 (4.98) | 0.502 (7.48) | 2.263 (28.1) |
+| XP72 0.4.17 | 0.586 (2.56) | 0.702 (5.08) | 0.960 (7.48) | 3.597 (30.1) |
+
+So 0.4.17 gives the same answer as 0.4.11 everywhere except where its changes reach: in `DO` the pooled median halves, but the median paired change is near zero, most windows are unchanged, and some got worse by more than rule 2 allows. Statement 4 fails, so under AP8.md the site stays at 0.4.11. Report only: `HX` is 8 % to 14 % closer at days 2 and 3, `IG`, `GE` and `HE` are unchanged, and Starlink is identical to 0.4.11 at every lead.
+
+Run note: the first `regimes` run of `cycle-ap8.sh` started none of its default group's eight workers (an empty array under `set -u` in bash 3.2). The script was fixed in the same commit as these tables, with no change to arm, window or rule, and the group was rerun before Part R's verdict was read; Parts T, N, L and S had been read by then.
+
+## AP 0.4.11
 
 `experiments/operator-theory/AP7.md`, registered at fb80f20 before any fit of this build on these data: modules a0f33bc545, wasm e4edacb03daf, the same forces, weather and priors as AP 0.4.0. Each statement is this build against the same arm of 0.4.0, by pair. A statement that it does not lose needs the upper bound of the median's interval below +2 %, or below 0.005 km on Part L. Tables: `table-t-0411.md`, `table-t2-0411.md`, `table-l-0411.md`, `table-s-0411.md`, the same as JSON beside them.
 
@@ -48,8 +76,6 @@ On CHEAPER.md's 54 days, against each center's next prediction, not independent 
 | Laser-ranging, navigation, 72 h fits, beats 0.4.0 at 72 h and 168 h | PASS: -0.007 km [-0.008, -0.006], -0.011 km [-0.018, -0.003] |
 
 So 0.4.11 is closer in medium Earth orbit, where a rounding of 1e-4 degrees in the set had been about 45 m, and level everywhere drag sets the error. Near 700 km against the public set, report only, it fails the 95th-percentile rule at days 1 and 2 as 0.4.0 did. On Starlink, report only, it is level with 0.4.0 at every lead (0.000 km [0.000, 0.000] at 24 h), and against XP -0.448 km [-0.581, -0.319] at 24 h and -1.002 km [-1.510, +0.197] at 48 h: the 48 h interval now crosses zero, where 0.4.0's did not, on the same pairs and a different draw. Under AP7.md the site moved to 0.4.11 as a whole. AP's arm was rerun at this build wherever the site shows AP, and so was whiteroom XP, which is this module with its forces off: on one day of Part N, its 24 h fit was about 20 % closer in medium Earth orbit at 0.4.11 and its 72 h fit identical. See `compare/README.md`.
-
-## AP 0.4.0` is AP 0.3.0's record: build 783133149a, wasm 0b021c575466.
 
 ## AP 0.4.0
 
