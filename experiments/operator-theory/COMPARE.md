@@ -58,6 +58,8 @@ Where it departs from what the package states:
 
 The same step finds where the reference's orbit steps: the forecast's orbit-mean radial distance from the reference, the orbit after less the orbit before, at least 8 times its typical size for that example and at least 5 m. `analysis/maneuver-detection` is not used here: its floors were set on the ISS, and they miss these orbit-keeping burns of about 0.01 m/s on one precise orbit. On a passive satellite the same step is called a step in the reference, since it cannot maneuver. A forecast knows none of these, and they are not removed from any table.
 
+Showcase examples, added 2026-11-03 at the owner's word ("we want examples where SGP4 is way off, and XP is ~5-10x off"): `compare-examples.mjs --pick showcase` adds one example per precise-orbit regime, ids `best-*`, chosen to show AP's lead, not to be typical. On stored day-3 errors, it takes the windows whose XP error is 5 to 10 times AP's. Those where FFM is no more than twice as close as AP come first, then the rest, each by SGP4's error over AP's, largest first. A regime with no window in that band takes the window where XP is furthest behind AP. The ratios go out with the example, and the site says so on each. They change no table: `compare-cells.mjs` never links a row to one.
+
 `providers-run.mjs` adds AP, XP and SGP4 to every other provider this work stores forecasts of, and `compare-cells.mjs` and `compare-sigma.mjs` write the site's tables and ellipsoids. All report only.
 
 To rebuild: `compare-sgp4.mjs` with 8 shards into `<store>/ap/b040/laser-sgp4`, `compare-costs.mjs` into `<store>/ap/b040/compare-costs/rows.jsonl`, then `compare-table.mjs --out results/ap-truth/compare`.
