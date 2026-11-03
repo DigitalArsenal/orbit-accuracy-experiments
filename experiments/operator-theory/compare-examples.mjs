@@ -3,6 +3,7 @@
 // median for that cell, ties broken by key. Lead: 72 h on next-prediction pairs, day 3 on precise-orbit windows. Module calls only; interpolation of a 300 s table is a data step, as in score.mjs.
 //   node experiments/operator-theory/compare-examples.mjs --mode next --out <dir>
 //   node experiments/operator-theory/compare-examples.mjs --mode truth --out <dir>          (XP2F_CONTROL=1 and --mode truth2 for AP2.md's windows)
+// --pick showcase, in truth, truth2 and regimes modes: one example per regime, chosen to show AP's lead, not to be typical (see showcaseRank). --build names the AP store (default b040).
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -10,7 +11,9 @@ const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) =>
 const MODE = args.mode, OUT = args.out;
 if (!MODE || !OUT) throw new Error('--mode and --out');
 fs.mkdirSync(OUT, { recursive: true });
-const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap'), NEW = path.join(AP, 'b040');
+const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap'), NEW = path.join(AP, args.build ?? 'b040');
+const SHOWCASE = args.pick === 'showcase';
+let EXTRA = {};
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const HOUR = 3600000, DAY = 86400000, MU = 398600.4418;
@@ -22,7 +25,7 @@ const { openUssfXp } = await import('./lib/ussf-xp.mjs');
 const U = await openUssfXp();
 const write = (doc) => {
   fs.writeFileSync(path.join(OUT, `${doc.id}.bin`), Buffer.concat(TRACKS.map((k) => doc.tracks[k])));
-  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, tracks: TRACKS })}\n`);
+  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, ...EXTRA, tracks: TRACKS })}\n`);
   console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.bin`)).size / 1024)} KB`);
 };
 /**
@@ -48,6 +51,17 @@ const onGrid = (lines, stepMs) => {
 const inBatches = async (epochs, fly) => { const out = []; for (let i = 0; i < epochs.length; i += 9000) out.push(...(await fly(epochs.slice(i, i + 9000)))); return out; };
 // A precise-orbit example must hold its reference without a hole of an hour or more; shorter holes are the burns the product leaves out.
 const holed = (epochs) => epochs.some((e, i) => i > 0 && Date.parse(e) - Date.parse(epochs[i - 1]) >= 3600000);
+/**
+ * The showcase rule (owner 2026-11-03: "we want examples where SGP4 is way off, and XP is ~5-10x off"), on stored day-3 errors: of the windows whose XP error is 5 to 10 times AP's,
+ * those where FFM is no more than twice as close as AP first, then the rest; each set by SGP4's error over AP's, largest first. A regime with no window in that band takes its windows by XP's
+ * error over AP's, largest first. Chosen to show AP's lead: not typical, and the site says so.
+ */
+const showcaseRank = (list, errs) => {
+  const q = list.map((r) => ({ r, e: errs(r) })).filter(({ e }) => [e.ap, e.xp, e.s, e.f].every(Number.isFinite) && e.ap > 0).map(({ r, e }) => ({ r, e, xp: e.xp / e.ap, s: e.s / e.ap, f: e.f / e.ap }));
+  const band = q.filter((x) => x.xp >= 5 && x.xp <= 10), by = (a, b) => b.s - a.s || String(a.r.key).localeCompare(String(b.r.key));
+  const ranked = band.length ? [...band.filter((x) => x.f >= 0.5).sort(by), ...band.filter((x) => x.f < 0.5).sort(by)] : [...q].sort((a, b) => b.xp - a.xp || String(a.r.key).localeCompare(String(b.r.key)));
+  return ranked.map((x) => Object.assign(x.r, { showcase: { day: 3, inBand: band.length > 0, apKm: x.e.ap, xpOverAp: x.xp, sgp4OverAp: x.s, ffmOverAp: x.f } }));
+};
 const nearestMedian = (list, value) => { const v = list.map(value).filter(Number.isFinite).sort((a, b) => a - b); if (!v.length) return []; const m = v[Math.floor((v.length - 1) / 2)]; return [...list].filter((r) => Number.isFinite(value(r))).sort((a, b) => Math.abs(value(a) - m) - Math.abs(value(b) - m) || String(a.key).localeCompare(String(b.key))); };
 
 if (MODE === 'next') {
@@ -273,7 +287,8 @@ if (MODE === 'next') {
   const rows = rowsIn(path.join(NEW, 'regimes')).filter((r) => !r.error);
   const NAMED = { LS: ['AJISAI', 'STARLETTE', 'LARES'], GD: ['LAGEOS 2', 'ETALON 1', 'LARES-2'] };
   const picks = [];
-  for (const group of ['LS', 'GD', 'IG', 'GE', 'HE', 'HX']) {
+  if (SHOWCASE) for (const group of ['LS', 'GD', 'IG', 'GE', 'HE', 'HX']) picks.push([group, null]);
+  else for (const group of ['LS', 'GD', 'IG', 'GE', 'HE', 'HX']) {
     const names = [...new Set(rows.filter((r) => r.group === group).map((r) => r.name))];
     const chosen = NAMED[group] ? names.filter((n) => NAMED[group].includes(n)) : group === 'HX' ? names.filter((n) => n === 'THEMIS A' || n === 'CHANDRA') : names.slice(0, group === 'HE' ? 1 : 2);
     for (const name of chosen) picks.push([group, name]);
@@ -308,16 +323,23 @@ if (MODE === 'next') {
     for (const o of STATIC.filter((x) => x.group === group)) { const s = SRC.chain(o.files()); if ((s.name || o.name) === name) return { norad: s.norad, objectId: s.objectId ?? '', lines: s.lines }; }
     throw new Error(`no series for ${name}`);
   };
-  for (const [group, name] of picks) {
-    const id = `truth-${GROUPS[group].label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+  const seriesCache = new Map();
+  for (const [group, only] of picks) {
+    const slug = GROUPS[group].label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const vacuum = group === 'HE' || group === 'HX', arc = 72, D3 = '3';
-    const ranked = nearestMedian(rows.filter((r) => r.group === group && r.name === name), (r) => r.arms.AP72?.days?.[D3]?.e);
-    const o = await seriesOf(group, name);
-    const times = o.lines.map((l) => ms(l.epoch));
-    const between = (a, b) => o.lines.filter((_, i) => times[i] >= a && times[i] <= b);
-    const stepNative = times[1] - times[0];
+    const e3 = (r, a) => (r.arms[a]?.ok ? r.arms[a].days?.[D3]?.e : undefined);
+    const ranked = SHOWCASE
+      ? showcaseRank(rows.filter((r) => r.group === group), (r) => ({ ap: e3(r, 'AP72'), xp: e3(r, 'XP72'), s: e3(r, 'S72'), f: e3(r, 'F72') }))
+      : nearestMedian(rows.filter((r) => r.group === group && r.name === only), (r) => r.arms.AP72?.days?.[D3]?.e);
+    const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     let done = false;
-    for (const pick of ranked) {
+    for (const pick of ranked.slice(0, SHOWCASE ? 12 : undefined)) {
+      const name = only ?? pick.name;
+      if (!seriesCache.has(name)) seriesCache.set(name, await seriesOf(group, name));
+      const o = seriesCache.get(name);
+      const times = o.lines.map((l) => ms(l.epoch));
+      const between = (a, b) => o.lines.filter((_, i) => times[i] >= a && times[i] <= b);
+      EXTRA = SHOWCASE ? { showcase: pick.showcase } : {};
       try {
         const D0 = Date.parse(pick.cutoff.length === 10 ? `${pick.cutoff}T00:00:00Z` : pick.cutoff);
         const from = D0 - arc * HOUR, to = D0 + 7 * DAY;
@@ -390,16 +412,23 @@ if (MODE === 'next') {
   const allWindows = ON_XM ? Object.entries(XM.config.groups).flatMap(([group, g]) => g.objects.flatMap((o) => XM.daysOf(XM.config.period.from, XM.config.period.to).map((t) => ({ group, o, cutoffMs: t, key: `${group}|${o.norad}|${XM.dateOf(t)}` })))) : Object.keys(config.spans).flatMap((s) => windows(s));
   const byKey = new Map(allWindows.map((w) => [w.key, w]));
   const CUTS = ON_XM ? [{ group: 'S1', regime: 'Near 700 km', provider: 'Copernicus', arc: 72 }, { group: 'GN', regime: 'Medium Earth orbit', provider: 'ESA navigation', arc: 72 }, { group: 'P', regime: 'Strong drag, 2026', provider: 'ESA', arc: 24, only: /^Swarm/ }] : [{ group: undefined, regime: 'Strong drag, 2025', provider: 'ESA', arc: 24, only: /^Swarm/ }];
-  for (const cut of CUTS) {
+  const others = SHOWCASE ? new Map(rowsIn(path.join(NEW, ON_XM ? 'compare-truth2' : 'compare-truth')).filter((r) => !r.error).map((r) => [r.key, r])) : null;
+  for (const cut of SHOWCASE ? CUTS.filter((c) => c.group !== 'P') : CUTS) {
     const inCut = rows.filter((r) => (ON_XM ? r.group === cut.group : true) && (!cut.only || cut.only.test(r.name)));
-    for (const name of [...new Set(inCut.map((r) => r.name))]) {
+    for (const only of SHOWCASE ? [null] : [...new Set(inCut.map((r) => r.name))]) {
       const arm = `AP${cut.arc}`;
-      const ranked = nearestMedian(inCut.filter((r) => r.name === name), (r) => r.arms[arm]?.days?.['3']?.e);
-      const id = `truth-${cut.regime.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+      const e3 = (r, a) => (r?.arms?.[a]?.ok ? r.arms[a].days?.['3']?.e : undefined);
+      const ranked = SHOWCASE
+        ? showcaseRank(inCut, (r) => { const c = others.get(r.key); return { ap: e3(r, arm), xp: e3(c, `XP${cut.arc}`), s: e3(c, `S${cut.arc}`), f: e3(c, `F${cut.arc}`) }; })
+        : nearestMedian(inCut.filter((r) => r.name === only), (r) => r.arms[arm]?.days?.['3']?.e);
+      const slug = cut.regime.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
       let done = false;
       for (const pick of ranked.slice(0, 12)) {
         const w = byKey.get(pick.key);
         if (!w) continue;
+        const name = only ?? pick.name;
+        EXTRA = SHOWCASE ? { showcase: pick.showcase } : {};
         try {
           const { o, cutoffMs: D0 } = w;
           const from = D0 - cut.arc * HOUR, to = D0 + 7 * DAY;

@@ -1,0 +1,25 @@
+{
+  "fabricated": {
+    "referenceEventsBelow1Km": 5,
+    "droppedByTheScreenWhileScreened": 2,
+    "afterRefusal": 1,
+    "refusedFromCallStart": 1
+  },
+  "baselineHarness": {
+    "commit": "5612dc1539296389ab5041605fc91126f6754f20",
+    "reference": 1,
+    "found": 1,
+    "status": "pass",
+    "misses": 0
+  },
+  "thisHarness": {
+    "reference": 3,
+    "found": 1,
+    "status": "fail",
+    "misses": 2,
+    "excludedByReason": {
+      "refused-part-way: SGP4: decayed (the radius is below one Earth radius)": 1,
+      "refused-from-start: SGP4: decayed (the radius is below one Earth radius)": 1
+    }
+  }
+}

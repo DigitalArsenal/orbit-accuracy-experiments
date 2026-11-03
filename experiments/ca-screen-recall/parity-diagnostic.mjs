@@ -19,8 +19,8 @@ if (manifest.mode !== 'registered') throw new Error('the diagnostic reads a regi
 
 const snapshot = readSnapshot(), subset = selectSubset(snapshot.rows, config.selection);
 const element = new Map(subset.objects.map((r) => [Number(r.NORAD_CAT_ID), r]));
-const modules = modulesRoot(values.modules), pinned = pinnedModules(modules);
-const screen = await openScreen({ modules, pinned, workDir: values.run }), sgp4 = await openSgp4({ modules, pinned });
+const pinned = pinnedModules(modulesRoot(values.modules), values.run);
+const screen = await openScreen({ pinned, workDir: values.run }), sgp4 = await openSgp4({ pinned });
 const byKey = new Map(events.map((e) => [`${Math.min(e.primary, e.secondary)}-${Math.max(e.primary, e.secondary)}@${e.tcaJd}`, e]));
 
 const BSTAR_BINS = [['BSTAR under 0.001', 0, 1e-3], ['BSTAR 0.001 to 0.01', 1e-3, 1e-2], ['BSTAR 0.01 to 0.1', 1e-2, 1e-1], ['BSTAR 0.1 or more', 1e-1, Infinity]];  // absolute value of BSTAR

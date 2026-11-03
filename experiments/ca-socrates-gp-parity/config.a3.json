@@ -1,0 +1,63 @@
+{
+  "amendment": "A3",
+  "date": "2026-10-31",
+  "task": "experiments-ca-validation-on-0-17-20261031",
+  "reason": "re-prove recall and geometry on CA 0.17.0, the build to publish: Parts 1 and 2 unchanged, then Part 3, the console's own path, which last ran on 0.9.0; the harness is fixed for how CA 0.13.0 and later report an object on the excluded port",
+  "module": {
+    "repository": "space-data-network-modules",
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "wasmPath": "analysis/conjunction-assessment/dist/isomorphic/module.wasm",
+    "wasmSha256": "0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a",
+    "version": "0.17.0",
+    "hostFiles": {
+      "analysis/conjunction-assessment/tests/lib/cqr.mjs": "df0e968326a662c041ce3fc7bf465468b68e41d23936b67c2c7f832f6390c9f0",
+      "analysis/conjunction-assessment/tests/lib/conjunctionCommandHarness.mjs": "c96a13d43af9c569677cb46a34c2d578ef77ef1d2bfe16fca1e1392f7c4ec022",
+      "analysis/conjunction-assessment/tests/lib/wasmedgeWasiThreadsRunner.mjs": "8fd2501452bddbcfb7705631b47777af99bc9db0f4cc0e77bc749361360428cf",
+      "analysis/conjunction-assessment/tests/lib/caParityTolerances.mjs": "a87ca94f73bdde61a38fbeee40f44575c4cfc1a41548a855cb867a58555bc9ae"
+    },
+    "packages": {
+      "space-data-module-sdk": "0.9.12",
+      "spacedatastandards.org": "1.271.0",
+      "flatbuffers": "25.9.23",
+      "flatc-wasm": "26.1.38"
+    }
+  },
+  "sgp4Module": {
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "wasmPath": "propagator/sgp4/dist/isomorphic/module.wasm",
+    "wasmSha256": "2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643",
+    "manifestPath": "propagator/sgp4/plugin-manifest.json",
+    "pluginId": "com.orbpro.sgp4",
+    "version": "1.4.1",
+    "hostFiles": {
+      "propagator/sgp4/tests/lib/payloadEncoders.mjs": "73716100576358b57b3607b0c3423a4ebf988117fb934b81511660c09f5bbb99"
+    },
+    "reason": "Part 3's console arm samples with what the console flies. OrbPro main e199dbb pins modules cfd7ee626: CA 0.17.0 and propagator/sgp4 1.4.1 (AFSPC mode, as CA is), whose isomorphic artifact has this hash at fbda894501 too. A1's 1.3.1 runs in improved mode, a pairing the console never runs"
+  },
+  "registration": {
+    "ref": "wip/experiments-ca-validation-on-0-17-20261031/registration",
+    "reason": "local main carries other lanes' unlanded commits, so the registration is a commit on origin built on origin/main, holding only this task's files"
+  },
+  "compute": {
+    "processes": 4,
+    "threadsPerProcess": 4,
+    "nice": 10,
+    "startBelowLoad1": 45,
+    "reason": "the coordinator's limit for this machine, 2026-10-31; 4 threads per call as registered; a registered test elsewhere pauses above load 45. If 4 processes hold the load above 45, the run resumes on 2 processes, which the report states. The process count enters no result"
+  },
+  "baseline": {
+    "version": "0.12.0",
+    "commit": "5612dc1539296389ab5041605fc91126f6754f20",
+    "run": "ca-socrates-gp-parity-a2-screen-20261030T040914Z",
+    "metrics": "results/ca-socrates-gp-parity/metrics.a2-full.json",
+    "manifest": "results/ca-socrates-gp-parity/manifest.a2-full.json",
+    "readme": "README-0.12.0.md"
+  },
+  "baseline090": {
+    "version": "0.9.0",
+    "run": "ca-socrates-gp-parity-screen-20261029T215308Z",
+    "metrics": "results/ca-socrates-gp-parity/metrics.full.json",
+    "console": { "metrics": "results/ca-socrates-gp-parity/a1-console.metrics.json", "compare": "results/ca-socrates-gp-parity/a1-console.compare.json" },
+    "descriptions": { "metrics": "results/ca-socrates-gp-parity/a1-descriptions.metrics.json", "compare": "results/ca-socrates-gp-parity/a1-descriptions.compare.json" }
+  }
+}

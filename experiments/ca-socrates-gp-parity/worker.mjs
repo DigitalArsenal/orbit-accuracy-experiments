@@ -78,7 +78,7 @@ async function call(k, startJd, seconds) {
       const statistics = st && Object.fromEntries(Object.entries(st).map(([key, v]) => [key, typeof v === 'bigint' ? Number(v) : v]));
       const found = Number(result.CONJUNCTIONS_FOUND);
       if (events.length !== found) throw new Error(`CONJUNCTIONS_FOUND ${found} but ${events.length} events returned`);
-      return { calls: [{ startJd, seconds, found, chunks, statistics, incomplete: incomplete ? r.errorCode : null }], excluded, events, objectsParsed: Number(result.OBJECTS_PARSED), failures: [] };
+      return { calls: [{ startJd, seconds, found, chunks, statistics, incomplete: incomplete ? r.errorCode : null, incompleteMessage: incomplete ? r.errorMessage : null }], excluded, events, objectsParsed: Number(result.OBJECTS_PARSED), failures: [] };
     }
   }
 }

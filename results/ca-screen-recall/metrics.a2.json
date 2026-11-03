@@ -1,0 +1,418 @@
+{
+  "experiment": "ca-screen-recall",
+  "amendment": "A2",
+  "mode": "registered",
+  "window": {
+    "startUtc": "2026-10-30T00:00:00Z",
+    "startJd": 2461343.5,
+    "durationSeconds": 259200
+  },
+  "subset": {
+    "seed": "ca-screen-recall-20261029",
+    "requested": 2000,
+    "eligible": 27685,
+    "selected": 2000,
+    "listSha256": "1c339a56875a9a3d0889a671b9d6928b82ea81c1a3718a60a2b7c41e1b42a83c"
+  },
+  "timeGrid": {
+    "maxLineVersusStateM": 4.547473508864641e-10
+  },
+  "reference": {
+    "events": 2525,
+    "inWindow": 2525,
+    "atWindowEdge": 0,
+    "outsideWindow": 0,
+    "belowOneKm": 132,
+    "oneToFiveKm": 1948,
+    "nearThreshold": 445,
+    "stats": {
+      "objects": 2000,
+      "samples": 25927,
+      "flaggedPairSamples": 815132,
+      "maxObjectSpeedKmS": 7.973986890953007,
+      "maxDuplicateSampleDiffKm": 0.0003207739496969367,
+      "brackets": 297766,
+      "kept": {
+        "s1": 8227,
+        "s2": 3031,
+        "s3": 2525
+      },
+      "moduleCalls": 309313,
+      "denseMs": 221300.928041,
+      "refineMs": 43222.35162500001,
+      "merged": 0
+    }
+  },
+  "arms": {
+    "defaults": {
+      "id": "defaults",
+      "thresholdM": 5000,
+      "elapsedMs": 26908.212666000007,
+      "chunks": 17,
+      "statistics": {
+        "TOTAL_OBJECTS": 2000,
+        "PAIRS_SCREENED": 1999000,
+        "PAIRS_PREFILTERED": 0,
+        "KD_TREE_CANDIDATES": 384438,
+        "TCA_REFINED": 5045312,
+        "CONJUNCTIONS_FOUND": 2080,
+        "PROPAGATIONS": 8642000,
+        "FAILED_PAIRS": 0
+      },
+      "listings": {
+        "objects": 0,
+        "records": 0,
+        "byReason": {},
+        "rows": []
+      },
+      "exclusions": {
+        "events": 0,
+        "byReason": {},
+        "rows": []
+      },
+      "recall": {
+        "below 1 km": {
+          "reference": 132,
+          "found": 132,
+          "recall": 1,
+          "lowerBound": 0.9775606515105933
+        },
+        "1 to 5 km": {
+          "reference": 1948,
+          "found": 1948,
+          "recall": 1,
+          "lowerBound": 0.9984633316426555
+        },
+        "all": {
+          "reference": 2080,
+          "found": 2080,
+          "recall": 1,
+          "lowerBound": 0.9985607807700326
+        }
+      },
+      "misses": [],
+      "edge": {
+        "reference": 0,
+        "found": 0
+      },
+      "nearThreshold": {
+        "reference": 445,
+        "found": 0
+      },
+      "screenEvents": {
+        "total": 2080,
+        "outOfWindow": 0,
+        "matched": 2080,
+        "nearThreshold": 0,
+        "edge": 0,
+        "beyondReference": 0,
+        "duplicates": 0,
+        "falseEvents": []
+      },
+      "differences": {
+        "below 1 km": {
+          "matched": 132,
+          "tcaSeconds": {
+            "count": 132,
+            "median": 0.0002816319465637207,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.00048279762268066406
+          },
+          "missM": {
+            "count": 132,
+            "median": 0.03063348944658628,
+            "p95": 0.14963528088810563,
+            "p99": 0.1816440892023934,
+            "max": 0.18268331477440825
+          },
+          "signedMissMeanM": -0.0007906886474004589,
+          "signedTcaMeanSeconds": 0.000015849416906183418
+        },
+        "1 to 5 km": {
+          "matched": 1948,
+          "tcaSeconds": {
+            "count": 1948,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.01697838306427002
+          },
+          "missM": {
+            "count": 1948,
+            "median": 0.022792557218053844,
+            "p95": 0.1463202176082632,
+            "p99": 0.1880981210824757,
+            "max": 0.243934020020788
+          },
+          "signedMissMeanM": -0.0029861081885709643,
+          "signedTcaMeanSeconds": 0.000007228746061697143
+        },
+        "all": {
+          "matched": 2080,
+          "tcaSeconds": {
+            "count": 2080,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.01697838306427002
+          },
+          "missM": {
+            "count": 2080,
+            "median": 0.02347241775578368,
+            "p95": 0.1463202176082632,
+            "p99": 0.18780912154898033,
+            "max": 0.243934020020788
+          },
+          "signedMissMeanM": -0.002846783486919759,
+          "signedTcaMeanSeconds": 0.000007775827096058772
+        }
+      },
+      "outliers": {
+        "flagThresholds": {
+          "tcaSeconds": 1,
+          "missM": 5
+        },
+        "flagged": 0,
+        "rows": []
+      },
+      "probability": {
+        "compared": 2080,
+        "missing": 0,
+        "relativeDifferenceAtScreenMiss": {
+          "count": 2080,
+          "median": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "relativeDifferenceAtReferenceMiss": {
+          "count": 2080,
+          "median": 0.0000155681154962052,
+          "p95": 0.0001648496320690997,
+          "p99": 0.00031606157674671833,
+          "max": 0.00295903852584072
+        }
+      },
+      "parity": {
+        "objects": 4160,
+        "unmatchedOrOtherFrame": 0,
+        "positionM": {
+          "count": 4160,
+          "median": 0.0755639315782793,
+          "p95": 0.13735050524256123,
+          "p99": 0.14900371899032883,
+          "max": 0.15253878110800254
+        },
+        "velocityMS": {
+          "count": 4160,
+          "median": 0.0000840677823557471,
+          "p95": 0.00015232691738678158,
+          "p99": 0.00016555304064748945,
+          "max": 0.00017037985832971851
+        },
+        "largest": [
+          {
+            "norad": 61713,
+            "positionM": 0.15253878110800254,
+            "velocityMS": 0.00017037985832971851,
+            "tcaUtc": "2026-11-01T00:20:08.750Z"
+          },
+          {
+            "norad": 61713,
+            "positionM": 0.15253785856420987,
+            "velocityMS": 0.00017037910698707303,
+            "tcaUtc": "2026-11-01T01:53:56.478Z"
+          },
+          {
+            "norad": 61713,
+            "positionM": 0.15253735675319952,
+            "velocityMS": 0.00017037798851374787,
+            "tcaUtc": "2026-10-31T22:46:21.023Z"
+          },
+          {
+            "norad": 61713,
+            "positionM": 0.15247892673334126,
+            "velocityMS": 0.00017024892357343167,
+            "tcaUtc": "2026-11-01T13:37:24.398Z"
+          },
+          {
+            "norad": 61713,
+            "positionM": 0.15247863341132634,
+            "velocityMS": 0.0001702482688636121,
+            "tcaUtc": "2026-11-01T12:03:36.670Z"
+          }
+        ]
+      },
+      "gate": {
+        "reference": 132,
+        "found": 132,
+        "status": "pass"
+      },
+      "windows": 1,
+      "mergedAcrossEdges": 0,
+      "fallback": null
+    },
+    "console": {
+      "id": "console",
+      "thresholdM": 15000,
+      "elapsedMs": 288034.61120899994,
+      "chunks": 119,
+      "statistics": {
+        "TOTAL_OBJECTS": 6000,
+        "PAIRS_SCREENED": 5997000,
+        "PAIRS_PREFILTERED": 0,
+        "KD_TREE_CANDIDATES": 966728,
+        "TCA_REFINED": 15371135,
+        "CONJUNCTIONS_FOUND": 15003,
+        "PROPAGATIONS": 8646000,
+        "FAILED_PAIRS": 0
+      },
+      "listings": {
+        "objects": 0,
+        "records": 0,
+        "byReason": {},
+        "rows": []
+      },
+      "exclusions": {
+        "events": 0,
+        "byReason": {},
+        "rows": []
+      },
+      "recall": {
+        "below 1 km": {
+          "reference": 132,
+          "found": 132,
+          "recall": 1,
+          "lowerBound": 0.9775606515105933
+        },
+        "1 to 5 km": {
+          "reference": 1948,
+          "found": 1948,
+          "recall": 1,
+          "lowerBound": 0.9984633316426555
+        },
+        "all": {
+          "reference": 2080,
+          "found": 2080,
+          "recall": 1,
+          "lowerBound": 0.9985607807700326
+        }
+      },
+      "misses": [],
+      "edge": {
+        "reference": 0,
+        "found": 0
+      },
+      "nearThreshold": {
+        "reference": 445,
+        "found": 445
+      },
+      "screenEvents": {
+        "total": 15003,
+        "outOfWindow": 0,
+        "matched": 2080,
+        "nearThreshold": 0,
+        "edge": 0,
+        "beyondReference": 12923,
+        "duplicates": 0,
+        "falseEvents": []
+      },
+      "differences": {
+        "below 1 km": {
+          "matched": 132,
+          "tcaSeconds": {
+            "count": 132,
+            "median": 0.0002816319465637207,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.00048279762268066406
+          },
+          "missM": {
+            "count": 132,
+            "median": 0.03063348944658628,
+            "p95": 0.14963528088810563,
+            "p99": 0.1816440892023934,
+            "max": 0.18268331477440825
+          },
+          "signedMissMeanM": -0.0007906886474004589,
+          "signedTcaMeanSeconds": 0.000015849416906183418
+        },
+        "1 to 5 km": {
+          "matched": 1948,
+          "tcaSeconds": {
+            "count": 1948,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.01697838306427002
+          },
+          "missM": {
+            "count": 1948,
+            "median": 0.022792557218053844,
+            "p95": 0.1463202176082632,
+            "p99": 0.1880981210824757,
+            "max": 0.243934020020788
+          },
+          "signedMissMeanM": -0.0029861081885709643,
+          "signedTcaMeanSeconds": 0.000007228746061697143
+        },
+        "all": {
+          "matched": 2080,
+          "tcaSeconds": {
+            "count": 2080,
+            "median": 0.00024139881134033203,
+            "p95": 0.00048279762268066406,
+            "p99": 0.00048279762268066406,
+            "max": 0.01697838306427002
+          },
+          "missM": {
+            "count": 2080,
+            "median": 0.02347241775578368,
+            "p95": 0.1463202176082632,
+            "p99": 0.18780912154898033,
+            "max": 0.243934020020788
+          },
+          "signedMissMeanM": -0.002846783486919759,
+          "signedTcaMeanSeconds": 0.000007775827096058772
+        }
+      },
+      "outliers": {
+        "flagThresholds": {
+          "tcaSeconds": 1,
+          "missM": 5
+        },
+        "flagged": 0,
+        "rows": []
+      },
+      "probability": {
+        "compared": 2080,
+        "missing": 0,
+        "relativeDifferenceAtScreenMiss": {
+          "count": 2080,
+          "median": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "relativeDifferenceAtReferenceMiss": {
+          "count": 2080,
+          "median": 0.0000155681154962052,
+          "p95": 0.0001648496320690997,
+          "p99": 0.00031606157674671833,
+          "max": 0.00295903852584072
+        }
+      },
+      "parity": null,
+      "gate": null,
+      "windows": 3,
+      "mergedAcrossEdges": 0,
+      "fallback": null
+    }
+  },
+  "verdict": {
+    "reference": 132,
+    "found": 132,
+    "status": "pass"
+  }
+}

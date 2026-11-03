@@ -1,0 +1,114 @@
+{
+  "source": "the screens' logs, one per invocation; the decision fields are uptime and preflight readings taken by the lane when it stopped an invocation",
+  "invocations": [
+    {
+      "label": "Part 1",
+      "part": 1,
+      "first": true,
+      "processes": 4,
+      "threads": 4,
+      "unitsOfPart": 560,
+      "unitsToDo": 560,
+      "unitsFinished": 560,
+      "start": "2026-11-03T09:30:24.473Z",
+      "lastUnit": "2026-11-03T10:12:41.882Z",
+      "wallMinutes": 42.30446666666667,
+      "ended": "finished"
+    },
+    {
+      "label": "Part 2",
+      "part": 2,
+      "first": true,
+      "processes": 4,
+      "threads": 4,
+      "unitsOfPart": 1036,
+      "unitsToDo": 1036,
+      "unitsFinished": 309,
+      "start": "2026-11-03T10:13:28.128Z",
+      "lastUnit": "2026-11-03T10:36:45.583Z",
+      "wallMinutes": null,
+      "ended": "stopped"
+    },
+    {
+      "label": "Part 2",
+      "part": 2,
+      "first": false,
+      "processes": 3,
+      "threads": 4,
+      "unitsOfPart": 1036,
+      "unitsToDo": 727,
+      "unitsFinished": 727,
+      "start": "2026-11-03T10:37:55.084Z",
+      "lastUnit": "2026-11-03T11:20:05.428Z",
+      "wallMinutes": 42.18991666666667,
+      "ended": "finished"
+    },
+    {
+      "label": "Part 3 console arm",
+      "first": true,
+      "processes": 1,
+      "threads": 4,
+      "unitsOfPart": 64,
+      "unitsToDo": 64,
+      "unitsFinished": 6,
+      "start": "2026-11-03T10:55:36.492Z",
+      "lastUnit": "2026-11-03T11:09:30.215Z",
+      "wallMinutes": null,
+      "ended": "stopped"
+    },
+    {
+      "label": "Part 3 console arm",
+      "first": false,
+      "processes": 3,
+      "threads": 4,
+      "unitsOfPart": 64,
+      "unitsToDo": 58,
+      "unitsFinished": 58,
+      "start": "2026-11-03T11:10:42.067Z",
+      "lastUnit": "2026-11-03T11:57:17.097Z",
+      "wallMinutes": 46.58488333333333,
+      "ended": "finished"
+    },
+    {
+      "label": "Part 3 descriptions arm",
+      "first": true,
+      "processes": 2,
+      "threads": 4,
+      "unitsOfPart": 14,
+      "unitsToDo": 14,
+      "unitsFinished": 14,
+      "start": "2026-11-03T11:06:33.307Z",
+      "lastUnit": "2026-11-03T11:08:58.754Z",
+      "wallMinutes": 2.4271,
+      "ended": "finished"
+    }
+  ],
+  "resumes": [
+    {
+      "label": "Part 2",
+      "units": 1036,
+      "unitsDone": 309,
+      "fromProcesses": 4,
+      "toProcesses": 3,
+      "threads": 4,
+      "lastUnitAt": "10:36:45Z",
+      "reason": "load",
+      "load1": 48.34,
+      "load5": 48.09,
+      "loadAt": "10:35:00Z",
+      "otherJobsCores": "at least 9"
+    },
+    {
+      "label": "Part 3 console arm",
+      "units": 64,
+      "unitsDone": 6,
+      "fromProcesses": 1,
+      "toProcesses": 3,
+      "threads": 4,
+      "lastUnitAt": "11:09:30Z",
+      "reason": "widened",
+      "load1": 29.76,
+      "loadAt": "11:10:00Z"
+    }
+  ]
+}

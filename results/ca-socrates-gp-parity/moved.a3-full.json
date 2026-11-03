@@ -1,0 +1,60 @@
+{
+  "baselineVersion": "0.12.0",
+  "baseline": "ca-socrates-gp-parity-a2-screen-20261030T040914Z",
+  "run": "ca-socrates-gp-parity-a3-screen-20261103T092938Z",
+  "parts": [
+    1,
+    2
+  ],
+  "baselineEventsSha256": {
+    "part1": "9f90a69187ba6f769d16f0c4c62fc8dae7622d5da9493fdd2681d53e18f95dc8",
+    "part2": "c1d471e596c7ebc0b9fac7240921da5755a73aa0fb837c1f408648868f868370"
+  },
+  "eventsSha256": {
+    "part1": "9f90a69187ba6f769d16f0c4c62fc8dae7622d5da9493fdd2681d53e18f95dc8",
+    "part2": "c1d471e596c7ebc0b9fac7240921da5755a73aa0fb837c1f408648868f868370"
+  },
+  "baselineEvents": 958800,
+  "events": 958800,
+  "paired": 958800,
+  "identicalValues": 958800,
+  "changedValues": 0,
+  "tcaSeconds": {
+    "n": 958800,
+    "median": 0,
+    "p99": 0,
+    "max": 0
+  },
+  "missM": {
+    "n": 958800,
+    "median": 0,
+    "p99": 0,
+    "max": 0
+  },
+  "speedMS": {
+    "n": 958800,
+    "median": 0,
+    "p99": 0,
+    "max": 0
+  },
+  "largestChanges": [],
+  "onlyBaseline": {
+    "count": 0,
+    "rows": []
+  },
+  "onlyThisBuild": {
+    "count": 0,
+    "rows": []
+  },
+  "listings": {
+    "baselineObjects": 41,
+    "objects": 41,
+    "newObjects": [],
+    "goneObjects": [],
+    "baselineByRefusal": {
+      "SGP4: the eccentricity leaves its range (e >= 1, e < -0.001, or a negative semi-latus rectum)": 9,
+      "SGP4: decayed (the radius is below one Earth radius)": 32
+    },
+    "changedSlices": []
+  }
+}

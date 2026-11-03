@@ -1,3 +1,4 @@
+import {saveEndpoints,saveOmm} from './lib/product-records.mjs';
 import { registration, allowed, manifest } from './guard.mjs';
 registration();
 // AP5.md: XP, SGP4 and FFM on AP's precise-orbit windows, its truth, grid and as-issued weather, so rows join to AP's stored rows by window key. Module calls only.
@@ -44,9 +45,9 @@ const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest
 fs.mkdirSync(OUT, { recursive: true });
 manifest(OUT, SHARD);
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
-const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
+const done = new Set(fs.readdirSync(OUT).filter(f=>/^rows-\d+\.jsonl$/.test(f)).flatMap(f=>fs.readFileSync(path.join(OUT,f),'utf8').split('\n').filter(Boolean).map(l=>JSON.parse(l).key)));
 const xmWindows = () => Object.entries(XM.config.groups).flatMap(([group, g]) => g.objects.flatMap((o) => XM.daysOf(XM.config.period.from, XM.config.period.to).map((t) => ({ group, o, cutoffMs: t, date: XM.dateOf(t), key: `${group}|${o.norad}|${XM.dateOf(t)}` }))));
-const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => (!args.key || w.key === args.key) && allowed(w.o.norad, w.o.name, w.cutoffMs) && w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
+const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => (!args.key || w.key === args.key) && (!args.groups || args.groups.split(',').includes(w.group ?? 'T')) && allowed(w.o.norad, w.o.name, w.cutoffMs) && w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
 
 for (const w of list) {
   const { o, cutoffMs: D0, key } = w;
@@ -59,19 +60,22 @@ for (const w of list) {
     const entered = LEADS.filter((k) => bins[k].length >= MIN_BIN);
     if (!entered.length) throw new Error('no lead bin');
     row.entered = entered;
+    if(args.products)saveEndpoints(OUT,SHARD,row,entered,bins,T.productFiles(o));
     const scored = entered.flatMap((k) => bins[k]);
     const epochs = scored.map((l) => l.epoch), epochsMs = epochs.map(ms), truth = scored.map((l) => ({ r: l.r, v: l.v })), sizes = entered.map((k) => bins[k].length);
     const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
     if (O.excluded) throw new Error(O.excluded);
     const gridB = S.gridBytes(epochs);
     const spw = driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
-    const score = (e) => { const days = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
+    let scoringArm = null;
+    const score = (e) => { const days = {}; const encounterErrors = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; encounterErrors[k] = { epoch: bins[k].at(-1).epoch, rtnKm: s.at(-1) }; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); fs.appendFileSync(path.join(OUT, `encounter-errors-${SHARD}.jsonl`), JSON.stringify({ key, group: row.group, arm: scoringArm, days: encounterErrors })+'\n'); return days; };
     const arc = (hours) => { const raw = T.series(o, D0 - hours * HOUR, D0).lines; const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
     const high = Math.hypot(...scored[0].r) >= 8400;
     for (const hours of ARCS) {
       const thin = arc(hours);
       const run = async (name, fn) => {
         if (!ARMS.has(name)) return;
+        scoringArm = `${name}${hours}`;
           const a = { ok: false }; const started = performance.now();
         try {
           if (!thin) throw new Error('coverage');
@@ -85,18 +89,27 @@ for (const w of list) {
         await run('U', async () => {
           const f = await U.fit(oem);
           if (!f.ok) throw new Error(f.error);
-          return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.omm, gridB, epochs.length), epochs, 'GCRF'), truth)) };
+          const byTime = new Map();
+            for (const leads of [[1,2,3,7],[4,5]]) {
+              const times = entered.filter(k => leads.includes(k)).flatMap(k => bins[k]).map(l => l.epoch);
+              if (!times.length) continue;
+              const states = await U.propagate(f.omm, S.gridBytes(times), times.length);
+              times.forEach((t,i) => byTime.set(t,states[i]));
+            }
+            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(epochs.map(t=>byTime.get(t)), epochs, 'GCRF'), truth)) };
         });
       }
       await run('AP', async () => {
         const ex = { rows: S.spwBytes(O.rows) };
         const f = await A.fit(oem, PCF_AP, ex);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_AP,ex);
         if (!f.ok) throw new Error(f.error);
         const st = await A.propagate(f.omm, gridB, PCF_AP, ex, epochs.length);
         return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
       });
       await run('XP', async () => {
         const f = await A.fit(oem, PCF_XP, undefined);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_XP,undefined);
         if (!f.ok) throw new Error(f.error);
         const st = await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length);
         return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
@@ -119,7 +132,15 @@ for (const w of list) {
         const settings = high ? ffmHigh() : ffmLow();
         const f = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
         if (!f.state) throw new Error(f.error ?? f.termination);
-        const st = await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw);
+        fs.appendFileSync(path.join(OUT, `fit-products-${SHARD}.jsonl`),JSON.stringify({key,group:row.group,arm:scoringArm,fit:f,settings,spw})+'\n');
+        const byTime = new Map();
+        for (const leads of [[1,2,3,7],[4,5]]) {
+          const times=entered.filter(k=>leads.includes(k)).flatMap(k=>bins[k]).map(l=>l.epoch);
+          if(!times.length)continue;
+          const states=await F.forecast({epoch:f.epoch,state:f.state,parameters:f.parameters},times,settings,spw);
+          times.forEach((t,i)=>byTime.set(t,states[i]));
+        }
+        const st=epochs.map(t=>byTime.get(t));
         return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(st, truth)) };
       });
     }

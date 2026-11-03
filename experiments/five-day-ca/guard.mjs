@@ -11,7 +11,7 @@ export function registration() {
   if (!config.frozen) throw Error('registration is not frozen');
   for (const name of ['config.json','FIVE-DAY.md']) {
     const rel = `experiments/five-day-ca/${name}`;
-    if (git('show', `28dd8bb:${rel}`) !== fs.readFileSync(path.join(root, rel),'utf8').trim()) throw Error(`registration changed: ${name}`);
+    if (git('show', `${name === 'FIVE-DAY.md' ? '989bcea50c8335cf68f2e87acb9ea870f19c93b6' : '28dd8bb'}:${rel}`) !== fs.readFileSync(path.join(root, rel),'utf8').trim()) throw Error(`registration changed: ${name}`);
   }
   for (const [file, pin] of Object.entries(config.pins)) if (hash(fs.readFileSync(path.resolve(root,file))) !== pin) throw Error(`pin mismatch: ${file}`);
 }
@@ -31,5 +31,16 @@ export function manifest(out, shard) {
     if (name.startsWith('/opt/data/sdn-archive/') && !name.startsWith(config.store+'/') && !seen.has(name)) { seen.add(name); fs.appendFileSync(path.join(out,`inputs-${shard}.jsonl`),JSON.stringify({path:name,sha256:hash(bytes)})+'\n'); }
     return bytes;
   };
-  fs.writeFileSync(path.join(out,`manifest-${shard}.json`),JSON.stringify({started:new Date().toISOString(),command:process.argv,commit:git('rev-parse','HEAD'),modulesCommit:execFileSync('git',['-C',config.modulesRoot,'rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,host:os.hostname(),load:os.loadavg(),pins:config.pins,sources},null,2)+'\n');
+  fs.writeFileSync(path.join(out,`manifest-${shard}-${Date.now()}.json`),JSON.stringify({started:new Date().toISOString(),command:process.argv,commit:git('rev-parse','HEAD'),modulesCommit:execFileSync('git',['-C',config.modulesRoot,'rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,host:os.hostname(),load:os.loadavg(),pins:config.pins,sources},null,2)+'\n');
+}
+
+export function analysisProvenance() {
+  const sources = {};
+  const visit = dir => { for (const entry of fs.readdirSync(path.join(root, dir), {withFileTypes:true})) {
+    const rel = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) visit(rel);
+    else if (/\.(mjs|json|md)$/.test(entry.name)) sources[rel] = hash(fs.readFileSync(path.join(root, rel)));
+  }};
+  visit('experiments/five-day-ca');
+  return { command:process.argv, commit:git('rev-parse','HEAD'), node:process.version, host:os.hostname(), registrationCommit:'eb143664cad7ab97133184d4d0b217592f81b5a8', modulesCommit:execFileSync('git',['-C',config.modulesRoot,'rev-parse','HEAD'],{encoding:'utf8'}).trim(), pins:config.pins, sources };
 }

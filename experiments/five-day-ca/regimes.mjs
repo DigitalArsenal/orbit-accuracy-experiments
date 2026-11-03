@@ -1,3 +1,4 @@
+import {saveEndpoints,saveOmm} from './lib/product-records.mjs';
 import { registration, allowed, manifest } from './guard.mjs';
 registration();
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
@@ -62,7 +63,8 @@ async function objects() {
     const files = o.files();
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
     const series = SRC.chain(files);
-    out.push({ group: o.group, name: series.name || o.name, norad: series.norad, objectId: series.objectId ?? '', lines: series.lines, arcs: o.arcs, cutoffs: o.cutoffs });
+    const productFiles=args.products?files.map(file=>{const x=SRC.readReference(file);return {file,startMs:ms(x.lines[0].epoch),stopMs:ms(x.lines.at(-1).epoch)};}):null;
+    out.push({ group: o.group, name: series.name || o.name, norad: series.norad, objectId: series.objectId ?? '', lines: series.lines, productFiles, arcs: o.arcs, cutoffs: o.cutoffs });
   }
   for (const [group, klass] of [['IG', 'igso'], ['GE', 'geo']]) {
     if (!GROUPS.includes(group)) continue;
@@ -109,6 +111,7 @@ for (const o of await objects()) {
       const entered = LEADS.filter((k) => bins[k].length >= minBin);
       if (!entered.length) throw new Error('no lead bin');
       row.entered = entered;
+    if(args.products)saveEndpoints(OUT,SHARD,row,entered,bins,o.productFiles);
     const scored = entered.flatMap((k) => bins[k]);
       const epochs = scored.map((l) => l.epoch), epochsMs = epochs.map(ms), truth = scored.map((l) => ({ r: l.r, v: l.v })), sizes = entered.map((k) => bins[k].length);
       let ex, spw;
@@ -119,7 +122,8 @@ for (const o of await objects()) {
         spw = driverRows(R.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
       }
       const gridB = S.gridBytes(epochs);
-      const score = (e) => { const days = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
+      let scoringArm = null;
+    const score = (e) => { const days = {}; const encounterErrors = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; encounterErrors[k] = { epoch: bins[k].at(-1).epoch, rtnKm: s.at(-1) }; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); fs.appendFileSync(path.join(OUT, `encounter-errors-${SHARD}.jsonl`), JSON.stringify({ key, group: row.group, arm: scoringArm, days: encounterErrors })+'\n'); return days; };
       const arc = (hours) => { const raw = between(D0 - hours * HOUR, D0); const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
       const high = Math.hypot(...scored[0].r) >= 8400;
       const pcfAp = o.vacuum ? PCF_AP_VACUUM : PCF_AP;
@@ -127,6 +131,7 @@ for (const o of await objects()) {
         const thin = arc(hours);
         const run = async (name, fn) => {
           if (!ARMS.has(name)) return;
+        scoringArm = `${name}${hours}`;
           const a = { ok: false }; const started = performance.now();
           try { if (!thin) throw new Error('coverage'); Object.assign(a, await fn()); a.ok = true; } catch (error) { a.error = String(error?.message ?? error).slice(0, 180); }
           a.elapsedMs = performance.now() - started; row.arms[`${name}${hours}`] = a;
@@ -136,17 +141,26 @@ for (const o of await objects()) {
           await run('U', async () => {
             const f = await U.fit(oem);
             if (!f.ok) throw new Error(f.error);
-            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.omm, gridB, epochs.length), epochs, 'GCRF'), truth)) };
+            const byTime = new Map();
+            for (const leads of [[1,2,3,7],[4,5]]) {
+              const times = entered.filter(k => leads.includes(k)).flatMap(k => bins[k]).map(l => l.epoch);
+              if (!times.length) continue;
+              const states = await U.propagate(f.omm, S.gridBytes(times), times.length);
+              times.forEach((t,i) => byTime.set(t,states[i]));
+            }
+            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(epochs.map(t=>byTime.get(t)), epochs, 'GCRF'), truth)) };
           });
           }
         await run('AP', async () => {
           const f = await A.fit(oem, pcfAp, ex);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,pcfAp,ex);
           if (!f.ok) throw new Error(f.error);
           const st = await A.propagate(f.omm, gridB, pcfAp, ex, epochs.length);
           return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
         });
         await run('XP', async () => {
           const f = await A.fit(oem, PCF_XP, undefined);
+          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_XP,undefined);
           if (!f.ok) throw new Error(f.error);
           const st = await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length);
           return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
@@ -169,7 +183,15 @@ for (const o of await objects()) {
           const settings = high ? ffmHigh() : ffmLow();
           const f = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0);
           if (!f.state) throw new Error(f.error ?? f.termination);
-          const st = await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, spw);
+        fs.appendFileSync(path.join(OUT, `fit-products-${SHARD}.jsonl`),JSON.stringify({key,group:row.group,arm:scoringArm,fit:f,settings,spw})+'\n');
+          const byTime = new Map();
+        for (const leads of [[1,2,3,7],[4,5]]) {
+          const times=entered.filter(k=>leads.includes(k)).flatMap(k=>bins[k]).map(l=>l.epoch);
+          if(!times.length)continue;
+          const states=await F.forecast({epoch:f.epoch,state:f.state,parameters:f.parameters},times,settings,spw);
+          times.forEach((t,i)=>byTime.set(t,states[i]));
+        }
+        const st=epochs.map(t=>byTime.get(t));
           return { fitOk: !!f.ok, termination: f.termination, days: score(await m.rtn(st, truth)) };
         });
       }
