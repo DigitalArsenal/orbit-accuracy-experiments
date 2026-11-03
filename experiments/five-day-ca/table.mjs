@@ -52,6 +52,7 @@ export function report(d){
  const complete=d.coverage.filter(c=>c.completed===c.expected&&c.expected>0);
  const optional=f=>fs.existsSync(f)?JSON.parse(fs.readFileSync(f,'utf8')):null;
  const stats=optional('results/five-day-ca/statistics.json'),ca=optional('results/five-day-ca/ca-reach.json'),enc=optional('results/five-day-ca/encounters.json');
+ for(const [name,value]of [['statistics',stats],['CA reach',ca]])if(value&&(value.snapshotStable!==true||JSON.stringify(value.inputs)!==JSON.stringify(d.inputs)))throw Error(`regenerate ${name} on the frozen forecast snapshot before reporting`);
  const fmt=x=>x===null||x===undefined?'unmeasured':typeof x==='number'?Number(x.toPrecision(7)):Array.isArray(x)?x.map(fmt).join(' to '):x;
  const completed=(group,arm)=>complete.some(c=>c.group===group&&c.phase===(arm.startsWith('F')?'ffm':'cheap'));
  const day5=ca?.cells.filter(c=>c.day===5&&c.n>0&&completed(c.group,c.arm)&&c.arm.endsWith(c.group==='T'?'24':'72'))??[];
