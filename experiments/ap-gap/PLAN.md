@@ -48,3 +48,7 @@ After 200 completed FFM windows, observed low-orbit throughput threatened the la
 ## Amendment 2026-11-03: frame controls
 
 Before method 4, include XP (0,0) and full AP (31,20) controls alongside FRAME (0,1) and RESONANCE (1,0), at the same 72 h fit windows on GN/IG/GE. The frame table's paired changes use XP as control. This allows GN's frame contribution to be measured without importing unrelated AP5 row files.
+
+## Amendment 2026-11-03: GN control environment
+
+Method 3 sets XP2F_CONTROL=1 before importing the shared readers, exactly as cycle-ap5.sh truth2 does. AP6 regime arms retain cycle-ap6.sh's environment. The manifest records this switch. No GN fitter row had been run when this routing correction was made.
