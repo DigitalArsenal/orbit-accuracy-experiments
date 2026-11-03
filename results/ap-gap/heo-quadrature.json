@@ -1,0 +1,22 @@
+{
+  "complete": true,
+  "days": [
+    {
+      "day": 1,
+      "n": 26,
+      "maxDifferenceM": 1.79792021765246
+    },
+    {
+      "day": 3,
+      "n": 26,
+      "maxDifferenceM": 2.9960195191489625
+    },
+    {
+      "day": 7,
+      "n": 26,
+      "maxDifferenceM": 5.831210369216855
+    }
+  ],
+  "toleranceM": 0.001,
+  "passed": false
+}
