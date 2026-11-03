@@ -9,7 +9,7 @@ import { config, root, HOUR, DAY, iso, ms, rms, XM } from '../xp2-fit-design/com
 import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
 import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
 import { apForces, openAp } from '../operator-theory/lib/ap.mjs';
-import { openUssfXp } from '../operator-theory/lib/ussf-xp.mjs';
+import { openUssfXp } from './ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from '../operator-theory/lib/host.mjs';
 import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from '../operator-theory/lib/regimes.mjs';
 
@@ -26,6 +26,9 @@ const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starl
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
 // --arms U: the Space Force's SGP4-XP alone, in its own store. Without it, this file's registered arms, unchanged.
 const ONLY_U = false; const method = args.method ?? 'ap';
+const U = method === 'gn' ? await openUssfXp() : null;
+const UF = method === 'gn' && args['ussf-fixed'] ? await openUssfXp(args['ussf-fixed']) : null;
+const AF = method === 'gn' && args['ap-fixed'] ? await openAp(args['ap-fixed']) : null;
 const m = await openModules(), A = await openAp(args.wasm), F = method === 'ffm' ? await openFfmHost() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const ATM = XM.config.arms.X2.forces;
@@ -72,6 +75,13 @@ function safeMgex({ klass }) {
 
 async function objects() {
   const out = [];
+  if (GROUPS.includes('GN')) {
+    const cutoffs=XM.daysOf(XM.config.period.from,XM.config.period.to);
+    for (const o of XM.config.groups.GN.objects) {
+      if(frozen.EXCLUDE_NORADS.includes(o.norad)) throw new Error('excluded GN object');
+      out.push({...o,group:'GN',objectId:'',lines:T.series(o,cutoffs[0]-3*DAY,cutoffs.at(-1)+7*DAY).lines,cutoffs,arcs:method==='gn'?[24]:[72]});
+    }
+  }
   for (const o of STATIC.filter((x) => GROUPS.includes(x.group)).sort((a,b)=>GROUPS.indexOf(a.group)-GROUPS.indexOf(b.group))) {
     const files = o.files();
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
@@ -154,7 +164,21 @@ for (const o of await objects()) {
           row.arms[`${name}${hours}`] = a;
         };
         const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
-        if (method === 'ap') {
+        if (method === 'gn') {
+          for (const name of ['AP','XP','XP_PRIOR','U','AP_FIXED','XP_FIXED','U_FIXED']) await run(name,async()=>{
+            const ussf=name.startsWith('U');
+            const host=ussf?(name==='U'?U:UF):(name.endsWith('FIXED')?AF:A);
+            if(!host) throw new Error('fixed build unavailable');
+            const forces=name.startsWith('AP')?apForces(ATM,{tesseral:31,zonal:20}):{};
+            const fit=name==='XP_PRIOR'?{dragPrior:{mean:0,sigma:0.05},srpPrior:{mean:0,sigma:0.1}}:null;
+            const pcf=S.pcfBytes({forces,fit});
+            const extra=name.startsWith('AP')?ex:undefined;
+            const f=ussf?await host.fit(oem):await host.fit(oem,pcf,extra);
+            if(!f.ok) throw new Error(f.error);
+            const st=ussf?await host.propagate(f.omm,gridB,epochs.length):await host.propagate(f.omm,gridB,pcf,extra,epochs.length);
+            return {days:score(await m.rtn(await m.toAxes(st,epochs,'GCRF'),truth))};
+          });
+        } else if (method === 'ap') {
           const specs = args.arm ? args.arm.split(',') : ['AP','J70','T0','T12','Z0'];
           for (const name of specs) await run(name, async () => {
             const degrees = { tesseral: name === 'T0' || name === 'FRAME' ? 0 : name === 'T12' ? 12 : name === 'RESONANCE' ? 1 : 31,
