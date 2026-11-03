@@ -1,6 +1,6 @@
 # GP covariance realism, Part 1: label every stratum (registration)
 
-Registered 2026-11-03 before any dev or fresh row is read. Task experiments-gp-covariance-strata-20261103. Sections 0, 1, 3 (S1, S3, S4, S5), 4, 5 and 8 are the registered plan; section 6 records the owner-question defaults that apply. Nothing has been run.
+Registered 2026-11-03 before any dev or fresh row is read. Task experiments-gp-covariance-strata-20261103. This file carries Part 1 (sections 0, 1, 3 with S1, S3, S4, S5, 4, 5, 6 and 8); section 6 records the owner-question defaults that apply. Part 2's sections (2 and S2.1 to S2.3) are registered in `experiments/covariance-every-object/PLAN.md` by lane claude-covobj-d9 (task experiments-covariance-per-object-inflate-20261103, registered at 0a3a543 on its WIP ref). Nothing has been run.
 
 **Owner ruling, 11-03:** covariance realism is the study, and element-set accuracy is immaterial. No covariance shrinks unless independent truth shows the error shrank.
 
