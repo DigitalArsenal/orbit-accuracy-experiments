@@ -38,6 +38,16 @@ const ffm=JSON.parse(fs.readFileSync(new URL('ffm-builds.json',results))).varian
 const heo=JSON.parse(fs.readFileSync(new URL('heo-heap-builds.json',results))).variants;
 for(const v of [...Object.values(ffm),...Object.values(heo)])assert(v.returncode===0&&hash(v.path)===v.sha256,'variant artifact mismatch');
 assert(ffm.CONTROL.sha256==='c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2','FFM control differs from AP6');
+for(const kind of ['variants','ussf'])for(const v of Object.values(status.builds[kind].variants))assert(v.returncode===0&&hash(v.path)===v.sha256,kind+' historical artifact changed');
+assert(status.builds.variants.variants.CONTROL.sha256===config.baselineSha256,'AP rebuild control differs');
+const referenceFfm=new Map(all.filter(r=>r.batch==='resume-ffm').map(r=>[r.key,r]));
+let zonalIdentityPairs=0,maxZonalIdentityDeltaM=0;
+for(const r of all.filter(r=>r.batch==='resume-ffm-isolated'&&['GD','IG','GE','HX','HE'].includes(r.group)))for(const day of [1,3,7]){
+ const a=r.arms.ZONAL2072?.days?.[day]?.e,b=referenceFfm.get(r.key)?.arms.F72?.days?.[day]?.e;
+ if(Number.isFinite(a)&&Number.isFinite(b)){zonalIdentityPairs++;maxZonalIdentityDeltaM=Math.max(maxZonalIdentityDeltaM,Math.abs(a-b)*1000);}
+}
+assert(zonalIdentityPairs>0&&maxZonalIdentityDeltaM<=0.001,'degree-20 high-orbit identity control changed');
+
 const run=(label,key,options)=>{
  const out=path.join(root,`check-${Date.now()}-${label}`);
  const child=spawnSync(process.execPath,['experiments/ap-gap/ablate.mjs','--wasm',config.baselineWasm,'--out',out,'--primary-only','true','--groups',key.split('|')[0],'--key',key,...options],{encoding:'utf8',timeout:300000});
@@ -78,5 +88,5 @@ const maxVariantRepeatDeltaM=Math.max(...reproduced.map(r=>r.deltaM));
 assert(repeatDeltaM<=0.001&&maxVariantRepeatDeltaM<=0.001,'forward repeatability exceeds 0.001 m');
 assert(fixedArms>0&&maxFixedAgom<=1e-15,'fixed AGOM check failed');
 assert(maxURebuildDeltaM<=0.001,'Space Force rebuild control differs');
-const result={verdict:'PASS_SCOPED',rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
+const result={verdict:'PASS_SCOPED',binaryControlsMatched:true,zonalIdentityPairs,maxZonalIdentityDeltaM,rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
 fs.writeFileSync(path.join(root,'check-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
