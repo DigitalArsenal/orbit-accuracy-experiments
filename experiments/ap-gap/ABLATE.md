@@ -24,3 +24,5 @@ The inherited MGEX selector decoded all six held Galileo files in memory before 
 Build amendment: CONTROL, H03/H05/H07, NOFRAME, CLASS0–CLASS4 follow the dated PLAN amendment; each variant is compared to the source-matched CONTROL.
 
 Candidate ranking, specified before reading FFM subtraction results: require at least five paired day-3 windows and a positive median paired AP–FFM gap. Flag a candidate when removal of the term reduces the median absolute FFM-to-AP error distance by at least 50%. This is an exploratory ranking, not unique causal identification. The gap is a target ceiling; an actual module gain remains unmeasured.
+
+AP candidate ranking was added after the AP runs but before inspecting their ablation error values: require at least five paired windows and a positive baseline gap to FFM (HE: whiteroom XP). Flag an AP perturbation that recovers at least half that median paired gap. Report its observed paired gain as exploratory; forced resonance classes are diagnostics, never proposed production defaults.

@@ -26,3 +26,22 @@ export function diagnoseGn(all) {
  const supported=gap>0&&best?.gainM>=0.5*gap;
  return {group:'GN',n:triples.length,pairedGapM:gap,effects,cause:supported?`Candidate: ${best.arm==='fixed'?'short-arc AGOM estimation':'short-arc prior constants'}`:'Unresolved',candidate:supported?best:null,proposedChange:supported?best.arm==='fixed'?'Hold AGOM at its seed on 24 h GNSS arcs, subject to unread-window confirmation.':'Use the tested Space Force wrapper prior constants on 24 h GNSS arcs, subject to unread-window confirmation.':null,expectedGainM:supported?best.gainM:null,gainTargetCeilingM:gap>0?gap:null,interpretation:'Expected gain is the exploratory paired day-3 improvement of the tested arm; no independent confirmation.'};
 }
+
+export function diagnoseAp(all, diagnosis) {
+ const group=diagnosis.group;
+ const base=all.filter(r=>r.group===group&&r.batch==='resume-CONTROL');
+ const map=batch=>new Map(all.filter(r=>r.group===group&&r.batch===batch).map(r=>[r.key,r]));
+ const reference=map(group==='HE'?'historical-regimes':'resume-ffm');
+ const referenceArm=group==='HE'?'XP72':'F72';
+ const descriptions={H05:['Hansen evaluation threshold','Select the Hansen representation by eccentricity and numerical accuracy; confirm the 0.5 threshold on unread windows.'],H07:['Hansen evaluation threshold','Select the Hansen representation by numerical accuracy; confirm the 0.7 perturbation with a convergence guard on unread windows.'],NOFRAME:['epoch/date frame correction','Check the mean-element epoch frame and date-frame conversion jointly in fit and propagation.'],J70:['drag atmosphere replacement','Check AP atmospheric drag integration and the fit/weather coupling.'],T0:['tesseral replacement','Isolate the AP tesseral corrections responsible for the measured error increase.'],T12:['tesseral degrees above 12','Check the near-resonant and shallow tesseral terms above degree 12.'],Z0:['high-degree zonal tail','Check the averaged zonal tail above degree 5.']};
+ for(let k=0;k<=4;k++)descriptions['CLASS'+k]=['resonance-class selection','Review resonance bands and class transitions; a globally forced class is not a production fix.'];
+ const effects=Object.entries(descriptions).map(([arm,[term,change]])=>{
+  const variant=map(['J70','T0','T12','Z0'].includes(arm)?(group==='HE'||group==='HX'?'resume-heo':'resume-ap'):'resume-'+arm);
+  const armName=['J70','T0','T12','Z0'].includes(arm)?arm+'72':'AP72';
+  const pairs=base.map(r=>({b:error(r,'AP72'),v:error(variant.get(r.key),armName),ref:error(reference.get(r.key),referenceArm)})).filter(p=>[p.b,p.v,p.ref].every(Number.isFinite));
+  return {arm,term,change,n:pairs.length,gainM:median(pairs.map(p=>(p.b-p.v)*1000)),gapM:median(pairs.map(p=>(p.b-p.ref)*1000))};
+ }).filter(e=>e.n>=5).sort((a,b)=>b.gainM-a.gainM);
+ const best=effects.find(e=>e.gapM>0&&e.gainM>0&&e.gainM>=0.5*e.gapM);
+ if(!best)return {...diagnosis,apEffects:effects};
+ return {...diagnosis,apEffects:effects,pairedGapM:best.gapM,n:best.n,cause:'Candidate: '+best.term,candidate:best,proposedChange:best.change,expectedGainM:best.gainM,gainTargetCeilingM:best.gapM,reference:group==='HE'?'whiteroom XP':'FFM',interpretation:'Expected gain is the exploratory paired day-3 improvement from the AP perturbation, not independent confirmation.'};
+}
