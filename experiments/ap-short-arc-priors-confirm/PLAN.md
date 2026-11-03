@@ -73,3 +73,4 @@ No arm, window, margin or rule changes after this registration. A deviation is a
 ## Amendments
 
 1. 2026-11-03, before any window of this task was fitted or scored: the runner fork also carries the fix of `ap-heo-frame-confirm`'s amendment 1 (a kernel sampled less often than the 300 s grid keeps every state; one at the grid or faster keeps the lattice as before). Nothing else of the registration changes.
+2. 2026-11-03, after the run, wording only: in G1, 29 m is the record's threshold and a little under half of the read gain of 60.204 m, not exactly its half. The threshold, the windows and the rules are as registered.
