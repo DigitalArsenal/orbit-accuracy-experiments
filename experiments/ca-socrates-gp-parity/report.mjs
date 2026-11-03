@@ -284,6 +284,25 @@ if (a1.length) {
     }
     const armRuns = (invocations?.invocations ?? []).filter((x) => !x.part);
     if (armRuns.length) L.push(`How the arms were run: ${armRuns.map(invocationText).join('; ')}.`, '');
+    // Every row an arm has beyond a registered tolerance in comparison (i), with identifiers, and whether the 0.9.0 arm has the same row.
+    const beyondRows = (metrics) => Object.entries(metrics.geometry).flatMap(([cls, g]) => Object.entries(g.worst).flatMap(([kind, list]) => list.map((r) => ({ cls, kind, r, of: g.beyondTolerance[kind] }))));
+    for (const x of a1) {
+      const rows = beyondRows(x.metrics);
+      if (!rows.length) continue;
+      const before = beyondRows(readRepo(a3.baseline090[x.armName].metrics));
+      const same = (u, v) => u.cls === v.cls && u.kind === v.kind && u.r.pair.join('-') === v.r.pair.join('-') && u.r.socratesTcaUtc === v.r.socratesTcaUtc;
+      const KIND = { tcaNlrv: 'NLRV TCA > 10 ms', miss: 'miss > 5 m', speed: 'speed > 5 m/s' };
+      L.push(`### ${x.armName}: rows beyond a registered tolerance, against SOCRATES`, '');
+      L.push(`${rows.length} row${rows.length === 1 ? '' : 's'} (${Object.entries(x.metrics.geometry).map(([c, g]) => `${CLS[c]}: ${g.beyondTolerance.tcaNlrv} TCA, ${g.beyondTolerance.miss} miss, ${g.beyondTolerance.speed} speed`).join('; ')}). The ${a3.baseline090.version} ${x.armName} arm is compared row by row below.`, '');
+      L.push('| Class | Beyond | Pair | Names | SOCRATES TCA (UTC) | SOCRATES range (m) | SOCRATES speed (m/s) | Arm TCA (UTC) | ΔTCA (ms) | Δmiss (m) | Δspeed (m/s) | Stratum | The same row on 0.9.0 |', '| --- | --- | --- | --- | --- | ---: | ---: | --- | ---: | ---: | ---: | --- | --- |');
+      for (const u of rows) {
+        const v = before.find((w) => same(u, w));
+        const identical = v && JSON.stringify(v.r) === JSON.stringify(u.r);
+        L.push(`| ${CLS[u.cls]} | ${KIND[u.kind]} | ${u.r.pair.join(' × ')} | ${u.r.names.join(' × ')} | ${u.r.socratesTcaUtc} | ${u.r.socratesRangeM} | ${u.r.socratesSpeedMS} | ${u.r.screenTcaUtc} | ${(u.r.dtSeconds * 1000).toFixed(3)} | ${u.r.dMissM.toFixed(3)} | ${u.r.dSpeedMS.toFixed(3)} | ${u.r.stratum} | ${identical ? 'the same row, every field equal to the last digit' : v ? `the same row, other values (Δmiss ${v.r.dMissM.toFixed(3)} m)` : 'not on 0.9.0'} |`);
+      }
+      L.push('');
+      if (rows.some((u) => u.of > rows.filter((w) => w.cls === u.cls && w.kind === u.kind).length)) L.push('Only the first rows of a longer list are shown; all are in the arm\'s metrics file.', '');
+    }
     const cons = a1.find((x) => x.armName === 'console');
     if (cons) {
       const e = cons.cmp.excuses, sk = cons.cmp.consoleSkipFinding;

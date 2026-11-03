@@ -249,6 +249,14 @@ What moved in descriptions against 0.9.0: 66,691 encounters then, 66,685 now, 66
 
 How the arms were run: Part 3 console arm, first invocation, stopped: 1 process × 4 threads, 6 of 64 units; Part 3 console arm, the invocation that finished it: 3 processes × 4 threads, 58 of 58 units, 46.6 min; Part 3 descriptions arm, one invocation: 2 processes × 4 threads, 14 of 14 units, 2.43 min.
 
+### console: rows beyond a registered tolerance, against SOCRATES
+
+1 row (Both numbered below 100000, editions matched (GP on GP): 0 TCA, 1 miss, 0 speed; Edition mismatch: 0 TCA, 0 miss, 0 speed; An object numbered 100000 or above: 0 TCA, 0 miss, 0 speed). The 0.9.0 console arm is compared row by row below.
+
+| Class | Beyond | Pair | Names | SOCRATES TCA (UTC) | SOCRATES range (m) | SOCRATES speed (m/s) | Arm TCA (UTC) | ΔTCA (ms) | Δmiss (m) | Δspeed (m/s) | Stratum | The same row on 0.9.0 |
+| --- | --- | --- | --- | --- | ---: | ---: | --- | ---: | ---: | ---: | --- | --- |
+| Both numbered below 100000, editions matched (GP on GP) | miss > 5 m | 68439 × 13609 | TRANSPORTER-16 OBJECT Z × SL-12 R/B(AUX MOTOR) | 2026-10-29 01:15:18.715 | 4890 | 8716 | 2026-10-29T01:15:18.716Z | 0.644 | -6.484 | 1.413 | NLRV | the same row, every field equal to the last digit |
+
 ### Excuses in comparison (ii), and why none can hide a miss
 
 A1 explains a one-arm encounter in three cases. On this run they excuse 0 encounters: none. Unexplained, each a defect: 0. The threshold excuse's width per BSTAR band: 0.0001 <= |B*| < 0.001 6.65 m; |B*| < 0.0001 1.08 m; |B*| >= 0.001 1.90 m.
