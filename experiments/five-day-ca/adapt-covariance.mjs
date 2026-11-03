@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import {config,registration,analysisProvenance,hash} from './guard.mjs';
+import {readRows} from './statistics.mjs';
+import {gOf,scaled,axesMleRef,median,truthTerm} from '../ffm-covariance-adaptive/lib/model.mjs';
+registration();
+const constants=JSON.parse(fs.readFileSync('results/ffm-covariance-adaptive/frozen-constants.json')).classes;
+const rows=['regimes','truth2','truth'].flatMap(label=>readRows(`${config.store}/covariance/${label}`).map(r=>({...r,labelSource:label}))),inputs={};
+for(const label of ['regimes','truth2','truth']){const dir=`${config.store}/covariance/${label}`;if(fs.existsSync(dir))for(const f of fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));}
+const histories=Map.groupBy(rows,r=>`${r.norad}|${r.class}`),counts={adapted:0,emptyHistory:0,classMedian:0,historySamples:0};
+const D=86400000,axes=[0,2,5];
+for(const r of rows){const p=constants[r.class];if(!p)continue;const E=Date.parse(r.cutoff);for(const [arm,a]of Object.entries(r.arms).filter(([arm])=>arm.startsWith('F'))){const prior=(histories.get(`${r.norad}|${r.class}`)??[]).filter(h=>h.key!==r.key&&Date.parse(h.cutoff)>E-90*D&&Date.parse(h.cutoff)<E&&Number.isFinite(h.fitAvailableAt)&&h.fitAvailableAt<=E).map(h=>h.arms[arm]?.chi).filter(v=>Number.isFinite(v)&&v>0);a.chiRef=prior.length>=5?median(prior):p.classMedianChi;a.fitHistory=prior.length;}}
+
+for(const r of rows){const p=constants[r.class];if(!p)continue;const E=Date.parse(r.cutoff),before=(histories.get(`${r.norad}|${r.class}`)??[]).filter(h=>Date.parse(h.cutoff)<=E-3*D&&Date.parse(h.cutoff)>E-90*D&&Number.isFinite(h.fitAvailableAt)&&h.fitAvailableAt<=E);
+ for(const [arm,a]of Object.entries(r.arms).filter(([a])=>a.startsWith('F'))){const fitHistory={length:a.fitHistory},chiRef=a.chiRef;
+  for(const [day,v]of Object.entries(a.days??{})){const prior=before.map(h=>({row:h,arm:h.arms[arm],v:h.arms[arm]?.days?.[day]})).filter(h=>h.v&&Number.isFinite(h.v.availableAt)&&h.v.availableAt<=E);const u=axes.map((axis,k)=>axesMleRef(prior.map(h=>({e:h.v.errorM[k],a:gOf(h.arm.chi,h.arm.chiRef,p.a0,p.a1,+day*24)*h.v.covarianceM2[axis],c:r.class==='R2-O'?truthTerm(h.v.truthSigmaM):0})),p.n0));
+   const g=gOf(a.chi,chiRef,p.a0,p.a1,+day*24);v.baseCovarianceM2=v.covarianceM2;v.covarianceM2=scaled(v.baseCovarianceM2,g,u);v.adaptation={g,u,chiRef,history:prior.length,fitHistory:fitHistory.length};v.label=`C3-small ${r.class}; cutoff-available history; seven-day transfer`;
+   counts.adapted++;counts.emptyHistory+=!prior.length;counts.classMedian+=fitHistory.length<5;counts.historySamples+=prior.length;
+  }
+ }
+}
+const out=`${config.store}/adapted-covariance.jsonl`;fs.writeFileSync(out,rows.map(r=>JSON.stringify(r)).join('\n')+'\n');
+fs.writeFileSync('results/five-day-ca/covariance.json',JSON.stringify({provenance:analysisProvenance(),inputs,counts,rows:rows.length,outputSha256:hash(fs.readFileSync(out)),truthTerm:'used only when estimating history scale; forecast covariance excludes reference measurement variance'},null,2)+'\n');console.log(JSON.stringify(counts));

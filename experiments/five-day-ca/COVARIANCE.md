@@ -51,3 +51,11 @@ This artificial encounter population cannot establish operational rates.
 C2 defines its original classes by perigee. Applying them by the available
 GP altitude bands here is a labeled transfer, not a new calibration or a
 claim that C2 validated these groups, fits, or seven-day leads.
+
+Implementation audit: the first LS probe revealed that the fourth stored OMM
+noise value is s_d, not the dimensionless table coefficient c. Preserve the
+module-computed non-gravitational rate by scaling stored s_d by new c / old c
+(old drag c=1.275e-6); above-regime s_d remains zero. The incorrect probe is
+archived separately and excluded from all results. This corrects encoding,
+not the registered table or sample. C3 truth variance enters history scale
+estimation only; forecast covariance excludes measurement uncertainty.
