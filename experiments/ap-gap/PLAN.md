@@ -74,3 +74,9 @@ The mixed frame batch used AP6's weather store for GN, producing 740 missing-wea
 ## Amendment 2026-11-03: individual-body completion
 
 After the primary report, complete the already registered NO_SUN and NO_MOON arms on remaining eligible FFM windows. Selection is absence of the arm, not error magnitude. Preserve the prior canonical rows under ffm-bodies/before and each new row separately; merge only new arm keys. A finite 12-worker queue stops by 03:46:40 UTC, leaving time to preserve the final report. This does not close the missing shadow, zonal-only, or extended-resonance tests.
+
+## Amendment 2026-11-03: coordinator resume 3
+
+Resume in the exclusive apgap clone at 03:49:26 UTC; the two-hour deadline is 05:49:26 UTC. The original registration remains frozen. Complete the 170 missing individual-body windows in a fresh ffm-bodies-resume3 store with eight workers, leaving capacity for builds; preserve the prior store. Build isolated FFM shadow-off and zonal-degree-20 copies with source-matched controls. Keep the SRP force on for shadow-off, and preserve every nonzonal gravity coefficient for zonal truncation. Compare rebuilt control forecasts to the pinned control before attributing differences. Extend HEO resonant terms in native AP scratch source with a source-matched control; record the exact term set and limitations before the first new run. No native physics is implemented in JavaScript.
+
+The coordinator authorizes landing a time-boxed partial report with coverage stated. The final E2E must validate real forward repeatability, hold-out exclusions, artifact hashes, and every claimed completed arm. Its scoped pass must not imply that missing measurements or unresolved causes are complete. Proposed module tasks remain drafts for the coordinator because graph writes are prohibited.
