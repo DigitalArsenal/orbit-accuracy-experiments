@@ -12,7 +12,14 @@ if(execFileSync('git',['show',`663355c:${plan}`],{encoding:'utf8'}).trim()!==fs.
 const inputs={},signed=new Map(),all=[];
 for(const label of ['regimes','truth2','truth']){
  const dir=`${config.store}/cheap/${label}`;
- for(const f of fs.readdirSync(dir).filter(f=>/^encounter-errors-\d+\.jsonl$/.test(f))){const file=`${dir}/${f}`,data=fs.readFileSync(file,'utf8');inputs[file]=hash(data);for(const line of data.split('\n').filter(Boolean)){const r=JSON.parse(line);if(!/^S\d+$/.test(r.arm??''))continue;for(const [d,v]of Object.entries(r.days))signed.set(`${label}|${r.key}|${r.arm}|${d}`,v);}}
+ const baseline=new Map(readRows(dir).map(r=>[r.key,r]));
+ const supplementary=`${config.store}/samples/${label}`;
+ for(const r of readRows(supplementary))for(const [arm,a]of Object.entries(r.arms))for(const [day,v]of Object.entries(a.days??{}))for(const field of ['e','r','t','n'])if(v[field]!==baseline.get(r.key)?.arms?.[arm]?.days?.[day]?.[field])throw Error('supplementary S forecast differs from baseline');
+ for(const inputDir of [dir,supplementary]){
+  if(!fs.existsSync(inputDir))continue;
+  for(const f of fs.readdirSync(inputDir).filter(f=>/^encounter-errors-\d+\.jsonl$/.test(f))){const file=`${inputDir}/${f}`,data=fs.readFileSync(file,'utf8');inputs[file]=hash(data);for(const line of data.split('\n').filter(Boolean)){const r=JSON.parse(line);if(!/^S\d+$/.test(r.arm??''))continue;for(const [d,v]of Object.entries(r.days)){const key=`${label}|${r.key}|${r.arm}|${d}`;if(signed.has(key)&&JSON.stringify(signed.get(key))!==JSON.stringify(v))throw Error('signed S replay differs');signed.set(key,v);}}}
+  if(inputDir===supplementary)for(const f of fs.readdirSync(inputDir).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${inputDir}/${f}`]=hash(fs.readFileSync(`${inputDir}/${f}`));
+ }
  for(const f of fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));
  for(const r of readRows(dir))for(const [arm,a]of Object.entries(r.arms).filter(([a])=>/^S\d+$/.test(a)))for(const [d,v]of Object.entries(a.days??{}))all.push({key:r.key,object:r.norad,group:label==='truth'?'T':r.group,arc:+arm.slice(1),day:+d,cutoff:r.cutoff,rms:v,vector:signed.get(`${label}|${r.key}|${arm}|${d}`)});
 }
