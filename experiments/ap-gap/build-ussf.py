@@ -6,6 +6,7 @@ for name in ['CONTROL','FIXED']:
  p=s/name/'propagator/sgp4-xp'
  if not p.exists():
   shutil.copytree(m/'propagator/sgp4-xp',p,ignore=shutil.ignore_patterns('node_modules','dist','.git','third_party'))
+  (p/'node_modules').symlink_to(m/'node_modules',target_is_directory=True)
   (p/'third_party').symlink_to(m/'propagator/sgp4-xp/third_party',target_is_directory=True)
   (p.parents[1]/'foundation').symlink_to(m/'foundation',target_is_directory=True)
   (p.parents[1]/'node_modules').symlink_to(m/'node_modules',target_is_directory=True)
