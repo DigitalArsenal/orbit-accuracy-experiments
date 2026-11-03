@@ -327,6 +327,8 @@ Candidate: short-arc prior constants. Use the tested Space Force wrapper prior c
 
 The task record lists drag LEO as context with no AP arm. It is outside the registered ablation groups; no cause or module gain was measured here.
 
+The first final E2E incorrectly treated all HX windows as degree-20 FFM identity controls. The original maximum zonal difference was 0.299192469 m. A native replay confirmed degree 40 for the differing THEMIS window and reproduced its day-3 error within 0.001 m. The corrected identity assertion covers GD/IG/GE/HE; HX retains a separate degree-selection and repeatability check. No force setting or tolerance changed. See identity-scope.json.
+
 ## HEO quadrature check
 
 Fourfold sampling changes only the added degree-6–20 terms. Maximum paired forward-error differences, in meters: day 1: 1.798 (n=26); day 3: 2.996 (n=26); day 7: 5.831 (n=26). Criterion: ≤0.001 m on all 26 windows at every lead. Complete: true; passed: false. A failed check prevents attributing a higher-term gain to converged numerics.
