@@ -1,0 +1,62 @@
+{
+  "modulesCommit": "9a05d899b95242b358939ab1d68a776170a6b167",
+  "modulesCommitNote": "XM3's, XM6's and XP2's commit. On 2026-11-03 origin/main of space-data-network-modules is dd4dccac6 (fetched 2026-11-02 23:56 local): the propagator/ffm, analysis/estimation, propagator/sgp4 and foundation/frames wasm, their manifests and both host files are byte-identical at 9a05d899b, 039246731 and dd4dccac6; analysis/gp-error-model moved to 0.12.0 (9635bfd1982874735cc40e6d646ed76fc417d595294f6834c7026da5fa034b73, commit 16f1ef678, one SGP4 mode) and stays pinned at 0.11.0 here so the scorer equals XM3's, XM6's and XP2's for the equality proof",
+  "wasmFrom": "git show <modulesCommit>:<module>/dist/isomorphic/module.wasm and plugin-manifest.json, SHA-256 checked, copied to <store>/build/<modulesCommit>/; never a working tree",
+  "wasmSha256": {
+    "propagator/ffm": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+    "analysis/estimation": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd",
+    "propagator/sgp4": "2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643",
+    "analysis/gp-error-model": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19",
+    "foundation/frames": "486acaa334705b97d3a975b8a3d90f4bfd2428af77c6b5086c970ed1f24e27a4"
+  },
+  "manifestSha256Prefix": {
+    "propagator/ffm": "165fd160fdd9ec2f",
+    "analysis/estimation": "f3c63ac7c9d32aa6",
+    "propagator/sgp4": "8dd8399bfb20e4ac",
+    "analysis/gp-error-model": "1120b5dff8f5cbaf",
+    "foundation/frames": "c909a9fa03ced3cf"
+  },
+  "versions": {
+    "propagator/ffm": "com.orbpro.ffm 2.0.4",
+    "analysis/estimation": "com.digitalarsenal.analysis.estimation 0.7.0",
+    "propagator/sgp4": "SGP4/SDP4 Propagator 1.4.1",
+    "analysis/gp-error-model": "GP prediction-error model 0.11.0",
+    "foundation/frames": "Foundation Frames 0.2.0"
+  },
+  "hostFiles": {
+    "sha256": {
+      "propagator/ffm/catalog-configuration.mjs": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6",
+      "analysis/estimation/schemas/Estimation.fbs": "38c771916ffe63b1c404bc4d1826d7a85ddf50979d16a5f986f06b002b273aba"
+    },
+    "rule": "the modules checkout's copy equals modulesCommit (git diff --quiet) and the SHA-256 above (XM3's rule)"
+  },
+  "harness": {
+    "sha256": {
+      "harness/ffm-fit-v3.mjs": "42aa040a6944971e6c314551d7350aad0887bd51025228c1486c50b3a1b8ee9c",
+      "harness/ffm-execution.mjs": "b9308822efa8dea4ac05526a05eb8008314f6e0ae74bb0a0e1069d7ac7b71b1e",
+      "harness/prw.mjs": "f7c1ca85bdad35bce35c9a4808c3456f794293505bc6b9bea21f078d88f84985"
+    },
+    "rule": "the experiments' committed copies, SHA-256 checked at every run (XM3's values)"
+  },
+  "experimentsCode": {
+    "xm": { "dir": "experiments/xp-atmosphere-merit", "commit": "2c7b326d4fd1a4a79a325ce03ea053a81599c0fa", "verified": "unchanged at main 0d00736 (git diff --quiet)" },
+    "xm3": { "dir": "experiments/ffm-atmosphere-xm3", "commit": "ee2a513", "verified": "unchanged at main 0d00736; lib/ffm.mjs SHA-256 prefix 77d2dda8456ec278" },
+    "xm6LibFfm": { "ref": "refs/remotes/origin/wip/experiments-ffm-agom-prior-leo-20261031/runner", "commit": "d0a6175", "sha256": "567333124242a1e59bfa66a355d3ccba4445bb5cdc10b429f8dac657ea537c72", "note": "byte-identical to the blob in XM6's results commit dbaa1deb42bbdbc1254bbcbeefa10ca55e282f5c on origin wip/experiments-ffm-agom-prior-leo-20261031/results" },
+    "xp2": { "dir": "experiments/xp2-fit-design", "commit": "403b96a17a4b5523d9b2d166d92bcda933ff25b6", "verified": "unchanged at main 0d00736", "rsgaReaderSha256": "bfc7a3275eaf6113c88703136ab06f3bca59fcd2b160363efadad042ba953594" }
+  },
+  "inputs": {
+    "seeds": { "file": "results/ffm-covariance-calibration/seeds-R1R2.json", "sha256": "a5bb7d5f871ff0e214b733658aeb78adf776b17f9ea61850ea5058737af3adb4" },
+    "kernel": { "path": "/opt/data/sdn-archive/hac/naif-kernels/spk/planets/de440s.bsp", "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2" },
+    "earthOrientation": { "path": "/opt/data/sdn-archive/sdn-ap-baselines/environment/environment.json", "sha256": "520b825d61e64418d1904a482da49c647cb2f92765c9df736d14d90a6e61dcf6" },
+    "gfz": { "path": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt" },
+    "rsgaBundles": {
+      "2024": { "file": "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2024_RSGA.tar.gz", "sha256": "6ef07a2ebd3d96dca8d7972ef2406d863438e1a4157aa12acbbf6c797b7ff4cb" },
+      "2025": { "file": "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2025_RSGA.tar.gz", "sha256": "15e1507537918391e247a3daa2aa97d6d398556dfd50d2556d3dbb9e08c66897" }
+    },
+    "storedRows": { "xm3": "1af3adb87236", "xm6": "28a69158e229", "xp2": "e4cff2a36484" }
+  },
+  "hosts": {
+    "propagator/ffm, analysis/estimation": "the experiments' space-data-module-sdk 0.9.7 host/browser-module harness, one instance per worker (XM3's)",
+    "propagator/sgp4, analysis/gp-error-model, foundation/frames": "XM's lib/modules.mjs at 2c7b326, pinned at modulesCommit"
+  }
+}

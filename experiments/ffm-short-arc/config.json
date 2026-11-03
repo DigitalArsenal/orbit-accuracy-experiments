@@ -1,0 +1,133 @@
+{
+  "experiment": "ffm-short-arc",
+  "id": "FSA",
+  "frozen": true,
+  "task": "experiments-ffm-short-arc-fresh-20261031",
+  "lane": "claude-ffmshort-d9",
+  "store": "/opt/data/sdn-archive/ffm-short-arc",
+  "wipRef": "refs/heads/wip/experiments-ffm-short-arc-fresh-20261031/claude-ffmshort-d9",
+  "build": { "file": "experiments/ffm-short-arc/build.json", "note": "modules 9a05d899b; every wasm read with git show at that commit, SHA-256 checked, never a working tree" },
+  "code": {
+    "xm": { "dir": "experiments/xp-atmosphere-merit", "commit": "2c7b326d4fd1a4a79a325ce03ea053a81599c0fa", "use": "lib/truth.mjs, lib/public.mjs, lib/weather.mjs, lib/sds.mjs, lib/modules.mjs, common.mjs; must equal the commit (git diff --quiet)" },
+    "xm3": { "dir": "experiments/ffm-atmosphere-xm3", "commit": "ee2a513", "use": "common.mjs, lib/ffm.mjs (openFfm, settingsFor, driverRows), config.json fit and environment; must equal the commit" },
+    "xm6": { "ref": "refs/remotes/origin/wip/experiments-ffm-agom-prior-leo-20261031/runner", "commit": "d0a6175", "file": "experiments/ffm-agom-prior-leo/lib/ffm.mjs", "sha256": "567333124242a1e59bfa66a355d3ccba4445bb5cdc10b429f8dac657ea537c72", "use": "the arm taking its arc and prior; copied into lib/ffm.mjs here with the import paths changed and nothing else", "resultsRef": "refs/remotes/origin/wip/experiments-ffm-agom-prior-leo-20261031/results", "resultsCommit": "dbaa1deb42bbdbc1254bbcbeefa10ca55e282f5c", "resultsNote": "XM6's README and table.json are read from that origin ref by git show, never from a working tree; cited by receipt and commit" },
+    "xp2": { "dir": "experiments/xp2-fit-design", "commit": "403b96a17a4b5523d9b2d166d92bcda933ff25b6", "use": "lib/sgp4fit.mjs (S17LP, S17LPc), lib/rsga.mjs (the registered bulletin normalization, read by git show), rows for the P and S17LPc equality; must equal the commit" }
+  },
+  "spans": {
+    "primary": { "group": "P", "from": "2025-10-04", "to": "2025-12-21", "norads": [39452, 39451, 39453, 43476, 43477], "cutoffs": 79, "windows": 395, "isoWeeks": 12 },
+    "extension": { "group": "P", "from": "2025-01-01", "to": "2025-09-30", "norads": [39452, 39451, 39453], "cutoffs": 273, "windows": 819, "isoWeeks": 40 },
+    "s1": { "group": "S1", "from": "2025-10-05", "to": "2025-12-21", "norads": [39634, 62261], "cutoffs": 78, "windows": 156, "isoWeeks": 12 }
+  },
+  "verdictPool": { "P": ["primary", "extension"], "S1": ["s1"], "note": "the verdict of group P is on the pool (1,214 windows, 51 ISO weeks); spans and orbit groups printed beside; no pooling across groups" },
+  "groups": {
+    "P": {
+      "name": "drag-strong precise LEO (primary)",
+      "primaryArm": "A12",
+      "objects": [
+        { "norad": 39452, "name": "Swarm A", "truth": "swarm", "product": "SW_OPER_SP3ACOM_2__", "cluster": "Swarm A+C" },
+        { "norad": 39451, "name": "Swarm B", "truth": "swarm", "product": "SW_OPER_SP3BCOM_2__", "cluster": "Swarm B" },
+        { "norad": 39453, "name": "Swarm C", "truth": "swarm", "product": "SW_OPER_SP3CCOM_2__", "cluster": "Swarm A+C" },
+        { "norad": 43476, "name": "GRACE-FO 1", "truth": "gfz-rso", "code": "L64", "objectId": "2018-047A", "cluster": "GRACE-FO" },
+        { "norad": 43477, "name": "GRACE-FO 2", "truth": "gfz-rso", "code": "L65", "objectId": "2018-047B", "cluster": "GRACE-FO" }
+      ]
+    },
+    "S1": {
+      "name": "Sentinel-1 (drag-moderate, secondary)",
+      "primaryArm": "A24",
+      "objects": [
+        { "norad": 39634, "name": "Sentinel-1A", "truth": "sentinel1", "product": "S1A_OPER_AUX_POEORB_OPOD_", "cluster": "Sentinel-1" },
+        { "norad": 62261, "name": "Sentinel-1C", "truth": "sentinel1", "product": "S1C_OPER_AUX_POEORB_OPOD_", "cluster": "Sentinel-1" }
+      ]
+    }
+  },
+  "truth": {
+    "swarm": "/opt/data/sdn-archive/reference-states/reference (ESA SP3 COM, daily, 2024-12-28..2026-08-19)",
+    "sentinel1": "/opt/data/sdn-archive/reference-states/reference (Copernicus POEORB, daily; the last day of each month is missing)",
+    "gfz-rso": "/opt/data/sdn-archive/xp2-fit-design/reference (XP2's converted GFZOP RSO L64/L65 copies, 2025-10-01..12-28, read only)",
+    "rule": "XM's lib/truth.mjs: states, jump screen, thinning to 300 s; an arc holding under 90 % of its states is not fitted"
+  },
+  "arcRule": { "P": 12, "S1": 24, "note": "fixed before any fresh score from XM6's spent cells (PLAN.md); every arc runs on every group and is printed" },
+  "arms": {
+    "P": { "kind": "public", "label": "the newest Space-Track set with EPOCH and CREATION_DATE at or before the cutoff, its B*, propagator/sgp4 AFSPC", "reference": true },
+    "A12": { "kind": "ffm", "arcHours": 12, "endsAt": "cutoff", "bPriorFraction": 0.3, "agomPriorFraction": 0.3, "label": "FFM fitted to the last 12 h" },
+    "A24": { "kind": "ffm", "arcHours": 24, "endsAt": "cutoff", "bPriorFraction": 0.3, "agomPriorFraction": 0.3, "label": "FFM fitted to the last 24 h" },
+    "F2": { "kind": "ffm", "arcHours": 72, "endsAt": "cutoff", "bPriorFraction": 0.3, "agomPriorFraction": 0.3, "label": "XM3's F2: FFM fitted to the last 72 h", "reference": true },
+    "A12c": { "kind": "ffm", "arcHours": 12, "endsAt": "creation", "bPriorFraction": 0.3, "agomPriorFraction": 0.3, "label": "A12 with the arc ending at the set's creation (parity)" },
+    "A24c": { "kind": "ffm", "arcHours": 24, "endsAt": "creation", "bPriorFraction": 0.3, "agomPriorFraction": 0.3, "label": "A24 with the arc ending at the set's creation (parity)" },
+    "W12": { "kind": "ffm", "arcHours": 12, "endsAt": "cutoff", "bPriorFraction": 0.3, "agomPriorFraction": 10, "label": "A12 with AGOM's prior sigma at 1000 % of its seed (report only)", "reportOnly": true },
+    "S17LP": { "kind": "sgp4fit", "arcHours": 17, "endsAt": "cutoff", "bstar": "P", "label": "SGP4 fit_elements to the last 17 h with P's B* (data age), XP2's" },
+    "S17LPc": { "kind": "sgp4fit", "arcHours": 17, "endsAt": "creation", "bstar": "P", "label": "S17LP with the arc ending at the set's creation (the parity clock), XP2's" }
+  },
+  "parity": { "endsAt": "Tc = min(cutoff, the set's CREATION_DATE) (XP2 run.mjs:163)", "forecast": "from the arc's first state through cutoff + 7 d, scored in the cutoff's bins", "weather": "the cutoff's condition-O rows for every arm", "reportOnly": "parity cells restricted to sets created within 6 h of the cutoff" },
+  "fit": {
+    "source": "experiments/ffm-atmosphere-xm3/config.json fit and environment, unchanged (profile P0: C2's seeds, 10 m per axis, correction tolerance 0.01, sigma edit 5, at most 40 iterations; EGM2008 70 x 70, Sun and Moon DE440s, cannonball SRP, NRLMSISE-00, IERS 2010 solid tides and relativity; RK78 relative 1e-10, absolute 1e-7, initial 60 s, minimum 1e-4 s, maximum 120 s)",
+    "arc": "the truth's states in [end - L, end] thinned to 300 s (144, 288, 864 states); the reference epoch is the arc's first state",
+    "minimumCoverage": 0.9,
+    "stored": "fit record as XM3 stores it, plus the a posteriori sigma of B and AGOM from fit_batch's covariance (fitV3 covariance), a report-only diagnostic",
+    "loss": "not CONVERGED, a refused forecast, a module refusal (weather rows out of range) or a non-finite state: d = +Infinity in every bin (rule 3), never dropped; B at the bound 0 is converged, counted; an SGP4 fit with B* at or below 0 or unconverged fails its arm (XP2)"
+  },
+  "weather": {
+    "condition": "O, as issued: XM lib/weather.mjs rowsO (the newest RSGA issued at or before the cutoff, at most 72 h old; GFZ observed before it; trailing 81-day mean) with XM3's driver rule (hold-last through D0 + 8, A1's fill); rows from cutoff - 72 h - 3 d; the cutoff's rows for every arm",
+    "gfzHistory": "/opt/data/sdn-archive/hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "rsgaNormalized": "/opt/data/sdn-archive/xp2-fit-design/rsga/normalized (every bulletin 2024-11-01..2025-12-31 through experiments/xp2-fit-design/lib/rsga.mjs; a bulletin XM's parser reads is copied unchanged), SHA-256 of each file recorded in the store's inputs; the reader's SHA-256 in build.json",
+    "notRun": "condition M"
+  },
+  "scoring": {
+    "leadDays": [1, 2, 3, 7],
+    "gridSeconds": 300,
+    "binMinimumEpochs": 260,
+    "metric": "e: the 3D RMS position error of the bin (km) in the truth's RTN axes (analysis/gp-error-model 0.11.0 pair_statistics, XM's scorer); FFM arms GCRF as returned; P and the SGP4 arms TEME to GCRF by foundation/frames"
+  },
+  "statistics": {
+    "d": "ln(e_arm / e_ref); arm failed +Infinity; else reference failed -Infinity",
+    "bootstrap": { "draws": 10000, "levels": [0.975, 0.95], "primaryLevel": 0.975, "interval": "percentile (1.25 %, 98.75 %) at 97.5 %; (2.5 %, 97.5 %) at 95 %", "generator": "xorshift128+ seeded by SHA-256 (XM's)", "seed": "FSA|<group>|<span>|<arm>/<ref>|<lead>|<clusters>" },
+    "clusters": { "primary": "ISO week of the cutoff", "beside": "orbit group x ISO week" },
+    "rules": { "1": "the interval of the median d wholly below 0", "2": "the upper bound of the interval of ln(p95_arm / p95_ref) below ln 1.10", "3": "failures at most 1 % of pairs", "xm": "all three at every lead 1, 2, 3, 7" },
+    "nan": "+Infinity (against the arm)"
+  },
+  "families": {
+    "P": [
+      { "id": "P1", "arm": "A12", "ref": "P", "form": "xm", "leads": [1, 2, 3, 7], "power": "96.7 % (pool)" },
+      { "id": "P2", "arm": "A12", "ref": "F2", "form": "rule1", "leads": [1, 2, 3], "power": "100 % (pool)" },
+      { "id": "P3", "arm": "A12c", "ref": "P", "form": "xm", "leads": [1, 2, 3, 7], "power": "not computable from spent rows" },
+      { "id": "P4", "arm": "A24", "ref": "P", "form": "xm", "leads": [1, 2, 3, 7], "power": "70.8 % (pool)" },
+      { "id": "P5", "arm": "A12", "ref": "F2", "form": "rule1", "leads": [7], "power": "52-58 % (pool)" },
+      { "id": "P6", "arm": "A24c", "ref": "P", "form": "xm", "leads": [1, 2, 3, 7], "power": "not computable from spent rows" }
+    ],
+    "S": [
+      { "id": "S1", "arm": "A24", "ref": "P", "form": "rule1", "leads": [1, 2, 3], "power": "100 %", "printed": "rule 2 at every lead, not tested" },
+      { "id": "S2", "arm": "A24", "ref": "F2", "form": "rule1", "leads": [1, 2, 3], "power": "100 %", "printed": "day 7 with a no-loss reading: the upper bound of the median interval below ln 1.10" },
+      { "id": "S3", "arm": "A12", "ref": "F2", "form": "prediction-above0", "leads": [7], "power": "83 %", "note": "a registered prediction of a loss, not a pass" }
+    ],
+    "rule": "a statement is tested only if every earlier statement of its family passed; cells after a stop are printed and labeled not tested"
+  },
+  "storms": {
+    "apAtLeast": 40,
+    "days": ["2025-01-01", "2025-03-26", "2025-04-05", "2025-04-16", "2025-05-29", "2025-06-01", "2025-06-02", "2025-06-03", "2025-06-13", "2025-08-09", "2025-09-15", "2025-09-30", "2025-10-01", "2025-10-02", "2025-11-06", "2025-11-12", "2025-11-13"],
+    "classes": { "arc": "a storm day in the 72 h before the cutoff (one class for every arm)", "forecast": "a storm day in the forecast through the lead", "screening": "XM's: Ap at least 50 or any Kp at least 6" },
+    "postStorm": "the five cutoffs after each storm day: the median e of each arm beside P's"
+  },
+  "power": { "file": "experiments/ffm-short-arc/power.mjs", "output": "experiments/ffm-short-arc/power.json", "spans": 400, "draws": 1000, "nullSpans": 100, "rows": "XM6 /opt/data/sdn-archive/ffm-agom-prior-leo/rows (digest 28a69158e229) and XM3 /opt/data/sdn-archive/ffm-atmosphere-xm3/rows (digest 1af3adb87236)" },
+  "proof": {
+    "f2": { "windows": ["P|39452|2026-03-10", "S1|39634|2026-03-10", "P|43476|2026-02-13"], "against": "XM3's stored rows (arm F2, every number)" },
+    "shortArcs": { "windows": [{ "key": "P|39452|2026-01-22", "arms": ["A12", "A24"] }, { "key": "P|43476|2026-02-13", "arms": ["A24"] }], "against": "XM6's stored rows (every number)" },
+    "fresh": { "arms": ["P", "S17LPc"], "against": "XP2's stored rows for every window as it runs (rows digest e4cff2a36484); a miss writes DEFECT.json and stops every worker" }
+  },
+  "check": {
+    "windows": [
+      { "key": "P|39452|2025-11-05", "arms": ["A12", "A24", "A12c", "S17LPc", "P"] },
+      { "key": "P|43476|2025-10-20", "arms": ["F2", "A12", "S17LP"] },
+      { "key": "S1|39634|2025-11-12", "arms": ["A24", "W12", "P"] }
+    ],
+    "rule": "each named arm re-run and compared exactly with the stored row; the table rebuilt equal to the committed table.json byte for byte"
+  },
+  "workers": { "count": 8, "nice": 10, "heapMb": 6144, "freeMemoryFloorGiB": 16, "diskFloorGiB": 25, "pidFile": "<store>/logs/pids.json" },
+  "integrity": [
+    "XM's and XM3's windows (2026-01-01..05-31) are spent and not used",
+    "C2's hold-out from cutoff 2026-06-01 is barred; Swarm and GRACE-FO truth for 2026-10-31..11-28 is barred",
+    "C2's held-out objects and the ISS are out",
+    "never read: C2's held-out row files, B2 part 1a and part 5 files, census results, operator-capture content, C3-small's rows, the open-DCA test's rows and results, XM7's results",
+    "no fetch; every input is in the archive",
+    "no cell is read while the run goes; the table is built after every window is stored"
+  ]
+}
