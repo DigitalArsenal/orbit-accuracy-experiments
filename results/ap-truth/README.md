@@ -19,7 +19,7 @@ Everything below `## AP 0.4.0` is AP 0.3.0's record: build 783133149a, wasm 0b02
 | 1. Part T, `APRa12` and `AP24` do not lose, days 1, 2, 3, 7 | PASS: identical, 0.0 % [0.0, 0.0] at every day |
 | 2. `AP72` in `S1` and `GN` does not lose, days 1, 2, 3, 7 | PASS: identical in `S1`; in `GN` 0.0 % [0.0, 0.0], 95th upper at most +2.5 % |
 | 3. Part L, `low`, 48 h fits, does not lose at 24 h and 72 h | PASS: 0.000 km [0.000, 0.000] at both |
-| 3. Part L, `navigation`, 72 h fits, at 72 h and 168 h | 0.000 km [0.000, 0.000] at both. AP8.md says "do not lose", which this passes; `ap8-verdict.mjs` as committed tests "beats", carried over from AP7, which it fails. Not settled here; it does not change the outcome |
+| 3. Part L, `navigation`, 72 h fits, does not lose at 72 h and 168 h | PASS: 0.000 km [0.000, 0.000] at both. Fix to match the registered text, made after the verdict was read: `ap8-verdict.mjs` tested "beats" (bound 0), carried over from AP7, while AP8.md statement 3 says "do not lose"; the bound is now `NOLOSS_KM` (0.005 km) and the label matches. The run printed `fail` before the fix. The outcome does not change: statement 4 still fails |
 | 4. `DO`, `AP72` beats 0.4.11: rule 1 at days 1 and 3, rules 2 and 3 at days 1, 2, 3, 7 | **fail**: day 1 -0.9 % [-41.0, -0.2] passes rule 1; day 3 0.0 % [-0.9, 0.0] does not; 95th upper +13.1 % at day 2 and +12.6 % at day 7, over rule 2's bound |
 | 5. `LS` and `GD` do not lose, days 1, 2, 3, 7 | PASS: both 0.0 % [0.0, 0.0]; `LS` 95th upper at most -10.1 % |
 | 6. `DO`, `AP72` beats `XP72` at 0.4.17, report either way | fail: -93.8 % [-94.5, -92.2] at day 1, -74.0 % at day 3, but 95th upper +11.7 % at day 2 |

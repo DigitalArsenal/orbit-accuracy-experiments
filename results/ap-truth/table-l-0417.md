@@ -139,4 +139,4 @@
 | F-H20@48 | 406 | 0 | 0.0177 | 0.06 |  |
 
 **Part L, low, 0.4.17 does not lose to 0.4.11 at 48 h fits, at 24 h and 72 h:** PASS
-**Part L, navigation, 0.4.17 beats 0.4.11 at 72 h fits, at 72 h and 168 h:** fail
+**Part L, navigation, 0.4.17 does not lose to 0.4.11 at 72 h fits, at 72 h and 168 h:** PASS

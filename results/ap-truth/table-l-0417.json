@@ -4,7 +4,7 @@
  "pairs": 19377,
  "claims": {
   "low": "PASS",
-  "navigation": "fail"
+  "navigation": "PASS"
  },
  "cells": {
   "low/A-APo@48/24": {
