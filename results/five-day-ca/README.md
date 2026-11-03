@@ -37,6 +37,8 @@ Every expected arm/arc/day cell, including missing work and counted exclusion re
 
 Six-day replay: 120 scalars, 0 differences, maximum 0 m, 0 rejected. U accepts at most 1 m per scalar because of the library's documented query-order dependence; AP, XP, S and F require exact equality.
 
+E2E FAIL: 540 forecast-statistics cells, 108 AP5 paired cells, 6480 CA-reach cells, 0 synthetic rate cells and 0 paired proper-score cells; 0 missing forecast arm-days. Incomplete: covariance.json unmeasured; encounters.json unmeasured.
+
 Staged U replay: 1010 windows, 6032 differing scalars, maximum 0.6253305 m against the 1 m allowance; 0 old-lead differences. Installation provenance is in ussf-install.json.
 
 | Group | Arm | Day | n | Median km | p10–p90 km | Median 95% CI km | R/T/N RMS km | Disclosure |
