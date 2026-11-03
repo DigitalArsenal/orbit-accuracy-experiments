@@ -311,4 +311,4 @@ DO labels: {"event":0,"quiet":78,"unknown":72}. Labels use the same gated truth 
 
 ## E2E
 
-Verdict: FAIL on committed f33a3334a7ee7310f3ecd8873f3323cafa1b91ac. Forward day-3 errors 18.112 and 18.112 m; repeat difference 0.000 m against 0.001 m. Excluded rows 0 of 7569; maximum fixed AGOM 0 across 2247 fits; rebuilt control maximum state difference 0.000 m. Methods complete 3/5. Numeric checks passed; full coverage failed. No gauntlet run, receipt, or main push.
+Verdict: FAIL on committed daab05800bc264b93a932a869643b3e9f66c82f9. Forward day-3 errors 18.112 and 18.112 m; repeat difference 0.000 m against 0.001 m. Excluded rows 0 of 8037; maximum fixed AGOM 0 across 2247 fits; rebuilt control maximum state difference 0.000 m. Methods complete 3/5. Numeric checks passed; full coverage failed. No gauntlet run, receipt, or main push.

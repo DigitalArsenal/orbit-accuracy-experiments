@@ -1,5 +1,5 @@
 {
-  "rows": 7569,
+  "rows": 8037,
   "excludedRows": 0,
   "fixedArms": 2247,
   "maxFixedAgom": 0,
@@ -14,7 +14,7 @@
   "methodsRequired": 5,
   "verdict": "FAIL",
   "exitCode": 1,
-  "testedCommit": "f33a3334a7ee7310f3ecd8873f3323cafa1b91ac",
+  "testedCommit": "daab05800bc264b93a932a869643b3e9f66c82f9",
   "command": "env SDN_MODULES_ROOT=/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules node experiments/ap-gap/check.mjs",
   "reason": "Only 3 of 5 methods complete; numeric repeatability, exclusion, fixed-AGOM and rebuilt-control checks passed."
 }
