@@ -4,6 +4,8 @@ Exploratory on previously read AP5/AP6 windows. Errors are forward 3D RMS in met
 
 The inherited MGEX selector decoded six held Galileo files before filtering. No held object was fitted, scored, printed, or copied into the output rows. The coordinator authorized continuation with filename exclusions; resumed runs use the guarded selector.
 
+AP arms: J70 uses the XP atmosphere; T0/T12 cap tesseral degree at 0/12; Z0 disables the zonal tail; H03/H05/H07 set the native Hansen threshold; CLASS0–4 force the resonance class; NOFRAME disables the epoch/date frame correction. FRAME and RESONANCE use FORCES degree pairs (0,1) and (1,0). HEO12/20 add the registered native resonant term set; Q4/Q16 refine its Hansen quadrature. FFM NO_* arms remove the named force, ZONAL20 removes only zonal degrees above 20, D20 truncates all gravity degrees at 20, TESS12/31 cap tesseral degree, and O12/31 cap order. Fixed GN arms hold AGOM at zero; XP_PRIOR changes the drag/SRP prior sigmas to 0.05/0.1 with zero means.
+
 ## Named-cause summary
 
 | Group | Diagnosis | Paired day-3 gap m (n) | Tested AP/XP gain m | Proposed module change |
@@ -226,7 +228,7 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-HEO12/AP72 | AP72 | — (0) | — (0) | — (0) | — (0) | — (0) | — (0) |
 | resume-HEO12-heap/AP72 | AP72 | 594.540 (19) | 2857.790 (19) | 12477.196 (19) | -0.004 (19) | 0.887 (19) | -0.422 (19) |
 | resume-HEO20-heap/AP72 | AP72 | 600.752 (19) | 2779.168 (19) | 12339.201 (19) | -0.004 (19) | 0.887 (19) | -0.422 (19) |
-| resume-HEO20-q16/AP72 | AP72 | 631.127 (10) | 2838.012 (10) | 12722.326 (10) | 0.102 (10) | 29.848 (10) | 0.361 (10) |
+| resume-HEO20-q16/AP72 | AP72 | 600.752 (19) | 2779.168 (19) | 12339.201 (19) | -0.004 (19) | 0.887 (19) | -0.422 (19) |
 | resume-HEO20-q4/AP72 | AP72 | 600.752 (19) | 2779.168 (19) | 12339.201 (19) | -0.004 (19) | 0.887 (19) | -0.422 (19) |
 | resume-NOFRAME/AP72 | AP72 | 522.909 (19) | 2460.516 (19) | 12114.505 (19) | -6.285 (19) | -34.302 (19) | -51.989 (19) |
 | resume-ffm/F72 | F72 | 28.183 (19) | 62.258 (19) | 199.080 (19) | 0.000 (19) | 0.000 (19) | 0.000 (19) |
@@ -266,7 +268,7 @@ Unresolved. No module change established. Expected gain is unmeasured; paired AP
 | resume-HEO12/AP72 | AP72 | — (0) | — (0) | — (0) | — (0) | — (0) | — (0) |
 | resume-HEO12-heap/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | -0.000 (7) | -0.000 (7) | -0.000 (7) |
 | resume-HEO20-heap/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | -0.000 (7) | -0.000 (7) | -0.000 (7) |
-| resume-HEO20-q16/AP72 | AP72 | 663.054 (2) | 1740.233 (2) | 11591.532 (2) | -0.000 (2) | -0.000 (2) | -0.000 (2) |
+| resume-HEO20-q16/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | -0.000 (7) | -0.000 (7) | -0.000 (7) |
 | resume-HEO20-q4/AP72 | AP72 | 766.203 (7) | 2009.249 (7) | 7605.137 (7) | -0.000 (7) | -0.000 (7) | -0.000 (7) |
 | resume-NOFRAME/AP72 | AP72 | 660.391 (7) | 1385.637 (7) | 6540.730 (7) | -210.249 (7) | -420.103 (7) | -1669.688 (7) |
 | resume-ffm/F72 | F72 | 1003.361 (7) | 2209.874 (7) | 5115.058 (7) | 0.000 (7) | 0.000 (7) | 0.000 (7) |
@@ -329,7 +331,7 @@ The task record lists drag LEO as context with no AP arm. It is outside the regi
 
 Fourfold sampling changes only the added degree-6–20 terms. Maximum paired forward-error differences, in meters: day 1: 1.798 (n=26); day 3: 2.996 (n=26); day 7: 5.831 (n=26). Criterion: ≤0.001 m on all 26 windows at every lead. Complete: true; passed: false. A failed check prevents attributing a higher-term gain to converged numerics.
 
-Sixteenfold versus fourfold sampling: day 1: 0.000 m (n=12); day 3: 0.000 m (n=12); day 7: 0.000 m (n=12). Criterion unchanged at 0.001 m. Complete: false; passed: false.
+Sixteenfold versus fourfold sampling: day 1: 0.000 m (n=26); day 3: 0.000 m (n=26); day 7: 0.000 m (n=26). Criterion unchanged at 0.001 m. Complete: true; passed: true.
 
 Registered measurement methods attempted completely: 5/5. This counts recorded exclusions and failed historical attempts separately; it does not certify numerical convergence or identify every cause.
 
@@ -349,7 +351,7 @@ Registered measurement methods attempted completely: 5/5. This counts recorded e
 | resume-HEO12 | 26 | 0 | 40 | 0 | 0 |
 | resume-HEO12-heap | 26 | 0 | 0 | 0 | 0 |
 | resume-HEO20-heap | 26 | 0 | 0 | 0 | 0 |
-| resume-HEO20-q16 | 12 | 0 | 0 | 0 | 0 |
+| resume-HEO20-q16 | 26 | 0 | 0 | 0 | 0 |
 | resume-HEO20-q4 | 26 | 0 | 0 | 0 | 0 |
 | resume-NOFRAME | 426 | 12 | 45 | 0 | 0 |
 | resume-ap | 400 | 12 | 225 | 0 | 0 |
@@ -378,7 +380,6 @@ Registered measurement methods attempted completely: 5/5. This counts recorded e
 
 ## Coverage
 
-- Higher-degree HEO numerical convergence is unconfirmed; no production gain is attributed to these terms.
 - Unique causes and measured module gains are not established for every gap; follow-up tasks remain coordinator drafts.
 
 DO labels: {"event":0,"quiet":78,"unknown":72}. Labels use the same gated truth as the fits; no event-versus-quiet contrast was measured. Historical interrupted LS rows are excluded from aggregates. The initial mixed frame batch used the wrong weather store for GN; its failed attempt is retained, and resume-frame-gn is the corrected GN frame comparison. NO_SUN and NO_MOON include the finite completion queue; their exact coverage is shown in the tables. Optional O12 and O31 arms cover the initial FFM prefix only. Original FFM arms before that merge remain under ffm-bodies/before. Four identical FFM scheduling repeats are preserved but counted once. The first resumed AP batch predates the archive-read audit. Interrupted FFM workers did not flush their input audits; the resumed workers pin the files they read. Early HEO/control batches predate explicit streamed-kernel hashes. This limits input provenance for those rows. Build hashes and changed-source hashes are in builds.json, ffm-builds.json, heo-builds.json, heo-heap-builds.json, heo-quadrature-builds.json, heo-refinement-builds.json, and ussf-builds.json; scratch manifests retain full source provenance. The first HEO12 batch trapped because native term workspaces exceeded the wasm stack. Corrected HEO12-heap and HEO20-heap batches use thread-local workspaces and remain separate. HEO results cover the registered finite harmonic set; they do not prove convergence of every high-eccentricity harmonic. Full measurement coverage and resolved physical causes are separate claims; the E2E reports its scope explicitly.
