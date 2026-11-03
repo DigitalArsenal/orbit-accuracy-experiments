@@ -1,0 +1,14 @@
+{
+  "originalCheck": "Failed: HX was incorrectly assumed to use degree 20 throughout.",
+  "originalHxMaximumDifferenceM": 0.299192468879661,
+  "verifiedMixedHxGravityDegree": 40,
+  "repeatDeltaM": 0,
+  "repeatToleranceM": 0.001,
+  "identityGroups": [
+    "GD",
+    "IG",
+    "GE",
+    "HE"
+  ],
+  "interpretation": "The force settings are unchanged. HX uses the existing first-forecast-radius choice between degree 20 and 40; it is not a group-wide identity control."
+}

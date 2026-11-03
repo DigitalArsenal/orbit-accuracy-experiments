@@ -44,7 +44,7 @@ for(const kind of ['variants','ussf'])for(const v of Object.values(status.builds
 assert(status.builds.variants.variants.CONTROL.sha256===config.baselineSha256,'AP rebuild control differs');
 const referenceFfm=new Map(all.filter(r=>r.batch==='resume-ffm').map(r=>[r.key,r]));
 let zonalIdentityPairs=0,maxZonalIdentityDeltaM=0;
-for(const r of all.filter(r=>r.batch==='resume-ffm-isolated'&&['GD','IG','GE','HX','HE'].includes(r.group)))for(const day of [1,3,7]){
+for(const r of all.filter(r=>r.batch==='resume-ffm-isolated'&&['GD','IG','GE','HE'].includes(r.group)))for(const day of [1,3,7]){
  const a=r.arms.ZONAL2072?.days?.[day]?.e,b=referenceFfm.get(r.key)?.arms.F72?.days?.[day]?.e;
  if(Number.isFinite(a)&&Number.isFinite(b)){zonalIdentityPairs++;maxZonalIdentityDeltaM=Math.max(maxZonalIdentityDeltaM,Math.abs(a-b)*1000);}
 }
@@ -72,6 +72,12 @@ for(const name of ['NO_SHADOW','ZONAL20']){
  const e=r.arms[name+'72']?.days?.[3]?.e*1000;assert(Number.isFinite(e),`nonfinite ${name} forward error`);
  reproduced.push({arm:name,key:reference.key,forwardDay3M:e,referenceDay3M:reference.arms[name+'72'].days[3].e*1000,deltaM:Math.abs(e-reference.arms[name+'72'].days[3].e*1000)});
 }
+const hxReference=iso.find(r=>r.key==='HX|THEMIS A|2013-02-13');
+assert(Number.isFinite(hxReference?.arms.ZONAL2072?.days?.[3]?.e),'missing mixed-regime HX reference');
+const hxRow=run('HX_ZONAL20',hxReference.key,['--method','ffm','--arm','ZONAL20','--isolated-ffm','/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ffm-variants/manifest.json']);
+assert(hxRow.ffmGravityDegree===40,'mixed-regime HX must select degree 40');
+const hxError=hxRow.arms.ZONAL2072?.days?.[3]?.e*1000;assert(Number.isFinite(hxError),'nonfinite mixed-regime HX error');
+reproduced.push({arm:'HX_ZONAL20',key:hxReference.key,gravityDegree:hxRow.ffmGravityDegree,forwardDay3M:hxError,referenceDay3M:hxReference.arms.ZONAL2072.days[3].e*1000,deltaM:Math.abs(hxError-hxReference.arms.ZONAL2072.days[3].e*1000)});
 for(const degree of [12,20]){
  const name='HEO'+degree,reference=all.find(r=>r.batch==='resume-'+name+'-heap'&&r.key==='HX|THEMIS A|2013-02-11');
  assert(Number.isFinite(reference?.arms.AP72?.days?.[3]?.e),`no ${name} finite reference`);
@@ -93,5 +99,5 @@ const maxVariantRepeatDeltaM=Math.max(...reproduced.map(r=>r.deltaM));
 assert(repeatDeltaM<=0.001&&maxVariantRepeatDeltaM<=0.001,'forward repeatability exceeds 0.001 m');
 assert(fixedArms>0&&maxFixedAgom<=1e-15,'fixed AGOM check failed');
 assert(maxURebuildDeltaM<=0.001,'Space Force rebuild control differs');
-const result={reportStatusSha256:hash(new URL('status.json',results)),verdict:'PASS_SCOPED',binaryControlsMatched:true,zonalIdentityPairs,maxZonalIdentityDeltaM,rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,verifiedExecutionManifests:status.executionManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
+const result={reportStatusSha256:hash(new URL('status.json',results)),verdict:'PASS_SCOPED',binaryControlsMatched:true,hxMixedGravityDegree:hxRow.ffmGravityDegree,zonalIdentityGroups:['GD','IG','GE','HE'],zonalIdentityPairs,maxZonalIdentityDeltaM,rows,excludedRows:excluded,fixedArms,maxFixedAgom,maxURebuildDeltaM,forwardDay3M:baseline,repeatDeltaM,repeatToleranceM:0.001,reproduced,maxVariantRepeatDeltaM,verifiedRowFiles:status.rowFiles.length,verifiedInputManifests:status.inputManifests.length,verifiedExecutionManifests:status.executionManifests.length,...measured,unresolvedGroups:status.diagnoses.filter(d=>d.cause==='Unresolved').map(d=>d.group),reason:'Numeric and provenance checks passed for the measured report. Coverage and unresolved physical causes are stated explicitly; this is not unread-window confirmation.'};
 fs.writeFileSync(path.join(root,'check-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));
