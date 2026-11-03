@@ -1,5 +1,6 @@
 // Typed module calls and record transport; no orbital dynamics in JavaScript.
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {createRequire} from 'node:module';
 import {pathToFileURL} from 'node:url';
@@ -11,6 +12,7 @@ import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
 import * as fb from 'flatbuffers';
 import {createBrowserModuleHarness} from 'space-data-module-sdk/host/browser-module';
 import {windowTerms} from './window-terms.mjs';
+if(execFileSync('git',['show','2748823:experiments/five-day-ca/COVARIANCE.md'],{encoding:'utf8'}).trim()!==fs.readFileSync('experiments/five-day-ca/COVARIANCE.md','utf8').trim())throw Error('covariance registration changed');
 export const covarianceConfig=JSON.parse(fs.readFileSync(new URL('../covariance-config.json',import.meta.url)));
 for(const [file,pin]of Object.entries(covarianceConfig.constants))if(hash(fs.readFileSync(file))!==pin)throw Error(`covariance constants changed: ${file}`);
 export async function openPairStatistics(){
