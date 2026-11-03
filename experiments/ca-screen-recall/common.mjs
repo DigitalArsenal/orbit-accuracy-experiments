@@ -10,14 +10,16 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 export const here = path.dirname(fileURLToPath(import.meta.url));
 export const repo = path.resolve(here, '../..');
 export const config = JSON.parse(fs.readFileSync(path.join(here, 'config.json'), 'utf8'));
+export const a2 = JSON.parse(fs.readFileSync(path.join(here, 'config.a2.json'), 'utf8'));
 export const id = config.id;
 export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
-export const git = (...args) => execFileSync('git', ['-C', repo, ...args], { maxBuffer: 64 << 20, stdio: ['ignore', 'pipe', 'pipe'] });
+// The git store of this repository: the checkout, or EXPERIMENTS_GIT when the run works in a snapshot outside it.
+export const git = (...args) => execFileSync('git', ['-C', process.env.EXPERIMENTS_GIT ?? repo, ...args], { maxBuffer: 64 << 20, stdio: ['ignore', 'pipe', 'pipe'] });
 export const importFile = (file) => import(pathToFileURL(file).href);
 export const DAY_S = 86400;
 
 // The files that define a registered run. Everything else in this folder (report, verify) is read-only on the run.
-export const RUN_SOURCES = ['PLAN.md', 'config.json', 'common.mjs', 'access.mjs', 'reference.mjs', 'compare.mjs', 'run.mjs'];
+export const RUN_SOURCES = ['PLAN.md', 'config.json', 'config.a2.json', 'common.mjs', 'access.mjs', 'reference.mjs', 'compare.mjs', 'run.mjs'];
 
 // The modules checkout: --modules, then SDN_MODULES_ROOT, then its place in the stack.
 export function modulesRoot(flag) {
@@ -28,39 +30,58 @@ export function modulesRoot(flag) {
   return root;
 }
 
-// The modules, pinned by commit. Artifacts and manifests are read with `git show` from the pinned commit and checked
-// against their registered SHA-256; the working tree's build outputs are never read. The helper sources the run imports
-// (test libraries, not build outputs) must equal the commit's.
-export function pinnedModules(root) {
-  const pin = config.modules, run = (...args) => execFileSync('git', ['-C', root, ...args], { maxBuffer: 64 << 20, stdio: ['ignore', 'pipe', 'pipe'] });
-  try { run('cat-file', '-e', `${pin.commit}^{commit}`); } catch { throw new Error(`modules commit ${pin.commit} is not in ${root}`); }
-  try { run('diff', '--quiet', pin.commit, '--', ...pin.sources); } catch { throw new Error(`${pin.sources.join(', ')} differ from modules commit ${pin.commit}`); }
-  const show = (rel) => run('show', `${pin.commit}:${rel}`);
+// The modules, pinned by commit (Amendment A2: each module at its own). Artifacts and manifests are read with `git show`
+// and checked against their registered SHA-256; the helper sources the run imports come from `git archive` at the same
+// commit into workDir, with the checkout's installed packages linked read-only, so its working tree is never read.
+const PINS = a2.modules.pins;
+const moduleOf = (rel) => {
+  const key = Object.keys(PINS).find((m) => rel.startsWith(`${m}/`));
+  if (!key) throw new Error(`${rel} is in no pinned module`);
+  return key;
+};
+export function pinnedModules(checkout, workDir) {
+  const run = (...args) => execFileSync('git', ['-C', checkout, ...args], { maxBuffer: 256 << 20, stdio: ['ignore', 'pipe', 'pipe'] });
+  const show = (rel) => run('show', `${PINS[moduleOf(rel)].commit}:${rel}`);
+  const root = path.join(workDir, 'modules');
+  fs.mkdirSync(root, { recursive: true });
+  const artifacts = {};
+  for (const [tree, pin] of Object.entries(PINS)) {
+    const rel = `${tree}/${pin.artifact}`;
+    if (sha256(show(rel)) !== pin.sha256) throw new Error(`${rel} at ${pin.commit} has another SHA-256 than registered`);
+    artifacts[rel] = pin.sha256;
+    if (!fs.existsSync(path.join(root, tree))) {
+      execFileSync('tar', ['-x', '-C', root], { input: run('archive', pin.commit, tree), maxBuffer: 256 << 20 });
+      fs.symlinkSync(path.join(checkout, tree, 'node_modules'), path.join(root, tree, 'node_modules'));
+    }
+  }
   const artifact = (rel) => {
     const bytes = show(rel);
-    if (sha256(bytes) !== pin.artifacts[rel]) throw new Error(`${rel} at ${pin.commit} has another SHA-256 than registered`);
+    if (sha256(bytes) !== artifacts[rel]) throw new Error(`${rel} has another SHA-256 than registered`);
     return bytes;
   };
   const head = (() => { try { return { commit: run('rev-parse', 'HEAD').toString().trim(), dirty: run('status', '--porcelain', '--untracked-files=no').length > 0 }; } catch { return null; } })();
-  return { commit: pin.commit, artifacts: pin.artifacts, show, artifact, head };
+  return { root, pins: PINS, artifacts, show, artifact, head };
 }
 
-// Registration is machine-enforced: the plan, configuration and run sources must equal their committed content,
-// and the plan's commit must be on origin/main, before a registered run reads the element sets.
+// Registration is machine-enforced: the plan, configuration and run sources must equal their content at the registration
+// commit (Amendment A2), and that commit must be on origin, before a registered run reads the element sets.
 export function frozenPlan() {
   if (config.frozen !== true) throw new Error('config.json is not frozen; refusing to read the element sets');
+  const ref = a2.registration.ref;
+  const experimentCommit = git('rev-parse', `refs/remotes/origin/${ref}`).toString().trim();
+  const onOrigin = git('ls-remote', 'origin', `refs/heads/${ref}`).toString().split(/\s/)[0];
+  if (onOrigin !== experimentCommit) throw new Error(`origin ${ref} is ${onOrigin}, not ${experimentCommit}; push the registration first`);
   const sourceHashes = {};
   for (const file of RUN_SOURCES) {
     const rel = `experiments/${id}/${file}`;
     const bytes = fs.readFileSync(path.join(here, file));
     let committed;
-    try { committed = git('show', `HEAD:${rel}`); } catch { throw new Error(`${rel} is not committed`); }
-    if (!committed.equals(bytes)) throw new Error(`${rel} differs from HEAD; commit it before the run`);
+    try { committed = git('show', `${experimentCommit}:${rel}`); } catch { throw new Error(`${rel} is not in the registration ${experimentCommit}`); }
+    if (!committed.equals(bytes)) throw new Error(`${rel} differs from the registration ${experimentCommit}`);
     sourceHashes[file] = sha256(bytes);
   }
-  const planCommit = git('log', '-1', '--format=%H', '--', `experiments/${id}/PLAN.md`).toString().trim();
-  try { git('merge-base', '--is-ancestor', planCommit, 'origin/main'); } catch { throw new Error(`plan commit ${planCommit} is not on origin/main; push PLAN.md first`); }
-  return { planCommit, sourceHashes, experimentCommit: git('rev-parse', 'HEAD').toString().trim() };
+  const planCommit = git('log', '-1', '--format=%H', experimentCommit, '--', `experiments/${id}/PLAN.md`).toString().trim();
+  return { planCommit, sourceHashes, experimentCommit };
 }
 
 export function readSnapshot(archiveRoot = config.data.archiveRoot) {

@@ -93,7 +93,7 @@ for (const dir of argOf('--in').split(',')) {
     fs.writeFileSync(path.join(OUT, `${d.id}.bin`), Buffer.concat(parts.map((p) => Buffer.from(p.buffer, p.byteOffset, p.byteLength))));
     const { tracks: _, ...rest } = d;
     fs.writeFileSync(path.join(OUT, `${d.id}.json`), `${JSON.stringify({ ...rest, center: referenceDrawn ? 'reference' : 'AP', offsets: arms, referenceDrawn, steps: stepsOf(d, offsets.FFM) })}\n`);
-    index.push({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite });
+    index.push({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite, ...(d.showcase ? { showcase: true } : {}) });
   }
 }
 fs.writeFileSync(path.join(OUT, 'index.json'), `${JSON.stringify(index)}\n`);

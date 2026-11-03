@@ -132,10 +132,10 @@ if (fs.existsSync(path.join(NEW, 'providers')) && !argOf('--only')) {
   }
 }
 
-// Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's.
+// Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's. Never a showcase example: those are chosen to show AP's lead, not to be typical.
 if (argOf('--examples')) {
   const dir = argOf('--examples');
-  const examples = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => { const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')); return { id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite }; });
+  const examples = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))).filter((d) => !d.showcase).map((d) => ({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite }));
   for (const r of out) {
     const same = examples.filter((x) => x.reference === r.reference && x.regime === r.regime);
     const found = same.find((x) => x.satellite === r.satellite && (r.provider === 'All' || x.provider === r.provider)) ?? same.find((x) => r.provider !== 'All' && x.provider === r.provider) ?? (r.provider === 'All' ? same[0] : null);
