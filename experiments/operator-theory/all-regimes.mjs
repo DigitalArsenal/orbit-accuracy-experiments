@@ -10,7 +10,7 @@ import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
 import { apForces, openAp } from './lib/ap.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
-import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
+import { HX, STATIC, DO9, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
@@ -55,7 +55,7 @@ async function spkOnGrid(lines, axes) {
 
 async function objects() {
   const out = [];
-  for (const o of STATIC.filter((x) => GROUPS.includes(x.group))) {
+  for (const o of [...STATIC.filter((x) => GROUPS.includes(x.group)), ...(GROUPS.includes('DO9') ? DO9 : [])]) {
     const files = o.files();
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
     const series = SRC.chain(files);

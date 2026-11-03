@@ -12,12 +12,15 @@ const yyddd = (s) => Date.UTC(2000 + Number(s.slice(0, 2)), 0, 1) + (Number(s.sl
 
 const LATE_2025 = { from: Date.parse('2025-09-25T00:00:00Z'), to: Date.parse('2026-01-05T00:00:00Z') };
 const inPeriod = (t) => t >= LATE_2025.from && t <= LATE_2025.to;
+const SPRING_2026 = { from: Date.parse('2026-01-19T00:00:00Z'), to: Date.parse('2026-04-30T00:00:00Z') };
 const oemIn = (dir) => { const f = fs.readdirSync(dir).find((n) => n.endsWith('.oem')); return f ? path.join(dir, f) : null; };
 const laserFiles = (kind, target) => fs.readdirSync(REF).filter((d) => d.startsWith(`${kind}.orb.${target}.`) && inPeriod(yymmdd(d.split('.')[3]))).sort().map((d) => oemIn(path.join(REF, d))).filter(Boolean);
-const dorisFiles = (codes) => fs.readdirSync(POD).filter((d) => codes.some((c) => d.startsWith(`ssa${c}.`))).filter((d) => { const m = /\.b(\d{5})\.e(\d{5})/.exec(d); return m && inPeriod(yyddd(m[1])); }).sort().map((d) => oemIn(path.join(POD, d))).filter(Boolean);
+const dorisFiles = (codes, period = LATE_2025) => fs.readdirSync(POD).filter((d) => codes.some((c) => d.startsWith(`ssa${c}.`))).filter((d) => { const m = /\.b(\d{5})\.e(\d{5})/.exec(d); return m && yyddd(m[1]) >= period.from && yyddd(m[1]) <= period.to; }).sort().map((d) => oemIn(path.join(POD, d))).filter(Boolean);
 
+const DORIS_SATS = { 'Jason-3': ['ja330'], 'Sentinel-3A': ['s3a30'], 'Sentinel-3B': ['s3b30'], 'Sentinel-6A': ['s6a30'], 'Sentinel-6B': ['s6b30'], SARAL: ['srl20'], SWOT: ['swo20', 'swo30'], 'CryoSat-2': ['cs220', 'cs230'], 'HY-2C': ['h2c20', 'h2c30'], 'HY-2D': ['h2d20', 'h2d30'] };
 const LOW = { group: 'LS', arcs: [24, 72], cutoffs: every('2025-10-10', '2025-12-21', 5) };
 const ALT = { group: 'DO', arcs: [24, 72], cutoffs: every('2025-10-10', '2025-12-21', 5) };
+const ALT9 = { group: 'DO', arcs: [24, 72], cutoffs: every('2026-02-02', '2026-04-13', 5) };
 const GEOD = { group: 'GD', arcs: [72], cutoffs: every('2025-10-11', '2025-12-21', 7) };
 export const GROUPS = {
   LS: { label: 'Low orbit, laser spheres', provider: 'ILRS (NSGF)' },
@@ -31,10 +34,12 @@ export const GROUPS = {
 };
 export const STATIC = [
   ...['ajisai', 'starlette', 'stella', 'westpac', 'lares', 'larets'].map((t) => ({ ...LOW, name: t, files: () => laserFiles('nsgf', t) })),
-  ...[['Jason-3', ['ja330']], ['Sentinel-3A', ['s3a30']], ['Sentinel-3B', ['s3b30']], ['Sentinel-6A', ['s6a30']], ['Sentinel-6B', ['s6b30']], ['SARAL', ['srl20']], ['SWOT', ['swo20', 'swo30']], ['CryoSat-2', ['cs220', 'cs230']], ['HY-2C', ['h2c20', 'h2c30']], ['HY-2D', ['h2d20', 'h2d30']]].map(([name, codes]) => ({ ...ALT, name, files: () => dorisFiles(codes) })),
+  ...Object.entries(DORIS_SATS).map(([name, codes]) => ({ ...ALT, name, files: () => dorisFiles(codes) })),
   ...['lageos1', 'lageos2', 'etalon1', 'etalon2'].map((t) => ({ ...GEOD, name: t, files: () => laserFiles('ilrsa', t) })),
   { ...GEOD, name: 'lares2', files: () => laserFiles('nsgf', 'lares2') },
 ];
+// AP9.md: AP6's ten altimetry satellites on ten new weeks, truth files none of which the 0.4.18 build refit against. Run as group DO9, keyed as DO.
+export const DO9 = Object.entries(DORIS_SATS).map(([name, codes]) => ({ ...ALT9, name, files: () => dorisFiles(codes, SPRING_2026) }));
 export const MGEX_CUTOFFS = every('2025-10-04', '2025-10-13', 2);
 export const TESS = { group: 'HE', name: 'TESS', norad: 43435, objectId: '2018-038A', arcs: [72, 336], cutoffs: every('2026-07-27', '2026-09-10', 7), dir: '/opt/data/sdn-archive/hac/mast-tess/models', from: '2026-07-10T00:00:00Z', to: '2026-09-17T12:00:00Z' };
 const NAIF = '/opt/data/sdn-archive/hac/naif-kernels/spk/missions';
