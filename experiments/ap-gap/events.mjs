@@ -12,8 +12,8 @@ for(const o of STATIC.filter(o=>o.group==='DO')) {
   const ref=readReference(file);norad=ref.norad;const a=[],b=[],epochs=[];
   for(const l of ref.lines) {
    const t=ms(l.epoch);const previous=byEpoch.get(t)||[];
-   for(const p of previous){a.push(l);b.push(p);epochs.push(t);}
-   previous.push(l);byEpoch.set(t,previous);
+   for(const p of previous)if(p.file!==file){a.push(l);b.push(p.line);epochs.push(t);}
+   previous.push({file,line:l});byEpoch.set(t,previous);
   }
   if(a.length) {const e=await m.rtn(a,b);e.forEach((v,i)=>diffs.push({t:epochs[i],meters:Math.hypot(...v)*1000}));}
  }
