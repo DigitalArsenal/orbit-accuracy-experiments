@@ -21,7 +21,7 @@ const cacheFd=fs.openSync(cacheFile,'a');
 const project=(a,b)=>[.5*(a[2]+b[2]),Math.SQRT1_2*(a[1]+b[1]),a[0]+b[0]];
 const gp=(row,day)=>{
  const group=row.group,regime=mapping.mappings[row.key]??model.regimes[band[group]]?.id;
- const s=model.strata.find(s=>s.regime===regime&&day>s.ageDays[0]&&day<=s.ageDays[1]);
+ const s=model.strata.find(s=>s.regime===regime&&day>=s.ageDays[0]&&(day<s.ageDays[1]||(day===7&&s.ageDays[1]===7)));
  if(!s)return null;
  const c=cal.strata.find(c=>c.regimeIndex===s.regimeIndex&&c.ageIndex===s.ageIndex),p=s.clipped.covariance;
  if(!p)return null;

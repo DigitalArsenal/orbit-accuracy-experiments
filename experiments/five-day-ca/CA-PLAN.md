@@ -37,3 +37,13 @@ archive-based Pc is computed. Read the registered truth object's last state
 in the two hours ending at the cutoff; missing states are counted. The
 remaining homogeneous bands stay as listed above. No covariance scale is
 estimated from these states.
+
+## GP age-boundary correction — 2026-11-03
+
+The initial reach pass used upper-inclusive bins. The GP module's own
+age_bin implementation (analysis/gp-error-model/src/gp_error_model.cpp,
+line 337) uses [lo,hi), with the final endpoint 7 included. This source rule
+replaces the provisional convention above: exact day 5 uses [5,7], exact
+day 3 uses [3,5), and exact day 1 uses [1,2). All reach aggregates are
+regenerated before acceptance. This corrects an input-selection defect;
+it is not a result-dependent covariance choice or a refit.
