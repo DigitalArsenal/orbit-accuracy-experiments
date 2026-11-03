@@ -16,6 +16,7 @@ import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from '../operat
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const frozen = JSON.parse(fs.readFileSync(new URL('./config.json', import.meta.url))); if (!frozen.frozen) throw new Error('registration is not frozen');
+const resume = JSON.parse(fs.readFileSync(new URL('./resume-config.json',import.meta.url))); if (!resume.frozen) throw new Error('resume registration is not frozen');
 const hash = p => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 if (args.wasm === frozen.baselineWasm && hash(args.wasm) !== frozen.baselineSha256) throw new Error('AP build mismatch');
 const OUT = args.out, GROUPS = (args.groups ?? 'LS,DO,GD,IG,GE,HE').split(',');
@@ -48,7 +49,7 @@ const ffmHigh = () => ({
 });
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
-fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
+fs.writeFileSync(path.join(OUT, `manifest-${SHARD}-${Date.now()}.json`), JSON.stringify({ command: process.argv, xp2Control: process.env.XP2F_CONTROL === '1', created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), registration: hash(new URL('./ABLATE.md',import.meta.url)), resume: hash(new URL('./resume-config.json',import.meta.url)), plan: hash(new URL('./PLAN.md',import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance, ussf: U?.provenance, ussfFixed: UF?.provenance, ussfRebuilt: UR?.provenance, apFixed: args['ap-fixed'] ? {path:args['ap-fixed'],sha256:hash(args['ap-fixed'])} : undefined },null,2));
 process.on('exit', () => writeAudit(OUT, SHARD));
 process.on('SIGTERM',()=>process.exit(143));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
@@ -136,7 +137,7 @@ for (const o of await objects()) {
   const between = (a, b) => { const out = []; for (let i = 0; i < times.length; i += 1) if (times[i] >= a && times[i] <= b) out.push(o.lines[i]); return out; };
   for (const D0 of o.cutoffs) {
     const key = windowKey(o.group, o.name, D0);
-    if (Date.now() >= Date.parse(frozen.deadline)) { await F?.close(); process.exit(0); }
+    if (Date.now() >= Date.parse(resume.deadline)) { await F?.close(); process.exit(0); }
     if (!inShard(key) || done.has(key) || (args.key && key !== args.key)) continue;
     const row = { key, group: o.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
     try {
