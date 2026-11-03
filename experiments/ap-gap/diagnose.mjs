@@ -28,7 +28,7 @@ export function diagnoseGn(all) {
  return {group:'GN',n:triples.length,pairedGapM:gap,effects,cause:supported?`Candidate: ${best.arm==='fixed'?'short-arc AGOM estimation':'short-arc prior constants'}`:'Unresolved',candidate:supported?best:null,proposedChange:supported?best.arm==='fixed'?'Hold AGOM at its seed on 24 h GNSS arcs, subject to unread-window confirmation.':'Use the tested Space Force wrapper prior constants on 24 h GNSS arcs, subject to unread-window confirmation.':null,expectedGainM:supported?best.gainM:null,gainTargetCeilingM:gap>0?gap:null,interpretation:'Expected gain is the exploratory paired day-3 improvement of the tested arm; no independent confirmation.'};
 }
 
-export function diagnoseAp(all, diagnosis) {
+export function diagnoseAp(all, diagnosis, heoConverged=false) {
  const group=diagnosis.group;
  const base=all.filter(r=>r.group===group&&r.batch==='resume-CONTROL');
  const map=batch=>new Map(all.filter(r=>r.group===group&&r.batch===batch).map(r=>[r.key,r]));
@@ -44,7 +44,7 @@ export function diagnoseAp(all, diagnosis) {
   return {arm,term,change,n:pairs.length,gainM:median(pairs.map(p=>(p.b-p.v)*1000)),gapM:median(pairs.map(p=>(p.b-p.ref)*1000))};
  }).filter(e=>e.n>=5).sort((a,b)=>b.gainM-a.gainM);
  if(group==='GE')return {...diagnosis,cause:'AP leads FFM in group medians; paired-window effects vary',candidate:null,proposedChange:'Preserve GE as a nonregression control for proposed module changes.',expectedGainM:null,apEffects:effects};
- const best=effects.find(e=>e.gapM>0&&e.gainM>0&&e.gainM>=0.5*e.gapM);
+ const best=effects.find(e=>(!e.arm.startsWith('HEO')||heoConverged)&&e.gapM>0&&e.gainM>0&&e.gainM>=0.5*e.gapM);
  if(!best)return {...diagnosis,apEffects:effects};
  return {...diagnosis,apEffects:effects,pairedGapM:best.gapM,n:best.n,cause:'Candidate: '+best.term,candidate:best,proposedChange:best.change,expectedGainM:best.gainM,gainTargetCeilingM:best.gapM,reference:group==='HE'?'whiteroom XP':'FFM',interpretation:'Expected gain is the exploratory paired day-3 improvement from the AP perturbation, not independent confirmation.'};
 }
