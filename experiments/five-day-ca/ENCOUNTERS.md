@@ -39,3 +39,13 @@ specified covariance arms are AP, XP, FFM, S and GP. No U covariance is
 specified; U remains in the forecast and reach tables. No U covariance is
 invented. Every registered window stays in the draw pool, including failed
 fits and absent truth, with missing primary/secondary products counted.
+
+## A13 pair classes — 2026-11-03, before calibrated encounter draws
+
+Execute both A13 classes on identical registered draws: fit x fit (the
+secondary uses the primary's arm) and fit x GP (the secondary always uses
+its cutoff-available public GP set). In either class the GP primary is the
+GP x GP reference. Report the class beside every rate and paired score;
+its repeated GP reference is identified, not pooled as independent data.
+The old partial S table covered fit x fit only. This completes the requested
+A13 comparison without changing windows, geometry, seeds or thresholds.
