@@ -1,7 +1,7 @@
 {
  "status": "DRAFT: items marked PENDING await Part 1",
  "freezeDeadlineUtc": "2026-11-09T23:59:00Z",
- "codeSha256": "e0eeaaebe03c724f3244c65335df8fa99af8bf273b0d9bfd16799a36eeb9fdc5",
+ "codeSha256": "3354d7baf12d1e5f30596974a2e6ba11d5511664a9e3e0ba3f19cea3cab9c381",
  "codeFilesSha256": {
   "PLAN.md": "c12bb546d205826dfd2d4edb723019ac20446c0d69961faf9687ed7468ad409a",
   "audit.mjs": "377bda408fedbbc9fbee2ade8e8d8d6ee392294840223045347650dd4f4837b4",
@@ -18,12 +18,14 @@
   "lib/linalg.mjs": "a9d734397d89c203eba416a696dd1f8700b3ffedfe6eba75701d02d39a25f5ac",
   "lib/n0sim.mjs": "aa62fc1097e566318f1ca90b4b662cd9da0ebf63be704ac3aacfe603cd2bc176",
   "lib/pairs.mjs": "36f843f6a173b439bf7526dba118d05ad3fb333bc61c4967aae0574f9d12646a",
+  "lib/s2-synth.mjs": "00b65d6b686e1524a72118160f464d9e01c86d98a3e872f3f3bfe9502494ee60",
+  "lib/s2.mjs": "a1696923ec731139a1695c3bef8eef8612e36b3199e6c0dd3c3b48203d363253",
   "lib/sgp4.mjs": "86471b532bd9885bc4be1b5c449b0b9a74242a191d1c6e4d02447ab1d7a89aa1",
   "lib/synth.mjs": "190e1e81e22fd2c7c0059bfd79d2ef96d12ab8437565b6e9c510243ba478f651",
   "n0.mjs": "909429279a9928914d805df38bd3d88d51e3e563dcc2849bbe9bc56da8e5a580",
   "pairs-worker.mjs": "da0b41b92983635c4dd36e869fd9841367af36d038587cf9eabee351cbabcea1",
   "pairs.mjs": "4bd93386904f8c02765ecaf8b7191fb73dc3aabffda86e45a58711389c6d14dc",
-  "run.mjs": "87ffe6c88fe85d89b702071648fffe43423adeaa268921932df98de8f84932ee",
+  "run.mjs": "c9d9712cc68aa504fa7ea9889814d8157d5a547857821691f531a6621045502e",
   "truth-objects.json": "5f45018e27985460e5891e7030ee5acd9db48fa9efeb458ad47be3fa57b1e875"
  },
  "inputs": {

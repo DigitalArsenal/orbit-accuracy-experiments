@@ -14,3 +14,7 @@ One early name scan of a single day's creation file used a loose pattern and pri
 Contains modified Copernicus Sentinel data (2025-2026).
 
 WAAS MT9 data: NASA Crustal Dynamics Data Information System (CDDIS).
+
+`daily/2026-10-20.json` and its `manifest.json` entry are a smoke test of the daily job on an archived day (first 150 objects of each of 8 workers), not an issue day.
+
+The daily catalog applies the same row predicate as the dev rows, so the ISS, Swarm, GRACE-FO and the other C2 calibration objects are absent from it.

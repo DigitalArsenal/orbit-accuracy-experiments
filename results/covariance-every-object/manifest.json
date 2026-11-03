@@ -1,3 +1,6 @@
 {
- "2026-10-20.jsonl": "99335b2b0d799f3e48b506477a86a5eb5e5c99a38d1b380f69c7ebaf0e2ae77b"
+ "2026-10-20.jsonl": "99335b2b0d799f3e48b506477a86a5eb5e5c99a38d1b380f69c7ebaf0e2ae77b",
+ "_labels": {
+  "2026-10-20.jsonl": "smoke test on an archived day, not an issue day; first 150 objects of each of 8 workers"
+ }
 }

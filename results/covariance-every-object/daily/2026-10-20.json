@@ -49,5 +49,6 @@
    "base": 0,
    "flagged": 0
   }
- }
+ },
+ "smokeTest": "archived day, not an issue day"
 }

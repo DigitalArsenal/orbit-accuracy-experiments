@@ -1,6 +1,8 @@
 // Part 2 acceptance runner. `--check`: each item prints PASS, FAIL, PENDING or NOT EVALUABLE; exit 0 unless an item FAILs.
 import fs from 'node:fs'; import crypto from 'node:crypto';
 import { TRUTH, C2_HELD_NORADS } from './lib/hold.mjs';
+import { synthRows } from './lib/s2-synth.mjs';
+import { evalS21, s21Null, s21Power, evalS22, evalS23 } from './lib/s2.mjs';
 import { rng, normal, synthP } from './lib/synth.mjs';
 import { floorCov, minGenEig, dFactors, uHat, encounterBasis, project } from './lib/inflate.mjs';
 
@@ -64,6 +66,13 @@ export function acceptanceF() {
   for (const [file, h] of Object.entries(man)) { const p = `/opt/data/sdn-archive/covariance-every-object/daily/${file}`; if (fs.existsSync(p) && crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex') !== h) mism.push(file); }
   return { status: bad.length || mism.length ? 'FAIL' : 'PASS', perObjectValueFiles: bad, manifestMismatches: mism, dailyFilesListed: Object.keys(man).length };
 }
+export function s2Code() {
+  const strong = synthRows({ erraticShare: 0.2, erraticScale: 2 }), none = synthRows({ erraticShare: 0, seed: 9 });
+  const nullFP = s21Null(none.map((r) => ({ ...r, flagged: r.cluster === 'c0' ? true : false })), { perms: 100, inner: 100 }), power = s21Power(strong, { reps: 60, inner: 100 });
+  const s22 = evalS22(strong, { B: 500 }), s21r = evalS21(strong, { B: 500, nullPower: { falsePositive: nullFP, power } }), s23 = evalS23([{ name: 'synthetic', rows: strong.map((r) => ({ ...r })), o1b: false }]);
+  const ok = nullFP <= 0.1 && power >= 0.8 && s21r.state === 'PASS' && s22.state === 'PASS';
+  return { status: ok ? 'PASS' : 'FAIL', note: 'evaluators exercised on synthetic rows only; no Part 1 row is read', nullFalsePositive: nullFP, power, s21: s21r.state, s22: s22.state, s23: s23.state };
+}
 const PENDING = (why) => ({ status: 'PENDING', reason: why });
 if (process.argv[1] && process.argv[1].endsWith('run.mjs') && process.argv.includes('--check')) {
   const items = {
@@ -73,6 +82,7 @@ if (process.argv[1] && process.argv[1].endsWith('run.mjs') && process.argv.inclu
     d: acceptanceD(),
     e: PENDING('Part 1 frozen-constants.json not yet committed'),
     f: acceptanceF(),
+    s2code: s2Code(),
     g: { S2_1: 'PENDING', S2_2: 'PENDING', S2_3: 'PENDING' },
   };
   console.log(JSON.stringify(items, null, 2));
