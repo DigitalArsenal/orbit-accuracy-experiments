@@ -75,7 +75,9 @@ async function objectsOf(id, g, ctx) {
         const series = await spkObjectSeries(cfg.modulesRoot, { files, source: 'ap-confirm-heo', id: o.id, name: o.name, norad: o.norad, fromUtc: o.from, toUtc: o.to, stride: 1 });
         const norm = series.lines.map((l) => ({ ...l, epoch: new Date(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`)).toISOString() }));
         const first = Math.round(ms(norm[0].epoch) / 1000) * 1000, grid = XM.config.scoring.gridSeconds * 1000;
-        const thin = norm.filter((l) => (Math.round(ms(l.epoch) / 1000) * 1000 - first) % grid === 0).map((l) => ({ ...l, epoch: new Date(Math.round(ms(l.epoch) / 1000) * 1000).toISOString() }));
+        // A kernel sampled more often than the grid keeps the grid's lattice; one sampled less often keeps every state (its segments can start a second off each other, which a lattice would drop).
+        const coarse = norm.length > 1 && ms(norm[1].epoch) - ms(norm[0].epoch) > grid;
+        const thin = norm.filter((l) => coarse || (Math.round(ms(l.epoch) / 1000) * 1000 - first) % grid === 0).map((l) => ({ ...l, epoch: new Date(Math.round(ms(l.epoch) / 1000) * 1000).toISOString() }));
         out.push(fromLines(o.name, o.norad, o.objectId ?? '', await axes.convert(thin, 'EME2000', 'GCRF')));
       }
     } finally { await axes.close(); }
@@ -162,7 +164,7 @@ export async function run(configUrl) {
         try {
           const after = o.range(D0 + 1, D0 + 7 * DAY);
           const first = after.length ? ms(after[0].epoch) : 0;
-          const grid = after.filter((l) => (ms(l.epoch) - first) % gridMs === 0);
+          const grid = o.step > GRID ? after : after.filter((l) => (ms(l.epoch) - first) % gridMs === 0);
           const bins = Object.fromEntries(LEADS.map((k) => [k, grid.filter((l) => { const t = ms(l.epoch); return t > D0 + (k - 1) * DAY && t <= D0 + k * DAY; })]));
           const entered = LEADS.filter((k) => bins[k].length >= minBin);
           if (!entered.length) throw new Error('no lead bin');

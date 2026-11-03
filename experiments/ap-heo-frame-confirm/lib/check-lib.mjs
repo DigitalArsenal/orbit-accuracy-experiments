@@ -35,11 +35,12 @@ export async function check({ dir, results, registration, replay = [], reference
     note(Date.parse(m.started) >= regTime, `${m.f}: started before the registration`);
     note(spawnSync('git', ['-C', root, 'merge-base', '--is-ancestor', registration, m.commit]).status === 0, `${m.f}: its commit does not descend from the registration`);
     for (const [name, b] of Object.entries(cfg.builds)) note(m.pins[name] === b.sha256, `${m.f}: pin ${name} differs`);
-    for (const rel of cfg.sources) {
-      note(m.sources[rel] === sha256(fs.readFileSync(path.join(root, rel))), `${m.f}: ${rel} changed since the run`);
-      note(m.sources[rel] === sha256(gitBytes('show', `${m.commit}:${rel}`)), `${m.f}: ${rel} was not committed unchanged at ${m.commit.slice(0, 9)}`);
-    }
+    for (const rel of cfg.sources) note(m.sources[rel] === sha256(gitBytes('show', `${m.commit}:${rel}`)), `${m.f}: ${rel} was not committed unchanged at ${m.commit.slice(0, 9)}`);
   }
+  // A source amended during the run (PLAN.md, Amendments) leaves older manifests with the older hash; the newest manifest must carry the files as they are now, and the replays below run the files as they are now.
+  const newest = manifests.reduce((a, b) => (Date.parse(b.started) > Date.parse(a.started) ? b : a), manifests[0]);
+  for (const rel of cfg.sources) note(newest?.sources[rel] === sha256(fs.readFileSync(path.join(root, rel))), `${rel} changed since the newest manifest ${newest?.f}`);
+  const generations = [...new Set(manifests.map((m) => m.commit))];
   for (const [name, b] of Object.entries(cfg.builds)) note(sha256(fs.readFileSync(b.file)) === b.sha256, `build ${name} differs from its pin`);
 
   // 3. Rows: registered groups and cutoffs, no held object or date, no duplicate, nothing older than the registration, every planned key present.
@@ -102,7 +103,7 @@ export async function check({ dir, results, registration, replay = [], reference
   }
 
   console.log(readme);
-  const result = { verdict: failures.length ? 'FAIL' : 'PASS', registration, registrationTime: new Date(regTime).toISOString(), testedCommit: git('rev-parse', 'HEAD'), manifests: manifests.length, rows: rows.length, plannedWindows: planned.size, replayedWindows: replayed, replayedScalars, replayDifferences, referenceChecks, statements: metrics.statements.map((s) => ({ id: s.id, reportOnly: !!s.reportOnly, pass: s.pass })), failures };
+  const result = { verdict: failures.length ? 'FAIL' : 'PASS', registration, registrationTime: new Date(regTime).toISOString(), testedCommit: git('rev-parse', 'HEAD'), manifests: manifests.length, runnerCommits: generations, rows: rows.length, plannedWindows: planned.size, replayedWindows: replayed, replayedScalars, replayDifferences, referenceChecks, statements: metrics.statements.map((s) => ({ id: s.id, reportOnly: !!s.reportOnly, pass: s.pass })), failures };
   console.log(JSON.stringify(result, null, 1));
   if (process.env.CONFIRM_STORE_OVERRIDE) { console.error('CONFIRM_STORE_OVERRIDE is set: this is not an E2E result'); process.exitCode = 2; } else if (failures.length) process.exitCode = 1;
 }
