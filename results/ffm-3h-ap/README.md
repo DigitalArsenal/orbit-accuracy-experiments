@@ -18,7 +18,7 @@ XM7 runs F2 on the 750 group-P windows XM3 scored as issued (cutoffs 2026-01-02 
 
 ## What this is not
 
-F2H reads GFZ's observed weather (condition M) with GFZ's 3-hourly ap; the RSGA has no 3-hourly forecast, so a 3-hourly ap as issued is not tested. F2C reads the true centered 81-day mean of F10.7 of each day, which no cutoff knows. F2E builds that mean at the cutoff from what the cutoff knew: O's rows, GFZ's observed F10.7 before them, and the last predicted value held after them. No row here is a claim about FFM against SGP4 on inputs available at a cutoff. The test wasm is a build on a modules wip ref, not a release; the build's commit states that its unpatched snapshot rebuilds the pinned wasm byte for byte, which was not rebuilt here, and the proof below holds the test wasm to the pinned wasm's outputs on 7 windows.
+F2H reads GFZ's observed weather (condition M) with GFZ's 3-hourly ap; the RSGA has no 3-hourly forecast, so a 3-hourly ap as issued is not tested. F2C reads the true centered 81-day mean of F10.7 of each day, which no cutoff knows. F2E builds that mean at the cutoff from what the cutoff knew: O's rows, GFZ's observed F10.7 before them, and the last predicted value held after them. No row here is a claim about FFM against SGP4 on inputs available at a cutoff. The test wasm is a build on a modules wip ref, not a release; the build's commit states that its unpatched snapshot rebuilds the pinned wasm byte for byte, which was not rebuilt here, and the proof below holds the test wasm to the pinned wasm's outputs on 6 windows (and the pinned wasm to XM3's on a seventh).
 
 ## How the passes ran
 
