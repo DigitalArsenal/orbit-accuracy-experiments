@@ -5,6 +5,7 @@ registration();
 const phase = process.argv[2] ?? 'cheap';
 if (!['cheap','ffm','samples','ussf-replay','products'].includes(phase)) throw Error('phase must be cheap, ffm, samples, ussf-replay or products');
 const arms = phase === 'products' ? 'AP,XP,S' : phase === 'cheap' ? 'AP,XP,S,U' : phase === 'samples' ? 'S' : phase === 'ussf-replay' ? 'U' : 'F';
+const onlyShard=process.argv.find(x=>x.startsWith("--only-shard="))?.split("=")[1];
 const workers = phase === 'samples' ? 2 : 12;
 const children = new Set();
 let stopping = false;
@@ -16,6 +17,7 @@ const jobs = phase === 'ffm'
  ? [...(process.argv.includes('--remaining')?[]:[regimeJob]),truth2Job('GN'),truth2Job('S1'),truthJob,truth2Job('P')]
  : [regimeJob,truth2Job(),truthJob];
 await Promise.all(Array.from({length:workers}, async (_,k)=>{
+ if(onlyShard!==undefined&&k!==+onlyShard)return;
  for(const [label,script,extra] of jobs){
   if(stopping) break;
   const out = `${config.store}/${phase}/${label}`;
@@ -28,5 +30,12 @@ await Promise.all(Array.from({length:workers}, async (_,k)=>{
   children.delete(child);
   console.log(JSON.stringify({label,shard:k,code}));
   if(code!==0) {process.exitCode=1;break;}
+  if(phase==='products')for(const script of ['covariance-products.mjs','gp-products.mjs']){
+   if(stopping)break;
+   const fd=fs.openSync(`${out}/${script}-${k}.log`,'a');
+   const sub=spawn(process.execPath,['--max-old-space-size=3072',`experiments/five-day-ca/${script}`,'--label',label,'--shard',`${k}/${workers}`],{env:{...process.env,SDN_MODULES_ROOT:config.modulesRoot},stdio:['ignore',fd,fd]});children.add(sub);fs.closeSync(fd);
+   const status=await new Promise(resolve=>sub.on('exit',resolve));children.delete(sub);console.log(JSON.stringify({label,script,shard:k,code:status}));if(status!==0){process.exitCode=1;break;}
+  }
+
  }
 }));
