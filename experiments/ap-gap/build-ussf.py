@@ -1,7 +1,13 @@
 from pathlib import Path
-import shutil,os,subprocess,hashlib,json
+import shutil,os,subprocess,hashlib,json,sys
 m=Path('/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules')
 s=Path('/Users/tj/software/terrain-work/body-look/codex-apgap-d9/ussf');manifest={}
+previous=s/'manifest.json'
+if previous.exists():
+ saved=json.loads(previous.read_text())
+ valid=all(k in saved and saved[k]['returncode']==0 and Path(saved[k]['path']).exists() and hashlib.sha256(Path(saved[k]['path']).read_bytes()).hexdigest()==saved[k]['sha256'] and hashlib.sha256((s/k/'propagator/sgp4-xp/src/fit.hpp').read_bytes()).hexdigest()==saved[k]['fitSha256'] for k in ['CONTROL','FIXED'])
+ if valid and saved['CONTROL']['sha256']==hashlib.sha256((m/'propagator/sgp4-xp/dist/isomorphic/module.wasm').read_bytes()).hexdigest():
+  print('Reusing verified CONTROL and FIXED artifacts',flush=True);sys.exit(0)
 for name in ['CONTROL','FIXED']:
  p=s/name/'propagator/sgp4-xp'
  if not p.exists():
