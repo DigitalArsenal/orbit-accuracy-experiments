@@ -1,3 +1,4 @@
+import { writeAudit } from './audit.mjs';
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
 //   node experiments/operator-theory/all-regimes.mjs --wasm <AP 0.4.0> --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
 import fs from 'node:fs';
@@ -44,6 +45,7 @@ const ffmHigh = () => ({
 const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 fs.mkdirSync(OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, `manifest-${SHARD}.json`), JSON.stringify({ command: process.argv, created: new Date().toISOString(), wasm: { path: args.wasm, sha256: hash(args.wasm) }, runner: hash(new URL(import.meta.url)), config: hash(new URL('./config.json',import.meta.url)), ffm: F?.provenance },null,2));
+process.on('exit', () => writeAudit(OUT, SHARD));
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
 
