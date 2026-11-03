@@ -7,20 +7,24 @@ export function readRows(dir){return fs.existsSync(dir)?fs.readdirSync(dir).filt
 export function inputHashes(){const out={};for(const phase of ['cheap','ffm'])for(const label of ['regimes','truth2','truth']){const d=`${config.store}/${phase}/${label}`;if(fs.existsSync(d))for(const f of fs.readdirSync(d).filter(f=>/^rows-\d+\.jsonl$/.test(f)))out[`${d}/${f}`]=hash(fs.readFileSync(`${d}/${f}`));}return out;}
 export function mergedRows(){const rows=new Map();for(const phase of ['cheap','ffm'])for(const label of ['regimes','truth2','truth'])for(const r of readRows(`${config.store}/${phase}/${label}`)){const key=label+'|'+r.key;if(!rows.has(key))rows.set(key,{...r,group:label==='truth'?'T':r.group,arms:{}});Object.assign(rows.get(key).arms,r.arms);}return [...rows.values()];}
 export function disclosure(group,day){return [4,5].includes(day)&&['LS','DO'].includes(group)?'read before the statements were registered':null;}
+const cacheFile=`${config.store}/statistics-cache-${hash(fs.readFileSync(new URL('./lib/statistics.mjs',import.meta.url)))}.json`;
+const cache=fs.existsSync(cacheFile)?JSON.parse(fs.readFileSync(cacheFile),(_,v)=>v==='Infinity'?Infinity:v==='-Infinity'?-Infinity:v):{};
+const memo=(kind,rows,label,calculate)=>{const key=hash(JSON.stringify([kind,label,rows]));return cache[key]??(cache[key]=calculate());};
 export function statistics(){
  const rows=mergedRows(),cells=[],paired=[];
  for(const [group,rs] of Map.groupBy(rows,r=>r.group)){
   const arms=[...new Set(rs.flatMap(r=>Object.keys(r.arms)))].sort();
   for(const arm of arms)for(const day of config.leads){
    const values=rs.filter(r=>Number.isFinite(r.arms[arm]?.days?.[day]?.e)).map(r=>({...r.arms[arm].days[day],cutoff:r.cutoff}));
-   cells.push({group,arm,day,disclosure:disclosure(group,day),...describe(values,`${group}|${arm}|${day}`)});
+   cells.push({group,arm,day,disclosure:disclosure(group,day),...memo('describe',values,`${group}|${arm}|${day}`,()=>describe(values,`${group}|${arm}|${day}`))});
   }
   for(const arc of new Set(arms.map(a=>a.match(/\d+/)[0])))for(const [a,b] of [['AP','XP'],['F','XP'],['XP','S']])for(const day of [4,5]){
    const A=a+arc,B=b+arc,pairs=[];let secondFailed=0,sparse=0,unrun=0;
    for(const r of rs){const x=r.arms[A],y=r.arms[B];if(!x||!y){unrun++;continue;}if(r.error||x.error==='coverage'||y.error==='coverage'||(x.ok&&!x.days?.[day])||(y.ok&&!y.days?.[day])){sparse++;continue;}if(!Number.isFinite(y.days?.[day]?.e)){secondFailed++;continue;}pairs.push({cutoff:r.cutoff,x:Number.isFinite(x.days?.[day]?.e)?x.days[day].e:null,y:y.days[day].e});}
-   paired.push({group,arc:+arc,contrast:`${a}-${b}`,day,disclosure:disclosure(group,day),secondFailed,sparse,unrun,...contrast(pairs,`${group}|${A}-${B}|${day}`)});
+   paired.push({group,arc:+arc,contrast:`${a}-${b}`,day,disclosure:disclosure(group,day),secondFailed,sparse,unrun,...memo('contrast',pairs,`${group}|${A}-${B}|${day}`,()=>contrast(pairs,`${group}|${A}-${B}|${day}`))});
   }
  }
- return {provenance:analysisProvenance(),inputs:inputHashes(),units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
+ fs.writeFileSync(cacheFile,JSON.stringify(cache,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v)+'\n');
+ return {provenance:analysisProvenance(),scope:'available rows; completed-group tables are selected using metrics.json coverage',inputs:inputHashes(),units:'km',bootstrap:{draws:10000,cluster:'ISO week',seed:20261103,interval:[.025,.975]},cells,paired};
 }
 if(process.argv[1]===new URL(import.meta.url).pathname){const result=statistics();fs.writeFileSync('results/five-day-ca/statistics.json',JSON.stringify(result,(_,v)=>v===Infinity?'Infinity':v===-Infinity?'-Infinity':v,2)+'\n');console.log(JSON.stringify({cells:result.cells.length,paired:result.paired.length}));}

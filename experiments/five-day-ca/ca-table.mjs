@@ -11,6 +11,7 @@ const model=JSON.parse(fs.readFileSync('/opt/data/sdn-archive/gp-error-model/202
 const cal=JSON.parse(fs.readFileSync('/opt/data/sdn-archive/gp-error-model/2026-08/calibration.json'));
 const band={S1:2,GN:6,IG:7,GE:7,HE:9,HX:9};
 const mapping=JSON.parse(fs.readFileSync(`${config.store}/gp-regimes.json`));
+const inputSnapshot=inputHashes();
 const rows=mergedRows(),pc=await openPc(),cells=new Map(),cache=new Map();
 const out=`${config.store}/ca`;fs.mkdirSync(out,{recursive:true});
 const raw=fs.openSync(`${out}/rows-${Date.now()}.jsonl`,'w');
@@ -47,7 +48,7 @@ try{
   }
  }
  const alfanoAtZero=await pc.pc([10000,0,10000],10,[0,0],true);
- const result={provenance:analysisProvenance(),inputs:inputHashes(),wasmSha256,regimeMappingSha256:hash(fs.readFileSync(`${config.store}/gp-regimes.json`)),planCommit:'d3c15e2',oracle,alfanoAtZero,geometry:'90 degree crossing; R/T plane; independent members',cells:[...cells.values()].map(({values,...c})=>({...c,gpLabel:c.pair==='fit x fit'?null:Object.keys(c.gpLabels).sort().join('/'),n:values.length,medianCeiling:quantile(values,.5),p10:quantile(values,.1),p90:quantile(values,.9),reach1e4:values.length?values.filter(x=>x>=1e-4).length/values.length:null,reach1e5:values.length?values.filter(x=>x>=1e-5).length/values.length:null,alfanoMaximumAtZero:alfanoAtZero}))};
+ const result={provenance:analysisProvenance(),snapshotStable:JSON.stringify(inputSnapshot)===JSON.stringify(inputHashes()),inputs:inputSnapshot,wasmSha256,regimeMappingSha256:hash(fs.readFileSync(`${config.store}/gp-regimes.json`)),planCommit:'d3c15e2',oracle,alfanoAtZero,geometry:'90 degree crossing; R/T plane; independent members',cells:[...cells.values()].map(({values,...c})=>({...c,gpLabel:c.pair==='fit x fit'?null:Object.keys(c.gpLabels).sort().join('/'),n:values.length,medianCeiling:quantile(values,.5),p10:quantile(values,.1),p90:quantile(values,.9),reach1e4:values.length?values.filter(x=>x>=1e-4).length/values.length:null,reach1e5:values.length?values.filter(x=>x>=1e-5).length/values.length:null,alfanoMaximumAtZero:alfanoAtZero}))};
  fs.writeFileSync('results/five-day-ca/ca-reach.json',JSON.stringify(result,null,2)+'\n');
  console.log(JSON.stringify({cells:result.cells.length,oracle,alfanoAtZero}));
 }finally{fs.closeSync(raw);fs.closeSync(cacheFd);await pc.close();}
