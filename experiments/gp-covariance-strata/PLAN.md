@@ -120,3 +120,25 @@ Written after the dev operating characteristics of S1 were computed (P(label | c
 - **L3p, O1(a).** The pooled per-axis share (the share of all three axes' |z| <= 1.96 together) lies in 0.95 +- 2 SE_pool, SE_pool from the same resamples. The registered per-axis L3 (b) is computed and reported beside it (`l3bRate`), not gated.
 - **T under S1p.** As section 1.4's T, with the operating characteristics: P(label | correct) >= 0.80 and P(label | x0.7) <= 0.05 (the too-small side is unchanged). P(label | x1.4) is reported, not gated. C_min = max(3, the smallest cluster count that passes), from the same scan.
 - **Reported:** TESTABLE counts and operating characteristics under both rules, per stratum, at the registered owner defaults and with O5 granted.
+
+## 11. Amendment 2 (2026-11-04, before the freeze)
+
+Recorded after the first truth backfill. No fresh row has been read: truth is read through the seal (names, dates, SHA-256) until a stratum's open date. No statement, rule, band or value of sections 0 to 10 changes.
+
+**A2.1 Owner answers.** O5: yes (owner, 2026-11-03): the collectors back-fill ESA finals, ILRS, Sentinel-1 POEORB, DORIS and GFZ Kp, sealed on arrival. A daily job (sdn-truth-backfill) reruns the fetch over the last 45 days and reseals. O1 (b), O2 coverage-calibrated, O3 no, O4 no stay on their defaults unless the task record says otherwise before 2026-11-08. The first seal is `reference-states/seal/2026-11-04T034634Z.json` (SHA-256 e92767243264aa478602f60b8dfce8ef84638f6663fbbafaaac6e5fad7014bb0, sealed 2026-11-04T03:46:34Z).
+
+**A2.2 Measured latencies (V3), replacing the assumed ones in section 4.** Latency = the time a product reached the archive minus the end of its last epoch; where only a bound is observable, the open date uses the upper bound (the measured interval is in v-checks.json).
+
+| Product | Used (d) | Observed interval (d) | Basis |
+|---|---|---|---|
+| ESA finals (ESA0OPSFIN) | 4.2 | (3.16, 4.16] | day 2026-10-30 present, day 2026-10-31 absent at 2026-11-04T03:44Z |
+| ILRS combined (ilrsa) | 17.2 | (10.2, 17.2] | arc ending 2026-10-17 present, 2026-10-24 absent at 03:43Z |
+| Sentinel-1 POEORB | 19.3 | 19.25 to 19.26 | file creation time minus validity end, 1,817 files (reprocessed files excluded from the figure) |
+| DORIS, LEO-M satellites (CryoSat-2, SARAL, Sentinel-3A/B) | 29.2 | per satellite 16.2 to 29.2 | newest arc end per satellite against the fetch at 03:41Z; the regime takes the maximum |
+| DORIS, LEO-H satellites (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B) | 32.2 | per satellite 22.2 to 32.2 | as above |
+| GFZ Kp (nowcast snapshot) | 1.0 | at most 0.6 | daily snapshot of 2026-11-02 13:47Z holds every 3-hour value of 2026-11-01 |
+| WAAS MT9 (CDDIS daily) | 1.0 | at most 0.7 | the day-306 file retrieved 2026-11-03T16:01Z |
+
+The open date of stratum (r, b) stays the latest of 2026-12-21, 2026-12-06 + b's upper edge + the latency of each product of r, and the interlocks (ESA and ILRS: C3's R3 record, 2027-01-20).
+
+**A2.3 Fresh-eligible clusters.** The expected fresh design (n, n_eff, operating characteristics, C_min) is computed from the clusters that have a fresh feed: Sentinel-1A truth ended 2026-07 and Sentinel-1C is off under O3, so the Sentinel-1 cluster leaves LEO-M's fresh pool (CryoSat-2, SARAL, Sentinel-3A/B remain, 3 clusters) and the LEO-M NORAD list loses 39634. Dev fits, P_strat and the dev rows are unchanged. This restricts the pool to what can be scored and changes the LEO-M operating characteristics, which are therefore recomputed and re-frozen.
