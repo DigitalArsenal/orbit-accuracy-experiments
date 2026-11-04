@@ -88,6 +88,15 @@ export function pcfBytes({ theory = 'SGP4XP', forces, fit = null }) {
   const enumOf = { WEATHER_SOURCE: PCF.pcfWeatherSource, ATMOSPHERE_MODEL: PCF.pcfAtmosphereFamily, DENSITY_CORRECTION: PCF.pcfDensityCorrection };
   const f = Object.assign(new PCF.PCFForceModelT(), { EPHEMERIS_SOURCE: '' });
   for (const [k, v] of Object.entries(forces)) f[k] = enumOf[k] ? enumOf[k][v] : v;
+  // every FORCES scalar on the wire (the module reads ATMOSPHERE_MODEL by presence; NRLMSISE00 is the schema default),
+  // absent strings and tables left off it
+  const pack = f.pack.bind(f);
+  f.pack = (b) => {
+    const offset = b.addFieldOffset;
+    b.addFieldOffset = function (slot, value, d) { if (value !== d) offset.call(this, slot, value, d); };
+    b.forceDefaults(true);
+    try { return pack(b); } finally { b.forceDefaults(false); b.addFieldOffset = offset; }
+  };
   t.FORCES = f;
   if (fit) {
     const prior = (p) => (p ? Object.assign(new PCF.PCFGaussianPriorT(), { MEAN: p.mean, SIGMA: p.sigma, HAS_SIGMA: true }) : null);
