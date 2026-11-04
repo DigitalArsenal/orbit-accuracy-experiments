@@ -1,13 +1,13 @@
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
-//   node experiments/operator-theory/all-regimes.mjs --wasm <AP 0.4.0> --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
+//   node experiments/operator-theory/all-regimes.mjs --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
-import { config, root, HOUR, DAY, iso, ms, rms, XM } from '../xp2-fit-design/common.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
-import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
-import { apForces, openAp } from './lib/ap.mjs';
+import { config, root, HOUR, DAY, iso, ms, rms, XM } from './lib/xp2.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
+import { driverRows } from './lib/xm3.mjs';
+import { apForces, openAp, fitPcf, fitWeather, horizonOf, readOcm } from './lib/ap.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
 import { HX, STATIC, DO9, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
@@ -27,12 +27,11 @@ const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules
 // --arms U: the Space Force's SGP4-XP alone, in its own store. --arms AP,XP (any of AP, XP, S, F): only those, in their own store, as for a
 // later AP build (AP7.md). Without it, this file's registered arms, unchanged.
 const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.includes('U'), has = (a) => !ONLY_U && ARMS.includes(a);
-const m = await openModules(), A = has('AP') || has('XP') ? await openAp(args.wasm) : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null, U = ONLY_U ? await openUssfXp() : null;
+const m = await openModules(), A = has('AP') || has('XP') ? await openAp() : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null, U = ONLY_U ? await openUssfXp() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
-const ATM = XM.config.arms.X2.forces;
-const PCF_AP = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20 }), fit: null });
-const PCF_AP_VACUUM = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20, atmosphere: false }), fit: null });
-const PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null });
+const PCF_AP_VACUUM = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null });
+const PCF_XP = fitPcf({ forces: {}, fit: null });
 const ffmLow = () => ({
   forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: true, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined },
   integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
@@ -123,10 +122,9 @@ for (const o of await objects()) {
       if (!o.vacuum) {
         const R = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
         if (R.excluded) throw new Error(R.excluded);
-        ex = { rows: S.spwBytes(R.rows) };
+        ex = { spw: fitWeather(R.rows, horizonOf(D0)) };
         spw = driverRows(R.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
       }
-      const gridB = S.gridBytes(epochs);
       const score = (e) => { const days = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
       const arc = (hours) => { const raw = between(D0 - hours * HOUR, D0); const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
       const high = Math.hypot(...scored[0].r) >= 8400;
@@ -144,21 +142,21 @@ for (const o of await objects()) {
           await run('U', async () => {
             const f = await U.fit(oem);
             if (!f.ok) throw new Error(f.error);
-            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.omm, gridB, epochs.length), epochs, 'GCRF'), truth)) };
+            return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.ocm, epochs, epochs.length), epochs, 'GCRF'), truth)) };
           });
           continue;
         }
         await run('AP', async () => {
           const f = await A.fit(oem, pcfAp, ex);
           if (!f.ok) throw new Error(f.error);
-          const st = await A.propagate(f.omm, gridB, pcfAp, ex, epochs.length);
-          return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+          const st = await A.propagate(f.ocm, epochs, epochs.length);
+          return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
         });
         await run('XP', async () => {
           const f = await A.fit(oem, PCF_XP, undefined);
           if (!f.ok) throw new Error(f.error);
-          const st = await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length);
-          return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+          const st = await A.propagate(f.ocm, epochs, epochs.length);
+          return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
         });
         await run('S', async () => {
           const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name: o.name, objectId: o.objectId });

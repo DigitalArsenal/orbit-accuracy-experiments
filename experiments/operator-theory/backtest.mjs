@@ -8,7 +8,7 @@ import * as flatbuffers from 'flatbuffers';
 import * as O from 'spacedatastandards.org/lib/js/OCM/main.js';
 import { openFfmHost, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 import { config as XMC } from '../xp-atmosphere-merit/common.mjs';

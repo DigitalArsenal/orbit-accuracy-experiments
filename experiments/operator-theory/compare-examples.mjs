@@ -71,7 +71,7 @@ if (MODE === 'next') {
   const { weatherRows } = await import('./lib/weather.mjs');
   const { openAp } = await import('./lib/ap.mjs');
   const { openModules } = await import('../xp-atmosphere-merit/lib/modules.mjs');
-  const { openSgp4Fit } = await import('../xp2-fit-design/lib/sgp4fit.mjs');
+  const { openSgp4Fit } = await import('./lib/xp2.mjs');
   const S = await import('../xp-atmosphere-merit/lib/sds.mjs');
   const { config: XMC } = await import('../xp-atmosphere-merit/common.mjs');
   const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
@@ -153,11 +153,11 @@ if (MODE === 'next') {
   const { weatherRows } = await import('./lib/weather.mjs');
   const { openAp, apForces } = await import('./lib/ap.mjs');
   const { openModules } = await import('../xp-atmosphere-merit/lib/modules.mjs');
-  const { openSgp4Fit } = await import('../xp2-fit-design/lib/sgp4fit.mjs');
+  const { openSgp4Fit } = await import('./lib/xp2.mjs');
   const S = await import('../xp-atmosphere-merit/lib/sds.mjs');
   const { config: XMC } = await import('../xp-atmosphere-merit/common.mjs');
   const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
-  const { driverRows } = ISS ? await import('../ffm-atmosphere-xm3/lib/ffm.mjs') : {};
+  const { driverRows } = ISS ? await import('./lib/xm3.mjs') : {};
   const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await openAp(path.join(NEW, 'module.wasm'));
   const axes = ISS ? await openAxes() : null;
   const PCF_AP = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
@@ -262,10 +262,10 @@ if (MODE === 'next') {
   await F.close();
 } else if (MODE === 'regimes') {
   // AP6.md's regimes: for each satellite named, the 72 h forecast whose AP error on day 3 is nearest AP's median for that satellite. Data E's orbits are not republished, so that group has no example.
-  const { config, root, iso, ms, XM } = await import('../xp2-fit-design/common.mjs');
+  const { config, root, iso, ms, XM } = await import('./lib/xp2.mjs');
   const { pathToFileURL } = await import('node:url');
-  const { openSgp4Fit } = await import('../xp2-fit-design/lib/sgp4fit.mjs');
-  const { driverRows } = await import('../ffm-atmosphere-xm3/lib/ffm.mjs');
+  const { openSgp4Fit } = await import('./lib/xp2.mjs');
+  const { driverRows } = await import('./lib/xm3.mjs');
   const { openAp, apForces } = await import('./lib/ap.mjs');
   const { openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
   const { STATIC, TESS, GROUPS, HX } = await import('./lib/regimes.mjs');
@@ -389,9 +389,9 @@ if (MODE === 'next') {
   await F.close();
 } else {
   const ON_XM = MODE === 'truth2';
-  const { config, root, iso, ms, XM, windows } = await import('../xp2-fit-design/common.mjs');
-  const { openSgp4Fit } = await import('../xp2-fit-design/lib/sgp4fit.mjs');
-  const { driverRows } = await import('../ffm-atmosphere-xm3/lib/ffm.mjs');
+  const { config, root, iso, ms, XM, windows } = await import('./lib/xp2.mjs');
+  const { openSgp4Fit } = await import('./lib/xp2.mjs');
+  const { driverRows } = await import('./lib/xm3.mjs');
   const { openAp, apForces } = await import('./lib/ap.mjs');
   const { openFfmHost, apriori } = await import('./lib/host.mjs');
   const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));

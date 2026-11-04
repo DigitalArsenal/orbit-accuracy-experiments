@@ -9,7 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { modulesRoot } from '../../xp-atmosphere-merit/common.mjs';
-import { TYPE, oemLines, flightPcfBytes, pcfBytes, spwBytes } from '../../xp-atmosphere-merit/lib/sds.mjs';
+import { TYPE, oemLines, flightPcfBytes, pcfBytes, spwBytes, readFitOcm } from '../../xp-atmosphere-merit/lib/sds.mjs';
 import { PIN } from './build.mjs';
 
 const DAY = 86400000;
@@ -64,6 +64,9 @@ export function fitWeather(rows, throughMs) {
 export const rowsOfSpw = (rows) => rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }));
 /** The horizon a fit needs its rows to reach: the arc's end plus FIT.WEATHER_HORIZON_DAYS and a day. */
 export const horizonOf = (arcEndMs) => arcEndMs + 31 * DAY;
+
+/** A fitted $OCM by its typed fields (XM's readFitOcm), plain or size-prefixed (propagator/sgp4-xp writes it size-prefixed). */
+export const readOcm = (bytes) => { const u = new Uint8Array(bytes); return readFitOcm(String.fromCharCode(...u.subarray(8, 12)) === '$OCM' ? u.subarray(4) : u); };
 
 const short = (e) => String(e?.message ?? e).slice(0, 240);
 /** propagator/sdn-ap at PIN: { fit(oem, pcf, extra) -> { ok, ocm } | { ok: false, error }, propagate(ocm, epochs, count) -> [{epoch, r, v}] TEME }.
