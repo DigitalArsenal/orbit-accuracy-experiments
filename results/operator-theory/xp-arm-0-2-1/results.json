@@ -61,11 +61,11 @@
   }
  },
  "runs": {
-  "registration": "cd2ef8c94826d12318d2e6f3b4c7b92583b37814",
+  "registration": "experiments/operator-theory/XP-ARM-0-2-1.md",
   "registered": "2026-11-04T19:33:37.000Z",
   "firstRowFile": "2026-11-04T19:51:04.950Z",
   "rowFiles": 141,
-  "amendment": "b49e336659ba529e25fcb04c8a3d8b020dc4c4b3",
+  "amendments": 2,
   "amended": "2026-11-04T20:15:41.000Z",
   "firstAttributionFile": "2026-11-04T21:15:10.955Z",
   "attributionFiles": 9,

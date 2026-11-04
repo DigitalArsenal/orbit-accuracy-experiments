@@ -103,21 +103,23 @@ const right = now.rows.every((r) => ['AP', 'XPU'].every((c) => !(c in r.arms) ||
 check(right, `AP names sdn-ap 0.5.1 on precise orbits and 0.4.11 on next files; the Space Force XP names sgp4-xp 0.2.1, the held SpaceX rows 0.1.1`);
 
 // 5. The registration precedes every fit, and the pairs flown are the registered ones.
-const registered = Date.parse(git('show', '-s', '--format=%cI', doc.runs.registration).toString().trim());
+// The registration's own history, newest first (a rebase keeps author dates): the commit that added it, and the last that amended it.
+const history = git('log', '--format=%H %aI', '--', doc.runs.registration).toString().trim().split('\n').map((l) => l.split(' '));
+const [regSha, regAt] = history.at(-1), [amendSha, amendAt] = history[0];
+const registered = Date.parse(regAt);
+check(new Date(registered).toISOString() === doc.runs.registered && new Date(Date.parse(amendAt)).toISOString() === doc.runs.amended && doc.runs.amendments === 2 && history.length === 3, `XP-ARM-0-2-1.md's history: added at ${doc.runs.registered}, amended twice, the second at ${doc.runs.amended}`);
 const starts = doc.runs.log.filter((l) => /^(start|resume|balanced|pool|attribution) /.test(l)).map((l) => Date.parse(l.split(' ').at(-2)));
-check(registered < Date.parse(doc.runs.firstRowFile) && starts.every((t) => registered < t), `registration ${doc.runs.registration.slice(0, 7)} at ${new Date(registered).toISOString()} precedes the first of ${doc.runs.rowFiles} row files (${doc.runs.firstRowFile}) and every run start`);
-let ancestor = true;
-try { git('merge-base', '--is-ancestor', doc.runs.registration, 'HEAD'); } catch { ancestor = false; }
-const registeredText = git('show', `${doc.runs.registration}:experiments/operator-theory/XP-ARM-0-2-1.md`), currentText = fs.readFileSync(path.join(here, 'XP-ARM-0-2-1.md'));
-check(ancestor && currentText.subarray(0, registeredText.length).equals(registeredText) && git('show', `${doc.runs.amendment}:experiments/operator-theory/XP-ARM-0-2-1.md`).equals(currentText), `XP-ARM-0-2-1.md is its registration with amendments 1 and 2 appended, unchanged since ${doc.runs.amendment.slice(0, 7)}`);
+check(registered < Date.parse(doc.runs.firstRowFile) && starts.every((t) => registered < t), `registration ${regSha.slice(0, 7)} at ${new Date(registered).toISOString()} precedes the first of ${doc.runs.rowFiles} row files (${doc.runs.firstRowFile}) and every run start`);
+const registeredText = git('show', `${regSha}:${doc.runs.registration}`), currentText = fs.readFileSync(path.join(repo, doc.runs.registration));
+check(currentText.subarray(0, registeredText.length).equals(registeredText) && git('show', `${amendSha}:${doc.runs.registration}`).equals(currentText), `XP-ARM-0-2-1.md is its registration with amendments 1 and 2 appended, unchanged since ${amendSha.slice(0, 7)}`);
 for (const s of doc.next) check(s.run === s.registered && s.notRegistered === 0 && s.flownTwice === 0, `${s.set}: ${s.run} of ${s.registered} registered pairs flown on 0.2.1 once each, none other (${Object.entries(s.failed).map(([a, f]) => `${a} without a figure ${f['0.2.1']}`).join(', ')})`);
 
 // 6. GE and IG day 1: the Space Force XP on 0.2.1 within 0.02 km of its sets flown on the whiteroom propagator (the 2x2's prediction).
 for (const p of doc.prediction) check(p.within && p.flown === p.windows, `${p.group} day 1 on the 2x2's ${p.windows} windows: Space Force XP ${p.spaceForce021} km (0.1.1: ${p.spaceForce011}), its sets on the whiteroom propagator ${p.spaceForceSetsOnWhiteroom}, ${p.lessSW >= 0 ? '+' : ''}${p.lessSW} km`);
 
 // 6b. The two cells worse on 0.2.1, per window: every window flown on all four arms, the refits reproducing the stored figures, amendment 2 before the first row.
-const amended = Date.parse(git('show', '-s', '--format=%cI', doc.runs.amendment).toString().trim());
-check(amended < Date.parse(doc.runs.firstAttributionFile), `amendment 2 ${doc.runs.amendment.slice(0, 7)} at ${new Date(amended).toISOString()} precedes the first of ${doc.runs.attributionFiles} attribution row files (${doc.runs.firstAttributionFile})`);
+const amended = Date.parse(amendAt);
+check(amended < Date.parse(doc.runs.firstAttributionFile), `amendment 2 ${amendSha.slice(0, 7)} at ${new Date(amended).toISOString()} precedes the first of ${doc.runs.attributionFiles} attribution row files (${doc.runs.firstAttributionFile})`);
 for (const x of doc.attribution) {
   const store = x.group === 'HX' ? 'ussf-regimes-hx' : 'ussf-regimes', oldU = byKey(path.join(OLD, store)), newU = byKey(path.join(B051, store));
   const expected = [...newU.values()].filter((r) => r.group === x.group && [r, oldU.get(r.key)].every((q) => Number.isFinite(q?.arms?.[x.arm]?.days?.[String(x.day)]?.e))).length;

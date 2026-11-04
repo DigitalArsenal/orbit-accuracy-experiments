@@ -1,6 +1,6 @@
 # The Space Force XP on sgp4-xp 0.2.1
 
-Report only, registered in `experiments/operator-theory/XP-ARM-0-2-1.md` at cd2ef8c (2026-11-04T19:33:37.000Z), before the first row (2026-11-04T19:51:04.950Z). Build: modules ea824356: sdn-ap 0.5.1 (d29acd2b5d92), sgp4-xp 0.2.1 (816fd137d761); sgp4-xp 0.1.1 is 1b905d16 (f61b15c4fd65). Every figure is a median in km, 0.1.1 / 0.2.1, over the pairs or windows both builds flew.
+Report only, registered in `experiments/operator-theory/XP-ARM-0-2-1.md`, committed 2026-11-04T19:33:37.000Z, before the first row (2026-11-04T19:51:04.950Z). Build: modules ea824356: sdn-ap 0.5.1 (d29acd2b5d92), sgp4-xp 0.2.1 (816fd137d761); sgp4-xp 0.1.1 is 1b905d16 (f61b15c4fd65). Every figure is a median in km, 0.1.1 / 0.2.1, over the pairs or windows both builds flew.
 
 ## Next-file pairs
 
@@ -111,7 +111,7 @@ TESS, 72 h fits: 1.81 / 1.73 km at day 1 and 42.4 / 42.9 km at day 7, as measure
 
 ## The two cells that moved the wrong way
 
-Amendments 1 and 2 of the registration, the second committed at b49e336 (2026-11-04T20:15:41.000Z) before the first of their rows (2026-11-04T21:15:10.955Z). Per window, km: a is 0.1.1 as stored, b is 0.2.1 as stored, U11 is 0.1.1's set flown on 0.2.1, UW is 0.2.1's set flown on the whiteroom propagator. The flight part is U11 less a, the fit part b less U11; their sum is the change.
+Amendments 1 and 2 of the registration, the second committed 2026-11-04T20:15:41.000Z, before the first of their rows (2026-11-04T21:15:10.955Z). Per window, km: a is 0.1.1 as stored, b is 0.2.1 as stored, U11 is 0.1.1's set flown on 0.2.1, UW is 0.2.1's set flown on the whiteroom propagator. The flight part is U11 less a, the fit part b less U11; their sum is the change.
 
 ### Highly elliptical, THEMIS and Chandra, U72, day 2
 

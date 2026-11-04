@@ -15,7 +15,7 @@ const OUT = argOf('--out');
 if (!OUT) throw new Error('--out');
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
 const A = '/opt/data/sdn-archive/operator-theory/ap', OLD = path.join(A, 'b0411'), NEW = path.join(A, 'xp-arm-0-2-1'), B051 = path.join(A, 'b051');
-const REGISTRATION = 'cd2ef8c94826d12318d2e6f3b4c7b92583b37814', AMENDMENT = 'b49e336659ba529e25fcb04c8a3d8b020dc4c4b3', TWO_BY_TWO = 'results/operator-theory/geo-sgp4-one-mode/results.json', NEAR_KM = 0.02;
+const REGISTRATION = 'experiments/operator-theory/XP-ARM-0-2-1.md', TWO_BY_TWO = 'results/operator-theory/geo-sgp4-one-mode/results.json', NEAR_KM = 0.02;
 const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const r4 = (x) => (x === null || x === undefined ? null : Number(x.toFixed(4)));
 const med = (v) => r4(pct([...v].sort(asc), 0.5));
@@ -116,9 +116,10 @@ const againstSgp4 = ['GE', 'IG'].map((group) => ({ group, days: Object.fromEntri
 
 // When the rows were made: the registration commit before the first row file of the store, amendment 1 before the first of its rows.
 const rowFiles = SETS.flatMap((s) => files(path.join(NEW, s.store), s.re)), attributionFiles = WORSE.flatMap((w) => files(path.join(NEW, 'attribution', w.group), LASER));
-const committed = (sha) => new Date(execFileSync('git', ['-C', REPO, 'show', '-s', '--format=%cI', sha]).toString().trim()).toISOString();
+// The registration's own history, newest first: the commit that added it and the last that amended it, by author date (which a rebase keeps).
+const history = execFileSync('git', ['-C', REPO, 'log', '--format=%aI', '--', REGISTRATION]).toString().trim().split('\n').map((t) => new Date(t).toISOString());
 const firstBorn = (list) => (list.length ? new Date(Math.min(...list.map((f) => fs.statSync(f).birthtimeMs))).toISOString() : null);
-const runs = { registration: REGISTRATION, registered: committed(REGISTRATION), firstRowFile: firstBorn(rowFiles), rowFiles: rowFiles.length, amendment: AMENDMENT, amended: committed(AMENDMENT), firstAttributionFile: firstBorn(attributionFiles), attributionFiles: attributionFiles.length, log: fs.readFileSync(path.join(NEW, 'runs.log'), 'utf8').split('\n').filter(Boolean) };
+const runs = { registration: REGISTRATION, registered: history.at(-1), firstRowFile: firstBorn(rowFiles), rowFiles: rowFiles.length, amendments: history.length - 1, amended: history[0], firstAttributionFile: firstBorn(attributionFiles), attributionFiles: attributionFiles.length, log: fs.readFileSync(path.join(NEW, 'runs.log'), 'utf8').split('\n').filter(Boolean) };
 
 const doc = { registered: 'experiments/operator-theory/XP-ARM-0-2-1.md', reading: 'report only', build: BUILD_NOTE, builds: { '0.1.1': COLUMN_BUILDS.held.XPU.map((b) => b.key), '0.2.1': COLUMN_BUILDS.next.XPU.map((b) => b.key), records: BUILD_RECORDS }, runs, next, truth, prediction, attribution, againstSgp4, storedHashes: Object.fromEntries([...read].sort()) };
 fs.mkdirSync(OUT, { recursive: true });
@@ -130,7 +131,7 @@ const signed = (x) => `${x >= 0 ? '+' : '-'}${fig(Math.abs(x))}`;
 const shown = (key) => key.split('|').slice(1).join(' ');
 /** The windows at the median rank of a figure (one for an odd count, two for an even). */
 const middle = (list, f) => { const s = [...list].sort((p, q) => p[f] - q[f]), k = (s.length - 1) / 2; return [...new Set([s[Math.floor(k)], s[Math.ceil(k)]])].map((w) => `${shown(w.key)} (${fig(w[f])})`).join(' and '); };
-const md = ['# The Space Force XP on sgp4-xp 0.2.1', '', `Report only, registered in \`experiments/operator-theory/XP-ARM-0-2-1.md\` at ${REGISTRATION.slice(0, 7)} (${runs.registered}), before the first row (${runs.firstRowFile}). Build: ${BUILD_NOTE}; sgp4-xp 0.1.1 is ${COLUMN_BUILDS.held.XPU[0].commit.slice(0, 8)} (${COLUMN_BUILDS.held.XPU[0].sha256.slice(0, 12)}). Every figure is a median in km, 0.1.1 / 0.2.1, over the pairs or windows both builds flew.`, ''];
+const md = ['# The Space Force XP on sgp4-xp 0.2.1', '', `Report only, registered in \`experiments/operator-theory/XP-ARM-0-2-1.md\`, committed ${runs.registered}, before the first row (${runs.firstRowFile}). Build: ${BUILD_NOTE}; sgp4-xp 0.1.1 is ${COLUMN_BUILDS.held.XPU[0].commit.slice(0, 8)} (${COLUMN_BUILDS.held.XPU[0].sha256.slice(0, 12)}). Every figure is a median in km, 0.1.1 / 0.2.1, over the pairs or windows both builds flew.`, ''];
 md.push('## Next-file pairs', '');
 for (const s of next) {
   md.push(`${s.set === 'laser' ? 'ILRS prediction files' : 'Providers'}: ${s.registered.toLocaleString('en-US')} pairs registered, ${s.run.toLocaleString('en-US')} flown on 0.2.1, ${s.notRegistered} not registered, ${s.held} held. Without a figure, ${Object.entries(s.failed).map(([arm, f]) => `${arm} ${f['0.1.1']} on 0.1.1 and ${f['0.2.1']} on 0.2.1`).join(', ')}.`, '');
@@ -149,7 +150,7 @@ md.push('## Against precise orbits', '', 'AP5\'s and AP6\'s windows as flown int
 for (const t of truth) md.push(`| ${t.label} | ${t.arm} | ${['1', '2', '3', '7'].map((d) => (t.days[d] ? pair(t.days[d]) : '')).join(' | ')} | ${t.days['1']?.windows ?? ''} |`);
 const tess = truth.find((t) => t.group === 'HE' && t.arm === 'U72');
 md.push('', `TESS, 72 h fits: ${pair(tess.days['1'])} km at day 1 and ${pair(tess.days['7'])} km at day 7, as measured. The flight fix does not explain it, and this file does not either.`);
-md.push('', '## The two cells that moved the wrong way', '', `Amendments 1 and 2 of the registration, the second committed at ${AMENDMENT.slice(0, 7)} (${runs.amended}) before the first of their rows (${runs.firstAttributionFile}). Per window, km: a is 0.1.1 as stored, b is 0.2.1 as stored, U11 is 0.1.1's set flown on 0.2.1, UW is 0.2.1's set flown on the whiteroom propagator. The flight part is U11 less a, the fit part b less U11; their sum is the change.`);
+md.push('', '## The two cells that moved the wrong way', '', `Amendments 1 and 2 of the registration, the second committed ${runs.amended}, before the first of their rows (${runs.firstAttributionFile}). Per window, km: a is 0.1.1 as stored, b is 0.2.1 as stored, U11 is 0.1.1's set flown on 0.2.1, UW is 0.2.1's set flown on the whiteroom propagator. The flight part is U11 less a, the fit part b less U11; their sum is the change.`);
 for (const x of attribution) {
   md.push('', `### ${x.label}, ${x.arm}, day ${x.day}`, '', `${x.windows - x.missing} windows with a day-${x.day} figure on every arm${x.missing ? `; ${x.missing} more have none, for want of truth that day or of the arc's coverage` : ''}. Medians: a ${fig(x.medianKm.a)}, b ${fig(x.medianKm.b)}, U11 ${fig(x.medianKm.u11)}, UW ${fig(x.medianKm.uw)}. Flight side ${x.flightSide}, fit side ${x.fitSide}: the change is on the ${x.fitSide > x.flightSide ? 'fit' : 'flight'} side, since 0.1.1's sets flown on 0.2.1 give ${fig(x.medianKm.u11)} against a's ${fig(x.medianKm.a)}, and 0.2.1's sets give ${fig(x.medianKm.uw)} on the whiteroom propagator against b's ${fig(x.medianKm.b)}. The 0.2.1 refit reproduces b on ${x.reproducesB} windows and the 0.1.1 refit, flown on 0.1.1, reproduces a on ${x.reproducesA}. At the median rank: a ${middle(x.perWindow.filter((w) => !w.missing), 'a')}; b ${middle(x.perWindow.filter((w) => !w.missing), 'b')}.`, '', '| Window | a | b | U11 | UW | Flight part | Fit part | Side |', '|---|---:|---:|---:|---:|---:|---:|---|');
   for (const w of x.perWindow.filter((y) => !y.missing)) md.push(`| ${shown(w.key)} | ${fig(w.a)} | ${fig(w.b)} | ${fig(w.u11)} | ${fig(w.uw)} | ${signed(w.flight)} | ${signed(w.fit)} | ${w.side} |`);
