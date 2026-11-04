@@ -11,6 +11,10 @@ import { apForces, openAp } from './lib/ap.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
 import { HX, STATIC, DO9, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
+// AP9.md (DO9): its cutoffs fall in 2026, and the XP2 store's normalized RSGA set that xp2-fit-design/common.mjs pins ends 2025-12-31, so
+// the as-issued 2026 reports are read from the archive's NOAA warehouse copy (fetched 2026-10-09) and the daily collector. Added 2026-11-04
+// after the first DO9 run excluded every window for want of an RSGA; no fit had run. Same files, same parser; 2025 cutoffs are unchanged.
+XM.config.spaceWeather.rsgaDirs = [...XM.config.spaceWeather.rsgaDirs, '/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA', '/opt/data/sdn-archive/hac/noaa-swpc/2026'];
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
