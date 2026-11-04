@@ -36,14 +36,19 @@ const { dclAt } = await import('./lib/dca.mjs');
 const { publicSetAt } = await import('./lib/public.mjs');
 const spheres = JSON.parse(fs.readFileSync(path.join(b1Dir, 'config.json'), 'utf8')).ffm.spheres;
 const D = config.diagnostic;
+const FIT_HORIZON_DAYS = 30; // $PCF FIT.WEATHER_HORIZON_DAYS left at its default: the record carries rows through its epoch's day + 30
 const rms = (v) => Math.sqrt(v.reduce((s, x) => s + x * x, 0) / v.length);
 const short = (e) => String(e?.message ?? e).slice(0, 240);
 
 /** The covariance statistics of a fitted set (SPEC 12 rows): sigma of BTERM and AGOM, their correlation, and the multiple
- *  correlation of each with the epoch state. Statistics only. */
+ *  correlation of each with the epoch state, from the record's COVARIANCE_DATA (lower triangle, state then the parameters in
+ *  COV_PARAMETER_KINDS order). Statistics only. */
 function covStats(info) {
-  const C = info.covariance, dr = info.params.SDNAP_COV_DRAG?.split(' ').map(Number), ag = info.params.SDNAP_COV_AGOM?.split(' ').map(Number);
-  if (C.length !== 21 || !dr || !ag || dr.length !== 7 || ag.length !== 8) return null;
+  const { size, kinds, ltm } = info.covariance, ib = 6 + kinds.indexOf(S.DRAG_KIND), ia = 6 + kinds.indexOf(S.AGOM_KIND);
+  if (!(size >= 8) || ltm.length !== (size * (size + 1)) / 2 || ib < 6 || ia < 6) return null;
+  const at = (i, j) => { const [a, b] = i >= j ? [i, j] : [j, i]; return ltm[(a * (a + 1)) / 2 + b]; };
+  const C = Array.from({ length: 21 }, (_, k) => { const i = Math.floor((Math.sqrt(8 * k + 1) - 1) / 2); return at(i, k - (i * (i + 1)) / 2); });
+  const dr = [...[0, 1, 2, 3, 4, 5].map((j) => at(ib, j)), at(ib, ib)], ag = [...[0, 1, 2, 3, 4, 5].map((j) => at(ia, j)), at(ia, ib), at(ia, ia)];
   const S6 = Array.from({ length: 6 }, (_, i) => Array.from({ length: 6 }, (_, j) => { const [a, b] = i >= j ? [i, j] : [j, i]; return C[(a * (a + 1)) / 2 + b]; }));
   const solve = (A, bvec) => { // Gaussian elimination with partial pivoting on a 6 x 6
     const M = A.map((row, i) => [...row, bvec[i]]);
@@ -62,9 +67,9 @@ function covStats(info) {
 }
 
 /** One fitted (or given) set scored: the fit span against the fit input, the held-out bins against the truth. */
-async function scoreSet(m, w, omm, pcf, extra, fitThin) {
+async function scoreSet(m, w, ocm, fitThin) {
   const epochs = [...fitThin.map((l) => l.epoch), ...w.truth.map((l) => l.epoch)];
-  const lines = await m.propagate(omm, epochs, pcf, extra, S.gridBytes(epochs));
+  const lines = await m.propagate(ocm, epochs);
   const pred = await m.toAxes(lines, w.axes);
   const out = { fitRmsKm: null, fitRic: null, days: {} };
   if (fitThin.length) {
@@ -83,14 +88,14 @@ async function scoreSet(m, w, omm, pcf, extra, fitThin) {
   return out;
 }
 
-/** An arm: fit on the block, then the set scored with the same $PCF and inputs. */
+/** An arm: fit on the block (the rows and the $DCL go to the fit), then the fitted $OCM alone flown and scored. */
 async function arm(m, w, block, pcf, extra, fitThin) {
   const oem = S.oemBytes({ frame: w.object.frame, object: w.object, lines: block.lines, useableStart: block.useableStart, useableStop: block.useableStop });
   const f = await m.fit(oem, pcf, extra);
   if (!f.ok) return { ok: false, error: f.error, fitMs: f.fitMs };
-  const info = S.readFitOmm(f.omm);
+  const info = S.readFitOcm(f.ocm);
   try {
-    const scored = await scoreSet(m, w, f.omm, pcf, extra, fitThin);
+    const scored = await scoreSet(m, w, f.ocm, fitThin);
     return { ok: true, epoch: info.epoch, bterm: info.bterm, agom: info.agom, moduleFitRmsKm: info.fitRmsKm, iterations: info.iterations, statesFitted: info.states, ...scored, cov: covStats(info), fitMs: f.fitMs };
   } catch (error) { return { ok: false, error: `score: ${short(error)}`, fitMs: f.fitMs }; }
 }
@@ -128,7 +133,24 @@ function sparse(lines, key) {
   return out;
 }
 
-const pcfOf = (name, fit) => S.pcfBytes({ forces: config.arms[name].forces, fit });
+/** An arm's fit $PCF from config.json's registered forces, as $PCF 1.0.7 states them: the atmosphere named
+ *  (ENABLE_DRAG true was NRLMSISE-00, else Jacchia 1970), no ENABLE_DRAG and no WEATHER_EXTENSION (the rows the fit is given
+ *  reach the record's horizon: see heldThrough); a force model other than the theory's own makes an AP set. */
+function pcfOf(name, fit) {
+  const { ENABLE_DRAG, WEATHER_EXTENSION, ...rest } = config.arms[name].forces ?? {};
+  const forces = { ...rest, ATMOSPHERE_MODEL: ENABLE_DRAG ? 'NRLMSISE00' : 'JACCHIA70' };
+  const stock = !ENABLE_DRAG && !rest.WEATHER_SOURCE && !rest.DENSITY_CORRECTION;
+  return S.pcfBytes({ theory: stock ? 'SGP4XP' : 'AP', forces, fit });
+}
+
+/** The condition's rows with the last one held, as PRD, on every later day through `throughMs`'s day: the drivers the
+ *  registered build held past the last row (WEATHER_EXTENSION HOLD_LAST), now carried by the record. Under M the held
+ *  days lie past the last truth epoch and no flight reads them. */
+function heldThrough(rows, throughMs) {
+  const out = [...rows], last = rows.at(-1);
+  for (let t = Date.parse(`${last.date}T00:00:00Z`) + DAY; t <= throughMs; t += DAY) out.push({ ...last, date: new Date(t).toISOString().slice(0, 10), held: true });
+  return out;
+}
 
 /** One window through every arm (PLAN.md, Arms), P, and Part D for L1 and I. */
 export async function scoreWindow(m, w) {
@@ -144,7 +166,8 @@ export async function scoreWindow(m, w) {
   Object.assign(row, { axes: w.axes, fitStart: block.lines[0].epoch, fitStates: block.lines.length, truthEpochs: w.truth.length, fitSpacingSeconds: w.fitSpacingSeconds, truthSpacingSeconds: w.truthSpacingSeconds });
   const fitThin = thinned(w.fitLines).chosen;
   const first = ms(block.lines[0].epoch), last = ms(w.truth.at(-1).epoch);
-  const rows = { M: S.spwBytes(rowsFor(first - config.spaceWeather.rowsMarginDays * DAY, last + DAY, 'M', w.E)), O: S.spwBytes(rowsFor(first - config.spaceWeather.rowsMarginDays * DAY, w.E, 'O', w.E)) };
+  const horizon = w.E + (FIT_HORIZON_DAYS + 1) * DAY;
+  const rows = { M: S.spwBytes(heldThrough(rowsFor(first - config.spaceWeather.rowsMarginDays * DAY, last + DAY, 'M', w.E), horizon)), O: S.spwBytes(heldThrough(rowsFor(first - config.spaceWeather.rowsMarginDays * DAY, w.E, 'O', w.E), horizon)) };
   const dcl = {};
   for (const c of ['M', 'O']) dcl[c] = await dclAt(m, Math.round(w.E + config.conditions[c].dclIssueOffsetHours * HOUR));
   row.dca = Object.fromEntries(Object.entries(dcl).map(([c, d]) => [c, d.ok ? { ok: true, arcs: d.arcs, doves: d.doves, supportedTo: iso(d.supportedToMs) } : { ok: false, error: d.error }]));
@@ -157,8 +180,8 @@ export async function scoreWindow(m, w) {
   const set = publicSetAt(w.norad, w.E);
   if (set) {
     try {
-      const omm = S.sgp4OmmBytes({ epoch: set.epoch, elements: set.elements, norad: w.norad });
-      row.arms.P = { ok: true, setEpoch: set.epoch, setCreation: set.creationDate, bstar: set.elements.BSTAR, ...(await scoreSet(m, w, omm, S.pcfBytes({ theory: 'SGP4' }), null, fitThin)) };
+      const ocm = await m.ingest(S.sgp4OmmBytes({ epoch: set.epoch, elements: set.elements, norad: w.norad }));
+      row.arms.P = { ok: true, setEpoch: set.epoch, setCreation: set.creationDate, bstar: set.elements.BSTAR, ...(await scoreSet(m, w, ocm, fitThin)) };
     } catch (error) { row.arms.P = { ok: false, error: short(error) }; }
   } else row.arms.P = { ok: false, notRun: 'no public set before E in the archive' };
   if (!D.groups.includes(w.group)) return row;
