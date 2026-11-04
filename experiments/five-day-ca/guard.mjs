@@ -14,6 +14,15 @@ const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 
  *  `store`; the old leads are checked against that build's AP5 and AP6 rows (`reference`). F, the GP products and the regime mapping are the
  *  registered store's (config.store), unchanged: none of them reads an element-set product. */
 export const store = `${config.store}/b051`, build = PIN, reference = '/opt/data/sdn-archive/operator-theory/ap/b051';
+/** Where a phase's rows live, by label: the re-measure's fits (AP, XP and S rows with their endpoints, fitted $OCM and signed errors), the
+ *  Space Force XP's rows (ussf, U) and the carried-covariance products under `store`; the registered F rows and fit products and the GP
+ *  products under config.store. */
+export const FORECAST_PHASES = ['fits', 'ussf', 'ffm'];
+export function dir(phase, label) {
+  if (phase === 'fits' || phase === 'ussf' || phase === 'covariance') return `${store}/${phase}/${label}`;
+  if (phase === 'ffm' || phase === 'gp-products') return `${config.store}/${phase}/${label}`;
+  throw Error(`no phase ${phase}`);
+}
 /** The registered pins the re-measure's build replaces: AP 0.4.0's wasm and the Space Force XP 0.1.1 in the modules working tree. */
 const REPLACED = ['/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm', `${config.modulesRoot}/propagator/sgp4-xp/dist/isomorphic/module.wasm`];
 /** The modules checkout (SDN_MODULES_ROOT), holding the pinned build's commit. */
