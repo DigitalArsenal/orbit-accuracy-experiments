@@ -8,7 +8,11 @@ import { assertPathLawful, heldPredicate, admit } from './holds.mjs';
 export const ROOTS = {
   reference: '/opt/data/sdn-archive/reference-states/reference',
   gfz: '/opt/data/sdn-archive/e14-covariance-realism/reference',
+  cosmic2: '/opt/data/sdn-archive/reference-states/reference-leo-pod-2',
 };
+// COSMIC-2 (O3 yes, R6 reading): the four satellites of the plan (not 44350, held by object; not 44343). Only leoOrb_ product
+// directories of that root are listed: it also holds DORIS conversions written after 2026-10-12, which are read through the seal only.
+export const COSMIC2_USED = [44349, 44351, 44353, 44358];
 // Product-directory prefixes read (everything else, nsgf and IGS subsets included, is not listed).
 const PREFIX = /^(SW_OPER_SP3[ABC]COM|S1[AC]_OPER_AUX|ESA0OPSFIN|ilrsa\.|GFZOP_RSO_L6[45]|ssa)/;
 const STEP = { ESA0OPSFIN: 300 };
@@ -19,13 +23,15 @@ export function loadTruthIndex({ roots = Object.values(ROOTS), audit }) {
   for (const root of roots) {
     if (!fs.existsSync(root)) continue;
     for (const product of fs.readdirSync(root).sort()) {
-      if (!PREFIX.test(product)) continue;
+      const leo = root === ROOTS.cosmic2;
+      if (leo ? !/^leoOrb_/.test(product) : !PREFIX.test(product)) continue;
       const dir = assertPathLawful(path.join(root, product));
       const f = path.join(dir, 'index.json');
       if (!fs.existsSync(f)) continue;
       const ix = JSON.parse(fs.readFileSync(f, 'utf8'));
       inputs.push(path.relative('/', f));
       for (const o of ix.objects) {
+        if (leo && !COSMIC2_USED.includes(o.norad)) continue;
         const sp3 = /SP3 satellite (\w\d\d)/.exec(o.comment ?? '')?.[1] ?? null;
         const gnss = /^ESA0OPSFIN/.test(product);
         const start = Date.parse(o.start), stop = Date.parse(o.stop);

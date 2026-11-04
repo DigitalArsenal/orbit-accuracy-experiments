@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Step 90: what TESTABLE becomes under single changes to the levers, on the same fresh pools and lawful spans (numbers only).
-//   node steps/90-sensitivity.mjs <out json> <strata-o3.json>
+//   node steps/90-sensitivity.mjs <out json>
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,7 +8,6 @@ import { REGIMES, BINS } from '../lib/bins.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fc = JSON.parse(fs.readFileSync(path.join(here, '../../../results/gp-covariance-strata/frozen-constants.json'), 'utf8'));
-const o3 = JSON.parse(fs.readFileSync(process.argv[3], 'utf8')).strata;
 const view = (rec, rule) => (rule === 'S1p' ? { oc: rec.s1p.oc, scan: rec.s1p.cScan } : { oc: rec.oc, scan: rec.cScan });
 // A stratum record: {oc, cScan, clusters, nFresh, nEff, timeBlocks, s1p:{oc, cScan}}
 function testable(regime, rec, rule, o) {
@@ -21,10 +20,8 @@ function testable(regime, rec, rule, o) {
   return cMin !== null && rec.clusters >= cMin && rec.nFresh >= 100 && rec.nEff >= 60 && rec.timeBlocks >= 6;
 }
 const scenarios = {
-  baseline: { note: 'as frozen (O5 yes; O3, O4 no; gate 0.8; C_min floor 3)', o: { gate: 0.8, cFloor: 3, o4: false } },
-  'a O3 yes': { note: 'Sentinel-1C fresh joins LEO-M (4 clusters; Sentinel-1A rows left out of the fresh pool); COSMIC-2 not included: no COSMIC-2 dev rows exist', o: { gate: 0.8, cFloor: 3, o4: false }, override: o3 },
+  baseline: { note: 'as frozen (O5 yes, O3 yes, O4 no; gate 0.8; C_min floor 3)', o: { gate: 0.8, cFloor: 3, o4: false } },
   'b O4 yes, Swarm and GRACE-FO': { note: 'LEO-L strata evaluated on their 3 clusters (Swarm A+C, Swarm B, GRACE-FO)', o: { gate: 0.8, cFloor: 3, o4: true } },
-  'c O4 yes, ISS': { note: 'not computable: no ISS dev rows exist (ISS 2022-11-20 to 2024-12-31 was not built)', o: null },
   'd C_min 2': { note: 'C_min floor 2 instead of 3; the OC gate unchanged', o: { gate: 0.8, cFloor: 2, o4: false } },
   'e OC gate 0.5': { note: 'P(label | correct) >= 0.5 instead of 0.8; the too-small side and T unchanged', o: { gate: 0.5, cFloor: 3, o4: false } },
 };
@@ -35,7 +32,7 @@ for (const [name, sc] of Object.entries(scenarios)) {
   for (const rule of ['S1', 'S1p']) {
     const list = [];
     for (const r of REGIMES) for (let b = 0; b < BINS.length; b++) {
-      const key = `${r}|${b}`; const rec = sc.override?.[key] ?? fc.strata[key];
+      const key = `${r}|${b}`; const rec = fc.strata[key];
       if (testable(r, rec, rule, sc.o)) list.push(key);
     }
     row[rule] = { count: list.length, strata: list };

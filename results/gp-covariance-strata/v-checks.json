@@ -81,13 +81,18 @@
     ],
     "basis": "doy 306 file retrieved 2026-11-03T16:01Z"
    },
-   "COSMIC-2": "not measurable; O3 default no"
+   "COSMIC-2": {
+    "used": 3.0,
+    "assumed": true,
+    "basis": "not measurable (feed ended 2026-10-10 before the seal); near-real-time product; not binding against DORIS 29.2 d"
+   }
   },
   "detail": "PLAN-v2 assumed ESA 14 d, ilrsa 11 d, DORIS at least 17 d, S1 about 20 d. Measured: ESA is 3 to 4 d, ilrsa up to 17 d, DORIS 16 to 32 d by satellite, S1 19.3 d. Open dates use the used column (PLAN.md section 11)."
  },
  "V4": {
   "result": "CLUSTERS FIXED IN lib/clusters.mjs",
-  "detail": "Fixed families: Swarm A+C, Swarm B, GRACE-FO 1+2, Sentinel-1A+C, CryoSat-2, SARAL, Sentinel-3A+B, HY-2C, HY-2D, SWOT, Jason-3+Sentinel-6A+B, LAGEOS-2, Etalon-1+2. GNSS planes from the ascending node and inclination of one set per satellite (gap rule, 20 degrees). Cluster counts per stratum are in dev-rows-summary.json."
+  "detail": "Fixed families: Swarm A+C, Swarm B, GRACE-FO 1+2, Sentinel-1A+C, CryoSat-2, SARAL, Sentinel-3A+B, HY-2C, HY-2D, SWOT, Jason-3+Sentinel-6A+B, LAGEOS-2, Etalon-1+2. GNSS planes from the ascending node and inclination of one set per satellite (gap rule, 20 degrees). Cluster counts per stratum are in dev-rows-summary.json.",
+  "cosmic2": "COSMIC-2 (44349, 44351, 44353, 44358): four planes by the 20-degree ascending-node gap rule (41, 156, 273, 338 degrees; inclination 24.0): 4 clusters"
  },
  "V5": {
   "result": "NOT NEEDED FOR LABELS",

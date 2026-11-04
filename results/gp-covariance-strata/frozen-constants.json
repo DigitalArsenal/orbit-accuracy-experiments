@@ -2,22 +2,22 @@
  "version": 1,
  "plan": {
   "file": "experiments/gp-covariance-strata/PLAN.md",
-  "sha256": "dc3d3d75810ba0ffadedcda3074e8ef6a48149b467ca76ed3b8c374902eeddce"
+  "sha256": "67715fcdbf25f14e6eba82bceb1a7f1cae32f604f5e49b8fa955d99ad5a10375"
  },
  "owner": {
   "o1": "b",
   "o2": "coverage-calibrated",
-  "o3": false,
+  "o3": true,
   "o4": false,
   "o5": true,
-  "recordedBy": "O5 yes (owner, 2026-11-03; PLAN.md section 11); O1-O4 on the defaults of PLAN.md section 6 unless the task record says otherwise before 2026-11-08"
+  "recordedBy": "O5 yes (owner, 2026-11-03; PLAN.md section 11); O3 yes, O1 (b), O2 coverage-calibrated, O4 no, S3 default (owner delegation, 2026-11-04; PLAN.md section 12)"
  },
  "regimeDefinition": "E14 regimes by the module rule: a set's regime is read from its mean altitude (SGP4 un-Kozai'd mean motion, WGS-72 radius) and eccentricity: LEO-L altitude [0,500) km, LEO-M [500,800), LEO-H [800,2000), MEO [2000,30000), GEO [30000,40000), all with eccentricity [0,0.25); HEO eccentricity >= 0.25 at any altitude. Age bins (days): [0,0.25) [0.25,0.75) [0.75,1.5) [1.5,2.5) [2.5,4) [4,6) [6,8]; the stratum lookup takes the bin containing the age (the last bin closed at 8 d), the interpolation lookup is linear in age between bin midpoints and held beyond the first and last usable midpoint.",
  "seed": 20261103,
  "trials": 1500,
  "code": {
-  "libSha256": "4791674c9ebf07a38b55ecdac5d0cdf427d7ba25f58db447e8a8f7dbcdb51115",
-  "stepsSha256": "04bed43b3ee6e03dd553115376ead63600e16f1606c0f37ff6f10b9af408ad40",
+  "libSha256": "fd0cc6b9e7479f51d148dde45d5331059161f0d91af87f3bee652d333fd3bb04",
+  "stepsSha256": "428d58bfc05b2b21ddb1185c2c588d68de656861f8efbd98da83ff9a17d85d71",
   "runSha256": "dbf71301d189566cd3c0fff1b30dca6043479a0dec549d2726710e95d4f91b79"
  },
  "pins": {
@@ -71,16 +71,16 @@
    "galileoGsat": 117360
   },
   "truthObjectBlocksDropped": {
-   "sp3PrnE": 20230,
-   "c2HeldObject": 46
+   "sp3PrnE": 21278,
+   "c2HeldObject": 50
   },
   "truthTargetsDroppedByTime": {
-   "c2Calibration20260601": 366459,
+   "c2Calibration20260601": 391009,
    "swarmGracefo20261031": 0,
    "iss2025": 0
   },
   "heldRowsRetained": 0,
-  "truthFilesRead": 51452,
+  "truthFilesRead": 60522,
   "gpFilesRead": 829,
   "inputPathsUnderHolds": 0
  },
@@ -553,6 +553,30 @@
    ],
    "cluster": "C6-2"
   },
+  "44349": {
+   "regimes": [
+    "LEO-M"
+   ],
+   "cluster": "Q2-0"
+  },
+  "44351": {
+   "regimes": [
+    "LEO-M"
+   ],
+   "cluster": "Q2-1"
+  },
+  "44353": {
+   "regimes": [
+    "LEO-M"
+   ],
+   "cluster": "Q2-3"
+  },
+  "44358": {
+   "regimes": [
+    "LEO-M"
+   ],
+   "cluster": "Q2-2"
+  },
   "44506": {
    "regimes": [
     "MEO"
@@ -776,7 +800,12 @@
    36508,
    39086,
    41335,
-   43437
+   43437,
+   44349,
+   44351,
+   44353,
+   44358,
+   62261
   ],
   "LEO-H": [
    41240,
@@ -909,6 +938,17 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
    "LEO-H": [
@@ -1125,139 +1165,139 @@
    "note": null
   },
   "LEO-M": {
-   "clusters": 4,
-   "rows": 232606,
+   "clusters": 8,
+   "rows": 292974,
    "folds": {
     "R0": [
-     6,
-     28
+     9,
+     56
     ],
     "R2": [
-     5,
-     28
+     7,
+     56
     ]
    },
    "passRate": {
-    "R0": 0.21428571428571427,
-    "R2": 0.17857142857142858
+    "R0": 0.16071428571428573,
+    "R2": 0.125
    },
    "pick": "R0",
    "why": "higher leave-one-cluster-out L1 pass rate",
    "c": 1,
    "r0": [
     [
-     0.007175535768398197,
-     0.005317841835981195,
-     0.002516492418236195,
-     0.3400351461884513,
-     -0.0032693804073946303,
-     0.018171595354084445
+     0.009913677534057178,
+     0.001121174666955612,
+     0.002689430943444245,
+     0.3230467860417248,
+     -0.0010972663010899752,
+     0.017711517310026154
     ],
     [
-     0.010767575962855495,
-     -0.0024396085304131112,
-     0.0012869924458155802,
-     0.3716477176033137,
-     0.00040918043971711323,
-     0.02001790342266967
+     0.012487881231971294,
+     0.0002887398824565145,
+     0.0020064493801567915,
+     0.3522442088934765,
+     0.003027765709889378,
+     0.0207299713695865
     ],
     [
-     0.014675774391305635,
-     -0.004550643168130218,
-     0.001995722175043155,
-     0.6967653870767995,
-     0.005838103924220321,
-     0.026778464041533438
+     0.015375105805599329,
+     -0.0029643416054904717,
+     0.00015503482531222077,
+     0.6661436363459441,
+     0.0054892733656488075,
+     0.031096820554660273
     ],
     [
-     0.02977813687632345,
-     -0.001315902761728491,
-     -0.0030968560526868404,
-     1.5212278311592293,
-     0.008925632120078431,
-     0.03891564898122818
+     0.02793345063262378,
+     -0.0010965301710417292,
+     -0.008099637280967482,
+     1.780271353248479,
+     0.0033166371434269473,
+     0.0637832421600487
     ],
     [
-     0.0751103913651594,
-     -0.009357171182466815,
-     -0.01678309921736866,
-     7.792554983974719,
-     0.03457428868301128,
-     0.07105135547235401
+     0.05396534502064896,
+     -0.01926019933094123,
+     -0.03078718626811518,
+     8.671805877955173,
+     0.009673725322748806,
+     0.1300356134538104
     ],
     [
-     0.11539311987433401,
-     0.0034060899920096348,
-     -0.029238479595056537,
-     31.664294658409435,
-     -0.010253664677596672,
-     0.07504033434864371
+     0.0926025939236284,
+     -0.037880064569321616,
+     -0.07673876427807955,
+     40.62543917685421,
+     -0.12719417420291154,
+     0.325568947320103
     ],
     [
-     0.19469718847904952,
-     -0.5770193361367092,
-     -0.05450738996161282,
-     110.66194810827402,
-     0.09521942801470906,
-     0.10130019261836228
+     0.20484332617881945,
+     -0.8084273906642111,
+     -0.15672004038372941,
+     191.5512778139552,
+     0.049357864661936576,
+     0.6935017214913229
     ]
    ],
    "r2": [
     [
-     0.007462032293816886,
-     0.0049598735759316245,
-     0.002862387627184123,
-     0.284440477116263,
-     -0.0033352675276597374,
-     0.022607675253192426
+     0.011499618571191673,
+     0.0011295064434122474,
+     0.003161053340249381,
+     0.28264912827575,
+     -0.001120083133697341,
+     0.021093564462091915
     ],
     [
-     0.01193267774749675,
-     -0.0022593722763936002,
-     0.0014165319943807433,
-     0.2876383616587954,
-     0.000376368214969158,
-     0.021882624215397488
+     0.01524357891979222,
+     0.0002882223391087759,
+     0.0023523383353419476,
+     0.2875328069646483,
+     0.0029027960536958538,
+     0.023342301570030012
     ],
     [
-     0.012303763977853672,
-     -0.0042158941684704715,
-     0.0017891852477193962,
-     0.7133184208910726,
-     0.005783716547331044,
-     0.025671967239585217
+     0.015273451041649013,
+     -0.0030851802974849445,
+     0.00013938036440253913,
+     0.7263625068368316,
+     0.005170355751835333,
+     0.02530122718513648
     ],
     [
-     0.020851178224256094,
-     -0.0014172657006331583,
-     -0.0020953231288978044,
-     2.5200905201953256,
-     0.009288880390985474,
-     0.025441995680339127
+     0.02290203214532248,
+     -0.0011690805171435212,
+     -0.007658860301316049,
+     2.468223288447358,
+     0.004078222744422142,
+     0.06955915753487554
     ],
     [
-     0.03149995001831183,
-     -0.007783796415138137,
-     -0.00747669161350797,
-     12.857715830644487,
-     0.030551153609572102,
-     0.03362305256682185
+     0.029076901201908357,
+     -0.017688982022171274,
+     -0.018554226695769352,
+     13.575646188247072,
+     0.009937462694656703,
+     0.08765463114194268
     ],
     [
-     0.06626215055721095,
-     0.003098394375422082,
-     -0.01607487725186224,
-     45.629463406229355,
-     -0.008930318668735587,
-     0.03949980108860158
+     0.06429541227667147,
+     -0.03725297142489437,
+     -0.06386920091487057,
+     56.590255247840936,
+     -0.1499468257032718,
+     0.3248175633444124
     ],
     [
-     0.10312187385811766,
-     -0.503270604007563,
-     -0.03139025452860514,
-     158.93867562414496,
-     0.09029944896228623,
-     0.06343048851407071
+     0.10897224201959937,
+     -0.7018034949887697,
+     -0.10434833335175736,
+     271.356357210408,
+     0.053628763636885894,
+     0.5779302679898948
     ]
    ],
    "note": null
@@ -1760,80 +1800,80 @@
   "LEO-M": [
    {
     "P": [
-     0.007175535768398197,
-     0.005317841835981195,
-     0.002516492418236195,
-     0.3400351461884513,
-     -0.0032693804073946303,
-     0.018171595354084445
+     0.009913677534057178,
+     0.001121174666955612,
+     0.002689430943444245,
+     0.3230467860417248,
+     -0.0010972663010899752,
+     0.017711517310026154
     ],
-    "n": 33349
+    "n": 42009
    },
    {
     "P": [
-     0.010767575962855495,
-     -0.0024396085304131112,
-     0.0012869924458155802,
-     0.3716477176033137,
-     0.00040918043971711323,
-     0.02001790342266967
+     0.012487881231971294,
+     0.0002887398824565145,
+     0.0020064493801567915,
+     0.3522442088934765,
+     0.003027765709889378,
+     0.0207299713695865
     ],
-    "n": 33314
+    "n": 42192
    },
    {
     "P": [
-     0.014675774391305635,
-     -0.004550643168130218,
-     0.001995722175043155,
-     0.6967653870767995,
-     0.005838103924220321,
-     0.026778464041533438
+     0.015375105805599329,
+     -0.0029643416054904717,
+     0.00015503482531222077,
+     0.6661436363459441,
+     0.0054892733656488075,
+     0.031096820554660273
     ],
-    "n": 33307
+    "n": 42155
    },
    {
     "P": [
-     0.02977813687632345,
-     -0.001315902761728491,
-     -0.0030968560526868404,
-     1.5212278311592293,
-     0.008925632120078431,
-     0.03891564898122818
+     0.02793345063262378,
+     -0.0010965301710417292,
+     -0.008099637280967482,
+     1.780271353248479,
+     0.0033166371434269473,
+     0.0637832421600487
     ],
-    "n": 33304
+    "n": 41945
    },
    {
     "P": [
-     0.0751103913651594,
-     -0.009357171182466815,
-     -0.01678309921736866,
-     7.792554983974719,
-     0.03457428868301128,
-     0.07105135547235401
+     0.05396534502064896,
+     -0.01926019933094123,
+     -0.03078718626811518,
+     8.671805877955173,
+     0.009673725322748806,
+     0.1300356134538104
     ],
-    "n": 33240
+    "n": 41848
    },
    {
     "P": [
-     0.11539311987433401,
-     0.0034060899920096348,
-     -0.029238479595056537,
-     31.664294658409435,
-     -0.010253664677596672,
-     0.07504033434864371
+     0.0926025939236284,
+     -0.037880064569321616,
+     -0.07673876427807955,
+     40.62543917685421,
+     -0.12719417420291154,
+     0.325568947320103
     ],
-    "n": 33086
+    "n": 41416
    },
    {
     "P": [
-     0.19469718847904952,
-     -0.5770193361367092,
-     -0.05450738996161282,
-     110.66194810827402,
-     0.09521942801470906,
-     0.10130019261836228
+     0.20484332617881945,
+     -0.8084273906642111,
+     -0.15672004038372941,
+     191.5512778139552,
+     0.049357864661936576,
+     0.6935017214913229
     ],
-    "n": 33006
+    "n": 41409
    }
   ],
   "LEO-H": [
@@ -2101,23 +2141,23 @@
   },
   "LEO-M": {
    "pick": "R0",
-   "sLo": 0.91278089777269,
-   "heldOutRows": 33086,
+   "sLo": 0.9218840033247103,
+   "heldOutRows": 41416,
    "coreSigmaM": {
-    "R": 156.67904734051567,
-    "T": 1257.3083948169206,
-    "N": 119.56535457089983
+    "R": 152.7927465776768,
+    "T": 1428.4966862150263,
+    "N": 162.85254906232052
    },
    "pc20": {
-    "pc": 0.0005744477447580137,
+    "pc": 0.00044838820057353606,
     "angleDeg": 170
    },
    "pc10": {
-    "pc": 0.00014364686738253476,
+    "pc": 0.00011212528447276072,
     "angleDeg": 170
    },
    "pc30": {
-    "pc": 0.001291983708646579,
+    "pc": 0.0010084501784131832,
     "angleDeg": 170
    },
    "pass": false,
@@ -2664,7 +2704,7 @@
    "pass": true
   },
   "LEO-M|0": {
-   "c": 2.5474435803372915,
+   "c": 1.9833294136902435,
    "models": 4,
    "modelCells": [
     {
@@ -2713,11 +2753,11 @@
     }
    ],
    "binding": "2026-08/1.0",
-   "minEigRel": 2.2962941786463775e-18,
+   "minEigRel": 8.433078683439181e-17,
    "pass": true
   },
   "LEO-M|1": {
-   "c": 4.901578913793686,
+   "c": 4.285346051140814,
    "models": 7,
    "modelCells": [
     {
@@ -2799,11 +2839,11 @@
     }
    ],
    "binding": "2026-08/9.1",
-   "minEigRel": 1.7781846585945984e-17,
+   "minEigRel": -2.8149004036504894e-17,
    "pass": true
   },
   "LEO-M|2": {
-   "c": 11.589915480666479,
+   "c": 10.953653997468075,
    "models": 7,
    "modelCells": [
     {
@@ -2885,11 +2925,11 @@
     }
    ],
    "binding": "2026-08/9.2",
-   "minEigRel": 6.832128787396093e-17,
+   "minEigRel": 5.593990556096212e-17,
    "pass": true
   },
   "LEO-M|3": {
-   "c": 23.707661220737005,
+   "c": 26.065656536347483,
    "models": 7,
    "modelCells": [
     {
@@ -2971,11 +3011,11 @@
     }
    ],
    "binding": "2026-08/9.3",
-   "minEigRel": 6.75486761962004e-17,
+   "minEigRel": 3.372365639427541e-17,
    "pass": true
   },
   "LEO-M|4": {
-   "c": 32.97839443321992,
+   "c": 50.20485951934916,
    "models": 7,
    "modelCells": [
     {
@@ -3057,11 +3097,11 @@
     }
    ],
    "binding": "2026-08/9.4",
-   "minEigRel": -3.0616453429650436e-17,
+   "minEigRel": -8.401352902218357e-18,
    "pass": true
   },
   "LEO-M|5": {
-   "c": 113.40181391627793,
+   "c": 157.43959089236634,
    "models": 7,
    "modelCells": [
     {
@@ -3143,11 +3183,11 @@
     }
    ],
    "binding": "2026-08/9.5",
-   "minEigRel": -6.021846753625853e-19,
+   "minEigRel": 6.455363343467964e-18,
    "pass": true
   },
   "LEO-M|6": {
-   "c": 72.73867933506634,
+   "c": 70.38240289848338,
    "models": 4,
    "modelCells": [
     {
@@ -3196,7 +3236,7 @@
     }
    ],
    "binding": "2026-08/9.5",
-   "minEigRel": 6.834354966153032e-17,
+   "minEigRel": 6.565669669406692e-17,
    "pass": true
   },
   "LEO-H|0": {
@@ -5914,63 +5954,61 @@
    ],
    "s1p": {
     "band": {
-     "se95": 0.005511805931391917,
-     "sePool": 0.004260276525664953
+     "se95": 0.014083112495254037,
+     "sePool": 0.012181320018237957
     },
     "oc": [
-     0.205,
+     0.778,
      0,
-     0
+     0.091
     ],
     "ocPass": false,
-    "cMin": null,
+    "cMin": 8,
     "cScan": {
      "2": [
-      0.24,
+      0.584,
       0,
-      0
+      0.14
      ],
      "3": [
-      0.228,
+      0.626,
       0,
-      0
+      0.16
      ],
      "4": [
-      0.184,
+      0.668,
       0,
-      0
+      0.124
      ],
      "5": [
-      0.132,
+      0.722,
       0,
-      0
+      0.114
      ],
      "6": [
-      0.154,
+      0.758,
       0,
-      0
+      0.076
      ],
      "7": [
-      0.134,
+      0.778,
       0,
-      0
+      0.098
      ],
      "8": [
-      0.136,
+      0.818,
       0,
-      0
+      0.06
      ]
     },
-    "l3bRate": 0,
+    "l3bRate": 0.001,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "operating characteristics fail under S1p: P(label | correct) 0.205, x0.7 0",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.778, x0.7 0"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.205, x0.7 0",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.778, x0.7 0"
     ],
     "state": "NOT TESTABLE"
    },
@@ -5984,6 +6022,14 @@
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
       "date": "2027-01-04"
+     },
+     {
+      "name": "Sentinel-1C POEORB",
+      "date": "2026-12-25"
+     },
+     {
+      "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+      "date": "2026-12-09"
      }
     ]
    },
@@ -5992,40 +6038,51 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
-   "devRows": 33349,
-   "clusters": 3,
-   "objects": 6,
+   "devRows": 42009,
+   "clusters": 8,
+   "objects": 10,
    "dev": {
-    "c95": 0.9539716333323338,
-    "c99": 0.9888452427359141,
-    "h0": 0.9542251761531158,
-    "h1": 0.9535912430649273,
+    "c95": 0.9469637458639816,
+    "c99": 0.9875264824204337,
+    "h0": 0.9620699553040555,
+    "h1": 0.9260583361706958,
     "axisShare": [
-     0.939098623646886,
-     0.9718132477735464,
-     0.9234459803892171
+     0.9252303077911876,
+     0.9686019662453283,
+     0.9279440119974292
     ],
     "axisMeanZ": [
-     -0.11992624865807042,
-     0.02597422061922155,
-     -0.06747957767293947
+     -0.20078796240616276,
+     0.20158823439896542,
+     -0.0022311056075464976
     ],
-    "L1": true,
+    "L1": false,
     "L2": true,
     "L3": false,
     "label": false,
-    "stepLookupC95": 0.9471348466220876,
-    "meanD2Over3": 1.2248626887559135,
-    "tailShare": 0.0028486611292692435
+    "stepLookupC95": 0.9398938322740366,
+    "meanD2Over3": 11.759626643636283,
+    "tailShare": 0.003689685543573996
    },
-   "s0": 0.9782986364797083,
-   "blockDays": 1,
-   "timeBlocks": 27,
-   "nFresh": 1960,
-   "nEff": 1372.9859301805807,
-   "icc": 0.018430650459885605,
+   "s0": 1.0148086113994663,
+   "blockDays": 2,
+   "timeBlocks": 14,
+   "nFresh": 3760,
+   "nEff": 1000.4388925427503,
+   "icc": 0.08468619919291419,
    "oc": [
     0,
     0,
@@ -6035,12 +6092,12 @@
    "cMin": null,
    "cScan": {
     "2": [
-     0.002,
+     0.004,
      0,
-     0
+     0.002
     ],
     "3": [
-     0,
+     0.002,
      0,
      0
     ],
@@ -6050,7 +6107,7 @@
      0
     ],
     "5": [
-     0,
+     0.002,
      0,
      0
     ],
@@ -6071,16 +6128,26 @@
     ]
    },
    "clusterNames": [
+    "s1",
+    "Q2-3",
+    "Q2-2",
     "saral",
     "s3",
-    "cryosat2"
+    "cryosat2",
+    "Q2-0",
+    "Q2-1"
    ],
    "state": "NOT TESTABLE",
    "noradList": [
     36508,
     39086,
     41335,
-    43437
+    43437,
+    44349,
+    44351,
+    44353,
+    44358,
+    62261
    ]
   },
   "LEO-M|1": {
@@ -6092,73 +6159,71 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "operating characteristics fail under S1: P(label | correct) 0.055, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.143, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0.055, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.143, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.010598147194448059,
-     "sePool": 0.005150224168299907
+     "se95": 0.01362710208107567,
+     "sePool": 0.010144966870761347
     },
     "oc": [
-     0.382,
+     0.798,
      0,
-     0
+     0.153
     ],
     "ocPass": false,
-    "cMin": null,
+    "cMin": 8,
     "cScan": {
      "2": [
-      0.35,
-      0,
-      0
+      0.464,
+      0.014,
+      0.138
      ],
      "3": [
-      0.384,
-      0,
-      0
+      0.602,
+      0.006,
+      0.15
      ],
      "4": [
-      0.446,
+      0.688,
       0,
-      0
+      0.14
      ],
      "5": [
-      0.486,
+      0.712,
       0,
-      0
+      0.15
      ],
      "6": [
-      0.546,
+      0.772,
       0,
-      0
+      0.146
      ],
      "7": [
-      0.544,
+      0.75,
       0,
-      0
+      0.162
      ],
      "8": [
-      0.548,
+      0.816,
       0,
-      0
+      0.144
      ]
     },
-    "l3bRate": 0.099,
+    "l3bRate": 0.176,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "operating characteristics fail under S1p: P(label | correct) 0.382, x0.7 0",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.798, x0.7 0"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.382, x0.7 0",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.798, x0.7 0"
     ],
     "state": "NOT TESTABLE"
    },
@@ -6172,6 +6237,14 @@
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
       "date": "2027-01-04"
+     },
+     {
+      "name": "Sentinel-1C POEORB",
+      "date": "2026-12-26"
+     },
+     {
+      "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+      "date": "2026-12-09"
      }
     ]
    },
@@ -6180,42 +6253,53 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
-   "devRows": 33314,
-   "clusters": 3,
-   "objects": 6,
+   "devRows": 42192,
+   "clusters": 8,
+   "objects": 10,
    "dev": {
-    "c95": 0.949510716215405,
-    "c99": 0.9839707030077445,
-    "h0": 0.9475368842210553,
-    "h1": 0.9524739094526616,
+    "c95": 0.9492320819112628,
+    "c99": 0.9835513841486537,
+    "h0": 0.947704494018752,
+    "h1": 0.9513984410820725,
     "axisShare": [
-     0.9426667467130936,
-     0.9641291949330612,
-     0.9398751275739929
+     0.9325701554797118,
+     0.9623388320060675,
+     0.9405574516496018
     ],
     "axisMeanZ": [
-     0.030523026642130496,
-     0.048385683409869845,
-     0.042036094295755284
+     -0.08578018500930745,
+     0.26000271055759344,
+     0.07093820582980206
     ],
     "L1": true,
     "L2": true,
     "L3": true,
     "label": true,
-    "stepLookupC95": 0.9493005943447199,
-    "meanD2Over3": 1.1866839212606966,
-    "tailShare": 0.008675031518280602
+    "stepLookupC95": 0.9454635949943118,
+    "meanD2Over3": 25.702124354177542,
+    "tailShare": 0.00936196435343193
    },
-   "s0": 1.0020181059615478,
-   "blockDays": 2,
-   "timeBlocks": 14,
-   "nFresh": 1968,
-   "nEff": 792.6359918493702,
-   "icc": 0.03233639538893917,
+   "s0": 1.0042101499008864,
+   "blockDays": 3,
+   "timeBlocks": 9,
+   "nFresh": 3776,
+   "nEff": 625.504916890807,
+   "icc": 0.09790606517058086,
    "oc": [
-    0.055,
+    0.143,
     0,
     0
    ],
@@ -6223,52 +6307,62 @@
    "cMin": null,
    "cScan": {
     "2": [
-     0.058,
-     0,
-     0
-    ],
-    "3": [
-     0.064,
-     0,
-     0
-    ],
-    "4": [
-     0.048,
-     0,
-     0
-    ],
-    "5": [
-     0.052,
-     0,
-     0
-    ],
-    "6": [
-     0.054,
-     0,
-     0
-    ],
-    "7": [
      0.038,
      0,
      0
     ],
+    "3": [
+     0.102,
+     0,
+     0.002
+    ],
+    "4": [
+     0.124,
+     0,
+     0
+    ],
+    "5": [
+     0.11,
+     0,
+     0
+    ],
+    "6": [
+     0.166,
+     0,
+     0
+    ],
+    "7": [
+     0.14,
+     0,
+     0
+    ],
     "8": [
-     0.022,
+     0.182,
      0,
      0
     ]
    },
    "clusterNames": [
+    "s1",
+    "Q2-3",
+    "Q2-2",
     "saral",
     "s3",
-    "cryosat2"
+    "cryosat2",
+    "Q2-0",
+    "Q2-1"
    ],
    "state": "NOT TESTABLE",
    "noradList": [
     36508,
     39086,
     41335,
-    43437
+    43437,
+    44349,
+    44351,
+    44353,
+    44358,
+    62261
    ]
   },
   "LEO-M|2": {
@@ -6280,72 +6374,72 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "operating characteristics fail under S1: P(label | correct) 0.001, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.105, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0.001, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.105, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.01890078192036462,
-     "sePool": 0.00894455501019446
+     "se95": 0.01336528858508508,
+     "sePool": 0.011004619722729179
     },
     "oc": [
-     0.089,
-     0.234,
-     0
+     0.427,
+     0.017,
+     0.059
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.082,
-      0.336,
-      0.002
+      0.214,
+      0.12,
+      0.05
      ],
      "3": [
-      0.098,
-      0.216,
-      0
+      0.314,
+      0.1,
+      0.064
      ],
      "4": [
-      0.084,
-      0.19,
-      0
+      0.388,
+      0.08,
+      0.066
      ],
      "5": [
-      0.116,
-      0.16,
-      0
+      0.382,
+      0.038,
+      0.082
      ],
      "6": [
-      0.09,
-      0.134,
-      0
+      0.43,
+      0.022,
+      0.064
      ],
      "7": [
-      0.106,
-      0.12,
-      0
+      0.45,
+      0.016,
+      0.066
      ],
      "8": [
-      0.102,
-      0.082,
-      0
+      0.428,
+      0.014,
+      0.07
      ]
     },
-    "l3bRate": 0.057,
+    "l3bRate": 0.29,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "operating characteristics fail under S1p: P(label | correct) 0.089, x0.7 0.234",
+     "operating characteristics fail under S1p: P(label | correct) 0.427, x0.7 0.017",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.089, x0.7 0.234",
+     "operating characteristics fail under S1p: P(label | correct) 0.427, x0.7 0.017",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "state": "NOT TESTABLE"
@@ -6360,6 +6454,14 @@
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
       "date": "2027-01-05"
+     },
+     {
+      "name": "Sentinel-1C POEORB",
+      "date": "2026-12-26"
+     },
+     {
+      "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+      "date": "2026-12-10"
      }
     ]
    },
@@ -6368,42 +6470,53 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
-   "devRows": 33307,
-   "clusters": 3,
-   "objects": 6,
+   "devRows": 42155,
+   "clusters": 8,
+   "objects": 10,
    "dev": {
-    "c95": 0.9505509352388387,
-    "c99": 0.9719278229801543,
-    "h0": 0.9481689013408044,
-    "h1": 0.9541256851114949,
+    "c95": 0.9502075673111138,
+    "c99": 0.9730755545012454,
+    "h0": 0.946253543944917,
+    "h1": 0.9557973089035213,
     "axisShare": [
-     0.9760110487284955,
-     0.9448464286786561,
-     0.9587774341729967
+     0.9599573004388566,
+     0.9449650100818409,
+     0.9568971652235796
     ],
     "axisMeanZ": [
-     -0.050266535182888414,
-     0.11180250540865772,
-     -0.008934970481832546
+     -0.18598626308453942,
+     0.5390296389921794,
+     0.014820440964529684
     ],
     "L1": true,
     "L2": false,
     "L3": false,
     "label": false,
-    "stepLookupC95": 0.9484492749271924,
-    "meanD2Over3": 1.197472970501653,
-    "tailShare": 0.01936529858588285
+    "stepLookupC95": 0.9407899418811528,
+    "meanD2Over3": 69.2559488734762,
+    "tailShare": 0.018977582730399716
    },
-   "s0": 0.9946959255312179,
-   "blockDays": 2,
-   "timeBlocks": 14,
-   "nFresh": 1958,
-   "nEff": 327.3972542910254,
-   "icc": 0.10917593551996914,
+   "s0": 0.996947460721859,
+   "blockDays": 3,
+   "timeBlocks": 9,
+   "nFresh": 3746,
+   "nEff": 306.74859970386774,
+   "icc": 0.21972257416743304,
    "oc": [
-    0.001,
+    0.105,
     0,
     0
    ],
@@ -6411,52 +6524,62 @@
    "cMin": null,
    "cScan": {
     "2": [
-     0,
-     0,
+     0.026,
+     0.008,
      0
     ],
     "3": [
-     0.004,
-     0,
+     0.038,
+     0.01,
      0
     ],
     "4": [
+     0.07,
      0.004,
-     0,
      0
     ],
     "5": [
-     0,
+     0.07,
      0,
      0
     ],
     "6": [
-     0,
+     0.092,
      0,
      0
     ],
     "7": [
-     0,
+     0.138,
      0,
      0
     ],
     "8": [
-     0,
+     0.082,
      0,
      0
     ]
    },
    "clusterNames": [
+    "s1",
+    "Q2-3",
+    "Q2-2",
     "saral",
     "s3",
-    "cryosat2"
+    "cryosat2",
+    "Q2-0",
+    "Q2-1"
    ],
    "state": "NOT TESTABLE",
    "noradList": [
     36508,
     39086,
     41335,
-    43437
+    43437,
+    44349,
+    44351,
+    44353,
+    44358,
+    62261
    ]
   },
   "LEO-M|3": {
@@ -6468,72 +6591,72 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.003, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.009, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.003, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.009, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.026573903496840745,
-     "sePool": 0.012027221938920881
+     "se95": 0.017674644049319056,
+     "sePool": 0.015538786138441197
     },
     "oc": [
-     0.001,
-     0.175,
-     0.001
+     0.236,
+     0.049,
+     0.207
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.008,
-      0.256,
-      0
+      0.226,
+      0.18,
+      0.162
      ],
      "3": [
-      0.006,
-      0.148,
-      0
+      0.306,
+      0.128,
+      0.142
      ],
      "4": [
-      0,
-      0.138,
-      0
+      0.274,
+      0.08,
+      0.178
      ],
      "5": [
-      0,
-      0.094,
-      0
+      0.288,
+      0.082,
+      0.174
      ],
      "6": [
-      0,
-      0.078,
-      0
+      0.258,
+      0.06,
+      0.202
      ],
      "7": [
-      0,
-      0.054,
-      0
+      0.218,
+      0.04,
+      0.202
      ],
      "8": [
-      0,
-      0.054,
-      0
+      0.256,
+      0.026,
+      0.2
      ]
     },
-    "l3bRate": 0,
+    "l3bRate": 0.013,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "operating characteristics fail under S1p: P(label | correct) 0.001, x0.7 0.175",
+     "operating characteristics fail under S1p: P(label | correct) 0.236, x0.7 0.049",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.001, x0.7 0.175",
+     "operating characteristics fail under S1p: P(label | correct) 0.236, x0.7 0.049",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "state": "NOT TESTABLE"
@@ -6548,6 +6671,14 @@
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
       "date": "2027-01-06"
+     },
+     {
+      "name": "Sentinel-1C POEORB",
+      "date": "2026-12-27"
+     },
+     {
+      "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+      "date": "2026-12-11"
      }
     ]
    },
@@ -6556,95 +6687,116 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
-   "devRows": 33304,
-   "clusters": 3,
-   "objects": 6,
+   "devRows": 41945,
+   "clusters": 8,
+   "objects": 10,
    "dev": {
-    "c95": 0.9498258467451357,
-    "c99": 0.962707182320442,
-    "h0": 0.9486512186577248,
-    "h1": 0.9515874802972304,
+    "c95": 0.9506496602694005,
+    "c99": 0.9657170103707235,
+    "h0": 0.9508310816343241,
+    "h1": 0.950396712141104,
     "axisShare": [
-     0.9823144367042997,
-     0.9327107854912323,
-     0.9879293778525102
+     0.9726785075694362,
+     0.9352485397544403,
+     0.9549886756466802
     ],
     "axisMeanZ": [
-     0.04047473559946931,
-     0.2263494235691401,
-     -0.016174557750687497
+     -0.48322278043446104,
+     0.9945461068341398,
+     0.05249295199517966
     ],
     "L1": true,
     "L2": false,
     "L3": false,
     "label": false,
-    "stepLookupC95": 0.938866202257987,
-    "meanD2Over3": 1.1520767015379862,
-    "tailShare": 0.02840499639682921
+    "stepLookupC95": 0.9328883061151508,
+    "meanD2Over3": 234.5154841525579,
+    "tailShare": 0.02598641077601621
    },
-   "s0": 1.0026161558930442,
-   "blockDays": 2,
-   "timeBlocks": 14,
-   "nFresh": 1955,
-   "nEff": 165.19058187918327,
-   "icc": 0.23787884789870364,
+   "s0": 0.9903021291977805,
+   "blockDays": 3,
+   "timeBlocks": 9,
+   "nFresh": 3725,
+   "nEff": 182.90345576004125,
+   "icc": 0.3816992506969444,
    "oc": [
     0,
-    0.003,
+    0.009,
     0
    ],
    "ocPass": false,
    "cMin": null,
    "cScan": {
     "2": [
-     0,
      0.002,
+     0,
      0
     ],
     "3": [
-     0,
-     0,
+     0.002,
+     0.024,
      0
     ],
     "4": [
-     0,
-     0.002,
+     0.008,
+     0.006,
      0
     ],
     "5": [
-     0,
-     0.012,
+     0.004,
+     0.02,
      0
     ],
     "6": [
-     0,
-     0.004,
+     0.002,
+     0.008,
      0
     ],
     "7": [
-     0,
-     0.01,
+     0.002,
+     0.006,
      0
     ],
     "8": [
      0,
-     0.008,
+     0.002,
      0
     ]
    },
    "clusterNames": [
+    "s1",
+    "Q2-3",
+    "Q2-2",
     "saral",
     "s3",
-    "cryosat2"
+    "cryosat2",
+    "Q2-0",
+    "Q2-1"
    ],
    "state": "NOT TESTABLE",
    "noradList": [
     36508,
     39086,
     41335,
-    43437
+    43437,
+    44349,
+    44351,
+    44353,
+    44358,
+    62261
    ]
   },
   "LEO-M|4": {
@@ -6657,72 +6809,76 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+    "time blocks 3 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+    "time blocks 3 < 6"
    ],
    "s1p": {
     "band": {
-     "se95": 0.03277897685134788,
-     "sePool": 0.016167589504840794
+     "se95": 0.019662224518302237,
+     "sePool": 0.01333865659355455
     },
     "oc": [
-     0.04,
-     0.073,
+     0.205,
+     0.044,
      0.059
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.034,
-      0.088,
-      0.068
+      0.254,
+      0.132,
+      0.072
      ],
      "3": [
-      0.048,
-      0.066,
-      0.06
+      0.232,
+      0.132,
+      0.082
      ],
      "4": [
-      0.038,
-      0.056,
-      0.068
+      0.242,
+      0.088,
+      0.066
      ],
      "5": [
-      0.02,
-      0.058,
-      0.064
+      0.204,
+      0.086,
+      0.062
      ],
      "6": [
-      0.028,
-      0.048,
-      0.054
+      0.19,
+      0.06,
+      0.056
      ],
      "7": [
-      0.016,
-      0.032,
-      0.044
+      0.224,
+      0.074,
+      0.062
      ],
      "8": [
-      0.03,
-      0.034,
-      0.062
+      0.17,
+      0.036,
+      0.064
      ]
     },
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "operating characteristics fail under S1p: P(label | correct) 0.04, x0.7 0.073",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.205, x0.7 0.044",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 3 < 6"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.04, x0.7 0.073",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.205, x0.7 0.044",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "time blocks 3 < 6"
     ],
     "state": "NOT TESTABLE"
    },
@@ -6736,6 +6892,14 @@
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
       "date": "2027-01-08"
+     },
+     {
+      "name": "Sentinel-1C POEORB",
+      "date": "2026-12-29"
+     },
+     {
+      "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+      "date": "2026-12-13"
      }
     ]
    },
@@ -6744,40 +6908,51 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
-   "devRows": 33240,
-   "clusters": 3,
-   "objects": 6,
+   "devRows": 41848,
+   "clusters": 8,
+   "objects": 10,
    "dev": {
-    "c95": 0.9510529482551143,
-    "c99": 0.9641095066185319,
-    "h0": 0.9495440424892274,
-    "h1": 0.9533202830898961,
+    "c95": 0.9492926782641943,
+    "c99": 0.9652313133244121,
+    "h0": 0.9492066088663504,
+    "h1": 0.9494136583122557,
     "axisShare": [
-     0.9975030084235861,
-     0.932791817087846,
-     0.9904031287605295
+     0.9861164213343528,
+     0.9286226342955458,
+     0.9686484419805008
     ],
     "axisMeanZ": [
-     -0.017791153273169883,
-     0.2683419889400586,
-     -0.0009045720267871755
+     -1.9154588305601277,
+     1.2730695862118253,
+     -0.012217285041376254
     ],
     "L1": true,
     "L2": false,
     "L3": false,
     "label": false,
-    "stepLookupC95": 0.94485559566787,
-    "meanD2Over3": 0.9104082716192025,
-    "tailShare": 0.026143200962695547
+    "stepLookupC95": 0.9305582106671765,
+    "meanD2Over3": 1302.0366880890708,
+    "tailShare": 0.024421716688969603
    },
-   "s0": 0.9749379016343305,
-   "blockDays": 3,
-   "timeBlocks": 9,
-   "nFresh": 1942,
-   "nEff": 86.6841233340393,
-   "icc": 0.30176807014767526,
+   "s0": 1.0109330193573636,
+   "blockDays": 12,
+   "timeBlocks": 3,
+   "nFresh": 3696,
+   "nEff": 66.88200085106465,
+   "icc": 0.3546503570886514,
    "oc": [
     0,
     0,
@@ -6793,17 +6968,17 @@
     ],
     "3": [
      0,
-     0,
+     0.012,
      0
     ],
     "4": [
      0,
-     0,
+     0.006,
      0
     ],
     "5": [
      0,
-     0,
+     0.002,
      0
     ],
     "6": [
@@ -6813,26 +6988,36 @@
     ],
     "7": [
      0,
-     0,
+     0.004,
      0
     ],
     "8": [
      0,
-     0,
+     0.002,
      0
     ]
    },
    "clusterNames": [
+    "s1",
+    "Q2-3",
+    "Q2-2",
     "saral",
     "s3",
-    "cryosat2"
+    "cryosat2",
+    "Q2-0",
+    "Q2-1"
    ],
    "state": "NOT TESTABLE",
    "noradList": [
     36508,
     39086,
     41335,
-    43437
+    43437,
+    44349,
+    44351,
+    44353,
+    44358,
+    62261
    ]
   },
   "LEO-M|5": {
@@ -6845,72 +7030,80 @@
    "outcome": "NOT TESTABLE",
    "reasons": [
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+    "n_eff 42 < 60",
+    "time blocks 3 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+    "n_eff 42 < 60",
+    "time blocks 3 < 6"
    ],
    "s1p": {
     "band": {
-     "se95": 0.03601389053415131,
-     "sePool": 0.0174444217069719
+     "se95": 0.02552741174590809,
+     "sePool": 0.01815817361869639
     },
     "oc": [
-     0.155,
-     0.123,
-     0.239
+     0.329,
+     0.051,
+     0.48
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
+      0.36,
       0.154,
-      0.172,
-      0.184
+      0.306
      ],
      "3": [
-      0.144,
-      0.116,
-      0.242
+      0.368,
+      0.128,
+      0.328
      ],
      "4": [
-      0.122,
-      0.094,
-      0.242
+      0.412,
+      0.126,
+      0.376
      ],
      "5": [
-      0.142,
-      0.082,
-      0.292
+      0.348,
+      0.094,
+      0.386
      ],
      "6": [
-      0.146,
-      0.058,
-      0.288
+      0.358,
+      0.07,
+      0.454
      ],
      "7": [
-      0.12,
-      0.038,
-      0.3
+      0.33,
+      0.062,
+      0.43
      ],
      "8": [
-      0.11,
-      0.042,
-      0.268
+      0.352,
+      0.046,
+      0.43
      ]
     },
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "operating characteristics fail under S1p: P(label | correct) 0.155, x0.7 0.123",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.329, x0.7 0.051",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 42 < 60",
+     "time blocks 3 < 6"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.155, x0.7 0.123",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+     "operating characteristics fail under S1p: P(label | correct) 0.329, x0.7 0.051",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 42 < 60",
+     "time blocks 3 < 6"
     ],
     "state": "NOT TESTABLE"
    },
@@ -6924,6 +7117,14 @@
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
       "date": "2027-01-10"
+     },
+     {
+      "name": "Sentinel-1C POEORB",
+      "date": "2026-12-31"
+     },
+     {
+      "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+      "date": "2026-12-15"
      }
     ]
    },
@@ -6932,40 +7133,51 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
-   "devRows": 33086,
-   "clusters": 3,
-   "objects": 6,
+   "devRows": 41416,
+   "clusters": 8,
+   "objects": 10,
    "dev": {
-    "c95": 0.9517922988575228,
-    "c99": 0.9684760926071451,
-    "h0": 0.9487772969709167,
-    "h1": 0.9563275809869816,
+    "c95": 0.9497778636275835,
+    "c99": 0.9711705621016032,
+    "h0": 0.9450917203767972,
+    "h1": 0.9563676504764118,
     "axisShare": [
-     0.9988212537024723,
-     0.9317536117995526,
-     0.9894215075862903
+     0.9908006567510141,
+     0.9290853776318331,
+     0.9613917326637048
     ],
     "axisMeanZ": [
-     0.03815498600955435,
-     0.31413826233969344,
-     -0.02174791419744688
+     -7.662505967231171,
+     1.6071033751292694,
+     -0.06570843145462953
     ],
     "L1": true,
     "L2": false,
     "L3": false,
     "label": false,
-    "stepLookupC95": 0.9439339902073385,
-    "meanD2Over3": 0.8661514234358682,
-    "tailShare": 0.02055249954663604
+    "stepLookupC95": 0.9306065288777284,
+    "meanD2Over3": 11292.304604024517,
+    "tailShare": 0.01835039598222909
    },
-   "s0": 0.9666805746921597,
-   "blockDays": 4,
-   "timeBlocks": 7,
-   "nFresh": 1941,
-   "nEff": 63.03439760237241,
-   "icc": 0.3258577785702672,
+   "s0": 1.0033026214833758,
+   "blockDays": 10,
+   "timeBlocks": 3,
+   "nFresh": 3649,
+   "nEff": 41.697119763837556,
+   "icc": 0.5727693662660593,
    "oc": [
     0,
     0.001,
@@ -6986,41 +7198,51 @@
     ],
     "4": [
      0,
-     0,
+     0.012,
      0
     ],
     "5": [
      0,
-     0,
+     0.004,
      0
     ],
     "6": [
      0,
-     0,
+     0.002,
      0
     ],
     "7": [
      0,
-     0,
+     0.004,
      0
     ],
     "8": [
      0,
-     0,
+     0.002,
      0
     ]
    },
    "clusterNames": [
+    "s1",
+    "Q2-3",
+    "Q2-2",
     "saral",
     "s3",
-    "cryosat2"
+    "cryosat2",
+    "Q2-0",
+    "Q2-1"
    ],
    "state": "NOT TESTABLE",
    "noradList": [
     36508,
     39086,
     41335,
-    43437
+    43437,
+    44349,
+    44351,
+    44353,
+    44358,
+    62261
    ]
   },
   "LEO-M|6": {
@@ -7034,79 +7256,79 @@
    "reasons": [
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "n_eff 42 < 60",
-    "time blocks 5 < 6"
+    "n_eff 46 < 60",
+    "time blocks 4 < 6"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "n_eff 42 < 60",
-    "time blocks 5 < 6"
+    "n_eff 46 < 60",
+    "time blocks 4 < 6"
    ],
    "s1p": {
     "band": {
-     "se95": 0.04138960127818716,
-     "sePool": 0.019585040895107417
+     "se95": 0.03214196339899822,
+     "sePool": 0.0181711825751093
     },
     "oc": [
-     0.256,
-     0.163,
-     0.388
+     0.286,
+     0.056,
+     0.374
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.276,
-      0.214,
-      0.362
+      0.284,
+      0.18,
+      0.234
      ],
      "3": [
-      0.246,
-      0.146,
-      0.38
+      0.318,
+      0.198,
+      0.278
      ],
      "4": [
-      0.218,
-      0.116,
-      0.404
+      0.3,
+      0.12,
+      0.332
      ],
      "5": [
-      0.236,
-      0.076,
-      0.434
+      0.3,
+      0.098,
+      0.368
      ],
      "6": [
-      0.224,
+      0.296,
       0.092,
-      0.404
+      0.346
      ],
      "7": [
-      0.192,
-      0.05,
-      0.484
+      0.312,
+      0.082,
+      0.374
      ],
      "8": [
-      0.198,
-      0.042,
-      0.442
+      0.266,
+      0.054,
+      0.388
      ]
     },
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "operating characteristics fail under S1p: P(label | correct) 0.256, x0.7 0.163",
+     "operating characteristics fail under S1p: P(label | correct) 0.286, x0.7 0.056",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "n_eff 42 < 60",
-     "time blocks 5 < 6"
+     "n_eff 46 < 60",
+     "time blocks 4 < 6"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.256, x0.7 0.163",
+     "operating characteristics fail under S1p: P(label | correct) 0.286, x0.7 0.056",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "n_eff 42 < 60",
-     "time blocks 5 < 6"
+     "n_eff 46 < 60",
+     "time blocks 4 < 6"
     ],
     "state": "NOT TESTABLE"
    },
@@ -7120,6 +7342,14 @@
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
       "date": "2027-01-12"
+     },
+     {
+      "name": "Sentinel-1C POEORB",
+      "date": "2027-01-02"
+     },
+     {
+      "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+      "date": "2026-12-17"
      }
     ]
    },
@@ -7128,40 +7358,51 @@
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
      "latencyDays": 29.2,
      "o5": true
+    },
+    {
+     "name": "Sentinel-1C POEORB",
+     "latencyDays": 19.3,
+     "o5": true
+    },
+    {
+     "name": "COSMIC-2 (reference-leo-pod-2, back-fill authorized)",
+     "latencyDays": 3,
+     "o5": true,
+     "assumed": true
     }
    ],
-   "devRows": 33006,
-   "clusters": 3,
-   "objects": 6,
+   "devRows": 41409,
+   "clusters": 8,
+   "objects": 10,
    "dev": {
-    "c95": 0.950433254559777,
-    "c99": 0.9696418832939465,
-    "h0": 0.956299452221546,
-    "h1": 0.9446187258687259,
+    "c95": 0.949455432393924,
+    "c99": 0.9711415392789007,
+    "h0": 0.9616783895221925,
+    "h1": 0.9373376935654516,
     "axisShare": [
-     0.9980306610919227,
-     0.9281948736593346,
-     0.9850027267769497
+     0.9906542056074766,
+     0.9283730589968364,
+     0.9838923905431186
     ],
     "axisMeanZ": [
-     -0.0916484424833361,
-     0.34384353005523766,
-     -0.008394457870712866
+     -18.615090740269636,
+     1.8661083678632007,
+     -0.0649482585368913
     ],
     "L1": true,
     "L2": false,
     "L3": false,
     "label": false,
-    "stepLookupC95": 0.9556141307641035,
-    "meanD2Over3": 0.9074969093738091,
-    "tailShare": 0.019329818820820455
+    "stepLookupC95": 0.9553237218962062,
+    "meanD2Over3": 41487.7114493544,
+    "tailShare": 0.019102127556811323
    },
-   "s0": 0.9922066892723428,
-   "blockDays": 6,
-   "timeBlocks": 5,
-   "nFresh": 1937,
-   "nEff": 42.2847380599411,
-   "icc": 0.3497020550454171,
+   "s0": 1.0049712784091571,
+   "blockDays": 8,
+   "timeBlocks": 4,
+   "nFresh": 3650,
+   "nEff": 45.69513754011018,
+   "icc": 0.6976425240138979,
    "oc": [
     0,
     0,
@@ -7172,7 +7413,7 @@
    "cScan": {
     "2": [
      0,
-     0.002,
+     0,
      0
     ],
     "3": [
@@ -7207,16 +7448,26 @@
     ]
    },
    "clusterNames": [
+    "s1",
+    "Q2-3",
+    "Q2-2",
     "saral",
     "s3",
-    "cryosat2"
+    "cryosat2",
+    "Q2-0",
+    "Q2-1"
    ],
    "state": "NOT TESTABLE",
    "noradList": [
     36508,
     39086,
     41335,
-    43437
+    43437,
+    44349,
+    44351,
+    44353,
+    44358,
+    62261
    ]
   },
   "LEO-H|0": {
@@ -13452,8 +13703,8 @@
  },
  "devRows": {
   "dir": "AR/gp-covariance-strata/dev-rows",
-  "files": 114,
-  "manifestSha256": "0fdd682d569a71c353bece7acaa9b30bc29007c7b3a5bdd16b07d3b5d4338279",
+  "files": 118,
+  "manifestSha256": "0b05a2e9e4a449d5f59bbfdaac5ddc2514b4139d9d0885cf2e22959ef0116bcb",
   "format": "one gzip JSON-lines file per NORAD: {norad, setEpoch, sampleEpoch, ageDays, bin, half, regime, cluster, block, e:[R,T,N] km unrounded, z:[3], d2}; z and d2 under the frozen P_strat (interpolation lookup); block = floor(days since 2024-01-01 / stratum block length)"
  },
  "testableCounts": {

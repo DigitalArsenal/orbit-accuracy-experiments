@@ -1,18 +1,7 @@
 {
  "rows": {
   "baseline": {
-   "note": "as frozen (O5 yes; O3, O4 no; gate 0.8; C_min floor 3)",
-   "S1": {
-    "count": 0,
-    "strata": []
-   },
-   "S1p": {
-    "count": 0,
-    "strata": []
-   }
-  },
-  "a O3 yes": {
-   "note": "Sentinel-1C fresh joins LEO-M (4 clusters; Sentinel-1A rows left out of the fresh pool); COSMIC-2 not included: no COSMIC-2 dev rows exist",
+   "note": "as frozen (O5 yes, O3 yes, O4 no; gate 0.8; C_min floor 3)",
    "S1": {
     "count": 0,
     "strata": []
@@ -33,11 +22,6 @@
     "strata": []
    }
   },
-  "c O4 yes, ISS": {
-   "note": "not computable: no ISS dev rows exist (ISS 2022-11-20 to 2024-12-31 was not built)",
-   "S1": null,
-   "S1p": null
-  },
   "d C_min 2": {
    "note": "C_min floor 2 instead of 3; the OC gate unchanged",
    "S1": {
@@ -56,8 +40,10 @@
     "strata": []
    },
    "S1p": {
-    "count": 1,
+    "count": 3,
     "strata": [
+     "LEO-M|0",
+     "LEO-M|1",
      "MEO|0"
     ]
    }
@@ -66,14 +52,14 @@
  "bestPCorrect": {
   "S1": {
    "LEO-L": 0.084,
-   "LEO-M": 0.055,
+   "LEO-M": 0.143,
    "LEO-H": 0.169,
    "MEO": 0.204,
    "GEO": 0.003
   },
   "S1p": {
    "LEO-L": 0.779,
-   "LEO-M": 0.382,
+   "LEO-M": 0.798,
    "LEO-H": 0.819,
    "MEO": 0.518,
    "GEO": 0.369

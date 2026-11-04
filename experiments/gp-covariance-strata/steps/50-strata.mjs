@@ -7,7 +7,7 @@ import { regimeTables } from '../lib/tab.mjs';
 import { evalRow } from '../lib/fit.mjs';
 import { BINS, REGIMES } from '../lib/bins.mjs';
 import { CHI2_95, CHI2_99, Z95, labelStats, quantileSorted } from '../lib/stats.mjs';
-import { openDate, PRODUCTS, WINDOW, FRESH_EXCLUDED_CLUSTERS } from '../lib/outcomes.mjs';
+import { openDate, PRODUCTS, WINDOW, FRESH_EXCLUDED_CLUSTERS, FRESH_EXCLUDED_NORADS } from '../lib/outcomes.mjs';
 
 const [candFile, out, ...dirs] = process.argv.slice(2);
 const cand = JSON.parse(fs.readFileSync(candFile, 'utf8'));
@@ -53,10 +53,10 @@ for (const regime of REGIMES) {
     const bl = blockLength(Array.from(day), lnd2);
     // per-cluster buckets by day
     const byC = new Map();
-    for (let k = 0; k < n; k++) { if (process.env.O3_YES === '1' && tab.norad[ids[k]] === 39634) continue; (byC.get(cl[k]) ?? byC.set(cl[k], []).get(cl[k])).push(k); }
+    for (let k = 0; k < n; k++) { if (FRESH_EXCLUDED_NORADS.includes(tab.norad[ids[k]])) continue;   // no fresh feed (amendment 3)
+      (byC.get(cl[k]) ?? byC.set(cl[k], []).get(cl[k])).push(k); }
     const C = [...byC.keys()];
-    const o3 = process.env.O3_YES === '1';   // sensitivity run only: Sentinel-1C fresh (Sentinel-1A has no fresh feed)
-    const pool = regime === 'LEO-L' || o3 ? C : C.filter((c) => !FRESH_EXCLUDED_CLUSTERS.includes(tab.clusterNames[c]));   // clusters with a fresh feed (amendment 2)
+    const pool = regime === 'LEO-L' ? C : C.filter((c) => !FRESH_EXCLUDED_CLUSTERS.includes(tab.clusterNames[c]));   // clusters with a fresh feed (amendment 2)
     const info = pool.map((c) => { const ks = byC.get(c).sort((a, b2) => day[a] - day[b2]); const dmin = day[ks[0]], dmax = day[ks[ks.length - 1]]; const idxByDay = new Map(); ks.forEach((k) => (idxByDay.get(day[k]) ?? idxByDay.set(day[k], []).get(day[k])).push(k)); return { c, ks, dmin, dmax, idxByDay, days: idxByDay.size }; });
     const clusterDays = info.reduce((a, x) => a + x.days, 0);
     const rate = info.reduce((a, x) => a + x.ks.length, 0) / clusterDays;                                       // rows per cluster-day

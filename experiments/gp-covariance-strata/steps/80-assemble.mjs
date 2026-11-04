@@ -15,7 +15,7 @@ import { C2_HELD_OBJECTS } from '../lib/holds.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../../..');
 const args = process.argv.slice(2);
-const owner = { o1: 'b', o2: 'coverage-calibrated', o3: false, o4: args.includes('--o4'), o5: args.includes('--o5'), recordedBy: args.includes('--o5') ? 'O5 yes (owner, 2026-11-03; PLAN.md section 11); O1-O4 on the defaults of PLAN.md section 6 unless the task record says otherwise before 2026-11-08' : 'defaults of PLAN.md section 6 unless the task record carries an answer' };
+const owner = { o1: 'b', o2: 'coverage-calibrated', o3: args.includes('--o3'), o4: args.includes('--o4'), o5: args.includes('--o5'), recordedBy: args.includes('--o5') ? 'O5 yes (owner, 2026-11-03; PLAN.md section 11); O3 yes, O1 (b), O2 coverage-calibrated, O4 no, S3 default (owner delegation, 2026-11-04; PLAN.md section 12)' : 'defaults of PLAN.md section 6 unless the task record carries an answer' };
 const [scratch, ...dirs] = args.filter((a) => !a.startsWith('--'));
 const J = (f) => JSON.parse(fs.readFileSync(path.join(scratch, f), 'utf8'));
 const cand = J('cand.json'), strata = J('strata.json').strata, s3s5 = J('s3s5.json'), manifest = J('dev-rows-manifest.json');

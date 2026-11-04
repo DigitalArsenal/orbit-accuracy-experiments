@@ -5,6 +5,7 @@ import zlib from 'node:zlib';
 import readline from 'node:readline';
 import { REGIMES, BINS } from './bins.mjs';
 import { FIXED, gnssClusters } from './clusters.mjs';
+import { COSMIC2_USED } from './truth.mjs';
 import { auditRetained, HoldAudit } from './holds.mjs';
 
 export const COLS = ['norad', 'setMs', 't', 'b', 'k', 'age', 'eR', 'eT', 'eN', 'vR', 'vT', 'vN', 'regime', 'cluster', 'gnss'];
@@ -21,7 +22,7 @@ export async function loadRows(dirs) {
   }
   // GNSS plane clusters from the ascending node and inclination of one set per object (the first, in time order)
   const planeInput = JSON.parse(fs.readFileSync(path.join(scratch, 'plane-input.json'), 'utf8'));
-  const gc = gnssClusters(planeInput.map((p) => ({ ...p, sys: sp3Of.get(p.norad) })).filter((p) => p.sys));
+  const gc = gnssClusters(planeInput.map((p) => ({ ...p, sys: sp3Of.get(p.norad) ?? (COSMIC2_USED.includes(p.norad) ? 'Q' : undefined) })).filter((p) => p.sys));   // 'Q': COSMIC-2 planes by the same gap rule
   const clusterNames = []; const cid = (n) => { let i = clusterNames.indexOf(n); if (i < 0) { clusterNames.push(n); i = clusterNames.length - 1; } return i; };
   // PLAN.md acceptance (f): every evaluated age lies inside its bin, both edges included. The module's age differs from the grid by
   // up to seconds (epoch rounding) on a few rows; those are dropped and counted.

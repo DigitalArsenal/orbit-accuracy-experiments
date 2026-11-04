@@ -1,13 +1,13 @@
 {
- "rows": 2287057,
+ "rows": 2347425,
  "builder": {
-  "objects": 114,
-  "sets": 68001,
-  "targets": 2287486,
-  "rows": 2287092,
+  "objects": 118,
+  "sets": 70153,
+  "targets": 2347854,
+  "rows": 2347460,
   "missing": 394,
-  "noSpan": 862015,
-  "held": 366459,
+  "noSpan": 975302,
+  "held": 391009,
   "ageOutsideBinDropped": 35
  },
  "s4": {
@@ -16,16 +16,16 @@
    "galileoGsat": 117360
   },
   "truthObjectBlocksDropped": {
-   "sp3PrnE": 20230,
-   "c2HeldObject": 46
+   "sp3PrnE": 21278,
+   "c2HeldObject": 50
   },
   "truthTargetsDroppedByTime": {
-   "c2Calibration20260601": 366459,
+   "c2Calibration20260601": 391009,
    "swarmGracefo20261031": 0,
    "iss2025": 0
   },
   "heldRowsRetained": 0,
-  "truthFilesRead": 51452,
+  "truthFilesRead": 60522,
   "gpFilesRead": 829,
   "inputPathsUnderHolds": 0
  },
@@ -199,45 +199,45 @@
    "days": 345
   },
   "LEO-M|6": {
-   "rows": 33006,
-   "objects": 6,
-   "clusters": 4,
+   "rows": 41409,
+   "objects": 10,
+   "clusters": 8,
    "days": 340
   },
   "LEO-M|5": {
-   "rows": 33086,
-   "objects": 6,
-   "clusters": 4,
+   "rows": 41416,
+   "objects": 10,
+   "clusters": 8,
    "days": 341
   },
   "LEO-M|4": {
-   "rows": 33240,
-   "objects": 6,
-   "clusters": 4,
+   "rows": 41848,
+   "objects": 10,
+   "clusters": 8,
    "days": 341
   },
   "LEO-M|3": {
-   "rows": 33304,
-   "objects": 6,
-   "clusters": 4,
+   "rows": 41945,
+   "objects": 10,
+   "clusters": 8,
    "days": 341
   },
   "LEO-M|2": {
-   "rows": 33307,
-   "objects": 6,
-   "clusters": 4,
+   "rows": 42155,
+   "objects": 10,
+   "clusters": 8,
    "days": 340
   },
   "LEO-M|1": {
-   "rows": 33314,
-   "objects": 6,
-   "clusters": 4,
+   "rows": 42192,
+   "objects": 10,
+   "clusters": 8,
    "days": 339
   },
   "LEO-M|0": {
-   "rows": 33349,
-   "objects": 6,
-   "clusters": 4,
+   "rows": 42009,
+   "objects": 10,
+   "clusters": 8,
    "days": 341
   },
   "LEO-L|6": {
