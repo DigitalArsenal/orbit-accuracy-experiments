@@ -1,4 +1,4 @@
-// Record framing for the orbit-determination pages (SDS 1.240.0): $PRW for
+// Record framing for the orbit-determination pages (SDS 1.276.0): $PRW for
 // propagator/ffm, $FRM for foundation/frames, $ACW for analysis/access and
 // analysis/observation-simulator, $OEM, $EOP and the observation records for
 // analysis/association, $CQR for analysis/conjunction-assessment. Encoding,
@@ -102,15 +102,15 @@ export function executionFrame(request) {
       COORDINATE_SYSTEM: gcrfSystem(), HAS_MASS_KG: f.massKg !== undefined, MASS_KG: f.massKg ?? 0,
     }),
     TARGET_EPOCH: instant(last),
-    INTEGRATOR: t('PRWIntegratorSettings', { ALGORITHM: S.prwSolverAlgorithm.RK78, INITIAL_STEP_SECONDS: 60, MINIMUM_STEP_SECONDS: 0.01, MAXIMUM_STEP_SECONDS: 300,
+    INTEGRATOR: t('PCFIntegratorSettings', { ALGORITHM: S.pcfIntegratorAlgorithm.RK78, INITIAL_STEP_SECONDS: 60, MINIMUM_STEP_SECONDS: 0.01, MAXIMUM_STEP_SECONDS: 300,
       ABSOLUTE_TOLERANCES: Array(6).fill((request.tolerance ?? 1e-12) * 1000), RELATIVE_TOLERANCE: request.tolerance ?? 1e-12, MAXIMUM_STEPS: 1000000 }),
-    FORCES: t('PRWForceConfiguration', {
-      GRAVITY_CHOICE: sh ? S.prwGravitySelection.SPHERICAL_HARMONICS : S.prwGravitySelection.POINT_MASS, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
+    FORCES: t('PCFForceModel', {
+      GRAVITY_CHOICE: sh ? S.pcfGravitySelection.SPHERICAL_HARMONICS : S.pcfGravitySelection.POINT_MASS, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
       MAXIMUM_DEGREE: f.degree ?? 0, HAS_MAXIMUM_DEGREE: sh, MAXIMUM_ORDER: f.order ?? 0, HAS_MAXIMUM_ORDER: sh,
       ENABLE_THIRD_BODY: (f.thirdBodies ?? []).length > 0, THIRD_BODY_IDS: f.thirdBodies ?? [], ENABLE_SRP: !!f.srp, ENABLE_DRAG: false,
       INITIAL_MASS_KG: f.massKg ?? 1000, AREA_M2: f.areaM2 ?? 1, REFLECTIVITY_COEFFICIENT: f.cr ?? 1, DRAG_COEFFICIENT: 2.2,
-      ATMOSPHERE_MODEL: S.prwAtmosphereFamily.NRLMSISE00, EPHEMERIS_SOURCE: request.kernel ? 'JPL_SPK' : 'Analytical',
-      SOLID_TIDES: S.prwSolidTideModel.NONE, RELATIVITY: S.prwRelativityTerms.NONE,
+      ATMOSPHERE_MODEL: S.pcfAtmosphereFamily.NRLMSISE00, EPHEMERIS_SOURCE: request.kernel ? 'JPL_SPK' : 'Analytical',
+      SOLID_TIDES: S.pcfSolidTideModel.NONE, RELATIVITY: S.pcfRelativityTerms.NONE,
     }),
     INCLUDE_STM: !!request.stm, STM_TECHNIQUE: S.prwDerivativeTechnique.ANALYTIC, DENSITY_TREATMENT: S.prwDensityTreatment.NEGLECTED,
     INITIAL_COVARIANCE: covariance ? t('PRWStateMatrix', { DIMENSION: 6, VALUES: covariance }) : null,
