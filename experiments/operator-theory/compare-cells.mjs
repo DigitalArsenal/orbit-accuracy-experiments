@@ -1,23 +1,38 @@
 // COMPARE.md: every figure of the comparison site's explorer, by reference, regime, provider, satellite, fit and lead. Statistics only.
 //   node experiments/operator-theory/compare-cells.mjs --out results/ap-truth/compare/cells.json [--examples <dir>]
+// Each row names its fits' input and each column's builds by SHA-256 (lib/build.mjs COLUMN_BUILDS). AP on precise orbits is sdn-ap 0.5.1 (ap/b051); next-file
+// AP stays 0.4.11's, the build of its rows. The Space Force XP is sgp4-xp 0.2.1 (ap/b051; the next-file pairs ap/xp-arm-0-2-1, XP-ARM-0-2-1.md). Every
+// Starlink group is held: no Starlink row or example is parsed, and the SpaceX rows are carried from HELD_FROM's cells.json as they were, on 0.1.1.
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { binOf, pct, asc } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
-import { BUILD, AP_ARM, AP_VERSION } from './lib/build.mjs';
+import { BUILD, AP_ARM, COLUMN_BUILDS, BUILD_RECORDS } from './lib/build.mjs';
+import { HELD_ROW } from './lib/pairs.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
-const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD);
-const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
-const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
+const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
+const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD), B051 = path.join(AP, 'b051'), XPARM = path.join(AP, 'xp-arm-0-2-1');
+const HELD_FROM = '71b27aa50112ec0533359572597eb408491cdb2f';
+const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter((l) => l && !HELD_ROW.test(l)).map((l) => JSON.parse(l));
+const rowsIn = (dir, re = /^rows-\d+\.jsonl$/) => fs.readdirSync(dir).filter((f) => re.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
 const NAV = /^(beidou|compass|galileo|glonass|gps|irnss|qzs)/;
 const regimeOf = (r) => (r.source.endsWith('-leo') ? 'Low orbit' : NAV.test(r.object) ? 'Navigation' : 'Geodetic');
 const providerOf = (r) => r.source.split('-')[1];
 const round = (x) => (x === null || x === undefined ? null : Number(x >= 100 ? x.toFixed(1) : x >= 1 ? x.toFixed(3) : x.toFixed(4)));
+/** The input class of a row's fits, and its builds: for each column in it, the keys of BUILD_RECORDS. */
+const INPUT = { next: 'operator-file', truth: 'precise-orbit' };
+const named = (row, set) => {
+  const builds = COLUMN_BUILDS[set], build = {};
+  for (const column of Object.keys(row.arms)) { if (!builds[column]) throw new Error(`no build for ${column} in ${set}`); build[column] = builds[column].map((b) => b.key); }
+  const { arms, ...head } = row;
+  return { ...head, input: INPUT[row.reference], build, arms };
+};
 
 const rows = rowsIn(path.join(NEW, 'laser', 'forward'));
-const stores = [new Map(rows.map((r) => [key(r), r])), ...[path.join(NEW, 'laser-xp', 'forward'), path.join(ROOT, 'cheaper', 'forward'), path.join(NEW, 'laser-sgp4'), path.join(NEW, 'laser-sgp4-high'), path.join(NEW, 'laser-sgp4-72'), path.join(NEW, 'ussf-laser')].map((d) => new Map(rowsIn(d).map((r) => [key(r), r])))];
+const stores = [new Map(rows.map((r) => [key(r), r])), ...[path.join(NEW, 'laser-xp', 'forward'), path.join(ROOT, 'cheaper', 'forward'), path.join(NEW, 'laser-sgp4'), path.join(NEW, 'laser-sgp4-high'), path.join(NEW, 'laser-sgp4-72'), path.join(XPARM, 'ussf-laser')].map((d) => new Map(rowsIn(d).map((r) => [key(r), r])))];
 const km = (r, arm) => { for (const s of stores) { const v = s.get(key(r))?.arms[arm]?.km; if (Number.isFinite(v)) return v; } return undefined; };
 
 /** The stored arm behind each column, by fit; a column with no arm for that fit or regime stays empty. */
@@ -49,21 +64,22 @@ for (const r of rows) {
 }
 for (const [k, list] of byBin) {
   const [level, regime, provider, satellite, lead] = k.split('|');
-  for (const fit of [48, 72]) out.push({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, arms: cellOf(list, regime, fit) });
+  for (const fit of [48, 72]) out.push(named({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, arms: cellOf(list, regime, fit) }, 'next'));
 }
 
-// Against precise orbits: AP5.md's windows, by group, provider and satellite.
+// Against precise orbits: AP5.md's windows, by group, provider and satellite. Membership, SGP4, XP and FFM from the AP build's stores; AP and the Space Force XP by window from ap/b051.
 const e = (r, arm, k) => r?.arms?.[arm]?.days?.[k]?.e;
-const windowsIn = (dir) => new Map(rowsIn(dir).map((r) => [r.key, r]));
-const u1 = windowsIn(path.join(NEW, 'ussf-truth')), u2 = windowsIn(path.join(NEW, 'ussf-truth2')), uSix = windowsIn(path.join(NEW, 'ussf-regimes'));
+const windowsIn = (...dirs) => new Map(dirs.flatMap((d) => rowsIn(d)).map((r) => [r.key, r]));
+const u1 = windowsIn(path.join(B051, 'ussf-truth')), u2 = windowsIn(path.join(B051, 'ussf-truth2')), uSix = windowsIn(path.join(B051, 'ussf-regimes'), path.join(B051, 'ussf-regimes-hx'));
+const a1 = windowsIn(path.join(B051, 'truth')), a2 = windowsIn(path.join(B051, 'truth2')), aSix = windowsIn(path.join(B051, 'regimes'), path.join(B051, 'regimes-hx'));
 const ap1 = rowsIn(path.join(NEW, 'truth')), ap2 = rowsIn(path.join(NEW, 'truth2')), cmp1 = rowsIn(path.join(NEW, 'compare-truth')), cmp2 = rowsIn(path.join(NEW, 'compare-truth2'));
 const PROVIDER = (name) => (/^Swarm/.test(name) ? 'ESA' : /^GRACE/.test(name) ? 'Data E' : /^Sentinel/.test(name) ? 'Copernicus' : 'ESA navigation');
 const PUBLIC_NAME = (name) => (/^GRACE-FO/.test(name) ? `Research satellite ${name.at(-1)}` : name);
 const CUTS = [
-  { regime: 'Strong drag, 2025', ap: ap1, cmp: cmp1, keep: (r) => !r.error, arcs: [24], ffm: 'FFM40', ussf: u1 },
-  { regime: 'Strong drag, 2026', ap: ap2, cmp: cmp2, keep: (r) => r.group === 'P' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2 },
-  { regime: 'Near 700 km', ap: ap2, cmp: cmp2, keep: (r) => r.group === 'S1' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2 },
-  { regime: 'Medium Earth orbit', ap: ap2, cmp: cmp2, keep: (r) => r.group === 'GN' && !r.error, arcs: [24, 72], ffm: 'FFM20', ussf: u2 },
+  { regime: 'Strong drag, 2025', ap: ap1, apNew: a1, cmp: cmp1, keep: (r) => !r.error, arcs: [24], ffm: 'FFM40', ussf: u1 },
+  { regime: 'Strong drag, 2026', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'P' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2 },
+  { regime: 'Near 700 km', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'S1' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2 },
+  { regime: 'Medium Earth orbit', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'GN' && !r.error, arcs: [24, 72], ffm: 'FFM20', ussf: u2 },
 ];
 // --only 2025: the finished windows alone, while the others still run; a partial part is never published.
 for (const cut of CUTS.filter((x) => !argOf('--only') || x.regime.includes(argOf('--only')))) {
@@ -73,11 +89,11 @@ for (const cut of CUTS.filter((x) => !argOf('--only') || x.regime.includes(argOf
   for (const name of new Set(inCut.map((r) => r.name))) levels.push(['satellite', PROVIDER(name), PUBLIC_NAME(name), inCut.filter((r) => r.name === name)]);
   for (const [level, provider, satellite, list] of levels) for (const fit of cut.arcs) for (const day of ['1', '2', '3', '7']) {
     const arms = {};
-    for (const [column, read] of [['SGP4', (r) => e(byKey.get(r.key), `S${fit}`, day)], ['XP', (r) => e(byKey.get(r.key), `XP${fit}`, day)], ['XPU', (r) => e(cut.ussf.get(r.key), `U${fit}`, day)], ['AP', (r) => e(r, `AP${fit}`, day)], [cut.ffm, (r) => e(byKey.get(r.key), `F${fit}`, day)]]) {
+    for (const [column, read] of [['SGP4', (r) => e(byKey.get(r.key), `S${fit}`, day)], ['XP', (r) => e(byKey.get(r.key), `XP${fit}`, day)], ['XPU', (r) => e(cut.ussf.get(r.key), `U${fit}`, day)], ['AP', (r) => e(cut.apNew.get(r.key), `AP${fit}`, day)], [cut.ffm, (r) => e(byKey.get(r.key), `F${fit}`, day)]]) {
       const v = list.map(read).filter(Number.isFinite).sort(asc);
       if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
     }
-    out.push({ reference: 'truth', level, regime: cut.regime, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms });
+    out.push(named({ reference: 'truth', level, regime: cut.regime, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms }, 'truth'));
   }
 }
 
@@ -92,10 +108,10 @@ if (fs.existsSync(path.join(NEW, 'regimes')) && !argOf('--only')) {
     for (const [level, provider, satellite, list] of levels) for (const fit of arcs) for (const day of ['1', '2', '3', '7']) {
       const arms = {};
       for (const [column, code] of [['SGP4', 'S'], ['XP', 'XP'], ['XPU', 'U'], ['AP', 'AP'], [ffm, 'F']]) {
-        const v = list.map((r) => e(code === 'U' ? uSix.get(r.key) : r, `${code}${fit}`, day)).filter(Number.isFinite).sort(asc);
+        const v = list.map((r) => e(code === 'U' ? uSix.get(r.key) : code === 'AP' ? aSix.get(r.key) : r, `${code}${fit}`, day)).filter(Number.isFinite).sort(asc);
         if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
       }
-      out.push({ reference: 'truth', level, regime: g.label, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms });
+      out.push(named({ reference: 'truth', level, regime: g.label, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms }, 'truth'));
     }
   }
 }
@@ -106,8 +122,9 @@ const providerLeftOut = {};
 if (fs.existsSync(path.join(NEW, 'providers')) && !argOf('--only')) {
   const pairKey = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
   const stored = new Map([...rowsIn(path.join(ROOT, 'forward')), ...rowsIn(path.join(ROOT, 'vendors', 'forward'))].map((r) => [pairKey(r), r]));
-  const uProviders = new Map(fs.readdirSync(path.join(NEW, 'ussf-providers')).filter((f) => /^rows(-iss)?-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(NEW, 'ussf-providers', f))).map((r) => [pairKey(r), r]));
-  const all = fs.readdirSync(path.join(NEW, 'providers')).filter((f) => /^rows(-iss)?-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(NEW, 'providers', f))).filter((r) => !r.error && PROVIDERS[r.source]);
+  const PROVIDER_ROWS = /^rows(-iss)?-\d+\.jsonl$/;
+  const uProviders = new Map(rowsIn(path.join(XPARM, 'ussf-providers'), PROVIDER_ROWS).map((r) => [pairKey(r), r]));
+  const all = rowsIn(path.join(NEW, 'providers'), PROVIDER_ROWS).filter((r) => !r.error && PROVIDERS[r.source]);
   // A Planet object with no catalog number: its successive files disagree by thousands of km for every arm, Planet's own forecast included, so it says nothing about a propagator.
   const live = all.filter((r) => r.source !== 'planet' || r.norad);
   providerLeftOut.planetPairsWithoutCatalogNumber = all.length - live.length;
@@ -129,15 +146,20 @@ if (fs.existsSync(path.join(NEW, 'providers')) && !argOf('--only')) {
   }
   for (const [k, list] of buckets) {
     const [level, regime, provider, satellite, lead] = k.split('|');
-    for (const fit of [24, 48]) { const arms = cell(list, fit); if (Object.keys(arms).length) out.push({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, arms }); }
+    for (const fit of [24, 48]) { const arms = cell(list, fit); if (Object.keys(arms).length) out.push(named({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, arms }, 'next')); }
   }
 }
+// The held SpaceX rows, as HELD_FROM published them.
+const HELD_REGIME = PROVIDERS.starlink[1];
+const held = JSON.parse(execFileSync('git', ['-C', REPO, 'show', `${HELD_FROM}:results/ap-truth/compare/cells.json`], { maxBuffer: 1 << 26 }).toString('utf8')).rows.filter((r) => r.regime === HELD_REGIME);
+if (!argOf('--only')) for (const r of held) { const { example, ...row } = r; out.push({ ...named(row, 'held'), ...(example ? { example } : {}) }); }
 
 // Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's. Never a showcase example: those are chosen to show AP's lead, not to be typical.
 if (argOf('--examples')) {
   const dir = argOf('--examples');
-  const examples = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))).filter((d) => !d.showcase).map((d) => ({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite }));
+  const examples = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json' && !/starlink/i.test(f)).map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))).filter((d) => !d.showcase).map((d) => ({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite }));
   for (const r of out) {
+    if (r.regime === HELD_REGIME) continue;
     const same = examples.filter((x) => x.reference === r.reference && x.regime === r.regime);
     const found = same.find((x) => x.satellite === r.satellite && (r.provider === 'All' || x.provider === r.provider)) ?? same.find((x) => r.provider !== 'All' && x.provider === r.provider) ?? (r.provider === 'All' ? same[0] : null);
     if (found) r.example = found.id;
@@ -146,9 +168,10 @@ if (argOf('--examples')) {
 const order = { regime: 0, provider: 1, satellite: 2 };
 out.sort((a, b) => a.reference.localeCompare(b.reference) || order[a.level] - order[b.level] || a.regime.localeCompare(b.regime) || a.provider.localeCompare(b.provider) || a.satellite.localeCompare(b.satellite) || a.fit - b.fit || a.lead - b.lead);
 const doc = {
-  registered: 'experiments/operator-theory/COMPARE.md, AP5.md',
-  columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: `AP ${AP_VERSION}`, FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
-  fields: 'arms: column to [median km, 95th percentile km, forecasts]. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
+  registered: 'experiments/operator-theory/COMPARE.md, AP5.md, XP-ARM-0-2-1.md',
+  columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
+  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. arms: column to [median km, 95th percentile km, forecasts]. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
+  builds: BUILD_RECORDS,
   leftOut: providerLeftOut,
   rows: out,
 };
