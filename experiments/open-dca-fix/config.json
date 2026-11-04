@@ -1,0 +1,61 @@
+{
+  "experiment": "open-dca-fix",
+  "task": "experiments-open-dca-fix-test-20261031",
+  "plan": "experiments/open-dca-fix/PLAN.md",
+  "internalPlan": { "file": "PLAN-internal.md", "sha256": "682e9be02592a4869364f86d524b20fc596919f444f06979a0244f038431f9ed" },
+  "store": "/opt/data/sdn-archive/open-dca-fix",
+  "statistic": { "trim": 0.1, "draws": 10000, "seed": 20261031, "familyLevel": 0.025, "tieBand": 0.02 },
+  "modules": {
+    "density": { "commit": "4b123d9f088deec48498bb4e19130a0e6f2cba4b", "wasmSha256": "5f1f6a24505314a9d54347342061d93cba12f478d1beb64251e9b1b12a6d2938", "note": "analysis/density-calibration 0.7.0, the commit before its landing; the wasm hash is the pin" },
+    "legacyDensity": { "commit": "9a05d899b95242b358939ab1d68a776170a6b167", "wasmSha256": "5d284078821dd80cabd499bce10b174bf635a2456cda261d641a6219b4df3719", "note": "0.6.0, the flat rule and the decay: the selection's control" }
+  },
+  "product": { "historyDays": 30, "legacyLatencyHours": 6, "noiseSigma": 0.065, "forecastTauHours": 168, "chosen": { "open_dca_lag_hours": 9, "open_dca_forecast_tau_hours": 168 } },
+  "weather": {
+    "reader": { "commit": "60fb94a617dd63b8313e8d4ea41899aa844384c6", "path": "experiments/xp2-fit-design/lib/rsga.mjs", "sha256": "bfc7a3275eaf6113c88703136ab06f3bca59fcd2b160363efadad042ba953594" },
+    "bundles": {
+      "2024": { "file": "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2024_RSGA.tar.gz", "sha256": "6ef07a2ebd3d96dca8d7972ef2406d863438e1a4157aa12acbbf6c797b7ff4cb" },
+      "2025": { "file": "/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2025_RSGA.tar.gz", "sha256": "15e1507537918391e247a3daa2aa97d6d398556dfd50d2556d3dbb9e08c66897" }
+    },
+    "span": ["20241128", "20251009"],
+    "counts": {"bulletins": 316, "changed": 93, "spacesOnly": 56, "apNotNumber": 37, "afrInAfrSlot": 0, "afrStandsInForAp": [{"bulletin": "20250516RSGA.txt", "line": "Predicted Afr/Ap 17 May-19 May  013/ NA-021/ NA-021/ 10", "to": "Predicted Afr/Ap 17 May-19 May  013/013-021/021-021/10"}], "unparsedAfter": []},
+    "spanHash": "7165f9671db3111f11b7c33e760865b41ba4f0f313de2908eaf58c03e771efc7",
+    "example": { "day": "20250123", "previous": "20250122", "next": "20250124" }
+  },
+  "planet": {
+    "publishedFile": "planet-published.json",
+    "dirs": ["/opt/data/sdn-archive/hac/planet-ephemerides/history", "/opt/data/sdn-archive/e13-open-dca/planet-live"],
+    "sample": "experiments/e13-open-dca/planet-sample.json",
+    "server": "https://ephemerides.planet-labs.com/",
+    "politeSeconds": 3
+  },
+  "selection": {
+    "days": ["2025-11-01", "2025-12-31"],
+    "lagHours": [6, 9, 12],
+    "tailTauHours": [48, 168],
+    "shrinkWindowHours": [72, 168],
+    "wrongDateDays": 20,
+    "hindcastHours": 174,
+    "arcs": ["/opt/data/sdn-archive/e13-open-dca/planet-arcs/dev-g24lean.msis.jsonl", "/opt/data/sdn-archive/e13-open-dca/planet-arcs/testA-g24lean.msis.jsonl"],
+    "truth": {
+      "cacheDir": "/opt/data/sdn-archive/e13-open-dca/density-cache",
+      "products": { "swarmA": "SW_OPER_DNSAPOD_2__", "swarmB": "SW_OPER_DNSBPOD_2__", "swarmC": "SW_OPER_DNSCPOD_2__", "gracefo1": "GF_OPER_DNS1ACC_2__" }
+    }
+  },
+  "test": {
+    "days": ["2025-01-01", "2025-09-30"],
+    "planetFrom": "2024-12-01",
+    "planetTo": "2025-09-30",
+    "satellites": { "even": 39451, "odd": 39452 },
+    "reportEveryIndexMod4": [0, 1],
+    "leadDays": [1, 2, 3, 7],
+    "arcs": { "fromDay": "2024-12-01", "toDay": "2025-10-09" },
+    "truth": {
+      "satellites": {
+        "A": { "norad": 39452, "product": "SW_OPER_SP3ACOM_2__" },
+        "B": { "norad": 39451, "product": "SW_OPER_SP3BCOM_2__" }
+      }
+    }
+  },
+  "prospective": { "from": "2026-11-29", "fileDays": 148 },
+  "compute": { "maxWorkers": 8, "pauseAboveLoad1m": 60 }
+}
