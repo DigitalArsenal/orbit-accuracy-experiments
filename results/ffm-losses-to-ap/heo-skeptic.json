@@ -1,0 +1,76 @@
+{
+ "report": "/Users/tj/software/terrain-work/body-look/ffm-losses/heo/SKEPTIC.md",
+ "verdicts": [
+  {
+   "claim": "27 losing window-leads, HX counted once",
+   "verdict": "weakened",
+   "why": "Holds for the 72 h arms only. The same registered rows also hold F336/AP336 (HE) and F168/AP168 (HX), which lose in 18 more window-leads, for example HE|TESS|2026-08-03 at 336 h with d1 2.003 vs 0.632, and HE|TESS|2026-08-31 at 336 h, all four leads."
+  },
+  {
+   "claim": "No window has an atmosphere or weather in either arm",
+   "verdict": "refuted",
+   "why": "In HX|THEMIS A|2013-02-13 the FFM arm ran ffmLow (all-regimes.mjs:33: drag true, NRLMSISE00) with no weather supplied. The analyst's own table shows drag B 0.0952 solved."
+  },
+  {
+   "claim": "Scoring (TESS chord states): 14 losses at 07-27, 08-10, 08-24, 09-07",
+   "verdict": "weakened",
+   "why": "Chords alone are enough for a loss: my post-step chord-truth reruns lose (08-10 FFM 0.659/1.937/3.988/22.07 vs AP 0.636/1.810/3.616/19.10). But all four windows also hold a step in the arc or within 40 min of the cutoff, and on node truth FFM's d3 and d7 rise sharply (08-10 d7 8.59 to 18.05). These are maneuver windows where the chords decide which arm wins, so the 0.741 non-maneuver share is overstated."
+  },
+  {
+   "claim": "Scoring (Chandra weekly joins): 6 losses where an arc or bin straddles a join",
+   "verdict": "weakened",
+   "why": "The class stands, since FFM is exact within a segment (rows read 0.0000). But the straddle rule does not discriminate: all 7 day-7 bins lie past a join and only 3 lose, and HX|CHANDRA|2018-04-05 at 72 h straddles a join while FFM wins every lead. The losses are AP compensating error against the join offset."
+  },
+  {
+   "claim": "Maneuver: 08-17 (4 leads) and 08-31 d1",
+   "verdict": "weakened",
+   "why": "08-17 is supported (post-step arc d1 0.067). 08-31 d1 (0.295 vs 0.268) has its step 6 h after the cutoff, which hits both arms, and the margin sits within the 0.011 to 0.221 km solution-switch floor inside the d1 bin. Nothing tells the steps apart from definitive-OD splices."
+  },
+  {
+   "claim": "Settings: the THEMIS A 2013-02-13 regime switch at all-regimes.mjs:128",
+   "verdict": "stands",
+   "why": "The stored rerun has high=false. Forced high, FFM gives 0.033/0.058/0.083/0.190 vs AP 0.147/0.179/0.203/0.937. Which ffmLow knob does the damage was not isolated."
+  },
+  {
+   "claim": "Estimator, force and unexplained: zero; no FFM module change indicated",
+   "verdict": "stands",
+   "why": "Every clean test FFM wins: TESS post-step 08-10, 08-17 and (mine) 07-27 at a 12 h arc (0.152/0.253/0.315/1.153 vs 0.190/1.042/2.383/9.522), Chandra after the join, and THEMIS high. The base is small, and for TESS FFM partly agrees with the generating model (fits at the cm level)."
+  },
+  {
+   "claim": "Chord bias goes into the state, not the SRP coefficient",
+   "verdict": "weakened",
+   "why": "Holds for 72 h arcs. On a 9.5 h post-step chord arc (08-10) the solved SRP went to the 0 bound."
+  },
+  {
+   "claim": "AP's day-1 lead in the perigee windows is compensating error",
+   "verdict": "weakened",
+   "why": "The same data fit the in-arc step taking over once the chord noise is removed. It is not shown to be compensation."
+  },
+  {
+   "claim": "Stitching is not the cause (single file within 0.11 km)",
+   "verdict": "stands",
+   "why": "The single-file rows match the registered rows."
+  },
+  {
+   "claim": "Integrator, third bodies, relativity and frames are converged and consistent",
+   "verdict": "stands",
+   "why": "Tolerance 1e-10 with 30 s steps gives results identical to the meter; Venus, Jupiter and IERS 2010 relativity change d7 by 4 m."
+  },
+  {
+   "claim": "Longer arcs fit and fly worse; conditioning is not the issue",
+   "verdict": "weakened",
+   "why": "True for FFM. But AP336 beats F336 on 08-03 (d1 ratio 3.2) and on 08-31 even on node truth: AP degrades more slowly when its arc holds unmodeled steps."
+  }
+ ],
+ "missed": [
+  "18 losses at 336 h (TESS 08-03, 08-31) and 168 h (Chandra 03-08, 03-15, 04-05, 04-19) in the same registered rows, which pairs.json does not pair",
+  "168 h node-truth TESS losses at d2 to d7 (08-17 d7 13.80 vs 1.319; 08-31 d7 11.53 vs 2.626), reported as day 1 only",
+  "The chord-vs-step 2x2: chords alone produce FFM losses on maneuver-free arcs, and every scoring-class TESS window also holds a step",
+  "The TESS steps may be definitive-OD splices in the MAST product (a truth artifact), not maneuvers",
+  "Model-consistency caveat for TESS: FFM fits post-step node arcs to cm, so the definitive ephemeris shares FFM-like dynamics",
+  "The 13:00 UTC solution switch inside every TESS d1 bin sets a 0.01 to 0.22 km floor common to both arms and decides 08-31 d1",
+  "Block 2 of the last TESS file has its node phase 3 min off the 300 s lattice, so every lattice point there is a one-sided chord point (09-07 d4 to d7 bins; small near apogee)",
+  "Atmosphere on in the THEMIS A 2013-02-13 FFM arm with no weather supplied; what the host does with it was not examined",
+  "Which knob of ffmLow (SRP fixed at 0.02, drag, 40x40, 120 s step) causes the THEMIS settings loss was not isolated"
+ ]
+}

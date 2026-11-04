@@ -1,0 +1,51 @@
+{
+ "report": "NOT WRITTEN: /Users/tj/software/terrain-work/body-look/ffm-losses/drag-leo/SKEPTIC.md (subagents may not write report files, so the content is carried in this output). Evidence files: /private/tmp/claude-501/-Users-tj-software-spacedatanetwork-stack/792d274b-9107-4126-9f3b-8e8464bf6b19/scratchpad/skeptic-drag/sma.mjs (per-rev mean SMA from truth, through the experiment's readers), sma-full-39634.jsonl, sma-full-62261.jsonl, sma-do-*.jsonl, steps.py, steps.json (SMA-raising steps), dsma.py, dsma-do.py, dsma-rows.json (truth SMA change across each forecast span against the FFM/AP ratio at day 7). I ran 0 reruns. Read-only everywhere; no held rows were read.",
+ "verdicts": [
+  {
+   "claim": "S1 F24 leads 2-7 'estimator': B is free on a 24 h arc at 700 km; the fit gives 0.009-0.013 against a forecast-effective B near 0.002, and AP holds its band prior of 0.002 (398 rows)",
+   "verdict": "refuted",
+   "why": "The estimator is right and the loss comes from routine station keeping. (1) The fitted B is well determined: formal sigma 0.0006-0.0009, about 7 % (rerun-rows S1 24 h base). It agrees with both 72 h fits (FFM 0.0075-0.0097, AP72 BTERM 0.0076 at S1|62261|2026-03-25). Holding B at 0.002 fits the arc 6-8 times worse (arc t rms 6.8 m against 0.8 m, rerun table rows 3 and 44). (2) Truth SMA, per-rev mean from the experiment's readers, shows a sawtooth: decay of 2-3 m/day, which matches the in-arc B, then +10-20 m steps about weekly. Examples: 39634 04-24 to 04-28 -13 m, step 04-29 +15.9; 05-06 +12.5. The monthly median SMA stays flat within 5 m from 2025-12 to 2026-06 for both satellites, so net decay over a week is near zero, and AP's prior median (0.4.11 SPEC section 15.5: 0.002 at 600-800 km; AP24 BTERM 0.00202, barely moved) imitates it by accident. (3) The loss rate follows the truth SMA change across the forecast span (dsma-rows.json, S1 F24 day 7). Where SMA fell more than 12 m (no compensating burn), FFM loses 19 % (median ratio 0.36, AP 6.48 km). Between -12 and -6 m: 77 %. Between -6 and 0: 77 %. Between 0 and 6: 87 %. Above 6: 92 %. (4) The signature at S1|39634|2026-05-03 F24: FFM beats AP 7x, 3.5x and 3.1x at days 1-3, then loses 28x at day 7 after the 05-06T04:42 step. Of the 180 S1 F24 day-7 estimator rows, 151 sit in spans where SMA was held. The fix is to flag maneuvers, not to put a B prior on FFM; that prior would tune FFM to the burns."
+  },
+  {
+   "claim": "DO 'estimator': the fitted B lies above the forecast-effective B at 700-1300 km, while AP holds its band prior (185 rows)",
+   "verdict": "refuted",
+   "why": "For F24 the cause is maneuvers. At DO|SENTINEL 3A|2025-11-09 the truth SMA steps +27 m between 11-12 and 11-13. FFM wins 7.5x, 7x and 9.5x at days 1-3, then loses at day 7 (6.24 against 0.46 km). Across DO F24 day 7, FFM is worse in 90 % of windows where SMA rose 10 m or more over the forecast span, and in 0-6 % of the rest (dsma-do.py). For the F72 losses on steadily decaying objects with no burn, the class holds only partly. SARAL decays at about 1.4 m/day with no steps (10-15 to 11-02), and at DO|SARAL|2025-10-20, DO|SARAL|2025-10-25 and DO|SENTINEL 3B|2025-10-25 FFM F72 loses at day 7 (0.66, 1.15 and 1.47 km against AP72 0.09, 0.16 and 0.11 km), while FFM F24 beats AP24 by 6x in the same windows. The analyst's own rerun at S3B (row 45) holds B at 0.007, and day 7 gets worse (4.80 km), with tMean flipping to -4.79. The B that would fix it is about 0.022 against the fitted 0.027, which is inside what a density error can absorb. Those F72 losses are unexplained, not shown to be estimator."
+  },
+  {
+   "claim": "P 'force': an atmosphere density (NRLMSISE-00) error is shared by both arms, and the arm whose B lands nearer the forecast-effective B wins (2619 rows, 46 %)",
+   "verdict": "weakened",
+   "why": "This is the default branch of classify.py: 3 reruns cover 1078 window-arms. The only force rerun, 70x70 with tolerance 1e-10, 30 s steps and relativity, made P|43476|2026-01-06 worse (7.04 to 8.10 km). AP 0.4.11 also flies NRLMSISE-00 (SPEC section 15.5), so a shared density error cannot by itself make FFM systematically worse, and P shows no systematic loss. FFM is worse in 33-51 % of windows, with a median ratio of 0.72-1.01 in every P cell, and F72 sits at 1.00 at days 3 and 7. The fixing rerun held B at 0.00533, which is AP24's own fitted BTERM (0.005333) at that key, not an independent forecast-effective value. That shows only sensitivity: a 7 % B change moves day 7 by 7 km while B's formal sigma is 0.3 %. These rows are ties under a shared error, not an FFM force defect."
+  },
+  {
+   "claim": "P and LS 'weather': a storm day (Ap >= 30) in the arc or the forecast span explains the loss (1560 rows)",
+   "verdict": "weakened",
+   "why": "Both arms flew the same weather, so a storm explains large errors, not FFM losing. The storm flag raises the loss rate only for P F24 at days 1-3 (32 to 52 %, 38 to 51 %, 39 to 46 %). At P F24 day 7 the rate barely moves (44 to 48 %), and for P F72 it does not move at any lead (44-52 % against 47-52 %). In LS the flagged windows lose less, not more. Flying the hindsight observed weather (rowsM) made P|43476|2026-01-06 worse (7.0 to 8.1 km) and LS|LARETS|2025-11-09 F72 worse (0.50 to 0.57 km). It halved P|39452|2025-07-12 (11.7 to 5.2 km), but the window still loses (AP 0.305 km). The ordering is also wrong: a storm overrides the analyst's own maneuver flag on 401 loss rows. Example: S1|62261|2026-01-12 F72 has truth SMA steps at 01-10T03:19 (+15.1 m) and 01-11 (+8.8 m) inside the arc, and the FFM rerun ends with B at bound 0 and an arc t rms of 146 m (rerun row 18), yet it is classed unexplained."
+  },
+  {
+   "claim": "maneuver class: AP fit rms at 3x the object median or more in the arc, or in an AP arc inside the forecast span with AP's own error at or above its cell median, and no storm (306 rows)",
+   "verdict": "weakened",
+   "why": "The rows it catches are probably real (median ratio 1.11; 49 % below 1.1). The premise behind the forecast-span condition is false, though. A station-keeping burn does not hit both arms alike; it favors the arm whose B is far below the physical value. AP's error at S1|39634|2026-05-03 is 0.179 km at day 7, below its day-3 error of 0.745 km, exactly because of the burn. The rule therefore misses the dominant maneuver population (151 of 180 S1 F24 day-7 estimator rows sit in spans where SMA was held). The burn detector was rightly set aside: its S1 events cluster near the 23:00 and 01:00 product joins and are mostly radial."
+  },
+  {
+   "claim": "LS 'settings': SRP held at 0.02 m2/kg for spheres with Cr*A/m of 0.0003-0.0055 (LARES, Ajisai and Starlette; 119 rows)",
+   "verdict": "stands",
+   "why": "The setting is in the code: all-regimes.mjs:39 and truth-compare.mjs:32 set fixed agom 0.02. Physics: A/m is 2.7e-4 for LARES, 5.3e-3 for Ajisai and 9.6e-4 for Starlette. Reruns: LARES 12-19 F24 drops from 0.200 to 0.024 km against AP 0.034; LARES 12-14 F72 from 0.118 to 0.008 against 0.021. Two caveats. Starlette 10-15 improves only to 0.209 km (0.088 with B held as well) and still loses to AP 0.080. The Ajisai 'flip' at 12-04 F24 day 7 started from a tie (0.106 against 0.106), and the 10-10 72 h rerun has no day 7. The class rests on 5 rerun window-arms out of 57."
+  },
+  {
+   "claim": "S1 F72 and S1 F24 day 1 'unexplained' (526 rows)",
+   "verdict": "weakened",
+   "why": "A large share is maneuvers. 123 S1 F72 rows carry the analyst's own in-arc maneuver flag but were overridden by the storm rule. S1 F72 day-7 losses also rise with SMA held: FFM worse 38 % where SMA fell more than 12 m, 76 % where it rose more than 6 m. What remains is a 2-5 % systematic tie (median ratio 1.02-1.05) that nobody tested. One candidate: FFM's reference epoch sits at the arc start (lib/host.mjs:94), so the state at the cutoff is the end of a 72 h propagation."
+  }
+ ],
+ "missed": [
+  "Routine station-keeping burns in the forecast span (Sentinel-1A/1C about weekly, +10-20 m SMA; Sentinel-3A +27 m on 2025-11-12/13) cause most S1 F24 and DO F24 day-7 losses. The low prior B in AP imitates zero net decay. This is the owner's maneuver exemption, so it is not an FFM defect.",
+  "Burns inside the arc that drive FFM's B to bound 0 (S1|39634|2026-03-06 F72, S1|62261|2026-01-12 F72; arc t rms 146-263 m). The stored FFM rows keep no B, so this pathology cannot be screened across all 2176 window-arms without reruns.",
+  "The storm-before-maneuver ordering in classify.py misfiles 401 rows that carry the analyst's own maneuver flag.",
+  "The AP24 win in S1 comes from AP 0.4.11's altitude-scaled starting median for BTERM (0.002 at 600-800 km, SPEC section 15.5). The AP fit barely moves from it (0.00202), so AP's B there is a prior, not a fit.",
+  "No noise floor: 26 % of loss rows have a ratio under 1.1, and P cells sit at a median ratio of 0.72-1.01. 'FFM worse at any lead' counts coin flips under a shared density error as defects.",
+  "The fixing P rerun held B at AP's own fitted BTERM (0.00533 = AP24 0.005333), which is hindsight. The S1 B-held values (0.0045, 0.0075, 0.002) were likewise chosen after seeing truth.",
+  "Steady-decay DO F72 losses with no burn (SARAL 10-20 and 10-25, Sentinel-3B 10-25): FFM F72 loses to AP72 by 7-13x while FFM F24 wins by 6x in the same windows. These are genuine and unexplained.",
+  "FFM fits its reference epoch at the arc start (lib/host.mjs:94), unlike a cutoff-placed epoch. Untested as the cause of the S1 F72 2-5 % systematic tie.",
+  "HY-2C, HY-2D and S6 Michael Freilich returned no truth SMA through the reader, and WESTPAC was not checked, so their losses have no maneuver check."
+ ]
+}

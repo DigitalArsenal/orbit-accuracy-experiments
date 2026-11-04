@@ -1,0 +1,88 @@
+{
+ "report": "NOT WRITTEN: /Users/tj/software/terrain-work/body-look/ffm-losses/drag-leo/REPORT.md. The harness refuses report files from subagents, so the report's content is carried in this structured output. Loss table: /Users/tj/software/terrain-work/body-look/ffm-losses/drag-leo/rows.json. Classes per group, arm and lead: /Users/tj/software/terrain-work/body-look/ffm-losses/drag-leo/class-cells.json. All 60 reruns as a table: /Users/tj/software/terrain-work/body-look/ffm-losses/drag-leo/rerun-table.md. Raw rerun rows: /Users/tj/software/terrain-work/body-look/ffm-losses/drag-leo/rerun-rows.jsonl.",
+ "losses": 5700,
+ "classes": {
+  "maneuver": 0.054,
+  "weather": 0.274,
+  "estimator": 0.1,
+  "force": 0.459,
+  "settings": 0.021,
+  "scoring": 0,
+  "unexplained": 0.092
+ },
+ "mechanisms": [
+  {
+   "claim": "P (Swarm, GRACE-FO) is a coin flip on a shared error, not an FFM defect. Both arms carry the same density error (NRLMSISE-00 on the as-issued weather). Their fitted B differ by 5-10 %, with the sign going either way. Whichever arm lands nearer the B the forecast span needed wins. At GRACE-FO height an 8 % B difference is about 7 km at day 7.",
+   "evidence": "At day 7, ln e of AP and FFM correlate at 0.72 (F24) and 0.94 (F72), with median ratio 0.96-1.00. B differences: P|43476|2026-01-06, FFM 0.00575 vs AP 0.00533 (+8 %); P|39452|2025-07-12, FFM 0.0073 vs AP 0.00797 (-8 %). P|43476|2026-01-06 F24: FFM with AP's B held scores 0.242 km at day 7, against 7.049 km with its own fit and AP's 0.177 km (rerun 59). Day-7 loss rate is 47 % with a storm day in the span and 46 % without (F24); 52 % and 48 % for F72.",
+   "strength": "shown"
+  },
+  {
+   "claim": "The GRACE-FO twin losses on 2026-01-06 (FFM 7.0 km, AP 0.11-0.18 km) belong to the date, not to either satellite. Both twins fit the same B. With it, the forecast density is too high: FFM ends +7 km ahead. Observed weather does not fix it, so the cause is NRLMSISE-00's response together with B, not the forecast alone.",
+   "evidence": "Reruns: P|43476 fits B 0.00575 and P|43477 fits 0.0058; along-track mean +7.02 km. On observed weather (rowsM) FFM is 8.145 km, worse. The 70x70 full-force run gives 8.104 km. A 72 h arc gives 2.209 km. With AP's B, 0.242 km. Weather as issued: F10.7 143 against an observed 125; Ap 5 issued against 31 observed on 01-10.",
+   "strength": "shown"
+  },
+  {
+   "claim": "S1 (700 km), 24 h arcs: the estimator is the cause. FFM's B is effectively free (Gaussian a priori, sigma 10x the seed). It fits 0.009-0.013 m2/kg, while the following week needs about 0.002. AP 0.4.11 holds BTERM at exactly that value on 24 h arcs, as its altitude-band prior median. That is why AP wins 80 % of day-7 windows (median ratio 2.06).",
+   "evidence": "AP code: fit_oem.inc:374-384 at modules a0f33bc545 sets the median to 0.002 at 600-800 km and 0.0005 above 800 km. AP24 BTERM on S1: p10 0.001975, p90 0.002053. FFM day-7 errors with B held at 0.002 against fitted B, AP24 in brackets: S1|39634|2026-03-06 0.133 vs 5.286 (0.136); S1|62261|2026-04-08 0.060 vs 4.075 (0.139); S1|62261|2026-03-25 0.072 vs 7.355 (0.268). Each pass through B 0.0075 and 0.0045 falls monotonically. Within 5 % of base, so ruled out as causes: observed weather (4.197 vs 4.075), 70x70 / 1e-10 / 30 s / relativity (4.411), a free SRP coefficient (4.054, SRP to 0), FES2004 ocean tides plus Knocke Earth radiation (4.028 and 7.293).",
+   "strength": "shown"
+  },
+  {
+   "claim": "The arc-fitted B at 700-800 km exceeds the B the next week needs: 4-6x on 24 h arcs, about 1.7x on 72 h. The arc holds an along-track signal of a few meters that FFM's force model does not have, and B absorbs it. With B held at 0.002, the along-track error goes negative at days 1-3 and returns near zero by day 7, an oscillation over days that a constant B cannot follow.",
+   "evidence": "Arc weighted rms (sigma 10 m) rises from 0.05-0.58 at the fitted B to 0.39-0.87 at B 0.002. S1|62261|2026-03-25 at 72 h: B held 0.002 gives -1.215 km, fitted 0.00754 gives +3.487 km, so the needed B is about 0.0045. AP72's median BTERM is 0.0047. The sign of the F10.7 forecast bias does not matter: on 03-25 issued F10.7 ran low (133 against 152 observed) and the needed B was still about 0.002.",
+   "strength": "likely"
+  },
+  {
+   "claim": "DO (altimetry) losses come from the same B excess: FFM's fitted B over-predicts decay, while AP holds its 0.0005 band prior above 800 km. FFM still wins most DO windows (median ratio 0.12-0.74). Sea-level satellites lose mainly in single storm or maneuver weeks.",
+   "evidence": "DO|SENTINEL 3A|2025-11-09 F24: fitted B 0.0168 gives 6.235 km at day 7; B held at 0.004 gives 1.310 km; AP 0.459. DO|SENTINEL 3B|2025-10-25 F72: the needed B is about 0.022 against 0.0273 fitted; AP 0.113. Left unchanged within 2 %: a free SRP coefficient (3 windows), ocean tides plus Earth radiation (2), observed weather (S3A 6.885).",
+   "strength": "weak"
+  },
+  {
+   "claim": "Laser spheres: one wrong setting. The harness holds SRP at 0.02 m2/kg for every object below 8,400 km, where the spheres' Cr·A/m is 0.0003-0.0055. B then absorbs the excess SRP (LARES fits B 0.025 against a physical Cd·A/m of about 0.0007).",
+   "evidence": "truth-compare.mjs:32 and all-regimes.mjs:39 hold fixed agom 0.02. lib/frame.mjs:36-38 sets area and mass to 1, so the held value is Cr·A/m. With the real value: LS|LARES|2025-12-19 F24 day 7 0.201 -> 0.024 km (AP 0.034); LS|LARES|2025-12-14 F72 0.118 -> 0.008 (AP 0.021); LS|AJISAI|2025-10-10 F72 days 1/2 0.023/0.034 -> 0.001/0.003 (AP 0.013/0.016); LS|AJISAI|2025-12-04 F24 day 7 0.106 -> 0.049 (AP 0.106); LS|STARLETTE|2025-10-15 F24 0.546 -> 0.209, and 0.088 with B held at 0.0021 (AP 0.080). LS|LARETS|2025-11-09 (691 km, storm) is unchanged at 0.532.",
+   "strength": "shown"
+  },
+  {
+   "claim": "The 40x40, 1e-8, 120 s settings are not why FFM loses in this regime. No loss comes from scoring or frame either: 99.8 % of losses are along-track, and FFM's normal error sits about 10x below AP's.",
+   "evidence": "Full force (70x70, tolerance 1e-10, 30 s steps, relativity) made two windows worse, not better: S1 04-08 4.411 vs 4.075 km; P|43476|2026-01-06 8.104 vs 7.041. Ocean tides plus Earth radiation stayed within 2 % on 4 windows. Loss component: along-track in 5,687 of 5,700 rows (radial 11, normal 2). Every base rerun reproduces the stored FFM rows to the third decimal on 15 windows.",
+   "strength": "shown"
+  },
+  {
+   "claim": "Conservatively read, maneuvers explain only 5.4 % of the losses. A burn after the cutoff hits both arms alike, so it can explain an FFM loss only where AP's own error is inflated as well.",
+   "evidence": "Rule: AP fit rms at least 3x the object median, in the window's own arc or in an AP arc inside the forecast span, with AP's error at or above its cell median and no storm day in the span. Counts: S1 234 rows (F24 97, F72 137), P 45, DO 27, LS 0. Clear cases: DO|SENTINEL-6B|2025-12-09 (both arms about 7,655 km, orbit raising); DO|SENTINEL 3A and 3B|2025-12-09 (72 h arcs ending 2025-12-14 at 19.6x and 8.8x rms); S1|39634|2026-03-06 F72 (FFM arc rms 263 m, B at bound 0, AP72 rms 10.4x).",
+   "strength": "likely"
+  }
+ ],
+ "fixes": [
+  {
+   "module": "experiments operator-theory harness: truth-compare.mjs:32 and all-regimes.mjs:39 (the low-orbit ffmLow settings)",
+   "change": "Stop holding SRP at 0.02 m2/kg for every object below 8,400 km. Hold it at the object's known Cr·A/m (spheres: LARES 0.0003, Starlette 0.0011, Larets 0.0018, Ajisai 0.0055), or estimate SRP with an a priori.",
+   "expected": "Removes the 119 LS settings losses. LARES and Ajisai flip to FFM wins at every lead tested; Starlette reaches a tie once B is also physical. A registration on unseen 2026 LS cutoffs must show FFM's loss share and median ratio at days 1, 2, 3 and 7, with the seed rule fixed before any fit.",
+   "cells": "AP6 LS F24 and F72 contrasts with FFM (report only)"
+  },
+  {
+   "module": "analysis/estimation (a priori form), with the harness's apriori() in lib/host.mjs:131-135",
+   "change": "Give B a log-normal prior below about 1,400 km in place of the effectively flat Gaussian (sigma 10x the seed). Take the median from the altitude band, as AP does (0.002 at 600-800 km, 0.0005 above), or better from a B carried over long arcs per object. SPEC 1757-1758 records that FFM's a priori is Gaussian in p, so the log-normal form is a module change.",
+   "expected": "S1 F24 day 7 goes from median ratio 2.06 to about 1 or below (3 of 3 windows reached 0.06-0.13 km against AP's 0.14-0.27 km). DO 24 h arcs improve (S3A 6.2 -> 1.3 km). It is a trade: days 1-3 lose part of FFM's edge (S1 day-1 median ratio 0.23 today). A registration must show S1 F24 day-7 loss share under 50 % with no loss at days 1-3 beyond a margin set beforehand, on unseen Sentinel-1 cutoffs (2025, or 2026-06 and later once C2's hold allows).",
+   "cells": "AP5 and AP7 Part N S1 F24 contrasts (report only); AP6 DO F24 and F72"
+  },
+  {
+   "module": "none in propagator/ffm for P; experiments FFM arc design",
+   "change": "No FFM dynamics fix: P losses are the shared density error, decided by 5-10 % B differences whose sign varies. Register XM6's short arc (12-24 h) for FFM against AP72. XM6 found 72 h is too long for drag-strong orbits, which fits the P F72 tie (median ratio 1.00). XM5 and XM7 (observed weather cuts 20 % at the median; a centered F10.7a helps a little) point at the density forecast as the next lever.",
+   "expected": "P F72 day 1-3 loss share falls (XM6 showed A12/A24 cut F2's error by 35-70 % at days 1-3). Day 7 stays a coin flip until density forecasting improves.",
+   "cells": "AP5 and AP7 Part T, report-only P contrasts, F24 and F72"
+  }
+ ],
+ "reruns": 60,
+ "rows": "/Users/tj/software/terrain-work/body-look/ffm-losses/drag-leo/rows.json",
+ "unsettled": [
+  "Why the arc wants a 4-6x larger B than the following week at 700-800 km (S1, Sentinel-3). Ruled out as causes, each on 1-4 windows: weather, gravity truncation, the integrator, SRP, ocean tides and Earth radiation. Untested candidates: frequent orbit-control burns below about 1 mm/s; a drag area that changes with attitude; NRLMSISE-00 local-time bias at dawn-dusk. If burns are the cause, part of S1 F24 is a maneuver after all, and AP's 0.002 prior is right only by coincidence.",
+  "S1 F72 (465 losses, classed unexplained). Half are within 10 %. One held-B pair (S1|62261|2026-03-25) suggests the same B excess at about 1.7x. FFM loses 80 % of day-7 windows where AP72's BTERM is above its median, against 48 % below. Not enough to assign a class.",
+  "S1 F24 day-1 losses (61 rows): no rerun speaks to them.",
+  "The DO estimator class rests on two windows. In one, DO|SENTINEL 3A|2025-11-09, the 2025-11-12 storm and AP arcs flagged at 13.7x and 12.7x rms overlap the forecast span.",
+  "Maneuver evidence is indirect: AP fit rms only. Burns below about 3 mm/s cannot be seen with the tools in this box, nor any burn on DO and LS (truth sampled at 300 s). Neither truth detector is used to classify: the semi-major-axis step detector (maneuvers.jsonl) is 8-40 m noisy and finds false steps on the spheres; of the 22 events the acceleration-spike detector (burns.jsonl) found inside S1 24 h arcs, 19 left no AP rms signature, so most are not burns. The 5.4 % maneuver share is a floor for S1 and DO.",
+  "LS|LARETS|2025-11-09 F72 (storm on 2025-11-12) loses with the real SRP coefficient (0.532 km) and on observed weather (0.573 km), against AP's 0.044 km.",
+  "Not run: fitting SRP from the 0.02 seed on the spheres; the 3-hourly ap (needs the XM7 test wasm; XM7 found it leaves P's tail where it is); P 2026-W04 storm cutoffs; Stella (C2 held, excluded).",
+  "Inside P, the weather/force split marks whether a storm day was in the span, not two separate mechanisms. The mechanism is the same in both: a shared density error, with the win going to the arm whose B lands nearer the needed value.",
+  "Provenance: reruns used the pinned propagator/ffm 2.0.4 (SHA-256 c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2) and analysis/estimation 0.7.0 (7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd), read by git show at modules 9a05d899b, as the experiment did. The canonical checkout's working-tree module.wasm is package 2.0.3 (SHA-256 6fdc530917d59c30542fef88cf281f04bf473c702ea715590ae72f3ee32282e0) and was not used. Of the 60 runs, 2 stopped before fitting: one for no RSGA, one for coverage 0.69."
+ ]
+}
