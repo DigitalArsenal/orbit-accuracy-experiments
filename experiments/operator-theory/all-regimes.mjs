@@ -8,7 +8,7 @@ import { config, root, HOUR, DAY, iso, ms, rms, XM } from './lib/xp2.mjs';
 import { openSgp4Fit } from './lib/xp2.mjs';
 import { driverRows } from './lib/xm3.mjs';
 import { apForces, openAp, fitPcf, fitWeather, horizonOf, readOcm } from './lib/ap.mjs';
-import { openUssfXp, openUssfXp011 } from './lib/ussf-xp.mjs';
+import { openUssfXp, openUssfXp011, typedOmm } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
 import { HX, STATIC, DO9, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
 // AP9.md (DO9): its cutoffs fall in 2026, and the XP2 store's normalized RSGA set that xp2-fit-design/common.mjs pins ends 2025-12-31, so
@@ -149,7 +149,7 @@ for (const o of await objects()) {
           const fit11 = async () => { f11 ??= await U11.fit(oem); if (!f11.ok) throw new Error(f11.error); return f11; };
           if (hasU('U')) await run('U', async () => { const f = await fit21(); return { rms: readOcm(f.ocm).fitRmsKm, days: await flown(await U.propagate(f.ocm, epochs, epochs.length)) }; });
           if (hasU('UW')) await run('UW', async () => ({ days: await flown(await A.propagate((await fit21()).ocm, epochs, epochs.length)) }));
-          if (hasU('U11')) await run('U11', async () => ({ days: await flown(await U.propagate(await U.ingest((await fit11()).omm), epochs, epochs.length)) }));
+          if (hasU('U11')) await run('U11', async () => ({ days: await flown(await U.propagate(await U.ingest(typedOmm((await fit11()).omm)), epochs, epochs.length)) }));
           if (hasU('U11F')) await run('U11F', async () => ({ days: await flown(await U11.propagate((await fit11()).omm, epochs, epochs.length)) }));
           continue;
         }

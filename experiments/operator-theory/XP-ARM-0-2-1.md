@@ -41,3 +41,7 @@ The record's second amendment: two Space Force XP cells of `results/remeasure-0-
 - `UW`: 0.2.1's set flown on the whiteroom propagator, `propagator/sdn-ap` 0.5.1 `propagate`.
 
 The flight part is `U11` less a, the fit part b less `U11`; a window is flight side when the flight part is the larger in size, fit side otherwise. `all-regimes.mjs --arms U,U11,U11F,UW`, HX with `--arcs 72` and LS with `--arcs 24`, into `ap/xp-arm-0-2-1/attribution`; every window reported in `results/operator-theory/xp-arm-0-2-1`. TESS (HE `U72`) is stated as measured. The geosynchronous ratio against SGP4 is the median of each window's ratio, on stored rows.
+
+## Amendment 2, 2026-11-04, before U11 flew
+
+0.2.1's `ingest_omm` refuses 0.1.1's `$OMM` for its free-form `USER_DEFINED_PARAMETERS`, the fit's own notes (FIT_START, FIT_STOP and the like), so no `U11` figure was made and the first attribution rows were removed. `U11` now takes 0.1.1's set with that list dropped and every typed field as fitted (`lib/ussf-xp.mjs` `typedOmm`). On one ISS file the two builds fly that set to the same position, within a millimeter, at four times a day apart.
