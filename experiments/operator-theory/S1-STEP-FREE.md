@@ -36,3 +36,13 @@ The windows are not unread. `experiments/ffm-short-arc` (registered 2026-11-01 f
 So the statement is not tested. `s1-step-free.mjs` flies the registered arms on all 170 windows, `s1-step-free-table.mjs` sets the figures beside the thresholds, and the report gives both readings: report only, no verdict. The truth from 2025-12-29 on had been read before registration, by AP5's 2026 windows and by `maneuver-flags.mjs`; here it is only the forecast span of the cutoffs from 12-22.
 
 Weather: the 2025 as-issued reports are xp2-fit-design's normalized RSGA set (its store, through 2025-12-31), the set AP5's 2025 windows read.
+
+## Amendment 2, 2026-11-04, the FFM build, before any 2025 window is flown on it
+
+FFM flies on `propagator/ffm` 2.2.0, whose RK78 step carries Fehlberg's eighth-order solution; the builds before it carried the seventh, their weights swapped in `lib/rk_augmented.h` (`modules-ffm-rk78-error-control-20261104`). It is pinned by its dist SHA-256 d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153 at space-data-network-modules f1517ef68e9f586048841e34ab553715111a94de (main, where `modules-ffm-rk78-error-control-20261104` landed it) (`lib/build.mjs` FFM_220). The fit stays XM3's `analysis/estimation` 0.7.0 (7a555ca5b3ed), whose propagation the host answers with this build, and AP stays `propagator/sdn-ap` 0.5.1. Thresholds, windows, arms and the flag are as written.
+
+The 2026 FFM figures in `results/operator-theory/maneuver-flags`, which the Why section cites, are FFM 2.0.4's (c36f1b14fc23, the build `results/ap-truth/compare/cells.json` names), flown before this fix.
+
+Before the hold that brought this amendment, the runner flew 8 windows under amendment 1 on 2.0.4, at 2026-11-04T23:28 to 23:29Z: S1|39634|2025-10-05, 10-06, 10-07, 10-08, 10-11, 10-12, 10-21 and 10-26. Their truth was read; their rows went unread to `operator-theory/s1-step-free-set-aside-2-0-4` and are not part of the test. They are flown again on 2.2.0 with the rest.
+
+Dry runs, on AP5's read window S1|39634|2026-03-24 only: on XM3's 2.0.4 the runner reproduces AP5's stored F24 and AP24 byte for byte; on 2.2.0's bytes from its branch commit f91806e9 its F24 at day 7 is 3.916 km against 2.0.4's 3.922, and AP24 is unchanged.
