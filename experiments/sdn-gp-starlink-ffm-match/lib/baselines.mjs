@@ -1,7 +1,8 @@
 // The two baselines on one window of an ephemeris, with the radial / in-track / cross-track split.
 //   SGP4     analysis/gp-error-model `fit_elements`, scored by `element_residuals` (RTN of the ephemeris).
-//   SGP4-XP  propagator/sgp4-xp `fit` (black box); its held-out RMS by day is the module's own, the RTN split of the
-//            held-out days is the set propagated by the module to the ephemeris epochs and compared by `pair_statistics`.
+//   SGP4-XP  propagator/sgp4-xp `fit` (black box): one $OCM, its fit and held-out statistics typed in FIT_STATISTICS (the
+//            held-out RMS by day is the module's own); the RTN split of the held-out days is that $OCM propagated by the
+//            module to the ephemeris epochs and compared by `pair_statistics`.
 // JavaScript here builds records, calls modules and does counting; every orbit and frame computation is a module's.
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -10,7 +11,7 @@ import { openModule } from './modules.mjs';
 import { openSdngp } from './sdngp.mjs';
 import { transformState } from './frames.mjs';
 import { store } from '../common.mjs';
-import { frame, oemBytes, ommBytes, ommFrame, readOmm, readOem, blockLines, paramsOf } from './sds.mjs';
+import { frame, oemBytes, ommBytes, ocmFrame, readOmm, readOcm, readOem, blockLines } from './sds.mjs';
 import { DAY, iso, ms, slice } from './windows.mjs';
 
 const OEM_FRAME = { EME2000: 'EME2000', GCRF: 'GCRF', ITRF: 'ITRF2000', TEME: 'TEMEOFDATE' };
@@ -45,13 +46,13 @@ const record = (omm, theory, norad) => ({
   argPerigee: omm.ARG_OF_PERICENTER, meanAnomaly: omm.MEAN_ANOMALY, norad, bstar: omm.BSTAR, agom: omm.MEAN_MOTION_DDOT,
 });
 
-async function ricOfHeldOut(b, object, ommPayload, held, stopFit, leadDays) {
+async function ricOfHeldOut(b, object, ocmPayload, held, stopFit, leadDays) {
   const step = held.length > 1 ? (ms(held[1].epoch) - ms(held[0].epoch)) / 1000 : 60;
   const thin = Math.max(1, Math.round(RTN_STRIDE_SECONDS / step));
   const chosen = held.filter((_, i) => i % thin === 0);
   const grid = block(object, chosen.map((l) => ({ epoch: l.epoch, r: [0, 0, 0], v: [0, 0, 0] })), {});
   const t0 = performance.now();
-  const prop = await b.xp.call('propagate', [ommFrame('omm', ommPayload), frame('grid', 'OEM', grid)]);
+  const prop = await b.xp.call('propagate', [ocmFrame('ocm', ocmPayload), frame('grid', 'OEM', grid)]);
   const propagateMs = performance.now() - t0;
   const predicted = blockLines(readOem(prop.ephemeris).EPHEMERIS_DATA_BLOCK[0]);
   if (predicted.length !== chosen.length) throw new Error(`propagate returned ${predicted.length} of ${chosen.length} states`);
@@ -69,12 +70,11 @@ export async function fitXp(b, object, lines, startMs, stopFit, leadDays, minSta
   let out;
   try { out = await b.xp.call('fit', [frame('ephemeris', 'OEM', bytes)]); } catch (error) { return { ok: false, error: String(error.message).slice(0, 200) }; }
   const fitMs = performance.now() - t0;
-  const omm = readOmm(out.elements);
-  const p = paramsOf(omm);
+  const o = readOcm(out.elements), me = o.MEAN_ELEMENTS, st = o.ORBIT_DETERMINATION.FIT_STATISTICS;
   const days = {};
   for (const k of leadDays) {
-    const n = Number(p[`HELD_OUT_DAY${k}_STATES`]);
-    if (Number.isFinite(n) && n >= minStatesPerDay) days[k] = { rmsKm: Number(p[`HELD_OUT_DAY${k}_RMS_KM`]), n };
+    const d = st.HELD_OUT_DAYS.find((x) => x.DAY === k);
+    if (d && d.STATES >= minStatesPerDay) days[k] = { rmsKm: d.RMS_KM, n: d.STATES };
   }
   const held = lines.filter((l) => ms(l.epoch) > stopFit);
   let ric = {}, usPerState = null;
@@ -82,11 +82,13 @@ export async function fitXp(b, object, lines, startMs, stopFit, leadDays, minSta
     try { ({ ric, usPerState } = await ricOfHeldOut(b, object, out.elements, held, stopFit, leadDays)); } catch (error) { return { ok: false, error: `ric: ${String(error.message).slice(0, 160)}` }; }
   }
   for (const k of Object.keys(days)) days[k].ric = ric[k] ?? null;
+  const elements = { theory: 'SGP4XP', epoch: me.EPOCH, meanMotion: me.MEAN_MOTION, eccentricity: me.ECCENTRICITY, inclination: me.INCLINATION, raan: me.RA_OF_ASC_NODE,
+    argPerigee: me.ARG_OF_PERICENTER, meanAnomaly: me.MEAN_ANOMALY, norad: object.norad, bstar: me.BTERM, agom: me.AGOM };
   return {
-    ok: true, converged: p.FIT_CONVERGED === 'true', iterations: Number(p.FIT_ITERATIONS), fitRmsKm: Number(p.FIT_RMS_KM), fitStates: Number(p.FIT_STATES),
-    fitRic: [Number(p.FIT_RADIAL_RMS_KM), Number(p.FIT_ALONG_TRACK_RMS_KM), Number(p.FIT_CROSS_TRACK_RMS_KM)], days,
-    elementBytes: ommBytes(record(omm, 'SGP4XP', object.norad)).length, recordBytes: out.elements.length, parameters: 8,
-    fitMs, usPerState, bterm: omm.BSTAR, agom: omm.MEAN_MOTION_DDOT, meanMotion: omm.MEAN_MOTION, inclination: omm.INCLINATION, eccentricity: omm.ECCENTRICITY,
+    ok: true, converged: st.CONVERGED, iterations: st.ITERATIONS, fitRmsKm: st.FIT_RMS_KM, fitStates: st.FIT_STATES,
+    fitRic: [st.FIT_RADIAL_RMS_KM, st.FIT_IN_TRACK_RMS_KM, st.FIT_CROSS_TRACK_RMS_KM], days,
+    elementBytes: ommBytes(elements).length, recordBytes: out.elements.length, parameters: 8,
+    fitMs, usPerState, bterm: me.BTERM, agom: me.AGOM, meanMotion: me.MEAN_MOTION, inclination: me.INCLINATION, eccentricity: me.ECCENTRICITY,
   };
 }
 
@@ -245,7 +247,8 @@ export async function scoreWindow(b, object, startMs, { fitSeconds, leadDays, mi
   return { source: object.source + (defaultSpan ? '+default' : ''), id: object.id, norad: object.norad, startUtc: iso(startMs), fitSeconds, stepSeconds, states: lines.length, xp, sgp4, ...(sdngpResult === undefined ? {} : { sdngp: sdngpResult }) };
 }
 
-/** The two fitted element sets of a window as the modules return them ($OMM payloads), for propagation to other epochs. */
+/** The two fitted element sets of a window as the modules return them (sgp4-xp's $OCM, gp-error-model's SGP4 $OMM), for
+ *  propagation to other epochs. */
 export async function fitElementSets(b, object, startMs, fitSeconds) {
   const stopFit = startMs + fitSeconds * 1000;
   const lines = slice(object, startMs, stopFit);
@@ -258,10 +261,10 @@ export async function fitElementSets(b, object, startMs, fitSeconds) {
   return out;
 }
 
-/** A set ($OMM payload) propagated by propagator/sgp4-xp to the given epochs (ms) in the named axes ('EME2000', 'GCRF'): [{r, v}] in km, km/s. */
+/** A set ($OCM payload) propagated by propagator/sgp4-xp to the given epochs (ms) in the named axes ('EME2000', 'GCRF'): [{r, v}] in km, km/s. */
 export async function propagateSet(b, payload, epochsMs, axes = 'EME2000') {
   const grid = oemBytes({ block: { frame: axes, object: { name: 'grid', norad: 0 }, lines: epochsMs.map((t) => ({ epoch: iso(t), r: [0, 0, 0], v: [0, 0, 0] })), start: iso(epochsMs[0]), stop: iso(epochsMs.at(-1)) } });
-  const prop = await b.xp.call('propagate', [ommFrame('omm', payload), frame('grid', 'OEM', grid)]);
+  const prop = await b.xp.call('propagate', [ocmFrame('ocm', payload), frame('grid', 'OEM', grid)]);
   return blockLines(readOem(prop.ephemeris).EPHEMERIS_DATA_BLOCK[0]);
 }
 
