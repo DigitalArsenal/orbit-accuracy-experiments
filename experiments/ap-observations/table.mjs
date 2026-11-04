@@ -52,9 +52,9 @@ if (isMain) {
     'NSGF computes its orbits from the same ILRS normal points: the truth is an anchor, not independent.', '',
     '| Arm | Scored / attempted | Day 1 | Day 2 | Day 3 | B2 median, days 1 / 2 / 3 |', '| --- | --: | --- | --- | --- | --- |',
     ...Object.entries(ARMS).map(([k, name]) => `| ${name} | ${arms[k].scored} / ${arms[k].attempted} | ${config.leadDays.map((d) => cell(arms[k].days[d])).join(' | ')} | ${config.b2.medianKm[B2[k]].map(f).join(' / ')} |`), '',
-    'A refusal of any module counts as a failure of that arm and is not dropped.', '',
+    'A refusal of any module counts as a failure of that arm and is not dropped. Each median is over the cutoffs its arm scored (the AP and FFM arms lack the refused cutoffs); n counts the cutoffs with that day covered.', '',
     ...Object.entries(ARMS).flatMap(([k, name]) => (arms[k].failures.length ? [`Failures, ${name} (${arms[k].failures.length}):`, '',
-      ...Object.entries(arms[k].failures.reduce((m, x) => { const code = String(x.refused).split(':')[0]; (m[code] ??= []).push(`${x.target} ${x.cutoff.slice(0, 10)}`); return m; }, {}))
+      ...Object.entries(arms[k].failures.reduce((m, x) => { const code = String(x.refused).match(/^[a-z][a-z-]*(?=:)/)?.[0] ?? String(x.refused); (m[code] ??= []).push(`${x.target} ${x.cutoff.slice(0, 10)}`); return m; }, {}))
         .map(([code, list]) => `- \`${code}\` (${list.length}): ${list.join(', ')}`), ''] : [])),
     'Sources: ILRS normal points from the EUROLAS Data Center, DGFI-TUM (Pearlman et al. 2019; Noll et al. 2019); ILRS weekly station solutions; IERS EOP 20 C04; NSGF rapid orbits (ILRS). ' +
     'The SGP4 arm uses public element sets; no element set is reproduced.', '',
