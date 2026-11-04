@@ -64,11 +64,11 @@ try {
     return n;
   };
   const runs = [
-    ['AP5 T, AP', 'ap-truth.mjs', ['--arms', 'registered', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/64'], {}, 'truth', 'truth', /^AP24$/, AP_STORE],
-    ['AP5 T, XP', 'truth-compare.mjs', ['--arms', 'XP', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/64'], {}, 'compare-truth', 'compare-truth', /^XP24$/, XP_STORE],
-    ['AP5 N, AP', 'ap-truth.mjs', ['--xm', '--from', '2026-01-01', '--to', '2026-05-31', '--shard', '0/128'], { XP2F_CONTROL: '1' }, 'truth2', 'truth2', /^AP(24|72)$/, AP_STORE],
+    ['AP5 T, AP', 'ap-truth.mjs', ['--arms', 'registered', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/128'], {}, 'truth', 'truth', /^AP24$/, AP_STORE],
+    ['AP5 T, XP', 'truth-compare.mjs', ['--arms', 'XP', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/128'], {}, 'compare-truth', 'compare-truth', /^XP24$/, XP_STORE],
+    ['AP5 N, AP', 'ap-truth.mjs', ['--xm', '--from', '2026-01-01', '--to', '2026-05-31', '--shard', '0/256'], { XP2F_CONTROL: '1' }, 'truth2', 'truth2', /^AP(24|72)$/, AP_STORE],
     ['AP5 N, Space Force XP', 'truth-compare.mjs', ['--xm', '--arms', 'U', '--from', '2026-01-01', '--to', '2026-05-31', '--shard', '0/512'], { XP2F_CONTROL: '1' }, 'ussf-truth2', 'ussf-truth2', /^U(24|72)$/, NEW],
-    ['AP6, AP and XP', 'all-regimes.mjs', ['--arms', 'AP,XP', '--shard', '0/64'], {}, 'regimes', 'regimes', /^(AP|XP)\d+$/, NEW],
+    ['AP6, AP and XP', 'all-regimes.mjs', ['--arms', 'AP,XP', '--shard', '0/128'], {}, 'regimes', 'regimes', /^(AP|XP)\d+$/, NEW],
   ];
   for (const [what, script, args, env, dir, storedDir, arms, base] of runs) {
     const o = path.join(temp, dir);
