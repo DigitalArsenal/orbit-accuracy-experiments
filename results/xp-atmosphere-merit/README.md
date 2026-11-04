@@ -12,9 +12,18 @@ registered rule at every lead. X3 (NRLMSISE-00 times the open-DCA nowcast) fails
 the density-correction producer issued no correction on three dates.
 
 Generated from `results/xp-atmosphere-merit/table.json` (`node experiments/xp-atmosphere-merit/table.mjs`, 1,812 stored
-windows, rows digest `5ebcddc4f423`). Plan: [PLAN.md](../../experiments/xp-atmosphere-merit/PLAN.md), registered at
-2026-10-30T13:35:20-04:00 (commit 59dbe07, pushed to origin before any score). Modules fbda89450, propagator/sdn-ap
-49fa4b0f65887a7b, propagator/sgp4 1.4.1 2fe246b716c78a4b.
+windows, rows digest `0a625b094933`). Plan: [PLAN.md](../../experiments/xp-atmosphere-merit/PLAN.md), registered at
+2026-10-30T13:35:20-04:00 (commit 59dbe07, pushed to origin before any score). Modules 33ae37507, propagator/sdn-ap
+0.5.0 fa1e4466a00d5343, propagator/sgp4 1.4.1 2fe246b716c78a4b.
+
+Re-measured 2026-11-04 (experiments-ocm-fit-readers-20261103): every window re-fitted and re-scored on modules 33ae37507,
+where propagator/sdn-ap fits one `$OCM` per arc and a flight takes that `$OCM` alone (the `$SPW` rows and open-DCA nodes
+carried in the record; a missing day filled by the row before it and the last row carried forward to the record's
+horizon, the hold the registered build applied at flight). It replaces the table of build fbda89450 (rows digest
+`5ebcddc4f423`), whose rows stay in the plan's store. Every verdict and every count is unchanged; every P, X0 and X2
+cell reproduces exactly but GN's 72 h X2 against P, where one window build fbda89450 refused now flies (below). The X3
+cells changed with analysis/density-calibration 0.7.0, which issues a different `$DCL`: flown on 0.6.0's cached `$DCL`,
+X3 reproduces the published numbers exactly (window P 39452 2026-03-10, both arcs).
 
 ## What a pass means
 
@@ -61,8 +70,10 @@ Verdict: X2 does not beat P in group P or in group S1.
   and 7; the p95 ratio's upper bound is 0.86 to 0.97; no failures. Medians: X0 0.879, 1.808, 3.537 and 20.623 km.
 - **X2 against X0, group S1: no.** Sentinel-1 flies near 700 km, where the two atmospheres differ little: the median
   paired ratio is within 0.1 % of 1 at every lead.
-- **X3 against P: no**, in P and S1 (group P: +12.5 %, +21.3 %, +9.8 %, -3.1 %).
-- **X3 against X0, group P: no.** Rules 1 and 2 hold at every lead (-1.9 %, -11.1 %, -14.6 %, -25.4 %), but X3 failed on
+- **X3 against P: no**, in P and S1 (group P: +12.4 %, +21.5 %, +12.3 %, -4.6 %; build fbda89450: +12.5 %, +21.3 %,
+  +9.8 %, -3.1 %).
+- **X3 against X0, group P: no.** Rules 1 and 2 hold at every lead (-2.7 %, -10.8 %, -14.6 %, -22.5 %; build fbda89450:
+  -1.9 %, -11.1 %, -14.6 %, -25.4 %), but X3 failed on
   10 of 750 pairs (1.3 %): analysis/density-calibration refused to issue the nowcast on 2026-04-09 and 2026-04-10
   ("stale-fleet": the last supported solve more than 48 h old), and a failure is a loss.
 
@@ -80,11 +91,11 @@ determine the drag term. X3 against X0 passes under M: the hindcast was refused 
 
 ## GN control (GNSS MEO)
 
-X2 and X3 equal X0 bit for bit wherever both ran: 5,970 comparisons of the propagated TEME states over 755 windows and two
-arcs, 0 differences. 34 arm runs produced no states: 30 X3 runs without a `$DCL` (the refusals above), and X2 and X3 of
-one window (E218 43058, cutoff 2026-05-15, 72 h arc), which propagator/sdn-ap refused with space-weather-out-of-range
-although the rows begin on 2026-05-10, two days before the arc's first state's day (2026-05-12); X0 ran. That refusal is
-reported as a possible module defect; no LEO window shows it. X2 against P passes in GN (median ratio -89 % to -65 %):
+X2 and X3 equal X0 bit for bit wherever both ran: 5,974 comparisons of the propagated TEME states over 755 windows and two
+arcs, 0 differences. 30 arm runs produced no states: the X3 runs without a `$DCL` (the refusals above). Build fbda89450
+also refused X2 and X3 of one window (E218 43058, cutoff 2026-05-15, 72 h arc) with space-weather-out-of-range although
+the rows began two days before the arc's first state's day; on the `$OCM` path that window flies, which moves GN's 72 h
+X2 against P cells by at most 0.08 points (day 1 -89.41 % to -89.47 %). X2 against P passes in GN (median ratio -89 % to -65 %):
 fits to ESA final orbits against public sets, the fitting advantage this test holds constant, not the atmosphere's.
 
 ## Windows
@@ -133,7 +144,7 @@ node experiments/xp-atmosphere-merit/table.mjs                          # this t
 node experiments/xp-atmosphere-merit/run.mjs --check                    # E2E: pinned windows replayed exactly, table rebuilt
 ```
 
-Every wasm is read with `git show` at modules fbda89450 and SHA-256 checked (`build.json`); all fitting and propagation
+Every wasm is read with `git show` at modules 33ae37507 and SHA-256 checked (`build.json`); all fitting and propagation
 are module calls.
 
 ## Data and terms
