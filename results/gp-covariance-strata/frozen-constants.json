@@ -2,7 +2,7 @@
  "version": 1,
  "plan": {
   "file": "experiments/gp-covariance-strata/PLAN.md",
-  "sha256": "ed613333438d5496728e98bcb564dbed4788067fc91268a0ae3afd5e7a8ab581"
+  "sha256": "dc3d3d75810ba0ffadedcda3074e8ef6a48149b467ca76ed3b8c374902eeddce"
  },
  "owner": {
   "o1": "b",
@@ -17,7 +17,7 @@
  "trials": 1500,
  "code": {
   "libSha256": "4791674c9ebf07a38b55ecdac5d0cdf427d7ba25f58db447e8a8f7dbcdb51115",
-  "stepsSha256": "c21559717401b053fde8962b2a9a3c136ec7ec46b239175d761b6dc5f4c50eb5",
+  "stepsSha256": "04bed43b3ee6e03dd553115376ead63600e16f1606c0f37ff6f10b9af408ad40",
   "runSha256": "dbf71301d189566cd3c0fff1b30dca6043479a0dec549d2726710e95d4f91b79"
  },
  "pins": {

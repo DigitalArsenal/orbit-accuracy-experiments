@@ -35,3 +35,18 @@ WAAS MT9 data: NASA Crustal Dynamics Data Information System (CDDIS).
 - `e` is SGP4 minus truth in the truth RTN axes, km, unrounded doubles; `half` is 0 for the lower half of the bin by age, 1 for the upper; `block` is floor(days since 2024-01-01 / the stratum's block length); `z` and `d2` are under the frozen P_strat through the interpolation lookup (`null` where a regime has no cell). The covariance used at the sample is `interp(pStrat[regime], ageDays)` as in `lib/stats.mjs`.
 - The regime definition text is `regimeDefinition` in `frozen-constants.json`; the frozen P_strat per stratum is `pStrat`.
 - The files are per-object and stay under AR; the public repository holds only the manifest.
+
+## Sensitivity of the TESTABLE count to the levers (numbers only)
+
+Each row changes one lever and keeps the frozen fresh pools and lawful spans; no new truth is read. File: `sensitivity.json`.
+
+| Change | S1 TESTABLE | S1p TESTABLE |
+|---|---|---|
+| As frozen (O5 yes; O3, O4 no; P(label \| correct) >= 0.8; C_min floor 3) | 0 | 0 |
+| (a) O3 yes: Sentinel-1C fresh in LEO-M (4 clusters; COSMIC-2 not included, no dev rows exist) | 0 | 0 |
+| (b) O4 yes, Swarm and GRACE-FO: LEO-L strata on their 3 clusters | 0 | 0 |
+| (c) O4 yes, ISS | not computed: no ISS dev rows | not computed |
+| (d) C_min floor 2 | 0 | 0 |
+| (e) P(label \| correct) >= 0.5 | 0 | 1 (MEO, ages [0, 0.25) d) |
+
+Largest P(label | correct) by regime: S1 LEO-L 0.08, LEO-M 0.06, LEO-H 0.17, MEO 0.20, GEO 0.00; S1p LEO-L 0.78, LEO-M 0.38, LEO-H 0.82, MEO 0.52, GEO 0.37 (LEO-H and LEO-L miss on the too-small side, P(label | x0.7) above 0.05).
