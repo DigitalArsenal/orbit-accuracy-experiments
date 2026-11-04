@@ -108,11 +108,25 @@ const starts = doc.runs.log.filter((l) => /^(start|resume|balanced) /.test(l)).m
 check(registered < Date.parse(doc.runs.firstRowFile) && starts.every((t) => registered < t), `registration ${doc.runs.registration.slice(0, 7)} at ${new Date(registered).toISOString()} precedes the first of ${doc.runs.rowFiles} row files (${doc.runs.firstRowFile}) and every run start`);
 let ancestor = true;
 try { git('merge-base', '--is-ancestor', doc.runs.registration, 'HEAD'); } catch { ancestor = false; }
-check(ancestor && git('show', `${doc.runs.registration}:experiments/operator-theory/XP-ARM-0-2-1.md`).equals(fs.readFileSync(path.join(here, 'XP-ARM-0-2-1.md'))), 'XP-ARM-0-2-1.md is an ancestor of HEAD and unchanged since registration');
+const registeredText = git('show', `${doc.runs.registration}:experiments/operator-theory/XP-ARM-0-2-1.md`), currentText = fs.readFileSync(path.join(here, 'XP-ARM-0-2-1.md'));
+check(ancestor && currentText.subarray(0, registeredText.length).equals(registeredText) && git('show', `${doc.runs.amendment}:experiments/operator-theory/XP-ARM-0-2-1.md`).equals(currentText), `XP-ARM-0-2-1.md is its registration with amendments 1 and 2 appended, unchanged since ${doc.runs.amendment.slice(0, 7)}`);
 for (const s of doc.next) check(s.run === s.registered && s.notRegistered === 0 && s.flownTwice === 0, `${s.set}: ${s.run} of ${s.registered} registered pairs flown on 0.2.1 once each, none other (${Object.entries(s.failed).map(([a, f]) => `${a} without a figure ${f['0.2.1']}`).join(', ')})`);
 
 // 6. GE and IG day 1: the Space Force XP on 0.2.1 within 0.02 km of its sets flown on the whiteroom propagator (the 2x2's prediction).
 for (const p of doc.prediction) check(p.within && p.flown === p.windows, `${p.group} day 1 on the 2x2's ${p.windows} windows: Space Force XP ${p.spaceForce021} km (0.1.1: ${p.spaceForce011}), its sets on the whiteroom propagator ${p.spaceForceSetsOnWhiteroom}, ${p.lessSW >= 0 ? '+' : ''}${p.lessSW} km`);
+
+// 6b. The two cells worse on 0.2.1, per window: every window flown on all four arms, the refits reproducing the stored figures, amendment 2 before the first row.
+const amended = Date.parse(git('show', '-s', '--format=%cI', doc.runs.amendment).toString().trim());
+check(amended < Date.parse(doc.runs.firstAttributionFile), `amendment 2 ${doc.runs.amendment.slice(0, 7)} at ${new Date(amended).toISOString()} precedes the first of ${doc.runs.attributionFiles} attribution row files (${doc.runs.firstAttributionFile})`);
+for (const x of doc.attribution) {
+  const store = x.group === 'HX' ? 'ussf-regimes-hx' : 'ussf-regimes', oldU = byKey(path.join(OLD, store)), newU = byKey(path.join(B051, store));
+  const expected = [...newU.values()].filter((r) => r.group === x.group && [r, oldU.get(r.key)].every((q) => Number.isFinite(q?.arms?.[x.arm]?.days?.[String(x.day)]?.e))).length;
+  const full = x.windows - x.missing;
+  console.log(`     ${x.label} ${x.arm} day ${x.day}: medians a ${x.medianKm.a}, b ${x.medianKm.b}, 0.1.1's set on 0.2.1 ${x.medianKm.u11}, 0.2.1's set on the whiteroom propagator ${x.medianKm.uw} km; flight side ${x.flightSide}, fit side ${x.fitSide}`);
+  check(full === expected && x.reproducesB === full && x.reproducesA === full, `${x.label} ${x.arm} day ${x.day}: all ${expected} windows with a figure flown on four arms; the 0.2.1 refit reproduces b on ${x.reproducesB}, the 0.1.1 refit on 0.1.1 reproduces a on ${x.reproducesA}`);
+}
+for (const g of doc.againstSgp4) console.log(`     ${g.group} against SGP4, median of each window's ratio, 0.1.1 / 0.2.1: ${['1', '2', '3', '7'].map((d) => `day ${d} ${g.days[d]['0.1.1']} / ${g.days[d]['0.2.1']} (${g.days[d].windows})`).join(', ')}`);
+check(doc.againstSgp4.length === 2 && doc.againstSgp4.every((g) => Object.values(g.days).every((d) => d.windows > 0)), 'the geosynchronous ratio against SGP4 is written from paired windows for GE and IG at days 1, 2, 3 and 7');
 
 // 7. The holds: no Starlink row and no held satellite in the new store; Swarm and GRACE-FO truth ends before 2026-10-31.
 const storeFiles = ['ussf-laser', 'ussf-providers'].flatMap((s) => fs.readdirSync(path.join(XPARM, s)).filter((f) => PROVIDER_ROWS.test(f)).map((f) => path.join(XPARM, s, f)));
