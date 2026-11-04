@@ -49,6 +49,9 @@
   "measurements_with_truth": 29523,
   "object_nights_with_truth_ge_20_measurements": 79,
   "objects_with_truth_ge_20_measurements_on_a_night": 9,
+  "arcs_24h_or_more": 15,
+  "arcs_24h_or_more_with_24h_of_truth_after": 14,
+  "arcs_24h_or_more_with_72h_of_truth_after": 14,
   "objects_with_2_or_more_consecutive_nights": 6,
   "held_objects_observed_not_counted": 3,
   "truth_exists_no_observed_night_covered": 0
@@ -94,70 +97,80 @@
      "last_session": "2026-08-30",
      "nights": 1,
      "hours": 0.1,
-     "measurements": 355
+     "measurements": 355,
+     "truth_hours_after_arc": 932.8
     },
     {
      "first_session": "2026-09-03",
      "last_session": "2026-09-06",
      "nights": 4,
      "hours": 73.2,
-     "measurements": 1623
+     "measurements": 1623,
+     "truth_hours_after_arc": 766.0
     },
     {
      "first_session": "2026-09-08",
      "last_session": "2026-09-09",
      "nights": 2,
      "hours": 22.4,
-     "measurements": 135
+     "measurements": 135,
+     "truth_hours_after_arc": 694.8
     },
     {
      "first_session": "2026-09-11",
      "last_session": "2026-09-11",
      "nights": 1,
      "hours": 3.9,
-     "measurements": 1090
+     "measurements": 1090,
+     "truth_hours_after_arc": 644.1
     },
     {
      "first_session": "2026-09-13",
      "last_session": "2026-09-16",
      "nights": 4,
      "hours": 71.3,
-     "measurements": 1782
+     "measurements": 1782,
+     "truth_hours_after_arc": 528.0
     },
     {
      "first_session": "2026-09-21",
      "last_session": "2026-09-26",
      "nights": 6,
      "hours": 118.0,
-     "measurements": 3360
+     "measurements": 3360,
+     "truth_hours_after_arc": 288.1
     },
     {
      "first_session": "2026-09-29",
      "last_session": "2026-09-29",
      "nights": 1,
      "hours": 2.0,
-     "measurements": 138
+     "measurements": 138,
+     "truth_hours_after_arc": 216.9
     },
     {
      "first_session": "2026-10-02",
      "last_session": "2026-10-03",
      "nights": 2,
      "hours": 30.1,
-     "measurements": 781
+     "measurements": 781,
+     "truth_hours_after_arc": 117.5
     },
     {
      "first_session": "2026-10-05",
      "last_session": "2026-10-06",
      "nights": 2,
      "hours": 16.5,
-     "measurements": 556
+     "measurements": 556,
+     "truth_hours_after_arc": 54.1
     },
     {
      "first_session": "2026-10-08",
      "last_session": "2026-10-08",
      "nights": 1,
      "hours": 3.9,
-     "measurements": 1088
+     "measurements": 1088,
+     "truth_hours_after_arc": 1.4
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 118.0,
@@ -632,63 +645,72 @@
      "last_session": "2026-08-30",
      "nights": 1,
      "hours": 0.1,
-     "measurements": 406
+     "measurements": 406,
+     "truth_hours_after_arc": 932.8
     },
     {
      "first_session": "2026-09-03",
      "last_session": "2026-09-06",
      "nights": 4,
      "hours": 73.2,
-     "measurements": 1331
+     "measurements": 1331,
+     "truth_hours_after_arc": 766.0
     },
     {
      "first_session": "2026-09-11",
      "last_session": "2026-09-11",
      "nights": 1,
      "hours": 3.9,
-     "measurements": 882
+     "measurements": 882,
+     "truth_hours_after_arc": 644.1
     },
     {
      "first_session": "2026-09-13",
      "last_session": "2026-09-16",
      "nights": 4,
      "hours": 71.3,
-     "measurements": 1690
+     "measurements": 1690,
+     "truth_hours_after_arc": 528.0
     },
     {
      "first_session": "2026-09-21",
      "last_session": "2026-09-26",
      "nights": 6,
      "hours": 118.0,
-     "measurements": 3544
+     "measurements": 3544,
+     "truth_hours_after_arc": 288.1
     },
     {
      "first_session": "2026-09-29",
      "last_session": "2026-09-29",
      "nights": 1,
      "hours": 2.0,
-     "measurements": 354
+     "measurements": 354,
+     "truth_hours_after_arc": 216.9
     },
     {
      "first_session": "2026-10-02",
      "last_session": "2026-10-03",
      "nights": 2,
      "hours": 30.1,
-     "measurements": 682
+     "measurements": 682,
+     "truth_hours_after_arc": 117.5
     },
     {
      "first_session": "2026-10-05",
      "last_session": "2026-10-05",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 544
+     "measurements": 544,
+     "truth_hours_after_arc": 70.6
     },
     {
      "first_session": "2026-10-08",
      "last_session": "2026-10-08",
      "nights": 1,
      "hours": 3.9,
-     "measurements": 1152
+     "measurements": 1152,
+     "truth_hours_after_arc": 1.4
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 118.0,
@@ -1097,49 +1119,56 @@
      "last_session": "2026-09-11",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 110
+     "measurements": 110,
+     "truth_hours_after_arc": 716.4
     },
     {
      "first_session": "2026-09-13",
      "last_session": "2026-09-13",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 413
+     "measurements": 413,
+     "truth_hours_after_arc": 669.5
     },
     {
      "first_session": "2026-09-16",
      "last_session": "2026-09-16",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 554
+     "measurements": 554,
+     "truth_hours_after_arc": 598.4
     },
     {
      "first_session": "2026-09-23",
      "last_session": "2026-09-24",
      "nights": 2,
      "hours": 27.9,
-     "measurements": 742
+     "measurements": 742,
+     "truth_hours_after_arc": 403.9
     },
     {
      "first_session": "2026-09-29",
      "last_session": "2026-09-29",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 210
+     "measurements": 210,
+     "truth_hours_after_arc": 284.2
     },
     {
      "first_session": "2026-10-02",
      "last_session": "2026-10-02",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 284
+     "measurements": 284,
+     "truth_hours_after_arc": 213.0
     },
     {
      "first_session": "2026-10-09",
      "last_session": "2026-10-11",
      "nights": 3,
      "hours": 41.4,
-     "measurements": 685
+     "measurements": 685,
+     "truth_hours_after_arc": 3.3
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 41.4,
@@ -1390,42 +1419,48 @@
      "last_session": "2026-08-28",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 335
+     "measurements": 335,
+     "truth_hours_after_arc": 985.1
     },
     {
      "first_session": "2026-08-31",
      "last_session": "2026-09-01",
      "nights": 2,
      "hours": 24.0,
-     "measurements": 793
+     "measurements": 793,
+     "truth_hours_after_arc": 890.7
     },
     {
      "first_session": "2026-09-05",
      "last_session": "2026-09-05",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 44
+     "measurements": 44,
+     "truth_hours_after_arc": 796.5
     },
     {
      "first_session": "2026-09-11",
      "last_session": "2026-09-11",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 543
+     "measurements": 543,
+     "truth_hours_after_arc": 652.4
     },
     {
      "first_session": "2026-09-21",
      "last_session": "2026-09-22",
      "nights": 2,
      "hours": 24.0,
-     "measurements": 370
+     "measurements": 370,
+     "truth_hours_after_arc": 381.2
     },
     {
      "first_session": "2026-10-01",
      "last_session": "2026-10-02",
      "nights": 2,
      "hours": 22.3,
-     "measurements": 426
+     "measurements": 426,
+     "truth_hours_after_arc": 142.8
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 24.0,
@@ -1578,42 +1613,48 @@
      "last_session": "2026-08-27",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 39
+     "measurements": 39,
+     "truth_hours_after_arc": 1035.9
     },
     {
      "first_session": "2026-09-11",
      "last_session": "2026-09-11",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 79
+     "measurements": 79,
+     "truth_hours_after_arc": 676.9
     },
     {
      "first_session": "2026-09-13",
      "last_session": "2026-09-13",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 310
+     "measurements": 310,
+     "truth_hours_after_arc": 629.0
     },
     {
      "first_session": "2026-09-26",
      "last_session": "2026-09-26",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 108
+     "measurements": 108,
+     "truth_hours_after_arc": 316.4
     },
     {
      "first_session": "2026-10-01",
      "last_session": "2026-10-01",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 360
+     "measurements": 360,
+     "truth_hours_after_arc": 195.6
     },
     {
      "first_session": "2026-10-08",
      "last_session": "2026-10-08",
      "nights": 1,
      "hours": 0.1,
-     "measurements": 374
+     "measurements": 374,
+     "truth_hours_after_arc": 30.2
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 0.1,
@@ -1749,21 +1790,24 @@
      "last_session": "2026-09-09",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 2
+     "measurements": 2,
+     "truth_hours_after_arc": 528.2
     },
     {
      "first_session": "2026-09-12",
      "last_session": "2026-09-13",
      "nights": 2,
      "hours": 24.3,
-     "measurements": 4
+     "measurements": 4,
+     "truth_hours_after_arc": 433.2
     },
     {
      "first_session": "2026-09-22",
      "last_session": "2026-09-23",
      "nights": 2,
      "hours": 28.1,
-     "measurements": 242
+     "measurements": 242,
+     "truth_hours_after_arc": 190.7
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 28.1,
@@ -1944,28 +1988,32 @@
      "last_session": "2026-08-24",
      "nights": 1,
      "hours": 2.0,
-     "measurements": 3
+     "measurements": 3,
+     "truth_hours_after_arc": 1049.1
     },
     {
      "first_session": "2026-08-26",
      "last_session": "2026-08-26",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 1
+     "measurements": 1,
+     "truth_hours_after_arc": 1003.0
     },
     {
      "first_session": "2026-08-29",
      "last_session": "2026-08-29",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 1
+     "measurements": 1,
+     "truth_hours_after_arc": 929.6
     },
     {
      "first_session": "2026-09-03",
      "last_session": "2026-09-03",
      "nights": 1,
      "hours": 2.0,
-     "measurements": 2
+     "measurements": 2,
+     "truth_hours_after_arc": 810.1
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 2.0,
@@ -2048,21 +2096,24 @@
      "last_session": "2026-09-06",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 168
+     "measurements": 168,
+     "truth_hours_after_arc": 988.0
     },
     {
      "first_session": "2026-09-22",
      "last_session": "2026-09-22",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 203
+     "measurements": 203,
+     "truth_hours_after_arc": 604.3
     },
     {
      "first_session": "2026-09-25",
      "last_session": "2026-09-26",
      "nights": 2,
      "hours": 25.2,
-     "measurements": 354
+     "measurements": 354,
+     "truth_hours_after_arc": 506.7
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 25.2,
@@ -2146,21 +2197,24 @@
      "last_session": "2026-08-31",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 25
+     "measurements": 25,
+     "truth_hours_after_arc": 1108.2
     },
     {
      "first_session": "2026-09-27",
      "last_session": "2026-09-27",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 48
+     "measurements": 48,
+     "truth_hours_after_arc": 460.1
     },
     {
      "first_session": "2026-09-29",
      "last_session": "2026-09-29",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 28
+     "measurements": 28,
+     "truth_hours_after_arc": 411.3
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 0.0,
@@ -2229,7 +2283,8 @@
      "last_session": "2026-09-06",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 1
+     "measurements": 1,
+     "truth_hours_after_arc": 1297.4
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 0.0,
@@ -2270,7 +2325,8 @@
      "last_session": "2026-09-06",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 1
+     "measurements": 1,
+     "truth_hours_after_arc": 1297.5
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 0.0,
@@ -2311,7 +2367,8 @@
      "last_session": "2026-10-02",
      "nights": 1,
      "hours": 0.0,
-     "measurements": 168
+     "measurements": 168,
+     "truth_hours_after_arc": 163.9
     }
    ],
    "longest_arc_hours_over_consecutive_nights": 0.0,
