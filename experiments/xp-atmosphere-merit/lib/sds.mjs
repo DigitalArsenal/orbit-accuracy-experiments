@@ -1,6 +1,6 @@
 // The SDS records XM sends to the modules, encoded with the bindings of the SDS release propagator/sdn-ap is built with
-// (1.276.0, its own dependency): $OEM blocks, $PCF (1.0.7: the fit's FORCES, a flight's OUTPUT.EPOCHS), $SPW rows, $DCL;
-// the fitted $OCM read by its typed fields. Bytes only; every orbit computation is a module's.
+// (1.276.0, its own dependency): $OEM blocks and propagator/sgp4-xp's grid, $PCF (1.0.7: the fit's FORCES, a flight's
+// OUTPUT.EPOCHS), $SPW rows, $DCL; the fitted $OCM read by its typed fields; $OMM only as the foreign boundary record. Bytes only; every orbit computation is a module's.
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -11,7 +11,7 @@ const req = createRequire(path.join(modules, 'propagator/sdn-ap/package.json'));
 const standards = path.dirname(req.resolve('spacedatastandards.org/package.json'));
 const load = (code) => import(pathToFileURL(path.join(standards, `lib/js/${code}/main.js`)).href);
 export const flatbuffers = await import(pathToFileURL(req.resolve('flatbuffers')).href);
-export const [OEM, OCM, PCF, SPW, DCL, RFM] = await Promise.all(['OEM', 'OCM', 'PCF', 'SPW', 'DCL', 'RFM'].map(load));
+export const [OEM, OMM, OCM, PCF, SPW, DCL, RFM] = await Promise.all(['OEM', 'OMM', 'OCM', 'PCF', 'SPW', 'DCL', 'RFM'].map(load));
 export const sdsVersion = (await import(pathToFileURL(path.join(standards, 'package.json')).href, { with: { type: 'json' } })).default.version;
 export const TYPE = (name) => ({ schemaName: `${name}.fbs`, fileIdentifier: `$${name}`, rootTypeName: name, wireFormat: 'flatbuffer' });
 
@@ -40,7 +40,10 @@ export function oemBytes({ frame, object, lines, useableStart, useableStop, orig
   return builder.asUint8Array().slice();
 }
 
-/** A flight's $PCF: OUTPUT at explicit epochs (ISO UTC), TEME; THEORY UNSPECIFIED (the set's own), no FORCES (the record is
+/** propagator/sgp4-xp's `grid`: explicit epochs (ISO UTC), TEME. */
+export const gridBytes = (epochs) => oemBytes({ frame: 'TEME', lines: epochs.map((epoch) => ({ epoch, r: [0, 0, 0] })) });
+
+/** propagator/sdn-ap's flight $PCF: OUTPUT at explicit epochs (ISO UTC), TEME; THEORY UNSPECIFIED (the set's own), no FORCES (the record is
  *  the one authority for its forces). */
 export function flightPcfBytes(epochs) {
   const t = new PCF.PCFT();
