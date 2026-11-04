@@ -1,0 +1,8211 @@
+{
+ "registered": "experiments/operator-theory/XP-ARM-0-2-1.md",
+ "reading": "report only",
+ "build": "modules ea824356: sdn-ap 0.5.1 (d29acd2b5d92), sgp4-xp 0.2.1 (816fd137d761)",
+ "builds": {
+  "0.1.1": [
+   "propagator/sgp4-xp@f61b15c4fd65"
+  ],
+  "0.2.1": [
+   "propagator/sgp4-xp@816fd137d761"
+  ],
+  "records": {
+   "propagator/sdn-ap@e4edacb03daf": {
+    "module": "propagator/sdn-ap",
+    "version": "0.4.11",
+    "commit": "a0f33bc545d76f47d679c7854c6963fb8efcf799",
+    "sha256": "e4edacb03daff4eaba47263010c27009a6d888259c0d8f028605cebf4d655610"
+   },
+   "propagator/sdn-ap@d29acd2b5d92": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "commit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "sha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "propagator/sgp4-xp@816fd137d761": {
+    "module": "propagator/sgp4-xp",
+    "version": "0.2.1",
+    "commit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "sha256": "816fd137d76197f2af93501d7d71c527383f7589ab698d5d1d3544782cd2feef"
+   },
+   "propagator/sgp4-xp@f61b15c4fd65": {
+    "module": "propagator/sgp4-xp",
+    "version": "0.1.1",
+    "commit": "1b905d16f68fc56e7da66c6392315970f9e7e6d0",
+    "sha256": "f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb"
+   },
+   "analysis/gp-error-model@8e13eddbd5cc": {
+    "module": "analysis/gp-error-model",
+    "version": "0.11.0",
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "sha256": "8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19"
+   },
+   "propagator/sgp4@2fe246b716c7": {
+    "module": "propagator/sgp4",
+    "version": "1.4.1",
+    "commit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
+    "sha256": "2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643"
+   },
+   "analysis/estimation@7a555ca5b3ed": {
+    "module": "analysis/estimation",
+    "version": "0.7.0",
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "sha256": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd"
+   },
+   "propagator/ffm@c36f1b14fc23": {
+    "module": "propagator/ffm",
+    "version": "2.0.4",
+    "commit": "9a05d899b95242b358939ab1d68a776170a6b167",
+    "sha256": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2"
+   }
+  }
+ },
+ "runs": {
+  "registration": "cd2ef8c94826d12318d2e6f3b4c7b92583b37814",
+  "registered": "2026-11-04T19:33:37.000Z",
+  "firstRowFile": "2026-11-04T19:51:04.950Z",
+  "rowFiles": 141,
+  "amendment": "b49e336659ba529e25fcb04c8a3d8b020dc4c4b3",
+  "amended": "2026-11-04T20:15:41.000Z",
+  "firstAttributionFile": "2026-11-04T21:15:10.955Z",
+  "attributionFiles": 9,
+  "log": [
+   "start 2026-11-04T19:50:46Z fc928a85a72692aaef980d4b580ef41023d797eb",
+   "FAILED laser 7 2026-11-04T19:57:35Z",
+   "FAILED laser 5 2026-11-04T19:57:35Z",
+   "FAILED laser 6 2026-11-04T19:57:35Z",
+   "FAILED laser 4 2026-11-04T19:57:35Z",
+   "FAILED laser 8 2026-11-04T19:57:35Z",
+   "stopped laser 4-8 2026-11-04T19:58:00Z: the 1-minute load passed 45; they resume from their rows",
+   "resume laser 4-8 2026-11-04T19:59:03Z f7ad4b51e43062ba53246349fd9d784c3300c687",
+   "FAILED laser 0 2026-11-04T20:04:38Z",
+   "FAILED laser 7 2026-11-04T20:04:38Z",
+   "FAILED laser 4 2026-11-04T20:04:38Z",
+   "FAILED laser 6 2026-11-04T20:04:38Z",
+   "FAILED laser 8 2026-11-04T20:04:38Z",
+   "FAILED laser 1 2026-11-04T20:04:38Z",
+   "FAILED laser 3 2026-11-04T20:04:38Z",
+   "FAILED laser 5 2026-11-04T20:04:38Z",
+   "FAILED laser 2 2026-11-04T20:04:38Z",
+   "end laser 4-8 2026-11-04T20:04:38Z",
+   "stopped laser 0-8 2026-11-04T20:04:41Z: shards uneven (low-orbit fits); the remaining pairs go to cost-balanced subsets",
+   "attribution 2026-11-04T20:12:41Z 6c0be888bc4b1a882cb742bb299bc1cc38fef783",
+   "FAILED attribution LS 0 2026-11-04T20:14:52Z",
+   "FAILED attribution LS 1 2026-11-04T20:14:52Z",
+   "FAILED attribution HX 2026-11-04T20:14:52Z",
+   "end attribution 2026-11-04T20:14:52Z",
+   "stopped attribution 2026-11-04T20:14:55Z: 0.2.1 ingest_omm refuses 0.1.1's free-form parameter list; rows removed, rerun after amendment 2",
+   "balanced laser 2026-11-04T20:15:19Z 6c0be888bc4b1a882cb742bb299bc1cc38fef783",
+   "FAILED subset 10 2026-11-04T20:16:36Z",
+   "FAILED subset 9 2026-11-04T20:16:36Z",
+   "stopped laser subsets 9 and 10 2026-11-04T20:16:38Z: fourteen workers with the providers; they resume from their rows",
+   "stopped laser subsets 2026-11-04T20:20:21Z: the remaining pairs go to smaller pieces in one pool",
+   "FAILED subset 11 2026-11-04T20:20:30Z",
+   "FAILED subset 5 2026-11-04T20:20:30Z",
+   "FAILED subset 2 2026-11-04T20:20:30Z",
+   "FAILED subset 3 2026-11-04T20:20:30Z",
+   "FAILED subset 1 2026-11-04T20:20:30Z",
+   "FAILED subset 4 2026-11-04T20:20:30Z",
+   "FAILED subset 7 2026-11-04T20:20:30Z",
+   "FAILED subset 6 2026-11-04T20:20:30Z",
+   "FAILED subset 8 2026-11-04T20:20:30Z",
+   "FAILED subset 0 2026-11-04T20:20:30Z",
+   "end balanced laser 2026-11-04T20:20:30Z",
+   "FAILED providers 1 2026-11-04T20:21:13Z",
+   "FAILED providers 0 2026-11-04T20:21:13Z",
+   "end 2026-11-04T20:21:13Z",
+   "stopped providers 0-1 2026-11-04T20:21:16Z: the remaining pairs go to the same pool",
+   "pool 125 jobs 2026-11-04T20:22:10Z 41183a8f24978fcb70b395dd91d430dc905a0969",
+   "stopped pool 2026-11-04T21:22:23Z: lane-run's 60-minute cap; the remaining pairs go to pool 400",
+   "pool 400: 1 jobs 2026-11-04T21:22:39Z f8d5534db0d77719196f684c06547c7568fdbe50",
+   "end pool 400 2026-11-04T21:27:55Z"
+  ]
+ },
+ "next": [
+  {
+   "set": "laser",
+   "store": "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser",
+   "registered": 19399,
+   "run": 19399,
+   "notRegistered": 0,
+   "flownTwice": 0,
+   "held": 0,
+   "failed": {
+    "U-XP@48": {
+     "0.1.1": 0,
+     "0.2.1": 0
+    },
+    "U-XP@72": {
+     "0.1.1": 0,
+     "0.2.1": 0
+    }
+   },
+   "cells": [
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 526,
+     "medianKm": {
+      "0.1.1": 0.0424,
+      "0.2.1": 0.0424
+     },
+     "p95Km": {
+      "0.1.1": 0.1354,
+      "0.2.1": 0.1352
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 460,
+     "medianKm": {
+      "0.1.1": 0.0571,
+      "0.2.1": 0.0571
+     },
+     "p95Km": {
+      "0.1.1": 0.1746,
+      "0.2.1": 0.1752
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 450,
+     "medianKm": {
+      "0.1.1": 0.067,
+      "0.2.1": 0.0666
+     },
+     "p95Km": {
+      "0.1.1": 0.21,
+      "0.2.1": 0.2087
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 439,
+     "medianKm": {
+      "0.1.1": 0.0824,
+      "0.2.1": 0.0807
+     },
+     "p95Km": {
+      "0.1.1": 0.2544,
+      "0.2.1": 0.2539
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 427,
+     "medianKm": {
+      "0.1.1": 0.1024,
+      "0.2.1": 0.0996
+     },
+     "p95Km": {
+      "0.1.1": 0.3259,
+      "0.2.1": 0.3255
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 416,
+     "medianKm": {
+      "0.1.1": 0.1448,
+      "0.2.1": 0.1408
+     },
+     "p95Km": {
+      "0.1.1": 0.343,
+      "0.2.1": 0.3418
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 406,
+     "medianKm": {
+      "0.1.1": 0.1582,
+      "0.2.1": 0.1537
+     },
+     "p95Km": {
+      "0.1.1": 0.3943,
+      "0.2.1": 0.3941
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 526,
+     "medianKm": {
+      "0.1.1": 0.0442,
+      "0.2.1": 0.0442
+     },
+     "p95Km": {
+      "0.1.1": 0.1317,
+      "0.2.1": 0.1312
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 460,
+     "medianKm": {
+      "0.1.1": 0.0539,
+      "0.2.1": 0.0527
+     },
+     "p95Km": {
+      "0.1.1": 0.1412,
+      "0.2.1": 0.1412
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 450,
+     "medianKm": {
+      "0.1.1": 0.0602,
+      "0.2.1": 0.0606
+     },
+     "p95Km": {
+      "0.1.1": 0.1647,
+      "0.2.1": 0.1651
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 439,
+     "medianKm": {
+      "0.1.1": 0.0705,
+      "0.2.1": 0.0704
+     },
+     "p95Km": {
+      "0.1.1": 0.1802,
+      "0.2.1": 0.1787
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 427,
+     "medianKm": {
+      "0.1.1": 0.0859,
+      "0.2.1": 0.0819
+     },
+     "p95Km": {
+      "0.1.1": 0.2041,
+      "0.2.1": 0.2052
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 416,
+     "medianKm": {
+      "0.1.1": 0.1033,
+      "0.2.1": 0.101
+     },
+     "p95Km": {
+      "0.1.1": 0.2284,
+      "0.2.1": 0.2276
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "All",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 406,
+     "medianKm": {
+      "0.1.1": 0.1177,
+      "0.2.1": 0.1153
+     },
+     "p95Km": {
+      "0.1.1": 0.2408,
+      "0.2.1": 0.2471
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 192,
+     "medianKm": {
+      "0.1.1": 0.0544,
+      "0.2.1": 0.0544
+     },
+     "p95Km": {
+      "0.1.1": 0.1418,
+      "0.2.1": 0.1418
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 168,
+     "medianKm": {
+      "0.1.1": 0.0573,
+      "0.2.1": 0.0574
+     },
+     "p95Km": {
+      "0.1.1": 0.1792,
+      "0.2.1": 0.1797
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 164,
+     "medianKm": {
+      "0.1.1": 0.071,
+      "0.2.1": 0.0716
+     },
+     "p95Km": {
+      "0.1.1": 0.2219,
+      "0.2.1": 0.221
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 160,
+     "medianKm": {
+      "0.1.1": 0.0838,
+      "0.2.1": 0.0841
+     },
+     "p95Km": {
+      "0.1.1": 0.273,
+      "0.2.1": 0.274
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 156,
+     "medianKm": {
+      "0.1.1": 0.1065,
+      "0.2.1": 0.1061
+     },
+     "p95Km": {
+      "0.1.1": 0.3446,
+      "0.2.1": 0.3438
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 152,
+     "medianKm": {
+      "0.1.1": 0.1485,
+      "0.2.1": 0.1442
+     },
+     "p95Km": {
+      "0.1.1": 0.3717,
+      "0.2.1": 0.3669
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 148,
+     "medianKm": {
+      "0.1.1": 0.1559,
+      "0.2.1": 0.1509
+     },
+     "p95Km": {
+      "0.1.1": 0.4383,
+      "0.2.1": 0.4359
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 192,
+     "medianKm": {
+      "0.1.1": 0.0619,
+      "0.2.1": 0.0541
+     },
+     "p95Km": {
+      "0.1.1": 0.1358,
+      "0.2.1": 0.1347
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 168,
+     "medianKm": {
+      "0.1.1": 0.0578,
+      "0.2.1": 0.0574
+     },
+     "p95Km": {
+      "0.1.1": 0.1446,
+      "0.2.1": 0.145
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 164,
+     "medianKm": {
+      "0.1.1": 0.0624,
+      "0.2.1": 0.0594
+     },
+     "p95Km": {
+      "0.1.1": 0.1732,
+      "0.2.1": 0.1715
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 160,
+     "medianKm": {
+      "0.1.1": 0.0673,
+      "0.2.1": 0.0681
+     },
+     "p95Km": {
+      "0.1.1": 0.1934,
+      "0.2.1": 0.1904
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 156,
+     "medianKm": {
+      "0.1.1": 0.0872,
+      "0.2.1": 0.0812
+     },
+     "p95Km": {
+      "0.1.1": 0.2114,
+      "0.2.1": 0.2134
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 152,
+     "medianKm": {
+      "0.1.1": 0.1042,
+      "0.2.1": 0.1
+     },
+     "p95Km": {
+      "0.1.1": 0.2358,
+      "0.2.1": 0.2328
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 148,
+     "medianKm": {
+      "0.1.1": 0.1191,
+      "0.2.1": 0.1155
+     },
+     "p95Km": {
+      "0.1.1": 0.248,
+      "0.2.1": 0.2561
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 142,
+     "medianKm": {
+      "0.1.1": 0.0396,
+      "0.2.1": 0.0396
+     },
+     "p95Km": {
+      "0.1.1": 0.1022,
+      "0.2.1": 0.1022
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 124,
+     "medianKm": {
+      "0.1.1": 0.0569,
+      "0.2.1": 0.0569
+     },
+     "p95Km": {
+      "0.1.1": 0.1251,
+      "0.2.1": 0.1251
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 122,
+     "medianKm": {
+      "0.1.1": 0.0653,
+      "0.2.1": 0.0643
+     },
+     "p95Km": {
+      "0.1.1": 0.1464,
+      "0.2.1": 0.1457
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 119,
+     "medianKm": {
+      "0.1.1": 0.0771,
+      "0.2.1": 0.0757
+     },
+     "p95Km": {
+      "0.1.1": 0.1802,
+      "0.2.1": 0.1798
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 115,
+     "medianKm": {
+      "0.1.1": 0.092,
+      "0.2.1": 0.0894
+     },
+     "p95Km": {
+      "0.1.1": 0.2196,
+      "0.2.1": 0.221
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 112,
+     "medianKm": {
+      "0.1.1": 0.1352,
+      "0.2.1": 0.1335
+     },
+     "p95Km": {
+      "0.1.1": 0.2474,
+      "0.2.1": 0.2473
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 110,
+     "medianKm": {
+      "0.1.1": 0.1541,
+      "0.2.1": 0.1431
+     },
+     "p95Km": {
+      "0.1.1": 0.2934,
+      "0.2.1": 0.2935
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 142,
+     "medianKm": {
+      "0.1.1": 0.0402,
+      "0.2.1": 0.041
+     },
+     "p95Km": {
+      "0.1.1": 0.1014,
+      "0.2.1": 0.1014
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 124,
+     "medianKm": {
+      "0.1.1": 0.0523,
+      "0.2.1": 0.0495
+     },
+     "p95Km": {
+      "0.1.1": 0.1071,
+      "0.2.1": 0.107
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 122,
+     "medianKm": {
+      "0.1.1": 0.0602,
+      "0.2.1": 0.0613
+     },
+     "p95Km": {
+      "0.1.1": 0.1119,
+      "0.2.1": 0.1128
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 119,
+     "medianKm": {
+      "0.1.1": 0.072,
+      "0.2.1": 0.0707
+     },
+     "p95Km": {
+      "0.1.1": 0.1297,
+      "0.2.1": 0.1278
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 115,
+     "medianKm": {
+      "0.1.1": 0.083,
+      "0.2.1": 0.0805
+     },
+     "p95Km": {
+      "0.1.1": 0.1507,
+      "0.2.1": 0.1508
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 112,
+     "medianKm": {
+      "0.1.1": 0.1017,
+      "0.2.1": 0.0965
+     },
+     "p95Km": {
+      "0.1.1": 0.1636,
+      "0.2.1": 0.1788
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 110,
+     "medianKm": {
+      "0.1.1": 0.1149,
+      "0.2.1": 0.1104
+     },
+     "p95Km": {
+      "0.1.1": 0.1993,
+      "0.2.1": 0.1935
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 192,
+     "medianKm": {
+      "0.1.1": 0.0539,
+      "0.2.1": 0.0539
+     },
+     "p95Km": {
+      "0.1.1": 0.1414,
+      "0.2.1": 0.1418
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 168,
+     "medianKm": {
+      "0.1.1": 0.0575,
+      "0.2.1": 0.0575
+     },
+     "p95Km": {
+      "0.1.1": 0.1784,
+      "0.2.1": 0.177
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 164,
+     "medianKm": {
+      "0.1.1": 0.0701,
+      "0.2.1": 0.071
+     },
+     "p95Km": {
+      "0.1.1": 0.2301,
+      "0.2.1": 0.2286
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 160,
+     "medianKm": {
+      "0.1.1": 0.0841,
+      "0.2.1": 0.0839
+     },
+     "p95Km": {
+      "0.1.1": 0.2722,
+      "0.2.1": 0.2718
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 156,
+     "medianKm": {
+      "0.1.1": 0.1076,
+      "0.2.1": 0.108
+     },
+     "p95Km": {
+      "0.1.1": 0.3468,
+      "0.2.1": 0.3458
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 152,
+     "medianKm": {
+      "0.1.1": 0.1544,
+      "0.2.1": 0.1522
+     },
+     "p95Km": {
+      "0.1.1": 0.3781,
+      "0.2.1": 0.3755
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 148,
+     "medianKm": {
+      "0.1.1": 0.1687,
+      "0.2.1": 0.1705
+     },
+     "p95Km": {
+      "0.1.1": 0.4396,
+      "0.2.1": 0.4353
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 192,
+     "medianKm": {
+      "0.1.1": 0.0596,
+      "0.2.1": 0.0588
+     },
+     "p95Km": {
+      "0.1.1": 0.1364,
+      "0.2.1": 0.1375
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 168,
+     "medianKm": {
+      "0.1.1": 0.0569,
+      "0.2.1": 0.0597
+     },
+     "p95Km": {
+      "0.1.1": 0.1436,
+      "0.2.1": 0.1436
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 164,
+     "medianKm": {
+      "0.1.1": 0.0591,
+      "0.2.1": 0.0609
+     },
+     "p95Km": {
+      "0.1.1": 0.1726,
+      "0.2.1": 0.1726
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 160,
+     "medianKm": {
+      "0.1.1": 0.0704,
+      "0.2.1": 0.071
+     },
+     "p95Km": {
+      "0.1.1": 0.1896,
+      "0.2.1": 0.1866
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 156,
+     "medianKm": {
+      "0.1.1": 0.0889,
+      "0.2.1": 0.0865
+     },
+     "p95Km": {
+      "0.1.1": 0.213,
+      "0.2.1": 0.2131
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 152,
+     "medianKm": {
+      "0.1.1": 0.1056,
+      "0.2.1": 0.1031
+     },
+     "p95Km": {
+      "0.1.1": 0.2402,
+      "0.2.1": 0.2383
+     }
+    },
+    {
+     "regime": "Geodetic",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 148,
+     "medianKm": {
+      "0.1.1": 0.1255,
+      "0.2.1": 0.1217
+     },
+     "p95Km": {
+      "0.1.1": 0.2577,
+      "0.2.1": 0.2571
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 1256,
+     "medianKm": {
+      "0.1.1": 0.4137,
+      "0.2.1": 0.4133
+     },
+     "p95Km": {
+      "0.1.1": 0.939,
+      "0.2.1": 0.9382
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 1097,
+     "medianKm": {
+      "0.1.1": 0.4849,
+      "0.2.1": 0.4857
+     },
+     "p95Km": {
+      "0.1.1": 1.334,
+      "0.2.1": 1.3339
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 1072,
+     "medianKm": {
+      "0.1.1": 0.6532,
+      "0.2.1": 0.6541
+     },
+     "p95Km": {
+      "0.1.1": 3.0826,
+      "0.2.1": 3.0722
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 1039,
+     "medianKm": {
+      "0.1.1": 0.8594,
+      "0.2.1": 0.8593
+     },
+     "p95Km": {
+      "0.1.1": 5.4884,
+      "0.2.1": 5.4914
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 1009,
+     "medianKm": {
+      "0.1.1": 1.1395,
+      "0.2.1": 1.135
+     },
+     "p95Km": {
+      "0.1.1": 8.0769,
+      "0.2.1": 8.0786
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 979,
+     "medianKm": {
+      "0.1.1": 1.44,
+      "0.2.1": 1.4436
+     },
+     "p95Km": {
+      "0.1.1": 12.3633,
+      "0.2.1": 12.3734
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 952,
+     "medianKm": {
+      "0.1.1": 1.8147,
+      "0.2.1": 1.8242
+     },
+     "p95Km": {
+      "0.1.1": 18.1471,
+      "0.2.1": 18.1292
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 1256,
+     "medianKm": {
+      "0.1.1": 0.4109,
+      "0.2.1": 0.4102
+     },
+     "p95Km": {
+      "0.1.1": 0.9008,
+      "0.2.1": 0.9004
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 1097,
+     "medianKm": {
+      "0.1.1": 0.4432,
+      "0.2.1": 0.4436
+     },
+     "p95Km": {
+      "0.1.1": 1.1369,
+      "0.2.1": 1.133
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 1072,
+     "medianKm": {
+      "0.1.1": 0.4808,
+      "0.2.1": 0.4809
+     },
+     "p95Km": {
+      "0.1.1": 2.674,
+      "0.2.1": 2.6747
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 1039,
+     "medianKm": {
+      "0.1.1": 0.5819,
+      "0.2.1": 0.5805
+     },
+     "p95Km": {
+      "0.1.1": 4.8319,
+      "0.2.1": 4.8321
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 1009,
+     "medianKm": {
+      "0.1.1": 0.6901,
+      "0.2.1": 0.6959
+     },
+     "p95Km": {
+      "0.1.1": 7.415,
+      "0.2.1": 7.3924
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 979,
+     "medianKm": {
+      "0.1.1": 0.8854,
+      "0.2.1": 0.8956
+     },
+     "p95Km": {
+      "0.1.1": 11.0403,
+      "0.2.1": 11.042
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "All",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 952,
+     "medianKm": {
+      "0.1.1": 1.1385,
+      "0.2.1": 1.1689
+     },
+     "p95Km": {
+      "0.1.1": 15.424,
+      "0.2.1": 15.4931
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 144,
+     "medianKm": {
+      "0.1.1": 0.5979,
+      "0.2.1": 0.5973
+     },
+     "p95Km": {
+      "0.1.1": 0.7832,
+      "0.2.1": 0.7829
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 126,
+     "medianKm": {
+      "0.1.1": 0.587,
+      "0.2.1": 0.5871
+     },
+     "p95Km": {
+      "0.1.1": 1.1111,
+      "0.2.1": 1.1106
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 123,
+     "medianKm": {
+      "0.1.1": 0.6979,
+      "0.2.1": 0.698
+     },
+     "p95Km": {
+      "0.1.1": 1.922,
+      "0.2.1": 1.9579
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 120,
+     "medianKm": {
+      "0.1.1": 0.9273,
+      "0.2.1": 0.938
+     },
+     "p95Km": {
+      "0.1.1": 3.0219,
+      "0.2.1": 3.0948
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 117,
+     "medianKm": {
+      "0.1.1": 1.5407,
+      "0.2.1": 1.4828
+     },
+     "p95Km": {
+      "0.1.1": 4.6297,
+      "0.2.1": 4.5213
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 114,
+     "medianKm": {
+      "0.1.1": 1.9085,
+      "0.2.1": 1.9077
+     },
+     "p95Km": {
+      "0.1.1": 6.7269,
+      "0.2.1": 6.5951
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 111,
+     "medianKm": {
+      "0.1.1": 2.6634,
+      "0.2.1": 2.6634
+     },
+     "p95Km": {
+      "0.1.1": 9.2902,
+      "0.2.1": 9.2363
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 144,
+     "medianKm": {
+      "0.1.1": 0.5728,
+      "0.2.1": 0.5728
+     },
+     "p95Km": {
+      "0.1.1": 0.7242,
+      "0.2.1": 0.7252
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 126,
+     "medianKm": {
+      "0.1.1": 0.6076,
+      "0.2.1": 0.6071
+     },
+     "p95Km": {
+      "0.1.1": 0.9089,
+      "0.2.1": 0.9093
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 123,
+     "medianKm": {
+      "0.1.1": 0.6298,
+      "0.2.1": 0.6305
+     },
+     "p95Km": {
+      "0.1.1": 1.2929,
+      "0.2.1": 1.2884
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 120,
+     "medianKm": {
+      "0.1.1": 0.726,
+      "0.2.1": 0.7261
+     },
+     "p95Km": {
+      "0.1.1": 2.0385,
+      "0.2.1": 2.0408
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 117,
+     "medianKm": {
+      "0.1.1": 1.0951,
+      "0.2.1": 1.1001
+     },
+     "p95Km": {
+      "0.1.1": 2.8498,
+      "0.2.1": 2.8508
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 114,
+     "medianKm": {
+      "0.1.1": 1.3809,
+      "0.2.1": 1.3807
+     },
+     "p95Km": {
+      "0.1.1": 4.1243,
+      "0.2.1": 4.117
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "cne",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 111,
+     "medianKm": {
+      "0.1.1": 1.986,
+      "0.2.1": 1.9861
+     },
+     "p95Km": {
+      "0.1.1": 5.6946,
+      "0.2.1": 5.6674
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 192,
+     "medianKm": {
+      "0.1.1": 0.3995,
+      "0.2.1": 0.3992
+     },
+     "p95Km": {
+      "0.1.1": 0.9379,
+      "0.2.1": 0.9379
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 168,
+     "medianKm": {
+      "0.1.1": 0.4383,
+      "0.2.1": 0.4388
+     },
+     "p95Km": {
+      "0.1.1": 1.1345,
+      "0.2.1": 1.1349
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 164,
+     "medianKm": {
+      "0.1.1": 0.5668,
+      "0.2.1": 0.5688
+     },
+     "p95Km": {
+      "0.1.1": 1.2441,
+      "0.2.1": 1.2441
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 160,
+     "medianKm": {
+      "0.1.1": 0.6888,
+      "0.2.1": 0.6903
+     },
+     "p95Km": {
+      "0.1.1": 1.4409,
+      "0.2.1": 1.4421
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 156,
+     "medianKm": {
+      "0.1.1": 0.8086,
+      "0.2.1": 0.818
+     },
+     "p95Km": {
+      "0.1.1": 2.3832,
+      "0.2.1": 2.3899
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 152,
+     "medianKm": {
+      "0.1.1": 0.9157,
+      "0.2.1": 0.9038
+     },
+     "p95Km": {
+      "0.1.1": 3.6448,
+      "0.2.1": 3.645
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 148,
+     "medianKm": {
+      "0.1.1": 1.107,
+      "0.2.1": 1.1062
+     },
+     "p95Km": {
+      "0.1.1": 5.1858,
+      "0.2.1": 5.2018
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 192,
+     "medianKm": {
+      "0.1.1": 0.3975,
+      "0.2.1": 0.3977
+     },
+     "p95Km": {
+      "0.1.1": 0.8901,
+      "0.2.1": 0.8908
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 168,
+     "medianKm": {
+      "0.1.1": 0.407,
+      "0.2.1": 0.4099
+     },
+     "p95Km": {
+      "0.1.1": 0.9517,
+      "0.2.1": 0.9516
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 164,
+     "medianKm": {
+      "0.1.1": 0.4206,
+      "0.2.1": 0.4217
+     },
+     "p95Km": {
+      "0.1.1": 1.0436,
+      "0.2.1": 1.0437
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 160,
+     "medianKm": {
+      "0.1.1": 0.4885,
+      "0.2.1": 0.4863
+     },
+     "p95Km": {
+      "0.1.1": 1.1039,
+      "0.2.1": 1.102
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 156,
+     "medianKm": {
+      "0.1.1": 0.5596,
+      "0.2.1": 0.5619
+     },
+     "p95Km": {
+      "0.1.1": 1.2242,
+      "0.2.1": 1.1959
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 152,
+     "medianKm": {
+      "0.1.1": 0.6761,
+      "0.2.1": 0.6812
+     },
+     "p95Km": {
+      "0.1.1": 1.7757,
+      "0.2.1": 1.7846
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "dgf",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 148,
+     "medianKm": {
+      "0.1.1": 0.7846,
+      "0.2.1": 0.7906
+     },
+     "p95Km": {
+      "0.1.1": 2.0859,
+      "0.2.1": 2.087
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 41,
+     "medianKm": {
+      "0.1.1": 0.6974,
+      "0.2.1": 0.6981
+     },
+     "p95Km": {
+      "0.1.1": 0.8128,
+      "0.2.1": 0.8128
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 36,
+     "medianKm": {
+      "0.1.1": 0.8077,
+      "0.2.1": 0.8027
+     },
+     "p95Km": {
+      "0.1.1": 1.0305,
+      "0.2.1": 1.0346
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 35,
+     "medianKm": {
+      "0.1.1": 0.854,
+      "0.2.1": 0.8517
+     },
+     "p95Km": {
+      "0.1.1": 2.7475,
+      "0.2.1": 2.7491
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 0.8439,
+      "0.2.1": 0.8442
+     },
+     "p95Km": {
+      "0.1.1": 6.4972,
+      "0.2.1": 6.5015
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 1.0201,
+      "0.2.1": 1.0241
+     },
+     "p95Km": {
+      "0.1.1": 9.5516,
+      "0.2.1": 9.557
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 30,
+     "medianKm": {
+      "0.1.1": 1.2685,
+      "0.2.1": 1.2641
+     },
+     "p95Km": {
+      "0.1.1": 13.9305,
+      "0.2.1": 13.9354
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 28,
+     "medianKm": {
+      "0.1.1": 1.6041,
+      "0.2.1": 1.5986
+     },
+     "p95Km": {
+      "0.1.1": 19.0855,
+      "0.2.1": 19.0846
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 41,
+     "medianKm": {
+      "0.1.1": 0.6822,
+      "0.2.1": 0.6827
+     },
+     "p95Km": {
+      "0.1.1": 0.809,
+      "0.2.1": 0.809
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 36,
+     "medianKm": {
+      "0.1.1": 0.7107,
+      "0.2.1": 0.7109
+     },
+     "p95Km": {
+      "0.1.1": 0.8855,
+      "0.2.1": 0.8848
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 35,
+     "medianKm": {
+      "0.1.1": 0.7487,
+      "0.2.1": 0.7492
+     },
+     "p95Km": {
+      "0.1.1": 1.7721,
+      "0.2.1": 1.7871
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 0.8311,
+      "0.2.1": 0.8445
+     },
+     "p95Km": {
+      "0.1.1": 4.7571,
+      "0.2.1": 4.7723
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 1.043,
+      "0.2.1": 1.0521
+     },
+     "p95Km": {
+      "0.1.1": 7.1602,
+      "0.2.1": 7.1868
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 30,
+     "medianKm": {
+      "0.1.1": 1.2379,
+      "0.2.1": 1.232
+     },
+     "p95Km": {
+      "0.1.1": 12.8778,
+      "0.2.1": 12.901
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 28,
+     "medianKm": {
+      "0.1.1": 1.5776,
+      "0.2.1": 1.5776
+     },
+     "p95Km": {
+      "0.1.1": 18.7257,
+      "0.2.1": 18.7544
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 96,
+     "medianKm": {
+      "0.1.1": 0.3082,
+      "0.2.1": 0.3087
+     },
+     "p95Km": {
+      "0.1.1": 0.4019,
+      "0.2.1": 0.4013
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 84,
+     "medianKm": {
+      "0.1.1": 0.3728,
+      "0.2.1": 0.3749
+     },
+     "p95Km": {
+      "0.1.1": 0.4641,
+      "0.2.1": 0.4642
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 82,
+     "medianKm": {
+      "0.1.1": 0.4764,
+      "0.2.1": 0.4734
+     },
+     "p95Km": {
+      "0.1.1": 1.057,
+      "0.2.1": 1.0776
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 80,
+     "medianKm": {
+      "0.1.1": 0.6508,
+      "0.2.1": 0.6486
+     },
+     "p95Km": {
+      "0.1.1": 2.4811,
+      "0.2.1": 2.5017
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 78,
+     "medianKm": {
+      "0.1.1": 0.8233,
+      "0.2.1": 0.8339
+     },
+     "p95Km": {
+      "0.1.1": 4.1291,
+      "0.2.1": 4.1865
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 76,
+     "medianKm": {
+      "0.1.1": 1.3825,
+      "0.2.1": 1.4349
+     },
+     "p95Km": {
+      "0.1.1": 6.0824,
+      "0.2.1": 6.1559
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 74,
+     "medianKm": {
+      "0.1.1": 1.5772,
+      "0.2.1": 1.5525
+     },
+     "p95Km": {
+      "0.1.1": 9.2955,
+      "0.2.1": 9.346
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 96,
+     "medianKm": {
+      "0.1.1": 0.2985,
+      "0.2.1": 0.2986
+     },
+     "p95Km": {
+      "0.1.1": 0.4106,
+      "0.2.1": 0.4161
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 84,
+     "medianKm": {
+      "0.1.1": 0.3284,
+      "0.2.1": 0.329
+     },
+     "p95Km": {
+      "0.1.1": 0.429,
+      "0.2.1": 0.4305
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 82,
+     "medianKm": {
+      "0.1.1": 0.3596,
+      "0.2.1": 0.3596
+     },
+     "p95Km": {
+      "0.1.1": 0.4811,
+      "0.2.1": 0.4805
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 80,
+     "medianKm": {
+      "0.1.1": 0.4338,
+      "0.2.1": 0.4301
+     },
+     "p95Km": {
+      "0.1.1": 0.9204,
+      "0.2.1": 0.9121
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 78,
+     "medianKm": {
+      "0.1.1": 0.5427,
+      "0.2.1": 0.5391
+     },
+     "p95Km": {
+      "0.1.1": 1.6353,
+      "0.2.1": 1.6358
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 76,
+     "medianKm": {
+      "0.1.1": 0.6609,
+      "0.2.1": 0.6381
+     },
+     "p95Km": {
+      "0.1.1": 2.16,
+      "0.2.1": 2.1058
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "eum",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 74,
+     "medianKm": {
+      "0.1.1": 0.8327,
+      "0.2.1": 0.8205
+     },
+     "p95Km": {
+      "0.1.1": 3.4447,
+      "0.2.1": 3.4088
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 48,
+     "medianKm": {
+      "0.1.1": 0.463,
+      "0.2.1": 0.463
+     },
+     "p95Km": {
+      "0.1.1": 0.986,
+      "0.2.1": 0.9865
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 0.723,
+      "0.2.1": 0.7135
+     },
+     "p95Km": {
+      "0.1.1": 1.9128,
+      "0.2.1": 1.8874
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 41,
+     "medianKm": {
+      "0.1.1": 1.8402,
+      "0.2.1": 1.8409
+     },
+     "p95Km": {
+      "0.1.1": 7.8166,
+      "0.2.1": 7.8165
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 40,
+     "medianKm": {
+      "0.1.1": 3.3137,
+      "0.2.1": 3.2612
+     },
+     "p95Km": {
+      "0.1.1": 17.6249,
+      "0.2.1": 17.6238
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 39,
+     "medianKm": {
+      "0.1.1": 4.7671,
+      "0.2.1": 4.7308
+     },
+     "p95Km": {
+      "0.1.1": 27.0454,
+      "0.2.1": 27.0442
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 38,
+     "medianKm": {
+      "0.1.1": 10.8483,
+      "0.2.1": 10.849
+     },
+     "p95Km": {
+      "0.1.1": 38.2651,
+      "0.2.1": 38.293
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 37,
+     "medianKm": {
+      "0.1.1": 16.4837,
+      "0.2.1": 16.4836
+     },
+     "p95Km": {
+      "0.1.1": 55.8263,
+      "0.2.1": 55.8252
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 48,
+     "medianKm": {
+      "0.1.1": 0.4695,
+      "0.2.1": 0.4694
+     },
+     "p95Km": {
+      "0.1.1": 1.096,
+      "0.2.1": 1.0979
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 0.6689,
+      "0.2.1": 0.6677
+     },
+     "p95Km": {
+      "0.1.1": 1.7412,
+      "0.2.1": 1.7417
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 41,
+     "medianKm": {
+      "0.1.1": 1.4578,
+      "0.2.1": 1.4578
+     },
+     "p95Km": {
+      "0.1.1": 7.9658,
+      "0.2.1": 7.9693
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 40,
+     "medianKm": {
+      "0.1.1": 2.4688,
+      "0.2.1": 2.4663
+     },
+     "p95Km": {
+      "0.1.1": 18.3974,
+      "0.2.1": 18.399
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 39,
+     "medianKm": {
+      "0.1.1": 6.7497,
+      "0.2.1": 6.7484
+     },
+     "p95Km": {
+      "0.1.1": 28.9216,
+      "0.2.1": 28.922
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 38,
+     "medianKm": {
+      "0.1.1": 14.1211,
+      "0.2.1": 14.118
+     },
+     "p95Km": {
+      "0.1.1": 40.9204,
+      "0.2.1": 40.9229
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "gfz",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 37,
+     "medianKm": {
+      "0.1.1": 23.0603,
+      "0.2.1": 23.0603
+     },
+     "p95Km": {
+      "0.1.1": 59.6515,
+      "0.2.1": 59.6605
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 46,
+     "medianKm": {
+      "0.1.1": 0.451,
+      "0.2.1": 0.451
+     },
+     "p95Km": {
+      "0.1.1": 1.5492,
+      "0.2.1": 1.5462
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 41,
+     "medianKm": {
+      "0.1.1": 0.9242,
+      "0.2.1": 0.9242
+     },
+     "p95Km": {
+      "0.1.1": 2.0519,
+      "0.2.1": 2.0539
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 40,
+     "medianKm": {
+      "0.1.1": 2.8242,
+      "0.2.1": 2.8237
+     },
+     "p95Km": {
+      "0.1.1": 10.9576,
+      "0.2.1": 10.9571
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 38,
+     "medianKm": {
+      "0.1.1": 8.3582,
+      "0.2.1": 8.4133
+     },
+     "p95Km": {
+      "0.1.1": 17.4758,
+      "0.2.1": 17.4867
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 37,
+     "medianKm": {
+      "0.1.1": 14.294,
+      "0.2.1": 14.2954
+     },
+     "p95Km": {
+      "0.1.1": 26.4353,
+      "0.2.1": 26.4349
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 36,
+     "medianKm": {
+      "0.1.1": 22.8227,
+      "0.2.1": 22.8237
+     },
+     "p95Km": {
+      "0.1.1": 45.3511,
+      "0.2.1": 45.4151
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 35,
+     "medianKm": {
+      "0.1.1": 39.5762,
+      "0.2.1": 39.5614
+     },
+     "p95Km": {
+      "0.1.1": 67.4591,
+      "0.2.1": 67.5161
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 46,
+     "medianKm": {
+      "0.1.1": 0.4658,
+      "0.2.1": 0.4658
+     },
+     "p95Km": {
+      "0.1.1": 2.1018,
+      "0.2.1": 2.0947
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 41,
+     "medianKm": {
+      "0.1.1": 0.6039,
+      "0.2.1": 0.6039
+     },
+     "p95Km": {
+      "0.1.1": 2.019,
+      "0.2.1": 2.0207
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 40,
+     "medianKm": {
+      "0.1.1": 1.7113,
+      "0.2.1": 1.7116
+     },
+     "p95Km": {
+      "0.1.1": 3.2238,
+      "0.2.1": 3.2209
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 38,
+     "medianKm": {
+      "0.1.1": 3.1852,
+      "0.2.1": 3.1731
+     },
+     "p95Km": {
+      "0.1.1": 12.3511,
+      "0.2.1": 12.3518
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 37,
+     "medianKm": {
+      "0.1.1": 6.223,
+      "0.2.1": 6.24
+     },
+     "p95Km": {
+      "0.1.1": 20.2609,
+      "0.2.1": 20.263
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 36,
+     "medianKm": {
+      "0.1.1": 8.6319,
+      "0.2.1": 8.6386
+     },
+     "p95Km": {
+      "0.1.1": 29.7098,
+      "0.2.1": 29.7144
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hds",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 35,
+     "medianKm": {
+      "0.1.1": 13.6343,
+      "0.2.1": 13.8282
+     },
+     "p95Km": {
+      "0.1.1": 46.2563,
+      "0.2.1": 46.2571
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 286,
+     "medianKm": {
+      "0.1.1": 0.3747,
+      "0.2.1": 0.3757
+     },
+     "p95Km": {
+      "0.1.1": 0.9878,
+      "0.2.1": 0.9852
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 250,
+     "medianKm": {
+      "0.1.1": 0.4365,
+      "0.2.1": 0.4391
+     },
+     "p95Km": {
+      "0.1.1": 1.8134,
+      "0.2.1": 1.8127
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 245,
+     "medianKm": {
+      "0.1.1": 0.6112,
+      "0.2.1": 0.6136
+     },
+     "p95Km": {
+      "0.1.1": 3.0073,
+      "0.2.1": 3.008
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 239,
+     "medianKm": {
+      "0.1.1": 0.8146,
+      "0.2.1": 0.8146
+     },
+     "p95Km": {
+      "0.1.1": 4.7473,
+      "0.2.1": 4.7579
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 232,
+     "medianKm": {
+      "0.1.1": 0.995,
+      "0.2.1": 0.9785
+     },
+     "p95Km": {
+      "0.1.1": 7.4979,
+      "0.2.1": 7.4979
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 226,
+     "medianKm": {
+      "0.1.1": 1.366,
+      "0.2.1": 1.3408
+     },
+     "p95Km": {
+      "0.1.1": 10.3992,
+      "0.2.1": 10.3993
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 221,
+     "medianKm": {
+      "0.1.1": 1.8754,
+      "0.2.1": 1.8742
+     },
+     "p95Km": {
+      "0.1.1": 13.1076,
+      "0.2.1": 13.0311
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 286,
+     "medianKm": {
+      "0.1.1": 0.3739,
+      "0.2.1": 0.3731
+     },
+     "p95Km": {
+      "0.1.1": 0.917,
+      "0.2.1": 0.9172
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 250,
+     "medianKm": {
+      "0.1.1": 0.4085,
+      "0.2.1": 0.4089
+     },
+     "p95Km": {
+      "0.1.1": 1.7954,
+      "0.2.1": 1.7953
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 245,
+     "medianKm": {
+      "0.1.1": 0.433,
+      "0.2.1": 0.4325
+     },
+     "p95Km": {
+      "0.1.1": 3.104,
+      "0.2.1": 3.1027
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 239,
+     "medianKm": {
+      "0.1.1": 0.5366,
+      "0.2.1": 0.5356
+     },
+     "p95Km": {
+      "0.1.1": 4.8753,
+      "0.2.1": 4.8753
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 232,
+     "medianKm": {
+      "0.1.1": 0.6648,
+      "0.2.1": 0.667
+     },
+     "p95Km": {
+      "0.1.1": 7.3705,
+      "0.2.1": 7.3596
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 226,
+     "medianKm": {
+      "0.1.1": 0.9476,
+      "0.2.1": 0.9666
+     },
+     "p95Km": {
+      "0.1.1": 10.5888,
+      "0.2.1": 10.5476
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "hts",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 221,
+     "medianKm": {
+      "0.1.1": 1.2828,
+      "0.2.1": 1.2726
+     },
+     "p95Km": {
+      "0.1.1": 14.3323,
+      "0.2.1": 14.0778
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 288,
+     "medianKm": {
+      "0.1.1": 0.4356,
+      "0.2.1": 0.4358
+     },
+     "p95Km": {
+      "0.1.1": 0.9446,
+      "0.2.1": 0.9431
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 252,
+     "medianKm": {
+      "0.1.1": 0.484,
+      "0.2.1": 0.4838
+     },
+     "p95Km": {
+      "0.1.1": 1.1344,
+      "0.2.1": 1.1328
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 246,
+     "medianKm": {
+      "0.1.1": 0.6308,
+      "0.2.1": 0.6331
+     },
+     "p95Km": {
+      "0.1.1": 1.2435,
+      "0.2.1": 1.2436
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 240,
+     "medianKm": {
+      "0.1.1": 0.7648,
+      "0.2.1": 0.7635
+     },
+     "p95Km": {
+      "0.1.1": 1.754,
+      "0.2.1": 1.7897
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 234,
+     "medianKm": {
+      "0.1.1": 0.931,
+      "0.2.1": 0.933
+     },
+     "p95Km": {
+      "0.1.1": 3.0005,
+      "0.2.1": 3.0414
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 228,
+     "medianKm": {
+      "0.1.1": 1.1427,
+      "0.2.1": 1.157
+     },
+     "p95Km": {
+      "0.1.1": 4.1925,
+      "0.2.1": 4.2047
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 222,
+     "medianKm": {
+      "0.1.1": 1.2652,
+      "0.2.1": 1.2738
+     },
+     "p95Km": {
+      "0.1.1": 5.7953,
+      "0.2.1": 5.792
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 288,
+     "medianKm": {
+      "0.1.1": 0.4177,
+      "0.2.1": 0.4177
+     },
+     "p95Km": {
+      "0.1.1": 0.9013,
+      "0.2.1": 0.9012
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 252,
+     "medianKm": {
+      "0.1.1": 0.4432,
+      "0.2.1": 0.442
+     },
+     "p95Km": {
+      "0.1.1": 0.9877,
+      "0.2.1": 0.9877
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 246,
+     "medianKm": {
+      "0.1.1": 0.4536,
+      "0.2.1": 0.4545
+     },
+     "p95Km": {
+      "0.1.1": 1.091,
+      "0.2.1": 1.091
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 240,
+     "medianKm": {
+      "0.1.1": 0.5103,
+      "0.2.1": 0.5117
+     },
+     "p95Km": {
+      "0.1.1": 1.2323,
+      "0.2.1": 1.2322
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 234,
+     "medianKm": {
+      "0.1.1": 0.6233,
+      "0.2.1": 0.6283
+     },
+     "p95Km": {
+      "0.1.1": 1.6254,
+      "0.2.1": 1.6277
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 228,
+     "medianKm": {
+      "0.1.1": 0.7323,
+      "0.2.1": 0.7305
+     },
+     "p95Km": {
+      "0.1.1": 2.4652,
+      "0.2.1": 2.473
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sgf",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 222,
+     "medianKm": {
+      "0.1.1": 0.931,
+      "0.2.1": 0.9205
+     },
+     "p95Km": {
+      "0.1.1": 3.1225,
+      "0.2.1": 3.1821
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 115,
+     "medianKm": {
+      "0.1.1": 0.4334,
+      "0.2.1": 0.4333
+     },
+     "p95Km": {
+      "0.1.1": 0.9993,
+      "0.2.1": 0.9974
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 98,
+     "medianKm": {
+      "0.1.1": 0.4902,
+      "0.2.1": 0.4901
+     },
+     "p95Km": {
+      "0.1.1": 2.1669,
+      "0.2.1": 2.1695
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 96,
+     "medianKm": {
+      "0.1.1": 0.6957,
+      "0.2.1": 0.6949
+     },
+     "p95Km": {
+      "0.1.1": 4.8915,
+      "0.2.1": 5.0008
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 89,
+     "medianKm": {
+      "0.1.1": 1.1129,
+      "0.2.1": 1.1112
+     },
+     "p95Km": {
+      "0.1.1": 7.0366,
+      "0.2.1": 7.0239
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 83,
+     "medianKm": {
+      "0.1.1": 1.4437,
+      "0.2.1": 1.4662
+     },
+     "p95Km": {
+      "0.1.1": 7.9432,
+      "0.2.1": 7.9454
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 79,
+     "medianKm": {
+      "0.1.1": 2.0845,
+      "0.2.1": 2.0586
+     },
+     "p95Km": {
+      "0.1.1": 8.0871,
+      "0.2.1": 8.0764
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 76,
+     "medianKm": {
+      "0.1.1": 3.1779,
+      "0.2.1": 3.1362
+     },
+     "p95Km": {
+      "0.1.1": 11.9425,
+      "0.2.1": 11.2331
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 115,
+     "medianKm": {
+      "0.1.1": 0.4096,
+      "0.2.1": 0.4097
+     },
+     "p95Km": {
+      "0.1.1": 0.9938,
+      "0.2.1": 0.9952
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 98,
+     "medianKm": {
+      "0.1.1": 0.4472,
+      "0.2.1": 0.446
+     },
+     "p95Km": {
+      "0.1.1": 2.2188,
+      "0.2.1": 2.2185
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 96,
+     "medianKm": {
+      "0.1.1": 0.473,
+      "0.2.1": 0.4724
+     },
+     "p95Km": {
+      "0.1.1": 4.2554,
+      "0.2.1": 4.251
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 89,
+     "medianKm": {
+      "0.1.1": 0.6423,
+      "0.2.1": 0.6458
+     },
+     "p95Km": {
+      "0.1.1": 6.0129,
+      "0.2.1": 6.0042
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 83,
+     "medianKm": {
+      "0.1.1": 0.857,
+      "0.2.1": 0.864
+     },
+     "p95Km": {
+      "0.1.1": 6.9413,
+      "0.2.1": 6.9487
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 79,
+     "medianKm": {
+      "0.1.1": 1.0146,
+      "0.2.1": 1.0251
+     },
+     "p95Km": {
+      "0.1.1": 6.9514,
+      "0.2.1": 6.9487
+     }
+    },
+    {
+     "regime": "Low orbit",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 76,
+     "medianKm": {
+      "0.1.1": 1.401,
+      "0.2.1": 1.4729
+     },
+     "p95Km": {
+      "0.1.1": 9.4397,
+      "0.2.1": 9.4354
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 1504,
+     "medianKm": {
+      "0.1.1": 0.0245,
+      "0.2.1": 0.0226
+     },
+     "p95Km": {
+      "0.1.1": 0.1245,
+      "0.2.1": 0.0404
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 1302,
+     "medianKm": {
+      "0.1.1": 0.0366,
+      "0.2.1": 0.0327
+     },
+     "p95Km": {
+      "0.1.1": 0.173,
+      "0.2.1": 0.0652
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 1257,
+     "medianKm": {
+      "0.1.1": 0.0655,
+      "0.2.1": 0.0529
+     },
+     "p95Km": {
+      "0.1.1": 0.1947,
+      "0.2.1": 0.1227
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 1247,
+     "medianKm": {
+      "0.1.1": 0.0854,
+      "0.2.1": 0.074
+     },
+     "p95Km": {
+      "0.1.1": 0.2205,
+      "0.2.1": 0.1903
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 1200,
+     "medianKm": {
+      "0.1.1": 0.1155,
+      "0.2.1": 0.1067
+     },
+     "p95Km": {
+      "0.1.1": 0.2949,
+      "0.2.1": 0.2735
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 1179,
+     "medianKm": {
+      "0.1.1": 0.1695,
+      "0.2.1": 0.1429
+     },
+     "p95Km": {
+      "0.1.1": 0.4956,
+      "0.2.1": 0.4113
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 1182,
+     "medianKm": {
+      "0.1.1": 0.1933,
+      "0.2.1": 0.1706
+     },
+     "p95Km": {
+      "0.1.1": 0.643,
+      "0.2.1": 0.5156
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 1504,
+     "medianKm": {
+      "0.1.1": 0.028,
+      "0.2.1": 0.0255
+     },
+     "p95Km": {
+      "0.1.1": 0.1119,
+      "0.2.1": 0.0464
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 1302,
+     "medianKm": {
+      "0.1.1": 0.028,
+      "0.2.1": 0.0257
+     },
+     "p95Km": {
+      "0.1.1": 0.1474,
+      "0.2.1": 0.0473
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 1257,
+     "medianKm": {
+      "0.1.1": 0.0431,
+      "0.2.1": 0.0375
+     },
+     "p95Km": {
+      "0.1.1": 0.1664,
+      "0.2.1": 0.0794
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 1247,
+     "medianKm": {
+      "0.1.1": 0.0668,
+      "0.2.1": 0.0566
+     },
+     "p95Km": {
+      "0.1.1": 0.1722,
+      "0.2.1": 0.1159
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 1200,
+     "medianKm": {
+      "0.1.1": 0.0939,
+      "0.2.1": 0.0791
+     },
+     "p95Km": {
+      "0.1.1": 0.2295,
+      "0.2.1": 0.1826
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 1179,
+     "medianKm": {
+      "0.1.1": 0.1303,
+      "0.2.1": 0.1092
+     },
+     "p95Km": {
+      "0.1.1": 0.3952,
+      "0.2.1": 0.3173
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "All",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 1182,
+     "medianKm": {
+      "0.1.1": 0.1656,
+      "0.2.1": 0.1456
+     },
+     "p95Km": {
+      "0.1.1": 0.5564,
+      "0.2.1": 0.4099
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 453,
+     "medianKm": {
+      "0.1.1": 0.0225,
+      "0.2.1": 0.0225
+     },
+     "p95Km": {
+      "0.1.1": 0.0354,
+      "0.2.1": 0.0354
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 394,
+     "medianKm": {
+      "0.1.1": 0.0318,
+      "0.2.1": 0.0318
+     },
+     "p95Km": {
+      "0.1.1": 0.0561,
+      "0.2.1": 0.0561
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 374,
+     "medianKm": {
+      "0.1.1": 0.0507,
+      "0.2.1": 0.0504
+     },
+     "p95Km": {
+      "0.1.1": 0.117,
+      "0.2.1": 0.117
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 364,
+     "medianKm": {
+      "0.1.1": 0.0714,
+      "0.2.1": 0.0694
+     },
+     "p95Km": {
+      "0.1.1": 0.1824,
+      "0.2.1": 0.1766
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 352,
+     "medianKm": {
+      "0.1.1": 0.0985,
+      "0.2.1": 0.0979
+     },
+     "p95Km": {
+      "0.1.1": 0.2436,
+      "0.2.1": 0.2235
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 342,
+     "medianKm": {
+      "0.1.1": 0.1512,
+      "0.2.1": 0.134
+     },
+     "p95Km": {
+      "0.1.1": 0.4179,
+      "0.2.1": 0.3556
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 333,
+     "medianKm": {
+      "0.1.1": 0.1876,
+      "0.2.1": 0.1625
+     },
+     "p95Km": {
+      "0.1.1": 0.5134,
+      "0.2.1": 0.3977
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 453,
+     "medianKm": {
+      "0.1.1": 0.0264,
+      "0.2.1": 0.0265
+     },
+     "p95Km": {
+      "0.1.1": 0.043,
+      "0.2.1": 0.0427
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 394,
+     "medianKm": {
+      "0.1.1": 0.0261,
+      "0.2.1": 0.0254
+     },
+     "p95Km": {
+      "0.1.1": 0.0392,
+      "0.2.1": 0.039
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 374,
+     "medianKm": {
+      "0.1.1": 0.037,
+      "0.2.1": 0.0364
+     },
+     "p95Km": {
+      "0.1.1": 0.0681,
+      "0.2.1": 0.0681
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 364,
+     "medianKm": {
+      "0.1.1": 0.0585,
+      "0.2.1": 0.0555
+     },
+     "p95Km": {
+      "0.1.1": 0.1125,
+      "0.2.1": 0.0975
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 352,
+     "medianKm": {
+      "0.1.1": 0.0801,
+      "0.2.1": 0.0715
+     },
+     "p95Km": {
+      "0.1.1": 0.1873,
+      "0.2.1": 0.1549
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 342,
+     "medianKm": {
+      "0.1.1": 0.1125,
+      "0.2.1": 0.0979
+     },
+     "p95Km": {
+      "0.1.1": 0.3248,
+      "0.2.1": 0.2653
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "cod",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 333,
+     "medianKm": {
+      "0.1.1": 0.1631,
+      "0.2.1": 0.1333
+     },
+     "p95Km": {
+      "0.1.1": 0.4589,
+      "0.2.1": 0.3337
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 336,
+     "medianKm": {
+      "0.1.1": 0.0211,
+      "0.2.1": 0.0211
+     },
+     "p95Km": {
+      "0.1.1": 0.0364,
+      "0.2.1": 0.0361
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 294,
+     "medianKm": {
+      "0.1.1": 0.0357,
+      "0.2.1": 0.0357
+     },
+     "p95Km": {
+      "0.1.1": 0.066,
+      "0.2.1": 0.0657
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 287,
+     "medianKm": {
+      "0.1.1": 0.0798,
+      "0.2.1": 0.0796
+     },
+     "p95Km": {
+      "0.1.1": 0.1322,
+      "0.2.1": 0.1322
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 280,
+     "medianKm": {
+      "0.1.1": 0.0999,
+      "0.2.1": 0.0956
+     },
+     "p95Km": {
+      "0.1.1": 0.2053,
+      "0.2.1": 0.2033
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 273,
+     "medianKm": {
+      "0.1.1": 0.1272,
+      "0.2.1": 0.1258
+     },
+     "p95Km": {
+      "0.1.1": 0.304,
+      "0.2.1": 0.2765
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 266,
+     "medianKm": {
+      "0.1.1": 0.2214,
+      "0.2.1": 0.2005
+     },
+     "p95Km": {
+      "0.1.1": 0.4618,
+      "0.2.1": 0.39
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 259,
+     "medianKm": {
+      "0.1.1": 0.2557,
+      "0.2.1": 0.2202
+     },
+     "p95Km": {
+      "0.1.1": 0.5997,
+      "0.2.1": 0.4623
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 336,
+     "medianKm": {
+      "0.1.1": 0.0267,
+      "0.2.1": 0.0267
+     },
+     "p95Km": {
+      "0.1.1": 0.0465,
+      "0.2.1": 0.0465
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 294,
+     "medianKm": {
+      "0.1.1": 0.0262,
+      "0.2.1": 0.0262
+     },
+     "p95Km": {
+      "0.1.1": 0.0447,
+      "0.2.1": 0.0435
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 287,
+     "medianKm": {
+      "0.1.1": 0.0453,
+      "0.2.1": 0.0454
+     },
+     "p95Km": {
+      "0.1.1": 0.08,
+      "0.2.1": 0.08
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 280,
+     "medianKm": {
+      "0.1.1": 0.0737,
+      "0.2.1": 0.0677
+     },
+     "p95Km": {
+      "0.1.1": 0.1328,
+      "0.2.1": 0.1162
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 273,
+     "medianKm": {
+      "0.1.1": 0.1051,
+      "0.2.1": 0.0853
+     },
+     "p95Km": {
+      "0.1.1": 0.2193,
+      "0.2.1": 0.1736
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 266,
+     "medianKm": {
+      "0.1.1": 0.1604,
+      "0.2.1": 0.1355
+     },
+     "p95Km": {
+      "0.1.1": 0.3698,
+      "0.2.1": 0.2976
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "esa",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 259,
+     "medianKm": {
+      "0.1.1": 0.216,
+      "0.2.1": 0.1777
+     },
+     "p95Km": {
+      "0.1.1": 0.5229,
+      "0.2.1": 0.3607
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 118,
+     "medianKm": {
+      "0.1.1": 0.023,
+      "0.2.1": 0.023
+     },
+     "p95Km": {
+      "0.1.1": 0.0532,
+      "0.2.1": 0.0532
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 111,
+     "medianKm": {
+      "0.1.1": 0.0392,
+      "0.2.1": 0.0392
+     },
+     "p95Km": {
+      "0.1.1": 0.1111,
+      "0.2.1": 0.1111
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 77,
+     "medianKm": {
+      "0.1.1": 0.0787,
+      "0.2.1": 0.0787
+     },
+     "p95Km": {
+      "0.1.1": 0.1645,
+      "0.2.1": 0.1645
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 87,
+     "medianKm": {
+      "0.1.1": 0.1036,
+      "0.2.1": 0.099
+     },
+     "p95Km": {
+      "0.1.1": 0.245,
+      "0.2.1": 0.2447
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 105,
+     "medianKm": {
+      "0.1.1": 0.1448,
+      "0.2.1": 0.1375
+     },
+     "p95Km": {
+      "0.1.1": 0.3091,
+      "0.2.1": 0.2833
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 111,
+     "medianKm": {
+      "0.1.1": 0.2506,
+      "0.2.1": 0.2041
+     },
+     "p95Km": {
+      "0.1.1": 0.5806,
+      "0.2.1": 0.4581
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 100,
+     "medianKm": {
+      "0.1.1": 0.2396,
+      "0.2.1": 0.2114
+     },
+     "p95Km": {
+      "0.1.1": 0.6448,
+      "0.2.1": 0.5183
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 118,
+     "medianKm": {
+      "0.1.1": 0.0287,
+      "0.2.1": 0.0287
+     },
+     "p95Km": {
+      "0.1.1": 0.0585,
+      "0.2.1": 0.0585
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 111,
+     "medianKm": {
+      "0.1.1": 0.0286,
+      "0.2.1": 0.0286
+     },
+     "p95Km": {
+      "0.1.1": 0.1147,
+      "0.2.1": 0.1147
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 77,
+     "medianKm": {
+      "0.1.1": 0.0512,
+      "0.2.1": 0.0512
+     },
+     "p95Km": {
+      "0.1.1": 0.1072,
+      "0.2.1": 0.1072
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 87,
+     "medianKm": {
+      "0.1.1": 0.0756,
+      "0.2.1": 0.0743
+     },
+     "p95Km": {
+      "0.1.1": 0.1661,
+      "0.2.1": 0.1714
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 105,
+     "medianKm": {
+      "0.1.1": 0.1096,
+      "0.2.1": 0.0901
+     },
+     "p95Km": {
+      "0.1.1": 0.2475,
+      "0.2.1": 0.2282
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 111,
+     "medianKm": {
+      "0.1.1": 0.1869,
+      "0.2.1": 0.1538
+     },
+     "p95Km": {
+      "0.1.1": 0.4214,
+      "0.2.1": 0.3335
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gal",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 100,
+     "medianKm": {
+      "0.1.1": 0.249,
+      "0.2.1": 0.1989
+     },
+     "p95Km": {
+      "0.1.1": 0.5592,
+      "0.2.1": 0.4319
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 23,
+     "medianKm": {
+      "0.1.1": 0.0273,
+      "0.2.1": 0.0273
+     },
+     "p95Km": {
+      "0.1.1": 0.0364,
+      "0.2.1": 0.0364
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 16,
+     "medianKm": {
+      "0.1.1": 0.0326,
+      "0.2.1": 0.0326
+     },
+     "p95Km": {
+      "0.1.1": 0.0812,
+      "0.2.1": 0.0812
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 17,
+     "medianKm": {
+      "0.1.1": 0.0367,
+      "0.2.1": 0.0369
+     },
+     "p95Km": {
+      "0.1.1": 0.1119,
+      "0.2.1": 0.1087
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 16,
+     "medianKm": {
+      "0.1.1": 0.0586,
+      "0.2.1": 0.0606
+     },
+     "p95Km": {
+      "0.1.1": 0.1982,
+      "0.2.1": 0.1868
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 13,
+     "medianKm": {
+      "0.1.1": 0.091,
+      "0.2.1": 0.1023
+     },
+     "p95Km": {
+      "0.1.1": 0.4027,
+      "0.2.1": 0.4016
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 16,
+     "medianKm": {
+      "0.1.1": 0.1307,
+      "0.2.1": 0.1501
+     },
+     "p95Km": {
+      "0.1.1": 0.4994,
+      "0.2.1": 0.5248
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 21,
+     "medianKm": {
+      "0.1.1": 0.2138,
+      "0.2.1": 0.1994
+     },
+     "p95Km": {
+      "0.1.1": 0.726,
+      "0.2.1": 0.6793
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 23,
+     "medianKm": {
+      "0.1.1": 0.0246,
+      "0.2.1": 0.0246
+     },
+     "p95Km": {
+      "0.1.1": 0.0338,
+      "0.2.1": 0.0338
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 16,
+     "medianKm": {
+      "0.1.1": 0.0261,
+      "0.2.1": 0.0261
+     },
+     "p95Km": {
+      "0.1.1": 0.0384,
+      "0.2.1": 0.0384
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 17,
+     "medianKm": {
+      "0.1.1": 0.0305,
+      "0.2.1": 0.0287
+     },
+     "p95Km": {
+      "0.1.1": 0.0405,
+      "0.2.1": 0.0398
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 16,
+     "medianKm": {
+      "0.1.1": 0.0452,
+      "0.2.1": 0.0443
+     },
+     "p95Km": {
+      "0.1.1": 0.0655,
+      "0.2.1": 0.0579
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 13,
+     "medianKm": {
+      "0.1.1": 0.0691,
+      "0.2.1": 0.0852
+     },
+     "p95Km": {
+      "0.1.1": 0.1174,
+      "0.2.1": 0.1074
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 16,
+     "medianKm": {
+      "0.1.1": 0.0959,
+      "0.2.1": 0.1284
+     },
+     "p95Km": {
+      "0.1.1": 0.1839,
+      "0.2.1": 0.1668
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "gsf",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 21,
+     "medianKm": {
+      "0.1.1": 0.1527,
+      "0.2.1": 0.1803
+     },
+     "p95Km": {
+      "0.1.1": 0.2892,
+      "0.2.1": 0.2369
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 93,
+     "medianKm": {
+      "0.1.1": 0.0918,
+      "0.2.1": 0.035
+     },
+     "p95Km": {
+      "0.1.1": 0.1536,
+      "0.2.1": 0.0685
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 83,
+     "medianKm": {
+      "0.1.1": 0.1258,
+      "0.2.1": 0.0415
+     },
+     "p95Km": {
+      "0.1.1": 0.2296,
+      "0.2.1": 0.097
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 81,
+     "medianKm": {
+      "0.1.1": 0.1378,
+      "0.2.1": 0.0612
+     },
+     "p95Km": {
+      "0.1.1": 0.4886,
+      "0.2.1": 0.5579
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 79,
+     "medianKm": {
+      "0.1.1": 0.1501,
+      "0.2.1": 0.0897
+     },
+     "p95Km": {
+      "0.1.1": 48.2471,
+      "0.2.1": 48.3294
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 76,
+     "medianKm": {
+      "0.1.1": 0.154,
+      "0.2.1": 0.1228
+     },
+     "p95Km": {
+      "0.1.1": 71.0095,
+      "0.2.1": 71.0664
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 74,
+     "medianKm": {
+      "0.1.1": 0.1778,
+      "0.2.1": 0.1517
+     },
+     "p95Km": {
+      "0.1.1": 123.6141,
+      "0.2.1": 123.6221
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 73,
+     "medianKm": {
+      "0.1.1": 0.2244,
+      "0.2.1": 0.1809
+     },
+     "p95Km": {
+      "0.1.1": 159.0892,
+      "0.2.1": 159.0922
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 93,
+     "medianKm": {
+      "0.1.1": 0.0876,
+      "0.2.1": 0.0359
+     },
+     "p95Km": {
+      "0.1.1": 0.1369,
+      "0.2.1": 0.0713
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 83,
+     "medianKm": {
+      "0.1.1": 0.1059,
+      "0.2.1": 0.0433
+     },
+     "p95Km": {
+      "0.1.1": 0.2127,
+      "0.2.1": 0.1057
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 81,
+     "medianKm": {
+      "0.1.1": 0.1201,
+      "0.2.1": 0.0499
+     },
+     "p95Km": {
+      "0.1.1": 0.6237,
+      "0.2.1": 0.5911
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 79,
+     "medianKm": {
+      "0.1.1": 0.1316,
+      "0.2.1": 0.0695
+     },
+     "p95Km": {
+      "0.1.1": 48.289,
+      "0.2.1": 48.3452
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 76,
+     "medianKm": {
+      "0.1.1": 0.1436,
+      "0.2.1": 0.0937
+     },
+     "p95Km": {
+      "0.1.1": 71.0422,
+      "0.2.1": 71.0733
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 74,
+     "medianKm": {
+      "0.1.1": 0.1496,
+      "0.2.1": 0.1166
+     },
+     "p95Km": {
+      "0.1.1": 123.5762,
+      "0.2.1": 123.6153
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "isr",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 73,
+     "medianKm": {
+      "0.1.1": 0.1715,
+      "0.2.1": 0.1517
+     },
+     "p95Km": {
+      "0.1.1": 159.0961,
+      "0.2.1": 159.1121
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 120,
+     "medianKm": {
+      "0.1.1": 0.0971,
+      "0.2.1": 0.0224
+     },
+     "p95Km": {
+      "0.1.1": 0.1587,
+      "0.2.1": 0.0416
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 105,
+     "medianKm": {
+      "0.1.1": 0.1211,
+      "0.2.1": 0.0244
+     },
+     "p95Km": {
+      "0.1.1": 0.221,
+      "0.2.1": 0.0531
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 103,
+     "medianKm": {
+      "0.1.1": 0.1375,
+      "0.2.1": 0.0404
+     },
+     "p95Km": {
+      "0.1.1": 0.2592,
+      "0.2.1": 0.0995
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 96,
+     "medianKm": {
+      "0.1.1": 0.1523,
+      "0.2.1": 0.0755
+     },
+     "p95Km": {
+      "0.1.1": 0.2544,
+      "0.2.1": 0.1821
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 100,
+     "medianKm": {
+      "0.1.1": 0.1564,
+      "0.2.1": 0.112
+     },
+     "p95Km": {
+      "0.1.1": 72.1392,
+      "0.2.1": 72.141
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 98,
+     "medianKm": {
+      "0.1.1": 0.1805,
+      "0.2.1": 0.1526
+     },
+     "p95Km": {
+      "0.1.1": 91.9534,
+      "0.2.1": 91.9043
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 93,
+     "medianKm": {
+      "0.1.1": 0.2391,
+      "0.2.1": 0.2192
+     },
+     "p95Km": {
+      "0.1.1": 100.5672,
+      "0.2.1": 100.5438
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 120,
+     "medianKm": {
+      "0.1.1": 0.0807,
+      "0.2.1": 0.0249
+     },
+     "p95Km": {
+      "0.1.1": 0.1391,
+      "0.2.1": 0.0437
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 105,
+     "medianKm": {
+      "0.1.1": 0.1071,
+      "0.2.1": 0.0224
+     },
+     "p95Km": {
+      "0.1.1": 0.1775,
+      "0.2.1": 0.0459
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 103,
+     "medianKm": {
+      "0.1.1": 0.1113,
+      "0.2.1": 0.035
+     },
+     "p95Km": {
+      "0.1.1": 0.2003,
+      "0.2.1": 0.0829
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 96,
+     "medianKm": {
+      "0.1.1": 0.12,
+      "0.2.1": 0.0597
+     },
+     "p95Km": {
+      "0.1.1": 0.2142,
+      "0.2.1": 0.1236
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 100,
+     "medianKm": {
+      "0.1.1": 0.1367,
+      "0.2.1": 0.0972
+     },
+     "p95Km": {
+      "0.1.1": 72.0813,
+      "0.2.1": 72.1344
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 98,
+     "medianKm": {
+      "0.1.1": 0.17,
+      "0.2.1": 0.1482
+     },
+     "p95Km": {
+      "0.1.1": 91.9315,
+      "0.2.1": 91.9156
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "qss",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 93,
+     "medianKm": {
+      "0.1.1": 0.2266,
+      "0.2.1": 0.2232
+     },
+     "p95Km": {
+      "0.1.1": 100.583,
+      "0.2.1": 100.5792
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 361,
+     "medianKm": {
+      "0.1.1": 0.0232,
+      "0.2.1": 0.0216
+     },
+     "p95Km": {
+      "0.1.1": 0.1377,
+      "0.2.1": 0.0359
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 299,
+     "medianKm": {
+      "0.1.1": 0.0328,
+      "0.2.1": 0.0289
+     },
+     "p95Km": {
+      "0.1.1": 0.18,
+      "0.2.1": 0.0517
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 318,
+     "medianKm": {
+      "0.1.1": 0.0441,
+      "0.2.1": 0.0395
+     },
+     "p95Km": {
+      "0.1.1": 0.2109,
+      "0.2.1": 0.0779
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 325,
+     "medianKm": {
+      "0.1.1": 0.0633,
+      "0.2.1": 0.0584
+     },
+     "p95Km": {
+      "0.1.1": 0.2005,
+      "0.2.1": 0.1178
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 281,
+     "medianKm": {
+      "0.1.1": 0.0904,
+      "0.2.1": 0.0798
+     },
+     "p95Km": {
+      "0.1.1": 0.2351,
+      "0.2.1": 0.186
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 272,
+     "medianKm": {
+      "0.1.1": 0.112,
+      "0.2.1": 0.1016
+     },
+     "p95Km": {
+      "0.1.1": 0.2627,
+      "0.2.1": 0.2493
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 303,
+     "medianKm": {
+      "0.1.1": 0.1316,
+      "0.2.1": 0.1191
+     },
+     "p95Km": {
+      "0.1.1": 0.3778,
+      "0.2.1": 0.3353
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 24,
+     "pairs": 361,
+     "medianKm": {
+      "0.1.1": 0.0234,
+      "0.2.1": 0.0215
+     },
+     "p95Km": {
+      "0.1.1": 0.1293,
+      "0.2.1": 0.0393
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 48,
+     "pairs": 299,
+     "medianKm": {
+      "0.1.1": 0.0253,
+      "0.2.1": 0.022
+     },
+     "p95Km": {
+      "0.1.1": 0.1692,
+      "0.2.1": 0.0378
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 72,
+     "pairs": 318,
+     "medianKm": {
+      "0.1.1": 0.0351,
+      "0.2.1": 0.0315
+     },
+     "p95Km": {
+      "0.1.1": 0.2002,
+      "0.2.1": 0.0549
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 96,
+     "pairs": 325,
+     "medianKm": {
+      "0.1.1": 0.0477,
+      "0.2.1": 0.0458
+     },
+     "p95Km": {
+      "0.1.1": 0.1843,
+      "0.2.1": 0.0908
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 120,
+     "pairs": 281,
+     "medianKm": {
+      "0.1.1": 0.0723,
+      "0.2.1": 0.0658
+     },
+     "p95Km": {
+      "0.1.1": 0.2248,
+      "0.2.1": 0.1422
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 144,
+     "pairs": 272,
+     "medianKm": {
+      "0.1.1": 0.0951,
+      "0.2.1": 0.0872
+     },
+     "p95Km": {
+      "0.1.1": 0.2386,
+      "0.2.1": 0.2103
+     }
+    },
+    {
+     "regime": "Navigation",
+     "provider": "sha",
+     "fit": 72,
+     "lead": 168,
+     "pairs": 303,
+     "medianKm": {
+      "0.1.1": 0.1122,
+      "0.2.1": 0.1061
+     },
+     "p95Km": {
+      "0.1.1": 0.2949,
+      "0.2.1": 0.2629
+     }
+    }
+   ]
+  },
+  {
+   "set": "providers",
+   "store": "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers",
+   "registered": 2499,
+   "run": 2499,
+   "notRegistered": 0,
+   "flownTwice": 0,
+   "held": 0,
+   "failed": {
+    "U-XP@24": {
+     "0.1.1": 0,
+     "0.2.1": 0
+    },
+    "U-XP@48": {
+     "0.1.1": 0,
+     "0.2.1": 0
+    }
+   },
+   "cells": [
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 24,
+     "lead": 12,
+     "pairs": 66,
+     "medianKm": {
+      "0.1.1": 1.1578,
+      "0.2.1": 1.1417
+     },
+     "p95Km": {
+      "0.1.1": 2.91,
+      "0.2.1": 2.8953
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 24,
+     "lead": 24,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 2.3527,
+      "0.2.1": 2.4114
+     },
+     "p95Km": {
+      "0.1.1": 4.9186,
+      "0.2.1": 4.8924
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 24,
+     "lead": 72,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 7.3429,
+      "0.2.1": 7.0061
+     },
+     "p95Km": {
+      "0.1.1": 97.0793,
+      "0.2.1": 96.8339
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 24,
+     "lead": 96,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 11.9491,
+      "0.2.1": 12.1637
+     },
+     "p95Km": {
+      "0.1.1": 121.0413,
+      "0.2.1": 120.8793
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 24,
+     "lead": 168,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 23.7621,
+      "0.2.1": 24.237
+     },
+     "p95Km": {
+      "0.1.1": 267.4547,
+      "0.2.1": 266.8301
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 48,
+     "lead": 12,
+     "pairs": 66,
+     "medianKm": {
+      "0.1.1": 1.67,
+      "0.2.1": 1.675
+     },
+     "p95Km": {
+      "0.1.1": 3.0926,
+      "0.2.1": 3.0895
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 1.9228,
+      "0.2.1": 1.9558
+     },
+     "p95Km": {
+      "0.1.1": 4.9649,
+      "0.2.1": 4.93
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 4.814,
+      "0.2.1": 4.7931
+     },
+     "p95Km": {
+      "0.1.1": 72.9024,
+      "0.2.1": 72.8241
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 8.4073,
+      "0.2.1": 8.3624
+     },
+     "p95Km": {
+      "0.1.1": 70.3932,
+      "0.2.1": 70.5319
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "All",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 20.4992,
+      "0.2.1": 20.3417
+     },
+     "p95Km": {
+      "0.1.1": 175.7386,
+      "0.2.1": 175.4397
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "Intelsat",
+     "fit": 24,
+     "lead": 72,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 7.3429,
+      "0.2.1": 7.0061
+     },
+     "p95Km": {
+      "0.1.1": 97.0793,
+      "0.2.1": 96.8339
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "Intelsat",
+     "fit": 24,
+     "lead": 96,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 11.9491,
+      "0.2.1": 12.1637
+     },
+     "p95Km": {
+      "0.1.1": 121.0413,
+      "0.2.1": 120.8793
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "Intelsat",
+     "fit": 24,
+     "lead": 168,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 23.7621,
+      "0.2.1": 24.237
+     },
+     "p95Km": {
+      "0.1.1": 267.4547,
+      "0.2.1": 266.8301
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "Intelsat",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 4.814,
+      "0.2.1": 4.7931
+     },
+     "p95Km": {
+      "0.1.1": 72.9024,
+      "0.2.1": 72.8241
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "Intelsat",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 8.4073,
+      "0.2.1": 8.3624
+     },
+     "p95Km": {
+      "0.1.1": 70.3932,
+      "0.2.1": 70.5319
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "Intelsat",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 42,
+     "medianKm": {
+      "0.1.1": 20.4992,
+      "0.2.1": 20.3417
+     },
+     "p95Km": {
+      "0.1.1": 175.7386,
+      "0.2.1": 175.4397
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "SES",
+     "fit": 24,
+     "lead": 12,
+     "pairs": 66,
+     "medianKm": {
+      "0.1.1": 1.1578,
+      "0.2.1": 1.1417
+     },
+     "p95Km": {
+      "0.1.1": 2.91,
+      "0.2.1": 2.8953
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "SES",
+     "fit": 24,
+     "lead": 24,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 2.3527,
+      "0.2.1": 2.4114
+     },
+     "p95Km": {
+      "0.1.1": 4.9186,
+      "0.2.1": 4.8924
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "SES",
+     "fit": 48,
+     "lead": 12,
+     "pairs": 66,
+     "medianKm": {
+      "0.1.1": 1.67,
+      "0.2.1": 1.675
+     },
+     "p95Km": {
+      "0.1.1": 3.0926,
+      "0.2.1": 3.0895
+     }
+    },
+    {
+     "regime": "Geostationary, station-kept",
+     "provider": "SES",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 33,
+     "medianKm": {
+      "0.1.1": 1.9228,
+      "0.2.1": 1.9558
+     },
+     "p95Km": {
+      "0.1.1": 4.9649,
+      "0.2.1": 4.93
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 24,
+     "lead": 48,
+     "pairs": 8,
+     "medianKm": {
+      "0.1.1": 4.0027,
+      "0.2.1": 4.0272
+     },
+     "p95Km": {
+      "0.1.1": 8.1946,
+      "0.2.1": 8.188
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 24,
+     "lead": 72,
+     "pairs": 5,
+     "medianKm": {
+      "0.1.1": 6.457,
+      "0.2.1": 6.4519
+     },
+     "p95Km": {
+      "0.1.1": 16.456,
+      "0.2.1": 16.5214
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 24,
+     "lead": 96,
+     "pairs": 3,
+     "medianKm": {
+      "0.1.1": 15.464,
+      "0.2.1": 15.2833
+     },
+     "p95Km": {
+      "0.1.1": 39.923,
+      "0.2.1": 39.8819
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 24,
+     "lead": 120,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 36.0138,
+      "0.2.1": 36.8074
+     },
+     "p95Km": {
+      "0.1.1": 1169.6416,
+      "0.2.1": 1169.4512
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 24,
+     "lead": 168,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 82.4471,
+      "0.2.1": 82.2929
+     },
+     "p95Km": {
+      "0.1.1": 697.5531,
+      "0.2.1": 697.4936
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 8,
+     "medianKm": {
+      "0.1.1": 1.3743,
+      "0.2.1": 1.3731
+     },
+     "p95Km": {
+      "0.1.1": 7.2746,
+      "0.2.1": 7.2752
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 5,
+     "medianKm": {
+      "0.1.1": 6.2316,
+      "0.2.1": 6.232
+     },
+     "p95Km": {
+      "0.1.1": 8.421,
+      "0.2.1": 8.4207
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 3,
+     "medianKm": {
+      "0.1.1": 10.0994,
+      "0.2.1": 10.1066
+     },
+     "p95Km": {
+      "0.1.1": 13.6088,
+      "0.2.1": 13.8662
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 17.8314,
+      "0.2.1": 17.8245
+     },
+     "p95Km": {
+      "0.1.1": 1129.1992,
+      "0.2.1": 1129.1503
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "All",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 43.5749,
+      "0.2.1": 43.5576
+     },
+     "p95Km": {
+      "0.1.1": 612.7319,
+      "0.2.1": 612.7463
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "China Space Station",
+     "fit": 24,
+     "lead": 72,
+     "pairs": 1,
+     "medianKm": {
+      "0.1.1": 6.457,
+      "0.2.1": 6.4519
+     },
+     "p95Km": {
+      "0.1.1": 6.457,
+      "0.2.1": 6.4519
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "China Space Station",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 1,
+     "medianKm": {
+      "0.1.1": 3.4083,
+      "0.2.1": 3.4511
+     },
+     "p95Km": {
+      "0.1.1": 3.4083,
+      "0.2.1": 3.4511
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 24,
+     "lead": 48,
+     "pairs": 8,
+     "medianKm": {
+      "0.1.1": 4.0027,
+      "0.2.1": 4.0272
+     },
+     "p95Km": {
+      "0.1.1": 8.1946,
+      "0.2.1": 8.188
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 24,
+     "lead": 72,
+     "pairs": 4,
+     "medianKm": {
+      "0.1.1": 8.9414,
+      "0.2.1": 8.982
+     },
+     "p95Km": {
+      "0.1.1": 16.4716,
+      "0.2.1": 16.5411
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 24,
+     "lead": 96,
+     "pairs": 3,
+     "medianKm": {
+      "0.1.1": 15.464,
+      "0.2.1": 15.2833
+     },
+     "p95Km": {
+      "0.1.1": 39.923,
+      "0.2.1": 39.8819
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 24,
+     "lead": 120,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 36.0138,
+      "0.2.1": 36.8074
+     },
+     "p95Km": {
+      "0.1.1": 1169.6416,
+      "0.2.1": 1169.4512
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 24,
+     "lead": 168,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 82.4471,
+      "0.2.1": 82.2929
+     },
+     "p95Km": {
+      "0.1.1": 697.5531,
+      "0.2.1": 697.4936
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 8,
+     "medianKm": {
+      "0.1.1": 1.3743,
+      "0.2.1": 1.3731
+     },
+     "p95Km": {
+      "0.1.1": 7.2746,
+      "0.2.1": 7.2752
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 4,
+     "medianKm": {
+      "0.1.1": 6.3313,
+      "0.2.1": 6.3392
+     },
+     "p95Km": {
+      "0.1.1": 8.5454,
+      "0.2.1": 8.5441
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 3,
+     "medianKm": {
+      "0.1.1": 10.0994,
+      "0.2.1": 10.1066
+     },
+     "p95Km": {
+      "0.1.1": 13.6088,
+      "0.2.1": 13.8662
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 17.8314,
+      "0.2.1": 17.8245
+     },
+     "p95Km": {
+      "0.1.1": 1129.1992,
+      "0.2.1": 1129.1503
+     }
+    },
+    {
+     "regime": "Low orbit, crewed",
+     "provider": "NASA ISS",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 11,
+     "medianKm": {
+      "0.1.1": 43.5749,
+      "0.2.1": 43.5576
+     },
+     "p95Km": {
+      "0.1.1": 612.7319,
+      "0.2.1": 612.7463
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 24,
+     "lead": 12,
+     "pairs": 173,
+     "medianKm": {
+      "0.1.1": 0.8173,
+      "0.2.1": 0.8173
+     },
+     "p95Km": {
+      "0.1.1": 1.7705,
+      "0.2.1": 1.7705
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 24,
+     "lead": 24,
+     "pairs": 95,
+     "medianKm": {
+      "0.1.1": 0.8764,
+      "0.2.1": 0.8771
+     },
+     "p95Km": {
+      "0.1.1": 7.6513,
+      "0.2.1": 7.631
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 24,
+     "lead": 36,
+     "pairs": 9,
+     "medianKm": {
+      "0.1.1": 2.2097,
+      "0.2.1": 2.211
+     },
+     "p95Km": {
+      "0.1.1": 3.1103,
+      "0.2.1": 3.1115
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 24,
+     "lead": 48,
+     "pairs": 1,
+     "medianKm": {
+      "0.1.1": 2.647,
+      "0.2.1": 2.647
+     },
+     "p95Km": {
+      "0.1.1": 2.647,
+      "0.2.1": 2.647
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 48,
+     "lead": 12,
+     "pairs": 173,
+     "medianKm": {
+      "0.1.1": 0.7889,
+      "0.2.1": 0.789
+     },
+     "p95Km": {
+      "0.1.1": 3.0295,
+      "0.2.1": 3.0297
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 95,
+     "medianKm": {
+      "0.1.1": 1.0904,
+      "0.2.1": 1.0902
+     },
+     "p95Km": {
+      "0.1.1": 8.2112,
+      "0.2.1": 8.2001
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 48,
+     "lead": 36,
+     "pairs": 9,
+     "medianKm": {
+      "0.1.1": 1.2744,
+      "0.2.1": 1.2747
+     },
+     "p95Km": {
+      "0.1.1": 5.657,
+      "0.2.1": 5.657
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "All",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 1,
+     "medianKm": {
+      "0.1.1": 8.6572,
+      "0.2.1": 8.6572
+     },
+     "p95Km": {
+      "0.1.1": 8.6572,
+      "0.2.1": 8.6572
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 24,
+     "lead": 12,
+     "pairs": 173,
+     "medianKm": {
+      "0.1.1": 0.8173,
+      "0.2.1": 0.8173
+     },
+     "p95Km": {
+      "0.1.1": 1.7705,
+      "0.2.1": 1.7705
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 24,
+     "lead": 24,
+     "pairs": 95,
+     "medianKm": {
+      "0.1.1": 0.8764,
+      "0.2.1": 0.8771
+     },
+     "p95Km": {
+      "0.1.1": 7.6513,
+      "0.2.1": 7.631
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 24,
+     "lead": 36,
+     "pairs": 9,
+     "medianKm": {
+      "0.1.1": 2.2097,
+      "0.2.1": 2.211
+     },
+     "p95Km": {
+      "0.1.1": 3.1103,
+      "0.2.1": 3.1115
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 24,
+     "lead": 48,
+     "pairs": 1,
+     "medianKm": {
+      "0.1.1": 2.647,
+      "0.2.1": 2.647
+     },
+     "p95Km": {
+      "0.1.1": 2.647,
+      "0.2.1": 2.647
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 48,
+     "lead": 12,
+     "pairs": 173,
+     "medianKm": {
+      "0.1.1": 0.7889,
+      "0.2.1": 0.789
+     },
+     "p95Km": {
+      "0.1.1": 3.0295,
+      "0.2.1": 3.0297
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 95,
+     "medianKm": {
+      "0.1.1": 1.0904,
+      "0.2.1": 1.0902
+     },
+     "p95Km": {
+      "0.1.1": 8.2112,
+      "0.2.1": 8.2001
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 48,
+     "lead": 36,
+     "pairs": 9,
+     "medianKm": {
+      "0.1.1": 1.2744,
+      "0.2.1": 1.2747
+     },
+     "p95Km": {
+      "0.1.1": 5.657,
+      "0.2.1": 5.657
+     }
+    },
+    {
+     "regime": "Low orbit, imaging fleet",
+     "provider": "Planet (Flock)",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 1,
+     "medianKm": {
+      "0.1.1": 8.6572,
+      "0.2.1": 8.6572
+     },
+     "p95Km": {
+      "0.1.1": 8.6572,
+      "0.2.1": 8.6572
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 12,
+     "pairs": 104,
+     "medianKm": {
+      "0.1.1": 0.0194,
+      "0.2.1": 0.0194
+     },
+     "p95Km": {
+      "0.1.1": 0.0351,
+      "0.2.1": 0.0351
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 24,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.0372,
+      "0.2.1": 0.0372
+     },
+     "p95Km": {
+      "0.1.1": 0.0828,
+      "0.2.1": 0.0828
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 36,
+     "pairs": 52,
+     "medianKm": {
+      "0.1.1": 0.0595,
+      "0.2.1": 0.0595
+     },
+     "p95Km": {
+      "0.1.1": 0.0939,
+      "0.2.1": 0.0939
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 48,
+     "pairs": 259,
+     "medianKm": {
+      "0.1.1": 0.0715,
+      "0.2.1": 0.0715
+     },
+     "p95Km": {
+      "0.1.1": 0.1904,
+      "0.2.1": 0.1904
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 60,
+     "pairs": 51,
+     "medianKm": {
+      "0.1.1": 0.1017,
+      "0.2.1": 0.1017
+     },
+     "p95Km": {
+      "0.1.1": 0.1934,
+      "0.2.1": 0.1934
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 72,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.1218,
+      "0.2.1": 0.1203
+     },
+     "p95Km": {
+      "0.1.1": 0.2993,
+      "0.2.1": 0.2985
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 96,
+     "pairs": 205,
+     "medianKm": {
+      "0.1.1": 0.1846,
+      "0.2.1": 0.1954
+     },
+     "p95Km": {
+      "0.1.1": 0.432,
+      "0.2.1": 0.4354
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 120,
+     "pairs": 208,
+     "medianKm": {
+      "0.1.1": 0.2316,
+      "0.2.1": 0.2262
+     },
+     "p95Km": {
+      "0.1.1": 0.7345,
+      "0.2.1": 0.7529
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 144,
+     "pairs": 257,
+     "medianKm": {
+      "0.1.1": 0.2862,
+      "0.2.1": 0.2821
+     },
+     "p95Km": {
+      "0.1.1": 0.7094,
+      "0.2.1": 0.6982
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 24,
+     "lead": 168,
+     "pairs": 153,
+     "medianKm": {
+      "0.1.1": 0.3115,
+      "0.2.1": 0.2934
+     },
+     "p95Km": {
+      "0.1.1": 0.7015,
+      "0.2.1": 0.7299
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 12,
+     "pairs": 104,
+     "medianKm": {
+      "0.1.1": 0.0231,
+      "0.2.1": 0.0231
+     },
+     "p95Km": {
+      "0.1.1": 0.0411,
+      "0.2.1": 0.0411
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.0227,
+      "0.2.1": 0.0227
+     },
+     "p95Km": {
+      "0.1.1": 0.0354,
+      "0.2.1": 0.0354
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 36,
+     "pairs": 52,
+     "medianKm": {
+      "0.1.1": 0.0245,
+      "0.2.1": 0.0245
+     },
+     "p95Km": {
+      "0.1.1": 0.0346,
+      "0.2.1": 0.0346
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 259,
+     "medianKm": {
+      "0.1.1": 0.0248,
+      "0.2.1": 0.0248
+     },
+     "p95Km": {
+      "0.1.1": 0.0475,
+      "0.2.1": 0.0475
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 60,
+     "pairs": 51,
+     "medianKm": {
+      "0.1.1": 0.0335,
+      "0.2.1": 0.0335
+     },
+     "p95Km": {
+      "0.1.1": 0.0539,
+      "0.2.1": 0.0539
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.0373,
+      "0.2.1": 0.0372
+     },
+     "p95Km": {
+      "0.1.1": 0.0725,
+      "0.2.1": 0.0725
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 205,
+     "medianKm": {
+      "0.1.1": 0.0616,
+      "0.2.1": 0.0581
+     },
+     "p95Km": {
+      "0.1.1": 0.1279,
+      "0.2.1": 0.1214
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 208,
+     "medianKm": {
+      "0.1.1": 0.0897,
+      "0.2.1": 0.08
+     },
+     "p95Km": {
+      "0.1.1": 0.2102,
+      "0.2.1": 0.1942
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 257,
+     "medianKm": {
+      "0.1.1": 0.1149,
+      "0.2.1": 0.0982
+     },
+     "p95Km": {
+      "0.1.1": 0.2601,
+      "0.2.1": 0.2467
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "All",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 153,
+     "medianKm": {
+      "0.1.1": 0.1564,
+      "0.2.1": 0.1233
+     },
+     "p95Km": {
+      "0.1.1": 0.3084,
+      "0.2.1": 0.2923
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 12,
+     "pairs": 104,
+     "medianKm": {
+      "0.1.1": 0.0194,
+      "0.2.1": 0.0194
+     },
+     "p95Km": {
+      "0.1.1": 0.0351,
+      "0.2.1": 0.0351
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 24,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.0372,
+      "0.2.1": 0.0372
+     },
+     "p95Km": {
+      "0.1.1": 0.0828,
+      "0.2.1": 0.0828
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 36,
+     "pairs": 52,
+     "medianKm": {
+      "0.1.1": 0.0595,
+      "0.2.1": 0.0595
+     },
+     "p95Km": {
+      "0.1.1": 0.0939,
+      "0.2.1": 0.0939
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 48,
+     "pairs": 259,
+     "medianKm": {
+      "0.1.1": 0.0715,
+      "0.2.1": 0.0715
+     },
+     "p95Km": {
+      "0.1.1": 0.1904,
+      "0.2.1": 0.1904
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 60,
+     "pairs": 51,
+     "medianKm": {
+      "0.1.1": 0.1017,
+      "0.2.1": 0.1017
+     },
+     "p95Km": {
+      "0.1.1": 0.1934,
+      "0.2.1": 0.1934
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 72,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.1218,
+      "0.2.1": 0.1203
+     },
+     "p95Km": {
+      "0.1.1": 0.2993,
+      "0.2.1": 0.2985
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 96,
+     "pairs": 205,
+     "medianKm": {
+      "0.1.1": 0.1846,
+      "0.2.1": 0.1954
+     },
+     "p95Km": {
+      "0.1.1": 0.432,
+      "0.2.1": 0.4354
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 120,
+     "pairs": 208,
+     "medianKm": {
+      "0.1.1": 0.2316,
+      "0.2.1": 0.2262
+     },
+     "p95Km": {
+      "0.1.1": 0.7345,
+      "0.2.1": 0.7529
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 144,
+     "pairs": 257,
+     "medianKm": {
+      "0.1.1": 0.2862,
+      "0.2.1": 0.2821
+     },
+     "p95Km": {
+      "0.1.1": 0.7094,
+      "0.2.1": 0.6982
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 24,
+     "lead": 168,
+     "pairs": 153,
+     "medianKm": {
+      "0.1.1": 0.3115,
+      "0.2.1": 0.2934
+     },
+     "p95Km": {
+      "0.1.1": 0.7015,
+      "0.2.1": 0.7299
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 12,
+     "pairs": 104,
+     "medianKm": {
+      "0.1.1": 0.0231,
+      "0.2.1": 0.0231
+     },
+     "p95Km": {
+      "0.1.1": 0.0411,
+      "0.2.1": 0.0411
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 24,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.0227,
+      "0.2.1": 0.0227
+     },
+     "p95Km": {
+      "0.1.1": 0.0354,
+      "0.2.1": 0.0354
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 36,
+     "pairs": 52,
+     "medianKm": {
+      "0.1.1": 0.0245,
+      "0.2.1": 0.0245
+     },
+     "p95Km": {
+      "0.1.1": 0.0346,
+      "0.2.1": 0.0346
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 48,
+     "pairs": 259,
+     "medianKm": {
+      "0.1.1": 0.0248,
+      "0.2.1": 0.0248
+     },
+     "p95Km": {
+      "0.1.1": 0.0475,
+      "0.2.1": 0.0475
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 60,
+     "pairs": 51,
+     "medianKm": {
+      "0.1.1": 0.0335,
+      "0.2.1": 0.0335
+     },
+     "p95Km": {
+      "0.1.1": 0.0539,
+      "0.2.1": 0.0539
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 72,
+     "pairs": 309,
+     "medianKm": {
+      "0.1.1": 0.0373,
+      "0.2.1": 0.0372
+     },
+     "p95Km": {
+      "0.1.1": 0.0725,
+      "0.2.1": 0.0725
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 96,
+     "pairs": 205,
+     "medianKm": {
+      "0.1.1": 0.0616,
+      "0.2.1": 0.0581
+     },
+     "p95Km": {
+      "0.1.1": 0.1279,
+      "0.2.1": 0.1214
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 120,
+     "pairs": 208,
+     "medianKm": {
+      "0.1.1": 0.0897,
+      "0.2.1": 0.08
+     },
+     "p95Km": {
+      "0.1.1": 0.2102,
+      "0.2.1": 0.1942
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 144,
+     "pairs": 257,
+     "medianKm": {
+      "0.1.1": 0.1149,
+      "0.2.1": 0.0982
+     },
+     "p95Km": {
+      "0.1.1": 0.2601,
+      "0.2.1": 0.2467
+     }
+    },
+    {
+     "regime": "Navigation, ultra-rapid",
+     "provider": "ESA ultra-rapid",
+     "fit": 48,
+     "lead": 168,
+     "pairs": 153,
+     "medianKm": {
+      "0.1.1": 0.1564,
+      "0.2.1": 0.1233
+     },
+     "p95Km": {
+      "0.1.1": 0.3084,
+      "0.2.1": 0.2923
+     }
+    }
+   ]
+  }
+ ],
+ "truth": [
+  {
+   "group": "T",
+   "label": "Strong drag, 2025",
+   "arm": "U24",
+   "days": {
+    "1": {
+     "windows": 944,
+     "0.1.1": 1.7248,
+     "0.2.1": 1.7222
+    },
+    "2": {
+     "windows": 944,
+     "0.1.1": 5.5816,
+     "0.2.1": 5.5651
+    },
+    "3": {
+     "windows": 944,
+     "0.1.1": 12.4317,
+     "0.2.1": 12.4262
+    },
+    "7": {
+     "windows": 944,
+     "0.1.1": 63.8736,
+     "0.2.1": 63.8736
+    }
+   }
+  },
+  {
+   "group": "P",
+   "label": "Strong drag, 2026",
+   "arm": "U24",
+   "days": {
+    "1": {
+     "windows": 750,
+     "0.1.1": 1.7361,
+     "0.2.1": 1.744
+    },
+    "2": {
+     "windows": 750,
+     "0.1.1": 5.8394,
+     "0.2.1": 5.8338
+    },
+    "3": {
+     "windows": 750,
+     "0.1.1": 12.4264,
+     "0.2.1": 12.4344
+    },
+    "7": {
+     "windows": 750,
+     "0.1.1": 65.3193,
+     "0.2.1": 65.3243
+    }
+   }
+  },
+  {
+   "group": "P",
+   "label": "Strong drag, 2026",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 750,
+     "0.1.1": 0.8735,
+     "0.2.1": 0.8762
+    },
+    "2": {
+     "windows": 750,
+     "0.1.1": 1.7927,
+     "0.2.1": 1.7928
+    },
+    "3": {
+     "windows": 750,
+     "0.1.1": 3.5265,
+     "0.2.1": 3.5267
+    },
+    "7": {
+     "windows": 750,
+     "0.1.1": 20.4088,
+     "0.2.1": 20.1835
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "arm": "U24",
+   "days": {
+    "1": {
+     "windows": 276,
+     "0.1.1": 2.6338,
+     "0.2.1": 2.6275
+    },
+    "2": {
+     "windows": 274,
+     "0.1.1": 8.9007,
+     "0.2.1": 8.9056
+    },
+    "3": {
+     "windows": 275,
+     "0.1.1": 19.3285,
+     "0.2.1": 19.3174
+    },
+    "7": {
+     "windows": 274,
+     "0.1.1": 98.5347,
+     "0.2.1": 99.3952
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 259,
+     "0.1.1": 0.6895,
+     "0.2.1": 0.6885
+    },
+    "2": {
+     "windows": 258,
+     "0.1.1": 0.9339,
+     "0.2.1": 0.935
+    },
+    "3": {
+     "windows": 258,
+     "0.1.1": 1.3614,
+     "0.2.1": 1.3516
+    },
+    "7": {
+     "windows": 257,
+     "0.1.1": 4.3396,
+     "0.2.1": 4.3512
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "label": "Medium Earth orbit",
+   "arm": "U24",
+   "days": {
+    "1": {
+     "windows": 748,
+     "0.1.1": 0.0535,
+     "0.2.1": 0.0535
+    },
+    "2": {
+     "windows": 748,
+     "0.1.1": 0.0996,
+     "0.2.1": 0.0997
+    },
+    "3": {
+     "windows": 748,
+     "0.1.1": 0.1494,
+     "0.2.1": 0.1477
+    },
+    "7": {
+     "windows": 748,
+     "0.1.1": 0.3627,
+     "0.2.1": 0.3517
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "label": "Medium Earth orbit",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 746,
+     "0.1.1": 0.0414,
+     "0.2.1": 0.041
+    },
+    "2": {
+     "windows": 746,
+     "0.1.1": 0.0582,
+     "0.2.1": 0.0568
+    },
+    "3": {
+     "windows": 746,
+     "0.1.1": 0.0757,
+     "0.2.1": 0.0745
+    },
+    "7": {
+     "windows": 746,
+     "0.1.1": 0.1664,
+     "0.2.1": 0.1522
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "label": "Low orbit, laser spheres",
+   "arm": "U24",
+   "days": {
+    "1": {
+     "windows": 59,
+     "0.1.1": 0.832,
+     "0.2.1": 0.834
+    },
+    "2": {
+     "windows": 56,
+     "0.1.1": 1.5733,
+     "0.2.1": 1.5532
+    },
+    "3": {
+     "windows": 49,
+     "0.1.1": 2.5038,
+     "0.2.1": 2.504
+    },
+    "7": {
+     "windows": 56,
+     "0.1.1": 8.9839,
+     "0.2.1": 10.7834
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "label": "Low orbit, laser spheres",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 65,
+     "0.1.1": 0.4826,
+     "0.2.1": 0.4826
+    },
+    "2": {
+     "windows": 63,
+     "0.1.1": 0.5655,
+     "0.2.1": 0.5656
+    },
+    "3": {
+     "windows": 57,
+     "0.1.1": 0.6188,
+     "0.2.1": 0.6256
+    },
+    "7": {
+     "windows": 64,
+     "0.1.1": 1.2432,
+     "0.2.1": 1.2491
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "arm": "U24",
+   "days": {
+    "1": {
+     "windows": 136,
+     "0.1.1": 0.9234,
+     "0.2.1": 0.9233
+    },
+    "2": {
+     "windows": 132,
+     "0.1.1": 1.8746,
+     "0.2.1": 1.8799
+    },
+    "3": {
+     "windows": 121,
+     "0.1.1": 3.1485,
+     "0.2.1": 3.0694
+    },
+    "7": {
+     "windows": 103,
+     "0.1.1": 14.9066,
+     "0.2.1": 15.0215
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 136,
+     "0.1.1": 0.5903,
+     "0.2.1": 0.5908
+    },
+    "2": {
+     "windows": 132,
+     "0.1.1": 0.7121,
+     "0.2.1": 0.7139
+    },
+    "3": {
+     "windows": 121,
+     "0.1.1": 1.0013,
+     "0.2.1": 1.0087
+    },
+    "7": {
+     "windows": 103,
+     "0.1.1": 3.8736,
+     "0.2.1": 3.831
+    }
+   }
+  },
+  {
+   "group": "GD",
+   "label": "Laser geodetic",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 54,
+     "0.1.1": 0.1039,
+     "0.2.1": 0.1039
+    },
+    "2": {
+     "windows": 54,
+     "0.1.1": 0.1089,
+     "0.2.1": 0.109
+    },
+    "3": {
+     "windows": 54,
+     "0.1.1": 0.1087,
+     "0.2.1": 0.1087
+    },
+    "7": {
+     "windows": 54,
+     "0.1.1": 0.1535,
+     "0.2.1": 0.1471
+    }
+   }
+  },
+  {
+   "group": "IG",
+   "label": "Inclined geosynchronous",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 60,
+     "0.1.1": 0.1659,
+     "0.2.1": 0.0454
+    },
+    "2": {
+     "windows": 60,
+     "0.1.1": 0.1828,
+     "0.2.1": 0.0644
+    },
+    "3": {
+     "windows": 60,
+     "0.1.1": 0.1804,
+     "0.2.1": 0.0883
+    },
+    "7": {
+     "windows": 59,
+     "0.1.1": 0.2322,
+     "0.2.1": 0.1864
+    }
+   }
+  },
+  {
+   "group": "GE",
+   "label": "Geostationary",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 32,
+     "0.1.1": 0.213,
+     "0.2.1": 0.0387
+    },
+    "2": {
+     "windows": 33,
+     "0.1.1": 0.2098,
+     "0.2.1": 0.0606
+    },
+    "3": {
+     "windows": 30,
+     "0.1.1": 0.1878,
+     "0.2.1": 0.089
+    },
+    "7": {
+     "windows": 32,
+     "0.1.1": 0.2935,
+     "0.2.1": 0.2686
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "label": "Highly elliptical",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 7,
+     "0.1.1": 1.806,
+     "0.2.1": 1.7316
+    },
+    "2": {
+     "windows": 7,
+     "0.1.1": 3.9647,
+     "0.2.1": 3.9734
+    },
+    "3": {
+     "windows": 7,
+     "0.1.1": 7.1238,
+     "0.2.1": 7.139
+    },
+    "7": {
+     "windows": 7,
+     "0.1.1": 42.4194,
+     "0.2.1": 42.8504
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "label": "Highly elliptical",
+   "arm": "U336",
+   "days": {
+    "1": {
+     "windows": 7,
+     "0.1.1": 2.3493,
+     "0.2.1": 1.9742
+    },
+    "2": {
+     "windows": 7,
+     "0.1.1": 4.945,
+     "0.2.1": 4.5838
+    },
+    "3": {
+     "windows": 7,
+     "0.1.1": 7.3453,
+     "0.2.1": 7.7373
+    },
+    "7": {
+     "windows": 7,
+     "0.1.1": 25.8658,
+     "0.2.1": 25.7474
+    }
+   }
+  },
+  {
+   "group": "HX",
+   "label": "Highly elliptical, THEMIS and Chandra",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 19,
+     "0.1.1": 0.6389,
+     "0.2.1": 0.6185
+    },
+    "2": {
+     "windows": 19,
+     "0.1.1": 1.4583,
+     "0.2.1": 1.9026
+    },
+    "3": {
+     "windows": 19,
+     "0.1.1": 2.6261,
+     "0.2.1": 2.9918
+    },
+    "7": {
+     "windows": 19,
+     "0.1.1": 9.1664,
+     "0.2.1": 9.6232
+    }
+   }
+  },
+  {
+   "group": "HX",
+   "label": "Highly elliptical, THEMIS and Chandra",
+   "arm": "U168",
+   "days": {
+    "1": {
+     "windows": 7,
+     "0.1.1": 2.2805,
+     "0.2.1": 2.1297
+    },
+    "2": {
+     "windows": 7,
+     "0.1.1": 6.6412,
+     "0.2.1": 6.8103
+    },
+    "3": {
+     "windows": 7,
+     "0.1.1": 3.6252,
+     "0.2.1": 3.6325
+    },
+    "7": {
+     "windows": 7,
+     "0.1.1": 17.7733,
+     "0.2.1": 17.8848
+    }
+   }
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial",
+   "arm": "U24",
+   "days": {
+    "1": {
+     "windows": 77,
+     "0.1.1": 2.1691,
+     "0.2.1": 2.0992
+    },
+    "2": {
+     "windows": 74,
+     "0.1.1": 6.5651,
+     "0.2.1": 6.5022
+    },
+    "3": {
+     "windows": 78,
+     "0.1.1": 9.3641,
+     "0.2.1": 9.3759
+    },
+    "7": {
+     "windows": 76,
+     "0.1.1": 22.3839,
+     "0.2.1": 22.1965
+    }
+   }
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial",
+   "arm": "U72",
+   "days": {
+    "1": {
+     "windows": 76,
+     "0.1.1": 5.2587,
+     "0.2.1": 5.2277
+    },
+    "2": {
+     "windows": 73,
+     "0.1.1": 4.9125,
+     "0.2.1": 4.9563
+    },
+    "3": {
+     "windows": 75,
+     "0.1.1": 9.5869,
+     "0.2.1": 9.5916
+    },
+    "7": {
+     "windows": 74,
+     "0.1.1": 27.0391,
+     "0.2.1": 27.0585
+    }
+   }
+  }
+ ],
+ "prediction": [
+  {
+   "group": "GE",
+   "windows": 32,
+   "flown": 32,
+   "spaceForce021": 0.0387,
+   "spaceForce011": 0.213,
+   "spaceForceSetsOnWhiteroom": 0.0477,
+   "whiteroom": 0.037,
+   "lessSW": -0.009,
+   "lessWW": 0.0017,
+   "withinKm": 0.02,
+   "within": true
+  },
+  {
+   "group": "IG",
+   "windows": 60,
+   "flown": 60,
+   "spaceForce021": 0.0454,
+   "spaceForce011": 0.1659,
+   "spaceForceSetsOnWhiteroom": 0.0535,
+   "whiteroom": 0.0379,
+   "lessSW": -0.0081,
+   "lessWW": 0.0075,
+   "withinKm": 0.02,
+   "within": true
+  }
+ ],
+ "attribution": [
+  {
+   "group": "HX",
+   "label": "Highly elliptical, THEMIS and Chandra",
+   "arm": "U72",
+   "day": 2,
+   "windows": 19,
+   "missing": 0,
+   "medianKm": {
+    "a": 1.4583,
+    "b": 1.9026,
+    "u11": 1.4037,
+    "uw": 1.9026
+   },
+   "flightSide": 6,
+   "fitSide": 13,
+   "reproducesB": 19,
+   "reproducesA": 19,
+   "perWindow": [
+    {
+     "key": "HX|CHANDRA|2018-03-08",
+     "a": 1.3258,
+     "b": 1.0627,
+     "u11": 1.2935,
+     "uw": 1.0627,
+     "flight": -0.0323,
+     "fit": -0.2308,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|CHANDRA|2018-03-15",
+     "a": 0.3101,
+     "b": 0.2502,
+     "u11": 0.2507,
+     "uw": 0.2502,
+     "flight": -0.0594,
+     "fit": -0.0005,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|CHANDRA|2018-03-22",
+     "a": 0.4414,
+     "b": 0.1866,
+     "u11": 0.4875,
+     "uw": 0.1866,
+     "flight": 0.0461,
+     "fit": -0.3009,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|CHANDRA|2018-03-29",
+     "a": 0.8142,
+     "b": 1.1569,
+     "u11": 0.7646,
+     "uw": 1.1569,
+     "flight": -0.0496,
+     "fit": 0.3922,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|CHANDRA|2018-04-05",
+     "a": 3.5215,
+     "b": 3.6765,
+     "u11": 3.5784,
+     "uw": 3.6765,
+     "flight": 0.0569,
+     "fit": 0.0981,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|CHANDRA|2018-04-12",
+     "a": 7.5575,
+     "b": 7.6869,
+     "u11": 7.7232,
+     "uw": 7.6869,
+     "flight": 0.1657,
+     "fit": -0.0362,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|CHANDRA|2018-04-19",
+     "a": 2.5097,
+     "b": 2.7299,
+     "u11": 2.6309,
+     "uw": 2.7299,
+     "flight": 0.1212,
+     "fit": 0.0991,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS A|2013-02-11",
+     "a": 2.6121,
+     "b": 2.5109,
+     "u11": 2.5659,
+     "uw": 2.5109,
+     "flight": -0.0462,
+     "fit": -0.055,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS A|2013-02-13",
+     "a": 1.4583,
+     "b": 1.9026,
+     "u11": 1.4037,
+     "uw": 1.9026,
+     "flight": -0.0546,
+     "fit": 0.4989,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS A|2013-02-15",
+     "a": 2.9989,
+     "b": 2.9283,
+     "u11": 2.9762,
+     "uw": 2.9283,
+     "flight": -0.0227,
+     "fit": -0.0479,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS A|2013-02-17",
+     "a": 0.7201,
+     "b": 0.6902,
+     "u11": 0.6921,
+     "uw": 0.6902,
+     "flight": -0.028,
+     "fit": -0.0019,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS D|2013-02-11",
+     "a": 2.5218,
+     "b": 2.504,
+     "u11": 2.3997,
+     "uw": 2.504,
+     "flight": -0.1221,
+     "fit": 0.1043,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS D|2013-02-13",
+     "a": 0.6206,
+     "b": 0.7158,
+     "u11": 0.5871,
+     "uw": 0.7158,
+     "flight": -0.0335,
+     "fit": 0.1287,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS D|2013-02-15",
+     "a": 2.9412,
+     "b": 2.7384,
+     "u11": 2.9269,
+     "uw": 2.7384,
+     "flight": -0.0143,
+     "fit": -0.1885,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS D|2013-02-17",
+     "a": 1.2472,
+     "b": 1.061,
+     "u11": 1.2051,
+     "uw": 1.061,
+     "flight": -0.0421,
+     "fit": -0.1442,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS E|2013-02-11",
+     "a": 1.3926,
+     "b": 1.5437,
+     "u11": 1.3761,
+     "uw": 1.5437,
+     "flight": -0.0166,
+     "fit": 0.1676,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS E|2013-02-13",
+     "a": 2.3278,
+     "b": 2.293,
+     "u11": 2.3646,
+     "uw": 2.293,
+     "flight": 0.0368,
+     "fit": -0.0716,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS E|2013-02-15",
+     "a": 2.8514,
+     "b": 2.7297,
+     "u11": 2.8347,
+     "uw": 2.7297,
+     "flight": -0.0168,
+     "fit": -0.105,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "HX|THEMIS E|2013-02-17",
+     "a": 0.5512,
+     "b": 0.4902,
+     "u11": 0.5035,
+     "uw": 0.4902,
+     "flight": -0.0477,
+     "fit": -0.0133,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    }
+   ]
+  },
+  {
+   "group": "LS",
+   "label": "Low orbit, laser spheres",
+   "arm": "U24",
+   "day": 7,
+   "windows": 90,
+   "missing": 34,
+   "medianKm": {
+    "a": 8.984,
+    "b": 10.7835,
+    "u11": 8.9838,
+    "uw": 10.7824
+   },
+   "flightSide": 18,
+   "fitSide": 38,
+   "reproducesB": 56,
+   "reproducesA": 56,
+   "perWindow": [
+    {
+     "key": "LS|AJISAI|2025-10-10",
+     "missing": true
+    },
+    {
+     "key": "LS|AJISAI|2025-10-15",
+     "a": 0.7909,
+     "b": 0.7962,
+     "u11": 0.7909,
+     "uw": 0.7962,
+     "flight": 0,
+     "fit": 0.0053,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-10-20",
+     "a": 33.2292,
+     "b": 33.9064,
+     "u11": 33.2291,
+     "uw": 33.9064,
+     "flight": -0.0001,
+     "fit": 0.6773,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-10-25",
+     "missing": true
+    },
+    {
+     "key": "LS|AJISAI|2025-10-30",
+     "a": 52.8115,
+     "b": 52.8187,
+     "u11": 52.8112,
+     "uw": 52.8187,
+     "flight": -0.0003,
+     "fit": 0.0075,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-11-04",
+     "a": 39.8348,
+     "b": 39.8362,
+     "u11": 39.8349,
+     "uw": 39.8362,
+     "flight": 0.0002,
+     "fit": 0.0013,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-11-09",
+     "a": 3.2846,
+     "b": 3.2824,
+     "u11": 3.2844,
+     "uw": 3.2824,
+     "flight": -0.0002,
+     "fit": -0.0019,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-11-14",
+     "a": 4.045,
+     "b": 4.0455,
+     "u11": 4.045,
+     "uw": 4.0455,
+     "flight": 0,
+     "fit": 0.0005,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-11-19",
+     "a": 0.5435,
+     "b": 0.5648,
+     "u11": 0.5434,
+     "uw": 0.5648,
+     "flight": -0.0001,
+     "fit": 0.0214,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-11-24",
+     "a": 0.6177,
+     "b": 0.6177,
+     "u11": 0.6177,
+     "uw": 0.6177,
+     "flight": 0.0001,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-11-29",
+     "missing": true
+    },
+    {
+     "key": "LS|AJISAI|2025-12-04",
+     "a": 1.0706,
+     "b": 1.0707,
+     "u11": 1.0706,
+     "uw": 1.0707,
+     "flight": 0,
+     "fit": 0.0001,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-12-09",
+     "missing": true
+    },
+    {
+     "key": "LS|AJISAI|2025-12-14",
+     "a": 17.7849,
+     "b": 17.7925,
+     "u11": 17.7849,
+     "uw": 17.7925,
+     "flight": -0.0001,
+     "fit": 0.0076,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|AJISAI|2025-12-19",
+     "a": 4.3538,
+     "b": 4.3539,
+     "u11": 4.3537,
+     "uw": 4.3539,
+     "flight": 0,
+     "fit": 0.0001,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-10-10",
+     "missing": true
+    },
+    {
+     "key": "LS|LARES|2025-10-15",
+     "a": 61.8275,
+     "b": 61.8229,
+     "u11": 61.8275,
+     "uw": 61.8229,
+     "flight": -0.0001,
+     "fit": -0.0046,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-10-20",
+     "a": 63.3292,
+     "b": 63.3302,
+     "u11": 63.3292,
+     "uw": 63.3302,
+     "flight": 0,
+     "fit": 0.0009,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-10-25",
+     "missing": true
+    },
+    {
+     "key": "LS|LARES|2025-10-30",
+     "a": 10.8098,
+     "b": 32.1963,
+     "u11": 10.8096,
+     "uw": 32.1848,
+     "flight": -0.0002,
+     "fit": 21.3867,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-11-04",
+     "a": 6.3431,
+     "b": 6.3437,
+     "u11": 6.3433,
+     "uw": 6.3437,
+     "flight": 0.0001,
+     "fit": 0.0004,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-11-09",
+     "a": 7.1581,
+     "b": 7.2311,
+     "u11": 7.158,
+     "uw": 7.229,
+     "flight": -0.0001,
+     "fit": 0.0731,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-11-14",
+     "missing": true
+    },
+    {
+     "key": "LS|LARES|2025-11-19",
+     "a": 3.4698,
+     "b": 3.516,
+     "u11": 3.4698,
+     "uw": 3.516,
+     "flight": 0,
+     "fit": 0.0462,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-11-24",
+     "a": 2.6454,
+     "b": 2.9238,
+     "u11": 2.6453,
+     "uw": 2.9204,
+     "flight": -0.0001,
+     "fit": 0.2785,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-11-29",
+     "missing": true
+    },
+    {
+     "key": "LS|LARES|2025-12-04",
+     "missing": true
+    },
+    {
+     "key": "LS|LARES|2025-12-09",
+     "missing": true
+    },
+    {
+     "key": "LS|LARES|2025-12-14",
+     "a": 2.9115,
+     "b": 3.2254,
+     "u11": 2.9116,
+     "uw": 3.2254,
+     "flight": 0,
+     "fit": 0.3139,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARES|2025-12-19",
+     "a": 4.311,
+     "b": 4.311,
+     "u11": 4.3111,
+     "uw": 4.311,
+     "flight": 0.0001,
+     "fit": -0.0001,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-10-10",
+     "missing": true
+    },
+    {
+     "key": "LS|LARETS|2025-10-15",
+     "a": 1.9384,
+     "b": 2.0219,
+     "u11": 1.9384,
+     "uw": 2.0219,
+     "flight": 0,
+     "fit": 0.0834,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-10-20",
+     "a": 1.3756,
+     "b": 1.4746,
+     "u11": 1.3756,
+     "uw": 1.4746,
+     "flight": 0,
+     "fit": 0.099,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-10-25",
+     "missing": true
+    },
+    {
+     "key": "LS|LARETS|2025-10-30",
+     "missing": true
+    },
+    {
+     "key": "LS|LARETS|2025-11-04",
+     "a": 1.7389,
+     "b": 1.7215,
+     "u11": 1.7389,
+     "uw": 1.7214,
+     "flight": 0,
+     "fit": -0.0175,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-11-09",
+     "a": 2.1353,
+     "b": 2.1361,
+     "u11": 2.1353,
+     "uw": 2.1361,
+     "flight": 0,
+     "fit": 0.0009,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-11-14",
+     "missing": true
+    },
+    {
+     "key": "LS|LARETS|2025-11-19",
+     "a": 2.81,
+     "b": 2.8266,
+     "u11": 2.81,
+     "uw": 2.8266,
+     "flight": 0,
+     "fit": 0.0165,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-11-24",
+     "a": 1.0258,
+     "b": 0.9955,
+     "u11": 1.0258,
+     "uw": 0.9955,
+     "flight": 0,
+     "fit": -0.0302,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-11-29",
+     "missing": true
+    },
+    {
+     "key": "LS|LARETS|2025-12-04",
+     "a": 1.1058,
+     "b": 1.1058,
+     "u11": 1.1058,
+     "uw": 1.1058,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-12-09",
+     "missing": true
+    },
+    {
+     "key": "LS|LARETS|2025-12-14",
+     "a": 3.9262,
+     "b": 4.2426,
+     "u11": 3.9262,
+     "uw": 4.2426,
+     "flight": 0,
+     "fit": 0.3163,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|LARETS|2025-12-19",
+     "a": 4.001,
+     "b": 4.1374,
+     "u11": 4.001,
+     "uw": 4.1374,
+     "flight": 0,
+     "fit": 0.1365,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-10-10",
+     "missing": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-10-15",
+     "a": 2.6391,
+     "b": 2.6393,
+     "u11": 2.6393,
+     "uw": 2.6393,
+     "flight": 0.0001,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-10-20",
+     "a": 21.0508,
+     "b": 21.0092,
+     "u11": 21.0507,
+     "uw": 21.0092,
+     "flight": -0.0001,
+     "fit": -0.0415,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-10-25",
+     "missing": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-10-30",
+     "a": 18.7217,
+     "b": 18.7191,
+     "u11": 18.7215,
+     "uw": 18.7191,
+     "flight": -0.0001,
+     "fit": -0.0025,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-11-04",
+     "a": 3.3983,
+     "b": 3.3978,
+     "u11": 3.398,
+     "uw": 3.3978,
+     "flight": -0.0003,
+     "fit": -0.0002,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-11-09",
+     "a": 1.8363,
+     "b": 1.8363,
+     "u11": 1.8363,
+     "uw": 1.8363,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-11-14",
+     "a": 3.2592,
+     "b": 3.2593,
+     "u11": 3.2593,
+     "uw": 3.2593,
+     "flight": 0.0001,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-11-19",
+     "missing": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-11-24",
+     "a": 46.1044,
+     "b": 46.1045,
+     "u11": 46.1045,
+     "uw": 46.1045,
+     "flight": 0.0001,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-11-29",
+     "missing": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-12-04",
+     "a": 65.9818,
+     "b": 65.9762,
+     "u11": 65.9816,
+     "uw": 65.9762,
+     "flight": -0.0002,
+     "fit": -0.0054,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-12-09",
+     "a": 14.3253,
+     "b": 14.3358,
+     "u11": 14.325,
+     "uw": 14.3358,
+     "flight": -0.0003,
+     "fit": 0.0107,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-12-14",
+     "a": 2.1098,
+     "b": 2.1097,
+     "u11": 2.1097,
+     "uw": 2.1097,
+     "flight": -0.0001,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STARLETTE|2025-12-19",
+     "a": 1.1159,
+     "b": 1.1156,
+     "u11": 1.1156,
+     "uw": 1.1156,
+     "flight": -0.0003,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STELLA|2025-10-10",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-10-15",
+     "a": 41.3065,
+     "b": 41.344,
+     "u11": 41.3064,
+     "uw": 41.344,
+     "flight": 0,
+     "fit": 0.0376,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STELLA|2025-10-20",
+     "a": 24.2861,
+     "b": 24.1685,
+     "u11": 24.2861,
+     "uw": 24.1685,
+     "flight": 0,
+     "fit": -0.1176,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STELLA|2025-10-25",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-10-30",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-11-04",
+     "a": 28.7063,
+     "b": 28.7063,
+     "u11": 28.7063,
+     "uw": 28.7063,
+     "flight": -0.0001,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STELLA|2025-11-09",
+     "a": 72.6988,
+     "b": 72.6988,
+     "u11": 72.6988,
+     "uw": 72.6988,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STELLA|2025-11-14",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-11-19",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-11-24",
+     "a": 70.9407,
+     "b": 70.9408,
+     "u11": 70.9408,
+     "uw": 70.9408,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STELLA|2025-11-29",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-12-04",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-12-09",
+     "missing": true
+    },
+    {
+     "key": "LS|STELLA|2025-12-14",
+     "a": 34.6553,
+     "b": 35.26,
+     "u11": 34.6553,
+     "uw": 35.26,
+     "flight": 0,
+     "fit": 0.6047,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|STELLA|2025-12-19",
+     "a": 26.4504,
+     "b": 26.4503,
+     "u11": 26.4503,
+     "uw": 26.4503,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-10-10",
+     "missing": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-10-15",
+     "a": 29.9425,
+     "b": 29.9425,
+     "u11": 29.9425,
+     "uw": 29.9425,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-10-20",
+     "a": 23.5536,
+     "b": 23.5549,
+     "u11": 23.5537,
+     "uw": 23.5549,
+     "flight": 0,
+     "fit": 0.0013,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-10-25",
+     "missing": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-10-30",
+     "missing": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-11-04",
+     "a": 37.6839,
+     "b": 37.6874,
+     "u11": 37.684,
+     "uw": 37.6874,
+     "flight": 0.0001,
+     "fit": 0.0034,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-11-09",
+     "a": 45.5723,
+     "b": 45.5304,
+     "u11": 45.5723,
+     "uw": 45.5304,
+     "flight": -0.0001,
+     "fit": -0.0418,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-11-14",
+     "missing": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-11-19",
+     "missing": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-11-24",
+     "a": 33.5683,
+     "b": 33.5683,
+     "u11": 33.5683,
+     "uw": 33.5683,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-11-29",
+     "missing": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-12-04",
+     "a": 30.848,
+     "b": 30.8481,
+     "u11": 30.8481,
+     "uw": 30.8481,
+     "flight": 0.0001,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-12-09",
+     "a": 27.8634,
+     "b": 27.9339,
+     "u11": 27.8634,
+     "uw": 27.9339,
+     "flight": 0,
+     "fit": 0.0706,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-12-14",
+     "a": 35.8942,
+     "b": 36.5613,
+     "u11": 35.8942,
+     "uw": 36.5613,
+     "flight": 0,
+     "fit": 0.6671,
+     "side": "fit",
+     "reproducesB": true,
+     "reproducesA": true
+    },
+    {
+     "key": "LS|WESTPAC|2025-12-19",
+     "a": 41.1011,
+     "b": 41.1012,
+     "u11": 41.1012,
+     "uw": 41.1012,
+     "flight": 0,
+     "fit": 0,
+     "side": "flight",
+     "reproducesB": true,
+     "reproducesA": true
+    }
+   ]
+  }
+ ],
+ "againstSgp4": [
+  {
+   "group": "GE",
+   "days": {
+    "1": {
+     "windows": 32,
+     "0.1.1": 0.0815,
+     "0.2.1": 0.0165
+    },
+    "2": {
+     "windows": 33,
+     "0.1.1": 0.0547,
+     "0.2.1": 0.0172
+    },
+    "3": {
+     "windows": 30,
+     "0.1.1": 0.0423,
+     "0.2.1": 0.0173
+    },
+    "7": {
+     "windows": 32,
+     "0.1.1": 0.0236,
+     "0.2.1": 0.0189
+    }
+   }
+  },
+  {
+   "group": "IG",
+   "days": {
+    "1": {
+     "windows": 49,
+     "0.1.1": 0.0809,
+     "0.2.1": 0.0202
+    },
+    "2": {
+     "windows": 49,
+     "0.1.1": 0.0499,
+     "0.2.1": 0.0173
+    },
+    "3": {
+     "windows": 49,
+     "0.1.1": 0.0366,
+     "0.2.1": 0.0159
+    },
+    "7": {
+     "windows": 48,
+     "0.1.1": 0.0102,
+     "0.2.1": 0.0088
+    }
+   }
+  }
+ ],
+ "storedHashes": {
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/regimes/rows-0.jsonl": "66ea1bce12c02e3d0cb19148c58446216b8372bfac75f39212e063b9587d7a42",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-0.jsonl": "ba67e8f3b3537e8fac2e27314f44ce8b7d9e8e067aaaa3693a1b5fffb0f7c586",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-1.jsonl": "d3021f4023b4fa68f6de5d4f228c0a24a12e3d1479fac86b2203c9217dd84d38",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-2.jsonl": "f2c3e8fc96f3b4d3b6784f0b8269b358bf3917d6752ea37f231be4a2eb6bbc08",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-3.jsonl": "ded04ba2c39e43cfd9b8364aedc2dbf8bd3323fb8260829e7e49aca75e8caea9",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-4.jsonl": "9f44ea71fa6e43b24d3682ad9877e42924826b2e062b4f5f670d5fff67977906",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-5.jsonl": "d8e82489e7c4e9ae532b90963bf6b7ec4dfe2ba6bed18e8c1972eef9f2b0124f",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-6.jsonl": "d18cc104cb1c243973f2d5ce38c82e6b36252d739e38b91bab05ad4bdbef560c",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-7.jsonl": "521845f62a46c27bdf590c90f3ad9a2248bdee01fe0cf0a2f4284678c4d85a33",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-8.jsonl": "dcebc888f0b608dce9bc39ab3c108ffa1d9870bcb2853e8a0673bec076b49cb1",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-laser/rows-9.jsonl": "3aa34464a93af4ff97b4815a750816f765ea59448d9aa5e158478b013dfea271",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-0.jsonl": "776e3b01c2f3d0de00434c75a6230b5418cdb0242e93e91d974957f0e4c61584",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-1.jsonl": "2aab7fc21861c7f7488d82489dfe9fe30e814d0f4406e7d194818e7192920b82",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-2.jsonl": "e725156cda659705cf2769b7f615e3c809ab2dc483a7ed118733756be93d4d9d",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-3.jsonl": "e9495f2182de9790bcb864b1b6430e33b30ced38017c09fbf60c4411732ab320",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-4.jsonl": "536f900091ddd72090cc63d4085f2b2a894dfe90f54cc038f867e0e33b69923a",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-5.jsonl": "18fd5b65bbc24bc212fdf96b1d402cee3621cc1ba0c9daadb70fec5f6df49b43",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-6.jsonl": "d99ad64e0297d92471d9352b4a5635007b1cb91b33eb1a9ddd09fbd772fa11c2",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-7.jsonl": "d15fe25b05688834a648f0a815814e25a70b24bdc3431dba6c8bf5a6224dd468",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-providers/rows-iss-0.jsonl": "5210b7deff0b174b1097e578ad093cc3ed4190901be2dc438078f7d7103a6ce2",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-hx/rows-0.jsonl": "98f4b8dad6a93fa14c1a6a76d3575aabd0c6c64e785e7ad65950a4492ac5ebcc",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-hx/rows-1.jsonl": "1cf1d0ff691d1c5b204de266588854b25fafd04816cbe00fb1e8ee8b9e4a18f0",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-hx/rows-2.jsonl": "fc274f8cfc7c93fd22cc87e85d9f1986d0add0a3d6d6b2fd5663e0e340a74bb6",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-hx/rows-3.jsonl": "a8036f7ac2d3c2fd5a7f41c6269b69072162b3c9b12caf6ad95434e8ac172260",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-wa/rows-0.jsonl": "cfac9e5d993ec0048374491bfa74e68fcc09ef8851d89054b690e5a58382f978",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-wa/rows-1.jsonl": "7c49e462582272868ea42a2172dc165f0f893bc9f15f3505c7aa57f7b8556b80",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-wa/rows-2.jsonl": "36e8ac37d5fa7035d7aac4b4bf5a2177fa1980c266eb9e40c6a0321c1881183c",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes-wa/rows-3.jsonl": "39b5f832a6846b0b76b674e8d6abc9cf1e61e73a7dd605dc08cde65efbc3d0f0",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-0.jsonl": "9c0cd0e9547a0e0100c4fab2f1570b9aeb036e1dfa274efa508f3e0cdc337fb9",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-1.jsonl": "acfbe327bb90f48202e698a576ef490150f424a69872aa4126d3153a0d79fa29",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-1000.jsonl": "98f4b8dad6a93fa14c1a6a76d3575aabd0c6c64e785e7ad65950a4492ac5ebcc",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-1001.jsonl": "1cf1d0ff691d1c5b204de266588854b25fafd04816cbe00fb1e8ee8b9e4a18f0",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-1002.jsonl": "fc274f8cfc7c93fd22cc87e85d9f1986d0add0a3d6d6b2fd5663e0e340a74bb6",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-1003.jsonl": "a8036f7ac2d3c2fd5a7f41c6269b69072162b3c9b12caf6ad95434e8ac172260",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-2.jsonl": "f80b539c8fc521988adb1848497be3f346cae2205a89d20f68758edc6c4bf2ff",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-3.jsonl": "48aae4d548448e3b71bf5b645f8d0aa37330fcc4d5e0ef9c0723fe1f5e5da569",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-4.jsonl": "4faf5f65300421648970c6cf8f694000d751fdda4ed1d2fd27d487300eb7ddc6",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-5.jsonl": "e59748864fccbc235aeeee239c7cc151ff4dc1a7c0aac1df945ab655fba6ab12",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-6.jsonl": "3291f9007120e57c2f1fa84fa786855e7bbaebcca9aae8d314905fa0666f63e7",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-7.jsonl": "a89ac2addc7f577beb3be362319e9510f4c8af22a259b0e2a0fa0c9d4c004e79",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-8.jsonl": "1ec46c81e11459ea72700a81b436e95d28f87f44050d48b19e24489e84cfde6c",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-regimes/rows-9.jsonl": "f3efb760c4b0a808f1e1ee569df6f444945b9c3ac402e4390be10bd6ac5cc221",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-0.jsonl": "14f3405aaf07790a2319ad14a16852ca573f3fda3f5034058f2d892d2ee9ec8b",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-1.jsonl": "1cefdc1c51dae3dcbb8a1bf2a3d83a3a27e0b993d5ca5d433aad91c4c58056b2",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-2.jsonl": "72fdb22107557b312c11ff81add51dd2d97cc3264424723a82c44b7fae43e7df",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-3.jsonl": "b1d57d3ea2bc96b5079a425f7ab5c1d94b4e72f3a0bd95239f4b3ea48ec253ef",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-4.jsonl": "7a129aafa8aa6cd58537118003cef1caceb0fd298f441ba14d92588e4423e573",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-5.jsonl": "0d9fc261f99a209ad5e72f90e19ce160ae5b2cc838634fdff998cfa0325c2809",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-6.jsonl": "e039d316fe5839f2f03202179ec573314098facccb088887b1d32c08e7136e23",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-7.jsonl": "782934f67fd122d8f8d67daa70d1e0181ce4f8e024bda0cff95004b7061d8d15",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-8.jsonl": "95893b2acc1f622b08fcae7ae9f2f795cd9d64d82283c3d967029913168920ec",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth/rows-9.jsonl": "df3dba919562b011a69ab56b4b5ab5abd674c39b1463b0576fd2cf41e12984ce",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-0.jsonl": "590a5041803378a799dadf745bbec795b8e224ba281246ac9f3de49f8bef29f0",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-1.jsonl": "2381a75db23c4f68410eaf25567536b9631dfe19d9406f4aed2bec4dcf6480cf",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-2.jsonl": "4f0f3ec2db955ac5f4f9717c145b2474b0097dfeeb7af5f5a8ec29814d320c78",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-3.jsonl": "02e3eaaff4895d2c663a2ee571d6cf2ebd3c0845f42f8c320fd3dbe6d5138d00",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-4.jsonl": "cff14acf00e1b68475af3eac678c4679f58033aecbb4ea6dc0ae735f3ab9fab8",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-5.jsonl": "e3950a8a10ee7beb31ca8caf7e1de356a2832af9c535898e9c91fb1c6ee2c611",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-6.jsonl": "b4236a958984effe5c7279b45bc0951109a3cc2c07d717dd563cef9eed975474",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-7.jsonl": "963a0692bb5626ef10e00ba369bf844cfd228e55fb519d4f116898e2e9e7c3d5",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-8.jsonl": "adb4bab5fca3083fb3860cc0dea2f60a824747bf5b47cfd6a8cd431c92e70af5",
+  "/opt/data/sdn-archive/operator-theory/ap/b0411/ussf-truth2/rows-9.jsonl": "640c4e9b57f8185e9950bcf0e01bef0b84e480ba419fa49ab7cfe4cc77d9ff67",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes-hx/rows-0.jsonl": "04783e14e9d93b11a132cf89af7ebc477cebd0636a04a0c2b26d6f8ba75df455",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes-wa/rows-0.jsonl": "26255b22830c9afca0ccb2227111d4f466e8d429982324240a4ba57745e49ff5",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes-wa/rows-1.jsonl": "fc9f4c81d099900deed9634d8d3bf4322efeaeed9ecbdfef767837363c8b2252",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-0.jsonl": "cf81ede99982da36ea698f39accf063ec7de3177a5eaffc426208c6a40e8c9d4",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-1.jsonl": "7d0ba221c6b1d276f63b7d1ebc57d512155c2f113fbbc6b698f8f81cb775b087",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-10.jsonl": "72b5ef82f848d287d82ccdc0e1c06f1a80165c87d81a81b3fd9cae2b50016ea1",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-11.jsonl": "81ef7a0eccec8b2852609974b83c54930739681799f48a3c02a03b9b7982c6a6",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-2.jsonl": "26d8ba29f40cec5639da049584cd862ee95aa52bbc598ada989490a973967da1",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-3.jsonl": "35a54f0cdc6bec0ee66b0bb2bf3be57b3436dfe7521a74dd82b1d42b16fe3d8e",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-4.jsonl": "ca718415a7ccdd91cf42ab949547199fba1fc9f20bd21682fe567945da27a580",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-5.jsonl": "62d4145da7d202bcdd2b80b79acd01bdff403f29245cac494f6e35d2ecd041e1",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-6.jsonl": "b6fd929752bfcddf8acebf91bc8515ab07dc509f46996b9a107fd67b9552ce97",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-7.jsonl": "ab8abaee1561ea65e4b57d69a66b21a53765e654c01466b535e86edb7e7b9604",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-8.jsonl": "72f10c3aab7b514f8c9d23fecd2d4c2d5ea96c94a465192887045b4fa484446c",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-regimes/rows-9.jsonl": "b90810e5089f9155dc78a4d5018b7bba0214e85fd8d1b140a94055c1d7d3678a",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-0.jsonl": "06b186a06b7584e6b9c4cab97a046187247fdeb1fe4c6b6c5c7b7fae6e56d8ba",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-1.jsonl": "90e547342a358fccf0493707a81bca13a5ca2b21875432908d54fabe3513b18a",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-10.jsonl": "585f1c65c505d422a57ab6207a26b80006c93f35a018c8cc03d79ec1c4656915",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-11.jsonl": "0e5d72914d3faa083e32d5e35a6a0a75aecb7b76e9038abececb038d57c30644",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-2.jsonl": "c93908eb6fe27d0a57f61c1f39c712faaf7f0a5c511a8e481590356ebcef5bf0",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-3.jsonl": "6735ac316f2a7a9403a777bc4584495b91b32c9e33c8d1fc0b5c579e788ffd59",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-4.jsonl": "e1ee5ea1a8b39508b240ba062a3818c3e41a5ecb64527619c9b4a9dea7ef9860",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-5.jsonl": "3a76a9f6ec201acbe092de521abe1651078cdde78a3733224dd6927487d9b603",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-6.jsonl": "3b50e57b834bbe0661dae8839e8c6070d66e4bbb5a519a47b5287ef2b0eb4c7b",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-7.jsonl": "7fa7f0da78259a87294c2d2a9375dd093c444925965436ef72f4f260a7eaab48",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-8.jsonl": "a7b293ed7270e92beef6b1a829ac2e88e62a5fe0287386af746bd71a06da775a",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth/rows-9.jsonl": "c8f36a7dcd6c7b41fe8c33a97e8fd8acefe53afad18c6ec014ff40e3f3cf717e",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-0.jsonl": "c5c768734e0e4e878d9edbb25a113c5ee58fb1317727504796105108004ad58f",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-1.jsonl": "45745e3a4b6abc9d863c112e48134232fd2a64612a1360798372142b7f67a4b3",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-10.jsonl": "37dbbfb30bb4bed60b52e0453942d99bf3cdc70b52fbd802a66a1160f5a9c771",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-11.jsonl": "545955269ee1617d51ce757ba98ddbe99573c1f146c39043fb08e2c25a275c6d",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-2.jsonl": "ebf637b6d49dd43dfda6f66c679c6f5fab208b9aa38433fe93cf0ca1d56b8bf6",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-3.jsonl": "e236bf0a68f377f4a113b438fd3bec1a178262dc5b1665f7e5a8b244c48eaede",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-4.jsonl": "1fe871bcb83fc5fe28560409b905d4a8816024bbe96efdec8c67cbbbd3e5209d",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-5.jsonl": "6378f3e54a3c781b6547c9f66c4e90b5e407ffd23cc2fb1c11e265f77a6df3fe",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-6.jsonl": "c6d9a6a2baa63c220bdaeb947d47c9a23b3289be989f76fbe42ea52e15e354b3",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-7.jsonl": "aec945e81a83044d18deb3e2f80943b95d1864336c24050e93f035e43f22f2b1",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-8.jsonl": "2f9b56ecfa4cff8b0954eba8a290cce98f5c88d3379350cd8a1e3e6945ad329b",
+  "/opt/data/sdn-archive/operator-theory/ap/b051/ussf-truth2/rows-9.jsonl": "f38f16b8a0d1d97b381e58fe861d72e9b851dd16863b653fc988ab869b9ed8c0",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/HX/rows-0.jsonl": "d979cc08cf03db0844c5e0d9817675727a69ce6cbc1f84ed4bc5ff14667a4c18",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/HX/rows-1.jsonl": "3c7f503611f934c8fbce54a328d125c6f5c1b6a50c9250a7f251d58f10e8558b",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/HX/rows-2.jsonl": "1906690e5763f6f073c5ef9880cca548ba532e8313efa7c6fb54aba577aedd1b",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/HX/rows-3.jsonl": "59106bc7ab3d58f2caec86286dd301ac5cc02a498a45206a196679a01b4ffe58",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/HX/rows-4.jsonl": "fd8cb6ad8b34433285ba7d10a05b53bcbc48e4bb2a73541e956a4c0937b2b5c7",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/HX/rows-5.jsonl": "52591285f368518e2559a15ffc895af4089debd676c4662516c57b8586606c4c",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/LS/rows-0.jsonl": "ca312259c3602cc6d31b1fb3bcadcf73d4ac0877e93df3872fe88aba091257c4",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/LS/rows-1.jsonl": "23a7ade9f5d2045ab231fdd61cda0ec1c746edf54ee10dd98837a299efef93d0",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/attribution/LS/rows-2.jsonl": "637ae8e17047a147a4740d0598a633ff3b310bc136759de384ba000981e3fa8f",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-0.jsonl": "2b1d4ac06c38b5a66ac2e0917301f89627afef13e4a16934e177d65856ae5ba2",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-1.jsonl": "930cfd1c7d8510a00ca7cb88e4e066b6aa5750d92d32116bd857884d53da4455",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-100.jsonl": "45d266a66782a343ae77ae243de950da83a5221c266d1bc326b38a6417879148",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-101.jsonl": "93a20797e066a778d428fc5ccb87ac6e33e3d92dd3297fcfb098e0dc6f258b76",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-102.jsonl": "6a84847d7651ad1c2a054625c371af6d18d1af1dd44cec71985b6dd87f3be19e",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-103.jsonl": "d2e841b41b956640c08ccad790f74b8190e43c19eb6216551c2c9407f6f26629",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-104.jsonl": "77248a2075490b74a95f5927c38fe620a1b19202e8d853381d79f85cea8d8238",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-105.jsonl": "6b2be46a34b7c371d6f5a004982986f8510a7eab2d860c0ed4ac423a98ac8ef7",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-106.jsonl": "89392670970d23554694aa8d9bed5e2af2f3dd6c93c8b2a9d3611e4fca427c7a",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-107.jsonl": "801da774d96038f3d5068839e0e6bf8100a0c98f814c02bb047ed8718dbb1bf4",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-108.jsonl": "f70d908b988d81c17e86f6254699264ea7950d3c241f1c1b5c00bb7b1e521be4",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-109.jsonl": "9da1c8d59b974ce52786beff00f0ce1739b88e6c03e27ac92b44614d4111af4a",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-110.jsonl": "c86fadad6ffa3f63efeed3d0807176a282cb3bcc2193b9532fdd1c27cade37fc",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-111.jsonl": "d830e5b470fb2fd7d833cff41183af4c8fbbff521e0e63239c10224cffba9cb7",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-2.jsonl": "fe5234f5739cba8b997a1a634c09d604852233786319ab11cb61870fbd338477",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-200.jsonl": "6439d569353abc3047061a7610a6c256237caf38ad5795b94dc0f1beb9530ba5",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-201.jsonl": "2eda180c13abb46ee0138acbb344dee75a4d58e1c61ce8c35dcf29c0e162246a",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-202.jsonl": "0ef261953c9f0b720e3d09a1b1d7c7a29a39486abd0cb83251d3f72bdf413cc0",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-203.jsonl": "d07498e04d650606ce48b830df3f2576d53d4a45ed41f4e34ff3f21d4c72e8f9",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-204.jsonl": "b44ee95d62b417f487a08c20db7fc0cb5c952311239b2f9cc99190c5983a8472",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-205.jsonl": "b97b1126c5a0ab2ede37f48993979313f2af8343d2c6c98c31cb235202b7e92f",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-206.jsonl": "3302c35c1b6c65a4eff80a8069f71ac783cdb7bd060d3bb29c0277588e77ff57",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-207.jsonl": "29fceb0856e815e8e1afe076dddcfbd50f505de4f81a4b1ce56b2bf4a962413b",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-208.jsonl": "8037d625c829170590150dfe85e396cb9b70c6348333f2721436d1946a6d823c",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-209.jsonl": "4103d13ef7e179ea7ea74adbcc040806d0e022276d12f1fa02ad17c6881bdc29",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-210.jsonl": "ad3126f7a34506c6b06c8ca822e392c611e3270aac4f716509f48fdd019f6e39",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-211.jsonl": "07f9216c01908a8a72026e7c72fe4d61a8f1f3397da124c73f6c077eeeaf04e1",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-212.jsonl": "7f05fd09c918914c11246b30775168c1af519e459e88de3c7534236fc81c8da4",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-213.jsonl": "fe02f633d5ddf2f25b72d2fe03b7e816580bdcbdab12eaa03f0d39f51271ff3b",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-214.jsonl": "dec46ff967a12f3d1d34cab7610e06984ac015c187de6f2d3f4f6f0975ee815b",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-215.jsonl": "e88d183bec9de35712289898229cde71c1cc341ee1efba6a57dd60f1fa06d4f5",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-216.jsonl": "cd349b8e9c1560570e8bf5b046601e69e138f96941beba2480d8bdaea34313bf",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-217.jsonl": "fbbc2db4be9208ed2f411fa6f6c143d102576ab3eb3172b0396e24914ef072be",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-218.jsonl": "f37073210283e3e3856209133054c230ae471be763e3c5df94bfbce29cc63b83",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-219.jsonl": "ed984493d7a617147d6b21d753c4a14c735cb840f03b9b38c0853bcf3a948d0f",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-220.jsonl": "9a476a1cca874d876c0be027718d33b73863d2d5b4f38815c1cba0cb4a65fa57",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-221.jsonl": "a6dfdf968f7e556a9d76bc161b2683087719683a6338f9e8ff03be4e883a7bcd",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-222.jsonl": "9201559cb808518c66e48d3c6d4974f396138436903c2adbf8ecf434e17ca21c",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-223.jsonl": "7c42c559f27a43354335e989392440d7fc63ab4cb3cdc00ef36b838b23a3f21c",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-224.jsonl": "7a81b1e6bf8becae81eb3e704d1ffc8d4cf4aa070ce92d24575b8afaa73d6c77",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-225.jsonl": "5cc357006fd7237963a98599e93adc0e55e945f6dcdc8f0449c8d0dd7ca1693f",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-226.jsonl": "5e7b8cd2c03184312ad3450efc5b5c90a9286ceb555e8c416965aa0fcb1a0f3e",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-227.jsonl": "b69331bfc2afaaf34951db9aba58614591a5c46beda091d6ca9b1376c1668553",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-228.jsonl": "bc7b74b5696aa23e645a65eb39279e42c1013914dd0a8a5b71818bf62cd30cc6",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-229.jsonl": "79b6700eff7f098fe79c0a8a1f26e0bc45497f9da116c58f49f2ca7653dd6bcf",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-230.jsonl": "852b6631998ebea96f7b81e4d5b0c84a50b029335c24a292a7b9a4bd7a7993c3",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-231.jsonl": "54560ba0de2a6a2326455a7609873f9173f983511c91701548ccc9b4619f19a3",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-232.jsonl": "975642cbb84dade31b120f910dcbce831164157b0d1fff271d3031ffd9c1cca8",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-233.jsonl": "924ca2d891b22933385a12a9b699d46ec8400ee2657ead9ce3b10a88583c620e",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-234.jsonl": "9c2432b7e4fd6c8741146b3c09d5f0144dcd8e541d6128a4fde4134cfec89a76",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-235.jsonl": "36f83df647439652c72ad62f178d7aede94fa16f78ab1448eb900f0b9a0eccda",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-236.jsonl": "78661e5d2647a59cdb60cadb89bb83a01465f424e2fe65914008da95a06fc72d",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-237.jsonl": "6c66b2766f8b700601592f4030a5aacba79cd37df2560ceef881697ae2121d16",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-238.jsonl": "9cb42d22f12615eb27f4159f14535795d8b56799cdd73375212ec71c4f5fd4b4",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-239.jsonl": "c59e205b7bc7451a688107215a3a152c636c91bb3889e753c0709aacade433d5",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-240.jsonl": "c4fd6467302aa3040efa1d105a7d4120afa9cae027ecd1d89229101c9b6226f1",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-241.jsonl": "d9b4cb4b07bcb3ce694b1d73b242ca242268135347a0a41233964fd554615c58",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-242.jsonl": "0296431e5760786c4aa4d3b7c52a5be0b9ae58ffe4acb8377c64db2cb0112551",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-243.jsonl": "c59f47ce3d51aa86ca44a245c6e5a141f7e80ad844f378095de5e39f2c4e5bf5",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-244.jsonl": "367cbac0de0dad773cbef66259c79d11b266c7fa9cba64535ba533323969cf16",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-245.jsonl": "f79dfd78c95257e5d311caeeb041bb242c5524be4e6572b4cb72d502d109e778",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-246.jsonl": "ba2442b1590dfb5503d926b7319e3563e9417b8013005d8b3d4007a099ff6be6",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-247.jsonl": "a250e3196e3458fe9507006372eba685ee9f51c2697a38e68e1b2e76cfa0eb72",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-248.jsonl": "9e8b7f41447434792cf9ca83272275796a3fef00231f58784196cfa2999ab0bb",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-249.jsonl": "31f4de4380f3624b002c2f2440e3d0306c9defc6f2318fc62550f3fa324b3d56",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-250.jsonl": "48ef465b3b25ef5d2f55745275170927de82ed061fb0e5cb306efb18ebea6823",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-251.jsonl": "b14f7c98734b122afe1588170799c25f8cb5f2f9cc5a187d33e2c410f431ed6a",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-252.jsonl": "65a921f05bcc9c0beb1d28df60fd0f7cab688579f3f779c13947269f0defd3cf",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-253.jsonl": "96490bc4ff4f265d7f8c7c139b56273c2f333dc0d225310fc33039a1d5fcc4d6",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-254.jsonl": "a7ecb20641ce8c86e6f1295b3f90b3e42e94e09dd561fdd00a6f4e8e89c793ef",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-255.jsonl": "d4e286967777bd338e79e42583d0380f943b36fa2628b7efe83c44ff4e27e591",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-256.jsonl": "1bbbcc0fe5a5f9a2289355a20525e501c1e1566a4fcb577e0cadfb3065cf8e0f",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-257.jsonl": "818dfdc209a2f00436339658c0336c5899f96eeb0aca48d05496ea91be8b14c6",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-258.jsonl": "f554bcd67016a8fde721f914e843ec1d8b27360c4ef00a65b2783795f63311ed",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-259.jsonl": "f880dc666825b80142ad2d84258c79abbebdc438de83a21d42978b247aeed7a2",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-260.jsonl": "239e1cb673d7f9f1c707a41045c083b7bdca5493a7702ad8a9156ade57966dca",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-261.jsonl": "09d870d463eacce0d6c2c141e3f25402e54ba4b0ea412888f662ccd82d3190cc",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-262.jsonl": "4b7a93bb55039814bb53cbba47e378fc0b32b960985dee9f4bf5fd295536d0eb",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-263.jsonl": "5f32185b4e52a5e0a07b2bc24b46b00b1f780201a20334c720806b7e92850f46",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-264.jsonl": "b2dbe18f8285ea358d0d1f99a310cc907451a4d86f844c73f66589c4cf9613b7",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-265.jsonl": "abdf1ac2e4c0e24eaafc83b16dee69015877b2ffab2d9a5dca7d536a6f494fd5",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-266.jsonl": "d5e8de32160d9abda3972d64860035d59b39237a97c91ffc251b742b12d7ba12",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-267.jsonl": "34ed97da91021065f12e49d64054e50eb841f29b1b9d0100a6ce940ace565dff",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-268.jsonl": "2da6e3f9c70293d0820f4a8623e26e6804a508b5873c2059ff010e2642c721ad",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-269.jsonl": "65e4e6d97063687a30bb50340c882dfa4b57324347ab7226078e4d7fe421f693",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-270.jsonl": "eede6278a56ff2b07aab5c102ec1b66cac52483ad175309033546a449b9e09e2",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-271.jsonl": "f9b88a22d2c3c7837fb0aec54536319e0aca627e29408ee0d9131a500493640f",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-272.jsonl": "cf3f2bfa6df83cf1593241db19e98b564c3ccd23e0212b59d14dcac518fe2ed1",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-273.jsonl": "52736acbf48987740a2b2a05940696719f15f6c7c1fbf615f0055af36311e2ac",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-274.jsonl": "a5ee2e3ce158f2459645fa988bbaedb918880bf023addd6157b67d02964d2c0e",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-275.jsonl": "944d2822ba604b06354f54ab32cbaaf3c925e9f10894674cc5f33225a151b8bc",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-276.jsonl": "d2d5fc28b03fa9445befa00c664fdc00cc606cbe16f29689d7481e887e8562dd",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-277.jsonl": "fb926ec8332da0be3d3a73c61e3ea05187dff3087b5793d242b45a792639c215",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-278.jsonl": "752d9059c058548bbe7b7bf8a1c02407a1fceaaffdd3d2f98ee9a41fbde566fb",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-279.jsonl": "8e07310885b8a5190c37461c0c6cf64123270c94b6c8ebeae288153b4224b006",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-280.jsonl": "b414c36ab3b65d77738ad2f86a17a927ab60277e44ca7b37921c1344d4fa3a32",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-281.jsonl": "3135d3ca3ae9eb36b97f612fd11a9e1deb60b58fbfe113385d7884b4ecc355c9",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-282.jsonl": "70928efd2950d9b75cd21d37f60360e2a6036252ffa1aeda15e92700a15ff33a",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-283.jsonl": "4d0bd37c78cc2f8e0729e843f3607e85786acee654ba413e707870ff54926b3d",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-284.jsonl": "32a7218aa099bb2254370a065bc7a59c949b36d4a8072e3d1cb59450f60ce7c8",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-285.jsonl": "891c56a68309f95ea76b3497f0aad8bc18a48dbed318e9e5af55456b09682512",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-286.jsonl": "2cb9935e8b4b9eb5ba00b8710d5af44c42fe6eb91a5fbed561928aba088ce404",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-287.jsonl": "39f641544ab4b1205f5c990cb0e45206f8bd3ad635faa0fe53ccab3ddb374c67",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-288.jsonl": "ede30908444e2b81a27c5c53c48a417dbc810499ed68870ba8024ba4240558ef",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-289.jsonl": "9203deb8a17054fd86cf5d35a2345064d2d973196fea793be906aac69af981cc",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-290.jsonl": "4694b51e648ff6b758bca8259bf5a66ca3ce09afc387b5210930e5d77cee0367",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-291.jsonl": "efdea0b94e64c4a2c54705159198cd7b32e6680cad260e0da65bb193ee0885bb",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-292.jsonl": "c1922239e6f0bd89dac908cd97bb55c3b7149f02938494a5e181378efe99b2b3",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-293.jsonl": "8f4924e603b1f66ee7999287b3764fc5a6ff0fb75aac2fe20b81a5673b7f5768",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-294.jsonl": "e23fc113c942c44f2514a5e4c7e1247215187c1e20c39e9c8f110ec23042e85c",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-295.jsonl": "a285cc062388e767efd38be1bf113c9c898072cf2fd105264c8d21e9b5624aa6",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-296.jsonl": "b0ec0ea386ae7e37b0b879bc3670c41ba486166e99bbf2a574553c68636c8dab",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-297.jsonl": "655fa404b8895dc20822c8d071ef46fc6d93bf4fe7fe13b1b2d9763e7ee82994",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-298.jsonl": "ac4dbbc5cb96d428807b4223cd2a01d3d01a13284cad350a6c3552b141c1e84f",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-299.jsonl": "89cff976401520c60054e6f40d815a6f9d3e420f0db2fc751bad9d8fbc7ae08c",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-3.jsonl": "bc3bd9b944c8db0bd769af2fd065cc46e1f3ef1a6cc460c51149d121532c1479",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-300.jsonl": "0a032b8b9b8f5505ed5e54dea13a87523cb882fe3a2eea8e0c6a1f47059ecff6",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-301.jsonl": "0e3e5e9ebf75bafde969d2a64a77fd691da80512c4c5a6d6e5aa54cd1f564e13",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-302.jsonl": "0544e1e28dc6d699d1d1393703f7d8dbdb4f72df39f423d5423cc019a1e363f1",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-303.jsonl": "e986c97d10a81a393d3e92b012982a748d9c82b565c70ad97f1bfb1e37d31641",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-4.jsonl": "fe36b702874b3e4100b8d4356a75f3d41521ffbe1a77fb48fce62e74b8b686cc",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-5.jsonl": "f4dce935fedc0f2d9f3aa8fd82186cea5549b92f3d76870e406e73d69ae067ea",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-6.jsonl": "cd115054052b5d7ec057992cf67723c25aa84366dcdb098f2d4793b35d8e05f9",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-7.jsonl": "2f959347e2940eeecda2a8c3dc923b34ec9ab7b57a4666732ed46de0c1ea23cd",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser/rows-8.jsonl": "d6eafa2235802dee85b6a20f09bab411fd6b6e9c12246017aeb6f43f982cc67b",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-0.jsonl": "4eb80212a081fd2cad4afad769b4936c3e293a1d811857aef8130daeda5b30ca",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-1.jsonl": "094cedcd8115f909aea1151100cb9a027a96c18b00219b2e463d43a4abeba663",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-200.jsonl": "e49b124e4c9a0aba03555b0eaa5c36f2d0c4d5a55b0b8599479f328023f070d2",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-201.jsonl": "e833dd4f7b7c65ab5aa3f50faf8c83fc8a27460827e22d3c9d72a9b02f87ca87",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-202.jsonl": "4f788d9ac6b2fa9b4a7e1b6072e0dbe6b5f2c0da6916580b8c61b2180a076145",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-203.jsonl": "2704184fc4c776e9a4c3c53041405ea19c5716479a041ac0d943ba37800da740",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-204.jsonl": "eb14089576c3f9bbd6c7e4cb721d93d8d17927c52fd66f639719182e36dc9b0d",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-205.jsonl": "9aaaac81a1f1762d941a657142735ed746b25a07999d03632a0de924069ed1d6",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-206.jsonl": "d91dc53250ad2c235fb35e50fe6d6c6a98af280dd5f2d2ef7d96adb9932facf9",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-207.jsonl": "3ca7d9fd9848b31b0fb882a760dc97035e00241fe6e7028d22038137ca61efa7",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-208.jsonl": "241fc5d5fec04025c8dba35adf77002d3ceaa14e6242006ea8df3e7024534a0b",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-209.jsonl": "b8ef8271f8c0fc0bb091f9544c4e03568d8b8c0932065be4783e252f00087cb0",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-210.jsonl": "2b68457bba2bc68c881b13090a811c78d3a2f5beff50c93cd4fb1b8eeaa44731",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-211.jsonl": "8052312355830a4a548ac81765e3b07832d63e8101ea4e92b467032dad0f6329",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-400.jsonl": "5521b4c2df6f4a638c51944a514f382fbc8449dda3ad20e2c5328dee1f6396a9",
+  "/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-providers/rows-iss-0.jsonl": "7f1c76a1a53a7ce9e3d6ec1a0338ead1b4dd7b0a90013d8a9df39759d3eb4437"
+ }
+}
