@@ -4,6 +4,7 @@
   "modulesTask": "modules-sdn-ap-ocm-epochs-20261103",
   "note": "every module the steps load, at this commit of space-data-network-modules main (propagator/sdn-ap 0.5.0: fit emits one $OCM, a flight takes that $OCM alone); the steps refuse a checkout at another commit or with other wasm bytes. The rows of this build live under store; the rows of 348636447dc9 (the first registration) stay under the plan's store.",
   "store": "/opt/data/sdn-archive/xp-atmosphere-ablation/b-33ae37507769",
+  "remeasured": { "date": "2026-11-04", "task": "experiments-ocm-fit-readers-20261103", "sdnap": "0.5.0", "replaces": "348636447dc900e7e2feb264083ec82ec3344df5" },
   "wasmSha256": {
     "propagator/sdn-ap": "fa1e4466a00d5343c2d03ae0fd613558860cff1a926b307cde957d5806a50fd6",
     "propagator/ffm": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
