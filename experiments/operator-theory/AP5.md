@@ -50,3 +50,24 @@ Report only: every contrast with `S` and `F`, every other arc.
 - FFM's settings were chosen by `CHEAPER.md` on laser-ranging predictions in 2026, and are not tuned to these satellites. Published mass and area would likely help it.
 
 No arm, window, margin or rule changes after this registration.
+
+## Re-measured 2026-11-04 on one $OCM in, report only
+
+Build: modules ea824356, `propagator/sdn-ap` 0.5.1 (wasm d29acd2b5d92) and `propagator/sgp4-xp` 0.2.1 (816fd137d761), replacing this registration's AP 0.4.0 (715ef2fee512) and the Space Force XP's sgp4-xp 0.1.1. `ap-truth.mjs` and `truth-compare.mjs` fitted every arm below as one `$OCM` and flew it alone, on these windows, truth, grid and as-issued weather, into `ap/b051` (`lib/remeasure.mjs`, `results/remeasure-0-5-1.md`).
+
+- `AP24` and `AP72`: every row equals AP 0.4.18's (`ap/b0418`, AP9.md) byte for byte, 944 Part T windows and 1812 Part N windows. 0.5.1 changes how a set enters and leaves the module, not its numbers; this registration's 0.4.0 rows stand as registered, and AP7.md and AP9.md read the later builds.
+- `XP24` and `XP72`: every row equals AP7.md's 0.4.11 rerun (`ap/b0411`) byte for byte, 944 and 1812 windows.
+- `S` and `F` are not rerun: neither flies `sdn-ap` or `sgp4-xp`.
+- The Space Force XP moved with sgp4-xp 0.2.1, which flies whole integrator steps. Median km, 0.1.1 / 0.2.1:
+
+| Group | Fit | Windows | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---|---:|---:|---:|---:|---:|
+| T | 24 h | 944 | 1.72 / 1.72 | 5.58 / 5.57 | 12.4 / 12.4 | 63.9 / 63.9 |
+| P | 24 h | 750 | 1.74 / 1.74 | 5.84 / 5.83 | 12.4 / 12.4 | 65.3 / 65.3 |
+| P | 72 h | 750 | 0.874 / 0.876 | 1.79 / 1.79 | 3.53 / 3.53 | 20.4 / 20.2 |
+| S1 | 24 h | 300 | 2.63 / 2.63 | 8.90 / 8.91 | 19.3 / 19.3 | 98.5 / 99.4 |
+| S1 | 72 h | 300 | 0.690 / 0.689 | 0.934 / 0.935 | 1.36 / 1.35 | 4.34 / 4.35 |
+| GN | 24 h | 750 | 0.053 / 0.053 | 0.100 / 0.100 | 0.149 / 0.148 | 0.363 / 0.352 |
+| GN | 72 h | 750 | 0.041 / 0.041 | 0.058 / 0.057 | 0.076 / 0.074 | 0.166 / 0.152 |
+
+No statement above reads the Space Force XP; no verdict changes.
