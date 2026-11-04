@@ -3,6 +3,9 @@
 //                                                     endpoints, fitted $OCM and signed errors, in 60 hash partitions per label over 12 workers
 //   node experiments/five-day-ca/run.mjs ussf         the Space Force XP (U) likewise, in its own rows (no covariance product is U's)
 //   node experiments/five-day-ca/run.mjs covariance   the carried-covariance products of every window (covariance-products.mjs), likewise
+//   node experiments/five-day-ca/run.mjs carried      C3 adaptation and the synthetic encounters (adapt-covariance.mjs, encounters.mjs)
+//   node experiments/five-day-ca/run.mjs tables       CA reach, statistics, metrics and the report (ca-table.mjs, statistics.mjs, table.mjs),
+//                                                     once every forecast phase is stored
 //   node experiments/five-day-ca/run.mjs --check      the E2E: pinned windows re-fitted and re-flown exactly; every published number rebuilt
 //                                                     from the stored products equals the committed results
 import fs from 'node:fs';
@@ -155,8 +158,14 @@ if (phase === 'fits' || phase === 'ussf') {
     for (const shard of [...pending].sort((a, b) => a - b)) jobs.push({ label, shard, script: 'covariance-products.mjs', env: {}, out: dir('covariance', label), args: ['--label', label] });
   }
   await pool(jobs);
+} else if (phase === 'carried' || phase === 'tables') {
+  for (const script of phase === 'carried' ? ['adapt-covariance.mjs', 'encounters.mjs'] : ['ca-table.mjs', 'statistics.mjs', 'table.mjs']) {
+    const child = spawn(process.execPath, ['--max-old-space-size=16384', `experiments/five-day-ca/${script}`], { env: { ...process.env, SDN_MODULES_ROOT: modules() }, stdio: 'inherit' });
+    const [code] = await once(child, 'exit');
+    if (code !== 0) throw new Error(`${script} exited ${code}`);
+  }
 } else if (process.argv.includes('--check')) {
   await check();
 } else {
-  throw new Error('run.mjs fits | ussf | covariance | --check');
+  throw new Error('run.mjs fits | ussf | covariance | carried | tables | --check');
 }
