@@ -70,7 +70,7 @@ if (isMain) {
       outcome.push({ target: r.target, cutoff: r.cutoff, first: o.arms.ap.ok ? 'ok' : codeOf(o.arms.ap.refused), second: r.arms.ap.ok ? 'ok' : codeOf(r.arms.ap.refused),
         sentence: r.arms.ap.ok
           ? `${r.target} ${r.cutoff.slice(0, 10)}: ${was} in the first; here an AP $OCM (fits ${fitsNow} iterations, WEIGHTED_RMS ${r.estimate.weightedRms.toFixed(3)}), ` +
-            (covered(r.arms.ap.days).length ? `at days ${covered(r.arms.ap.days).join(' / ')} AP ${dayList(r.arms.ap.days)} km, FFM ${r.arms.ffm.ok ? `${dayList(r.arms.ffm.days)} km` : `refused (${r.arms.ffm.refused})`}.` : 'no day covered by the truth.')
+            (covered(r.arms.ap.days).length ? `at day${covered(r.arms.ap.days).length > 1 ? 's' : ''} ${covered(r.arms.ap.days).join(' / ')} AP ${dayList(r.arms.ap.days)} km, FFM ${r.arms.ffm.ok ? `${dayList(r.arms.ffm.days)} km` : `refused (${r.arms.ffm.refused})`}.` : 'no day covered by the truth.')
           : `${r.target} ${r.cutoff.slice(0, 10)}: ${was} in the first; refused \`${codeOf(r.arms.ap.refused)}\` here${fitsNow ? ` (fits ${fitsNow})` : ''}.` });
     }
   }
@@ -107,6 +107,8 @@ if (isMain) {
   const v = config.modules.versions;
   const ap = arms.ap, fap = first.arms.ap;
   const nList = (a) => config.leadDays.map((d) => a.days[d].n).join(' / ');
+  // The refused cutoffs' days the truth covers (the SGP4 arm scores every cutoff): the difference to B2's n.
+  const refusedCovered = config.leadDays.map((d) => rows.filter((r) => !r.arms.ap.ok && r.arms.sgp4.ok && r.arms.sgp4.days?.[d]).length);
   const failureLines = (k) => {
     const byCode = arms[k].failures.reduce((m, x) => { (m[codeOf(x.refused)] ??= []).push(x); return m; }, {});
     return Object.entries(byCode).map(([code, list]) => `- \`${code}\` (${list.length}): ${list.map((x) => {
@@ -138,7 +140,8 @@ if (isMain) {
     '| Arm | Scored / attempted | Day 1 | Day 2 | Day 3 | B2 median, days 1 / 2 / 3 |', '| --- | --: | --- | --- | --- | --- |',
     ...Object.entries(ARMS).map(([k, name]) => `| ${name} | ${arms[k].scored} / ${arms[k].attempted} | ${config.leadDays.map((d) => cell(arms[k].days[d])).join(' | ')} | ${config.b2.medianKm[B2[k]].map(f).join(' / ')} |`), '',
     'A refusal of any module counts as a failure of that arm and is not dropped. Each median is over the cutoffs its arm scored; n counts the cutoffs with that day covered.', '',
-    `Like for like: n ${nList(ap)} at days 1 / 2 / 3 here, against B2 part 2's ${config.b2.n.sdnap.join(' / ')} (206 scored) and the first registration's ${nList(fap)} (${fap.scored} scored).`, '',
+    `Like for like: n ${nList(ap)} at days 1 / 2 / 3 here, against B2 part 2's ${config.b2.n.sdnap.join(' / ')} (206 scored) and the first registration's ${nList(fap)} (${fap.scored} scored); ` +
+    `the ${ap.failures.length} refused cutoffs hold ${refusedCovered.join(' / ')} of the days the truth covers.`, '',
     '## Beside the first registration', '',
     '| Arm | Scored, first / second | Day 1, first / second | Day 2, first / second | Day 3, first / second |', '| --- | --: | --- | --- | --- |',
     ...Object.entries(ARMS).map(([k, name]) => `| ${name} | ${first.arms[k].scored} / ${arms[k].scored} | ${config.leadDays.map((d) => `${cell(first.arms[k].days[d])} / ${cell(arms[k].days[d])}`).join(' | ')} |`), '',
