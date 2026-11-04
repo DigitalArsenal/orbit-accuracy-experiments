@@ -31,7 +31,7 @@ for (const regime of REGIMES) {
   const tab = tabs[regime]; const counts = new Map();
   for (let i = 0; i < tab.n; i++) { counts.set(tab.norad[i], (counts.get(tab.norad[i]) ?? 0) + 1); const r = ageRange[tab.b[i]]; r[0] = Math.min(r[0], tab.age[i]); r[1] = Math.max(r[1], tab.age[i]); }
   lists[regime] = [...counts].filter(([, n]) => n >= 100).map(([k]) => k).sort((a, b) => a - b);
-  for (const k of lists[regime]) (placements[k] ??= { regimes: [], cluster: tab.clusterNames[tab.cluster[tab.norad.indexOf(k)]] }).regimes.push(regime);
+  for (const k of counts.keys()) (placements[k] ??= { regimes: [], cluster: tab.clusterNames[tab.cluster[tab.norad.indexOf(k)]] }).regimes.push(regime);   // every object with a row, whatever its count
 }
 // O3 default: Sentinel-1C and COSMIC-2 are not in a fresh list
 for (const r of Object.keys(lists)) lists[r] = lists[r].filter((n) => !FRESH_EXCLUDED_NORADS.includes(n));

@@ -17,7 +17,7 @@
  "trials": 1500,
  "code": {
   "libSha256": "fd0cc6b9e7479f51d148dde45d5331059161f0d91af87f3bee652d333fd3bb04",
-  "stepsSha256": "428d58bfc05b2b21ddb1185c2c588d68de656861f8efbd98da83ff9a17d85d71",
+  "stepsSha256": "78c76b4a890dd90b587a017b2f267c4d0f1e063370cbe96cf2863cb0c1665024",
   "runSha256": "dbf71301d189566cd3c0fff1b30dca6043479a0dec549d2726710e95d4f91b79"
  },
  "pins": {
@@ -591,7 +591,8 @@
   },
   "44709": {
    "regimes": [
-    "GEO"
+    "GEO",
+    "HEO"
    ],
    "cluster": "C5-1"
   },
@@ -786,6 +787,12 @@
     "MEO"
    ],
    "cluster": "G6-1"
+  },
+  "68791": {
+   "regimes": [
+    "MEO"
+   ],
+   "cluster": "solo-68791"
   }
  },
  "noradLists": {
