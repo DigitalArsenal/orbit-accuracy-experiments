@@ -1,6 +1,6 @@
 // The modules XM-fast runs, every wasm pinned to build.json (git show at the registered commit, SHA-256 checked), each
 // hosted by the space-data-module-sdk its own package installs (build.json hosts):
-//   propagator/sdn-ap            fit and propagate of the X arms (standalone harness, direct surface)
+//   propagator/sdn-ap            fit of the X arms, then the fitted $OCM alone propagated (standalone harness, direct surface)
 //   propagator/sgp4              propagate_ephemeris of the public set P (a fresh harness per call)
 //   analysis/gp-error-model      G1's scorer: pair_statistics in the truth's RTN axes
 //   foundation/frames            TEME to the truth's axes, every arm alike
@@ -10,7 +10,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { g1Dir, modulesRoot, pinned, build } from '../common.mjs';
-import { TYPE, oemLines } from './sds.mjs';
+import { TYPE, oemLines, flightPcfBytes } from './sds.mjs';
 
 const modules = modulesRoot();
 const sdk = (rel, entry) => import(pathToFileURL(createRequire(path.join(modules, rel, 'package.json')).resolve(`space-data-module-sdk/${entry}`)).href);
@@ -67,13 +67,14 @@ export async function openModules() {
   const sgp4 = await openPinned('propagator/sgp4', { fresh: true });
   const dc = await openPinned('analysis/density-calibration', { sdkFrom: 'analysis/gp-error-model' });
   const b = { erm, gem, frames };
+  // the rows and the $DCL go to the fit, which writes them into the $OCM it emits: that one record is a flight's input
   const extraFrames = (extra) => { const { rows, dcl } = extra ?? {}; return [
     ...(rows ? [{ portId: 'space_weather', typeRef: TYPE('SPW'), payload: rows }] : []),
     ...(dcl ? [{ portId: 'density_correction', typeRef: TYPE('DCL'), payload: dcl }] : []),
   ]; };
   return {
     provenance: { modulesCommit: build.modulesCommit, wasmSha256: build.wasmSha256 },
-    /** propagator/sdn-ap `fit` of one block: { ok, omm, obd, fitMs } or { ok: false, error, fitMs }. */
+    /** propagator/sdn-ap `fit` of one block: { ok, ocm, fitMs } or { ok: false, error, fitMs }. */
     async fit(oem, pcf, extra) {
       const inputs = [{ portId: 'ephemeris', typeRef: TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: TYPE('PCF'), payload: pcf }, ...extraFrames(extra)];
       const t0 = performance.now();
@@ -81,11 +82,11 @@ export async function openModules() {
       try { r = await h.invoke({ methodId: 'fit', inputs }); } catch (error) { return { ok: false, error: short(error), fitMs: performance.now() - t0 }; }
       const fitMs = performance.now() - t0;
       if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`, fitMs };
-      return { ok: true, omm: new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload), obd: new Uint8Array(r.outputs.find((o) => o.portId === 'determination').payload), fitMs };
+      return { ok: true, ocm: new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload), fitMs };
     },
-    /** propagator/sdn-ap `propagate` of one set at explicit epochs (ISO UTC), TEME: [{epoch, r, v}]. */
-    async propagate(omm, grid, pcf, extra, count) {
-      const inputs = [{ portId: 'omm', typeRef: TYPE('OMM'), payload: omm }, { portId: 'grid', typeRef: TYPE('OEM'), payload: grid }, { portId: 'configuration', typeRef: TYPE('PCF'), payload: pcf }, ...extraFrames(extra)];
+    /** propagator/sdn-ap `propagate` of one $OCM at explicit epochs (ISO UTC; the $PCF's OUTPUT.EPOCHS), TEME: [{epoch, r, v}]. */
+    async propagate(ocm, epochs, count) {
+      const inputs = [{ portId: 'ocm', typeRef: TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: TYPE('PCF'), payload: flightPcfBytes(epochs) }];
       const r = await h.invoke({ methodId: 'propagate', inputs });
       if (r.statusCode !== 0) throw new Error(`propagate: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
       const lines = oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload));
