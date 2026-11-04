@@ -1,0 +1,62 @@
+examples 59 with the reference drawn 40
+best-geostationary: XPU 788.2 m
+best-highly-elliptical-themis-and-chandra: AP 1650.7 m, XPU 2051.4 m
+best-highly-elliptical: AP 0.0 m, XPU 5241.7 m
+best-inclined-geosynchronous: XPU 638.6 m
+best-laser-geodetic: XPU 21.7 m
+best-low-orbit-laser-spheres: XPU 14.8 m
+best-medium-earth-orbit: XPU 80.2 m
+best-near-700-km: XPU 38.9 m
+best-strong-drag-2025: XPU 73.9 m
+next-china-space-station-css: XPU 11.0 m
+next-cne-low-orbit: AP 241.8 m, XPU 0.1 m
+next-cod-navigation: AP 2.1 m, XPU 6.1 m
+next-dgf-geodetic: XPU 0.3 m
+next-dgf-low-orbit: AP 0.1 m, XPU 0.5 m
+next-esa-low-orbit: XPU 13.7 m
+next-esa-navigation: AP 5.1 m, XPU 0.0 m
+next-esa-ultra-rapid-glonass: AP 3.4 m, XPU 31.6 m
+next-esa-ultra-rapid-gps: XPU 57.2 m
+next-eum-low-orbit: AP 0.0 m, XPU 11.0 m
+next-gal-navigation: AP 6.1 m, XPU 0.0 m
+next-gfz-low-orbit: XPU 0.2 m
+next-gsf-navigation: XPU 3.0 m
+next-hds-low-orbit: XPU 0.0 m
+next-hts-geodetic: XPU 0.1 m
+next-hts-low-orbit: XPU 19.2 m
+next-intelsat-intelsat: XPU 850.3 m
+next-isr-navigation: XPU 488.1 m
+next-nasa-iss-iss: XPU 0.9 m
+next-planet-flock--planet: XPU 0.0 m
+next-qss-navigation: XPU 740.4 m
+next-ses-ses: XPU 160.2 m
+next-sgf-geodetic: XPU 2.0 m
+next-sgf-low-orbit: XPU 15.8 m
+next-sha-low-orbit: AP 65.4 m, XPU 2.1 m
+next-sha-navigation: AP 2.8 m, XPU 0.0 m
+next-spacex-starlink: XPU 7.8 m
+truth-geostationary-c006-bds-2g: XPU 880.9 m
+truth-highly-elliptical-tess: AP 0.0 m, XPU 1611.5 m
+truth-highly-elliptical-themis-and-chandra-chandra: AP 2635.8 m, XPU 1447.1 m
+truth-highly-elliptical-themis-and-chandra-themis-a: AP 2158.5 m, XPU 1240.7 m
+truth-inclined-geosynchronous-c005-bds-2i: XPU 646.0 m
+truth-inclined-geosynchronous-c009-bds-2i: XPU 726.9 m
+truth-laser-geodetic-etalon-1: AP 2.6 m, XPU 138.1 m
+truth-laser-geodetic-lageos-2: XPU 3.0 m
+truth-laser-geodetic-lares-2: XPU 3.2 m
+truth-low-orbit-laser-spheres-ajisai: XPU 14.8 m
+truth-medium-earth-orbit-e218-gal-2: AP 14.4 m, XPU 242.6 m
+truth-medium-earth-orbit-g053-gps-iir-m: XPU 160.0 m
+truth-medium-earth-orbit-g073-gps-iif: XPU 96.8 m
+truth-medium-earth-orbit-r743-glo-m: AP 8.7 m, XPU 126.1 m
+truth-medium-earth-orbit-r859-glo-m-: AP 3.2 m, XPU 140.2 m
+truth-near-700-km-sentinel-1a: XPU 1.9 m
+truth-near-700-km-sentinel-1c: XPU 0.2 m
+truth-strong-drag-2025-swarm-a: XPU 1.5 m
+truth-strong-drag-2025-swarm-b: XPU 0.1 m
+truth-strong-drag-2025-swarm-c: XPU 0.2 m
+truth-strong-drag-2026-swarm-a: XPU 0.2 m
+truth-strong-drag-2026-swarm-b: XPU 0.1 m
+truth-strong-drag-2026-swarm-c: XPU 1198.9 m
+reflown tracks: {"reference":{"equal":59,"moved":0},"AP":{"equal":41,"moved":18},"XP":{"equal":59,"moved":0},"XPU":{"equal":0,"moved":59},"SGP4":{"equal":59,"moved":0},"FFM":{"equal":59,"moved":0}}
+COMPARE EXAMPLES CHECK PASS: 119 files equal sdn-ap docs/data/compare/examples byte for byte
