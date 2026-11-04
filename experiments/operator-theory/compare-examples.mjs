@@ -18,6 +18,8 @@ fs.mkdirSync(OUT, { recursive: true });
 const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap'), NEW = path.join(AP, args.build ?? BUILD);
 const SHOWCASE = args.pick === 'showcase';
 const IDS = args.ids ? new Set(args.ids.split(',')) : null;
+// A pick tries windows in its order until one is written: at most `usable` that the burn-free rule passes (the tries before it) and 60 in all.
+const more = (tried, stepped, usable) => tried - stepped < usable && tried < 60;
 let EXTRA = {};
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
@@ -135,8 +137,10 @@ if (MODE === 'next') {
     const id = `next-${provider}-${regime.toLowerCase().replace(/\s+/g, '-')}`;
     if (IDS && !IDS.has(id)) continue;
     if (!ranked.length) { console.error(`${id}: no forecast has every arm`); continue; }
-    let done = false, stepped = 0;
-    for (const pick of ranked.slice(0, 12)) {
+    let done = false, stepped = 0, tried = 0;
+    for (const pick of ranked) {
+      if (!more(tried, stepped, 12)) break;
+      tried += 1;
       const apP = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.olderStart);
       const xpP = findProduct(path.join(NEW, 'laser-xp'), pick.source, pick.norad, pick.olderStart);
       const ffP = findProduct(path.join(STORE, 'cheaper'), pick.source, pick.norad, pick.olderStart);
@@ -151,6 +155,10 @@ if (MODE === 'next') {
       const w = weatherRows(apP.weatherDay, '2026-02-20', '2026-12-14');
       const tracks = { reference: refs.map((s) => s.r) };
       const f = ffP.products[ffmName];
+      // FFM first: its offsets from the reference carry the steps, so a window the burn-free rule refuses is not fitted by the other arms.
+      tracks.FFM = (await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, { forces: f.forces, fixed: f.fixed, integrator: f.integrator }, w.rows)).map((s) => s.r);
+      const head = { id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20' };
+      if (pickedSteps(head, tracks).some((x) => x.hour < head.fitHours) || fitHoles(head.epochsSeconds, head.fitHours).length) { burnFree(head, tracks, key(pick)); stepped += 1; continue; }
       // AP (the stored arm's: 31x20, NRLMSISE-00, the module's priors) and whiteroom XP re-fitted as $OCM on the stored window, the older file's first 48 h
       const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + 48 * HOUR);
       const segOem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
@@ -166,8 +174,7 @@ if (MODE === 'next') {
       const flown = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
       if (flown.some((s) => !s)) { console.error(`${id}: SGP4 returned no state at some epochs`); continue; }
       tracks.SGP4 = (await M.toAxes(flown, epochs, 'GCRF')).map((s) => s.r);
-      tracks.FFM = (await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, { forces: f.forces, fixed: f.fixed, integrator: f.integrator }, w.rows)).map((s) => s.r);
-      if (!burnFree({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20' }, tracks, key(pick))) { stepped += 1; continue; }
+      if (!burnFree(head, { reference: tracks.reference, AP: tracks.AP, XP: tracks.XP, XPU: tracks.XPU, SGP4: tracks.SGP4, FFM: tracks.FFM }, key(pick))) { stepped += 1; continue; }
       done = true;
       break;
     }
@@ -237,8 +244,10 @@ if (MODE === 'next') {
     const ranked = nearestMedian(past.length ? past : usable, (r) => r.arms[`${AP_ARM}@${FIT_H}`]?.km);
     const id = `next-${provider.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${source}`;
     if (IDS && !IDS.has(id)) continue;
-    let done = false, stepped = 0;
-    for (const pick of ranked.slice(0, 8)) {
+    let done = false, stepped = 0, tried = 0;
+    for (const pick of ranked) {
+      if (!more(tried, stepped, 8)) break;
+      tried += 1;
       try {
         const oldP = ISS ? null : findStored(source, pick.norad, pick.olderStart);
         const newP = ISS ? null : findStored(source, pick.norad, pick.newerStart);
@@ -367,8 +376,10 @@ if (MODE === 'next') {
       : nearestMedian(rows.filter((r) => r.group === group && r.name === only), (r) => r.arms.AP72?.days?.[D3]?.e);
     const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     if (IDS && !IDS.has(id)) continue;
-    let done = false, stepped = 0;
-    for (const pick of ranked.slice(0, SHOWCASE ? 12 : undefined)) {
+    let done = false, stepped = 0, tried = 0;
+    for (const pick of ranked) {
+      if (!more(tried, stepped, SHOWCASE ? 12 : Infinity)) break;
+      tried += 1;
       const name = only ?? pick.name;
       if (!seriesCache.has(name)) seriesCache.set(name, await seriesOf(group, name));
       const o = seriesCache.get(name);
@@ -461,8 +472,10 @@ if (MODE === 'next') {
       const slug = cut.regime.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
       if (IDS && !IDS.has(id)) continue;
-      let done = false, stepped = 0;
-      for (const pick of ranked.slice(0, 12)) {
+      let done = false, stepped = 0, tried = 0;
+      for (const pick of ranked) {
+        if (!more(tried, stepped, 12)) break;
+        tried += 1;
         const w = byKey.get(pick.key);
         if (!w) continue;
         const name = only ?? pick.name;
