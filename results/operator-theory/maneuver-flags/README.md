@@ -27,6 +27,19 @@ The study averaged the states of each revolution. The twice-per-revolution swing
 
 On the altimetry satellites every step-free window at day 7 from a 24 h fit is FFM's (median FFM/AP 0.13): their losses are burns. On Sentinel-1 FFM still loses three in four step-free windows from a 24 h fit at day 7 (median 2.2); burns under 8 m and AP's drag prior are not separated here. The WAAS arms tie whatever the flag; SES-15 resolves no burn (its median residual is 451 m against 71 and 104 m for the other two).
 
+## The examples
+
+`compare-examples.mjs` now passes over a window whose example has a step inside its fit, or a hole in its reference there of more than two grid steps (where the product leaves out a burn; the step rule cannot see the track's first orbit), and takes the next. Four examples moved (`results/ap-truth/compare/examples`; flown on AP 0.5.1 and the Space Force XP 0.2.1 into `ap/b051/compare-examples-burn-free`, the others stay as stored):
+
+| Example | Was | Its fit | Now | Burns after the fit |
+| --- | --- | --- | --- | --- |
+| `best-near-700-km` | Sentinel-1A, 2026-05-08 | step at 25.7 h, -8.8 m | Sentinel-1C, 2026-05-10 (XP/AP 9.8, SGP4/AP 10.2, FFM/AP 1.73 at day 3) | 1 |
+| `truth-near-700-km-sentinel-1a` | 2026-01-18 | hole at 47.5 h | 2026-03-21 | 0 |
+| `truth-near-700-km-sentinel-1c` | 2026-04-19 | step at 49.4 h, -6.8 m | 2026-05-22 | 2 |
+| `next-gfz-low-orbit` | TanDEM-X, 2026-03-13 | step at 21.6 h, -12.2 m | TanDEM-X, 2026-03-03 (39th window tried) | 0 |
+
+No regime lost its example. The SpaceX example is held: the publisher does not parse it, and the index names it.
+
 ## Holds and data
 
 Never read: C2's held objects (TerraSAR-X, Stella, Sentinel-1D, LAGEOS-1, its six Galileo satellites), Swarm, GRACE-FO, every Starlink group and any Sentinel-1 cutoff from 2026-06-01; Sentinel-1 truth is read to 2026-06-08, as AP5's day 7 read it. Steps are sizes and epochs derived from the truth; no state is reproduced. The registration this flag serves is `experiments/operator-theory/S1-STEP-FREE.md`.
