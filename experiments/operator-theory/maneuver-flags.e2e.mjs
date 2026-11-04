@@ -86,8 +86,10 @@ await el.close();
     `every cells.json row has burnsInFit and burnsInForecast: counts on the ${tested.length} Sentinel-1 and altimetry rows (Near 700 km, 24 h fit, day 7: ${near.burnsInFit} in the fit, ${near.burnsInForecast} in the forecast of ${near.n}), null elsewhere`);
   // 6. The examples: published, reproduced, burn-free fits, their counts.
   const out = path.join(COMPARE, 'examples');
-  execFileSync(process.execPath, [path.join(here, 'compare-examples-publish.mjs'), '--in', EXAMPLES_IN.join(','), '--out', out, '--check'], { stdio: ['ignore', 'pipe', 'inherit'] });
-  check(true, `compare-examples-publish.mjs --check: every published example in results/ap-truth/compare/examples reproduces byte for byte from ${EXAMPLES_IN.map((d) => path.basename(d)).join(' and ')}`);
+  let said = '';
+  try { said = execFileSync(process.execPath, [path.join(here, 'compare-examples-publish.mjs'), '--in', EXAMPLES_IN.join(','), '--out', out, '--check'], { stdio: ['ignore', 'pipe', 'inherit'] }).toString('utf8'); } catch (error) { said = String(error.stdout ?? error.message); }
+  check(/COMPARE EXAMPLES CHECK PASS/.test(said), `compare-examples-publish.mjs --check: ${said.trim().split('\n').at(-1)} (from ${EXAMPLES_IN.map((d) => path.basename(d)).join(' and ')})`);
+  if (!fs.existsSync(path.join(out, 'index.json'))) { console.log('MANEUVER FLAGS E2E FAIL: no published examples'); process.exit(1); }
   const index = JSON.parse(fs.readFileSync(path.join(out, 'index.json'), 'utf8')), live = index.filter((e) => !e.held && !e.dropped);
   const docs = live.map((e) => JSON.parse(fs.readFileSync(path.join(out, `${e.id}.json`), 'utf8')));
   const inFit = docs.filter((d) => d.steps.some((s) => s.hour < d.fitHours));
