@@ -4,7 +4,6 @@ import crypto from 'node:crypto';
 import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { PIN } from '../operator-theory/lib/build.mjs';
-import { modulesRoot } from '../xp-atmosphere-merit/common.mjs';
 const root = path.resolve(new URL('../..', import.meta.url).pathname);
 export const config = JSON.parse(fs.readFileSync(new URL('./config.json', import.meta.url)));
 export const hash = x => crypto.createHash('sha256').update(x).digest('hex');
@@ -25,9 +24,10 @@ export function dir(phase, label) {
 }
 /** The registered pins the re-measure's build replaces: AP 0.4.0's wasm and the Space Force XP 0.1.1 in the modules working tree. */
 const REPLACED = ['/opt/data/sdn-archive/operator-theory/ap/b040/module.wasm', `${config.modulesRoot}/propagator/sgp4-xp/dist/isomorphic/module.wasm`];
-/** The modules checkout (SDN_MODULES_ROOT), holding the pinned build's commit. */
+/** The modules checkout (SDN_MODULES_ROOT, else the registered one), holding the pinned build's commit. Resolved here, not through XM's
+ *  common.mjs: importing that here would fix XM's store before lib/xp2.mjs sets XM_STORE for the runner it serves. */
 export function modules() {
-  const dir = modulesRoot();
+  const dir = path.resolve(process.env.SDN_MODULES_ROOT ?? config.modulesRoot);
   execFileSync('git', ['-C', dir, 'cat-file', '-e', `${PIN.modulesCommit}^{commit}`]);
   return dir;
 }
