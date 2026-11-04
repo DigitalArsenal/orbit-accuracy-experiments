@@ -2,8 +2,8 @@
  "experiment": "xp-atmosphere-merit",
  "id": "XM-fast",
  "task": "experiments-xp-atmosphere-merit-20261030",
- "modulesCommit": "fbda894501f32210b77c74b53bcad036ce7a1b07",
- "rowsDigest": "5ebcddc4f42360d17472bf17d1ea5bfeb0fab33617ad4a9f651e295da102dc80",
+ "modulesCommit": "33ae3750769b8b27de440e4d2305c7803a4e7dcb",
+ "rowsDigest": "0a625b094933f99315b0e340323669c779edeb0048222d39439c0c80aa05b722",
  "rows": 1812,
  "rule": "X2 beats P in a group only if every lead cell meets all three: (1) the 95 % interval of the median d lies wholly below 0; (2) the upper bound of the 95 % interval of ln(p95_X2 / p95_P) is below ln 1.10; (3) X2 fails on at most 1 % of the pairs",
  "counts": {
@@ -63,41 +63,15 @@
   }
  },
  "control": {
-  "stateComparisons": 5970,
+  "stateComparisons": 5974,
   "stateDifferences": 0,
   "differExamples": [],
   "statesIdentical": true,
-  "armsWithoutStates": 34,
+  "armsWithoutStates": 30,
   "withoutStatesByReason": {
-   "no $DCL": 30,
-   "space-weather-out-of-range": 4
+   "no $DCL": 30
   },
-  "withoutStates": [
-   {
-    "arm": "GN|43058|2026-05-15|72|X2O",
-    "armOk": false,
-    "x0Ok": true,
-    "reason": "space-weather-out-of-range"
-   },
-   {
-    "arm": "GN|43058|2026-05-15|72|X2M",
-    "armOk": false,
-    "x0Ok": true,
-    "reason": "space-weather-out-of-range"
-   },
-   {
-    "arm": "GN|43058|2026-05-15|72|X3O",
-    "armOk": false,
-    "x0Ok": true,
-    "reason": "space-weather-out-of-range"
-   },
-   {
-    "arm": "GN|43058|2026-05-15|72|X3M",
-    "armOk": false,
-    "x0Ok": true,
-    "reason": "space-weather-out-of-range"
-   }
-  ]
+  "withoutStates": []
  },
  "verdicts": {
   "72h|O|orbit": {
@@ -195,7 +169,7 @@
       "lead": 1,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -204,7 +178,7 @@
       "lead": 2,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -213,7 +187,7 @@
       "lead": 3,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -222,7 +196,7 @@
       "lead": 7,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -1469,7 +1443,7 @@
       "lead": 7,
       "rules": {
        "medianBelow0": false,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -1487,7 +1461,7 @@
       "lead": 1,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -1496,7 +1470,7 @@
       "lead": 2,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -1505,7 +1479,7 @@
       "lead": 3,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -1514,7 +1488,7 @@
       "lead": 7,
       "rules": {
        "medianBelow0": true,
-       "p95RatioBelow110": true,
+       "p95RatioBelow110": false,
        "failuresAtMost1pc": false
       },
       "why": null
@@ -1891,20 +1865,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.11749613361449711,
-   "medianRatioPercent": 12.467728149938996,
+   "medianD": 0.11649419415801562,
+   "medianRatioPercent": 12.355098728877412,
    "ciMedianD": [
-    0.08642227334430556,
-    0.1469876277717937
+    0.08926241760342428,
+    0.14500826401998712
    ],
-   "lnP95Ratio": 0.13628707439604903,
+   "lnP95Ratio": 0.2219574441810378,
    "ciLnP95Ratio": [
-    -0.17996841919383846,
-    0.527330561691757
+    -0.11172682926831111,
+    0.7744479516578854
    ],
-   "medianEArmKm": 0.8665098576948875,
+   "medianEArmKm": 0.8738919659997232,
    "medianERefKm": 0.7626043580345967,
-   "medianAtArmKm": 0.8362748945438299,
+   "medianAtArmKm": 0.8449281120001865,
    "medianAtRefKm": 0.7314729602258272,
    "rules": {
     "medianBelow0": false,
@@ -1927,20 +1901,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.19330220401301657,
-   "medianRatioPercent": 21.32493869568537,
+   "medianD": 0.194598561742347,
+   "medianRatioPercent": 21.48232120770135,
    "ciMedianD": [
-    0.085448998336901,
-    0.284214615827133
+    0.0961341813919834,
+    0.2885260491249901
    ],
-   "lnP95Ratio": 0.08033239642731127,
+   "lnP95Ratio": 0.2601233719421614,
    "ciLnP95Ratio": [
-    -0.2931107998763484,
-    0.4671884299061693
+    -0.1321438450371185,
+    0.6794504558781891
    ],
-   "medianEArmKm": 1.6567306300165714,
+   "medianEArmKm": 1.6753886510515326,
    "medianERefKm": 1.3094428715990793,
-   "medianAtArmKm": 1.6320072012355653,
+   "medianAtArmKm": 1.6496862696109709,
    "medianAtRefKm": 1.2859996045967819,
    "rules": {
     "medianBelow0": false,
@@ -1963,20 +1937,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.09393233330839201,
-   "medianRatioPercent": 9.848541252860944,
+   "medianD": 0.11592507032228122,
+   "medianRatioPercent": 12.291172956690332,
    "ciMedianD": [
-    -0.0472440419513428,
-    0.22306714782135673
+    0.008388286441722903,
+    0.21645719855491397
    ],
-   "lnP95Ratio": -0.026441949074238913,
+   "lnP95Ratio": 0.1259434755823885,
    "ciLnP95Ratio": [
-    -0.2909397722591934,
-    0.36851333508680134
+    -0.25524027513716563,
+    0.6650911523626235
    ],
-   "medianEArmKm": 3.0668880215080394,
+   "medianEArmKm": 2.869280830028228,
    "medianERefKm": 2.4535584615776553,
-   "medianAtArmKm": 3.0509953142129156,
+   "medianAtArmKm": 2.851189655220397,
    "medianAtRefKm": 2.429131079256986,
    "rules": {
     "medianBelow0": false,
@@ -1999,20 +1973,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.03190926517825954,
-   "medianRatioPercent": -3.1405536661838096,
+   "medianD": -0.04679903596843982,
+   "medianRatioPercent": -4.572084589231229,
    "ciMedianD": [
-    -0.2097993489543013,
-    0.10066016608019712
+    -0.18558122235417196,
+    0.07048773902220977
    ],
-   "lnP95Ratio": -0.27676881597973235,
+   "lnP95Ratio": -0.09272474135518838,
    "ciLnP95Ratio": [
-    -0.45376357318240407,
-    0.1750856961525674
+    -0.29153744345976285,
+    0.500439868900848
    ],
-   "medianEArmKm": 14.33646993685515,
+   "medianEArmKm": 13.480143180899892,
    "medianERefKm": 15.347999670324242,
-   "medianAtArmKm": 14.325718355003549,
+   "medianAtArmKm": 13.46984298574043,
    "medianAtRefKm": 15.332170491570235,
    "rules": {
     "medianBelow0": false,
@@ -2179,24 +2153,24 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.01940198426200046,
-   "medianRatioPercent": -1.9214977154589308,
+   "medianD": -0.027529510788786512,
+   "medianRatioPercent": -2.7154027322190966,
    "ciMedianD": [
-    -0.047385498898130124,
-    -0.006274370348347921
+    -0.047971465824351106,
+    -0.010212732440125851
    ],
-   "lnP95Ratio": -0.25481674112429953,
+   "lnP95Ratio": -0.16914637133931076,
    "ciLnP95Ratio": [
-    -0.37794939256661403,
-    0.05514513369905614
+    -0.3095465327982568,
+    0.29530755571558087
    ],
-   "medianEArmKm": 0.8665098576948875,
+   "medianEArmKm": 0.8738919659997232,
    "medianERefKm": 0.8787587332719852,
-   "medianAtArmKm": 0.8362748945438299,
+   "medianAtArmKm": 0.8449281120001865,
    "medianAtRefKm": 0.8476030194576486,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -2215,24 +2189,24 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.11814054676886303,
-   "medianRatioPercent": -11.142884196710845,
+   "medianD": -0.11375326768231649,
+   "medianRatioPercent": -10.752186808301056,
    "ciMedianD": [
-    -0.16298991871377266,
-    -0.06257208056662093
+    -0.16708640871701963,
+    -0.08219889357108323
    ],
-   "lnP95Ratio": -0.2664367644003345,
+   "lnP95Ratio": -0.08664578888548435,
    "ciLnP95Ratio": [
-    -0.4538046014623248,
-    0.07093233802309698
+    -0.3747632614845168,
+    0.31888163322973107
    ],
-   "medianEArmKm": 1.6567306300165714,
+   "medianEArmKm": 1.6753886510515326,
    "medianERefKm": 1.8079743140233027,
-   "medianAtArmKm": 1.6320072012355653,
+   "medianAtArmKm": 1.6496862696109709,
    "medianAtRefKm": 1.784886764848264,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -2251,24 +2225,24 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.15831594022690607,
-   "medianRatioPercent": -14.641994091497901,
+   "medianD": -0.1580461101177234,
+   "medianRatioPercent": -14.618958823779348,
    "ciMedianD": [
-    -0.23098290745492633,
-    -0.0722079318650003
+    -0.22519403057690013,
+    -0.09397089161980497
    ],
-   "lnP95Ratio": -0.2594934238432476,
+   "lnP95Ratio": -0.10710799918662017,
    "ciLnP95Ratio": [
-    -0.4498695042998766,
-    0.01954274354780421
+    -0.4171737893605476,
+    0.3177157275503676
    ],
-   "medianEArmKm": 3.0668880215080394,
+   "medianEArmKm": 2.869280830028228,
    "medianERefKm": 3.537010140542963,
-   "medianAtArmKm": 3.0509953142129156,
+   "medianAtArmKm": 2.851189655220397,
    "medianAtRefKm": 3.5222227103861696,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -2287,24 +2261,24 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.2935822477369807,
-   "medianRatioPercent": -25.441210257508786,
+   "medianD": -0.25445487443199744,
+   "medianRatioPercent": -22.466096008406556,
    "ciMedianD": [
-    -0.3913131014459954,
-    -0.2153432178090255
+    -0.3311439681329478,
+    -0.19555108798699306
    ],
-   "lnP95Ratio": -0.31936660203829526,
+   "lnP95Ratio": -0.13532252741375128,
    "ciLnP95Ratio": [
-    -0.46449891901700124,
-    0.08594915143827586
+    -0.31305029750090646,
+    0.4144915168347168
    ],
-   "medianEArmKm": 14.33646993685515,
+   "medianEArmKm": 13.480143180899892,
    "medianERefKm": 20.623482578759628,
-   "medianAtArmKm": 14.325718355003549,
+   "medianAtArmKm": 13.46984298574043,
    "medianAtRefKm": 20.616760646088714,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -2575,20 +2549,20 @@
    "clusterCount": 66,
    "armFailures": 5,
    "refFailures": 0,
-   "medianD": -0.6569674995584094,
-   "medianRatioPercent": -48.15789347064877,
+   "medianD": -0.6565742644488313,
+   "medianRatioPercent": -48.13750332540919,
    "ciMedianD": [
-    -0.8599759234401483,
-    -0.4171092302079611
+    -0.8601207506828905,
+    -0.4171173389541001
    ],
-   "lnP95Ratio": -1.0839531624602543,
+   "lnP95Ratio": -1.0838562707235413,
    "ciLnP95Ratio": [
-    -1.3817440865268416,
-    -0.7406026203278234
+    -1.38163413495046,
+    -0.7405554777394355
    ],
-   "medianEArmKm": 8.12642318819687,
+   "medianEArmKm": 8.12568465330958,
    "medianERefKm": 15.386929383604025,
-   "medianAtArmKm": 8.107479793119532,
+   "medianAtArmKm": 8.10673964954749,
    "medianAtRefKm": 15.371871865510874,
    "rules": {
     "medianBelow0": true,
@@ -2863,20 +2837,20 @@
    "clusterCount": 66,
    "armFailures": 5,
    "refFailures": 0,
-   "medianD": -0.912465912325525,
-   "medianRatioPercent": -59.846714259778096,
+   "medianD": -0.9125699216335952,
+   "medianRatioPercent": -59.850890358064376,
    "ciMedianD": [
-    -1.0737948971661786,
-    -0.7772812082142981
+    -1.0736813766921305,
+    -0.7782760366290771
    ],
-   "lnP95Ratio": -1.122663358449313,
+   "lnP95Ratio": -1.1225664667126,
    "ciLnP95Ratio": [
-    -1.3357912975349262,
-    -0.8590351085877954
+    -1.3358617612060728,
+    -0.85969240511431
    ],
-   "medianEArmKm": 8.12642318819687,
+   "medianEArmKm": 8.12568465330958,
    "medianERefKm": 20.435188510818048,
-   "medianAtArmKm": 8.107479793119532,
+   "medianAtArmKm": 8.10673964954749,
    "medianAtRefKm": 20.42762933538033,
    "rules": {
     "medianBelow0": true,
@@ -3043,20 +3017,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.6278554437589643,
-   "medianRatioPercent": 87.35882523730636,
+   "medianD": 0.6450232091392454,
+   "medianRatioPercent": 90.60312661036323,
    "ciMedianD": [
-    0.4947705074621317,
-    0.7614113645324183
+    0.47458911019956124,
+    0.7641640196867879
    ],
-   "lnP95Ratio": 0.6538828866108929,
+   "lnP95Ratio": 0.6505072950787928,
    "ciLnP95Ratio": [
-    0.22502248434834066,
-    0.873514754206954
+    0.23112315412951312,
+    0.8870890696243742
    ],
-   "medianEArmKm": 1.5875942635504798,
+   "medianEArmKm": 1.6023903284966265,
    "medianERefKm": 0.7626043580345967,
-   "medianAtArmKm": 1.573103028673155,
+   "medianAtArmKm": 1.5878128510285174,
    "medianAtRefKm": 0.7314729602258272,
    "rules": {
     "medianBelow0": false,
@@ -3079,20 +3053,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 1.1922886810096607,
-   "medianRatioPercent": 229.46129032567035,
+   "medianD": 1.2225318410909431,
+   "medianRatioPercent": 239.5774420184115,
    "ciMedianD": [
-    0.9790641749244513,
-    1.3985648711048384
+    0.9637510635333413,
+    1.3987249681496117
    ],
-   "lnP95Ratio": 0.7749768263463532,
+   "lnP95Ratio": 0.7946203683067043,
    "ciLnP95Ratio": [
-    0.2711466243005627,
-    1.0112235281707835
+    0.286222526303341,
+    1.0237111113678505
    ],
-   "medianEArmKm": 5.0324720923028945,
+   "medianEArmKm": 5.0853473482905045,
    "medianERefKm": 1.3094428715990793,
-   "medianAtArmKm": 5.027752869031268,
+   "medianAtArmKm": 5.080008894855804,
    "medianAtRefKm": 1.2859996045967819,
    "rules": {
     "medianBelow0": false,
@@ -3115,20 +3089,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 1.3383553590782307,
-   "medianRatioPercent": 281.27677122630564,
+   "medianD": 1.330908460516056,
+   "medianRatioPercent": 278.447987691698,
    "ciMedianD": [
-    1.1113679962213232,
-    1.5433099069144793
+    1.116479657332889,
+    1.5438892228015404
    ],
-   "lnP95Ratio": 0.719202522637965,
+   "lnP95Ratio": 0.7214043263368186,
    "ciLnP95Ratio": [
-    0.4273130845618671,
-    1.0105116044871316
+    0.42038757826841155,
+    1.0192222125336288
    ],
-   "medianEArmKm": 10.714970319746339,
+   "medianEArmKm": 10.926225676496152,
    "medianERefKm": 2.4535584615776553,
-   "medianAtArmKm": 10.711400831835983,
+   "medianAtArmKm": 10.922518911422582,
    "medianAtRefKm": 2.429131079256986,
    "rules": {
     "medianBelow0": false,
@@ -3151,20 +3125,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 1.3577486648206976,
-   "medianRatioPercent": 288.74315312913643,
+   "medianD": 1.3566192534013315,
+   "medianRatioPercent": 288.3043500140602,
    "ciMedianD": [
-    1.076527641128724,
-    1.5430069278940244
+    1.1022358337972271,
+    1.5772096735905579
    ],
-   "lnP95Ratio": 0.5706302391562454,
+   "lnP95Ratio": 0.5801239066852935,
    "ciLnP95Ratio": [
-    0.301070336713843,
-    0.8522006633614932
+    0.30766097276226617,
+    0.8533588128398168
    ],
-   "medianEArmKm": 56.60075482254967,
+   "medianEArmKm": 57.96383702327486,
    "medianERefKm": 15.347999670324242,
-   "medianAtArmKm": 56.59790084535332,
+   "medianAtArmKm": 57.961980572944036,
    "medianAtRefKm": 15.332170491570235,
    "rules": {
     "medianBelow0": false,
@@ -3331,20 +3305,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.001341872511602893,
-   "medianRatioPercent": -0.13409726032499458,
+   "medianD": 0.004326583362586803,
+   "medianRatioPercent": 0.4335956537449004,
    "ciMedianD": [
-    -0.006193954629836018,
-    0.005537503773414776
+    -0.0016001889393095596,
+    0.011010438313031917
    ],
-   "lnP95Ratio": 0.03769700965321343,
+   "lnP95Ratio": 0.034321418121113334,
    "ciLnP95Ratio": [
-    -0.02007879232327303,
-    0.12197147335385751
+    -0.018201855061623185,
+    0.12983260674876254
    ],
-   "medianEArmKm": 1.5875942635504798,
+   "medianEArmKm": 1.6023903284966265,
    "medianERefKm": 1.6080844710053377,
-   "medianAtArmKm": 1.573103028673155,
+   "medianAtArmKm": 1.5878128510285174,
    "medianAtRefKm": 1.5968730853876443,
    "rules": {
     "medianBelow0": false,
@@ -3367,20 +3341,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.0010800537373580887,
-   "medianRatioPercent": -0.10794706892469641,
+   "medianD": 0.00698153277544189,
+   "medianRatioPercent": 0.7005960489929963,
    "ciMedianD": [
-    -0.012151886736917916,
-    0.015187582589558879
+    -0.0037679030401092106,
+    0.021016627351421402
    ],
-   "lnP95Ratio": 0.02421797529440406,
+   "lnP95Ratio": 0.04386151725475518,
    "ciLnP95Ratio": [
-    -0.04783158321400984,
-    0.10976073718994625
+    -0.04440261162625623,
+    0.1260997564702351
    ],
-   "medianEArmKm": 5.0324720923028945,
+   "medianEArmKm": 5.0853473482905045,
    "medianERefKm": 5.1727057692060505,
-   "medianAtArmKm": 5.027752869031268,
+   "medianAtArmKm": 5.080008894855804,
    "medianAtRefKm": 5.167557095189874,
    "rules": {
     "medianBelow0": false,
@@ -3403,20 +3377,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.000559878036868966,
-   "medianRatioPercent": 0.05600347978313991,
+   "medianD": 0.00798521613490899,
+   "medianRatioPercent": 0.8017183004072503,
    "ciMedianD": [
-    -0.013849686044369314,
-    0.023740494243948085
+    -0.006497074553472704,
+    0.02215355972271027
    ],
-   "lnP95Ratio": 0.030761380811854533,
+   "lnP95Ratio": 0.03296318451070812,
    "ciLnP95Ratio": [
-    -0.053494450922878044,
-    0.16016186325661422
+    -0.05789776701483046,
+    0.15576640342146977
    ],
-   "medianEArmKm": 10.714970319746339,
+   "medianEArmKm": 10.926225676496152,
    "medianERefKm": 11.221006993687446,
-   "medianAtArmKm": 10.711400831835983,
+   "medianAtArmKm": 10.922518911422582,
    "medianAtRefKm": 11.217957816163125,
    "rules": {
     "medianBelow0": false,
@@ -3439,20 +3413,20 @@
    "clusterCount": 66,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.003246376941213658,
-   "medianRatioPercent": -0.32411131572077645,
+   "medianD": 0.00313481365614221,
+   "medianRatioPercent": 0.31397323228297136,
    "ciMedianD": [
-    -0.026448925919471122,
-    0.01796737912364348
+    -0.011755135676112971,
+    0.02138345348295756
    ],
-   "lnP95Ratio": 0.008323661028527773,
+   "lnP95Ratio": 0.017817328557575784,
    "ciLnP95Ratio": [
-    -0.08983949836945238,
-    0.12201399303951381
+    -0.08188019367060628,
+    0.11244082149561423
    ],
-   "medianEArmKm": 56.60075482254967,
+   "medianEArmKm": 57.96383702327486,
    "medianERefKm": 60.294389584252116,
-   "medianAtArmKm": 56.59790084535332,
+   "medianAtArmKm": 57.961980572944036,
    "medianAtRefKm": 60.29263506440777,
    "rules": {
     "medianBelow0": false,
@@ -3727,20 +3701,20 @@
    "clusterCount": 66,
    "armFailures": 5,
    "refFailures": 0,
-   "medianD": 1.3042257623598044,
-   "medianRatioPercent": 268.4835050999545,
+   "medianD": 1.3042523900405616,
+   "medianRatioPercent": 268.49331709172736,
    "ciMedianD": [
-    1.1155465970865381,
-    1.5519289060105685
+    1.1155424912770715,
+    1.5519836852854154
    ],
-   "lnP95Ratio": 0.5515549274051743,
+   "lnP95Ratio": 0.5515830095555092,
    "ciLnP95Ratio": [
-    0.22073149222032235,
-    0.7803631659385949
+    0.22073309845582936,
+    0.7803778272203268
    ],
-   "medianEArmKm": 59.340915469332444,
+   "medianEArmKm": 59.34175356808309,
    "medianERefKm": 15.386929383604025,
-   "medianAtArmKm": 59.33840033427033,
+   "medianAtArmKm": 59.33923885346171,
    "medianAtRefKm": 15.371871865510874,
    "rules": {
     "medianBelow0": false,
@@ -4015,20 +3989,20 @@
    "clusterCount": 66,
    "armFailures": 5,
    "refFailures": 0,
-   "medianD": -0.003963878005738053,
-   "medianRatioPercent": -0.3956032211329896,
+   "medianD": -0.003954093515385004,
+   "medianRatioPercent": -0.3946286381056985,
    "ciMedianD": [
-    -0.03363963280791138,
-    0.022711486322174235
+    -0.03325929192386967,
+    0.022711090529311306
    ],
-   "lnP95Ratio": -0.00742178044723385,
+   "lnP95Ratio": -0.007393698296898954,
    "ciLnP95Ratio": [
-    -0.13669405413792243,
-    0.060013851488705305
+    -0.136630464546736,
+    0.06005700917174842
    ],
-   "medianEArmKm": 59.340915469332444,
+   "medianEArmKm": 59.34175356808309,
    "medianERefKm": 60.46087474163392,
-   "medianAtArmKm": 59.33840033427033,
+   "medianAtArmKm": 59.33923885346171,
    "medianAtRefKm": 60.45890825305293,
    "rules": {
     "medianBelow0": false,
@@ -4195,20 +4169,20 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.11749613361449711,
-   "medianRatioPercent": 12.467728149938996,
+   "medianD": 0.11649419415801562,
+   "medianRatioPercent": 12.355098728877412,
    "ciMedianD": [
-    0.0935843804203671,
-    0.13525669788418293
+    0.0937910858913972,
+    0.13486863918171713
    ],
-   "lnP95Ratio": 0.13628707439604903,
+   "lnP95Ratio": 0.2219574441810378,
    "ciLnP95Ratio": [
-    -0.14402211304784168,
-    0.4469369616112227
+    -0.057129445271383736,
+    0.7057023739579229
    ],
-   "medianEArmKm": 0.8665098576948875,
+   "medianEArmKm": 0.8738919659997232,
    "medianERefKm": 0.7626043580345967,
-   "medianAtArmKm": 0.8362748945438299,
+   "medianAtArmKm": 0.8449281120001865,
    "medianAtRefKm": 0.7314729602258272,
    "rules": {
     "medianBelow0": false,
@@ -4231,20 +4205,20 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.19330220401301657,
-   "medianRatioPercent": 21.32493869568537,
+   "medianD": 0.194598561742347,
+   "medianRatioPercent": 21.48232120770135,
    "ciMedianD": [
-    0.11358493248834767,
-    0.25820557548372425
+    0.11074705943329682,
+    0.2674168141723033
    ],
-   "lnP95Ratio": 0.08033239642731127,
+   "lnP95Ratio": 0.2601233719421614,
    "ciLnP95Ratio": [
-    -0.20302407690103264,
-    0.28473106834381634
+    -0.08624889282251538,
+    0.5748450217665573
    ],
-   "medianEArmKm": 1.6567306300165714,
+   "medianEArmKm": 1.6753886510515326,
    "medianERefKm": 1.3094428715990793,
-   "medianAtArmKm": 1.6320072012355653,
+   "medianAtArmKm": 1.6496862696109709,
    "medianAtRefKm": 1.2859996045967819,
    "rules": {
     "medianBelow0": false,
@@ -4267,20 +4241,20 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": 0.09393233330839201,
-   "medianRatioPercent": 9.848541252860944,
+   "medianD": 0.11592507032228122,
+   "medianRatioPercent": 12.291172956690332,
    "ciMedianD": [
-    -0.005524573080504469,
-    0.19428906297892298
+    0.03596392789920915,
+    0.1892427551215316
    ],
-   "lnP95Ratio": -0.026441949074238913,
+   "lnP95Ratio": 0.1259434755823885,
    "ciLnP95Ratio": [
-    -0.25802161884534563,
-    0.20886909448637472
+    -0.21998705236096727,
+    0.5008861503350373
    ],
-   "medianEArmKm": 3.0668880215080394,
+   "medianEArmKm": 2.869280830028228,
    "medianERefKm": 2.4535584615776553,
-   "medianAtArmKm": 3.0509953142129156,
+   "medianAtArmKm": 2.851189655220397,
    "medianAtRefKm": 2.429131079256986,
    "rules": {
     "medianBelow0": false,
@@ -4303,24 +4277,24 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.03190926517825954,
-   "medianRatioPercent": -3.1405536661838096,
+   "medianD": -0.04679903596843982,
+   "medianRatioPercent": -4.572084589231229,
    "ciMedianD": [
-    -0.1699968168825423,
-    0.06842010239029528
+    -0.16173595970329568,
+    0.028475089483284144
    ],
-   "lnP95Ratio": -0.27676881597973235,
+   "lnP95Ratio": -0.09272474135518838,
    "ciLnP95Ratio": [
-    -0.41654409738589854,
-    -0.013421726814386567
+    -0.24590339824507015,
+    0.4178257473961246
    ],
-   "medianEArmKm": 14.33646993685515,
+   "medianEArmKm": 13.480143180899892,
    "medianERefKm": 15.347999670324242,
-   "medianAtArmKm": 14.325718355003549,
+   "medianAtArmKm": 13.46984298574043,
    "medianAtRefKm": 15.332170491570235,
    "rules": {
     "medianBelow0": false,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -4483,24 +4457,24 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.01940198426200046,
-   "medianRatioPercent": -1.9214977154589308,
+   "medianD": -0.027529510788786512,
+   "medianRatioPercent": -2.7154027322190966,
    "ciMedianD": [
-    -0.04044492177995122,
-    -0.009490815846643186
+    -0.04450991123169015,
+    -0.013698013031087697
    ],
-   "lnP95Ratio": -0.25481674112429953,
+   "lnP95Ratio": -0.16914637133931076,
    "ciLnP95Ratio": [
-    -0.35061594897077514,
-    -0.014228948407703201
+    -0.28516597675478084,
+    0.22497866118342405
    ],
-   "medianEArmKm": 0.8665098576948875,
+   "medianEArmKm": 0.8738919659997232,
    "medianERefKm": 0.8787587332719852,
-   "medianAtArmKm": 0.8362748945438299,
+   "medianAtArmKm": 0.8449281120001865,
    "medianAtRefKm": 0.8476030194576486,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -4519,24 +4493,24 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.11814054676886303,
-   "medianRatioPercent": -11.142884196710845,
+   "medianD": -0.11375326768231649,
+   "medianRatioPercent": -10.752186808301056,
    "ciMedianD": [
-    -0.15401118369340178,
-    -0.07497971759061883
+    -0.1558854599407621,
+    -0.08700782279685382
    ],
-   "lnP95Ratio": -0.2664367644003345,
+   "lnP95Ratio": -0.08664578888548435,
    "ciLnP95Ratio": [
-    -0.4132552271429,
-    -0.08560812219759933
+    -0.32281787230405234,
+    0.1609382130022703
    ],
-   "medianEArmKm": 1.6567306300165714,
+   "medianEArmKm": 1.6753886510515326,
    "medianERefKm": 1.8079743140233027,
-   "medianAtArmKm": 1.6320072012355653,
+   "medianAtArmKm": 1.6496862696109709,
    "medianAtRefKm": 1.784886764848264,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -4555,24 +4529,24 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.15831594022690607,
-   "medianRatioPercent": -14.641994091497901,
+   "medianD": -0.1580461101177234,
+   "medianRatioPercent": -14.618958823779348,
    "ciMedianD": [
-    -0.2119530711410682,
-    -0.10046594409276423
+    -0.2144808973409571,
+    -0.11014943065928828
    ],
-   "lnP95Ratio": -0.2594934238432476,
+   "lnP95Ratio": -0.10710799918662017,
    "ciLnP95Ratio": [
-    -0.4181014389063074,
-    -0.09810190147523032
+    -0.3729779742675834,
+    0.19591069091380262
    ],
-   "medianEArmKm": 3.0668880215080394,
+   "medianEArmKm": 2.869280830028228,
    "medianERefKm": 3.537010140542963,
-   "medianAtArmKm": 3.0509953142129156,
+   "medianAtArmKm": 2.851189655220397,
    "medianAtRefKm": 3.5222227103861696,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -4591,24 +4565,24 @@
    "clusterCount": 110,
    "armFailures": 10,
    "refFailures": 0,
-   "medianD": -0.2935822477369807,
-   "medianRatioPercent": -25.441210257508786,
+   "medianD": -0.25445487443199744,
+   "medianRatioPercent": -22.466096008406556,
    "ciMedianD": [
-    -0.3642196981608532,
-    -0.23444539414263987
+    -0.3147085673124094,
+    -0.2121737564299484
    ],
-   "lnP95Ratio": -0.31936660203829526,
+   "lnP95Ratio": -0.13532252741375128,
    "ciLnP95Ratio": [
-    -0.4174484334484236,
-    -0.12939590396735945
+    -0.2531095938972219,
+    0.34477729947599617
    ],
-   "medianEArmKm": 14.33646993685515,
+   "medianEArmKm": 13.480143180899892,
    "medianERefKm": 20.623482578759628,
-   "medianAtArmKm": 14.325718355003549,
+   "medianAtArmKm": 13.46984298574043,
    "medianAtRefKm": 20.616760646088714,
    "rules": {
     "medianBelow0": true,
-    "p95RatioBelow110": true,
+    "p95RatioBelow110": false,
     "failuresAtMost1pc": false
    },
    "pass": false
@@ -4771,20 +4745,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.03119089529339031,
-   "medianRatioPercent": -3.070947758471909,
+   "medianD": -0.03669443738141398,
+   "medianRatioPercent": -3.6029356254473566,
    "ciMedianD": [
-    -0.08588049278198628,
-    -0.017349961041316753
+    -0.0861849175030327,
+    -0.019311744818369614
    ],
-   "lnP95Ratio": 0.03713346181722932,
+   "lnP95Ratio": 0.025464426427849296,
    "ciLnP95Ratio": [
-    -0.5517384965501856,
-    0.8706589476340918
+    -0.5573693529304264,
+    0.8694189329385679
    ],
-   "medianEArmKm": 0.691049939269461,
+   "medianEArmKm": 0.6899284042271903,
    "medianERefKm": 0.7339149858845244,
-   "medianAtArmKm": 0.668560386481395,
+   "medianAtArmKm": 0.6663463955876204,
    "medianAtRefKm": 0.7045376954549881,
    "rules": {
     "medianBelow0": true,
@@ -4807,20 +4781,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.02076555646600789,
-   "medianRatioPercent": -2.0551436963048175,
+   "medianD": -0.021768632220144468,
+   "medianRatioPercent": -2.153340549230809,
    "ciMedianD": [
-    -0.08962953588565403,
-    0.03393780752593323
+    -0.09439176672167804,
+    0.038422130189031845
    ],
-   "lnP95Ratio": 0.17552002897142094,
+   "lnP95Ratio": 0.17175384360604595,
    "ciLnP95Ratio": [
-    -0.20669160387654495,
-    1.4694697600671665
+    -0.21292079353995416,
+    1.474122804048504
    ],
-   "medianEArmKm": 0.9100466027572292,
+   "medianEArmKm": 0.9176301605643564,
    "medianERefKm": 1.0029999895406692,
-   "medianAtArmKm": 0.8912267184620775,
+   "medianAtArmKm": 0.8989997175056651,
    "medianAtRefKm": 0.976921574309418,
    "rules": {
     "medianBelow0": false,
@@ -4843,20 +4817,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.04071999893596226,
-   "medianRatioPercent": -3.990207924542144,
+   "medianD": -0.03621217557698067,
+   "medianRatioPercent": -3.556435791594348,
    "ciMedianD": [
-    -0.13845029805476383,
-    0.10358615187286246
+    -0.1389555114247167,
+    0.10008736924806336
    ],
-   "lnP95Ratio": 0.09417571493360088,
+   "lnP95Ratio": 0.0844837315631839,
    "ciLnP95Ratio": [
-    -0.21099828889997202,
-    1.4422053580207812
+    -0.23072996923603037,
+    1.4901177338646199
    ],
-   "medianEArmKm": 1.4126033667636217,
+   "medianEArmKm": 1.408040610765764,
    "medianERefKm": 1.332800407788525,
-   "medianAtArmKm": 1.3998166968707697,
+   "medianAtArmKm": 1.3953560654917652,
    "medianAtRefKm": 1.309201187738935,
    "rules": {
     "medianBelow0": false,
@@ -4879,20 +4853,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.08424414616789466,
-   "medianRatioPercent": 8.789446665331813,
+   "medianD": 0.1188339716368203,
+   "medianRatioPercent": 12.618292445805391,
    "ciMedianD": [
-    -0.08943971878867263,
-    0.2674215213507658
+    -0.10651135615318297,
+    0.2356666747058378
    ],
-   "lnP95Ratio": 0.09081010820280255,
+   "lnP95Ratio": 0.07574217119022641,
    "ciLnP95Ratio": [
-    -0.3126489085232248,
-    1.8067934512211243
+    -0.3113280748698856,
+    1.9345289212604144
    ],
-   "medianEArmKm": 4.4652355084192825,
+   "medianEArmKm": 4.5211652018411295,
    "medianERefKm": 4.149849724349947,
-   "medianAtArmKm": 4.460031492759965,
+   "medianAtArmKm": 4.514836862132835,
    "medianAtRefKm": 4.129468344304683,
    "rules": {
     "medianBelow0": false,
@@ -5059,20 +5033,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.0003582814189994066,
-   "medianRatioPercent": 0.03583456094529147,
+   "medianD": 0.0005739267010368421,
+   "medianRatioPercent": 0.057409142847819616,
    "ciMedianD": [
-    -0.00016676276075683338,
-    0.001031651841037956
+    -0.00018565936311421005,
+    0.001047038450384119
    ],
-   "lnP95Ratio": 0.5027020715415068,
+   "lnP95Ratio": 0.4910330361521268,
    "ciLnP95Ratio": [
-    -0.029632323997116794,
-    1.5213728490179217
+    -0.04037660366963261,
+    1.5199855788090155
    ],
-   "medianEArmKm": 0.691049939269461,
+   "medianEArmKm": 0.6899284042271903,
    "medianERefKm": 0.68726883898503,
-   "medianAtArmKm": 0.668560386481395,
+   "medianAtArmKm": 0.6663463955876204,
    "medianAtRefKm": 0.6637252222756795,
    "rules": {
     "medianBelow0": false,
@@ -5095,20 +5069,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.0003964630407193859,
-   "medianRatioPercent": 0.03965416425779633,
+   "medianD": 0.00020751917300076972,
+   "medianRatioPercent": 0.020754070659378954,
    "ciMedianD": [
-    -0.0025525070993449583,
-    0.003016009885432186
+    -0.0032172373153271927,
+    0.0026767274292187615
    ],
-   "lnP95Ratio": 0.2498653015522343,
+   "lnP95Ratio": 0.2460991161868593,
    "ciLnP95Ratio": [
-    -0.09725743876229598,
-    1.5291660521588921
+    -0.07924610606794931,
+    1.5641213536330996
    ],
-   "medianEArmKm": 0.9100466027572292,
+   "medianEArmKm": 0.9176301605643564,
    "medianERefKm": 0.8986436192965007,
-   "medianAtArmKm": 0.8912267184620775,
+   "medianAtArmKm": 0.8989997175056651,
    "medianAtRefKm": 0.8796207531294374,
    "rules": {
     "medianBelow0": false,
@@ -5131,20 +5105,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.002274716374601221,
-   "medianRatioPercent": 0.22773055047002888,
+   "medianD": -0.00036033426700263216,
+   "medianRatioPercent": -0.0360269354407583,
    "ciMedianD": [
-    -0.00252744502917035,
-    0.0076514167996730165
+    -0.004477998551771955,
+    0.00394793689633427
    ],
-   "lnP95Ratio": 0.037199315541847744,
+   "lnP95Ratio": 0.027507332171430754,
    "ciLnP95Ratio": [
-    -0.11279419784105957,
-    1.448711669317609
+    -0.07753938250039849,
+    1.4746940092747198
    ],
-   "medianEArmKm": 1.4126033667636217,
+   "medianEArmKm": 1.408040610765764,
    "medianERefKm": 1.387916042022491,
-   "medianAtArmKm": 1.3998166968707697,
+   "medianAtArmKm": 1.3953560654917652,
    "medianAtRefKm": 1.3749735049423748,
    "rules": {
     "medianBelow0": false,
@@ -5167,20 +5141,20 @@
    "clusterCount": 21,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.0019912031860471746,
-   "medianRatioPercent": 0.19931869475835473,
+   "medianD": -0.0015461656627279163,
+   "medianRatioPercent": -0.15449709644127507,
    "ciMedianD": [
-    -0.009630692627363602,
-    0.01879019999295828
+    -0.008158727909062136,
+    0.014655774735268579
    ],
-   "lnP95Ratio": 0.17829721661267328,
+   "lnP95Ratio": 0.16322927960009714,
    "ciLnP95Ratio": [
-    -0.1264481406305655,
-    1.8375325803278593
+    -0.1258739867148666,
+    1.958211018377877
    ],
-   "medianEArmKm": 4.4652355084192825,
+   "medianEArmKm": 4.5211652018411295,
    "medianERefKm": 4.800087296487376,
-   "medianAtArmKm": 4.460031492759965,
+   "medianAtArmKm": 4.514836862132835,
    "medianAtRefKm": 4.79447161319713,
    "rules": {
     "medianBelow0": false,
@@ -5455,20 +5429,20 @@
    "clusterCount": 22,
    "armFailures": 0,
    "refFailures": 0,
-   "medianD": 0.07848136927073268,
-   "medianRatioPercent": 8.1643203172872,
+   "medianD": 0.07849591456494664,
+   "medianRatioPercent": 8.165893610591656,
    "ciMedianD": [
-    -0.07538688686446582,
-    0.2802501801467937
+    -0.0753856956618123,
+    0.2802683142526228
    ],
-   "lnP95Ratio": -0.06886706566617828,
+   "lnP95Ratio": -0.06884838685862782,
    "ciLnP95Ratio": [
-    -0.3302879908848041,
-    0.24473243888274776
+    -0.3302766397138852,
+    0.24475378455237978
    ],
-   "medianEArmKm": 4.557460019020628,
+   "medianEArmKm": 4.557348215253781,
    "medianERefKm": 4.149849724349947,
-   "medianAtArmKm": 4.551499472837654,
+   "medianAtArmKm": 4.551387488858618,
    "medianAtRefKm": 4.129468344304683,
    "rules": {
     "medianBelow0": false,
@@ -5743,20 +5717,20 @@
    "clusterCount": 22,
    "armFailures": 0,
    "refFailures": 0,
-   "medianD": -0.005730395755701556,
-   "medianRatioPercent": -0.571400835498237,
+   "medianD": -0.005728626322618169,
+   "medianRatioPercent": -0.5712249030897842,
    "ciMedianD": [
-    -0.04957436703295704,
-    0.005570512354582391
+    -0.04957377351647679,
+    0.0055696581711953685
    ],
-   "lnP95Ratio": 0.017165863697750083,
+   "lnP95Ratio": 0.01718454250530055,
    "ciLnP95Ratio": [
-    -0.09876315945599724,
-    0.09693680190007276
+    -0.09878224227266534,
+    0.09691355458823349
    ],
-   "medianEArmKm": 4.557460019020628,
+   "medianEArmKm": 4.557348215253781,
    "medianERefKm": 4.790006611559849,
-   "medianAtArmKm": 4.551499472837654,
+   "medianAtArmKm": 4.551387488858618,
    "medianAtRefKm": 4.784324199211523,
    "rules": {
     "medianBelow0": false,
@@ -5923,20 +5897,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 1.0693396461740772,
-   "medianRatioPercent": 191.3454953480927,
+   "medianD": 1.061572796449238,
+   "medianRatioPercent": 189.09142351750302,
    "ciMedianD": [
-    1.0231353950462077,
-    1.105187299594184
+    1.025867596516655,
+    1.1065054801686318
    ],
-   "lnP95Ratio": 0.48388505800424864,
+   "lnP95Ratio": 0.46944358148383736,
    "ciLnP95Ratio": [
-    0.20833302091786574,
-    0.9323808995381301
+    0.20455049502083356,
+    0.9392889935192863
    ],
-   "medianEArmKm": 2.358550416053417,
+   "medianEArmKm": 2.359480007416855,
    "medianERefKm": 0.7378445443199462,
-   "medianAtArmKm": 2.351958486687642,
+   "medianAtArmKm": 2.3529201542019726,
    "medianAtRefKm": 0.7055365712460903,
    "rules": {
     "medianBelow0": false,
@@ -5959,20 +5933,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 2.024521282628603,
-   "medianRatioPercent": 657.24849966914,
+   "medianD": 2.010080776724024,
+   "medianRatioPercent": 646.392023399414,
    "ciMedianD": [
-    1.9317339090050165,
-    2.1078563234568866
+    1.9311763825935468,
+    2.1154664444636477
    ],
-   "lnP95Ratio": 1.2645689991774185,
+   "lnP95Ratio": 1.2269469127374222,
    "ciLnP95Ratio": [
-    0.6938104081233472,
-    1.5962608437297892
+    0.6675334482610651,
+    1.583545511295531
    ],
-   "medianEArmKm": 7.868538622003838,
+   "medianEArmKm": 7.846249565782846,
    "medianERefKm": 1.0124878404630426,
-   "medianAtArmKm": 7.866421319163791,
+   "medianAtArmKm": 7.844081871939247,
    "medianAtRefKm": 0.9880148912537321,
    "rules": {
     "medianBelow0": false,
@@ -5995,20 +5969,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 2.4895255235824694,
-   "medianRatioPercent": 1105.5554686810246,
+   "medianD": 2.484372857617469,
+   "medianRatioPercent": 1099.3596203253962,
    "ciMedianD": [
-    2.383774144487215,
-    2.59098060233648
+    2.3734444145843603,
+    2.5871337790386235
    ],
-   "lnP95Ratio": 1.3961101345503897,
+   "lnP95Ratio": 1.419818189383916,
    "ciLnP95Ratio": [
-    1.0004877615704293,
-    1.8665659582634306
+    1.0150337639072993,
+    1.8488735567352195
    ],
-   "medianEArmKm": 16.980078730716876,
+   "medianEArmKm": 16.89289328900806,
    "medianERefKm": 1.3601967515518487,
-   "medianAtArmKm": 16.978833680220795,
+   "medianAtArmKm": 16.891661727478088,
    "medianAtRefKm": 1.3380247863519341,
    "rules": {
     "medianBelow0": false,
@@ -6031,20 +6005,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 2.9944620225374465,
-   "medianRatioPercent": 1897.4611108215736,
+   "medianD": 2.994934128258368,
+   "medianRatioPercent": 1898.4043462752186,
    "ciMedianD": [
-    2.7347305165913727,
-    3.165066849473152
+    2.738934160337838,
+    3.1653751429737245
    ],
-   "lnP95Ratio": 1.9042829884846082,
+   "lnP95Ratio": 1.902064675341518,
    "ciLnP95Ratio": [
-    1.5021803586398397,
-    2.2211591890288043
+    1.5036704167058854,
+    2.2070028596820253
    ],
-   "medianEArmKm": 84.86952886355789,
+   "medianEArmKm": 84.45982735657734,
    "medianERefKm": 4.359918978408752,
-   "medianAtArmKm": 84.8665044739503,
+   "medianAtArmKm": 84.45690034432744,
    "medianAtRefKm": 4.3470361800669926,
    "rules": {
     "medianBelow0": false,
@@ -6211,20 +6185,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.002186275013393024,
-   "medianRatioPercent": -0.21838868548833545,
+   "medianD": -0.005381387001633708,
+   "medianRatioPercent": -0.5366933277254016,
    "ciMedianD": [
-    -0.013665617922740554,
-    0.010810377354267764
+    -0.012486066364963855,
+    0.00860779230221942
    ],
-   "lnP95Ratio": 0.06780884601098558,
+   "lnP95Ratio": 0.0533673694905743,
    "ciLnP95Ratio": [
-    -0.013076026023174148,
-    0.582519076419915
+    -0.012832657819506342,
+    0.5914120151502928
    ],
-   "medianEArmKm": 2.358550416053417,
+   "medianEArmKm": 2.359480007416855,
    "medianERefKm": 2.3631398258215466,
-   "medianAtArmKm": 2.351958486687642,
+   "medianAtArmKm": 2.3529201542019726,
    "medianAtRefKm": 2.3567124934411936,
    "rules": {
     "medianBelow0": false,
@@ -6247,20 +6221,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.0009272391590161577,
-   "medianRatioPercent": -0.0926809405625506,
+   "medianD": -0.0017787007964309431,
+   "medianRatioPercent": -0.1777119845654429,
    "ciMedianD": [
-    -0.030915712137876694,
-    0.01779541660734263
+    -0.024942837246254346,
+    0.0147336967678946
    ],
-   "lnP95Ratio": 0.10103247650822444,
+   "lnP95Ratio": 0.06341039006822813,
    "ciLnP95Ratio": [
-    -0.010414691901959516,
-    0.24073943622567587
+    -0.0017168279156303257,
+    0.23314991804892876
    ],
-   "medianEArmKm": 7.868538622003838,
+   "medianEArmKm": 7.846249565782846,
    "medianERefKm": 8.015875714457245,
-   "medianAtArmKm": 7.866421319163791,
+   "medianAtArmKm": 7.844081871939247,
    "medianAtRefKm": 8.013738235779282,
    "rules": {
     "medianBelow0": false,
@@ -6283,20 +6257,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.0022058360961758616,
-   "medianRatioPercent": 0.2208270742431795,
+   "medianD": 0.0026262135856747193,
+   "medianRatioPercent": 0.26296651053880904,
    "ciMedianD": [
-    -0.03118240688805285,
-    0.02640286092522226
+    -0.02426617351459459,
+    0.028116175883189598
    ],
-   "lnP95Ratio": 0.0653972383038135,
+   "lnP95Ratio": 0.08910529313733973,
    "ciLnP95Ratio": [
-    0.009660601536584313,
-    0.2469128375700854
+    0.013747550268958377,
+    0.22146196711015032
    ],
-   "medianEArmKm": 16.980078730716876,
+   "medianEArmKm": 16.89289328900806,
    "medianERefKm": 17.118556115993478,
-   "medianAtArmKm": 16.978833680220795,
+   "medianAtArmKm": 16.891661727478088,
    "medianAtRefKm": 17.117290504528057,
    "rules": {
     "medianBelow0": false,
@@ -6319,20 +6293,20 @@
    "clusterCount": 22,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.015605520690741947,
-   "medianRatioPercent": -1.5484385497250175,
+   "medianD": -0.003508664953765006,
+   "medianRatioPercent": -0.3502516781613507,
    "ciMedianD": [
-    -0.045042802513946434,
-    0.021674162822962195
+    -0.04064989961556531,
+    0.011879418101618633
    ],
-   "lnP95Ratio": 0.08784820157523754,
+   "lnP95Ratio": 0.08562988843214736,
    "ciLnP95Ratio": [
-    0.024451441367751257,
-    0.25368305661970864
+    0.027320872004159048,
+    0.19526998305557425
    ],
-   "medianEArmKm": 84.86952886355789,
+   "medianEArmKm": 84.45982735657734,
    "medianERefKm": 86.46214029432652,
-   "medianAtArmKm": 84.8665044739503,
+   "medianAtArmKm": 84.45690034432744,
    "medianAtRefKm": 86.45899245528939,
    "rules": {
     "medianBelow0": false,
@@ -6607,20 +6581,20 @@
    "clusterCount": 22,
    "armFailures": 0,
    "refFailures": 0,
-   "medianD": 2.9682097449463516,
-   "medianRatioPercent": 1845.7055305766642,
+   "medianD": 2.9682150552937143,
+   "medianRatioPercent": 1845.7158629763312,
    "ciMedianD": [
-    2.712668039189209,
-    3.1755711355025755
+    2.7126648896070353,
+    3.1755526753339822
    ],
-   "lnP95Ratio": 2.016945440360642,
+   "lnP95Ratio": 2.0169574639524317,
    "ciLnP95Ratio": [
-    1.629770570479673,
-    2.3987743192525257
+    1.6298144178780571,
+    2.398739775462365
    ],
-   "medianEArmKm": 85.34659020385683,
+   "medianEArmKm": 85.34648866196292,
    "medianERefKm": 4.359918978408752,
-   "medianAtArmKm": 85.3434719902346,
+   "medianAtArmKm": 85.34337047273146,
    "medianAtRefKm": 4.3470361800669926,
    "rules": {
     "medianBelow0": false,
@@ -6895,20 +6869,20 @@
    "clusterCount": 22,
    "armFailures": 0,
    "refFailures": 0,
-   "medianD": -0.02156650977774488,
-   "medianRatioPercent": -2.133561544618956,
+   "medianD": -0.02154991205593282,
+   "medianRatioPercent": -2.1319371712183233,
    "ciMedianD": [
-    -0.05947425525254779,
-    0.031126516339276655
+    -0.05947128576852112,
+    0.03114341161603562
    ],
-   "lnP95Ratio": 0.20075394273228397,
+   "lnP95Ratio": 0.20076596632407373,
    "ciLnP95Ratio": [
-    0.08496586230362094,
-    0.3916791050589552
+    0.08493168249304531,
+    0.3916420319035048
    ],
-   "medianEArmKm": 85.34659020385683,
+   "medianEArmKm": 85.34648866196292,
    "medianERefKm": 86.46214029432652,
-   "medianAtArmKm": 85.3434719902346,
+   "medianAtArmKm": 85.34337047273146,
    "medianAtRefKm": 86.45899245528939,
    "rules": {
     "medianBelow0": false,
@@ -7075,20 +7049,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.03119089529339031,
-   "medianRatioPercent": -3.070947758471909,
+   "medianD": -0.03669443738141398,
+   "medianRatioPercent": -3.6029356254473566,
    "ciMedianD": [
-    -0.09192772573209065,
-    -0.008285832342469823
+    -0.09126268374634638,
+    -0.008687895622017106
    ],
-   "lnP95Ratio": 0.03713346181722932,
+   "lnP95Ratio": 0.025464426427849296,
    "ciLnP95Ratio": [
-    -0.5405667556164678,
-    0.47879569241845277
+    -0.5447033890663456,
+    0.47845823978090996
    ],
-   "medianEArmKm": 0.691049939269461,
+   "medianEArmKm": 0.6899284042271903,
    "medianERefKm": 0.7339149858845244,
-   "medianAtArmKm": 0.668560386481395,
+   "medianAtArmKm": 0.6663463955876204,
    "medianAtRefKm": 0.7045376954549881,
    "rules": {
     "medianBelow0": true,
@@ -7111,20 +7085,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.02076555646600789,
-   "medianRatioPercent": -2.0551436963048175,
+   "medianD": -0.021768632220144468,
+   "medianRatioPercent": -2.153340549230809,
    "ciMedianD": [
-    -0.09368925494417046,
-    0.03292993019803243
+    -0.10249674654582383,
+    0.03516887885884812
    ],
-   "lnP95Ratio": 0.17552002897142094,
+   "lnP95Ratio": 0.17175384360604595,
    "ciLnP95Ratio": [
-    -0.25336541932157053,
-    0.6987750408360259
+    -0.25938453513884224,
+    0.699254132260464
    ],
-   "medianEArmKm": 0.9100466027572292,
+   "medianEArmKm": 0.9176301605643564,
    "medianERefKm": 1.0029999895406692,
-   "medianAtArmKm": 0.8912267184620775,
+   "medianAtArmKm": 0.8989997175056651,
    "medianAtRefKm": 0.976921574309418,
    "rules": {
     "medianBelow0": false,
@@ -7147,20 +7121,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": -0.04071999893596226,
-   "medianRatioPercent": -3.990207924542144,
+   "medianD": -0.03621217557698067,
+   "medianRatioPercent": -3.556435791594348,
    "ciMedianD": [
-    -0.14205878615371248,
-    0.09346932880655134
+    -0.1469566631425654,
+    0.0821051885610069
    ],
-   "lnP95Ratio": 0.09417571493360088,
+   "lnP95Ratio": 0.0844837315631839,
    "ciLnP95Ratio": [
-    -0.225138942710015,
-    0.546929175543438
+    -0.24324146347801556,
+    0.5189342895023374
    ],
-   "medianEArmKm": 1.4126033667636217,
+   "medianEArmKm": 1.408040610765764,
    "medianERefKm": 1.332800407788525,
-   "medianAtArmKm": 1.3998166968707697,
+   "medianAtArmKm": 1.3953560654917652,
    "medianAtRefKm": 1.309201187738935,
    "rules": {
     "medianBelow0": false,
@@ -7183,20 +7157,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.08424414616789466,
-   "medianRatioPercent": 8.789446665331813,
+   "medianD": 0.1188339716368203,
+   "medianRatioPercent": 12.618292445805391,
    "ciMedianD": [
-    -0.08943971878867263,
-    0.2674215213507658
+    -0.10651135615318297,
+    0.2356666747058378
    ],
-   "lnP95Ratio": 0.09081010820280255,
+   "lnP95Ratio": 0.07574217119022641,
    "ciLnP95Ratio": [
-    -0.2897235458505125,
-    0.7600925827585479
+    -0.2850933463124555,
+    0.7029173617644657
    ],
-   "medianEArmKm": 4.4652355084192825,
+   "medianEArmKm": 4.5211652018411295,
    "medianERefKm": 4.149849724349947,
-   "medianAtArmKm": 4.460031492759965,
+   "medianAtArmKm": 4.514836862132835,
    "medianAtRefKm": 4.129468344304683,
    "rules": {
     "medianBelow0": false,
@@ -7363,20 +7337,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.0003582814189994066,
-   "medianRatioPercent": 0.03583456094529147,
+   "medianD": 0.0005739267010368421,
+   "medianRatioPercent": 0.057409142847819616,
    "ciMedianD": [
-    -0.00016763609841533158,
-    0.001052277605605258
+    -0.00010144081338966937,
+    0.0009620711404597082
    ],
-   "lnP95Ratio": 0.5027020715415068,
+   "lnP95Ratio": 0.4910330361521268,
    "ciLnP95Ratio": [
-    -0.016653426289505887,
-    0.8509215185145909
+    -0.021177963684409783,
+    0.8519223784627555
    ],
-   "medianEArmKm": 0.691049939269461,
+   "medianEArmKm": 0.6899284042271903,
    "medianERefKm": 0.68726883898503,
-   "medianAtArmKm": 0.668560386481395,
+   "medianAtArmKm": 0.6663463955876204,
    "medianAtRefKm": 0.6637252222756795,
    "rules": {
     "medianBelow0": false,
@@ -7399,20 +7373,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.0003964630407193859,
-   "medianRatioPercent": 0.03965416425779633,
+   "medianD": 0.00020751917300076972,
+   "medianRatioPercent": 0.020754070659378954,
    "ciMedianD": [
-    -0.0015305502293415027,
-    0.0026097988144082387
+    -0.0028075001190903206,
+    0.002373209897255063
    ],
-   "lnP95Ratio": 0.2498653015522343,
+   "lnP95Ratio": 0.2460991161868593,
    "ciLnP95Ratio": [
-    -0.04792371293836162,
-    0.7859131123356764
+    -0.035530888153261705,
+    0.7860664635539834
    ],
-   "medianEArmKm": 0.9100466027572292,
+   "medianEArmKm": 0.9176301605643564,
    "medianERefKm": 0.8986436192965007,
-   "medianAtArmKm": 0.8912267184620775,
+   "medianAtArmKm": 0.8989997175056651,
    "medianAtRefKm": 0.8796207531294374,
    "rules": {
     "medianBelow0": false,
@@ -7435,20 +7409,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.002274716374601221,
-   "medianRatioPercent": 0.22773055047002888,
+   "medianD": -0.00036033426700263216,
+   "medianRatioPercent": -0.0360269354407583,
    "ciMedianD": [
-    -0.0007476193586150592,
-    0.005014680027626006
+    -0.0035859557136003195,
+    0.002673839308957149
    ],
-   "lnP95Ratio": 0.037199315541847744,
+   "lnP95Ratio": 0.027507332171430754,
    "ciLnP95Ratio": [
-    -0.08927081274010806,
-    0.6784067509773941
+    -0.06966585906516976,
+    0.6731816868265821
    ],
-   "medianEArmKm": 1.4126033667636217,
+   "medianEArmKm": 1.408040610765764,
    "medianERefKm": 1.387916042022491,
-   "medianAtArmKm": 1.3998166968707697,
+   "medianAtArmKm": 1.3953560654917652,
    "medianAtRefKm": 1.3749735049423748,
    "rules": {
     "medianBelow0": false,
@@ -7471,20 +7445,20 @@
    "clusterCount": 42,
    "armFailures": 4,
    "refFailures": 0,
-   "medianD": 0.0019912031860471746,
-   "medianRatioPercent": 0.19931869475835473,
+   "medianD": -0.0015461656627279163,
+   "medianRatioPercent": -0.15449709644127507,
    "ciMedianD": [
-    -0.006271219917900722,
-    0.014979880733858586
+    -0.006795414174775916,
+    0.007710828057430008
    ],
-   "lnP95Ratio": 0.17829721661267328,
+   "lnP95Ratio": 0.16322927960009714,
    "ciLnP95Ratio": [
-    -0.09250367087636402,
-    0.7693611810831773
+    -0.10743074186770052,
+    0.7169704746483222
    ],
-   "medianEArmKm": 4.4652355084192825,
+   "medianEArmKm": 4.5211652018411295,
    "medianERefKm": 4.800087296487376,
-   "medianAtArmKm": 4.460031492759965,
+   "medianAtArmKm": 4.514836862132835,
    "medianAtRefKm": 4.79447161319713,
    "rules": {
     "medianBelow0": false,
@@ -7505,22 +7479,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|1|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -2.2451677430136945,
-   "medianRatioPercent": -89.40902267411138,
+   "medianD": -2.2508734047758643,
+   "medianRatioPercent": -89.46927914347856,
    "ciMedianD": [
-    -2.368290190171958,
-    -2.146562005316919
+    -2.3755302525076427,
+    -2.1483276840889918
    ],
-   "lnP95Ratio": -2.9120439931602524,
+   "lnP95Ratio": -2.914879950631616,
    "ciLnP95Ratio": [
-    -3.4261061702147346,
-    -2.714164937004504
+    -3.4348783948340857,
+    -2.714622257623758
    ],
-   "medianEArmKm": 0.16138718359463036,
+   "medianEArmKm": 0.16138763736748934,
    "medianERefKm": 1.6210960174542852,
-   "medianAtArmKm": 0.14206400941864053,
+   "medianAtArmKm": 0.14206935167771403,
    "medianAtRefKm": 1.5484366063745698,
    "rules": {
     "medianBelow0": true,
@@ -7541,22 +7515,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|2|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.9021047180046988,
-   "medianRatioPercent": -85.07458494931097,
+   "medianD": -1.9042365963180727,
+   "medianRatioPercent": -85.1063702247675,
    "ciMedianD": [
-    -1.9970196940020604,
+    -2.005214975326166,
     -1.7915409282044998
    ],
-   "lnP95Ratio": -2.590232710743837,
+   "lnP95Ratio": -2.5921548134505206,
    "ciLnP95Ratio": [
-    -3.0328514546459133,
-    -2.3088710389328626
+    -3.0406256328330725,
+    -2.309656115338172
    ],
-   "medianEArmKm": 0.23985244844350703,
+   "medianEArmKm": 0.24042834450537465,
    "medianERefKm": 1.6821971409685967,
-   "medianAtArmKm": 0.21237035113836583,
+   "medianAtArmKm": 0.21250982585451778,
    "medianAtRefKm": 1.5937891021110429,
    "rules": {
     "medianBelow0": true,
@@ -7577,22 +7551,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|3|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.6287287164706201,
-   "medianRatioPercent": -80.38211854385227,
+   "medianD": -1.6300151031449985,
+   "medianRatioPercent": -80.4073385003512,
    "ciMedianD": [
-    -1.7286811462892095,
-    -1.542912296154456
+    -1.7335708697636407,
+    -1.5429478947396364
    ],
-   "lnP95Ratio": -2.3931366845499995,
+   "lnP95Ratio": -2.396917434417659,
    "ciLnP95Ratio": [
-    -2.716158482904083,
-    -2.0799057793271847
+    -2.725155470322088,
+    -2.080463517112006
    ],
-   "medianEArmKm": 0.3200933994058968,
+   "medianEArmKm": 0.32012519282096874,
    "medianERefKm": 1.740145264090706,
-   "medianAtArmKm": 0.2849185442597457,
+   "medianAtArmKm": 0.28493092730568237,
    "medianAtRefKm": 1.6635968890202129,
    "rules": {
     "medianBelow0": true,
@@ -7613,22 +7587,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|7|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.064548998191365,
-   "medianRatioPercent": -65.51166372822453,
+   "medianD": -1.0654587511313274,
+   "medianRatioPercent": -65.5430253257264,
    "ciMedianD": [
-    -1.1672511734045925,
-    -0.9949081675410055
+    -1.1706746622253672,
+    -0.9961393726891661
    ],
-   "lnP95Ratio": -1.966561398998401,
+   "lnP95Ratio": -1.9675681887939804,
    "ciLnP95Ratio": [
-    -2.0743756243435394,
-    -1.8130460462441935
+    -2.076669112290227,
+    -1.8138514810915223
    ],
-   "medianEArmKm": 0.6498044820533513,
+   "medianEArmKm": 0.6498314117696966,
    "medianERefKm": 1.8866950456840592,
-   "medianAtArmKm": 0.5825205783729516,
+   "medianAtArmKm": 0.5829870238139909,
    "medianAtRefKm": 1.7337494118754133,
    "rules": {
     "medianBelow0": true,
@@ -7649,22 +7623,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|1|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -2.230716393797969,
-   "medianRatioPercent": -89.25485749783732,
+   "medianD": -2.2331850215611118,
+   "medianRatioPercent": -89.28135054075213,
    "ciMedianD": [
-    -2.3505970315206204,
-    -2.1328939417447295
+    -2.3593679014376843,
+    -2.135096343645537
    ],
-   "lnP95Ratio": -2.877352967279576,
+   "lnP95Ratio": -2.8782984820340074,
    "ciLnP95Ratio": [
-    -3.3884504375311266,
-    -2.693843715410522
+    -3.395154980841513,
+    -2.6946328695999324
    ],
-   "medianEArmKm": 0.16138718359463036,
+   "medianEArmKm": 0.16138763736748934,
    "medianERefKm": 1.6210960174542852,
-   "medianAtArmKm": 0.14204496321014373,
+   "medianAtArmKm": 0.14205448631439213,
    "medianAtRefKm": 1.5484366063745698,
    "rules": {
     "medianBelow0": true,
@@ -7685,22 +7659,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|2|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -1.898783479302009,
-   "medianRatioPercent": -85.0249316736427,
+   "medianD": -1.8998861978900583,
+   "medianRatioPercent": -85.04143585843539,
    "ciMedianD": [
-    -1.9837379239678086,
-    -1.773736744001912
+    -1.9843415714531942,
+    -1.7737665920403685
    ],
-   "lnP95Ratio": -2.56594721183027,
+   "lnP95Ratio": -2.568957893279994,
    "ciLnP95Ratio": [
-    -3.0006072427325075,
-    -2.2830362382455425
+    -3.007726298092205,
+    -2.283870916043806
    ],
-   "medianEArmKm": 0.23984671520750725,
+   "medianEArmKm": 0.23984958182550714,
    "medianERefKm": 1.6821971409685967,
-   "medianAtArmKm": 0.21198225348760064,
+   "medianAtArmKm": 0.21217630231298323,
    "medianAtRefKm": 1.5937891021110429,
    "rules": {
     "medianBelow0": true,
@@ -7721,22 +7695,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|3|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -1.615124367521585,
-   "medianRatioPercent": -80.11340635608444,
+   "medianD": -1.6199968308124122,
+   "medianRatioPercent": -80.21006737372906,
    "ciMedianD": [
-    -1.723155744234929,
-    -1.5283216610566241
+    -1.7240098627552831,
+    -1.5333262251136972
    ],
-   "lnP95Ratio": -2.368630772243855,
+   "lnP95Ratio": -2.372576758883251,
    "ciLnP95Ratio": [
-    -2.691187624284848,
-    -2.0606280710239786
+    -2.6980862262735665,
+    -2.0612181039909117
    ],
-   "medianEArmKm": 0.3199183404940484,
+   "medianEArmKm": 0.3200058699499726,
    "medianERefKm": 1.740145264090706,
-   "medianAtArmKm": 0.28485952760227357,
+   "medianAtArmKm": 0.28488903593100967,
    "medianAtRefKm": 1.6635968890202129,
    "rules": {
     "medianBelow0": true,
@@ -7757,22 +7731,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|7|orbit",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -1.060632113728663,
-   "medianRatioPercent": -65.37631199423221,
+   "medianD": -1.0612999493870678,
+   "medianRatioPercent": -65.39942720826673,
    "ciMedianD": [
-    -1.1626083206538615,
-    -0.9862491564847176
+    -1.1637338937545507,
+    -0.9870304720101803
    ],
-   "lnP95Ratio": -1.9408489998931395,
+   "lnP95Ratio": -1.9436225513447154,
    "ciLnP95Ratio": [
-    -2.0495413132100375,
-    -1.792197270887326
+    -2.0527465028339242,
+    -1.7922527428669044
    ],
-   "medianEArmKm": 0.6484496015435876,
+   "medianEArmKm": 0.6487947765028016,
    "medianERefKm": 1.8866950456840592,
-   "medianAtArmKm": 0.5816526608376165,
+   "medianAtArmKm": 0.581864878360057,
    "medianAtRefKm": 1.7337494118754133,
    "rules": {
     "medianBelow0": true,
@@ -7793,22 +7767,22 @@
    "seed": "XM-fast|GN|72|M|X2/P|1|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -2.2472551092059483,
-   "medianRatioPercent": -89.43110686520885,
+   "medianD": -2.2544917003457803,
+   "medianRatioPercent": -89.50731355273874,
    "ciMedianD": [
-    -2.375277820527342,
-    -2.147230927295875
+    -2.3757826844879433,
+    -2.149424440882108
    ],
-   "lnP95Ratio": -2.9237726222444347,
+   "lnP95Ratio": -2.93198188101389,
    "ciLnP95Ratio": [
-    -3.434921193769369,
-    -2.71909536680399
+    -3.443384189896015,
+    -2.720020234164853
    ],
-   "medianEArmKm": 0.161424568371073,
+   "medianEArmKm": 0.16146104560179772,
    "medianERefKm": 1.6370684091480663,
-   "medianAtArmKm": 0.14219756582787868,
+   "medianAtArmKm": 0.14232043771896985,
    "medianAtRefKm": 1.5595260129992066,
    "rules": {
     "medianBelow0": true,
@@ -7829,22 +7803,22 @@
    "seed": "XM-fast|GN|72|M|X2/P|2|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.9069482767570445,
-   "medianRatioPercent": -85.14670228075647,
+   "medianD": -1.907239370139998,
+   "medianRatioPercent": -85.1510253481989,
    "ciMedianD": [
-    -1.9991292385346964,
-    -1.7937172128577747
+    -2.006900554154482,
+    -1.7937552330267141
    ],
-   "lnP95Ratio": -2.5985237853287813,
+   "lnP95Ratio": -2.60216126256036,
    "ciLnP95Ratio": [
-    -3.039622420504128,
-    -2.308794818678554
+    -3.0485675626839774,
+    -2.3094936036796248
    ],
-   "medianEArmKm": 0.2411084736305352,
+   "medianEArmKm": 0.2412127066938281,
    "medianERefKm": 1.6860583735732897,
-   "medianAtArmKm": 0.21296286993065772,
+   "medianAtArmKm": 0.21327643929064571,
    "medianAtRefKm": 1.595615338811796,
    "rules": {
     "medianBelow0": true,
@@ -7865,22 +7839,22 @@
    "seed": "XM-fast|GN|72|M|X2/P|3|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.6306356635677597,
-   "medianRatioPercent": -80.41949315891436,
+   "medianD": -1.6306769020422194,
+   "medianRatioPercent": -80.42030061249645,
    "ciMedianD": [
-    -1.741840193949415,
-    -1.5405294536373306
+    -1.7431295758500076,
+    -1.5429478947396364
    ],
-   "lnP95Ratio": -2.3988646466246997,
+   "lnP95Ratio": -2.402608801349935,
    "ciLnP95Ratio": [
-    -2.728793137521586,
-    -2.0842839768105907
+    -2.737256388762491,
+    -2.0859641244730915
    ],
-   "medianEArmKm": 0.3206170096924711,
+   "medianEArmKm": 0.3210770331489015,
    "medianERefKm": 1.7442907450818685,
-   "medianAtArmKm": 0.2853218152386018,
+   "medianAtArmKm": 0.2853819814491615,
    "medianAtRefKm": 1.666334542935914,
    "rules": {
     "medianBelow0": true,
@@ -7901,22 +7875,22 @@
    "seed": "XM-fast|GN|72|M|X2/P|7|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.0662765065780828,
-   "medianRatioPercent": -65.57119118648238,
+   "medianD": -1.0667367186212897,
+   "medianRatioPercent": -65.58703209356393,
    "ciMedianD": [
-    -1.1749279686914762,
-    -1.0010791611284944
+    -1.1778543020422154,
+    -1.0025026761563396
    ],
-   "lnP95Ratio": -1.9666339003000266,
+   "lnP95Ratio": -1.9684945098058253,
    "ciLnP95Ratio": [
-    -2.076220697857986,
-    -1.8191336393852404
+    -2.0784831334036866,
+    -1.8198766976063498
    ],
-   "medianEArmKm": 0.6500575805282385,
+   "medianEArmKm": 0.6501414292864919,
    "medianERefKm": 1.8869617223132775,
-   "medianAtArmKm": 0.5836170545440827,
+   "medianAtArmKm": 0.5837806398331353,
    "medianAtRefKm": 1.7445414181822358,
    "rules": {
     "medianBelow0": true,
@@ -7937,22 +7911,22 @@
    "seed": "XM-fast|GN|72|M|X3/P|1|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 6,
+   "armFailures": 5,
    "refFailures": 0,
-   "medianD": -2.2411614721137383,
-   "medianRatioPercent": -89.36650724254554,
+   "medianD": -2.2430803768214402,
+   "medianRatioPercent": -89.38689233707504,
    "ciMedianD": [
-    -2.3607976958559727,
-    -2.139183007943314
+    -2.367806688320747,
+    -2.141240919211339
    ],
-   "lnP95Ratio": -2.90706140268517,
+   "lnP95Ratio": -2.9089522492073656,
    "ciLnP95Ratio": [
-    -3.412522678552361,
-    -2.7014167033625713
+    -3.4181386964599745,
+    -2.701525374071927
    ],
-   "medianEArmKm": 0.16146104560179772,
+   "medianEArmKm": 0.161495869827683,
    "medianERefKm": 1.6370684091480663,
-   "medianAtArmKm": 0.14232043771896985,
+   "medianAtArmKm": 0.14233406534266818,
    "medianAtRefKm": 1.5595260129992066,
    "rules": {
     "medianBelow0": true,
@@ -7973,22 +7947,22 @@
    "seed": "XM-fast|GN|72|M|X3/P|2|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 6,
+   "armFailures": 5,
    "refFailures": 0,
-   "medianD": -1.9063639602445581,
-   "medianRatioPercent": -85.13802071749086,
+   "medianD": -1.9069482767570445,
+   "medianRatioPercent": -85.14670228075647,
    "ciMedianD": [
-    -1.9970196940020604,
-    -1.7914048005170184
+    -2.005479164192362,
+    -1.7915409282044998
    ],
-   "lnP95Ratio": -2.5862035201577758,
+   "lnP95Ratio": -2.5875240562688915,
    "ciLnP95Ratio": [
-    -3.028356232531934,
-    -2.298261758118876
+    -3.034784770339637,
+    -2.2990002444865207
    ],
-   "medianEArmKm": 0.2410042405672423,
+   "medianEArmKm": 0.2411084736305352,
    "medianERefKm": 1.6860583735732897,
-   "medianAtArmKm": 0.21264930057066975,
+   "medianAtArmKm": 0.21296286993065772,
    "medianAtRefKm": 1.595615338811796,
    "rules": {
     "medianBelow0": true,
@@ -8009,22 +7983,22 @@
    "seed": "XM-fast|GN|72|M|X3/P|3|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 6,
+   "armFailures": 5,
    "refFailures": 0,
-   "medianD": -1.6293945427222374,
-   "medianRatioPercent": -80.39517629674717,
+   "medianD": -1.6306356635677597,
+   "medianRatioPercent": -80.41949315891436,
    "ciMedianD": [
-    -1.7298848985758077,
-    -1.5381110125350248
+    -1.741840193949415,
+    -1.5417794170309138
    ],
-   "lnP95Ratio": -2.3925994195380413,
+   "lnP95Ratio": -2.3937869094712365,
    "ciLnP95Ratio": [
-    -2.712724659473907,
-    -2.074013399413903
+    -2.7183616614502273,
+    -2.074309178752298
    ],
-   "medianEArmKm": 0.3201569862360407,
+   "medianEArmKm": 0.3206170096924711,
    "medianERefKm": 1.7442907450818685,
-   "medianAtArmKm": 0.285261649028042,
+   "medianAtArmKm": 0.2853218152386018,
    "medianAtRefKm": 1.666334542935914,
    "rules": {
     "medianBelow0": true,
@@ -8045,22 +8019,22 @@
    "seed": "XM-fast|GN|72|M|X3/P|7|orbit",
    "pairs": 751,
    "clusterCount": 110,
-   "armFailures": 6,
+   "armFailures": 5,
    "refFailures": 0,
-   "medianD": -1.0628001680928183,
-   "medianRatioPercent": -65.45129671726637,
+   "medianD": -1.064457000698158,
+   "medianRatioPercent": -65.50849074179149,
    "ciMedianD": [
-    -1.1682992935988956,
-    -0.996154957564459
+    -1.1706746622253672,
+    -0.9986170593464767
    ],
-   "lnP95Ratio": -1.952712385851814,
+   "lnP95Ratio": -1.9559283215383148,
    "ciLnP95Ratio": [
-    -2.070599551047753,
-    -1.811361191046625
+    -2.0732074484091423,
+    -1.8118970058195203
    ],
-   "medianEArmKm": 0.6501414292864919,
+   "medianEArmKm": 0.6503653791044743,
    "medianERefKm": 1.8869617223132775,
-   "medianAtArmKm": 0.5837806398331353,
+   "medianAtArmKm": 0.5838358839812878,
    "medianAtRefKm": 1.7445414181822358,
    "rules": {
     "medianBelow0": true,
@@ -8657,22 +8631,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|1|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -2.2451677430136945,
-   "medianRatioPercent": -89.40902267411138,
+   "medianD": -2.2508734047758643,
+   "medianRatioPercent": -89.46927914347856,
    "ciMedianD": [
-    -2.368301649762004,
-    -2.1453007456809763
+    -2.3755302525076427,
+    -2.147230927295875
    ],
-   "lnP95Ratio": -2.9120439931602524,
+   "lnP95Ratio": -2.914879950631616,
    "ciLnP95Ratio": [
-    -3.4369483044827547,
-    -2.714260498667823
+    -3.442534977291044,
+    -2.714581222143245
    ],
-   "medianEArmKm": 0.16138718359463036,
+   "medianEArmKm": 0.16138763736748934,
    "medianERefKm": 1.6210960174542852,
-   "medianAtArmKm": 0.14206400941864053,
+   "medianAtArmKm": 0.14206935167771403,
    "medianAtRefKm": 1.5484366063745698,
    "rules": {
     "medianBelow0": true,
@@ -8693,22 +8667,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|2|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.9021047180046988,
-   "medianRatioPercent": -85.07458494931097,
+   "medianD": -1.9042365963180727,
+   "medianRatioPercent": -85.1063702247675,
    "ciMedianD": [
-    -1.9970196940020604,
-    -1.788126032835509
+    -2.0035158483508653,
+    -1.789092388176262
    ],
-   "lnP95Ratio": -2.590232710743837,
+   "lnP95Ratio": -2.5921548134505206,
    "ciLnP95Ratio": [
-    -3.036830550056968,
-    -2.310858253436132
+    -3.0454142011072904,
+    -2.3111316510043114
    ],
-   "medianEArmKm": 0.23985244844350703,
+   "medianEArmKm": 0.24042834450537465,
    "medianERefKm": 1.6821971409685967,
-   "medianAtArmKm": 0.21237035113836583,
+   "medianAtArmKm": 0.21250982585451778,
    "medianAtRefKm": 1.5937891021110429,
    "rules": {
     "medianBelow0": true,
@@ -8729,22 +8703,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|3|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.6287287164706201,
-   "medianRatioPercent": -80.38211854385227,
+   "medianD": -1.6300151031449985,
+   "medianRatioPercent": -80.4073385003512,
    "ciMedianD": [
-    -1.7317278841697243,
-    -1.5405294536373306
+    -1.7377055318565278,
+    -1.5429478947396364
    ],
-   "lnP95Ratio": -2.3931366845499995,
+   "lnP95Ratio": -2.396917434417659,
    "ciLnP95Ratio": [
-    -2.734103390779796,
-    -2.0835509408475423
+    -2.741874717518335,
+    -2.084198974838499
    ],
-   "medianEArmKm": 0.3200933994058968,
+   "medianEArmKm": 0.32012519282096874,
    "medianERefKm": 1.740145264090706,
-   "medianAtArmKm": 0.2849185442597457,
+   "medianAtArmKm": 0.28493092730568237,
    "medianAtRefKm": 1.6635968890202129,
    "rules": {
     "medianBelow0": true,
@@ -8765,22 +8739,22 @@
    "seed": "XM-fast|GN|72|O|X2/P|7|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 1,
+   "armFailures": 0,
    "refFailures": 0,
-   "medianD": -1.064548998191365,
-   "medianRatioPercent": -65.51166372822453,
+   "medianD": -1.0654587511313274,
+   "medianRatioPercent": -65.5430253257264,
    "ciMedianD": [
-    -1.1660634890913566,
-    -0.9949081675410055
+    -1.1706746622253672,
+    -0.996154957564459
    ],
-   "lnP95Ratio": -1.966561398998401,
+   "lnP95Ratio": -1.9675681887939804,
    "ciLnP95Ratio": [
-    -2.0742052792005445,
-    -1.8107150712075104
+    -2.076219546522169,
+    -1.81120782297614
    ],
-   "medianEArmKm": 0.6498044820533513,
+   "medianEArmKm": 0.6498314117696966,
    "medianERefKm": 1.8866950456840592,
-   "medianAtArmKm": 0.5825205783729516,
+   "medianAtArmKm": 0.5829870238139909,
    "medianAtRefKm": 1.7337494118754133,
    "rules": {
     "medianBelow0": true,
@@ -8801,22 +8775,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|1|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -2.230716393797969,
-   "medianRatioPercent": -89.25485749783732,
+   "medianD": -2.2331850215611118,
+   "medianRatioPercent": -89.28135054075213,
    "ciMedianD": [
-    -2.3428322418455023,
-    -2.1382408767448293
+    -2.351583898979827,
+    -2.139183007943314
    ],
-   "lnP95Ratio": -2.877352967279576,
+   "lnP95Ratio": -2.8782984820340074,
    "ciLnP95Ratio": [
-    -3.391195688663011,
-    -2.690510298360819
+    -3.397551742218078,
+    -2.69087388124416
    ],
-   "medianEArmKm": 0.16138718359463036,
+   "medianEArmKm": 0.16138763736748934,
    "medianERefKm": 1.6210960174542852,
-   "medianAtArmKm": 0.14204496321014373,
+   "medianAtArmKm": 0.14205448631439213,
    "medianAtRefKm": 1.5484366063745698,
    "rules": {
     "medianBelow0": true,
@@ -8837,22 +8811,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|2|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -1.898783479302009,
-   "medianRatioPercent": -85.0249316736427,
+   "medianD": -1.8998861978900583,
+   "medianRatioPercent": -85.04143585843539,
    "ciMedianD": [
-    -1.9838840958095254,
-    -1.7737205036686967
+    -1.9846444722164156,
+    -1.7737665920403685
    ],
-   "lnP95Ratio": -2.56594721183027,
+   "lnP95Ratio": -2.568957893279994,
    "ciLnP95Ratio": [
-    -2.9967140338747895,
-    -2.283770776479592
+    -3.0055023548902744,
+    -2.284554628307377
    ],
-   "medianEArmKm": 0.23984671520750725,
+   "medianEArmKm": 0.23984958182550714,
    "medianERefKm": 1.6821971409685967,
-   "medianAtArmKm": 0.21198225348760064,
+   "medianAtArmKm": 0.21217630231298323,
    "medianAtRefKm": 1.5937891021110429,
    "rules": {
     "medianBelow0": true,
@@ -8873,22 +8847,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|3|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -1.615124367521585,
-   "medianRatioPercent": -80.11340635608444,
+   "medianD": -1.6199968308124122,
+   "medianRatioPercent": -80.21006737372906,
    "ciMedianD": [
-    -1.7224446836929261,
-    -1.5283303160438975
+    -1.7240151505052492,
+    -1.5328195730962053
    ],
-   "lnP95Ratio": -2.368630772243855,
+   "lnP95Ratio": -2.372576758883251,
    "ciLnP95Ratio": [
-    -2.694169059434171,
-    -2.0557060892244934
+    -2.6990612895167123,
+    -2.0567586773665
    ],
-   "medianEArmKm": 0.3199183404940484,
+   "medianEArmKm": 0.3200058699499726,
    "medianERefKm": 1.740145264090706,
-   "medianAtArmKm": 0.28485952760227357,
+   "medianAtArmKm": 0.28488903593100967,
    "medianAtRefKm": 1.6635968890202129,
    "rules": {
     "medianBelow0": true,
@@ -8909,22 +8883,22 @@
    "seed": "XM-fast|GN|72|O|X3/P|7|satellite",
    "pairs": 746,
    "clusterCount": 110,
-   "armFailures": 11,
+   "armFailures": 10,
    "refFailures": 0,
-   "medianD": -1.060632113728663,
-   "medianRatioPercent": -65.37631199423221,
+   "medianD": -1.0612999493870678,
+   "medianRatioPercent": -65.39942720826673,
    "ciMedianD": [
-    -1.1637338937545507,
-    -0.9862491564847176
+    -1.1660165936767233,
+    -0.9878265611063562
    ],
-   "lnP95Ratio": -1.9408489998931395,
+   "lnP95Ratio": -1.9436225513447154,
    "ciLnP95Ratio": [
-    -2.050202773833494,
-    -1.7938146530991388
+    -2.052693700753937,
+    -1.7938796176848806
    ],
-   "medianEArmKm": 0.6484496015435876,
+   "medianEArmKm": 0.6487947765028016,
    "medianERefKm": 1.8866950456840592,
-   "medianAtArmKm": 0.5816526608376165,
+   "medianAtArmKm": 0.581864878360057,
    "medianAtRefKm": 1.7337494118754133,
    "rules": {
     "medianBelow0": true,
