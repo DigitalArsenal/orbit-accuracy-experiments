@@ -1,6 +1,6 @@
 // End-to-end check of the one-$OCM path (lib/build.mjs PIN: sdn-ap 0.5.1, sgp4-xp 0.2.1), every product re-fitted as $OCM on stored windows (inputs on disk):
-// 1. the forward test: score.mjs re-scores the first two registered cycles' pairs, one shard. The operator's forecast, SGP4 and FFM arms equal the registered rows
-//    (forward/rows.jsonl); the AP module's arms (X0, X2) equal the 0.5.1 re-measure (ap/b051/forward-check), the registered 0.1 rows they replace beside them.
+// 1. the forward test: score.mjs re-scores the first two registered cycles' pairs, one shard, the AP module's arms (X0, X2) re-fitted as $OCM on the older file's
+//    stored window; every arm, the operator's forecast, SGP4 and FFM with them, equals the registered row (forward/rows.jsonl).
 // 2. AP5 and AP6: ap-truth.mjs, truth-compare.mjs and all-regimes.mjs re-fit one shard of the registered windows. AP and whiteroom XP equal AP7's 0.4.11 rows of
 //    those windows (ap/b0411) byte for byte; the Space Force XP equals the 0.2.1 re-measure (ap/b051).
 //   node experiments/operator-theory/check.mjs [--root /opt/data/sdn-archive/operator-theory]
@@ -29,21 +29,21 @@ try {
   if (!rows.length) throw new Error('no pair scored');
   const id = (r) => `${r.key}|${r.olderStart}|${r.newerStart}`;
   const registered = new Map(jsonl(path.join(ROOT, 'forward/rows.jsonl')).map((r) => [id(r), r]));
-  const remeasured = new Map(jsonl(path.join(NEW, 'forward-check/rows.jsonl')).map((r) => [id(r), r]));
-  let equalRegistered = 0, equalRemeasured = 0;
+  let compared = 0, refitted = 0;
   for (const r of rows) {
-    const s = registered.get(id(r)), m = remeasured.get(id(r));
-    if (!s || !m) throw new Error(`no stored row for ${id(r)}`);
+    const s = registered.get(id(r));
+    if (!s) throw new Error(`no stored row for ${id(r)}`);
     if (!r.arms.operator) throw new Error(`${r.key}: no operator forecast scored`);
     if (Object.keys(r.arms).length !== Object.keys(s.arms).length) throw new Error(`${r.key}: ${Object.keys(r.arms).length} arms scored, ${Object.keys(s.arms).length} registered`);
     for (const [name, a] of Object.entries(r.arms)) {
-      const want = AP_MODULE_ARM.test(name) ? m.arms[name] : s.arms[name];
+      const want = s.arms[name];
       if (a.error || want?.error) throw new Error(`${r.key} ${name}: ${a.error ?? want.error}`);
       if (Math.abs(a.km - want.km) > 1e-9) throw new Error(`${r.key} ${name}: ${a.km} against stored ${want.km}`);
-      if (AP_MODULE_ARM.test(name)) equalRemeasured += 1; else equalRegistered += 1;
+      compared += 1; if (AP_MODULE_ARM.test(name)) refitted += 1;
     }
   }
-  console.log(`forward: ${rows.length} pairs; ${equalRegistered} operator, SGP4 and FFM scores equal the registered rows; ${equalRemeasured} AP-module scores equal the 0.5.1 re-measure`);
+  if (!refitted) throw new Error('forward: no AP-module arm re-fitted');
+  console.log(`forward: ${rows.length} pairs, ${compared} arm scores equal the registered rows (${refitted} from $OCM re-fitted at 0.5.1)`);
 
   // 2. AP5 and AP6, one shard of the registered windows each
   const equal = (fresh, stored, arms, what) => {

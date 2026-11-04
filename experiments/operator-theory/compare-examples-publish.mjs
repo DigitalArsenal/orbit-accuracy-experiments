@@ -1,13 +1,23 @@
 // COMPARE.md: what the site's globe reads, from the full examples compare-examples.mjs wrote. Every forecast's positions, and at each time its radial, in-track and cross-track distance from
 // the reference, which are results, and the orbit-local axes at each time. The reference's own positions go out only where its source's terms allow them to be redrawn. Arithmetic on stored positions only.
-//   node experiments/operator-theory/compare-examples-publish.mjs --in <dir>,<dir> --out <dir>
+//   node experiments/operator-theory/compare-examples-publish.mjs --in <dir>,<dir> --out <dir> [--check]
+// --check writes nothing: every file this would write must equal the one in --out (the published examples) byte for byte.
 import fs from 'node:fs';
 import path from 'node:path';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
-const OUT = argOf('--out');
+const OUT = argOf('--out'), CHECK = process.argv.includes('--check');
 if (!OUT || !argOf('--in')) throw new Error('--in and --out');
-fs.mkdirSync(OUT, { recursive: true });
+if (!CHECK) fs.mkdirSync(OUT, { recursive: true });
+const differ = [];
+let checked = 0;
+/** Write one file, or under --check compare it with the published one. */
+const put = (name, bytes) => {
+  const file = path.join(OUT, name), b = Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes);
+  if (!CHECK) { fs.writeFileSync(file, b); return; }
+  checked += 1;
+  if (!fs.existsSync(file) || !fs.readFileSync(file).equals(b)) differ.push(name);
+};
 // No stated license, a non-commercial license, or terms that bind each recipient. SpaceX is not here: the owner ruled its numbers public on 2026-11-01.
 const NOT_REDRAWN = new Set(['ESA', 'ESA navigation', 'ESA ultra-rapid', 'Intelsat', 'SES', 'China Space Station', 'Planet (Flock)']);
 
@@ -90,11 +100,15 @@ for (const dir of argOf('--in').split(',')) {
     // One Float64 track in km, the reference where it may be drawn and AP elsewhere, then each arm's Float32 distances from the reference, then the Float32 rotations: little endian.
     const center = section(referenceDrawn ? 'reference' : 'AP');
     const parts = [center, ...arms.map((a) => offsets[a]), framesOf(reference, d.count)];
-    fs.writeFileSync(path.join(OUT, `${d.id}.bin`), Buffer.concat(parts.map((p) => Buffer.from(p.buffer, p.byteOffset, p.byteLength))));
+    put(`${d.id}.bin`, Buffer.concat(parts.map((p) => Buffer.from(p.buffer, p.byteOffset, p.byteLength))));
     const { tracks: _, ...rest } = d;
-    fs.writeFileSync(path.join(OUT, `${d.id}.json`), `${JSON.stringify({ ...rest, center: referenceDrawn ? 'reference' : 'AP', offsets: arms, referenceDrawn, steps: stepsOf(d, offsets.FFM) })}\n`);
+    put(`${d.id}.json`, `${JSON.stringify({ ...rest, center: referenceDrawn ? 'reference' : 'AP', offsets: arms, referenceDrawn, steps: stepsOf(d, offsets.FFM) })}\n`);
     index.push({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite, ...(d.showcase ? { showcase: true } : {}) });
   }
 }
-fs.writeFileSync(path.join(OUT, 'index.json'), `${JSON.stringify(index)}\n`);
+put('index.json', `${JSON.stringify(index)}\n`);
 console.log('examples', index.length, 'with the reference drawn', index.filter((e) => !NOT_REDRAWN.has(e.provider)).length);
+if (CHECK) {
+  if (differ.length) { console.log(`COMPARE EXAMPLES CHECK FAIL: ${differ.length} of ${checked} files differ from ${OUT}: ${differ.slice(0, 8).join(', ')}`); process.exit(1); }
+  console.log(`COMPARE EXAMPLES CHECK PASS: ${checked} files equal ${OUT} byte for byte`);
+}
