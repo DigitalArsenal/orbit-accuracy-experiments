@@ -5,8 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
-import { createRequire } from 'node:module';
-import { pathToFileURL } from 'node:url';
+import { createRequire, registerHooks } from 'node:module';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
 export const dir = path.dirname(new URL(import.meta.url).pathname);
@@ -45,6 +45,32 @@ const flowDir = path.join(MODULES, 'flows/observation-ap');
 const req = createRequire(path.join(flowDir, 'package.json'));
 const sdsRoot = path.join(flowDir, 'node_modules/spacedatastandards.org');
 const imp = (p) => import(pathToFileURL(p).href);
+// propagator/sgp4's request encoders (sgp4-lib/PROVENANCE.md): the byte-identical copy in sgp4-lib/, or the directory SGP4_LIB
+// names (one holding tests/lib/payloadEncoders.mjs). Their dependencies (flatbuffers, spacedatastandards.org) resolve from the
+// read-only clone's flows/observation-ap install, never from this repository's node_modules; every file the import loads is
+// held to the closure SHA-256 in PROVENANCE.md. Imported before any other module, so that the closure is whole.
+const encRoot = path.resolve(process.env.SGP4_LIB ?? path.join(dir, 'sgp4-lib'));
+const encProvenance = JSON.parse(fs.readFileSync(path.join(dir, 'sgp4-lib/PROVENANCE.md'), 'utf8').match(/```json\n([\s\S]*?)\n```/)[1]);
+const depsRoot = path.join(MODULES, encProvenance.dependencies.resolvedFrom);
+const encLoaded = new Set();
+let encRecording = false;
+registerHooks({ resolve(specifier, context, next) {
+  const bare = !/^(\.|\/|node:|file:|data:)/.test(specifier);
+  const r = bare && context.parentURL?.startsWith(`${pathToFileURL(encRoot).href}/`)
+    ? next(specifier, { ...context, parentURL: pathToFileURL(path.join(path.dirname(depsRoot), 'package.json')).href }) : next(specifier, context);
+  if (encRecording && r.url.startsWith('file:')) encLoaded.add(fileURLToPath(r.url));
+  return r;
+} });
+encRecording = true;
+export const enc = await imp(path.join(encRoot, 'tests/lib/payloadEncoders.mjs'));
+encRecording = false;
+{
+  const label = (p) => (p.startsWith(encRoot + path.sep) ? path.relative(encRoot, p) : p.startsWith(depsRoot + path.sep) ? `node_modules/${path.relative(depsRoot, p)}` : p);
+  const lines = [...encLoaded].map((p) => `${label(p)} ${sha256(fs.readFileSync(p))}`).sort();
+  const closure = sha256(`${lines.join('\n')}\n`);
+  if (sha256(fs.readFileSync(path.join(encRoot, 'tests/lib/payloadEncoders.mjs'))) !== config.modules.build.sgp4Encoders.sha256) throw new Error(`${encRoot}: payloadEncoders.mjs differs from ${config.modules.build.sgp4Encoders.path}`);
+  if (lines.length !== encProvenance.closure.files || closure !== encProvenance.closure.sha256) throw new Error(`SGP4 encoders: ${lines.length} files, closure ${closure}; PROVENANCE.md holds ${encProvenance.closure.files}, ${encProvenance.closure.sha256}`);
+}
 export const flatbuffers = await imp(req.resolve('flatbuffers'));
 const sds = (p) => imp(path.join(sdsRoot, 'lib/js', p));
 export const [P, PCF, OCMm, OEMm, EOPm, TDMm, GSTm] = await Promise.all(['PRW/main.js', 'PCF/main.js', 'OCM/main.js', 'OEM/main.js', 'EOP/main.js', 'TDM/main.js', 'GST/main.js'].map(sds));
@@ -52,11 +78,6 @@ const sdkRoot = path.join(flowDir, 'node_modules/space-data-module-sdk');
 export const { createStandaloneHarness } = await imp(path.join(sdkRoot, 'src/testing/isomorphicHarness.js'));
 export const { encodeHttpResponse } = await imp(path.join(sdkRoot, 'src/standards/runtimeContracts.js'));
 export const { observationAp } = await imp(path.join(flowDir, 'flow.mjs'));
-// propagator/sgp4's request encoders, a byte-identical copy (hash checked) beside an install of that module's own lock: the
-// read-only clone has no install under propagator/sgp4.
-const encCopy = path.join(process.env.SGP4_LIB ?? '/Users/tj/software/terrain-work/body-look/claude-aplaser2-d9/sgp4-lib', 'tests/lib/payloadEncoders.mjs');
-if (sha256(fs.readFileSync(encCopy)) !== config.modules.build.sgp4Encoders.sha256) throw new Error(`${encCopy} differs from ${config.modules.build.sgp4Encoders.path}`);
-export const enc = await imp(encCopy);
 // analysis/estimation's schema codec (generated from schemas/Estimation.fbs), hash checked: reads fit_batch answers only.
 const codecPath = path.join(MODULES, config.modules.build.estimationCodec.path);
 if (sha256(fs.readFileSync(codecPath)) !== config.modules.build.estimationCodec.sha256) throw new Error(`${codecPath} differs from its registered SHA-256`);
