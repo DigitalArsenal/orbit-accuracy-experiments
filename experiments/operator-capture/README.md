@@ -87,10 +87,19 @@ existing stdout log. `--once` is available for a complete diagnostic cycle, and
 `--limit <n>` limits it to the first n listed files (a commissioning subset: the
 cycle reads `partial`, never `complete`).
 
+Release 532bd3d4 runs under the launchd agent
+`collector/launchd/io.spacedatanetwork.operator-capture.plist`, installed to
+`~/Library/LaunchAgents/` and loaded with `launchctl bootstrap gui/$(id -u) <plist>`.
+It is that installed command with `OPERATOR_SUBSETS` unset (the release's
+default path does not exist, so the capture stays fallback-all, the mode of
+every window cycle). `RunAtLoad` starts it at login; there is no `KeepAlive`, so
+a halt stays a halt. After a halt, verify the PID has exited, then
+`launchctl kickstart gui/$(id -u)/io.spacedatanetwork.operator-capture`.
+
 Checks, from the repository checkout (`npm ci --prefix experiments/operator-capture/collector` first):
 
 ```sh
-node experiments/operator-capture/collector/check.mjs          # the A4 E2E: live files, pinned WASM, nothing skipped
+node experiments/operator-capture/collector/check.mjs          # the A4 E2E (live files, pinned WASM, nothing skipped) and the restart check
 node experiments/operator-capture/collector/count-cycle.mjs <cycle-id>
 ```
 
