@@ -2,9 +2,9 @@
 import fs from 'node:fs';
 import {spawn} from 'node:child_process';
 import {once} from 'node:events';
-import {config,analysisProvenance,hash} from '../guard.mjs';
+import {analysisProvenance,hash,store} from '../guard.mjs';
 export async function runEncounterPool(){
- const runId=String(Date.now()),out=`${config.store}/encounters`,children=new Set(),parts=12;
+ const runId=String(Date.now()),out=`${store}/encounters`,children=new Set(),parts=12;
  fs.mkdirSync(out,{recursive:true});
  const stop=()=>{for(const child of children)child.kill('SIGTERM');};
  process.on('SIGTERM',stop);
