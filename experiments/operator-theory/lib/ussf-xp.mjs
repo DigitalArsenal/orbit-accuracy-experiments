@@ -1,7 +1,7 @@
 // The Space Force's SGP4-XP: propagator/sgp4-xp at the pinned build (lib/build.mjs PIN, 0.2.1), whose library is the unmodified US Space Force Sgp4Prop 9.1.1.0 XP
 // build, through that module's fit (one $OCM per block), ingest_omm and propagate (an $OCM on its grid). A black box here: nothing reads the library's source.
 // The library has no fitter; the module's fit is ours, and every evaluation in it runs the library. Our whiteroom XP is the AP module with the theory's own forces.
-import { TYPE, oemLines, gridBytes } from '../../xp-atmosphere-merit/lib/sds.mjs';
+import { TYPE, oemLines, gridBytes, OMM, flatbuffers } from '../../xp-atmosphere-merit/lib/sds.mjs';
 import { standalone } from './ap.mjs';
 import { PIN, USSF_011 } from './build.mjs';
 
@@ -31,6 +31,15 @@ export async function openUssfXp() {
       return lines;
     },
   };
+}
+
+/** A fitted size-prefixed $OMM without its free-form USER_DEFINED_PARAMETERS (the fit's own notes), which 0.2.1's ingest_omm refuses; every typed field as fitted. */
+export function typedOmm(bytes) {
+  const t = OMM.OMM.getSizePrefixedRootAsOMM(new flatbuffers.ByteBuffer(bytes)).unpack();
+  t.USER_DEFINED_PARAMETERS = [];
+  const b = new flatbuffers.Builder(1024);
+  b.finishSizePrefixed(t.pack(b), '$OMM');
+  return b.asUint8Array();
 }
 
 /** propagator/sgp4-xp 0.1.1 (lib/build.mjs USSF_011), for XP-ARM-0-2-1.md's attribution only: its fit emits an $OMM, which its propagate flies on a grid. */
