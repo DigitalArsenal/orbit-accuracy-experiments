@@ -8,9 +8,9 @@
   "note": "Part 1's frozen-constants.json still carries o5 false at 4bd8021; the pin is re-taken at its ready-to-freeze"
  },
  "freezeDeadlineUtc": "2026-11-09T23:59:00Z",
- "codeSha256": "e3ff1e82aa1a0a4337473060da81b5f0d8e1483419b762360dca5f8395e0fe1b",
+ "codeSha256": "48e3b3682b7d2636e8e2f9f7b29cf9d703c6339c111c40e1b099bbef4485be44",
  "codeFilesSha256": {
-  "PLAN.md": "6896ca842c32e6161417bd3ecdb46ce1527863a4abd483ec8896becf5b635bee",
+  "PLAN.md": "438dd9e65a58e52b10033a09059ba7b762d34b2590f1e504c1b6491ecf00144e",
   "admission.mjs": "8cb857346ea17cd988bcd2de9f51bd4642df3c73bc9bdd421c0a9ba999301ea9",
   "audit.mjs": "377bda408fedbbc9fbee2ade8e8d8d6ee392294840223045347650dd4f4837b4",
   "build-truth.mjs": "4f7955a687ed77779bf55adb148600c6e68ddbec79b501e0840cc7159ad58401",
@@ -19,7 +19,7 @@
   "denominators.mjs": "ec893d3f103da2fd445c6c7b374f160401db287a771541800954912129d4bd38",
   "devs2-worker.mjs": "28dc9ff38d4b30747147ab217d265b72e48a1a0107c68bca0c8fa1e47603fd0d",
   "devs2.mjs": "f871033e984cac54252ec3b488b97cff8e8c6e65858c3bb55d9cab8717aee065",
-  "freeze.mjs": "64f8b39390f36dfebbd110da6a31dc7455fa983572fea91c69ad06a579aef6c1",
+  "freeze.mjs": "0c9a066317210b4fd074cfacbba698491115be9698bdac37bab968882f7bf983",
   "index-worker.mjs": "12452a39268f5d88ff4b9a3ac04bb2366e5039959621f90eb9af8098af085025",
   "index.mjs": "7887c0c58e5b8e2fe852694cf5a44bcc07fedc2521b2d8677726ebf1f773f5ef",
   "lib/archive.mjs": "2395e5ff6396f730ebe0570542e328420a08b57b938cb40f78f6dac8346f8209",
@@ -48,8 +48,10 @@
   "sgp4Pins": "lib/sgp4.mjs PINS (space-data-network-modules origin/main 3ae1eb289)"
  },
  "part1FrozenConstantsSha256": {
-  "sha256": "daf3153ff6baf2596f1dbe1d22489182e69931cba15d7133307497b80638e3ba",
-  "source": "origin wip/experiments-gp-covariance-strata-20261103/claude-gpstrata-d9 4bd8021",
+  "sha256": "821c853408042774cdf79d96fd920bd6dcf2f60e8a603a53d182ed882c11a631",
+  "source": "origin wip/experiments-gp-covariance-strata-20261103/claude-gpstrata-d9 aa4f90e",
+  "devRowsManifestSha256": "0b05a2e9e4a449d5f59bbfdaac5ddc2514b4139d9d0885cf2e22959ef0116bcb",
+  "devRowsFiles": 118,
   "provisional": true,
   "note": "Re-pinned after Part 1 adds its s3.ruling field; the pin in the committed freeze is the one in Part 1's final results/gp-covariance-strata/frozen-constants.json"
  },
@@ -58,6 +60,7 @@
   "devPairsManifestSha256": "c27c079f25536f59816d2e55c6223fccb866d338d3866613e162bfaaf7e5e56c",
   "clusterMomentsSha256": "4fc2ca59d34efd1ffdb5db710a851a9183c4ea25159f65453b110bc9036c3b29"
  },
+ "devResultsComputedOn": "Part 1 dev rows at 4bd8021 (113 objects); re-run on the rewritten archive (aa4f90e) before the freeze",
  "n0": {
   "status": "Part 1 block lengths (median over strata with an admitted bin) and SD-admitted bins; the S2.1 null condition is applied in the freeze",
   "admittedAxisCells": 33,
