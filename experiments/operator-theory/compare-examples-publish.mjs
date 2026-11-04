@@ -2,6 +2,8 @@
 // the reference, which are results, and the orbit-local axes at each time. The reference's own positions go out only where its source's terms allow them to be redrawn. Arithmetic on stored positions only.
 //   node experiments/operator-theory/compare-examples-publish.mjs --in <dir>,<dir> --out <dir> [--check]
 // --check writes nothing: every file this would write must equal the one in --out (the published examples) byte for byte.
+// --reflown <dir>: full examples compare-examples.mjs flew again (the same ids); each track is reported equal to --in's byte for byte, or by its largest
+// position difference, in m.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -108,6 +110,23 @@ for (const dir of argOf('--in').split(',')) {
 }
 put('index.json', `${JSON.stringify(index)}\n`);
 console.log('examples', index.length, 'with the reference drawn', index.filter((e) => !NOT_REDRAWN.has(e.provider)).length);
+if (argOf('--reflown')) {
+  const dirs = argOf('--in').split(','), tally = {};
+  for (const f of fs.readdirSync(argOf('--reflown')).filter((n) => n.endsWith('.json') && n !== 'index.json').sort()) {
+    const from = dirs.find((d) => fs.existsSync(path.join(d, f)));
+    if (!from) { console.log(`${f}: not in --in`); continue; }
+    const read = (dir) => ({ d: JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), b: fs.readFileSync(path.join(dir, f.replace(/\.json$/, '.bin'))) });
+    const x = read(argOf('--reflown')), y = read(from), size = 24 * x.d.count, moved = [];
+    for (const t of x.d.tracks) {
+      const p = x.b.subarray(size * x.d.tracks.indexOf(t), size * (x.d.tracks.indexOf(t) + 1)), q = y.b.subarray(size * y.d.tracks.indexOf(t), size * (y.d.tracks.indexOf(t) + 1));
+      const same = x.d.count === y.d.count && p.equals(q);
+      (tally[t] ??= { equal: 0, moved: 0 })[same ? 'equal' : 'moved'] += 1;
+      if (!same) { let m = 0; for (let i = 0; i < Math.min(p.length, q.length); i += 8) m = Math.max(m, Math.abs(p.readDoubleLE(i) - q.readDoubleLE(i))); moved.push(`${t} ${(m * 1000).toFixed(1)} m`); }
+    }
+    console.log(`${f.replace(/\.json$/, '')}: ${moved.length ? moved.join(', ') : 'every track equal'}`);
+  }
+  console.log(`reflown tracks: ${JSON.stringify(tally)}`);
+}
 if (CHECK) {
   if (differ.length) { console.log(`COMPARE EXAMPLES CHECK FAIL: ${differ.length} of ${checked} files differ from ${OUT}: ${differ.slice(0, 8).join(', ')}`); process.exit(1); }
   console.log(`COMPARE EXAMPLES CHECK PASS: ${checked} files equal ${OUT} byte for byte`);
