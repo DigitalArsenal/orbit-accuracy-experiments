@@ -21,8 +21,10 @@ const mjd = (t) => t / DAY + 40587;
 const labelMs = (text) => { const m = /^(.*T\d\d:\d\d:\d\d)(?:\.(\d+))?Z?$/.exec(String(text)); return m ? Date.parse(`${m[1]}Z`) + (m[2] ? Number(`0.${m[2]}`) * 1000 : 0) : NaN; };
 export const isoMs = (t) => new Date(t).toISOString();
 
-async function host(rel) {
-  const { bytes, manifest } = pinned(modulesRoot(), rel);
+/** A module at XM3's pin, or at `build` ({ modulesCommit, wasmSha256 }: lib/ap.mjs pinnedFile). */
+async function host(rel, build) {
+  const fromFile = (file) => ({ bytes: fs.readFileSync(file), manifest: JSON.parse(fs.readFileSync(path.join(path.dirname(file), 'plugin-manifest.json'), 'utf8')) });
+  const { bytes, manifest } = build ? fromFile((await import('./ap.mjs')).pinnedFile(rel, build)) : pinned(modulesRoot(), rel);
   const harness = await createBrowserModuleHarness({ wasmSource: bytes, manifest, surface: 'direct' });
   return {
     provenance: { path: rel, version: manifest.version, wasmSha256: sha256(bytes) },
@@ -62,8 +64,9 @@ function earthOrientation() {
   return P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(Buffer.from(saved.inputs.earth_orientation_finals, 'base64')))).unpack().EARTH_ORIENTATION.ROWS;
 }
 
-export async function openFfmHost() {
-  const estimation = await host('analysis/estimation'), ffm = await host('propagator/ffm');
+/** FFM's fit and flight: analysis/estimation and propagator/ffm at XM3's pin, or propagator/ffm at `ffm` ({ modulesCommit, wasmSha256 }). */
+export async function openFfmHost({ ffm: ffmBuild } = {}) {
+  const estimation = await host('analysis/estimation'), ffm = await host('propagator/ffm', ffmBuild);
   const modules = modulesRoot();
   const { FIT_PARAMETER_DOMAINS: domains } = await import(path.join(modules, 'propagator/ffm/catalog-configuration.mjs'));
   const codec = await estimationCodecV3(modules, path.join(root, 'node_modules/space-data-module-sdk/schemas/orbpro'));

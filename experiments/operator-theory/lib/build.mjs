@@ -15,6 +15,9 @@ export const PIN = {
   },
   versions: { 'propagator/sdn-ap': '0.5.1', 'propagator/sgp4-xp': '0.2.1' },
 };
+// S1-STEP-FREE.md's FFM flight (amendment 2): propagator/ffm 2.2.0, RK78 carrying Fehlberg's 8th-order solution (2.0.4 to 2.1.0 carried the 7th), by its dist SHA-256
+// at the modules commit it lands in on main; analysis/estimation stays XM3's 0.7.0.
+export const FFM_220 = { module: 'propagator/ffm', version: '2.2.0', modulesCommit: null, wasmSha256: 'd635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153' };
 export const BUILD_NOTE = `modules ${PIN.modulesCommit.slice(0, 8)}: sdn-ap ${PIN.versions['propagator/sdn-ap']} (${PIN.wasmSha256['propagator/sdn-ap'].slice(0, 12)}), sgp4-xp ${PIN.versions['propagator/sgp4-xp']} (${PIN.wasmSha256['propagator/sgp4-xp'].slice(0, 12)})`;
 // The builds behind the compare tables' columns (results/ap-truth/compare/table.json and xp-versions.json name the same ones), each wasm by SHA-256:
 // key module@sha256[0, 12]. SGP4 is fitted by analysis/gp-error-model and flown by propagator/sgp4; FFM fitted by analysis/estimation, flown by propagator/ffm.

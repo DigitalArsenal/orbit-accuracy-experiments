@@ -1,6 +1,9 @@
-// S1-STEP-FREE.md: FFM (truth-compare.mjs's F24, CHEAPER.md's settings) and AP (propagator/sdn-ap 0.5.1, ap-truth.mjs's AP24: module priors, 31x20) on Sentinel-1A and
-// 1C, cutoff 00:00 UTC every day from 2025-10-05 to 2025-12-28: XM's truth, thinning, coverage, as-issued weather (xp2-fit-design's store) and scoring. Module calls only.
-//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/s1-step-free.mjs --out <store> --shard k/n
+// S1-STEP-FREE.md: FFM (truth-compare.mjs's F24, CHEAPER.md's settings, flown on propagator/ffm 2.2.0: lib/build.mjs FFM_220) and AP (propagator/sdn-ap 0.5.1,
+// ap-truth.mjs's AP24: module priors, 31x20) on Sentinel-1A and 1C, cutoff 00:00 UTC every day from 2025-10-05 to 2025-12-28: XM's truth, thinning, coverage,
+// as-issued weather (xp2-fit-design's store) and scoring. Module calls only.
+//   SDN_MODULES_ROOT=<modules> [SDN_MODULES_GIT=<clone holding FFM_220's commit>] node experiments/operator-theory/s1-step-free.mjs --out <store> --shard k/n
+// Dry run, before any 2025 window is read: --window <AP5 window key from 2026> with XP2F_CONTROL=1 (AP5's environment); --ffm xm3 flies XM3's propagator/ffm 2.0.4,
+// so the row can be set beside AP5's stored F24 and AP24.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -8,20 +11,26 @@ import { config, root, HOUR, DAY, iso, ms, rms, XM } from './lib/xp2.mjs';
 import { driverRows } from './lib/xm3.mjs';
 import { apForces, openAp, fitPcf, fitWeather, horizonOf, readOcm } from './lib/ap.mjs';
 import { openFfmHost, apriori } from './lib/host.mjs';
-import { BUILD_NOTE } from './lib/build.mjs';
+import { BUILD_NOTE, FFM_220 } from './lib/build.mjs';
 import { S1_STEP_FREE as WINDOWS } from './lib/regimes.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
-const OUT = args.out;
+const OUT = args.out, DRY = args.window ?? null;
 if (!OUT) throw new Error('--out');
-if (process.env.XP2F_CONTROL === '1') throw new Error('the 2025 as-issued weather is xp2-fit-design\'s store: run without XP2F_CONTROL');
+if (DRY ? !/^S1\|(39634|62261)\|2026-0[1-5]-\d\d$/.test(DRY) || process.env.XP2F_CONTROL !== '1' : process.env.XP2F_CONTROL === '1') {
+  throw new Error(DRY ? 'a dry run takes one of AP5\'s read 2026 windows, with XP2F_CONTROL=1' : 'the 2025 as-issued weather is xp2-fit-design\'s store: run without XP2F_CONTROL');
+}
+// --ffm-commit <sha>, dry runs only: FFM_220's bytes from a commit before main (its WIP), to try the build on a read window.
+if (args['ffm-commit'] && !DRY) throw new Error('--ffm-commit is for a dry run');
+const FFM = args.ffm === 'xm3' ? null : { ...FFM_220, ...(args['ffm-commit'] ? { modulesCommit: args['ffm-commit'] } : {}) };
+if (FFM && !FFM.modulesCommit) throw new Error('propagator/ffm 2.2.0 is not on modules main yet (lib/build.mjs FFM_220)');
 const runner = crypto.createHash('sha256').update(fs.readFileSync(new URL(import.meta.url))).digest('hex');
 const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
 const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
 const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-const m = await openModules(), A = await openAp(), F = await openFfmHost();
+const m = await openModules(), A = await openAp(), F = await openFfmHost(FFM ? { ffm: FFM } : {});
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 // CHEAPER.md's settings, as truth-compare.mjs flies them.
 const ffmLow = () => ({
@@ -35,9 +44,10 @@ const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest
 fs.mkdirSync(OUT, { recursive: true });
 const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
-const list = objects.flatMap((o) => WINDOWS.cutoffs.map((t) => ({ o, cutoffMs: t, key: `S1|${o.norad}|${XM.dateOf(t)}` }))).filter((w) => inShard(w.key) && !done.has(w.key));
+const cutoffs = DRY ? [Date.parse(`${DRY.split('|')[2]}T00:00:00Z`)] : WINDOWS.cutoffs;
+const list = objects.flatMap((o) => cutoffs.map((t) => ({ o, cutoffMs: t, key: `S1|${o.norad}|${XM.dateOf(t)}` }))).filter((w) => (!DRY || w.key === DRY) && inShard(w.key) && !done.has(w.key));
 for (const { o, cutoffMs: D0, key } of list) {
-  const row = { key, group: 'S1', norad: o.norad, name: o.name, cutoff: iso(D0), createdUtc: new Date().toISOString(), runner, build: BUILD_NOTE, arms: {} };
+  const row = { key, group: 'S1', norad: o.norad, name: o.name, cutoff: iso(D0), createdUtc: new Date().toISOString(), runner, build: BUILD_NOTE, ffm: F.provenance.ffm, arms: {} };
   try {
     const after = T.series(o, D0 + 1, D0 + 7 * DAY).lines;
     const first = after.length ? ms(after[0].epoch) : 0;

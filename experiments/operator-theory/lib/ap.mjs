@@ -14,12 +14,15 @@ import { PIN } from './build.mjs';
 
 const DAY = 86400000;
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
-/** A module's wasm and manifest at PIN's commit, or at `build`'s (git show from the modules checkout), SHA-256 checked, written under the OS temp directory: the file. */
+/**
+ * A module's wasm and manifest at PIN's commit, or at `build`'s (git show from the modules checkout, or from SDN_MODULES_GIT, a clone holding the pinned commits), SHA-256
+ * checked, written under the OS temp directory: the file.
+ */
 export function pinnedFile(rel, build = { modulesCommit: PIN.modulesCommit, wasmSha256: PIN.wasmSha256[rel] }) {
   const want = build.wasmSha256, commit = build.modulesCommit;
   const dir = path.join(os.tmpdir(), 'operator-theory-build', commit, rel), file = path.join(dir, 'module.wasm');
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== want || !fs.existsSync(path.join(dir, 'plugin-manifest.json'))) {
-    const show = (p) => execFileSync('git', ['-C', modulesRoot(), 'show', `${commit}:${rel}/${p}`], { maxBuffer: 1 << 28 });
+    const show = (p) => execFileSync('git', ['-C', process.env.SDN_MODULES_GIT ?? modulesRoot(), 'show', `${commit}:${rel}/${p}`], { maxBuffer: 1 << 28 });
     const bytes = show('dist/isomorphic/module.wasm');
     if (sha256(bytes) !== want) throw new Error(`${rel} at ${commit} is ${sha256(bytes)}, pinned ${want}`);
     fs.mkdirSync(dir, { recursive: true });
