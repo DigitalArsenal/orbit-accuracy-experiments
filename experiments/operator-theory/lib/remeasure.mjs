@@ -16,7 +16,8 @@ const PAIRS = [
   ['truth', 'b0418/truth', /^AP/], ['truth2', 'b0418/truth2', /^AP/], ['regimes', 'b0418/regimes-apxp', /^(AP|XP)/],
   ['truth', 'b0411/truth', /^AP/], ['truth2', 'b0411/truth2', /^AP/], ['regimes', 'b0411/regimes', /^(AP|XP)/],
   ['compare-truth', 'b0411/compare-truth', /^XP/], ['compare-truth2', 'b0411/compare-truth2', /^XP/],
-  ['ussf-truth', 'b0411/ussf-truth', /^U/], ['ussf-truth2', 'b0411/ussf-truth2', /^U/], ['ussf-regimes', 'b0411/ussf-regimes', /^U/],
+  ['regimes-hx', 'b0418/regimes-hx-apxp', /^(AP|XP)/], ['regimes-wa', 'b0418/regimes-wa-apxp', /^(AP|XP)/], ['regimes-hx', 'b0411/regimes-hx', /^(AP|XP)/], ['regimes-wa', 'b0411/regimes-wa', /^(AP|XP)/],
+  ['ussf-truth', 'b0411/ussf-truth', /^U/], ['ussf-truth2', 'b0411/ussf-truth2', /^U/], ['ussf-regimes', 'b0411/ussf-regimes', /^U/], ['ussf-regimes-hx', 'b0411/ussf-regimes-hx', /^U/], ['ussf-regimes-wa', 'b0411/ussf-regimes-wa', /^U/],
 ];
 const out = { build: BUILD_NOTE, store: `${A}/b051`, pairs: [], ussf: [] };
 for (const [store, against, arms] of PAIRS) {
@@ -28,7 +29,7 @@ for (const [store, against, arms] of PAIRS) {
   }
   out.pairs.push({ store, against, windows: fresh.length, arms: t });
 }
-for (const store of ['ussf-truth', 'ussf-truth2', 'ussf-regimes']) {
+for (const store of ['ussf-truth', 'ussf-truth2', 'ussf-regimes', 'ussf-regimes-hx', 'ussf-regimes-wa']) {
   const old = new Map(rowsIn(path.join(A, 'b0411', store)).map((r) => [r.key, r])), groups = new Map();
   for (const r of rowsIn(path.join(A, 'b051', store))) for (const [arm, a] of Object.entries(r.arms ?? {})) {
     const k = `${store === 'ussf-truth' ? 'T' : r.group}|${arm}`, L = groups.get(k) ?? groups.set(k, { n: 0, old: {}, new: {} }).get(k);

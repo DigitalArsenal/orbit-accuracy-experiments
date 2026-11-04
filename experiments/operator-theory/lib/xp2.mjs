@@ -1,7 +1,8 @@
 // xp2-fit-design's windows, store and settings for this experiment's runners (AP5, AP6, the compare examples), and its S fit (lib/sgp4fit.mjs, the same
 // calls). xp2-fit-design/common.mjs pins XM's whole directory at its commit, and XM's sds.mjs and modules.mjs moved to the one-$OCM path on 2026-11-04, so
 // its import refuses; this file pins only what these runners read of XM's: the truth and the weather (lib/truth.mjs, lib/weather.mjs, config.json at XP2F's
-// XM commit) and XM3's directory. XM's modules keep XM's current pins (build.json), never XP2F's modules commit. XP2F_CONTROL=1 as there: XM's own store.
+// XM commit) and XM3's directory. XM's modules keep XM's current pins (its build.json), except the S fit's analysis/gp-error-model, which stays at XP2F's own
+// pin (its build.json: git show at its modules commit, SHA-256 checked) as XP2F registered it. XP2F_CONTROL=1 as there: XM's own store.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -11,6 +12,7 @@ import { execFileSync } from 'node:child_process';
 const here = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../xp2-fit-design');
 export const root = path.resolve(here, '../..');
 export const config = JSON.parse(fs.readFileSync(path.join(here, 'config.json')));
+export const build = JSON.parse(fs.readFileSync(path.join(root, config.build.file)));
 export const control = process.env.XP2F_CONTROL === '1';
 export const store = process.env.XP2F_STORE ?? config.store;
 const git = (...a) => execFileSync('git', ['-C', root, ...a], { maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'ignore'] });
@@ -34,10 +36,12 @@ export function windows(span) {
   return out;
 }
 
-/** xp2-fit-design/lib/sgp4fit.mjs's S fit: analysis/gp-error-model fit_elements at XM's pin, a fresh harness per call. */
+/** xp2-fit-design/lib/sgp4fit.mjs's S fit: analysis/gp-error-model fit_elements at XP2F's pin, a fresh harness per call. */
 export async function openSgp4Fit() {
-  const modules = XM.modulesRoot();
-  const { bytes, manifest } = XM.pinned(modules, 'analysis/gp-error-model');
+  const modules = XM.modulesRoot(), rel = 'analysis/gp-error-model', want = build.wasmSha256[rel];
+  const show = (p) => execFileSync('git', ['-C', modules, 'show', `${build.modulesCommit}:${rel}/${p}`], { maxBuffer: 1 << 28 });
+  const bytes = show('dist/isomorphic/module.wasm'), manifest = JSON.parse(show('plugin-manifest.json').toString('utf8'));
+  if (sha256(bytes) !== want) throw new Error(`${rel} at ${build.modulesCommit} is ${sha256(bytes)}, registered ${want}`);
   const { createBrowserModuleHarness } = await import(pathToFileURL(createRequire(path.join(modules, 'analysis/gp-error-model/package.json')).resolve('space-data-module-sdk/host/browser-module')).href);
   const erm = await import(pathToFileURL(path.join(modules, 'analysis/gp-error-model/scripts/erm-codec.mjs')).href);
   const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
