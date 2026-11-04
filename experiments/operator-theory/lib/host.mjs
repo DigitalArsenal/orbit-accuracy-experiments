@@ -10,7 +10,7 @@ import { pathToFileURL } from 'node:url';
 import * as flatbuffers from 'flatbuffers';
 import * as P from 'spacedatastandards.org/lib/js/PRW/main.js';
 import { createBrowserModuleHarness } from 'space-data-module-sdk/host/browser-module';
-import { config as XM3, root, modulesRoot, pinned, sha256 } from '../../ffm-atmosphere-xm3/common.mjs';
+import { config as XM3, root, modulesRoot, pinned, sha256 } from './xm3.mjs';
 import * as XM from '../../xp-atmosphere-merit/common.mjs';
 import { fitV3, estimationCodecV3 } from './fit.mjs';
 import { executionFrame, decodeSamples, kernelFrame, encode } from './frame.mjs';

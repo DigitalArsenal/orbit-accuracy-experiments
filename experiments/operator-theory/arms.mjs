@@ -17,7 +17,7 @@ import { execFileSync } from 'node:child_process';
 import { openFfmHost, openAxes, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { vendorFiles } from './lib/vendors.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import { apForces, openAp } from './lib/ap.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
