@@ -1,0 +1,200 @@
+{
+ "set": "waas",
+ "medianBreakM": 160.5125889107585,
+ "medianBreakMdeg": 1.17013781931337,
+ "satellites": [
+  {
+   "name": "EUTELSAT 117 WEST B",
+   "burns": [],
+   "hourly": {
+    "medianResidualM": 104.2,
+    "medianPlaneMdeg": 1.93,
+    "burns": [
+     {
+      "t": "2026-08-31T01:56",
+      "semimajorAxisM": 442,
+      "residualM": 657,
+      "planeMdeg": 1.6,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-10-08T09:56",
+      "semimajorAxisM": 615,
+      "residualM": 512,
+      "planeMdeg": 2.2,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-10-29T08:56",
+      "semimajorAxisM": 575,
+      "residualM": 560,
+      "planeMdeg": 2.5,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-11-01T16:56",
+      "semimajorAxisM": -383,
+      "residualM": -751,
+      "planeMdeg": 1.8,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  },
+  {
+   "name": "SES-15",
+   "burns": [],
+   "hourly": {
+    "medianResidualM": 451.4,
+    "medianPlaneMdeg": 2.12,
+    "burns": []
+   }
+  },
+  {
+   "name": "GALAXY 30 (G-30)",
+   "burns": [
+    {
+     "day": "2026-09-03T23:41:06.452Z",
+     "afterGap": false,
+     "semimajorAxisM": -109,
+     "planeMdeg": 12
+    },
+    {
+     "day": "2026-09-17T22:46:03.719Z",
+     "afterGap": false,
+     "semimajorAxisM": -130,
+     "planeMdeg": 12.7
+    },
+    {
+     "day": "2026-10-01T21:51:00.986Z",
+     "afterGap": false,
+     "semimajorAxisM": -154,
+     "planeMdeg": 12.5
+    },
+    {
+     "day": "2026-10-15T20:55:58.253Z",
+     "afterGap": false,
+     "semimajorAxisM": -165,
+     "planeMdeg": 12.3
+    },
+    {
+     "day": "2026-10-29T20:00:55.520Z",
+     "afterGap": false,
+     "semimajorAxisM": -238,
+     "planeMdeg": 12.3
+    }
+   ],
+   "hourly": {
+    "medianResidualM": 70.6,
+    "medianPlaneMdeg": 3.13,
+    "burns": [
+     {
+      "t": "2026-09-02T14:56",
+      "semimajorAxisM": 44,
+      "residualM": 100,
+      "planeMdeg": 14.6,
+      "by": "plane"
+     },
+     {
+      "t": "2026-09-05T10:56",
+      "semimajorAxisM": 770,
+      "residualM": 821,
+      "planeMdeg": 4.2,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-09-08T14:56",
+      "semimajorAxisM": 48,
+      "residualM": 125,
+      "planeMdeg": 16,
+      "by": "plane"
+     },
+     {
+      "t": "2026-09-13T11:56",
+      "semimajorAxisM": 588,
+      "residualM": 651,
+      "planeMdeg": 1.5,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-09-16T13:56",
+      "semimajorAxisM": 73,
+      "residualM": 138,
+      "planeMdeg": 16.3,
+      "by": "plane"
+     },
+     {
+      "t": "2026-09-23T13:56",
+      "semimajorAxisM": 106,
+      "residualM": 170,
+      "planeMdeg": 16.8,
+      "by": "plane"
+     },
+     {
+      "t": "2026-09-26T11:56",
+      "semimajorAxisM": 464,
+      "residualM": 522,
+      "planeMdeg": 0.6,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-09-30T12:56",
+      "semimajorAxisM": 90,
+      "residualM": 159,
+      "planeMdeg": 15,
+      "by": "plane"
+     },
+     {
+      "t": "2026-10-07T12:56",
+      "semimajorAxisM": 126,
+      "residualM": 191,
+      "planeMdeg": 17.1,
+      "by": "plane"
+     },
+     {
+      "t": "2026-10-11T10:56",
+      "semimajorAxisM": 489,
+      "residualM": 551,
+      "planeMdeg": 2.5,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-10-14T12:56",
+      "semimajorAxisM": 154,
+      "residualM": 216,
+      "planeMdeg": 15.4,
+      "by": "plane"
+     },
+     {
+      "t": "2026-10-21T11:56",
+      "semimajorAxisM": 323,
+      "residualM": 395,
+      "planeMdeg": 16.4,
+      "by": "both"
+     },
+     {
+      "t": "2026-10-25T10:56",
+      "semimajorAxisM": 227,
+      "residualM": 295,
+      "planeMdeg": 2.9,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-10-28T08:56",
+      "semimajorAxisM": 231,
+      "residualM": 294,
+      "planeMdeg": 12.5,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2026-10-28T11:56",
+      "semimajorAxisM": 219,
+      "residualM": 284,
+      "planeMdeg": 14.1,
+      "by": "plane"
+     }
+    ]
+   }
+  }
+ ]
+}

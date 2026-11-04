@@ -1,5 +1,5 @@
 // COMPARE.md: every figure of the comparison site's explorer, by reference, regime, provider, satellite, fit and lead. Statistics only.
-//   node experiments/operator-theory/compare-cells.mjs --out results/ap-truth/compare/cells.json [--examples <dir>]
+//   node experiments/operator-theory/compare-cells.mjs --out results/ap-truth/compare/cells.json [--examples <dir>,<dir>]
 // Each row names its fits' input and each column's builds by SHA-256 (lib/build.mjs COLUMN_BUILDS). AP on precise orbits is sdn-ap 0.5.1 (ap/b051); next-file
 // AP stays 0.4.11's, the build of its rows. The Space Force XP is sgp4-xp 0.2.1 (ap/b051; the next-file pairs ap/xp-arm-0-2-1, XP-ARM-0-2-1.md). Every
 // Starlink group is held: no Starlink row or example is parsed, and the SpaceX rows are carried from HELD_FROM's cells.json as they were, on 0.1.1.
@@ -166,9 +166,11 @@ const held = JSON.parse(execFileSync('git', ['-C', REPO, 'show', `${HELD_FROM}:r
 if (!argOf('--only')) for (const r of held) { const { example, ...row } = r; out.push({ ...named({ ...row, ...NOT_TESTED }, 'held'), ...(example ? { example } : {}) }); }
 
 // Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's. Never a showcase example: those are chosen to show AP's lead, not to be typical.
+// --examples a,b: the full examples' folders, a later folder's example replacing an earlier one's of the same id, as compare-examples-publish.mjs reads them; a dropped one links nothing.
 if (argOf('--examples')) {
-  const dir = argOf('--examples');
-  const examples = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json' && !/starlink/i.test(f)).map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))).filter((d) => !d.showcase).map((d) => ({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite }));
+  const files = new Map();
+  for (const dir of argOf('--examples').split(',')) for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json') && n !== 'index.json' && !/starlink/i.test(n))) files.set(f, path.join(dir, f));
+  const examples = [...files.values()].sort().map((f) => JSON.parse(fs.readFileSync(f, 'utf8'))).filter((d) => !d.showcase && !d.dropped).map((d) => ({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite }));
   for (const r of out) {
     if (r.regime === HELD_REGIME) continue;
     const same = examples.filter((x) => x.reference === r.reference && x.regime === r.regime);
