@@ -38,9 +38,9 @@ const SETS = [
 ];
 const next = [];
 for (const s of SETS) {
-  const old = new Map(rowsOf(files(path.join(OLD, s.store), s.re)).map((r) => [pairKey(r), r])), now = new Map(rowsOf(files(path.join(NEW, s.store), s.re)).map((r) => [pairKey(r), r]));
+  const old = new Map(rowsOf(files(path.join(OLD, s.store), s.re)).map((r) => [pairKey(r), r])), flown = rowsOf(files(path.join(NEW, s.store), s.re)), now = new Map(flown.map((r) => [pairKey(r), r]));
   const held = files(path.join(NEW, s.store), s.re).reduce((n, f) => n + skipped.get(f), 0) + [...now.values()].filter((r) => HELD_NORADS.has(Number(r.norad))).length;
-  const set = { set: s.name, store: path.join(NEW, s.store), registered: old.size, run: [...now.keys()].filter((k) => old.has(k)).length, notRegistered: [...now.keys()].filter((k) => !old.has(k)).length, held, failed: {}, cells: [] };
+  const set = { set: s.name, store: path.join(NEW, s.store), registered: old.size, run: [...now.keys()].filter((k) => old.has(k)).length, notRegistered: [...now.keys()].filter((k) => !old.has(k)).length, flownTwice: flown.length - now.size, held, failed: {}, cells: [] };
   for (const fit of s.fits) {
     const arm = `U-XP@${fit}`;
     set.failed[arm] = { '0.1.1': [...old.values()].filter((r) => !Number.isFinite(r.arms[arm]?.km)).length, '0.2.1': [...now.values()].filter((r) => !Number.isFinite(r.arms[arm]?.km)).length };
