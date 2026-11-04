@@ -128,7 +128,8 @@ async function fitsOf(item) {
 }
 
 fs.mkdirSync(OUT, { recursive: true });
-const outFile = path.join(OUT, `rows${ISS ? '-iss' : ''}-${SHARD}.jsonl`);
+// --part: the rows file's number in place of the shard's, so that pieces of a registered set (--pairs) write apart.
+const outFile = path.join(OUT, `rows${ISS ? '-iss' : ''}-${args.part ?? SHARD}.jsonl`);
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return `${r.key}|${r.olderStart}|${r.newerStart}`; }) : []);
 let added = 0;
 for (const [key, list] of items()) {
