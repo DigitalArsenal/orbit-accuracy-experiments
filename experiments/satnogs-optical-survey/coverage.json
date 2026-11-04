@@ -1,0 +1,2354 @@
+{
+ "credit": "SatNOGS Optical contributors - https://optical.satnogs.org - CC BY-SA 4.0",
+ "licence": "CC-BY-SA-4.0",
+ "sessions": {
+  "first": "2026-08-23",
+  "last": "2026-11-03",
+  "count": 71
+ },
+ "identity_basis": "object_norad_id of tracks.parquet: assigned by the network by SGP4 correlation against Space-Track and McCants element sets (correlation_method sgp4-topocentric-v1); a label for association, never a truth",
+ "night": "a session (UTC date the night started) in which the object has at least one identified track whose first and last epoch lie inside one truth product span",
+ "holds_applied": {
+  "galileo_excluded": [
+   37847,
+   41174,
+   41175,
+   41862,
+   43055,
+   43567
+  ],
+  "swarm_grace_fo_excluded_at_all_dates": [
+   39451,
+   39452,
+   39453,
+   43476,
+   43477
+  ],
+  "starlink": "every Starlink group is excluded: no Starlink product is read, and no Starlink NORAD is in any truth map above",
+  "sgp4_derivatives": "never truth: no truth class below is an element set"
+ },
+ "truth_classes": {
+  "gnss-sp3": "ESA0OPSFIN final SP3, 5 min (reference-states/products), PRN to NORAD through igs_satellite_metadata.snx",
+  "ilrs-sp3": "ILRS analysis-center SP3 for the 11 geodetic spheres",
+  "doris-sp3": "IDS DORIS SP3 (hac/ids-doris/ssa)",
+  "sentinel1-poeorb": "Copernicus Sentinel-1 precise orbit (POEORB)"
+ },
+ "not_present_in_this_survey": [
+  "TESS and THEMIS nodes (HEO far from any network station; none of their NORAD ids is observed)",
+  "COSMIC-2 (archive holds 2025 only)"
+ ],
+ "totals": {
+  "objects_observed_identified": 8496,
+  "objects_with_truth": 12,
+  "objects_with_truth_by_class": {
+   "ilrs-sp3": 1,
+   "gnss-sp3": 2,
+   "doris-sp3": 9
+  },
+  "object_nights_with_truth": 89,
+  "measurements_with_truth": 29523,
+  "object_nights_with_truth_ge_20_measurements": 79,
+  "objects_with_truth_ge_20_measurements_on_a_night": 9,
+  "objects_with_2_or_more_consecutive_nights": 6,
+  "held_objects_observed_not_counted": 3,
+  "truth_exists_no_observed_night_covered": 0
+ },
+ "held_observed": [
+  {
+   "norad": 39451,
+   "reason": "Swarm or GRACE-FO hold",
+   "nights_observed": [
+    "2026-10-05",
+    "2026-10-14",
+    "2026-10-31"
+   ]
+  },
+  {
+   "norad": 39452,
+   "reason": "Swarm or GRACE-FO hold",
+   "nights_observed": [
+    "2026-09-05"
+   ]
+  },
+  {
+   "norad": 39453,
+   "reason": "Swarm or GRACE-FO hold",
+   "nights_observed": [
+    "2026-09-05"
+   ]
+  }
+ ],
+ "truth_exists_no_observed_night_covered": [],
+ "objects": [
+  {
+   "norad": 66514,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 33,
+   "nights_with_truth": 24,
+   "longest_consecutive_nights_with_truth": 6,
+   "arcs": [
+    {
+     "first_session": "2026-08-30",
+     "last_session": "2026-08-30",
+     "nights": 1,
+     "hours": 0.1,
+     "measurements": 355
+    },
+    {
+     "first_session": "2026-09-03",
+     "last_session": "2026-09-06",
+     "nights": 4,
+     "hours": 73.2,
+     "measurements": 1623
+    },
+    {
+     "first_session": "2026-09-08",
+     "last_session": "2026-09-09",
+     "nights": 2,
+     "hours": 22.4,
+     "measurements": 135
+    },
+    {
+     "first_session": "2026-09-11",
+     "last_session": "2026-09-11",
+     "nights": 1,
+     "hours": 3.9,
+     "measurements": 1090
+    },
+    {
+     "first_session": "2026-09-13",
+     "last_session": "2026-09-16",
+     "nights": 4,
+     "hours": 71.3,
+     "measurements": 1782
+    },
+    {
+     "first_session": "2026-09-21",
+     "last_session": "2026-09-26",
+     "nights": 6,
+     "hours": 118.0,
+     "measurements": 3360
+    },
+    {
+     "first_session": "2026-09-29",
+     "last_session": "2026-09-29",
+     "nights": 1,
+     "hours": 2.0,
+     "measurements": 138
+    },
+    {
+     "first_session": "2026-10-02",
+     "last_session": "2026-10-03",
+     "nights": 2,
+     "hours": 30.1,
+     "measurements": 781
+    },
+    {
+     "first_session": "2026-10-05",
+     "last_session": "2026-10-06",
+     "nights": 2,
+     "hours": 16.5,
+     "measurements": 556
+    },
+    {
+     "first_session": "2026-10-08",
+     "last_session": "2026-10-08",
+     "nights": 1,
+     "hours": 3.9,
+     "measurements": 1088
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 118.0,
+   "nights_with_truth_ge_20_measurements": 23,
+   "measurements_with_truth": 10908,
+   "truth_window": [
+    "2025-11-23T00:00:00+00:00",
+    "2026-10-09T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-08-30",
+     "tracks": 2,
+     "measurements": 355,
+     "first_utc": "2026-08-31T03:07:17.096375+00:00",
+     "last_utc": "2026-08-31T03:14:26.068115+00:00",
+     "span_hours": 0.119,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 355,
+     "stations": [
+      7,
+      11
+     ]
+    },
+    {
+     "session": "2026-09-03",
+     "tracks": 1,
+     "measurements": 522,
+     "first_utc": "2026-09-04T00:45:59.071148+00:00",
+     "last_utc": "2026-09-04T00:47:33.217494+00:00",
+     "span_hours": 0.026,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 522,
+     "stations": [
+      12
+     ]
+    },
+    {
+     "session": "2026-09-04",
+     "tracks": 2,
+     "measurements": 111,
+     "first_utc": "2026-09-05T01:14:11.549898+00:00",
+     "last_utc": "2026-09-05T01:14:37.027026+00:00",
+     "span_hours": 0.007,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 111,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-05",
+     "tracks": 2,
+     "measurements": 820,
+     "first_utc": "2026-09-06T01:36:54.041679+00:00",
+     "last_utc": "2026-09-06T03:34:22.063888+00:00",
+     "span_hours": 1.958,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 820,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-06",
+     "tracks": 1,
+     "measurements": 170,
+     "first_utc": "2026-09-07T02:00:12.599183+00:00",
+     "last_utc": "2026-09-07T02:00:58.490943+00:00",
+     "span_hours": 0.013,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 170,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-08",
+     "tracks": 1,
+     "measurements": 77,
+     "first_utc": "2026-09-09T02:45:41.512447+00:00",
+     "last_utc": "2026-09-09T02:46:17.351360+00:00",
+     "span_hours": 0.01,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 77,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-09",
+     "tracks": 1,
+     "measurements": 58,
+     "first_utc": "2026-09-10T01:12:13.174753+00:00",
+     "last_utc": "2026-09-10T01:12:28.043706+00:00",
+     "span_hours": 0.004,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 58,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-11",
+     "tracks": 3,
+     "measurements": 1090,
+     "first_utc": "2026-09-12T00:00:43.416649+00:00",
+     "last_utc": "2026-09-12T03:54:28.433495+00:00",
+     "span_hours": 3.896,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 1090,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-13",
+     "tracks": 4,
+     "measurements": 735,
+     "first_utc": "2026-09-14T00:41:38.237239+00:00",
+     "last_utc": "2026-09-14T02:44:11.864882+00:00",
+     "span_hours": 2.043,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 4,
+     "measurements_with_truth": 735,
+     "stations": [
+      7,
+      11
+     ]
+    },
+    {
+     "session": "2026-09-14",
+     "tracks": 1,
+     "measurements": 413,
+     "first_utc": "2026-09-15T03:05:45.124270+00:00",
+     "last_utc": "2026-09-15T03:06:36.727898+00:00",
+     "span_hours": 0.014,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 413,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-15",
+     "tracks": 3,
+     "measurements": 392,
+     "first_utc": "2026-09-16T01:32:13.906720+00:00",
+     "last_utc": "2026-09-16T03:29:04.513123+00:00",
+     "span_hours": 1.947,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 392,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-16",
+     "tracks": 1,
+     "measurements": 242,
+     "first_utc": "2026-09-16T23:59:03.788971+00:00",
+     "last_utc": "2026-09-16T23:59:30.618803+00:00",
+     "span_hours": 0.007,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 242,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-21",
+     "tracks": 1,
+     "measurements": 423,
+     "first_utc": "2026-09-22T01:52:21.922669+00:00",
+     "last_utc": "2026-09-22T01:53:08.072017+00:00",
+     "span_hours": 0.013,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 423,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-22",
+     "tracks": 3,
+     "measurements": 714,
+     "first_utc": "2026-09-22T22:22:21.502194+00:00",
+     "last_utc": "2026-09-23T02:15:35.339048+00:00",
+     "span_hours": 3.887,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 714,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-23",
+     "tracks": 3,
+     "measurements": 589,
+     "first_utc": "2026-09-23T22:40:09.003158+00:00",
+     "last_utc": "2026-09-24T00:42:31.961559+00:00",
+     "span_hours": 2.04,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 589,
+     "stations": [
+      7,
+      11
+     ]
+    },
+    {
+     "session": "2026-09-24",
+     "tracks": 2,
+     "measurements": 521,
+     "first_utc": "2026-09-24T21:11:24.215790+00:00",
+     "last_utc": "2026-09-25T01:05:10.539974+00:00",
+     "span_hours": 3.896,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 521,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-25",
+     "tracks": 2,
+     "measurements": 945,
+     "first_utc": "2026-09-25T21:34:03.138095+00:00",
+     "last_utc": "2026-09-26T01:27:36.384915+00:00",
+     "span_hours": 3.893,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 945,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-26",
+     "tracks": 2,
+     "measurements": 168,
+     "first_utc": "2026-09-26T21:57:36.470338+00:00",
+     "last_utc": "2026-09-26T23:54:07.466718+00:00",
+     "span_hours": 1.942,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 168,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-29",
+     "tracks": 5,
+     "measurements": 138,
+     "first_utc": "2026-09-29T21:06:51.823938+00:00",
+     "last_utc": "2026-09-29T23:06:18.951291+00:00",
+     "span_hours": 1.991,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 5,
+     "measurements_with_truth": 138,
+     "stations": [
+      11,
+      15
+     ]
+    },
+    {
+     "session": "2026-10-02",
+     "tracks": 3,
+     "measurements": 655,
+     "first_utc": "2026-10-02T20:21:00.232666+00:00",
+     "last_utc": "2026-10-03T00:14:06.864124+00:00",
+     "span_hours": 3.885,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 655,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-03",
+     "tracks": 1,
+     "measurements": 126,
+     "first_utc": "2026-10-04T02:29:36.373184+00:00",
+     "last_utc": "2026-10-04T02:29:59.956753+00:00",
+     "span_hours": 0.007,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 126,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-10-05",
+     "tracks": 1,
+     "measurements": 544,
+     "first_utc": "2026-10-06T01:23:26.053906+00:00",
+     "last_utc": "2026-10-06T01:24:20.556858+00:00",
+     "span_hours": 0.015,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 544,
+     "stations": [
+      12
+     ]
+    },
+    {
+     "session": "2026-10-06",
+     "tracks": 1,
+     "measurements": 12,
+     "first_utc": "2026-10-06T17:52:10.413554+00:00",
+     "last_utc": "2026-10-06T17:52:13.416894+00:00",
+     "span_hours": 0.001,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 12,
+     "stations": [
+      15
+     ]
+    },
+    {
+     "session": "2026-10-08",
+     "tracks": 3,
+     "measurements": 1088,
+     "first_utc": "2026-10-08T18:44:18.227824+00:00",
+     "last_utc": "2026-10-08T22:38:09.536409+00:00",
+     "span_hours": 3.898,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 1088,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-10",
+     "tracks": 1,
+     "measurements": 1,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-11",
+     "tracks": 2,
+     "measurements": 576,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-12",
+     "tracks": 1,
+     "measurements": 117,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-13",
+     "tracks": 4,
+     "measurements": 550,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-17",
+     "tracks": 2,
+     "measurements": 456,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-19",
+     "tracks": 1,
+     "measurements": 66,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-20",
+     "tracks": 2,
+     "measurements": 248,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-29",
+     "tracks": 1,
+     "measurements": 88,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-11-02",
+     "tracks": 2,
+     "measurements": 121,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    }
+   ]
+  },
+  {
+   "norad": 46984,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 28,
+   "nights_with_truth": 21,
+   "longest_consecutive_nights_with_truth": 6,
+   "arcs": [
+    {
+     "first_session": "2026-08-30",
+     "last_session": "2026-08-30",
+     "nights": 1,
+     "hours": 0.1,
+     "measurements": 406
+    },
+    {
+     "first_session": "2026-09-03",
+     "last_session": "2026-09-06",
+     "nights": 4,
+     "hours": 73.2,
+     "measurements": 1331
+    },
+    {
+     "first_session": "2026-09-11",
+     "last_session": "2026-09-11",
+     "nights": 1,
+     "hours": 3.9,
+     "measurements": 882
+    },
+    {
+     "first_session": "2026-09-13",
+     "last_session": "2026-09-16",
+     "nights": 4,
+     "hours": 71.3,
+     "measurements": 1690
+    },
+    {
+     "first_session": "2026-09-21",
+     "last_session": "2026-09-26",
+     "nights": 6,
+     "hours": 118.0,
+     "measurements": 3544
+    },
+    {
+     "first_session": "2026-09-29",
+     "last_session": "2026-09-29",
+     "nights": 1,
+     "hours": 2.0,
+     "measurements": 354
+    },
+    {
+     "first_session": "2026-10-02",
+     "last_session": "2026-10-03",
+     "nights": 2,
+     "hours": 30.1,
+     "measurements": 682
+    },
+    {
+     "first_session": "2026-10-05",
+     "last_session": "2026-10-05",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 544
+    },
+    {
+     "first_session": "2026-10-08",
+     "last_session": "2026-10-08",
+     "nights": 1,
+     "hours": 3.9,
+     "measurements": 1152
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 118.0,
+   "nights_with_truth_ge_20_measurements": 21,
+   "measurements_with_truth": 10585,
+   "truth_window": [
+    "2025-09-27T00:00:00+00:00",
+    "2026-10-09T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-08-30",
+     "tracks": 3,
+     "measurements": 406,
+     "first_utc": "2026-08-31T03:06:51.323295+00:00",
+     "last_utc": "2026-08-31T03:13:55.035159+00:00",
+     "span_hours": 0.118,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 406,
+     "stations": [
+      7,
+      11
+     ]
+    },
+    {
+     "session": "2026-09-03",
+     "tracks": 1,
+     "measurements": 276,
+     "first_utc": "2026-09-04T00:45:51.567379+00:00",
+     "last_utc": "2026-09-04T00:47:01.916221+00:00",
+     "span_hours": 0.02,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 276,
+     "stations": [
+      12
+     ]
+    },
+    {
+     "session": "2026-09-04",
+     "tracks": 1,
+     "measurements": 205,
+     "first_utc": "2026-09-05T01:13:41.324845+00:00",
+     "last_utc": "2026-09-05T01:14:03.641993+00:00",
+     "span_hours": 0.006,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 205,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-05",
+     "tracks": 2,
+     "measurements": 776,
+     "first_utc": "2026-09-06T01:36:28.070433+00:00",
+     "last_utc": "2026-09-06T01:37:58.806755+00:00",
+     "span_hours": 0.025,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 776,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-06",
+     "tracks": 1,
+     "measurements": 74,
+     "first_utc": "2026-09-07T02:00:12.599183+00:00",
+     "last_utc": "2026-09-07T02:00:28.057958+00:00",
+     "span_hours": 0.004,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 74,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-11",
+     "tracks": 2,
+     "measurements": 882,
+     "first_utc": "2026-09-12T00:00:13.287468+00:00",
+     "last_utc": "2026-09-12T03:54:01.356910+00:00",
+     "span_hours": 3.897,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 882,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-13",
+     "tracks": 4,
+     "measurements": 689,
+     "first_utc": "2026-09-14T00:41:07.537450+00:00",
+     "last_utc": "2026-09-14T02:43:39.131039+00:00",
+     "span_hours": 2.042,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 4,
+     "measurements_with_truth": 689,
+     "stations": [
+      7,
+      11
+     ]
+    },
+    {
+     "session": "2026-09-14",
+     "tracks": 1,
+     "measurements": 324,
+     "first_utc": "2026-09-15T03:05:19.250133+00:00",
+     "last_utc": "2026-09-15T03:05:59.986893+00:00",
+     "span_hours": 0.011,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 324,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-15",
+     "tracks": 2,
+     "measurements": 445,
+     "first_utc": "2026-09-16T01:32:15.158031+00:00",
+     "last_utc": "2026-09-16T03:28:34.278772+00:00",
+     "span_hours": 1.939,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 445,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-16",
+     "tracks": 1,
+     "measurements": 232,
+     "first_utc": "2026-09-16T23:58:33.558724+00:00",
+     "last_utc": "2026-09-16T23:58:59.584169+00:00",
+     "span_hours": 0.007,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 232,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-21",
+     "tracks": 2,
+     "measurements": 401,
+     "first_utc": "2026-09-22T01:51:52.491250+00:00",
+     "last_utc": "2026-09-22T01:52:41.295675+00:00",
+     "span_hours": 0.014,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 401,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-22",
+     "tracks": 2,
+     "measurements": 875,
+     "first_utc": "2026-09-22T22:21:26.843919+00:00",
+     "last_utc": "2026-09-23T02:15:04.902821+00:00",
+     "span_hours": 3.894,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 875,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-23",
+     "tracks": 5,
+     "measurements": 628,
+     "first_utc": "2026-09-23T22:39:32.252182+00:00",
+     "last_utc": "2026-09-24T00:42:09.832922+00:00",
+     "span_hours": 2.044,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 5,
+     "measurements_with_truth": 628,
+     "stations": [
+      7,
+      11
+     ]
+    },
+    {
+     "session": "2026-09-24",
+     "tracks": 2,
+     "measurements": 529,
+     "first_utc": "2026-09-24T21:10:45.266680+00:00",
+     "last_utc": "2026-09-25T01:04:40.210075+00:00",
+     "span_hours": 3.899,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 529,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-25",
+     "tracks": 4,
+     "measurements": 796,
+     "first_utc": "2026-09-25T21:33:32.805561+00:00",
+     "last_utc": "2026-09-26T01:27:06.452833+00:00",
+     "span_hours": 3.893,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 4,
+     "measurements_with_truth": 796,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-26",
+     "tracks": 3,
+     "measurements": 315,
+     "first_utc": "2026-09-26T21:57:06.043094+00:00",
+     "last_utc": "2026-09-26T23:53:46.246880+00:00",
+     "span_hours": 1.945,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 315,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-29",
+     "tracks": 4,
+     "measurements": 354,
+     "first_utc": "2026-09-29T21:06:25.474032+00:00",
+     "last_utc": "2026-09-29T23:05:45.915969+00:00",
+     "span_hours": 1.989,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 4,
+     "measurements_with_truth": 354,
+     "stations": [
+      11,
+      15
+     ]
+    },
+    {
+     "session": "2026-10-02",
+     "tracks": 3,
+     "measurements": 642,
+     "first_utc": "2026-10-02T20:20:33.306600+00:00",
+     "last_utc": "2026-10-03T00:13:36.430611+00:00",
+     "span_hours": 3.884,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 642,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-03",
+     "tracks": 2,
+     "measurements": 40,
+     "first_utc": "2026-10-04T02:28:49.727965+00:00",
+     "last_utc": "2026-10-04T02:29:20.512100+00:00",
+     "span_hours": 0.009,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 40,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-10-05",
+     "tracks": 1,
+     "measurements": 544,
+     "first_utc": "2026-10-06T01:22:46.710039+00:00",
+     "last_utc": "2026-10-06T01:23:50.046279+00:00",
+     "span_hours": 0.018,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 544,
+     "stations": [
+      12
+     ]
+    },
+    {
+     "session": "2026-10-08",
+     "tracks": 3,
+     "measurements": 1152,
+     "first_utc": "2026-10-08T18:43:47.692355+00:00",
+     "last_utc": "2026-10-08T22:37:39.005030+00:00",
+     "span_hours": 3.898,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 1152,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-11",
+     "tracks": 2,
+     "measurements": 585,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-12",
+     "tracks": 1,
+     "measurements": 110,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-13",
+     "tracks": 2,
+     "measurements": 705,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-17",
+     "tracks": 4,
+     "measurements": 512,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-20",
+     "tracks": 2,
+     "measurements": 4,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-29",
+     "tracks": 1,
+     "measurements": 2,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-11-02",
+     "tracks": 1,
+     "measurements": 181,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    }
+   ]
+  },
+  {
+   "norad": 46469,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 17,
+   "nights_with_truth": 10,
+   "longest_consecutive_nights_with_truth": 3,
+   "arcs": [
+    {
+     "first_session": "2026-09-11",
+     "last_session": "2026-09-11",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 110
+    },
+    {
+     "first_session": "2026-09-13",
+     "last_session": "2026-09-13",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 413
+    },
+    {
+     "first_session": "2026-09-16",
+     "last_session": "2026-09-16",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 554
+    },
+    {
+     "first_session": "2026-09-23",
+     "last_session": "2026-09-24",
+     "nights": 2,
+     "hours": 27.9,
+     "measurements": 742
+    },
+    {
+     "first_session": "2026-09-29",
+     "last_session": "2026-09-29",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 210
+    },
+    {
+     "first_session": "2026-10-02",
+     "last_session": "2026-10-02",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 284
+    },
+    {
+     "first_session": "2026-10-09",
+     "last_session": "2026-10-11",
+     "nights": 3,
+     "hours": 41.4,
+     "measurements": 685
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 41.4,
+   "nights_with_truth_ge_20_measurements": 10,
+   "measurements_with_truth": 2998,
+   "truth_window": [
+    "2025-09-21T00:00:00+00:00",
+    "2026-10-12T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-09-11",
+     "tracks": 1,
+     "measurements": 110,
+     "first_utc": "2026-09-12T03:35:20.795664+00:00",
+     "last_utc": "2026-09-12T03:35:38.187957+00:00",
+     "span_hours": 0.005,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 110,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-09-13",
+     "tracks": 1,
+     "measurements": 413,
+     "first_utc": "2026-09-14T02:27:58.895820+00:00",
+     "last_utc": "2026-09-14T02:29:00.863335+00:00",
+     "span_hours": 0.017,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 413,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-16",
+     "tracks": 1,
+     "measurements": 554,
+     "first_utc": "2026-09-17T01:36:00.899208+00:00",
+     "last_utc": "2026-09-17T01:37:05.156828+00:00",
+     "span_hours": 0.018,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 554,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-23",
+     "tracks": 1,
+     "measurements": 720,
+     "first_utc": "2026-09-24T00:10:16.827950+00:00",
+     "last_utc": "2026-09-24T00:11:33.006169+00:00",
+     "span_hours": 0.021,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 720,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-24",
+     "tracks": 1,
+     "measurements": 22,
+     "first_utc": "2026-09-25T04:04:49.537713+00:00",
+     "last_utc": "2026-09-25T04:05:05.304435+00:00",
+     "span_hours": 0.004,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 22,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-29",
+     "tracks": 1,
+     "measurements": 210,
+     "first_utc": "2026-09-30T03:49:26.747308+00:00",
+     "last_utc": "2026-09-30T03:49:55.475786+00:00",
+     "span_hours": 0.008,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 210,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-02",
+     "tracks": 1,
+     "measurements": 284,
+     "first_utc": "2026-10-03T02:57:25.151379+00:00",
+     "last_utc": "2026-10-03T02:57:55.581947+00:00",
+     "span_hours": 0.008,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 284,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-09",
+     "tracks": 1,
+     "measurements": 84,
+     "first_utc": "2026-10-10T03:17:17.307607+00:00",
+     "last_utc": "2026-10-10T03:17:30.494711+00:00",
+     "span_hours": 0.004,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 84,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-10-10",
+     "tracks": 1,
+     "measurements": 533,
+     "first_utc": "2026-10-10T18:36:30.538949+00:00",
+     "last_utc": "2026-10-10T18:37:24.073687+00:00",
+     "span_hours": 0.015,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 533,
+     "stations": [
+      12
+     ]
+    },
+    {
+     "session": "2026-10-11",
+     "tracks": 1,
+     "measurements": 68,
+     "first_utc": "2026-10-11T20:42:25.344445+00:00",
+     "last_utc": "2026-10-11T20:42:38.139174+00:00",
+     "span_hours": 0.004,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 68,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-10-12",
+     "tracks": 2,
+     "measurements": 114,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-13",
+     "tracks": 2,
+     "measurements": 543,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-15",
+     "tracks": 2,
+     "measurements": 276,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-17",
+     "tracks": 1,
+     "measurements": 103,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-20",
+     "tracks": 1,
+     "measurements": 392,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-21",
+     "tracks": 1,
+     "measurements": 28,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-22",
+     "tracks": 1,
+     "measurements": 102,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    }
+   ]
+  },
+  {
+   "norad": 54754,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 9,
+   "nights_with_truth": 9,
+   "longest_consecutive_nights_with_truth": 2,
+   "arcs": [
+    {
+     "first_session": "2026-08-28",
+     "last_session": "2026-08-28",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 335
+    },
+    {
+     "first_session": "2026-08-31",
+     "last_session": "2026-09-01",
+     "nights": 2,
+     "hours": 24.0,
+     "measurements": 793
+    },
+    {
+     "first_session": "2026-09-05",
+     "last_session": "2026-09-05",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 44
+    },
+    {
+     "first_session": "2026-09-11",
+     "last_session": "2026-09-11",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 543
+    },
+    {
+     "first_session": "2026-09-21",
+     "last_session": "2026-09-22",
+     "nights": 2,
+     "hours": 24.0,
+     "measurements": 370
+    },
+    {
+     "first_session": "2026-10-01",
+     "last_session": "2026-10-02",
+     "nights": 2,
+     "hours": 22.3,
+     "measurements": 426
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 24.0,
+   "nights_with_truth_ge_20_measurements": 9,
+   "measurements_with_truth": 2511,
+   "truth_window": [
+    "2025-09-25T00:00:00+00:00",
+    "2026-10-09T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-08-28",
+     "tracks": 1,
+     "measurements": 335,
+     "first_utc": "2026-08-28T22:53:45.307965+00:00",
+     "last_utc": "2026-08-28T22:54:24.290223+00:00",
+     "span_hours": 0.011,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 335,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-08-31",
+     "tracks": 1,
+     "measurements": 689,
+     "first_utc": "2026-08-31T21:14:08.440516+00:00",
+     "last_utc": "2026-08-31T21:15:21.421760+00:00",
+     "span_hours": 0.02,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 689,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-01",
+     "tracks": 1,
+     "measurements": 104,
+     "first_utc": "2026-09-01T21:14:54.320959+00:00",
+     "last_utc": "2026-09-01T21:15:05.539989+00:00",
+     "span_hours": 0.003,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 104,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-05",
+     "tracks": 1,
+     "measurements": 44,
+     "first_utc": "2026-09-05T19:29:02.832738+00:00",
+     "last_utc": "2026-09-05T19:29:07.953537+00:00",
+     "span_hours": 0.001,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 44,
+     "stations": [
+      12
+     ]
+    },
+    {
+     "session": "2026-09-11",
+     "tracks": 1,
+     "measurements": 543,
+     "first_utc": "2026-09-11T19:37:00.325347+00:00",
+     "last_utc": "2026-09-11T19:37:58.192341+00:00",
+     "span_hours": 0.016,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 543,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-21",
+     "tracks": 1,
+     "measurements": 83,
+     "first_utc": "2026-09-22T02:49:17.455680+00:00",
+     "last_utc": "2026-09-22T02:49:39.533862+00:00",
+     "span_hours": 0.006,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 83,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-22",
+     "tracks": 1,
+     "measurements": 287,
+     "first_utc": "2026-09-23T02:49:48.842151+00:00",
+     "last_utc": "2026-09-23T02:50:26.832634+00:00",
+     "span_hours": 0.011,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 287,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-01",
+     "tracks": 2,
+     "measurements": 157,
+     "first_utc": "2026-10-02T02:55:37.648384+00:00",
+     "last_utc": "2026-10-02T02:56:03.878127+00:00",
+     "span_hours": 0.007,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 157,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-10-02",
+     "tracks": 1,
+     "measurements": 269,
+     "first_utc": "2026-10-03T01:11:59.180791+00:00",
+     "last_utc": "2026-10-03T01:12:33.869683+00:00",
+     "span_hours": 0.01,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 269,
+     "stations": [
+      11
+     ]
+    }
+   ]
+  },
+  {
+   "norad": 36508,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 8,
+   "nights_with_truth": 6,
+   "longest_consecutive_nights_with_truth": 1,
+   "arcs": [
+    {
+     "first_session": "2026-08-27",
+     "last_session": "2026-08-27",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 39
+    },
+    {
+     "first_session": "2026-09-11",
+     "last_session": "2026-09-11",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 79
+    },
+    {
+     "first_session": "2026-09-13",
+     "last_session": "2026-09-13",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 310
+    },
+    {
+     "first_session": "2026-09-26",
+     "last_session": "2026-09-26",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 108
+    },
+    {
+     "first_session": "2026-10-01",
+     "last_session": "2026-10-01",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 360
+    },
+    {
+     "first_session": "2026-10-08",
+     "last_session": "2026-10-08",
+     "nights": 1,
+     "hours": 0.1,
+     "measurements": 374
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 0.1,
+   "nights_with_truth_ge_20_measurements": 6,
+   "measurements_with_truth": 1270,
+   "truth_window": [
+    "2025-09-26T00:00:00+00:00",
+    "2026-10-10T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-08-27",
+     "tracks": 1,
+     "measurements": 39,
+     "first_utc": "2026-08-27T20:03:28.454507+00:00",
+     "last_utc": "2026-08-27T20:03:36.963263+00:00",
+     "span_hours": 0.002,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 39,
+     "stations": [
+      4
+     ]
+    },
+    {
+     "session": "2026-09-11",
+     "tracks": 1,
+     "measurements": 79,
+     "first_utc": "2026-09-11T19:04:05.609842+00:00",
+     "last_utc": "2026-09-11T19:04:21.220720+00:00",
+     "span_hours": 0.004,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 79,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-13",
+     "tracks": 2,
+     "measurements": 310,
+     "first_utc": "2026-09-13T19:01:54.753468+00:00",
+     "last_utc": "2026-09-13T19:02:37.848099+00:00",
+     "span_hours": 0.012,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 310,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-26",
+     "tracks": 1,
+     "measurements": 108,
+     "first_utc": "2026-09-26T19:38:18.424465+00:00",
+     "last_utc": "2026-09-26T19:38:34.035674+00:00",
+     "span_hours": 0.004,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 108,
+     "stations": [
+      7
+     ]
+    },
+    {
+     "session": "2026-10-01",
+     "tracks": 2,
+     "measurements": 360,
+     "first_utc": "2026-10-01T20:21:28.575318+00:00",
+     "last_utc": "2026-10-01T20:22:19.017170+00:00",
+     "span_hours": 0.014,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 360,
+     "stations": [
+      15
+     ]
+    },
+    {
+     "session": "2026-10-08",
+     "tracks": 2,
+     "measurements": 374,
+     "first_utc": "2026-10-08T17:44:30.626581+00:00",
+     "last_utc": "2026-10-08T17:49:08.067878+00:00",
+     "span_hours": 0.077,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 374,
+     "stations": [
+      11,
+      12
+     ]
+    },
+    {
+     "session": "2026-10-10",
+     "tracks": 1,
+     "measurements": 505,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-14",
+     "tracks": 4,
+     "measurements": 33,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    }
+   ]
+  },
+  {
+   "norad": 41240,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 12,
+   "nights_with_truth": 5,
+   "longest_consecutive_nights_with_truth": 2,
+   "arcs": [
+    {
+     "first_session": "2026-09-09",
+     "last_session": "2026-09-09",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 2
+    },
+    {
+     "first_session": "2026-09-12",
+     "last_session": "2026-09-13",
+     "nights": 2,
+     "hours": 24.3,
+     "measurements": 4
+    },
+    {
+     "first_session": "2026-09-22",
+     "last_session": "2026-09-23",
+     "nights": 2,
+     "hours": 28.1,
+     "measurements": 242
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 28.1,
+   "nights_with_truth_ge_20_measurements": 2,
+   "measurements_with_truth": 248,
+   "truth_window": [
+    "2025-09-23T00:00:00+00:00",
+    "2026-10-02T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-09-09",
+     "tracks": 1,
+     "measurements": 2,
+     "first_utc": "2026-09-09T23:45:16.201528+00:00",
+     "last_utc": "2026-09-09T23:45:27.015431+00:00",
+     "span_hours": 0.003,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 2,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-12",
+     "tracks": 1,
+     "measurements": 1,
+     "first_utc": "2026-09-12T22:30:14.644013+00:00",
+     "last_utc": "2026-09-12T22:30:14.644013+00:00",
+     "span_hours": 0.0,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 1,
+     "stations": [
+      4
+     ]
+    },
+    {
+     "session": "2026-09-13",
+     "tracks": 2,
+     "measurements": 3,
+     "first_utc": "2026-09-13T22:49:48.390700+00:00",
+     "last_utc": "2026-09-13T22:49:59.299713+00:00",
+     "span_hours": 0.003,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 3,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-22",
+     "tracks": 3,
+     "measurements": 105,
+     "first_utc": "2026-09-22T21:11:46.086018+00:00",
+     "last_utc": "2026-09-23T01:03:57.643549+00:00",
+     "span_hours": 3.87,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 105,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-23",
+     "tracks": 2,
+     "measurements": 137,
+     "first_utc": "2026-09-24T01:18:18.857756+00:00",
+     "last_utc": "2026-09-24T01:18:56.245402+00:00",
+     "span_hours": 0.01,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 137,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-03",
+     "tracks": 1,
+     "measurements": 117,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-08",
+     "tracks": 1,
+     "measurements": 87,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-12",
+     "tracks": 1,
+     "measurements": 1,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-13",
+     "tracks": 1,
+     "measurements": 123,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-17",
+     "tracks": 1,
+     "measurements": 435,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-10-20",
+     "tracks": 2,
+     "measurements": 29,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    },
+    {
+     "session": "2026-11-02",
+     "tracks": 2,
+     "measurements": 5,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    }
+   ]
+  },
+  {
+   "norad": 16908,
+   "truth_classes": [
+    "ilrs-sp3"
+   ],
+   "nights_observed": 4,
+   "nights_with_truth": 4,
+   "longest_consecutive_nights_with_truth": 1,
+   "arcs": [
+    {
+     "first_session": "2026-08-24",
+     "last_session": "2026-08-24",
+     "nights": 1,
+     "hours": 2.0,
+     "measurements": 3
+    },
+    {
+     "first_session": "2026-08-26",
+     "last_session": "2026-08-26",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 1
+    },
+    {
+     "first_session": "2026-08-29",
+     "last_session": "2026-08-29",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 1
+    },
+    {
+     "first_session": "2026-09-03",
+     "last_session": "2026-09-03",
+     "nights": 1,
+     "hours": 2.0,
+     "measurements": 2
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 2.0,
+   "nights_with_truth_ge_20_measurements": 0,
+   "measurements_with_truth": 7,
+   "truth_window": [
+    "2026-07-28T00:00:00+00:00",
+    "2026-10-07T20:08:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-08-24",
+     "tracks": 3,
+     "measurements": 3,
+     "first_utc": "2026-08-25T00:57:15.298780+00:00",
+     "last_utc": "2026-08-25T02:59:19.269488+00:00",
+     "span_hours": 2.034,
+     "truth_class": "ilrs-sp3",
+     "tracks_with_truth": 3,
+     "measurements_with_truth": 3,
+     "stations": [
+      4
+     ]
+    },
+    {
+     "session": "2026-08-26",
+     "tracks": 1,
+     "measurements": 1,
+     "first_utc": "2026-08-27T01:10:25.646131+00:00",
+     "last_utc": "2026-08-27T01:10:25.646131+00:00",
+     "span_hours": 0.0,
+     "truth_class": "ilrs-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 1,
+     "stations": [
+      4
+     ]
+    },
+    {
+     "session": "2026-08-29",
+     "tracks": 1,
+     "measurements": 1,
+     "first_utc": "2026-08-30T02:31:20.960904+00:00",
+     "last_utc": "2026-08-30T02:31:20.960904+00:00",
+     "span_hours": 0.0,
+     "truth_class": "ilrs-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 1,
+     "stations": [
+      4
+     ]
+    },
+    {
+     "session": "2026-09-03",
+     "tracks": 2,
+     "measurements": 2,
+     "first_utc": "2026-09-04T00:00:53.716307+00:00",
+     "last_utc": "2026-09-04T02:03:25.220008+00:00",
+     "span_hours": 2.042,
+     "truth_class": "ilrs-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 2,
+     "stations": [
+      12
+     ]
+    }
+   ]
+  },
+  {
+   "norad": 43437,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 4,
+   "nights_with_truth": 4,
+   "longest_consecutive_nights_with_truth": 2,
+   "arcs": [
+    {
+     "first_session": "2026-09-06",
+     "last_session": "2026-09-06",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 168
+    },
+    {
+     "first_session": "2026-09-22",
+     "last_session": "2026-09-22",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 203
+    },
+    {
+     "first_session": "2026-09-25",
+     "last_session": "2026-09-26",
+     "nights": 2,
+     "hours": 25.2,
+     "measurements": 354
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 25.2,
+   "nights_with_truth_ge_20_measurements": 4,
+   "measurements_with_truth": 725,
+   "truth_window": [
+    "2025-09-25T00:00:00+00:00",
+    "2026-10-18T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-09-06",
+     "tracks": 1,
+     "measurements": 168,
+     "first_utc": "2026-09-06T19:58:49.299517+00:00",
+     "last_utc": "2026-09-06T19:59:17.230931+00:00",
+     "span_hours": 0.008,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 168,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-22",
+     "tracks": 1,
+     "measurements": 203,
+     "first_utc": "2026-09-22T19:44:19.080966+00:00",
+     "last_utc": "2026-09-22T19:44:45.707439+00:00",
+     "span_hours": 0.007,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 203,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-25",
+     "tracks": 1,
+     "measurements": 111,
+     "first_utc": "2026-09-25T20:06:18.167080+00:00",
+     "last_utc": "2026-09-25T20:06:29.987239+00:00",
+     "span_hours": 0.003,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 111,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-26",
+     "tracks": 2,
+     "measurements": 243,
+     "first_utc": "2026-09-26T19:40:37.017561+00:00",
+     "last_utc": "2026-09-26T21:20:29.234933+00:00",
+     "span_hours": 1.665,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 243,
+     "stations": [
+      7,
+      11
+     ]
+    }
+   ]
+  },
+  {
+   "norad": 41335,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 3,
+   "nights_with_truth": 3,
+   "longest_consecutive_nights_with_truth": 1,
+   "arcs": [
+    {
+     "first_session": "2026-08-31",
+     "last_session": "2026-08-31",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 25
+    },
+    {
+     "first_session": "2026-09-27",
+     "last_session": "2026-09-27",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 48
+    },
+    {
+     "first_session": "2026-09-29",
+     "last_session": "2026-09-29",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 28
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 0.0,
+   "nights_with_truth_ge_20_measurements": 3,
+   "measurements_with_truth": 101,
+   "truth_window": [
+    "2025-09-24T00:00:00+00:00",
+    "2026-10-17T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-08-31",
+     "tracks": 1,
+     "measurements": 25,
+     "first_utc": "2026-08-31T19:48:28.218199+00:00",
+     "last_utc": "2026-08-31T19:48:38.875190+00:00",
+     "span_hours": 0.003,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 25,
+     "stations": [
+      4
+     ]
+    },
+    {
+     "session": "2026-09-27",
+     "tracks": 1,
+     "measurements": 48,
+     "first_utc": "2026-09-27T19:53:06.473073+00:00",
+     "last_utc": "2026-09-27T19:53:12.378570+00:00",
+     "span_hours": 0.002,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 48,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-09-29",
+     "tracks": 1,
+     "measurements": 28,
+     "first_utc": "2026-09-29T20:41:08.878675+00:00",
+     "last_utc": "2026-09-29T20:41:11.781382+00:00",
+     "span_hours": 0.001,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 28,
+     "stations": [
+      15
+     ]
+    }
+   ]
+  },
+  {
+   "norad": 26407,
+   "truth_classes": [
+    "gnss-sp3"
+   ],
+   "nights_observed": 1,
+   "nights_with_truth": 1,
+   "longest_consecutive_nights_with_truth": 1,
+   "arcs": [
+    {
+     "first_session": "2026-09-06",
+     "last_session": "2026-09-06",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 1
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 0.0,
+   "nights_with_truth_ge_20_measurements": 0,
+   "measurements_with_truth": 1,
+   "truth_window": [
+    "2026-08-19T00:00:00+00:00",
+    "2026-10-31T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-09-06",
+     "tracks": 1,
+     "measurements": 1,
+     "first_utc": "2026-09-06T22:34:04.891056+00:00",
+     "last_utc": "2026-09-06T22:34:04.891056+00:00",
+     "span_hours": 0.0,
+     "truth_class": "gnss-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 1,
+     "stations": [
+      15
+     ]
+    }
+   ]
+  },
+  {
+   "norad": 28190,
+   "truth_classes": [
+    "gnss-sp3"
+   ],
+   "nights_observed": 1,
+   "nights_with_truth": 1,
+   "longest_consecutive_nights_with_truth": 1,
+   "arcs": [
+    {
+     "first_session": "2026-09-06",
+     "last_session": "2026-09-06",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 1
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 0.0,
+   "nights_with_truth_ge_20_measurements": 0,
+   "measurements_with_truth": 1,
+   "truth_window": [
+    "2026-08-19T00:00:00+00:00",
+    "2026-10-31T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-09-06",
+     "tracks": 1,
+     "measurements": 1,
+     "first_utc": "2026-09-06T22:27:58.805669+00:00",
+     "last_utc": "2026-09-06T22:27:58.805669+00:00",
+     "span_hours": 0.0,
+     "truth_class": "gnss-sp3",
+     "tracks_with_truth": 1,
+     "measurements_with_truth": 1,
+     "stations": [
+      15
+     ]
+    }
+   ]
+  },
+  {
+   "norad": 48621,
+   "truth_classes": [
+    "doris-sp3"
+   ],
+   "nights_observed": 2,
+   "nights_with_truth": 1,
+   "longest_consecutive_nights_with_truth": 1,
+   "arcs": [
+    {
+     "first_session": "2026-10-02",
+     "last_session": "2026-10-02",
+     "nights": 1,
+     "hours": 0.0,
+     "measurements": 168
+    }
+   ],
+   "longest_arc_hours_over_consecutive_nights": 0.0,
+   "nights_with_truth_ge_20_measurements": 1,
+   "measurements_with_truth": 168,
+   "truth_window": [
+    "2025-09-28T00:00:00+00:00",
+    "2026-10-10T00:00:00+00:00"
+   ],
+   "nights": [
+    {
+     "session": "2026-10-02",
+     "tracks": 2,
+     "measurements": 168,
+     "first_utc": "2026-10-03T04:06:10.381593+00:00",
+     "last_utc": "2026-10-03T04:06:55.176921+00:00",
+     "span_hours": 0.012,
+     "truth_class": "doris-sp3",
+     "tracks_with_truth": 2,
+     "measurements_with_truth": 168,
+     "stations": [
+      11
+     ]
+    },
+    {
+     "session": "2026-10-31",
+     "tracks": 2,
+     "measurements": 133,
+     "first_utc": null,
+     "last_utc": null,
+     "span_hours": null,
+     "truth_class": null,
+     "tracks_with_truth": 0,
+     "measurements_with_truth": 0,
+     "stations": []
+    }
+   ]
+  }
+ ]
+}
