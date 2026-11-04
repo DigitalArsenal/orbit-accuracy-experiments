@@ -7,7 +7,7 @@ import { regimeTables } from '../lib/tab.mjs';
 import { evalRow } from '../lib/fit.mjs';
 import { BINS, REGIMES } from '../lib/bins.mjs';
 import { CHI2_95, CHI2_99, Z95, labelStats, quantileSorted } from '../lib/stats.mjs';
-import { openDate, PRODUCTS, WINDOW } from '../lib/outcomes.mjs';
+import { openDate, PRODUCTS, WINDOW, FRESH_EXCLUDED_CLUSTERS } from '../lib/outcomes.mjs';
 
 const [candFile, out, ...dirs] = process.argv.slice(2);
 const cand = JSON.parse(fs.readFileSync(candFile, 'utf8'));
@@ -54,10 +54,11 @@ for (const regime of REGIMES) {
     const byC = new Map();
     for (let k = 0; k < n; k++) (byC.get(cl[k]) ?? byC.set(cl[k], []).get(cl[k])).push(k);
     const C = [...byC.keys()];
-    const info = C.map((c) => { const ks = byC.get(c).sort((a, b2) => day[a] - day[b2]); const dmin = day[ks[0]], dmax = day[ks[ks.length - 1]]; const idxByDay = new Map(); ks.forEach((k) => (idxByDay.get(day[k]) ?? idxByDay.set(day[k], []).get(day[k])).push(k)); return { c, ks, dmin, dmax, idxByDay, days: idxByDay.size }; });
+    const pool = regime === 'LEO-L' ? C : C.filter((c) => !FRESH_EXCLUDED_CLUSTERS.includes(tab.clusterNames[c]));   // clusters with a fresh feed (amendment 2)
+    const info = pool.map((c) => { const ks = byC.get(c).sort((a, b2) => day[a] - day[b2]); const dmin = day[ks[0]], dmax = day[ks[ks.length - 1]]; const idxByDay = new Map(); ks.forEach((k) => (idxByDay.get(day[k]) ?? idxByDay.set(day[k], []).get(day[k])).push(k)); return { c, ks, dmin, dmax, idxByDay, days: idxByDay.size }; });
     const clusterDays = info.reduce((a, x) => a + x.days, 0);
-    const rate = n / clusterDays;                                       // rows per cluster-day
-    const Cexp = C.length, nFresh = Math.round(rate * FRESH_DAYS * Cexp);
+    const rate = info.reduce((a, x) => a + x.ks.length, 0) / clusterDays;                                       // rows per cluster-day
+    const Cexp = pool.length, nFresh = Math.round(rate * FRESH_DAYS * Cexp);
     const nb = Math.ceil(FRESH_DAYS / bl.L);
     // ICC of ln d2 over cluster x block units -> design effect -> n_eff
     const unit = new Map(); for (let k = 0; k < n; k++) { const u = `${cl[k]}|${Math.floor(day[k] / bl.L)}`; (unit.get(u) ?? unit.set(u, []).get(u)).push(lnd2[k]); }
@@ -118,7 +119,7 @@ for (const regime of REGIMES) {
     result.strata[key] = { ...base, devRows: n, objects: new Set(ids.map((i) => tab.norad[i])).size, clusters: Cexp,
       dev: { c95: dev.c95, c99: dev.c99, h0: dev.h0, h1: dev.h1, axisShare: dev.ax.map((a) => a.share), axisMeanZ: dev.ax.map((a) => a.mean), L1: dev.L1, L2: dev.L2, L3: dev.L3, label: dev.label, stepLookupC95: stepCov, meanD2Over3: mean / 3, tailShare: d2.reduce((a, x) => a + (x > 16.27 ? 1 : 0), 0) / n },
       s0, blockDays: bl.L, blockCapped: bl.capped, timeBlocks: nb, icc, nFresh, nEff, oc: ocExp.map((x) => Number(x.toFixed(3))), ocPass: ocPass(ocExp), cMin, cScan: scan,
-      s1p: { band, oc: ocExpP.map((x) => Number(x.toFixed(3))), ocPass: ocPassP(ocExpP), cMin: cMinP, cScan: scanP, l3bRate: Number(l3b.toFixed(3)) }, clusterNames: C.map((c) => tab.clusterNames[c]) };
+      s1p: { band, oc: ocExpP.map((x) => Number(x.toFixed(3))), ocPass: ocPassP(ocExpP), cMin: cMinP, cScan: scanP, l3bRate: Number(l3b.toFixed(3)) }, clusterNames: pool.map((c) => tab.clusterNames[c]) };
     console.log(key, JSON.stringify({ n, C: Cexp, s0: Number(s0.toFixed(2)), L: bl.L, nFresh, nEff: Math.round(nEff), oc: ocExp, cMin }));
     fs.writeFileSync(out, `${JSON.stringify(result, null, 1)}\n`);
   }

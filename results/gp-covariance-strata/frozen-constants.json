@@ -2,22 +2,22 @@
  "version": 1,
  "plan": {
   "file": "experiments/gp-covariance-strata/PLAN.md",
-  "sha256": "f320abf8a6b48ae1c7e20dc46c22777c050821b6d04a518fe065c4424f664aba"
+  "sha256": "ed613333438d5496728e98bcb564dbed4788067fc91268a0ae3afd5e7a8ab581"
  },
  "owner": {
   "o1": "b",
   "o2": "coverage-calibrated",
   "o3": false,
   "o4": false,
-  "o5": false,
-  "recordedBy": "defaults of PLAN.md section 6 unless the task record carries an answer"
+  "o5": true,
+  "recordedBy": "O5 yes (owner, 2026-11-03; PLAN.md section 11); O1-O4 on the defaults of PLAN.md section 6 unless the task record says otherwise before 2026-11-08"
  },
  "regimeDefinition": "E14 regimes by the module rule: a set's regime is read from its mean altitude (SGP4 un-Kozai'd mean motion, WGS-72 radius) and eccentricity: LEO-L altitude [0,500) km, LEO-M [500,800), LEO-H [800,2000), MEO [2000,30000), GEO [30000,40000), all with eccentricity [0,0.25); HEO eccentricity >= 0.25 at any altitude. Age bins (days): [0,0.25) [0.25,0.75) [0.75,1.5) [1.5,2.5) [2.5,4) [4,6) [6,8]; the stratum lookup takes the bin containing the age (the last bin closed at 8 d), the interpolation lookup is linear in age between bin midpoints and held beyond the first and last usable midpoint.",
  "seed": 20261103,
  "trials": 1500,
  "code": {
-  "libSha256": "2812d1d3a508c3a1766988c4bd6fc343cb2276e7d0e0cb28f25f2bd9d8e04f78",
-  "stepsSha256": "ba5a2f9f55d819e2a6f66bb85d6081a2bcd3986691e69cb74a8d7ae00afc2faf",
+  "libSha256": "4791674c9ebf07a38b55ecdac5d0cdf427d7ba25f58db447e8a8f7dbcdb51115",
+  "stepsSha256": "c21559717401b053fde8962b2a9a3c136ec7ec46b239175d761b6dc5f4c50eb5",
   "runSha256": "dbf71301d189566cd3c0fff1b30dca6043479a0dec549d2726710e95d4f91b79"
  },
  "pins": {
@@ -775,7 +775,6 @@
   "LEO-M": [
    36508,
    39086,
-   39634,
    41335,
    43437
   ],
@@ -896,6 +895,65 @@
   44350,
   66315
  ],
+ "seal": {
+  "file": "reference-states/seal/2026-11-04T034634Z.json",
+  "sha256": "e92767243264aa478602f60b8dfce8ef84638f6663fbbafaaac6e5fad7014bb0",
+  "sealedUtc": "2026-11-04T03:46:34Z",
+  "read": "names, dates and SHA-256 only until a stratum's open date"
+ },
+ "latencies": {
+  "used": {
+   "LEO-L": [],
+   "LEO-M": [
+    {
+     "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
+     "latencyDays": 29.2,
+     "o5": true
+    }
+   ],
+   "LEO-H": [
+    {
+     "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
+     "latencyDays": 32.2,
+     "o5": true
+    }
+   ],
+   "MEO": [
+    {
+     "name": "ESA finals",
+     "latencyDays": 4.2,
+     "o5": true,
+     "interlock": "2027-01-20"
+    },
+    {
+     "name": "ILRS combined",
+     "latencyDays": 17.2,
+     "o5": true,
+     "interlock": "2027-01-20"
+    }
+   ],
+   "GEO": [
+    {
+     "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
+     "latencyDays": 4.2,
+     "o5": true,
+     "interlock": "2027-01-20"
+    },
+    {
+     "name": "WAAS MT9 (needs a module converter)",
+     "latencyDays": 1,
+     "o5": false,
+     "pendingConverter": true
+    }
+   ],
+   "HEO": []
+  },
+  "other": {
+   "GFZ Kp": 1,
+   "Sentinel-1 POEORB": 19.3
+  },
+  "measuredIn": "v-checks.json V3"
+ },
  "pTruth": 0,
  "sampleAgeRangeDays": [
   [
@@ -5846,75 +5904,78 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail under S1: P(label | correct) 0.017, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0.017, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.015197068014824656,
-     "sePool": 0.012512456392211203
+     "se95": 0.005511805931391917,
+     "sePool": 0.004260276525664953
     },
     "oc": [
-     0.863,
+     0.205,
      0,
-     0.191
+     0
     ],
-    "ocPass": true,
-    "cMin": 3,
+    "ocPass": false,
+    "cMin": null,
     "cScan": {
      "2": [
-      0.758,
+      0.24,
       0,
-      0.208
+      0
      ],
      "3": [
-      0.818,
+      0.228,
       0,
-      0.192
+      0
      ],
      "4": [
-      0.864,
+      0.184,
       0,
-      0.178
+      0
      ],
      "5": [
-      0.878,
+      0.132,
       0,
-      0.168
+      0
      ],
      "6": [
-      0.898,
+      0.154,
       0,
-      0.178
+      0
      ],
      "7": [
-      0.932,
+      0.134,
       0,
-      0.144
+      0
      ],
      "8": [
-      0.956,
+      0.136,
       0,
-      0.138
+      0
      ]
     },
-    "l3bRate": 0.017,
+    "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products"
+     "operating characteristics fail under S1p: P(label | correct) 0.205, x0.7 0",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
-    "outcomeIfO5": "TESTABLE",
-    "reasonsIfO5": [],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.205, x0.7 0",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-26",
+    "date": "2027-01-04",
     "parts": [
      {
       "name": "floor",
@@ -5922,28 +5983,19 @@
      },
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-      "date": "2026-12-23"
-     },
-     {
-      "name": "Sentinel-1A POEORB",
-      "date": "2026-12-26"
+      "date": "2027-01-04"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-     "latencyDays": 17,
-     "o5": true
-    },
-    {
-     "name": "Sentinel-1A POEORB",
-     "latencyDays": 20,
+     "latencyDays": 29.2,
      "o5": true
     }
    ],
    "devRows": 33349,
-   "clusters": 4,
+   "clusters": 3,
    "objects": 6,
    "dev": {
     "c95": 0.9539716333323338,
@@ -5971,11 +6023,11 @@
    "s0": 0.9782986364797083,
    "blockDays": 1,
    "timeBlocks": 27,
-   "nFresh": 2886,
-   "nEff": 1957.8349288643792,
+   "nFresh": 1960,
+   "nEff": 1372.9859301805807,
    "icc": 0.018430650459885605,
    "oc": [
-    0.017,
+    0,
     0,
     0
    ],
@@ -5985,15 +6037,15 @@
     "2": [
      0.002,
      0,
-     0.002
+     0
     ],
     "3": [
-     0.012,
      0,
-     0.004
+     0,
+     0
     ],
     "4": [
-     0.022,
+     0,
      0,
      0
     ],
@@ -6003,23 +6055,22 @@
      0
     ],
     "6": [
-     0.004,
+     0,
      0,
      0
     ],
     "7": [
-     0.004,
+     0,
      0,
      0
     ],
     "8": [
-     0.006,
+     0,
      0,
      0
     ]
    },
    "clusterNames": [
-    "s1",
     "saral",
     "s3",
     "cryosat2"
@@ -6028,7 +6079,6 @@
    "noradList": [
     36508,
     39086,
-    39634,
     41335,
     43437
    ]
@@ -6042,75 +6092,78 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail under S1: P(label | correct) 0.305, x0.7 0, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.055, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0.305, x0.7 0, x1.4 0.001",
+    "operating characteristics fail under S1: P(label | correct) 0.055, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.019242622076142187,
-     "sePool": 0.009757738237444294
+     "se95": 0.010598147194448059,
+     "sePool": 0.005150224168299907
     },
     "oc": [
-     0.851,
+     0.382,
      0,
-     0.097
+     0
     ],
-    "ocPass": true,
-    "cMin": 3,
+    "ocPass": false,
+    "cMin": null,
     "cScan": {
      "2": [
-      0.736,
-      0.002,
-      0.158
+      0.35,
+      0,
+      0
      ],
      "3": [
-      0.844,
+      0.384,
       0,
-      0.094
+      0
      ],
      "4": [
-      0.848,
+      0.446,
       0,
-      0.114
+      0
      ],
      "5": [
-      0.91,
+      0.486,
       0,
-      0.064
+      0
      ],
      "6": [
-      0.928,
+      0.546,
       0,
-      0.054
+      0
      ],
      "7": [
-      0.934,
+      0.544,
       0,
-      0.046
+      0
      ],
      "8": [
-      0.966,
+      0.548,
       0,
-      0.024
+      0
      ]
     },
-    "l3bRate": 0.397,
+    "l3bRate": 0.099,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products"
+     "operating characteristics fail under S1p: P(label | correct) 0.382, x0.7 0",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
-    "outcomeIfO5": "TESTABLE",
-    "reasonsIfO5": [],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.382, x0.7 0",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
+    ],
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-26",
+    "date": "2027-01-04",
     "parts": [
      {
       "name": "floor",
@@ -6118,28 +6171,19 @@
      },
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-      "date": "2026-12-23"
-     },
-     {
-      "name": "Sentinel-1A POEORB",
-      "date": "2026-12-26"
+      "date": "2027-01-04"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-     "latencyDays": 17,
-     "o5": true
-    },
-    {
-     "name": "Sentinel-1A POEORB",
-     "latencyDays": 20,
+     "latencyDays": 29.2,
      "o5": true
     }
    ],
    "devRows": 33314,
-   "clusters": 4,
+   "clusters": 3,
    "objects": 6,
    "dev": {
     "c95": 0.949510716215405,
@@ -6167,55 +6211,54 @@
    "s0": 1.0020181059615478,
    "blockDays": 2,
    "timeBlocks": 14,
-   "nFresh": 2892,
-   "nEff": 1096.4482215088956,
+   "nFresh": 1968,
+   "nEff": 792.6359918493702,
    "icc": 0.03233639538893917,
    "oc": [
-    0.305,
+    0.055,
     0,
-    0.001
+    0
    ],
    "ocPass": false,
    "cMin": null,
    "cScan": {
     "2": [
-     0.046,
+     0.058,
      0,
      0
     ],
     "3": [
-     0.192,
+     0.064,
      0,
      0
     ],
     "4": [
-     0.302,
+     0.048,
      0,
-     0.004
+     0
     ],
     "5": [
-     0.316,
+     0.052,
      0,
-     0.002
+     0
     ],
     "6": [
-     0.396,
+     0.054,
      0,
      0
     ],
     "7": [
-     0.402,
+     0.038,
      0,
-     0.002
+     0
     ],
     "8": [
-     0.492,
+     0.022,
      0,
      0
     ]
    },
    "clusterNames": [
-    "s1",
     "saral",
     "s3",
     "cryosat2"
@@ -6224,7 +6267,6 @@
    "noradList": [
     36508,
     39086,
-    39634,
     41335,
     43437
    ]
@@ -6238,80 +6280,78 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail under S1: P(label | correct) 0.032, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.001, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0.032, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0.001, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.016863239493056785,
-     "sePool": 0.008532302452333782
+     "se95": 0.01890078192036462,
+     "sePool": 0.00894455501019446
     },
     "oc": [
-     0.286,
-     0.06,
-     0.006
+     0.089,
+     0.234,
+     0
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.238,
-      0.142,
-      0.01
+      0.082,
+      0.336,
+      0.002
      ],
      "3": [
-      0.236,
-      0.086,
+      0.098,
+      0.216,
       0
      ],
      "4": [
-      0.282,
-      0.058,
-      0.002
+      0.084,
+      0.19,
+      0
      ],
      "5": [
-      0.286,
-      0.042,
+      0.116,
+      0.16,
       0
      ],
      "6": [
-      0.288,
-      0.024,
+      0.09,
+      0.134,
       0
      ],
      "7": [
-      0.324,
-      0.014,
-      0.002
+      0.106,
+      0.12,
+      0
      ],
      "8": [
-      0.266,
-      0.012,
+      0.102,
+      0.082,
       0
      ]
     },
-    "l3bRate": 0.089,
+    "l3bRate": 0.057,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
-     "operating characteristics fail under S1p: P(label | correct) 0.286, x0.7 0.06",
+     "operating characteristics fail under S1p: P(label | correct) 0.089, x0.7 0.234",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.286, x0.7 0.06",
+     "operating characteristics fail under S1p: P(label | correct) 0.089, x0.7 0.234",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-27",
+    "date": "2027-01-05",
     "parts": [
      {
       "name": "floor",
@@ -6319,28 +6359,19 @@
      },
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-      "date": "2026-12-24"
-     },
-     {
-      "name": "Sentinel-1A POEORB",
-      "date": "2026-12-27"
+      "date": "2027-01-05"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-     "latencyDays": 17,
-     "o5": true
-    },
-    {
-     "name": "Sentinel-1A POEORB",
-     "latencyDays": 20,
+     "latencyDays": 29.2,
      "o5": true
     }
    ],
    "devRows": 33307,
-   "clusters": 4,
+   "clusters": 3,
    "objects": 6,
    "dev": {
     "c95": 0.9505509352388387,
@@ -6368,11 +6399,11 @@
    "s0": 0.9946959255312179,
    "blockDays": 2,
    "timeBlocks": 14,
-   "nFresh": 2885,
-   "nEff": 442.8015295830671,
+   "nFresh": 1958,
+   "nEff": 327.3972542910254,
    "icc": 0.10917593551996914,
    "oc": [
-    0.032,
+    0.001,
     0,
     0
    ],
@@ -6380,43 +6411,42 @@
    "cMin": null,
    "cScan": {
     "2": [
-     0.014,
+     0,
      0,
      0
     ],
     "3": [
-     0.016,
+     0.004,
      0,
      0
     ],
     "4": [
-     0.026,
+     0.004,
      0,
      0
     ],
     "5": [
-     0.042,
+     0,
      0,
      0
     ],
     "6": [
-     0.048,
+     0,
      0,
      0
     ],
     "7": [
-     0.038,
+     0,
      0,
      0
     ],
     "8": [
-     0.044,
+     0,
      0,
      0
     ]
    },
    "clusterNames": [
-    "s1",
     "saral",
     "s3",
     "cryosat2"
@@ -6425,7 +6455,6 @@
    "noradList": [
     36508,
     39086,
-    39634,
     41335,
     43437
    ]
@@ -6439,80 +6468,78 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.023, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.003, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.023, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.003, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.020283195291753587,
-     "sePool": 0.009524227778247928
+     "se95": 0.026573903496840745,
+     "sePool": 0.012027221938920881
     },
     "oc": [
-     0.053,
-     0.111,
-     0
+     0.001,
+     0.175,
+     0.001
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.076,
-      0.118,
-      0.002
+      0.008,
+      0.256,
+      0
      ],
      "3": [
-      0.07,
-      0.118,
+      0.006,
+      0.148,
       0
      ],
      "4": [
-      0.058,
-      0.102,
+      0,
+      0.138,
       0
      ],
      "5": [
-      0.048,
-      0.064,
+      0,
+      0.094,
       0
      ],
      "6": [
-      0.036,
-      0.068,
+      0,
+      0.078,
       0
      ],
      "7": [
-      0.03,
-      0.032,
+      0,
+      0.054,
       0
      ],
      "8": [
-      0.022,
-      0.04,
+      0,
+      0.054,
       0
      ]
     },
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
-     "operating characteristics fail under S1p: P(label | correct) 0.053, x0.7 0.111",
+     "operating characteristics fail under S1p: P(label | correct) 0.001, x0.7 0.175",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.053, x0.7 0.111",
+     "operating characteristics fail under S1p: P(label | correct) 0.001, x0.7 0.175",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-28",
+    "date": "2027-01-06",
     "parts": [
      {
       "name": "floor",
@@ -6520,28 +6547,19 @@
      },
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-      "date": "2026-12-25"
-     },
-     {
-      "name": "Sentinel-1A POEORB",
-      "date": "2026-12-28"
+      "date": "2027-01-06"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-     "latencyDays": 17,
-     "o5": true
-    },
-    {
-     "name": "Sentinel-1A POEORB",
-     "latencyDays": 20,
+     "latencyDays": 29.2,
      "o5": true
     }
    ],
    "devRows": 33304,
-   "clusters": 4,
+   "clusters": 3,
    "objects": 6,
    "dev": {
     "c95": 0.9498258467451357,
@@ -6569,12 +6587,12 @@
    "s0": 1.0026161558930442,
    "blockDays": 2,
    "timeBlocks": 14,
-   "nFresh": 2884,
-   "nEff": 221.62654207884114,
+   "nFresh": 1955,
+   "nEff": 165.19058187918327,
    "icc": 0.23787884789870364,
    "oc": [
     0,
-    0.023,
+    0.003,
     0
    ],
    "ocPass": false,
@@ -6582,17 +6600,17 @@
    "cScan": {
     "2": [
      0,
-     0.004,
+     0.002,
      0
     ],
     "3": [
      0,
-     0.018,
+     0,
      0
     ],
     "4": [
      0,
-     0.022,
+     0.002,
      0
     ],
     "5": [
@@ -6602,22 +6620,21 @@
     ],
     "6": [
      0,
-     0.028,
+     0.004,
      0
     ],
     "7": [
      0,
-     0.014,
+     0.01,
      0
     ],
     "8": [
      0,
-     0.02,
+     0.008,
      0
     ]
    },
    "clusterNames": [
-    "s1",
     "saral",
     "s3",
     "cryosat2"
@@ -6626,7 +6643,6 @@
    "noradList": [
     36508,
     39086,
-    39634,
     41335,
     43437
    ]
@@ -6640,7 +6656,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -6651,69 +6666,68 @@
    ],
    "s1p": {
     "band": {
-     "se95": 0.024490766810736878,
-     "sePool": 0.011505357747050067
+     "se95": 0.03277897685134788,
+     "sePool": 0.016167589504840794
     },
     "oc": [
-     0.013,
-     0.093,
-     0.002
+     0.04,
+     0.073,
+     0.059
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.024,
-      0.152,
-      0.014
+      0.034,
+      0.088,
+      0.068
      ],
      "3": [
-      0.012,
-      0.094,
-      0.014
+      0.048,
+      0.066,
+      0.06
      ],
      "4": [
-      0.008,
-      0.084,
-      0.002
+      0.038,
+      0.056,
+      0.068
      ],
      "5": [
-      0.008,
-      0.092,
-      0.004
+      0.02,
+      0.058,
+      0.064
      ],
      "6": [
-      0.004,
-      0.068,
-      0
+      0.028,
+      0.048,
+      0.054
      ],
      "7": [
-      0.004,
-      0.072,
-      0
+      0.016,
+      0.032,
+      0.044
      ],
      "8": [
-      0.008,
-      0.054,
-      0
+      0.03,
+      0.034,
+      0.062
      ]
     },
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
-     "operating characteristics fail under S1p: P(label | correct) 0.013, x0.7 0.093",
+     "operating characteristics fail under S1p: P(label | correct) 0.04, x0.7 0.073",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.013, x0.7 0.093",
+     "operating characteristics fail under S1p: P(label | correct) 0.04, x0.7 0.073",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-30",
+    "date": "2027-01-08",
     "parts": [
      {
       "name": "floor",
@@ -6721,28 +6735,19 @@
      },
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-      "date": "2026-12-27"
-     },
-     {
-      "name": "Sentinel-1A POEORB",
-      "date": "2026-12-30"
+      "date": "2027-01-08"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-     "latencyDays": 17,
-     "o5": true
-    },
-    {
-     "name": "Sentinel-1A POEORB",
-     "latencyDays": 20,
+     "latencyDays": 29.2,
      "o5": true
     }
    ],
    "devRows": 33240,
-   "clusters": 4,
+   "clusters": 3,
    "objects": 6,
    "dev": {
     "c95": 0.9510529482551143,
@@ -6770,8 +6775,8 @@
    "s0": 0.9749379016343305,
    "blockDays": 3,
    "timeBlocks": 9,
-   "nFresh": 2867,
-   "nEff": 115.92875797030254,
+   "nFresh": 1942,
+   "nEff": 86.6841233340393,
    "icc": 0.30176807014767526,
    "oc": [
     0,
@@ -6818,7 +6823,6 @@
     ]
    },
    "clusterNames": [
-    "s1",
     "saral",
     "s3",
     "cryosat2"
@@ -6827,7 +6831,6 @@
    "noradList": [
     36508,
     39086,
-    39634,
     41335,
     43437
    ]
@@ -6841,80 +6844,78 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "s1p": {
     "band": {
-     "se95": 0.027487185161699283,
-     "sePool": 0.013439191757839935
+     "se95": 0.03601389053415131,
+     "sePool": 0.0174444217069719
     },
     "oc": [
-     0.069,
-     0.163,
-     0.076
+     0.155,
+     0.123,
+     0.239
     ],
     "ocPass": false,
     "cMin": null,
     "cScan": {
      "2": [
-      0.07,
       0.154,
-      0.08
+      0.172,
+      0.184
      ],
      "3": [
-      0.058,
-      0.148,
-      0.086
+      0.144,
+      0.116,
+      0.242
      ],
      "4": [
-      0.092,
-      0.148,
-      0.072
+      0.122,
+      0.094,
+      0.242
      ],
      "5": [
-      0.074,
-      0.122,
-      0.06
+      0.142,
+      0.082,
+      0.292
      ],
      "6": [
-      0.056,
-      0.128,
-      0.06
+      0.146,
+      0.058,
+      0.288
      ],
      "7": [
-      0.06,
-      0.116,
-      0.068
+      0.12,
+      0.038,
+      0.3
      ],
      "8": [
-      0.052,
-      0.096,
-      0.088
+      0.11,
+      0.042,
+      0.268
      ]
     },
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
-     "operating characteristics fail under S1p: P(label | correct) 0.069, x0.7 0.163",
+     "operating characteristics fail under S1p: P(label | correct) 0.155, x0.7 0.123",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.069, x0.7 0.163",
+     "operating characteristics fail under S1p: P(label | correct) 0.155, x0.7 0.123",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2027-01-01",
+    "date": "2027-01-10",
     "parts": [
      {
       "name": "floor",
@@ -6922,28 +6923,19 @@
      },
      {
       "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-      "date": "2026-12-29"
-     },
-     {
-      "name": "Sentinel-1A POEORB",
-      "date": "2027-01-01"
+      "date": "2027-01-10"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-     "latencyDays": 17,
-     "o5": true
-    },
-    {
-     "name": "Sentinel-1A POEORB",
-     "latencyDays": 20,
+     "latencyDays": 29.2,
      "o5": true
     }
    ],
    "devRows": 33086,
-   "clusters": 4,
+   "clusters": 3,
    "objects": 6,
    "dev": {
     "c95": 0.9517922988575228,
@@ -6971,218 +6963,9 @@
    "s0": 0.9666805746921597,
    "blockDays": 4,
    "timeBlocks": 7,
-   "nFresh": 2856,
-   "nEff": 84.21888081983464,
+   "nFresh": 1941,
+   "nEff": 63.03439760237241,
    "icc": 0.3258577785702672,
-   "oc": [
-    0,
-    0,
-    0
-   ],
-   "ocPass": false,
-   "cMin": null,
-   "cScan": {
-    "2": [
-     0,
-     0,
-     0
-    ],
-    "3": [
-     0,
-     0,
-     0
-    ],
-    "4": [
-     0,
-     0,
-     0
-    ],
-    "5": [
-     0,
-     0,
-     0
-    ],
-    "6": [
-     0,
-     0,
-     0
-    ],
-    "7": [
-     0,
-     0,
-     0
-    ],
-    "8": [
-     0,
-     0,
-     0
-    ]
-   },
-   "clusterNames": [
-    "s1",
-    "saral",
-    "s3",
-    "cryosat2"
-   ],
-   "state": "NOT TESTABLE",
-   "noradList": [
-    36508,
-    39086,
-    39634,
-    41335,
-    43437
-   ]
-  },
-  "LEO-M|6": {
-   "regime": "LEO-M",
-   "bin": 6,
-   "binDays": [
-    6,
-    8
-   ],
-   "outcome": "NOT TESTABLE",
-   "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "n_eff 56 < 60",
-    "time blocks 5 < 6"
-   ],
-   "outcomeIfO5": "NOT TESTABLE",
-   "reasonsIfO5": [
-    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.001, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "n_eff 56 < 60",
-    "time blocks 5 < 6"
-   ],
-   "s1p": {
-    "band": {
-     "se95": 0.03192214246301534,
-     "sePool": 0.014958677128646378
-    },
-    "oc": [
-     0.217,
-     0.204,
-     0.18
-    ],
-    "ocPass": false,
-    "cMin": null,
-    "cScan": {
-     "2": [
-      0.2,
-      0.238,
-      0.168
-     ],
-     "3": [
-      0.174,
-      0.224,
-      0.18
-     ],
-     "4": [
-      0.204,
-      0.27,
-      0.176
-     ],
-     "5": [
-      0.208,
-      0.204,
-      0.19
-     ],
-     "6": [
-      0.24,
-      0.144,
-      0.206
-     ],
-     "7": [
-      0.32,
-      0.13,
-      0.226
-     ],
-     "8": [
-      0.234,
-      0.106,
-      0.182
-     ]
-    },
-    "l3bRate": 0,
-    "outcome": "NOT TESTABLE",
-    "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
-     "operating characteristics fail under S1p: P(label | correct) 0.217, x0.7 0.204",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "n_eff 56 < 60",
-     "time blocks 5 < 6"
-    ],
-    "outcomeIfO5": "NOT TESTABLE",
-    "reasonsIfO5": [
-     "operating characteristics fail under S1p: P(label | correct) 0.217, x0.7 0.204",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "n_eff 56 < 60",
-     "time blocks 5 < 6"
-    ],
-    "state": "NOT TESTABLE"
-   },
-   "open": {
-    "date": "2027-01-03",
-    "parts": [
-     {
-      "name": "floor",
-      "date": "2026-12-21"
-     },
-     {
-      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-      "date": "2026-12-31"
-     },
-     {
-      "name": "Sentinel-1A POEORB",
-      "date": "2027-01-03"
-     }
-    ]
-   },
-   "products": [
-    {
-     "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
-     "latencyDays": 17,
-     "o5": true
-    },
-    {
-     "name": "Sentinel-1A POEORB",
-     "latencyDays": 20,
-     "o5": true
-    }
-   ],
-   "devRows": 33006,
-   "clusters": 4,
-   "objects": 6,
-   "dev": {
-    "c95": 0.950433254559777,
-    "c99": 0.9696418832939465,
-    "h0": 0.956299452221546,
-    "h1": 0.9446187258687259,
-    "axisShare": [
-     0.9980306610919227,
-     0.9281948736593346,
-     0.9850027267769497
-    ],
-    "axisMeanZ": [
-     -0.0916484424833361,
-     0.34384353005523766,
-     -0.008394457870712866
-    ],
-    "L1": true,
-    "L2": false,
-    "L3": false,
-    "label": false,
-    "stepLookupC95": 0.9556141307641035,
-    "meanD2Over3": 0.9074969093738091,
-    "tailShare": 0.019329818820820455
-   },
-   "s0": 0.9922066892723428,
-   "blockDays": 6,
-   "timeBlocks": 5,
-   "nFresh": 2849,
-   "nEff": 56.45457088852991,
-   "icc": 0.3497020550454171,
    "oc": [
     0,
     0.001,
@@ -7228,7 +7011,6 @@
     ]
    },
    "clusterNames": [
-    "s1",
     "saral",
     "s3",
     "cryosat2"
@@ -7237,7 +7019,202 @@
    "noradList": [
     36508,
     39086,
-    39634,
+    41335,
+    43437
+   ]
+  },
+  "LEO-M|6": {
+   "regime": "LEO-M",
+   "bin": 6,
+   "binDays": [
+    6,
+    8
+   ],
+   "outcome": "NOT TESTABLE",
+   "reasons": [
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+    "n_eff 42 < 60",
+    "time blocks 5 < 6"
+   ],
+   "outcomeIfO5": "NOT TESTABLE",
+   "reasonsIfO5": [
+    "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+    "n_eff 42 < 60",
+    "time blocks 5 < 6"
+   ],
+   "s1p": {
+    "band": {
+     "se95": 0.04138960127818716,
+     "sePool": 0.019585040895107417
+    },
+    "oc": [
+     0.256,
+     0.163,
+     0.388
+    ],
+    "ocPass": false,
+    "cMin": null,
+    "cScan": {
+     "2": [
+      0.276,
+      0.214,
+      0.362
+     ],
+     "3": [
+      0.246,
+      0.146,
+      0.38
+     ],
+     "4": [
+      0.218,
+      0.116,
+      0.404
+     ],
+     "5": [
+      0.236,
+      0.076,
+      0.434
+     ],
+     "6": [
+      0.224,
+      0.092,
+      0.404
+     ],
+     "7": [
+      0.192,
+      0.05,
+      0.484
+     ],
+     "8": [
+      0.198,
+      0.042,
+      0.442
+     ]
+    },
+    "l3bRate": 0,
+    "outcome": "NOT TESTABLE",
+    "reasons": [
+     "operating characteristics fail under S1p: P(label | correct) 0.256, x0.7 0.163",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 42 < 60",
+     "time blocks 5 < 6"
+    ],
+    "outcomeIfO5": "NOT TESTABLE",
+    "reasonsIfO5": [
+     "operating characteristics fail under S1p: P(label | correct) 0.256, x0.7 0.163",
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
+     "n_eff 42 < 60",
+     "time blocks 5 < 6"
+    ],
+    "state": "NOT TESTABLE"
+   },
+   "open": {
+    "date": "2027-01-12",
+    "parts": [
+     {
+      "name": "floor",
+      "date": "2026-12-21"
+     },
+     {
+      "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
+      "date": "2027-01-12"
+     }
+    ]
+   },
+   "products": [
+    {
+     "name": "DORIS (CryoSat-2, SARAL, Sentinel-3A/B)",
+     "latencyDays": 29.2,
+     "o5": true
+    }
+   ],
+   "devRows": 33006,
+   "clusters": 3,
+   "objects": 6,
+   "dev": {
+    "c95": 0.950433254559777,
+    "c99": 0.9696418832939465,
+    "h0": 0.956299452221546,
+    "h1": 0.9446187258687259,
+    "axisShare": [
+     0.9980306610919227,
+     0.9281948736593346,
+     0.9850027267769497
+    ],
+    "axisMeanZ": [
+     -0.0916484424833361,
+     0.34384353005523766,
+     -0.008394457870712866
+    ],
+    "L1": true,
+    "L2": false,
+    "L3": false,
+    "label": false,
+    "stepLookupC95": 0.9556141307641035,
+    "meanD2Over3": 0.9074969093738091,
+    "tailShare": 0.019329818820820455
+   },
+   "s0": 0.9922066892723428,
+   "blockDays": 6,
+   "timeBlocks": 5,
+   "nFresh": 1937,
+   "nEff": 42.2847380599411,
+   "icc": 0.3497020550454171,
+   "oc": [
+    0,
+    0,
+    0
+   ],
+   "ocPass": false,
+   "cMin": null,
+   "cScan": {
+    "2": [
+     0,
+     0.002,
+     0
+    ],
+    "3": [
+     0,
+     0,
+     0
+    ],
+    "4": [
+     0,
+     0,
+     0
+    ],
+    "5": [
+     0,
+     0,
+     0
+    ],
+    "6": [
+     0,
+     0,
+     0
+    ],
+    "7": [
+     0,
+     0,
+     0
+    ],
+    "8": [
+     0,
+     0,
+     0
+    ]
+   },
+   "clusterNames": [
+    "saral",
+    "s3",
+    "cryosat2"
+   ],
+   "state": "NOT TESTABLE",
+   "noradList": [
+    36508,
+    39086,
     41335,
     43437
    ]
@@ -7251,7 +7228,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.169, x0.7 0.002, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -7312,7 +7288,6 @@
     "l3bRate": 0.258,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.819, x0.7 0.109",
      "clusters 4 < C_min 8"
     ],
@@ -7324,7 +7299,7 @@
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-23",
+    "date": "2027-01-07",
     "parts": [
      {
       "name": "floor",
@@ -7332,14 +7307,14 @@
      },
      {
       "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-      "date": "2026-12-23"
+      "date": "2027-01-07"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-     "latencyDays": 17,
+     "latencyDays": 32.2,
      "o5": true
     }
    ],
@@ -7444,7 +7419,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.129, x0.7 0.001, x1.4 0.002",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -7505,7 +7479,6 @@
     "l3bRate": 0.27,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.815, x0.7 0.116",
      "clusters 4 < C_min 7"
     ],
@@ -7517,7 +7490,7 @@
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-23",
+    "date": "2027-01-07",
     "parts": [
      {
       "name": "floor",
@@ -7525,14 +7498,14 @@
      },
      {
       "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-      "date": "2026-12-23"
+      "date": "2027-01-07"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-     "latencyDays": 17,
+     "latencyDays": 32.2,
      "o5": true
     }
    ],
@@ -7637,7 +7610,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.048, x0.7 0.015, x1.4 0.003",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -7698,7 +7670,6 @@
     "l3bRate": 0.178,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.697, x0.7 0.147",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
@@ -7710,7 +7681,7 @@
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-24",
+    "date": "2027-01-08",
     "parts": [
      {
       "name": "floor",
@@ -7718,14 +7689,14 @@
      },
      {
       "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-      "date": "2026-12-24"
+      "date": "2027-01-08"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-     "latencyDays": 17,
+     "latencyDays": 32.2,
      "o5": true
     }
    ],
@@ -7830,7 +7801,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.001, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -7891,7 +7861,6 @@
     "l3bRate": 0.003,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.362, x0.7 0.092",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
@@ -7903,7 +7872,7 @@
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-25",
+    "date": "2027-01-09",
     "parts": [
      {
       "name": "floor",
@@ -7911,14 +7880,14 @@
      },
      {
       "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-      "date": "2026-12-25"
+      "date": "2027-01-09"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-     "latencyDays": 17,
+     "latencyDays": 32.2,
      "o5": true
     }
    ],
@@ -8023,7 +7992,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.002, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -8084,7 +8052,6 @@
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.284, x0.7 0.102",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
@@ -8096,7 +8063,7 @@
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-27",
+    "date": "2027-01-11",
     "parts": [
      {
       "name": "floor",
@@ -8104,14 +8071,14 @@
      },
      {
       "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-      "date": "2026-12-27"
+      "date": "2027-01-11"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-     "latencyDays": 17,
+     "latencyDays": 32.2,
      "o5": true
     }
    ],
@@ -8216,7 +8183,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
@@ -8279,7 +8245,6 @@
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.253, x0.7 0.134",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
      "time blocks 4 < 6"
@@ -8293,7 +8258,7 @@
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-29",
+    "date": "2027-01-13",
     "parts": [
      {
       "name": "floor",
@@ -8301,14 +8266,14 @@
      },
      {
       "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-      "date": "2026-12-29"
+      "date": "2027-01-13"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-     "latencyDays": 17,
+     "latencyDays": 32.2,
      "o5": true
     }
    ],
@@ -8413,7 +8378,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.005, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "n_eff 53 < 60",
@@ -8478,7 +8442,6 @@
     "l3bRate": 0,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.338, x0.7 0.189",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
      "n_eff 53 < 60",
@@ -8494,7 +8457,7 @@
     "state": "NOT TESTABLE"
    },
    "open": {
-    "date": "2026-12-31",
+    "date": "2027-01-15",
     "parts": [
      {
       "name": "floor",
@@ -8502,14 +8465,14 @@
      },
      {
       "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-      "date": "2026-12-31"
+      "date": "2027-01-15"
      }
     ]
    },
    "products": [
     {
      "name": "DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)",
-     "latencyDays": 17,
+     "latencyDays": 32.2,
      "o5": true
     }
    ],
@@ -8614,7 +8577,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.204, x0.7 0.001, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -8740,7 +8702,6 @@
     "l3bRate": 0.423,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.518, x0.7 0.003",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
@@ -8760,7 +8721,7 @@
      },
      {
       "name": "ESA finals",
-      "date": "2026-12-20"
+      "date": "2026-12-10"
      },
      {
       "name": "ESA finals interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -8768,7 +8729,7 @@
      },
      {
       "name": "ILRS combined",
-      "date": "2026-12-17"
+      "date": "2026-12-23"
      },
      {
       "name": "ILRS combined interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -8779,13 +8740,13 @@
    "products": [
     {
      "name": "ESA finals",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
     {
      "name": "ILRS combined",
-     "latencyDays": 11,
+     "latencyDays": 17.2,
      "o5": true,
      "interlock": "2027-01-20"
     }
@@ -9055,7 +9016,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.186, x0.7 0.003, x1.4 0.003",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -9181,7 +9141,6 @@
     "l3bRate": 0.393,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.485, x0.7 0.009",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
@@ -9201,7 +9160,7 @@
      },
      {
       "name": "ESA finals",
-      "date": "2026-12-20"
+      "date": "2026-12-10"
      },
      {
       "name": "ESA finals interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -9209,7 +9168,7 @@
      },
      {
       "name": "ILRS combined",
-      "date": "2026-12-17"
+      "date": "2026-12-23"
      },
      {
       "name": "ILRS combined interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -9220,13 +9179,13 @@
    "products": [
     {
      "name": "ESA finals",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
     {
      "name": "ILRS combined",
-     "latencyDays": 11,
+     "latencyDays": 17.2,
      "o5": true,
      "interlock": "2027-01-20"
     }
@@ -9496,7 +9455,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.141, x0.7 0.002, x1.4 0.001",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
@@ -9622,7 +9580,6 @@
     "l3bRate": 0.425,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.381, x0.7 0.005",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
@@ -9642,7 +9599,7 @@
      },
      {
       "name": "ESA finals",
-      "date": "2026-12-21"
+      "date": "2026-12-11"
      },
      {
       "name": "ESA finals interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -9650,7 +9607,7 @@
      },
      {
       "name": "ILRS combined",
-      "date": "2026-12-18"
+      "date": "2026-12-24"
      },
      {
       "name": "ILRS combined interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -9661,13 +9618,13 @@
    "products": [
     {
      "name": "ESA finals",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
     {
      "name": "ILRS combined",
-     "latencyDays": 11,
+     "latencyDays": 17.2,
      "o5": true,
      "interlock": "2027-01-20"
     }
@@ -9937,7 +9894,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.105, x0.7 0.006, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 5 < 6"
@@ -10065,7 +10021,6 @@
     "l3bRate": 0.281,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.43, x0.7 0.035",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
      "time blocks 5 < 6"
@@ -10087,7 +10042,7 @@
      },
      {
       "name": "ESA finals",
-      "date": "2026-12-22"
+      "date": "2026-12-12"
      },
      {
       "name": "ESA finals interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -10095,7 +10050,7 @@
      },
      {
       "name": "ILRS combined",
-      "date": "2026-12-19"
+      "date": "2026-12-25"
      },
      {
       "name": "ILRS combined interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -10106,13 +10061,13 @@
    "products": [
     {
      "name": "ESA finals",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
     {
      "name": "ILRS combined",
-     "latencyDays": 11,
+     "latencyDays": 17.2,
      "o5": true,
      "interlock": "2027-01-20"
     }
@@ -10382,7 +10337,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.11, x0.7 0.015, x1.4 0.008",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
@@ -10510,7 +10464,6 @@
     "l3bRate": 0.379,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.438, x0.7 0.058",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
      "time blocks 4 < 6"
@@ -10532,7 +10485,7 @@
      },
      {
       "name": "ESA finals",
-      "date": "2026-12-24"
+      "date": "2026-12-14"
      },
      {
       "name": "ESA finals interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -10540,7 +10493,7 @@
      },
      {
       "name": "ILRS combined",
-      "date": "2026-12-21"
+      "date": "2026-12-27"
      },
      {
       "name": "ILRS combined interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -10551,13 +10504,13 @@
    "products": [
     {
      "name": "ESA finals",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
     {
      "name": "ILRS combined",
-     "latencyDays": 11,
+     "latencyDays": 17.2,
      "o5": true,
      "interlock": "2027-01-20"
     }
@@ -10827,7 +10780,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.038, x0.7 0.027, x1.4 0.005",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 4 < 6"
@@ -10955,7 +10907,6 @@
     "l3bRate": 0.278,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.252, x0.7 0.057",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
      "time blocks 4 < 6"
@@ -10977,7 +10928,7 @@
      },
      {
       "name": "ESA finals",
-      "date": "2026-12-26"
+      "date": "2026-12-16"
      },
      {
       "name": "ESA finals interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -10985,7 +10936,7 @@
      },
      {
       "name": "ILRS combined",
-      "date": "2026-12-23"
+      "date": "2026-12-29"
      },
      {
       "name": "ILRS combined interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -10996,13 +10947,13 @@
    "products": [
     {
      "name": "ESA finals",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
     {
      "name": "ILRS combined",
-     "latencyDays": 11,
+     "latencyDays": 17.2,
      "o5": true,
      "interlock": "2027-01-20"
     }
@@ -11272,7 +11223,6 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.009, x0.7 0.044, x1.4 0",
     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
     "time blocks 1 < 6"
@@ -11400,7 +11350,6 @@
     "l3bRate": 0.053,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.381, x0.7 0.196",
      "no cluster count up to the available passes the operating characteristics (C_min undefined)",
      "time blocks 1 < 6"
@@ -11422,7 +11371,7 @@
      },
      {
       "name": "ESA finals",
-      "date": "2026-12-28"
+      "date": "2026-12-18"
      },
      {
       "name": "ESA finals interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -11430,7 +11379,7 @@
      },
      {
       "name": "ILRS combined",
-      "date": "2026-12-25"
+      "date": "2026-12-31"
      },
      {
       "name": "ILRS combined interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -11441,13 +11390,13 @@
    "products": [
     {
      "name": "ESA finals",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
     {
      "name": "ILRS combined",
-     "latencyDays": 11,
+     "latencyDays": 17.2,
      "o5": true,
      "interlock": "2027-01-20"
     }
@@ -11717,10 +11666,8 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0.003, x0.7 0.007, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
@@ -11779,10 +11726,8 @@
     "l3bRate": 0.029,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.369, x0.7 0.241",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
@@ -11800,7 +11745,7 @@
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-      "date": "2026-12-20"
+      "date": "2026-12-10"
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3) interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -11815,7 +11760,7 @@
    "products": [
     {
      "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
@@ -11933,10 +11878,8 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0.003, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
@@ -11995,10 +11938,8 @@
     "l3bRate": 0.031,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.305, x0.7 0.241",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
@@ -12016,7 +11957,7 @@
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-      "date": "2026-12-20"
+      "date": "2026-12-10"
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3) interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -12031,7 +11972,7 @@
    "products": [
     {
      "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
@@ -12149,10 +12090,8 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
@@ -12211,10 +12150,8 @@
     "l3bRate": 0.029,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.195, x0.7 0.189",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
@@ -12232,7 +12169,7 @@
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-      "date": "2026-12-21"
+      "date": "2026-12-11"
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3) interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -12247,7 +12184,7 @@
    "products": [
     {
      "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
@@ -12365,10 +12302,8 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
@@ -12427,10 +12362,8 @@
     "l3bRate": 0.017,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.053, x0.7 0.032",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
@@ -12448,7 +12381,7 @@
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-      "date": "2026-12-22"
+      "date": "2026-12-12"
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3) interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -12463,7 +12396,7 @@
    "products": [
     {
      "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
@@ -12581,10 +12514,8 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
@@ -12643,10 +12574,8 @@
     "l3bRate": 0.07,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.065, x0.7 0.028",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
@@ -12664,7 +12593,7 @@
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-      "date": "2026-12-24"
+      "date": "2026-12-14"
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3) interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -12679,7 +12608,7 @@
    "products": [
     {
      "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
@@ -12797,10 +12726,8 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
@@ -12859,10 +12786,8 @@
     "l3bRate": 0.055,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.031, x0.7 0.044",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
@@ -12880,7 +12805,7 @@
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-      "date": "2026-12-26"
+      "date": "2026-12-16"
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3) interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -12895,7 +12820,7 @@
    "products": [
     {
      "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
@@ -13013,10 +12938,8 @@
    ],
    "outcome": "NOT TESTABLE",
    "reasons": [
-    "O5 not granted: no lawful fresh truth for the regime's products",
     "operating characteristics fail under S1: P(label | correct) 0, x0.7 0, x1.4 0",
-    "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-    "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+    "no cluster count up to the available passes the operating characteristics (C_min undefined)"
    ],
    "outcomeIfO5": "NOT TESTABLE",
    "reasonsIfO5": [
@@ -13075,10 +12998,8 @@
     "l3bRate": 0.039,
     "outcome": "NOT TESTABLE",
     "reasons": [
-     "O5 not granted: no lawful fresh truth for the regime's products",
      "operating characteristics fail under S1p: P(label | correct) 0.048, x0.7 0.029",
-     "no cluster count up to the available passes the operating characteristics (C_min undefined)",
-     "GEO fresh truth is WAAS alone (one longitude sector, module converter pending): sectors < 2"
+     "no cluster count up to the available passes the operating characteristics (C_min undefined)"
     ],
     "outcomeIfO5": "NOT TESTABLE",
     "reasonsIfO5": [
@@ -13096,7 +13017,7 @@
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-      "date": "2026-12-28"
+      "date": "2026-12-18"
      },
      {
       "name": "ESA finals (BeiDou GEO/IGSO, QZS-3) interlock (C3 R3 record, later of 12-21 and 2027-01-20)",
@@ -13111,7 +13032,7 @@
    "products": [
     {
      "name": "ESA finals (BeiDou GEO/IGSO, QZS-3)",
-     "latencyDays": 14,
+     "latencyDays": 4.2,
      "o5": true,
      "interlock": "2027-01-20"
     },
@@ -13542,7 +13463,7 @@
   },
   "S1p": {
    "default": 0,
-   "ifO5": 2
+   "ifO5": 0
   }
  }
 }

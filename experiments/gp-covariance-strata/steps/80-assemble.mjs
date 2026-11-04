@@ -9,13 +9,13 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { regimeTables } from '../lib/tab.mjs';
 import { REGIMES, BINS } from '../lib/bins.mjs';
-import { outcomeOf, openDate, PRODUCTS, WINDOW } from '../lib/outcomes.mjs';
+import { outcomeOf, openDate, PRODUCTS, WINDOW, FRESH_EXCLUDED_NORADS, OTHER_LATENCIES } from '../lib/outcomes.mjs';
 import { C2_HELD_OBJECTS } from '../lib/holds.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../../..');
 const args = process.argv.slice(2);
-const owner = { o1: 'b', o2: 'coverage-calibrated', o3: false, o4: args.includes('--o4'), o5: args.includes('--o5'), recordedBy: 'defaults of PLAN.md section 6 unless the task record carries an answer' };
+const owner = { o1: 'b', o2: 'coverage-calibrated', o3: false, o4: args.includes('--o4'), o5: args.includes('--o5'), recordedBy: args.includes('--o5') ? 'O5 yes (owner, 2026-11-03; PLAN.md section 11); O1-O4 on the defaults of PLAN.md section 6 unless the task record says otherwise before 2026-11-08' : 'defaults of PLAN.md section 6 unless the task record carries an answer' };
 const [scratch, ...dirs] = args.filter((a) => !a.startsWith('--'));
 const J = (f) => JSON.parse(fs.readFileSync(path.join(scratch, f), 'utf8'));
 const cand = J('cand.json'), strata = J('strata.json').strata, s3s5 = J('s3s5.json'), manifest = J('dev-rows-manifest.json');
@@ -34,7 +34,7 @@ for (const regime of REGIMES) {
   for (const k of lists[regime]) (placements[k] ??= { regimes: [], cluster: tab.clusterNames[tab.cluster[tab.norad.indexOf(k)]] }).regimes.push(regime);
 }
 // O3 default: Sentinel-1C and COSMIC-2 are not in a fresh list
-for (const r of Object.keys(lists)) lists[r] = lists[r].filter((n) => n !== 62261);
+for (const r of Object.keys(lists)) lists[r] = lists[r].filter((n) => !FRESH_EXCLUDED_NORADS.includes(n));
 // S5 models for the committed audit
 const out = { version: 1, plan: { file: 'experiments/gp-covariance-strata/PLAN.md', sha256: sha(fs.readFileSync(path.join(here, '../PLAN.md'))) }, owner,
   regimeDefinition: 'E14 regimes by the module rule: a set\'s regime is read from its mean altitude (SGP4 un-Kozai\'d mean motion, WGS-72 radius) and eccentricity: LEO-L altitude [0,500) km, LEO-M [500,800), LEO-H [800,2000), MEO [2000,30000), GEO [30000,40000), all with eccentricity [0,0.25); HEO eccentricity >= 0.25 at any altitude. Age bins (days): [0,0.25) [0.25,0.75) [0.75,1.5) [1.5,2.5) [2.5,4) [4,6) [6,8]; the stratum lookup takes the bin containing the age (the last bin closed at 8 d), the interpolation lookup is linear in age between bin midpoints and held beyond the first and last usable midpoint.',
@@ -42,6 +42,8 @@ const out = { version: 1, plan: { file: 'experiments/gp-covariance-strata/PLAN.m
   code: { libSha256: hashTree(path.join(here, '../lib'), /\.mjs$/), stepsSha256: hashTree(path.join(here, '../steps'), /\.mjs$/), runSha256: fs.existsSync(path.join(here, '../run.mjs')) ? sha(fs.readFileSync(path.join(here, '../run.mjs'))) : null },
   pins, vendorsBlob: pins.vendorsMd.gitBlob, s4: JSON.parse(fs.readFileSync(path.join(root, 'results/gp-covariance-strata/dev-rows-summary.json'), 'utf8')).s4,
   placements, noradLists: lists, c2HeldObjects: Object.keys(C2_HELD_OBJECTS).map(Number),
+  seal: { file: 'reference-states/seal/2026-11-04T034634Z.json', sha256: 'e92767243264aa478602f60b8dfce8ef84638f6663fbbafaaac6e5fad7014bb0', sealedUtc: '2026-11-04T03:46:34Z', read: 'names, dates and SHA-256 only until a stratum\'s open date' },
+  latencies: { used: PRODUCTS, other: OTHER_LATENCIES, measuredIn: 'v-checks.json V3' },
   pTruth: 0, sampleAgeRangeDays: ageRange,
   candidates: Object.fromEntries(Object.entries(cand).map(([r, c]) => [r, { clusters: c.clusters, rows: c.rows, folds: c.folds, passRate: c.passRate, pick: c.pick, why: c.why, c: c.c, r0: c.r0 ?? null, r2: c.r2 ?? null, note: c.note ?? null }])),
   pStrat: Object.fromEntries(Object.entries(cand).map(([r, c]) => [r, c.cells ?? null])),

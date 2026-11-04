@@ -5,14 +5,17 @@ const D = 86400000;
 const ts = (s) => Date.parse(`${s}T00:00:00Z`);
 export const iso = (ms) => new Date(ms).toISOString().slice(0, 10);
 // products: name, latency in days, needs O5
+export const FRESH_EXCLUDED_CLUSTERS = ['s1'];     // Sentinel-1A truth ended 2026-07; Sentinel-1C is off under O3 (amendment 2)
+export const FRESH_EXCLUDED_NORADS = [39634, 62261];
 export const PRODUCTS = {
   'LEO-L': [],
-  'LEO-M': [{ name: 'DORIS (CryoSat-2, SARAL, Sentinel-3A/B)', latencyDays: 17, o5: true }, { name: 'Sentinel-1A POEORB', latencyDays: 20, o5: true }],
-  'LEO-H': [{ name: 'DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)', latencyDays: 17, o5: true }],
-  MEO: [{ name: 'ESA finals', latencyDays: 14, o5: true, interlock: '2027-01-20' }, { name: 'ILRS combined', latencyDays: 11, o5: true, interlock: '2027-01-20' }],
-  GEO: [{ name: 'ESA finals (BeiDou GEO/IGSO, QZS-3)', latencyDays: 14, o5: true, interlock: '2027-01-20' }, { name: 'WAAS MT9 (needs a module converter)', latencyDays: 1, o5: false, pendingConverter: true }],
+  'LEO-M': [{ name: 'DORIS (CryoSat-2, SARAL, Sentinel-3A/B)', latencyDays: 29.2, o5: true }],
+  'LEO-H': [{ name: 'DORIS (SWOT, HY-2C/D, Jason-3, Sentinel-6A/B)', latencyDays: 32.2, o5: true }],
+  MEO: [{ name: 'ESA finals', latencyDays: 4.2, o5: true, interlock: '2027-01-20' }, { name: 'ILRS combined', latencyDays: 17.2, o5: true, interlock: '2027-01-20' }],
+  GEO: [{ name: 'ESA finals (BeiDou GEO/IGSO, QZS-3)', latencyDays: 4.2, o5: true, interlock: '2027-01-20' }, { name: 'WAAS MT9 (needs a module converter)', latencyDays: 1, o5: false, pendingConverter: true }],
   HEO: [],
 };
+export const OTHER_LATENCIES = { 'GFZ Kp': 1.0, 'Sentinel-1 POEORB': 19.3 };
 export function openDate(regime, b) {
   const upper = BINS[b][1];
   let open = ts(WINDOW.floor);
