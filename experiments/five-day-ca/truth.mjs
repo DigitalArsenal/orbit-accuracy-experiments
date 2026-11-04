@@ -1,15 +1,15 @@
-import {saveEndpoints,saveOmm} from './lib/product-records.mjs';
+import {saveEndpoints,saveOcm} from './lib/product-records.mjs';
 import { registration, allowed, manifest } from './guard.mjs';
 registration();
 // AP5.md: XP, SGP4 and FFM on AP's precise-orbit windows, its truth, grid and as-issued weather, so rows join to AP's stored rows by window key. Module calls only.
-//   node experiments/operator-theory/truth-compare.mjs --wasm <AP 0.4.0> --out <dir> --from 2025-04-01 --to 2025-12-21 --shard k/n [--xm]
+// AP and XP fit and fly one $OCM at the pinned build (operator-theory lib/build.mjs PIN), as operator-theory's AP5 runners do since 2026-11-04.
+//   node experiments/five-day-ca/truth.mjs --out <dir> --from 2025-04-01 --to 2025-12-21 --shard k/n [--xm]
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { config, root, HOUR, DAY, iso, ms, rms, XM, windows } from '../xp2-fit-design/common.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
-import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
-import { apForces, openAp } from '../operator-theory/lib/ap.mjs';
+import { config, root, HOUR, DAY, iso, ms, rms, XM, windows, openSgp4Fit } from '../operator-theory/lib/xp2.mjs';
+import { driverRows } from '../operator-theory/lib/xm3.mjs';
+import { apForces, openAp, fitPcf, fitWeather, horizonOf, readOcm } from '../operator-theory/lib/ap.mjs';
 import { openFfmHost, apriori } from '../operator-theory/lib/host.mjs';
 import { openUssfXp } from '../operator-theory/lib/ussf-xp.mjs';
 
@@ -23,11 +23,11 @@ const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
 const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
 const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-const m = await openModules(), A = ARMS.has('AP') || ARMS.has('XP') ? await openAp(args.wasm) : null, G = ARMS.has('S') ? await openSgp4Fit() : null, F = ARMS.has('F') ? await openFfmHost() : null, U = ARMS.has('U') ? await openUssfXp() : null;
+const m = await openModules(), A = ARMS.has('AP') || ARMS.has('XP') ? await openAp() : null, G = ARMS.has('S') ? await openSgp4Fit() : null, F = ARMS.has('F') ? await openFfmHost() : null, U = ARMS.has('U') ? await openUssfXp() : null;
 const LEADS = [1, 2, 3, 4, 5, 7], GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const ARCS = ON_XM ? [24, 72] : [24];
-const PCF_AP = S.pcfBytes({ forces: apForces(XM.config.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null });
-const PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null });
+const PCF_XP = fitPcf({ forces: {}, fit: null });
 
 // CHEAPER.md's settings, unchanged, with its seeds for every object.
 const ffmLow = () => ({
@@ -65,7 +65,7 @@ for (const w of list) {
     const epochs = scored.map((l) => l.epoch), epochsMs = epochs.map(ms), truth = scored.map((l) => ({ r: l.r, v: l.v })), sizes = entered.map((k) => bins[k].length);
     const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
     if (O.excluded) throw new Error(O.excluded);
-    const gridB = S.gridBytes(epochs);
+    const ex = { spw: fitWeather(O.rows, horizonOf(D0)) };
     const spw = driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
     let scoringArm = null;
     const score = (e) => { const days = {}; const encounterErrors = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; encounterErrors[k] = { epoch: bins[k].at(-1).epoch, rtnKm: s.at(-1) }; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); fs.appendFileSync(path.join(OUT, `encounter-errors-${SHARD}.jsonl`), JSON.stringify({ key, group: row.group, arm: scoringArm, days: encounterErrors })+'\n'); return days; };
@@ -93,26 +93,25 @@ for (const w of list) {
             for (const leads of [[1,2,3,7],[4,5]]) {
               const times = entered.filter(k => leads.includes(k)).flatMap(k => bins[k]).map(l => l.epoch);
               if (!times.length) continue;
-              const states = await U.propagate(f.omm, S.gridBytes(times), times.length);
+              const states = await U.propagate(f.ocm, times, times.length);
               times.forEach((t,i) => byTime.set(t,states[i]));
             }
-            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(epochs.map(t=>byTime.get(t)), epochs, 'GCRF'), truth)) };
+            return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(epochs.map(t=>byTime.get(t)), epochs, 'GCRF'), truth)) };
         });
       }
       await run('AP', async () => {
-        const ex = { rows: S.spwBytes(O.rows) };
         const f = await A.fit(oem, PCF_AP, ex);
-          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_AP,ex);
+          if(args.products&&f.ok)saveOcm(OUT,SHARD,key,scoringArm,f.ocm);
         if (!f.ok) throw new Error(f.error);
-        const st = await A.propagate(f.omm, gridB, PCF_AP, ex, epochs.length);
-        return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+        const st = await A.propagate(f.ocm, epochs, epochs.length);
+        return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
       });
       await run('XP', async () => {
         const f = await A.fit(oem, PCF_XP, undefined);
-          if(args.products&&f.ok)saveOmm(OUT,SHARD,key,scoringArm,f.omm,PCF_XP,undefined);
+          if(args.products&&f.ok)saveOcm(OUT,SHARD,key,scoringArm,f.ocm);
         if (!f.ok) throw new Error(f.error);
-        const st = await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length);
-        return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+        const st = await A.propagate(f.ocm, epochs, epochs.length);
+        return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
       });
       await run('S', async () => {
         const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name: o.name, objectId: o.objectId ?? '' });
