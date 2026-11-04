@@ -1,0 +1,988 @@
+{
+ "tables": [
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 24,
+   "day": 1,
+   "windows": 276,
+   "flagged": 34,
+   "inFit": 18,
+   "inForecast": 16,
+   "stepFree": 220,
+   "unchecked": 22,
+   "split": {
+    "flagged": {
+     "n": 34,
+     "ffmMedianKm": 0.3669,
+     "apMedianKm": 0.3075,
+     "ffmWorseShare": 0.529,
+     "medianRatio": 1.033
+    },
+    "stepFree": {
+     "n": 220,
+     "ffmMedianKm": 0.015,
+     "apMedianKm": 0.0982,
+     "ffmWorseShare": 0.186,
+     "medianRatio": 0.198
+    },
+    "unchecked": {
+     "n": 22,
+     "ffmMedianKm": 0.0331,
+     "apMedianKm": 0.1726,
+     "ffmWorseShare": 0.182,
+     "medianRatio": 0.329
+    }
+   },
+   "classes": {
+    "maneuver": 18,
+    "storm": 12,
+    "neither": 33
+   },
+   "maneuverWithStorm": 2
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 24,
+   "day": 2,
+   "windows": 274,
+   "flagged": 46,
+   "inFit": 16,
+   "inForecast": 31,
+   "stepFree": 200,
+   "unchecked": 28,
+   "split": {
+    "flagged": {
+     "n": 46,
+     "ffmMedianKm": 1.01,
+     "apMedianKm": 0.6201,
+     "ffmWorseShare": 0.717,
+     "medianRatio": 1.172
+    },
+    "stepFree": {
+     "n": 200,
+     "ffmMedianKm": 0.1367,
+     "apMedianKm": 0.3242,
+     "ffmWorseShare": 0.385,
+     "medianRatio": 0.601
+    },
+    "unchecked": {
+     "n": 28,
+     "ffmMedianKm": 0.4183,
+     "apMedianKm": 0.5123,
+     "ffmWorseShare": 0.393,
+     "medianRatio": 0.674
+    }
+   },
+   "classes": {
+    "maneuver": 33,
+    "storm": 26,
+    "neither": 62
+   },
+   "maneuverWithStorm": 4
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 24,
+   "day": 3,
+   "windows": 275,
+   "flagged": 60,
+   "inFit": 18,
+   "inForecast": 43,
+   "stepFree": 182,
+   "unchecked": 33,
+   "split": {
+    "flagged": {
+     "n": 60,
+     "ffmMedianKm": 2.031,
+     "apMedianKm": 1.326,
+     "ffmWorseShare": 0.783,
+     "medianRatio": 1.319
+    },
+    "stepFree": {
+     "n": 182,
+     "ffmMedianKm": 0.5276,
+     "apMedianKm": 0.5629,
+     "ffmWorseShare": 0.522,
+     "medianRatio": 1.082
+    },
+    "unchecked": {
+     "n": 33,
+     "ffmMedianKm": 0.5872,
+     "apMedianKm": 0.9468,
+     "ffmWorseShare": 0.364,
+     "medianRatio": 0.32
+    }
+   },
+   "classes": {
+    "maneuver": 47,
+    "storm": 37,
+    "neither": 70
+   },
+   "maneuverWithStorm": 8
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 24,
+   "day": 7,
+   "windows": 274,
+   "flagged": 116,
+   "inFit": 18,
+   "inForecast": 103,
+   "stepFree": 128,
+   "unchecked": 30,
+   "split": {
+    "flagged": {
+     "n": 116,
+     "ffmMedianKm": 6.635,
+     "apMedianKm": 3.247,
+     "ffmWorseShare": 0.862,
+     "medianRatio": 1.782
+    },
+    "stepFree": {
+     "n": 128,
+     "ffmMedianKm": 3.281,
+     "apMedianKm": 1.602,
+     "ffmWorseShare": 0.75,
+     "medianRatio": 2.196
+    },
+    "unchecked": {
+     "n": 30,
+     "ffmMedianKm": 5.512,
+     "apMedianKm": 2.302,
+     "ffmWorseShare": 0.733,
+     "medianRatio": 2.395
+    }
+   },
+   "classes": {
+    "maneuver": 100,
+    "storm": 78,
+    "neither": 40
+   },
+   "maneuverWithStorm": 39
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 72,
+   "day": 1,
+   "windows": 259,
+   "flagged": 56,
+   "inFit": 45,
+   "inForecast": 12,
+   "stepFree": 184,
+   "unchecked": 19,
+   "split": {
+    "flagged": {
+     "n": 56,
+     "ffmMedianKm": 0.6628,
+     "apMedianKm": 0.6705,
+     "ffmWorseShare": 0.429,
+     "medianRatio": 0.995
+    },
+    "stepFree": {
+     "n": 184,
+     "ffmMedianKm": 0.1537,
+     "apMedianKm": 0.1438,
+     "ffmWorseShare": 0.44,
+     "medianRatio": 0.948
+    },
+    "unchecked": {
+     "n": 19,
+     "ffmMedianKm": 0.3646,
+     "apMedianKm": 0.3514,
+     "ffmWorseShare": 0.421,
+     "medianRatio": 0.999
+    }
+   },
+   "classes": {
+    "maneuver": 24,
+    "storm": 29,
+    "neither": 60
+   },
+   "maneuverWithStorm": 6
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 72,
+   "day": 2,
+   "windows": 258,
+   "flagged": 65,
+   "inFit": 45,
+   "inForecast": 23,
+   "stepFree": 169,
+   "unchecked": 24,
+   "split": {
+    "flagged": {
+     "n": 65,
+     "ffmMedianKm": 0.8489,
+     "apMedianKm": 0.824,
+     "ffmWorseShare": 0.508,
+     "medianRatio": 1.001
+    },
+    "stepFree": {
+     "n": 169,
+     "ffmMedianKm": 0.3434,
+     "apMedianKm": 0.3421,
+     "ffmWorseShare": 0.604,
+     "medianRatio": 1.047
+    },
+    "unchecked": {
+     "n": 24,
+     "ffmMedianKm": 1.138,
+     "apMedianKm": 1.079,
+     "ffmWorseShare": 0.667,
+     "medianRatio": 1.021
+    }
+   },
+   "classes": {
+    "maneuver": 33,
+    "storm": 41,
+    "neither": 77
+   },
+   "maneuverWithStorm": 8
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 72,
+   "day": 3,
+   "windows": 258,
+   "flagged": 75,
+   "inFit": 46,
+   "inForecast": 33,
+   "stepFree": 155,
+   "unchecked": 28,
+   "split": {
+    "flagged": {
+     "n": 75,
+     "ffmMedianKm": 1.403,
+     "apMedianKm": 1.424,
+     "ffmWorseShare": 0.56,
+     "medianRatio": 1.014
+    },
+    "stepFree": {
+     "n": 155,
+     "ffmMedianKm": 0.8422,
+     "apMedianKm": 0.6931,
+     "ffmWorseShare": 0.684,
+     "medianRatio": 1.087
+    },
+    "unchecked": {
+     "n": 28,
+     "ffmMedianKm": 1.687,
+     "apMedianKm": 1.599,
+     "ffmWorseShare": 0.786,
+     "medianRatio": 1.029
+    }
+   },
+   "classes": {
+    "maneuver": 42,
+    "storm": 52,
+    "neither": 76
+   },
+   "maneuverWithStorm": 11
+  },
+  {
+   "group": "S1",
+   "label": "Near 700 km",
+   "fit": 72,
+   "day": 7,
+   "windows": 257,
+   "flagged": 122,
+   "inFit": 45,
+   "inForecast": 92,
+   "stepFree": 108,
+   "unchecked": 27,
+   "split": {
+    "flagged": {
+     "n": 122,
+     "ffmMedianKm": 3.814,
+     "apMedianKm": 3.975,
+     "ffmWorseShare": 0.607,
+     "medianRatio": 1.023
+    },
+    "stepFree": {
+     "n": 108,
+     "ffmMedianKm": 2.834,
+     "apMedianKm": 2.426,
+     "ffmWorseShare": 0.722,
+     "medianRatio": 1.082
+    },
+    "unchecked": {
+     "n": 27,
+     "ffmMedianKm": 5.043,
+     "apMedianKm": 4.707,
+     "ffmWorseShare": 0.593,
+     "medianRatio": 1.01
+    }
+   },
+   "classes": {
+    "maneuver": 74,
+    "storm": 71,
+    "neither": 23
+   },
+   "maneuverWithStorm": 32
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 24,
+   "day": 1,
+   "windows": 136,
+   "flagged": 13,
+   "inFit": 7,
+   "inForecast": 6,
+   "stepFree": 123,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 13,
+     "ffmMedianKm": 0.5045,
+     "apMedianKm": 0.5241,
+     "ffmWorseShare": 0.538,
+     "medianRatio": 1
+    },
+    "stepFree": {
+     "n": 123,
+     "ffmMedianKm": 0.0068,
+     "apMedianKm": 0.0549,
+     "ffmWorseShare": 0,
+     "medianRatio": 0.114
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 7,
+    "storm": 0,
+    "neither": 0
+   },
+   "maneuverWithStorm": 3
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 24,
+   "day": 2,
+   "windows": 132,
+   "flagged": 17,
+   "inFit": 6,
+   "inForecast": 11,
+   "stepFree": 115,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 17,
+     "ffmMedianKm": 1.645,
+     "apMedianKm": 1.529,
+     "ffmWorseShare": 0.765,
+     "medianRatio": 1.076
+    },
+    "stepFree": {
+     "n": 115,
+     "ffmMedianKm": 0.018,
+     "apMedianKm": 0.2021,
+     "ffmWorseShare": 0.009,
+     "medianRatio": 0.134
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 13,
+    "storm": 1,
+    "neither": 0
+   },
+   "maneuverWithStorm": 5
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 24,
+   "day": 3,
+   "windows": 121,
+   "flagged": 21,
+   "inFit": 5,
+   "inForecast": 16,
+   "stepFree": 100,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 21,
+     "ffmMedianKm": 4.888,
+     "apMedianKm": 4.153,
+     "ffmWorseShare": 0.81,
+     "medianRatio": 1.098
+    },
+    "stepFree": {
+     "n": 100,
+     "ffmMedianKm": 0.0417,
+     "apMedianKm": 0.5326,
+     "ffmWorseShare": 0.02,
+     "medianRatio": 0.121
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 17,
+    "storm": 1,
+    "neither": 1
+   },
+   "maneuverWithStorm": 10
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 24,
+   "day": 7,
+   "windows": 103,
+   "flagged": 32,
+   "inFit": 5,
+   "inForecast": 28,
+   "stepFree": 71,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 32,
+     "ffmMedianKm": 10.598,
+     "apMedianKm": 7.867,
+     "ffmWorseShare": 0.844,
+     "medianRatio": 1.203
+    },
+    "stepFree": {
+     "n": 71,
+     "ffmMedianKm": 0.3232,
+     "apMedianKm": 3.236,
+     "ffmWorseShare": 0,
+     "medianRatio": 0.129
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 27,
+    "storm": 0,
+    "neither": 0
+   },
+   "maneuverWithStorm": 15
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 72,
+   "day": 1,
+   "windows": 136,
+   "flagged": 23,
+   "inFit": 17,
+   "inForecast": 6,
+   "stepFree": 113,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 23,
+     "ffmMedianKm": 0.8518,
+     "apMedianKm": 0.8529,
+     "ffmWorseShare": 0.304,
+     "medianRatio": 0.998
+    },
+    "stepFree": {
+     "n": 113,
+     "ffmMedianKm": 0.0121,
+     "apMedianKm": 0.0301,
+     "ffmWorseShare": 0.159,
+     "medianRatio": 0.315
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 7,
+    "storm": 14,
+    "neither": 4
+   },
+   "maneuverWithStorm": 4
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 72,
+   "day": 2,
+   "windows": 132,
+   "flagged": 27,
+   "inFit": 16,
+   "inForecast": 11,
+   "stepFree": 105,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 27,
+     "ffmMedianKm": 2.183,
+     "apMedianKm": 2.213,
+     "ffmWorseShare": 0.481,
+     "medianRatio": 1
+    },
+    "stepFree": {
+     "n": 105,
+     "ffmMedianKm": 0.0262,
+     "apMedianKm": 0.0671,
+     "ffmWorseShare": 0.219,
+     "medianRatio": 0.392
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 13,
+    "storm": 15,
+    "neither": 8
+   },
+   "maneuverWithStorm": 7
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 72,
+   "day": 3,
+   "windows": 121,
+   "flagged": 29,
+   "inFit": 14,
+   "inForecast": 16,
+   "stepFree": 92,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 29,
+     "ffmMedianKm": 5.339,
+     "apMedianKm": 5.327,
+     "ffmWorseShare": 0.517,
+     "medianRatio": 1
+    },
+    "stepFree": {
+     "n": 92,
+     "ffmMedianKm": 0.0652,
+     "apMedianKm": 0.1302,
+     "ffmWorseShare": 0.261,
+     "medianRatio": 0.45
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 15,
+    "storm": 16,
+    "neither": 8
+   },
+   "maneuverWithStorm": 10
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "fit": 72,
+   "day": 7,
+   "windows": 103,
+   "flagged": 40,
+   "inFit": 14,
+   "inForecast": 28,
+   "stepFree": 63,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 40,
+     "ffmMedianKm": 12.013,
+     "apMedianKm": 11.76,
+     "ffmWorseShare": 0.5,
+     "medianRatio": 1
+    },
+    "stepFree": {
+     "n": 63,
+     "ffmMedianKm": 0.314,
+     "apMedianKm": 0.7604,
+     "ffmWorseShare": 0.206,
+     "medianRatio": 0.44
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 20,
+    "storm": 10,
+    "neither": 3
+   },
+   "maneuverWithStorm": 15
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 24,
+   "day": 1,
+   "windows": 77,
+   "flagged": 13,
+   "inFit": 7,
+   "inForecast": 6,
+   "stepFree": 64,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 13,
+     "ffmMedianKm": 5.137,
+     "apMedianKm": 5.143,
+     "ffmWorseShare": 0.231,
+     "medianRatio": 0.999
+    },
+    "stepFree": {
+     "n": 64,
+     "ffmMedianKm": 1.678,
+     "apMedianKm": 1.653,
+     "ffmWorseShare": 0.641,
+     "medianRatio": 1.001
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 3,
+    "storm": 0,
+    "neither": 41
+   },
+   "maneuverWithStorm": 0
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 24,
+   "day": 2,
+   "windows": 74,
+   "flagged": 21,
+   "inFit": 7,
+   "inForecast": 14,
+   "stepFree": 53,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 21,
+     "ffmMedianKm": 6.485,
+     "apMedianKm": 6.485,
+     "ffmWorseShare": 0.19,
+     "medianRatio": 0.999
+    },
+    "stepFree": {
+     "n": 53,
+     "ffmMedianKm": 7.392,
+     "apMedianKm": 7.405,
+     "ffmWorseShare": 0.774,
+     "medianRatio": 1.001
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 4,
+    "storm": 0,
+    "neither": 41
+   },
+   "maneuverWithStorm": 0
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 24,
+   "day": 3,
+   "windows": 78,
+   "flagged": 22,
+   "inFit": 7,
+   "inForecast": 20,
+   "stepFree": 56,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 22,
+     "ffmMedianKm": 9.354,
+     "apMedianKm": 9.352,
+     "ffmWorseShare": 0.591,
+     "medianRatio": 1
+    },
+    "stepFree": {
+     "n": 56,
+     "ffmMedianKm": 8.863,
+     "apMedianKm": 8.86,
+     "ffmWorseShare": 0.732,
+     "medianRatio": 1.001
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 13,
+    "storm": 0,
+    "neither": 41
+   },
+   "maneuverWithStorm": 0
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 24,
+   "day": 7,
+   "windows": 76,
+   "flagged": 33,
+   "inFit": 7,
+   "inForecast": 33,
+   "stepFree": 43,
+   "unchecked": 0,
+   "split": {
+    "flagged": {
+     "n": 33,
+     "ffmMedianKm": 21.679,
+     "apMedianKm": 21.557,
+     "ffmWorseShare": 0.788,
+     "medianRatio": 1.004
+    },
+    "stepFree": {
+     "n": 43,
+     "ffmMedianKm": 22.97,
+     "apMedianKm": 22.971,
+     "ffmWorseShare": 0.279,
+     "medianRatio": 1
+    },
+    "unchecked": {
+     "n": 0,
+     "ffmMedianKm": null,
+     "apMedianKm": null,
+     "ffmWorseShare": null,
+     "medianRatio": null
+    }
+   },
+   "classes": {
+    "maneuver": 26,
+    "storm": 0,
+    "neither": 12
+   },
+   "maneuverWithStorm": 0
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 72,
+   "day": 1,
+   "windows": 76,
+   "flagged": 22,
+   "inFit": 20,
+   "inForecast": 6,
+   "stepFree": 53,
+   "unchecked": 1,
+   "split": {
+    "flagged": {
+     "n": 22,
+     "ffmMedianKm": 5.342,
+     "apMedianKm": 5.347,
+     "ffmWorseShare": 0.136,
+     "medianRatio": 0.999
+    },
+    "stepFree": {
+     "n": 53,
+     "ffmMedianKm": 4.858,
+     "apMedianKm": 4.858,
+     "ffmWorseShare": 0.264,
+     "medianRatio": 0.999
+    },
+    "unchecked": {
+     "n": 1,
+     "ffmMedianKm": 5.269,
+     "apMedianKm": 5.288,
+     "ffmWorseShare": 0,
+     "medianRatio": 0.996
+    }
+   },
+   "classes": {
+    "maneuver": 3,
+    "storm": 0,
+    "neither": 14
+   },
+   "maneuverWithStorm": 0
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 72,
+   "day": 2,
+   "windows": 73,
+   "flagged": 27,
+   "inFit": 20,
+   "inForecast": 14,
+   "stepFree": 45,
+   "unchecked": 1,
+   "split": {
+    "flagged": {
+     "n": 27,
+     "ffmMedianKm": 6.764,
+     "apMedianKm": 6.783,
+     "ffmWorseShare": 0.148,
+     "medianRatio": 0.999
+    },
+    "stepFree": {
+     "n": 45,
+     "ffmMedianKm": 4.752,
+     "apMedianKm": 4.757,
+     "ffmWorseShare": 0.4,
+     "medianRatio": 1
+    },
+    "unchecked": {
+     "n": 1,
+     "ffmMedianKm": 4.661,
+     "apMedianKm": 4.651,
+     "ffmWorseShare": 1,
+     "medianRatio": 1.002
+    }
+   },
+   "classes": {
+    "maneuver": 4,
+    "storm": 0,
+    "neither": 19
+   },
+   "maneuverWithStorm": 0
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 72,
+   "day": 3,
+   "windows": 75,
+   "flagged": 27,
+   "inFit": 20,
+   "inForecast": 20,
+   "stepFree": 47,
+   "unchecked": 1,
+   "split": {
+    "flagged": {
+     "n": 27,
+     "ffmMedianKm": 9.95,
+     "apMedianKm": 9.956,
+     "ffmWorseShare": 0.148,
+     "medianRatio": 0.999
+    },
+    "stepFree": {
+     "n": 47,
+     "ffmMedianKm": 9.438,
+     "apMedianKm": 9.467,
+     "ffmWorseShare": 0.489,
+     "medianRatio": 1
+    },
+    "unchecked": {
+     "n": 1,
+     "ffmMedianKm": 7.23,
+     "apMedianKm": 7.258,
+     "ffmWorseShare": 0,
+     "medianRatio": 0.996
+    }
+   },
+   "classes": {
+    "maneuver": 4,
+    "storm": 0,
+    "neither": 23
+   },
+   "maneuverWithStorm": 0
+  },
+  {
+   "group": "WA",
+   "label": "Geostationary, commercial (WAAS)",
+   "fit": 72,
+   "day": 7,
+   "windows": 74,
+   "flagged": 33,
+   "inFit": 20,
+   "inForecast": 32,
+   "stepFree": 40,
+   "unchecked": 1,
+   "split": {
+    "flagged": {
+     "n": 33,
+     "ffmMedianKm": 23.335,
+     "apMedianKm": 23.405,
+     "ffmWorseShare": 0.394,
+     "medianRatio": 1
+    },
+    "stepFree": {
+     "n": 40,
+     "ffmMedianKm": 28.877,
+     "apMedianKm": 28.892,
+     "ffmWorseShare": 0.675,
+     "medianRatio": 1.001
+    },
+    "unchecked": {
+     "n": 1,
+     "ffmMedianKm": 17.336,
+     "apMedianKm": 17.386,
+     "ffmWorseShare": 0,
+     "medianRatio": 0.997
+    }
+   },
+   "classes": {
+    "maneuver": 13,
+    "storm": 0,
+    "neither": 27
+   },
+   "maneuverWithStorm": 0
+  }
+ ]
+}

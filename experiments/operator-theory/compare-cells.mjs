@@ -10,11 +10,22 @@ import { binOf, pct, asc } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
 import { BUILD, AP_ARM, COLUMN_BUILDS, BUILD_RECORDS } from './lib/build.mjs';
 import { HELD_ROW } from './lib/pairs.mjs';
+import { windowState } from './lib/steps.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
 const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD), B051 = path.join(AP, 'b051'), XPARM = path.join(AP, 'xp-arm-0-2-1');
 const HELD_FROM = '71b27aa50112ec0533359572597eb408491cdb2f';
+// The maneuver flag (maneuver-flags.mjs): each cell's windows with a step of the truth's mean semimajor axis in the fit arc and in the forecast span to the lead.
+// null where no detector ran: every next-file row, and the precise-orbit regimes other than Sentinel-1 and the altimetry satellites.
+const FLAGGED = new Map(JSON.parse(fs.readFileSync(path.join(REPO, 'results/operator-theory/maneuver-flags/flags.json'), 'utf8')).windows.map((w) => [w.key, w]));
+const NOT_TESTED = { burnsInFit: null, burnsInForecast: null };
+const burns = (list, fit, lead) => {
+  const flags = list.map((r) => FLAGGED.get(r.key));
+  if (flags.some((w) => !w)) return NOT_TESTED;
+  const at = flags.map((w) => windowState(w, fit, lead));
+  return { burnsInFit: at.filter((x) => x.inFit).length, burnsInForecast: at.filter((x) => x.inForecast).length };
+};
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter((l) => l && !HELD_ROW.test(l)).map((l) => JSON.parse(l));
 const rowsIn = (dir, re = /^rows-\d+\.jsonl$/) => fs.readdirSync(dir).filter((f) => re.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
@@ -64,7 +75,7 @@ for (const r of rows) {
 }
 for (const [k, list] of byBin) {
   const [level, regime, provider, satellite, lead] = k.split('|');
-  for (const fit of [48, 72]) out.push(named({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, arms: cellOf(list, regime, fit) }, 'next'));
+  for (const fit of [48, 72]) out.push(named({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, ...NOT_TESTED, arms: cellOf(list, regime, fit) }, 'next'));
 }
 
 // Against precise orbits: AP5.md's windows, by group, provider and satellite. Membership, SGP4, XP and FFM from the AP build's stores; AP and the Space Force XP by window from ap/b051.
@@ -93,7 +104,7 @@ for (const cut of CUTS.filter((x) => !argOf('--only') || x.regime.includes(argOf
       const v = list.map(read).filter(Number.isFinite).sort(asc);
       if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
     }
-    out.push(named({ reference: 'truth', level, regime: cut.regime, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms }, 'truth'));
+    out.push(named({ reference: 'truth', level, regime: cut.regime, provider, satellite, fit, lead: Number(day) * 24, n: list.length, ...burns(list, fit, Number(day) * 24), arms }, 'truth'));
   }
 }
 
@@ -111,7 +122,7 @@ if (fs.existsSync(path.join(NEW, 'regimes')) && !argOf('--only')) {
         const v = list.map((r) => e(code === 'U' ? uSix.get(r.key) : code === 'AP' ? aSix.get(r.key) : r, `${code}${fit}`, day)).filter(Number.isFinite).sort(asc);
         if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
       }
-      out.push(named({ reference: 'truth', level, regime: g.label, provider, satellite, fit, lead: Number(day) * 24, n: list.length, arms }, 'truth'));
+      out.push(named({ reference: 'truth', level, regime: g.label, provider, satellite, fit, lead: Number(day) * 24, n: list.length, ...burns(list, fit, Number(day) * 24), arms }, 'truth'));
     }
   }
 }
@@ -146,13 +157,13 @@ if (fs.existsSync(path.join(NEW, 'providers')) && !argOf('--only')) {
   }
   for (const [k, list] of buckets) {
     const [level, regime, provider, satellite, lead] = k.split('|');
-    for (const fit of [24, 48]) { const arms = cell(list, fit); if (Object.keys(arms).length) out.push(named({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, arms }, 'next')); }
+    for (const fit of [24, 48]) { const arms = cell(list, fit); if (Object.keys(arms).length) out.push(named({ reference: 'next', level, regime, provider, satellite, fit, lead: Number(lead), n: list.length, ...NOT_TESTED, arms }, 'next')); }
   }
 }
 // The held SpaceX rows, as HELD_FROM published them.
 const HELD_REGIME = PROVIDERS.starlink[1];
 const held = JSON.parse(execFileSync('git', ['-C', REPO, 'show', `${HELD_FROM}:results/ap-truth/compare/cells.json`], { maxBuffer: 1 << 26 }).toString('utf8')).rows.filter((r) => r.regime === HELD_REGIME);
-if (!argOf('--only')) for (const r of held) { const { example, ...row } = r; out.push({ ...named(row, 'held'), ...(example ? { example } : {}) }); }
+if (!argOf('--only')) for (const r of held) { const { example, ...row } = r; out.push({ ...named({ ...row, ...NOT_TESTED }, 'held'), ...(example ? { example } : {}) }); }
 
 // Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's. Never a showcase example: those are chosen to show AP's lead, not to be typical.
 if (argOf('--examples')) {
@@ -170,7 +181,7 @@ out.sort((a, b) => a.reference.localeCompare(b.reference) || order[a.level] - or
 const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md, XP-ARM-0-2-1.md',
   columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
-  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. arms: column to [median km, 95th percentile km, forecasts]. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
+  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those with a step of the truth\'s mean semimajor axis of 8 m or more in the fit arc, and in the forecast span to the lead (results/operator-theory/maneuver-flags); a window the detector could not cover counts in neither; null where no detector ran. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
   builds: BUILD_RECORDS,
   leftOut: providerLeftOut,
   rows: out,

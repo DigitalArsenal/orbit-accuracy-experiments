@@ -4,9 +4,12 @@
 //   node experiments/operator-theory/compare-examples.mjs --mode next --out <dir>
 //   node experiments/operator-theory/compare-examples.mjs --mode truth --out <dir>          (XP2F_CONTROL=1 and --mode truth2 for AP2.md's windows)
 // --pick showcase, in truth, truth2 and regimes modes: one example per regime, chosen to show AP's lead, not to be typical (see showcaseRank). --build names the AP store (default lib/build.mjs's).
+// Every pick, typical or showcase, skips a window whose example has a step inside its fit (lib/steps.mjs, as the publisher finds them: hour < fitHours) and takes the next; when
+// every window tried has one, <id>.json says so and holds no tracks. --ids a,b: those examples alone.
 import fs from 'node:fs';
 import path from 'node:path';
 import { BUILD, AP_ARM } from './lib/build.mjs';
+import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
@@ -14,6 +17,7 @@ if (!MODE || !OUT) throw new Error('--mode and --out');
 fs.mkdirSync(OUT, { recursive: true });
 const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap'), NEW = path.join(AP, args.build ?? BUILD);
 const SHOWCASE = args.pick === 'showcase';
+const IDS = args.ids ? new Set(args.ids.split(',')) : null;
 let EXTRA = {};
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
@@ -29,6 +33,15 @@ const write = (doc) => {
   fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, ...EXTRA, tracks: TRACKS })}\n`);
   console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.bin`)).size / 1024)} KB`);
 };
+/** The burn-free rule: false (and a line) when the example's tracks show a step inside its fit; else the example is written. */
+const burnFree = (doc, tracks, key) => {
+  const inFit = pickedSteps(doc, tracks).filter((s) => s.hour < doc.fitHours);
+  if (inFit.length) { console.error(`${doc.id} ${key}: a step in its fit (${inFit.map((s) => `${s.hour} h, ${s.radialM} m`).join('; ')}); the next window`); return false; }
+  write({ ...doc, tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
+  return true;
+};
+/** Every window tried had a step in its fit: the example is dropped, and says so. */
+const dropped = (head) => { fs.writeFileSync(path.join(OUT, `${head.id}.json`), `${JSON.stringify({ ...head, ...(SHOWCASE ? { showcase: true } : {}), dropped: 'every window tried holds a step inside its fit' })}\n`); console.error(`${head.id}: dropped, every window tried holds a step inside its fit`); };
 /**
  * A product's states on a uniform grid, so the worked examples show AP's short-period terms as smooth curves: one minute below 8,400 km, five above. Eight-point Lagrange in the product's own
  * states, a data step. A grid time whose eight nearest states span a gap in the product is left out.
@@ -114,39 +127,46 @@ if (MODE === 'next') {
     const ffmName = leo ? 'F-M40@48' : 'F-H20@48';
     const ranked = nearestMedian(list.filter((r) => Number.isFinite(sgp(r)) && Number.isFinite(ffmRows.get(key(r))?.arms[ffmName]?.km)), (r) => r.arms[`${AP_ARM}@48`]?.km);
     const id = `next-${provider}-${regime.toLowerCase().replace(/\s+/g, '-')}`;
+    if (IDS && !IDS.has(id)) continue;
     if (!ranked.length) { console.error(`${id}: no forecast has every arm`); continue; }
-    const pick = ranked[0];
-    const apP = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.olderStart);
-    const xpP = findProduct(path.join(NEW, 'laser-xp'), pick.source, pick.norad, pick.olderStart);
-    const ffP = findProduct(path.join(STORE, 'cheaper'), pick.source, pick.norad, pick.olderStart);
-    const newer = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.newerStart);
-    if (!apP || !xpP || !ffP || !newer) { console.error(`${id}: a stored product is missing`); continue; }
-    const older = lines(apP.forecastOem), next = lines(newer.forecastOem);
-    const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), step = (leo ? 60 : 300) * 1000, end = tn + 3 * HOUR;
-    const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
-    const reference = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
-    const keep = ms.map((_, i) => !!reference[i]);
-    const epochsMs = ms.filter((_, i) => keep[i]), epochs = epochsMs.map(isoMs), refs = reference.filter(Boolean);
-    const w = weatherRows(apP.weatherDay, '2026-02-20', '2026-12-14');
-    const tracks = { reference: refs.map((s) => s.r) };
-    const f = ffP.products[ffmName];
-    // AP (the stored arm's: 31x20, NRLMSISE-00, the module's priors) and whiteroom XP re-fitted as $OCM on the stored window, the older file's first 48 h
-    const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + 48 * HOUR);
-    const segOem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
-    const fa = await A.fit(segOem, fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), { spw: fitWeather(rowsOfSpw(w.rows), horizonOf(Date.parse(seg.at(-1).epoch))) });
-    const fx = await A.fit(segOem, fitPcf({ forces: {}, fit: null }), undefined);
-    if (!fa.ok || !fx.ok) { console.error(`${id}: ${fa.error ?? fx.error}`); continue; }
-    tracks.AP = (await M.toAxes(await A.propagate(fa.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
-    tracks.XP = (await M.toAxes(await A.propagate(fx.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
-    const fu = await U.fit(segOem);
-    if (!fu.ok) { console.error(`${id}: ${fu.error}`); continue; }
-    tracks.XPU = (await M.toAxes(await U.propagate(fu.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
-    const { el } = await G.fit(S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' }), { from: seg[0].epoch, to: isoMs(t0 + 48 * HOUR), epoch: 'first', fitBstar: true }, { name: pick.object, objectId: '' });
-    const flown = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
-    if (flown.some((s) => !s)) { console.error(`${id}: SGP4 returned no state at some epochs`); continue; }
-    tracks.SGP4 = (await M.toAxes(flown, epochs, 'GCRF')).map((s) => s.r);
-    tracks.FFM = (await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, { forces: f.forces, fixed: f.fixed, integrator: f.integrator }, w.rows)).map((s) => s.r);
-    write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
+    let done = false, stepped = 0;
+    for (const pick of ranked.slice(0, 12)) {
+      const apP = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.olderStart);
+      const xpP = findProduct(path.join(NEW, 'laser-xp'), pick.source, pick.norad, pick.olderStart);
+      const ffP = findProduct(path.join(STORE, 'cheaper'), pick.source, pick.norad, pick.olderStart);
+      const newer = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.newerStart);
+      if (!apP || !xpP || !ffP || !newer) { console.error(`${id}: a stored product is missing`); continue; }
+      const older = lines(apP.forecastOem), next = lines(newer.forecastOem);
+      const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), step = (leo ? 60 : 300) * 1000, end = tn + 3 * HOUR;
+      const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
+      const reference = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
+      const keep = ms.map((_, i) => !!reference[i]);
+      const epochsMs = ms.filter((_, i) => keep[i]), epochs = epochsMs.map(isoMs), refs = reference.filter(Boolean);
+      const w = weatherRows(apP.weatherDay, '2026-02-20', '2026-12-14');
+      const tracks = { reference: refs.map((s) => s.r) };
+      const f = ffP.products[ffmName];
+      // AP (the stored arm's: 31x20, NRLMSISE-00, the module's priors) and whiteroom XP re-fitted as $OCM on the stored window, the older file's first 48 h
+      const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + 48 * HOUR);
+      const segOem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+      const fa = await A.fit(segOem, fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), { spw: fitWeather(rowsOfSpw(w.rows), horizonOf(Date.parse(seg.at(-1).epoch))) });
+      const fx = await A.fit(segOem, fitPcf({ forces: {}, fit: null }), undefined);
+      if (!fa.ok || !fx.ok) { console.error(`${id}: ${fa.error ?? fx.error}`); continue; }
+      tracks.AP = (await M.toAxes(await A.propagate(fa.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+      tracks.XP = (await M.toAxes(await A.propagate(fx.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+      const fu = await U.fit(segOem);
+      if (!fu.ok) { console.error(`${id}: ${fu.error}`); continue; }
+      tracks.XPU = (await M.toAxes(await U.propagate(fu.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+      const { el } = await G.fit(S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' }), { from: seg[0].epoch, to: isoMs(t0 + 48 * HOUR), epoch: 'first', fitBstar: true }, { name: pick.object, objectId: '' });
+      const flown = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
+      if (flown.some((s) => !s)) { console.error(`${id}: SGP4 returned no state at some epochs`); continue; }
+      tracks.SGP4 = (await M.toAxes(flown, epochs, 'GCRF')).map((s) => s.r);
+      tracks.FFM = (await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, { forces: f.forces, fixed: f.fixed, integrator: f.integrator }, w.rows)).map((s) => s.r);
+      if (!burnFree({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20' }, tracks, key(pick))) { stepped += 1; continue; }
+      done = true;
+      break;
+    }
+    if (!done && stepped) dropped({ id, reference: 'next', regime, provider });
+    else if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
   }
   await F.close(); await M.close();
 } else if (MODE === 'providers') {
@@ -210,7 +230,8 @@ if (MODE === 'next') {
     const past = usable.filter((r) => r.leadHours >= FIT_H + 6);
     const ranked = nearestMedian(past.length ? past : usable, (r) => r.arms[`${AP_ARM}@${FIT_H}`]?.km);
     const id = `next-${provider.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${source}`;
-    let done = false;
+    if (IDS && !IDS.has(id)) continue;
+    let done = false, stepped = 0;
     for (const pick of ranked.slice(0, 8)) {
       try {
         const oldP = ISS ? null : findStored(source, pick.norad, pick.olderStart);
@@ -256,12 +277,13 @@ if (MODE === 'next') {
           SGP4: (await M.toAxes(sg, epochs, 'GCRF')).map((x) => x.r),
           FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((x) => x.r),
         };
-        write({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: FIT_H, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + FIT_H * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(reference[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
+        if (!burnFree({ id, reference: 'next', regime, provider, satellite: pick.object, fitHours: FIT_H, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + FIT_H * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(reference[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20' }, tracks, pick.key ?? `${pick.source}|${pick.norad}|${pick.olderStart}`)) { stepped += 1; continue; }
         done = true;
         break;
       } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
     }
-    if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
+    if (!done && stepped) dropped({ id, reference: 'next', regime, provider });
+    else if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
   }
   await F.close();
 } else if (MODE === 'regimes') {
@@ -338,7 +360,8 @@ if (MODE === 'next') {
       ? showcaseRank(rows.filter((r) => r.group === group), (r) => ({ ap: e3(r, 'AP72'), xp: e3(r, 'XP72'), s: e3(r, 'S72'), f: e3(r, 'F72') }))
       : nearestMedian(rows.filter((r) => r.group === group && r.name === only), (r) => r.arms.AP72?.days?.[D3]?.e);
     const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-    let done = false;
+    if (IDS && !IDS.has(id)) continue;
+    let done = false, stepped = 0;
     for (const pick of ranked.slice(0, SHOWCASE ? 12 : undefined)) {
       const name = only ?? pick.name;
       if (!seriesCache.has(name)) seriesCache.set(name, await seriesOf(group, name));
@@ -383,12 +406,13 @@ if (MODE === 'next') {
           SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
           FFM: (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((s) => s.r),
         };
-        write({ id, reference: 'truth', regime: GROUPS[group].label, provider: GROUPS[group].provider, satellite: name, fitHours: arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
+        if (!burnFree({ id, reference: 'truth', regime: GROUPS[group].label, provider: GROUPS[group].provider, satellite: name, fitHours: arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40' }, tracks, pick.key)) { stepped += 1; continue; }
         done = true;
         break;
       } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
     }
-    if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
+    if (!done && stepped) dropped({ id, reference: 'truth', regime: GROUPS[group].label, provider: GROUPS[group].provider });
+    else if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
   }
   await F.close();
 } else {
@@ -429,7 +453,8 @@ if (MODE === 'next') {
         : nearestMedian(inCut.filter((r) => r.name === only), (r) => r.arms[arm]?.days?.['3']?.e);
       const slug = cut.regime.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-      let done = false;
+      if (IDS && !IDS.has(id)) continue;
+      let done = false, stepped = 0;
       for (const pick of ranked.slice(0, 12)) {
         const w = byKey.get(pick.key);
         if (!w) continue;
@@ -474,12 +499,13 @@ if (MODE === 'next') {
             FFM: (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((s) => s.r),
           };
           const publicName = name;
-          write({ id, reference: 'truth', regime: cut.regime, provider: cut.provider, satellite: publicName, fitHours: cut.arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40', tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
+          if (!burnFree({ id, reference: 'truth', regime: cut.regime, provider: cut.provider, satellite: publicName, fitHours: cut.arc, cutoff: iso(D0), start: iso(t0), fitEndMs: D0, scoreFromMs: D0, scoreToMs: to, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion({ r: grid[0].r, v: grid[0].v }), count: epochs.length, ffm: high ? 'FFM 20×20' : 'FFM 40×40' }, tracks, pick.key)) { stepped += 1; continue; }
           done = true;
           break;
         } catch (error) { console.error(`${id} ${pick.key}: ${String(error?.message ?? error).slice(0, 140)}`); }
       }
-      if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
+      if (!done && stepped) dropped({ id, reference: 'truth', regime: cut.regime, provider: cut.provider });
+      else if (!done) console.error(`${id}: none of the nearest forecasts had every arm`);
     }
   }
   await F.close();

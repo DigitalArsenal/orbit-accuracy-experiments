@@ -1,11 +1,12 @@
 // COMPARE.md: what the site's globe reads, from the full examples compare-examples.mjs wrote. Every forecast's positions, and at each time its radial, in-track and cross-track distance from
 // the reference, which are results, and the orbit-local axes at each time. The reference's own positions go out only where its source's terms allow them to be redrawn. Arithmetic on stored positions only.
-//   node experiments/operator-theory/compare-examples-publish.mjs --in <dir>,<dir> --out <dir> [--check]
+//   node experiments/operator-theory/compare-examples-publish.mjs --in <dir>,<dir> --out <dir> [--check]   (a later --in folder's example replaces an earlier one's)
 // --check writes nothing: every file this would write must equal the one in --out (the published examples) byte for byte.
 // --reflown <dir>: full examples compare-examples.mjs flew again (the same ids); each track is reported equal to --in's byte for byte, or by its largest
 // position difference, in m.
 import fs from 'node:fs';
 import path from 'node:path';
+import { axesAt, offsetsOf, exampleSteps, exampleBurns } from './lib/steps.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const OUT = argOf('--out'), CHECK = process.argv.includes('--check');
@@ -22,54 +23,6 @@ const put = (name, bytes) => {
 };
 // No stated license, a non-commercial license, or terms that bind each recipient. SpaceX is not here: the owner ruled its numbers public on 2026-11-01.
 const NOT_REDRAWN = new Set(['ESA', 'ESA navigation', 'ESA ultra-rapid', 'Intelsat', 'SES', 'China Space Station', 'Planet (Flock)']);
-
-/** The reference's radial, in-track and cross-track axes at one sample, in GCRF; its motion is differenced across the sample. */
-function axesAt(reference, count, i) {
-  const k = 3 * i, lo = 3 * Math.max(0, i - 1), hi = 3 * Math.min(count - 1, i + 1);
-  const p = [reference[k], reference[k + 1], reference[k + 2]], v = [reference[hi] - reference[lo], reference[hi + 1] - reference[lo + 1], reference[hi + 2] - reference[lo + 2]];
-  const r = Math.hypot(...p), R = p.map((x) => x / r);
-  const c = [p[1] * v[2] - p[2] * v[1], p[2] * v[0] - p[0] * v[2], p[0] * v[1] - p[1] * v[0]], m = Math.hypot(...c), C = c.map((x) => x / m);
-  return { p, R, I: [C[1] * R[2] - C[2] * R[1], C[2] * R[0] - C[0] * R[2], C[0] * R[1] - C[1] * R[0]], C };
-}
-
-/** Radial, in-track, cross-track distance of one track from the reference at each time, Float32 meters, positions in km. */
-function offsetsOf(track, reference, count) {
-  const out = new Float32Array(3 * count);
-  for (let i = 0; i < count; i += 1) {
-    const k = 3 * i, { p, R, I, C } = axesAt(reference, count, i);
-    const d = [(track[k] - p[0]) * 1000, (track[k + 1] - p[1]) * 1000, (track[k + 2] - p[2]) * 1000];
-    const dot = (a) => a[0] * d[0] + a[1] * d[1] + a[2] * d[2];
-    out[k] = dot(R); out[k + 1] = dot(I); out[k + 2] = dot(C);
-  }
-  return out;
-}
-
-/**
- * Where the reference's orbit steps: a burn the forecast does not know about moves the forecast's orbit-mean radial distance from the reference at once, and drag and fit error move it slowly.
- * At each sample, the mean over the orbit after less the mean over the orbit before, against the median absolute size of that difference for this example; a step is at least 8 of those and
- * at least 5 m. Hours from the first state. On next-prediction examples, only before the newer file starts, since the reference changes source there.
- */
-function stepsOf(d, offsets) {
-  const t = d.epochsSeconds, period = 86400 / d.meanMotion, lastT = d.reference === 'next' ? (d.scoreFromMs - Date.parse(d.start)) / 1000 : Infinity;
-  const stepS = t[1] - t[0], stride = Math.max(1, Math.round(period / 4 / stepS));
-  const mean = (from, to) => { let s = 0, n = 0; for (let i = 0; i < t.length; i += 1) if (t[i] >= from && t[i] < to) { s += offsets[3 * i]; n += 1; } return n >= (period / stepS) / 2 ? s / n : NaN; };
-  const jumps = [];
-  for (let i = 0; i < t.length; i += stride) {
-    if (t[i] - period < t[0] || t[i] + period > Math.min(t.at(-1), lastT)) continue;
-    const j = mean(t[i], t[i] + period) - mean(t[i] - period, t[i]);
-    if (Number.isFinite(j)) jumps.push({ at: t[i], j });
-  }
-  if (!jumps.length) return [];
-  const sizes = jumps.map((x) => Math.abs(x.j)).sort((p, q) => p - q), typical = sizes[sizes.length >> 1], floor = Math.max(5, 8 * typical);
-  const events = [];
-  for (const x of jumps) {
-    if (Math.abs(x.j) < floor) continue;
-    const last = events.at(-1);
-    if (last && x.at - last.at < 2 * period) { if (Math.abs(x.j) > Math.abs(last.j)) { last.at = x.at; last.j = x.j; } } else events.push({ ...x });
-  }
-  const passive = /laser spheres|geodetic/i.test(d.regime) || /ajisai|starlette|stella|lares|larets|westpac|beacon|lageos|etalon/i.test(d.satellite);
-  return events.map((e) => ({ hour: Math.round((e.at / 3600) * 10) / 10, radialM: Math.round(e.j * 10) / 10, kind: passive ? 'reference-step' : 'maneuver' }));
-}
 
 /** The rotation from the axes in-track, cross-track, radial to GCRF at each time, Float32 quaternions x, y, z, w. The site reads these and builds no axes of its own. */
 function framesOf(reference, count) {
@@ -88,9 +41,15 @@ function framesOf(reference, count) {
 }
 
 const index = [];
-for (const dir of argOf('--in').split(',')) {
-  for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json') && n !== 'index.json').sort()) {
+// Every example of the --in folders, a later folder's file replacing an earlier one's of the same id. Every Starlink group is held: its example is not parsed,
+// and the index names it. An example dropped for want of a window without a step in its fit has no files; the index says why.
+const files = new Map();
+for (const dir of argOf('--in').split(',')) for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json') && n !== 'index.json')) files.set(f, dir);
+for (const [f, dir] of [...files].sort((a, b) => a[0].localeCompare(b[0]))) {
+  if (/starlink/i.test(f)) { index.push({ id: f.replace(/\.json$/, ''), held: 'every Starlink group is held; its example is not parsed' }); continue; }
+  {
     const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+    if (d.dropped) { index.push({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, ...(d.showcase ? { showcase: true } : {}), dropped: d.dropped }); continue; }
     const raw = fs.readFileSync(path.join(dir, f.replace(/\.json$/, '.bin')));
     const size = 3 * d.count;
     const all = new Float64Array(raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.length));
@@ -104,15 +63,16 @@ for (const dir of argOf('--in').split(',')) {
     const parts = [center, ...arms.map((a) => offsets[a]), framesOf(reference, d.count)];
     put(`${d.id}.bin`, Buffer.concat(parts.map((p) => Buffer.from(p.buffer, p.byteOffset, p.byteLength))));
     const { tracks: _, ...rest } = d;
-    put(`${d.id}.json`, `${JSON.stringify({ ...rest, center: referenceDrawn ? 'reference' : 'AP', offsets: arms, referenceDrawn, steps: stepsOf(d, offsets.FFM) })}\n`);
+    const steps = exampleSteps(d, offsets.FFM);
+    put(`${d.id}.json`, `${JSON.stringify({ ...rest, center: referenceDrawn ? 'reference' : 'AP', offsets: arms, referenceDrawn, steps, ...exampleBurns(d, steps) })}\n`);
     index.push({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite, ...(d.showcase ? { showcase: true } : {}) });
   }
 }
 put('index.json', `${JSON.stringify(index)}\n`);
-console.log('examples', index.length, 'with the reference drawn', index.filter((e) => !NOT_REDRAWN.has(e.provider)).length);
+console.log('examples', index.filter((e) => !e.held && !e.dropped).length, 'with the reference drawn', index.filter((e) => !e.held && !e.dropped && !NOT_REDRAWN.has(e.provider)).length, 'held', index.filter((e) => e.held).length, 'dropped', index.filter((e) => e.dropped).length);
 if (argOf('--reflown')) {
   const dirs = argOf('--in').split(','), tally = {};
-  for (const f of fs.readdirSync(argOf('--reflown')).filter((n) => n.endsWith('.json') && n !== 'index.json').sort()) {
+  for (const f of fs.readdirSync(argOf('--reflown')).filter((n) => n.endsWith('.json') && n !== 'index.json' && !/starlink/i.test(n)).sort()) {
     const from = dirs.find((d) => fs.existsSync(path.join(d, f)));
     if (!from) { console.log(`${f}: not in --in`); continue; }
     const read = (dir) => ({ d: JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), b: fs.readFileSync(path.join(dir, f.replace(/\.json$/, '.bin'))) });
