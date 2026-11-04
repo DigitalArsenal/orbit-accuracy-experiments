@@ -16,9 +16,11 @@ let failures = 0;
 const check = (ok, line) => { console.log(`${ok ? 'ok  ' : 'FAIL'} ${line}`); if (!ok) failures += 1; };
 
 // 1. The tables reproduce from the stored rows.
+// The compare files as this record landed them: a later record may move one (XP-ARM-0-2-1.md moved cells.json), and results.json records their hashes.
+const landed = git('log', '-1', '--format=%H', '--', 'results/operator-theory/geo-sgp4-one-mode/results.json').toString().trim();
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'geo-sgp4-'));
 fs.mkdirSync(path.join(tmp, 'compare'));
-for (const f of fs.readdirSync(COMPARE)) fs.copyFileSync(path.join(COMPARE, f), path.join(tmp, 'compare', f));
+for (const f of git('ls-tree', '--name-only', `${landed}:results/ap-truth/compare`).toString().split('\n').filter(Boolean)) fs.writeFileSync(path.join(tmp, 'compare', f), git('show', `${landed}:results/ap-truth/compare/${f}`));
 execFileSync(process.execPath, [path.join(here, 'geo-sgp4-table.mjs'), '--out', path.join(tmp, 'out'), '--compare', path.join(tmp, 'compare')], { stdio: ['ignore', 'ignore', 'inherit'], maxBuffer: 1 << 26 });
 for (const [dir, f] of [[RESULTS, 'results.json'], [RESULTS, 'README.md'], [COMPARE, 'regimes.json'], [COMPARE, 'regimes.md']]) {
   const again = fs.readFileSync(path.join(tmp, dir === RESULTS ? 'out' : 'compare', f));
@@ -46,8 +48,6 @@ check(moved.length === 0, `${Object.keys(doc.storedHashes).length} stored row fi
 const base = JSON.parse(git('show', `${doc.compare.base}:results/ap-truth/compare/regimes.json`).toString('utf8')), now = JSON.parse(fs.readFileSync(path.join(COMPARE, 'regimes.json'), 'utf8'));
 const strip = (d) => ({ ...d, cells: d.cells.map((c) => (c.group === 'GE' || c.group === 'IG' ? { ...c, arms: { ...c.arms, SGP4: null } } : c)) });
 check(JSON.stringify(strip(base)) === JSON.stringify(strip(now)), `regimes.json: every figure but the GE and IG SGP4 cells is identical to ${doc.compare.base.slice(0, 7)} (${now.cells.length} cells; AP, XP and FFM of GE and IG included)`);
-// As this record landed them: a later record may move a compare file (XP-ARM-0-2-1.md moved cells.json).
-const landed = git('log', '-1', '--format=%H', '--', 'results/operator-theory/geo-sgp4-one-mode/results.json').toString().trim();
 for (const u of doc.compare.unchanged) check(sha(git('show', `${landed}:results/ap-truth/compare/${u.file}`)) === sha(git('show', `${doc.compare.base}:results/ap-truth/compare/${u.file}`)), `${u.file} as landed at ${landed.slice(0, 7)} is byte-identical to ${doc.compare.base.slice(0, 7)}`);
 
 // 4. The 2x2: four cells on equal windows for GE and IG, or an empty cell with its reason.
