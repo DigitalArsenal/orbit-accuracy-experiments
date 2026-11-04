@@ -130,7 +130,7 @@ const signed = (x) => `${x >= 0 ? '+' : '-'}${fig(Math.abs(x))}`;
 const md = ['# The Space Force XP on sgp4-xp 0.2.1', '', `Report only, registered in \`experiments/operator-theory/XP-ARM-0-2-1.md\` at ${REGISTRATION.slice(0, 7)} (${runs.registered}), before the first row (${runs.firstRowFile}). Build: ${BUILD_NOTE}; sgp4-xp 0.1.1 is ${COLUMN_BUILDS.held.XPU[0].commit.slice(0, 8)} (${COLUMN_BUILDS.held.XPU[0].sha256.slice(0, 12)}). Every figure is a median in km, 0.1.1 / 0.2.1, over the pairs or windows both builds flew.`, ''];
 md.push('## Next-file pairs', '');
 for (const s of next) {
-  md.push(`${s.set === 'laser' ? 'ILRS prediction files' : 'Providers'}: ${s.registered} pairs registered, ${s.run} flown on 0.2.1, ${s.notRegistered} not registered, ${s.held} held. Without a figure, ${Object.entries(s.failed).map(([arm, f]) => `${arm} ${f['0.1.1']} on 0.1.1 and ${f['0.2.1']} on 0.2.1`).join(', ')}.`, '');
+  md.push(`${s.set === 'laser' ? 'ILRS prediction files' : 'Providers'}: ${s.registered.toLocaleString('en-US')} pairs registered, ${s.run.toLocaleString('en-US')} flown on 0.2.1, ${s.notRegistered} not registered, ${s.held} held. Without a figure, ${Object.entries(s.failed).map(([arm, f]) => `${arm} ${f['0.1.1']} on 0.1.1 and ${f['0.2.1']} on 0.2.1`).join(', ')}.`, '');
   const leads = s.set === 'laser' ? [24, 72, 168] : [12, 24, 48, 72];
   md.push(`| Regime | Provider | Fit | ${leads.map((l) => `${l} h`).join(' | ')} |`, `|---|---|---:|${leads.map(() => '---:').join('|')}|`);
   const keys = [...new Set(s.cells.map((c) => `${c.regime}|${c.provider}|${c.fit}`))];
