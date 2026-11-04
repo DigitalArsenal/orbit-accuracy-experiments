@@ -46,7 +46,9 @@ check(moved.length === 0, `${Object.keys(doc.storedHashes).length} stored row fi
 const base = JSON.parse(git('show', `${doc.compare.base}:results/ap-truth/compare/regimes.json`).toString('utf8')), now = JSON.parse(fs.readFileSync(path.join(COMPARE, 'regimes.json'), 'utf8'));
 const strip = (d) => ({ ...d, cells: d.cells.map((c) => (c.group === 'GE' || c.group === 'IG' ? { ...c, arms: { ...c.arms, SGP4: null } } : c)) });
 check(JSON.stringify(strip(base)) === JSON.stringify(strip(now)), `regimes.json: every figure but the GE and IG SGP4 cells is identical to ${doc.compare.base.slice(0, 7)} (${now.cells.length} cells; AP, XP and FFM of GE and IG included)`);
-for (const u of doc.compare.unchanged) check(sha(fs.readFileSync(path.join(COMPARE, u.file))) === sha(git('show', `${doc.compare.base}:results/ap-truth/compare/${u.file}`)), `${u.file} is byte-identical to ${doc.compare.base.slice(0, 7)}`);
+// As this record landed them: a later record may move a compare file (XP-ARM-0-2-1.md moved cells.json).
+const landed = git('log', '-1', '--format=%H', '--', 'results/operator-theory/geo-sgp4-one-mode/results.json').toString().trim();
+for (const u of doc.compare.unchanged) check(sha(git('show', `${landed}:results/ap-truth/compare/${u.file}`)) === sha(git('show', `${doc.compare.base}:results/ap-truth/compare/${u.file}`)), `${u.file} as landed at ${landed.slice(0, 7)} is byte-identical to ${doc.compare.base.slice(0, 7)}`);
 
 // 4. The 2x2: four cells on equal windows for GE and IG, or an empty cell with its reason.
 for (const c of doc.armB) {
