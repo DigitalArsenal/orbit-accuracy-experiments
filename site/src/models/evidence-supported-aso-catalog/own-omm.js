@@ -76,7 +76,7 @@ export default async function run(ctx) {
   ].map(([k, v]) => [{ text: k, class: 'left mono' }, { text: String(v), class: 'mono' }]));
   table(record, ['$OCM orbit determination', 'Value'], [
     ['OD_ALGORITHM', det.OD_ALGORITHM], ['OD_METHOD', det.OD_METHOD], ['OD_EPOCH', det.OD_EPOCH], ['OD_RESIDUALS', det.OD_RESIDUALS], ['OD_CONVERGENCE_CRITERIA', det.OD_CONVERGENCE_CRITERIA],
-    ...(ocm.USER_DEFINED_PARAMETERS ?? []).filter((u) => /COVARIANCE_INTERPRETATION|STATE_REFERENCE_FRAME/.test(u.PARAM_NAME)).map((u) => [u.PARAM_NAME, u.PARAM_VALUE]),
+    ['TRAJ_REF_FRAME', ocm.TRAJ_REF_FRAME?.NAME], ['COV_TYPE', ocm.COV_TYPE], ['COV_REF_FRAME', ocm.COV_REF_FRAME?.NAME],
   ].filter(([, v]) => v).map(([k, v]) => [{ text: k, class: 'left mono' }, { text: String(v), class: 'mono wrap' }]));
   note(record, `Here, inside the window: ${formatMeters(rms * 1000)} RMS of the 3-D distance over ${inside.length} of NASA’s states, in GCRF.`);
 
