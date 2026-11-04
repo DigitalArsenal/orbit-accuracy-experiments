@@ -1,5 +1,5 @@
 // propagator/ffm execution requests with every force the module carries
-// (SDS 1.240.0 PRW), and the environment inputs those forces read: the JPL
+// (SDS 1.276.0 PRW), and the environment inputs those forces read: the JPL
 // kernel, IERS Earth orientation, SET's JB2008 drivers and daily space
 // weather for NRLMSISE-00. Encoding, decoding and the selection of published
 // rows only; the propagation, frames, time scales and force models are the
@@ -44,28 +44,28 @@ function encode(arm, value, size = 1 << 16) {
 export const ECOM2_TERMS = ['D0', 'Y0', 'B0', 'D2_COS', 'D2_SIN', 'D4_COS', 'D4_SIN', 'B1_COS', 'B1_SIN', 'B3_COS', 'B3_SIN'];
 export function executionFrame(request) {
   const f = request.forces, it = request.integrator, c = request.coefficients ?? {};
-  const forces = table('PRWForceConfiguration', {
-    GRAVITY_CHOICE: P.prwGravitySelection.EGM2008, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
+  const forces = table('PCFForceModel', {
+    GRAVITY_CHOICE: P.pcfGravitySelection.EGM2008, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
     ENABLE_J2: false, ENABLE_J3: false, ENABLE_J4: false, ENABLE_HIGHER_ZONALS: false,
     MAXIMUM_DEGREE: f.degree, HAS_MAXIMUM_DEGREE: true, MAXIMUM_ORDER: f.order, HAS_MAXIMUM_ORDER: true,
     ENABLE_THIRD_BODY: (f.thirdBodies ?? []).length > 0, THIRD_BODY_IDS: f.thirdBodies ?? [],
     ENABLE_SRP: !!f.srp, ENABLE_DRAG: !!f.drag,
     INITIAL_MASS_KG: c.boxWing ? c.boxWing.massKg : 1, AREA_M2: 1,
     REFLECTIVITY_COEFFICIENT: f.srp && !c.boxWing ? c.agom : 0,
-    RADIATION_PRESSURE_MODEL: c.boxWing ? P.prwRadiationPressureFamily.GNSS_BOX_WING : P.prwRadiationPressureFamily.CANNONBALL,
-    GNSS_BLOCK: c.boxWing ? P.prwGnssSpacecraftBlock[c.boxWing.block] : P.prwGnssSpacecraftBlock.UNSPECIFIED,
-    ECOM2: c.ecom2 ? table('PRWEcom2', Object.fromEntries(ECOM2_TERMS.map((t) => [`${t}_M_S2`, c.ecom2[t] ?? 0]))) : null,
+    RADIATION_PRESSURE_MODEL: c.boxWing ? P.pcfRadiationPressureFamily.GNSS_BOX_WING : P.pcfRadiationPressureFamily.CANNONBALL,
+    GNSS_BLOCK: c.boxWing ? P.pcfGnssSpacecraftBlock[c.boxWing.block] : P.pcfGnssSpacecraftBlock.UNSPECIFIED,
+    ECOM2: c.ecom2 ? table('PCFEcom2', Object.fromEntries(ECOM2_TERMS.map((t) => [`${t}_M_S2`, c.ecom2[t] ?? 0]))) : null,
     IN_TRACK_ACCELERATION_M_S2: c.inTrack ?? 0, HAS_IN_TRACK_ACCELERATION_M_S2: c.inTrack !== undefined,
     DRAG_COEFFICIENT: f.drag ? c.b : 0,
-    ATMOSPHERE_MODEL: P.prwAtmosphereFamily[f.atmosphere ?? 'NRLMSISE00'],
+    ATMOSPHERE_MODEL: P.pcfAtmosphereFamily[f.atmosphere ?? 'NRLMSISE00'],
     EPHEMERIS_SOURCE: 'JPL_SPK',
-    SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
-    RELATIVITY: f.relativity ? P.prwRelativityTerms[f.relativity] : P.prwRelativityTerms.NONE,
+    SOLID_TIDES: f.solidTides ? P.pcfSolidTideModel.IERS_2010 : P.pcfSolidTideModel.NONE,
+    RELATIVITY: f.relativity ? P.pcfRelativityTerms[f.relativity] : P.pcfRelativityTerms.NONE,
   });
   // Optional terms, set only when asked for: unset fields keep the schema defaults and are not written.
   if (f.drag && c.bdot !== undefined) Object.assign(forces, { DRAG_AREA_OVER_MASS_RATE_M2_KG_S: c.bdot, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: true });
-  if (f.earthRadiation) Object.assign(forces, { EARTH_RADIATION: P.prwEarthRadiationModel[f.earthRadiation.model ?? 'KNOCKE'], EARTH_RADIATION_RESOLUTION_DEG: f.earthRadiation.resolutionDeg });
-  if (f.oceanTides) Object.assign(forces, { OCEAN_TIDES: P.prwOceanTideModel[f.oceanTides.model ?? 'FES2004'], OCEAN_TIDE_MAXIMUM_DEGREE: f.oceanTides.degree, OCEAN_TIDE_MAXIMUM_ORDER: f.oceanTides.order });
+  if (f.earthRadiation) Object.assign(forces, { EARTH_RADIATION: P.pcfEarthRadiationModel[f.earthRadiation.model ?? 'KNOCKE'], EARTH_RADIATION_RESOLUTION_DEG: f.earthRadiation.resolutionDeg });
+  if (f.oceanTides) Object.assign(forces, { OCEAN_TIDES: P.pcfOceanTideModel[f.oceanTides.model ?? 'FES2004'], OCEAN_TIDE_MAXIMUM_DEGREE: f.oceanTides.degree, OCEAN_TIDE_MAXIMUM_ORDER: f.oceanTides.order });
   const execution = table('PRWExecutionRequest', {
     INITIAL: table('PRWResidentState', {
       STATE: table('FRMStateVector', {
@@ -75,8 +75,8 @@ export function executionFrame(request) {
       COORDINATE_SYSTEM: gcrf(), HAS_MASS_KG: false, MASS_KG: 0,
     }),
     TARGET_EPOCH: instant(request.samples.at(-1), 'UTC'),
-    INTEGRATOR: table('PRWIntegratorSettings', {
-      ALGORITHM: P.prwSolverAlgorithm.RK78, INITIAL_STEP_SECONDS: 30, MINIMUM_STEP_SECONDS: 0.01, MAXIMUM_STEP_SECONDS: it.maxStep,
+    INTEGRATOR: table('PCFIntegratorSettings', {
+      ALGORITHM: P.pcfIntegratorAlgorithm.RK78, INITIAL_STEP_SECONDS: 30, MINIMUM_STEP_SECONDS: 0.01, MAXIMUM_STEP_SECONDS: it.maxStep,
       ABSOLUTE_TOLERANCES: Array(6).fill(it.tolerance * 1000), RELATIVE_TOLERANCE: it.tolerance, MAXIMUM_STEPS: 2000000,
     }),
     FORCES: forces,

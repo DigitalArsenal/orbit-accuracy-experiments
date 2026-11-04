@@ -1,4 +1,4 @@
-// propagator/ffm requests for E5 (SDS 1.240.0 PRW): an execution request
+// propagator/ffm requests for E5 (SDS 1.276.0 PRW): an execution request
 // with drag (JB2008 or NRLMSISE-00), Cd*A/m as a dynamic parameter, and the
 // environment inputs (DE440 kernel, IERS EOP, SET JB2008 indices or daily
 // space weather); and the single-point ATMOSPHERE_REQUEST for NRLMSISE-00
@@ -31,8 +31,8 @@ export const spaceWeatherFrame = (rows) => ({ portId: 'space_weather', typeRef: 
 export function executionFrame(request) {
   const f = request.forces, it = request.integrator;
   const value = (kind, fallback) => request.parameters.find((p) => p.kind === kind)?.value ?? fallback;
-  const forces = table('PRWForceConfiguration', {
-    GRAVITY_CHOICE: P.prwGravitySelection.SPHERICAL_HARMONICS, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
+  const forces = table('PCFForceModel', {
+    GRAVITY_CHOICE: P.pcfGravitySelection.SPHERICAL_HARMONICS, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
     ENABLE_J2: false, ENABLE_J3: false, ENABLE_J4: false, ENABLE_HIGHER_ZONALS: false,
     MAXIMUM_DEGREE: f.degree, HAS_MAXIMUM_DEGREE: true, MAXIMUM_ORDER: f.order, HAS_MAXIMUM_ORDER: true,
     ENABLE_THIRD_BODY: (f.thirdBodies ?? []).length > 0, THIRD_BODY_IDS: f.thirdBodies ?? [],
@@ -40,10 +40,10 @@ export function executionFrame(request) {
     INITIAL_MASS_KG: 1, AREA_M2: 1,
     REFLECTIVITY_COEFFICIENT: value('SRP_AREA_OVER_MASS', request.fixed?.agom ?? 0),
     DRAG_COEFFICIENT: value('DRAG_AREA_OVER_MASS', request.fixed?.b ?? 0),
-    ATMOSPHERE_MODEL: P.prwAtmosphereFamily[f.atmosphere],
+    ATMOSPHERE_MODEL: P.pcfAtmosphereFamily[f.atmosphere],
     EPHEMERIS_SOURCE: 'JPL_SPK',
-    SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
-    RELATIVITY: P.prwRelativityTerms.NONE,
+    SOLID_TIDES: f.solidTides ? P.pcfSolidTideModel.IERS_2010 : P.pcfSolidTideModel.NONE,
+    RELATIVITY: P.pcfRelativityTerms.NONE,
   });
   const execution = table('PRWExecutionRequest', {
     INITIAL: table('PRWResidentState', {
@@ -54,8 +54,8 @@ export function executionFrame(request) {
       COORDINATE_SYSTEM: gcrf(), HAS_MASS_KG: false, MASS_KG: 0,
     }),
     TARGET_EPOCH: instant(request.target ?? request.samples.at(-1), 'UTC'),
-    INTEGRATOR: table('PRWIntegratorSettings', {
-      ALGORITHM: P.prwSolverAlgorithm.RK78, INITIAL_STEP_SECONDS: 60, MINIMUM_STEP_SECONDS: 0.01, MAXIMUM_STEP_SECONDS: it.maxStep,
+    INTEGRATOR: table('PCFIntegratorSettings', {
+      ALGORITHM: P.pcfIntegratorAlgorithm.RK78, INITIAL_STEP_SECONDS: 60, MINIMUM_STEP_SECONDS: 0.01, MAXIMUM_STEP_SECONDS: it.maxStep,
       ABSOLUTE_TOLERANCES: Array(6).fill(it.tolerance * 1000), RELATIVE_TOLERANCE: it.tolerance, MAXIMUM_STEPS: 1000000,
     }),
     FORCES: forces,
@@ -87,7 +87,7 @@ export function decodeSamples(response) {
 // geodetic point, with the drivers ffm's space_weather reading gives it.
 export function atmosphereFrame({ epoch, altKm, latDeg, lonDeg, f107, f107a, ap }) {
   const request = table('PRWAtmosphereRequest', {
-    ATMOSPHERE_MODEL: P.prwAtmosphereFamily.NRLMSISE00, EPOCH: instant(epoch, 'UTC'), ALTITUDE_M: altKm * 1000,
+    ATMOSPHERE_MODEL: P.pcfAtmosphereFamily.NRLMSISE00, EPOCH: instant(epoch, 'UTC'), ALTITUDE_M: altKm * 1000,
     LATITUDE_RAD: latDeg * Math.PI / 180, LONGITUDE_RAD: lonDeg * Math.PI / 180, HAS_LOCAL_SOLAR_TIME_HOURS: false,
     F107: f107, F107_AVERAGE: f107a, AP_INDEX: ap, INCLUDE_ANOMALOUS_OXYGEN: true,
   });
