@@ -10,6 +10,7 @@ import { openFfmHost, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { openSgp4Fit } from './lib/xp2.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
+import { openAp, fitPcf, fitWeather, rowsOfSpw, horizonOf, readOcm, MSIS } from './lib/ap.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
@@ -69,8 +70,8 @@ function interpolate(lines, t) {
 
 // ---- settings: PLAN.md's
 const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
-const PCF = { X0: S.pcfBytes({ forces: XMC.arms.X0.forces, fit: FIT }), X2: S.pcfBytes({ forces: XMC.arms.X2.forces, fit: FIT }) };
-const pinned = (b) => S.pcfBytes({ forces: XMC.arms.X2.forces, fit: { dragPrior: { form: 'LOG_NORMAL', mean: b, sigma: 1e-6 }, srpPrior: FIT.srpPrior } });
+const PCF = { X0: fitPcf({ forces: {}, fit: FIT }), X2: fitPcf({ forces: MSIS, fit: FIT }) };
+const pinned = (b) => fitPcf({ forces: MSIS, fit: { dragPrior: { form: 'LOG_NORMAL', mean: b, sigma: 1e-6 }, srpPrior: FIT.srpPrior } });
 const integrator = { tolerance: 1e-10, maxStep: 120, minStep: 1e-4 };
 const ffmSettings = (norad, atmosphere) => ({
   forces: { gravity: 'SPHERICAL_HARMONICS', degree: 70, order: 70, thirdBodies: [10, 301], srp: true, drag: true, atmosphere, solidTides: true, relativity: 'IERS_2010' },
@@ -81,12 +82,12 @@ const weatherOf = new Map();
 function weather(day) {
   if (!weatherOf.has(day)) {
     const w = weatherRows(day, '2026-07-15', '2026-12-14');
-    weatherOf.set(day, { rows: w.rows, spw: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) });
+    weatherOf.set(day, { rows: w.rows, spw: fitWeather(rowsOfSpw(w.rows), horizonOf(Date.parse(`${day}T00:00:00Z`) + 2 * 86400000)) });
   }
   return weatherOf.get(day);
 }
 
-const M = await openModules();
+const M = await openModules(), A = await openAp();
 const G = await openSgp4Fit();
 const F = await openFfmHost();
 
@@ -109,11 +110,11 @@ async function fitAll(head, w) {
   });
   for (const a of [12, 16]) for (const name of ['X0', 'X2']) {
     await attempt(`${name}@${a}`, async () => {
-      const f = await M.fit(oem(arcOf(a)), PCF[name], name === 'X2' ? { rows: w.spw } : undefined);
+      const f = await A.fit(oem(arcOf(a)), PCF[name], name === 'X2' ? { spw: w.spw } : undefined);
       if (!f.ok) throw new Error(f.error);
-      const info = S.readFitOmm(f.omm);
+      const info = readOcm(f.ocm);
       diagnostics[`${name}@${a}`] = { bterm: info.bterm, fitRmsKm: info.fitRmsKm };
-      return Buffer.from(f.omm).toString('base64');
+      return { ocm: Buffer.from(f.ocm).toString('base64') };
     });
   }
   for (const [a, atmosphere] of [[12, 'NRLMSISE00'], [16, 'NRLMSISE00'], [16, 'EXPONENTIAL']]) {
@@ -134,9 +135,9 @@ async function fitAll(head, w) {
     diagnostics['RFa12@16'] = { termination: g.termination, b };
     if (!g.state) throw new Error(g.error ?? g.termination);
     if (!(b > 0)) throw new Error('no positive drag from the 12 h fit');
-    const f = await M.fit(oem(lastOf(16, end)), pinned(b), { rows: w.spw });
+    const f = await A.fit(oem(lastOf(16, end)), pinned(b), { spw: w.spw });
     if (!f.ok) throw new Error(f.error);
-    return { omm: Buffer.from(f.omm).toString('base64'), b };
+    return { ocm: Buffer.from(f.ocm).toString('base64'), b };
   });
   return { products, diagnostics };
 }
@@ -201,11 +202,10 @@ for (const norad of mine) {
             if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
             row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));
           } else if (name.startsWith('X')) {
-            const kind = name.split('@')[0];
-            const flown = await M.propagate(Buffer.from(product, 'base64'), S.gridBytes(epochs), PCF[kind], kind === 'X2' ? { rows: w.spw } : undefined, epochs.length);
+            const flown = await A.propagate(Buffer.from(product.ocm, 'base64'), epochs, epochs.length);
             row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));
           } else if (name.startsWith('RFa')) {
-            const flown = await M.propagate(Buffer.from(product.omm, 'base64'), S.gridBytes(epochs), pinned(product.b), { rows: w.spw }, epochs.length);
+            const flown = await A.propagate(Buffer.from(product.ocm, 'base64'), epochs, epochs.length);
             row.arms[name] = await score(await M.toAxes(flown, epochs, 'GCRF'));
           } else if (name.startsWith('F-')) {
             if (ffm[name].error) throw new Error(ffm[name].error);

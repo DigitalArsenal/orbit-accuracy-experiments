@@ -69,7 +69,7 @@ if (MODE === 'next') {
   const { isoMs, openFfmHost } = await import('./lib/host.mjs');
   const { binOf } = await import('./lib/compare.mjs');
   const { weatherRows } = await import('./lib/weather.mjs');
-  const { openAp } = await import('./lib/ap.mjs');
+  const { openAp, fitPcf, fitWeather, rowsOfSpw, horizonOf, apForces } = await import('./lib/ap.mjs');
   const { openModules } = await import('../xp-atmosphere-merit/lib/modules.mjs');
   const { openSgp4Fit } = await import('./lib/xp2.mjs');
   const S = await import('../xp-atmosphere-merit/lib/sds.mjs');
@@ -77,7 +77,7 @@ if (MODE === 'next') {
   const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
   const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost();
   // AP and XP from the same build: XP is that module with its atmosphere and added terms off.
-  const A = await openAp(path.join(NEW, 'module.wasm'));
+  const A = await openAp();
   const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
   const rows = rowsIn(path.join(NEW, 'laser', 'forward')).filter((r) => binOf(r.leadHours) === 72);
   const stores = ['laser-sgp4', 'laser-sgp4-high'].map((d) => new Map(rowsIn(path.join(NEW, d)).map((r) => [key(r), r])));
@@ -128,15 +128,19 @@ if (MODE === 'next') {
     const keep = ms.map((_, i) => !!reference[i]);
     const epochsMs = ms.filter((_, i) => keep[i]), epochs = epochsMs.map(isoMs), refs = reference.filter(Boolean);
     const w = weatherRows(apP.weatherDay, '2026-02-20', '2026-12-14');
-    const spw = S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG })));
     const tracks = { reference: refs.map((s) => s.r) };
-    const a = apP.products[`${AP_ARM}@48`], x = xpP.products['A-XP@48'], f = ffP.products[ffmName];
-    tracks.AP = (await M.toAxes(await A.propagate(Buffer.from(a.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: a.forces, fit: FIT }), { rows: spw }, epochs.length), epochs, 'GCRF')).map((s) => s.r);
-    tracks.XP = (await M.toAxes(await A.propagate(Buffer.from(x.omm, 'base64'), S.gridBytes(epochs), S.pcfBytes({ forces: x.forces, fit: FIT }), undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+    const f = ffP.products[ffmName];
+    // AP (the stored arm's: 31x20, NRLMSISE-00, the module's priors) and whiteroom XP re-fitted as $OCM on the stored window, the older file's first 48 h
     const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + 48 * HOUR);
-    const fu = await U.fit(S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' }));
+    const segOem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+    const fa = await A.fit(segOem, fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), { spw: fitWeather(rowsOfSpw(w.rows), horizonOf(Date.parse(seg.at(-1).epoch))) });
+    const fx = await A.fit(segOem, fitPcf({ forces: {}, fit: null }), undefined);
+    if (!fa.ok || !fx.ok) { console.error(`${id}: ${fa.error ?? fx.error}`); continue; }
+    tracks.AP = (await M.toAxes(await A.propagate(fa.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+    tracks.XP = (await M.toAxes(await A.propagate(fx.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
+    const fu = await U.fit(segOem);
     if (!fu.ok) { console.error(`${id}: ${fu.error}`); continue; }
-    tracks.XPU = (await M.toAxes(await U.propagate(fu.omm, S.gridBytes(epochs), epochs.length), epochs, 'GCRF')).map((s) => s.r);
+    tracks.XPU = (await M.toAxes(await U.propagate(fu.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r);
     const { el } = await G.fit(S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' }), { from: seg[0].epoch, to: isoMs(t0 + 48 * HOUR), epoch: 'first', fitBstar: true }, { name: pick.object, objectId: '' });
     const flown = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
     if (flown.some((s) => !s)) { console.error(`${id}: SGP4 returned no state at some epochs`); continue; }
@@ -151,16 +155,16 @@ if (MODE === 'next') {
   const ISS = args.only === 'iss';
   const { isoMs, openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
   const { weatherRows } = await import('./lib/weather.mjs');
-  const { openAp, apForces } = await import('./lib/ap.mjs');
+  const { openAp, apForces, fitPcf, fitWeather, rowsOfSpw, horizonOf } = await import('./lib/ap.mjs');
   const { openModules } = await import('../xp-atmosphere-merit/lib/modules.mjs');
   const { openSgp4Fit } = await import('./lib/xp2.mjs');
   const S = await import('../xp-atmosphere-merit/lib/sds.mjs');
   const { config: XMC } = await import('../xp-atmosphere-merit/common.mjs');
   const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
   const { driverRows } = ISS ? await import('./lib/xm3.mjs') : {};
-  const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await openAp(path.join(NEW, 'module.wasm'));
+  const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await openAp();
   const axes = ISS ? await openAxes() : null;
-  const PCF_AP = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+  const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = fitPcf({ forces: {}, fit: null });
   const LABEL = { starlink: ['SpaceX', 'Low orbit, maneuvering'], iss: ['NASA ISS', 'Low orbit, crewed'], css: ['China Space Station', 'Low orbit, crewed'], planet: ['Planet (Flock)', 'Low orbit, imaging fleet'], gps: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], glonass: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], intelsat: ['Intelsat', 'Geostationary, station-kept'], ses: ['SES', 'Geostationary, station-kept'] };
   const rows = fs.readdirSync(path.join(NEW, 'providers')).filter((f) => /^rows(-iss)?-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(NEW, 'providers', f))).filter((r) => !r.error);
   const lines = (b64) => S.oemLines(Buffer.from(b64, 'base64')).map((l) => ({ ...l, epoch: isoMs(Date.parse(l.epoch)) }));
@@ -218,17 +222,17 @@ if (MODE === 'next') {
         const step = (leo ? 60 : 300) * 1000, end = tn + 3 * HOUR;
         const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
         const refs = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
-        const epochsMs = ms.filter((_, i) => refs[i]), epochs = epochsMs.map(isoMs), reference = refs.filter(Boolean), gridB = S.gridBytes(epochs);
+        const epochsMs = ms.filter((_, i) => refs[i]), epochs = epochsMs.map(isoMs), reference = refs.filter(Boolean);
         let extra, spw;
         if (ISS) {
           const O = W.rowsO(t0 - 72 * HOUR - XMC.conditions.rowsMarginDays * DAY, t0);
           if (O.excluded) continue;
-          extra = { rows: S.spwBytes(O.rows) };
+          extra = { spw: fitWeather(O.rows, horizonOf(t0 + FIT_H * HOUR)) };
           spw = driverRows(O.rows, t0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
         } else {
           const w = weatherRows(oldP.weatherDay, '2026-07-15', '2026-12-14');
           spw = w.rows;
-          extra = { rows: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) };
+          extra = { spw: fitWeather(rowsOfSpw(w.rows), horizonOf(t0 + FIT_H * HOUR)) };
         }
         const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + FIT_H * HOUR);
         const oem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
@@ -246,9 +250,9 @@ if (MODE === 'next') {
         if (!ff.state) continue;
         const tracks = {
           reference: reference.map((x) => x.r),
-          AP: (await M.toAxes(await A.propagate(fa.omm, gridB, PCF_AP, extra, epochs.length), epochs, 'GCRF')).map((x) => x.r),
-          XP: (await M.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((x) => x.r),
-          XPU: (await M.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((x) => x.r),
+          AP: (await M.toAxes(await A.propagate(fa.ocm, epochs, epochs.length), epochs, 'GCRF')).map((x) => x.r),
+          XP: (await M.toAxes(await A.propagate(fx.ocm, epochs, epochs.length), epochs, 'GCRF')).map((x) => x.r),
+          XPU: (await M.toAxes(await U.propagate(fu.ocm, epochs, epochs.length), epochs, 'GCRF')).map((x) => x.r),
           SGP4: (await M.toAxes(sg, epochs, 'GCRF')).map((x) => x.r),
           FFM: (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((x) => x.r),
         };
@@ -266,7 +270,7 @@ if (MODE === 'next') {
   const { pathToFileURL } = await import('node:url');
   const { openSgp4Fit } = await import('./lib/xp2.mjs');
   const { driverRows } = await import('./lib/xm3.mjs');
-  const { openAp, apForces } = await import('./lib/ap.mjs');
+  const { openAp, apForces, fitPcf, fitWeather, rowsOfSpw, horizonOf } = await import('./lib/ap.mjs');
   const { openFfmHost, openAxes, apriori } = await import('./lib/host.mjs');
   const { STATIC, TESS, GROUPS, HX } = await import('./lib/regimes.mjs');
   const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
@@ -274,9 +278,9 @@ if (MODE === 'next') {
   const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
   const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
   const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-  const m = await openModules(), A = await openAp(path.join(NEW, 'module.wasm')), G = await openSgp4Fit(), F = await openFfmHost();
-  const ATM = XM.config.arms.X2.forces, GRID = XM.config.scoring.gridSeconds * 1000;
-  const PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+  const m = await openModules(), A = await openAp(), G = await openSgp4Fit(), F = await openFfmHost();
+  const GRID = XM.config.scoring.gridSeconds * 1000;
+  const PCF_XP = fitPcf({ forces: {}, fit: null });
   const ffmSettings = (high) => (high ? {
     forces: { gravity: 'SPHERICAL_HARMONICS', degree: 20, order: 20, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined },
     integrator: { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
@@ -352,15 +356,15 @@ if (MODE === 'next') {
         const whole = between(from, to), t0 = ms(whole[0].epoch);
         const grid = onGrid(whole, step);
         if (holed(grid.map((l) => l.epoch))) continue;
-        const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms), gridB = S.gridBytes(epochs);
+        const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms);
         let ex, spw;
         if (!vacuum) {
           const R = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
           if (R.excluded) continue;
-          ex = { rows: S.spwBytes(R.rows) };
+          ex = { spw: fitWeather(R.rows, horizonOf(D0)) };
           spw = driverRows(R.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
         }
-        const pcfAp = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20, atmosphere: !vacuum }), fit: null });
+        const pcfAp = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20, atmosphere: !vacuum }), fit: null });
         const oem = S.oemBytes({ frame: 'GCRF', object: { name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
         const fa = await A.fit(oem, pcfAp, ex); if (!fa.ok) continue;
         const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
@@ -373,9 +377,9 @@ if (MODE === 'next') {
         if (epochsMs.some((t) => t <= Date.parse(ff.epoch))) continue;
         const tracks = {
           reference: grid.map((l) => l.r),
-          AP: (await m.toAxes(await A.propagate(fa.omm, gridB, pcfAp, ex, epochs.length), epochs, 'GCRF')).map((s) => s.r),
-          XP: (await m.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r),
-          XPU: (await m.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+          AP: (await m.toAxes(await A.propagate(fa.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+          XP: (await m.toAxes(await A.propagate(fx.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+          XPU: (await m.toAxes(await U.propagate(fu.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r),
           SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
           FFM: (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((s) => s.r),
         };
@@ -392,14 +396,14 @@ if (MODE === 'next') {
   const { config, root, iso, ms, XM, windows } = await import('./lib/xp2.mjs');
   const { openSgp4Fit } = await import('./lib/xp2.mjs');
   const { driverRows } = await import('./lib/xm3.mjs');
-  const { openAp, apForces } = await import('./lib/ap.mjs');
+  const { openAp, apForces, fitPcf, fitWeather, rowsOfSpw, horizonOf } = await import('./lib/ap.mjs');
   const { openFfmHost, apriori } = await import('./lib/host.mjs');
   const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
   const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
   const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
   const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-  const m = await openModules(), A = await openAp(path.join(NEW, 'module.wasm')), G = await openSgp4Fit(), F = await openFfmHost();
-  const ATM = XM.config.arms.X2.forces, PCF_AP = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+  const m = await openModules(), A = await openAp(), G = await openSgp4Fit(), F = await openFfmHost();
+  const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = fitPcf({ forces: {}, fit: null });
   const MIN_COV = XM.config.fit.minimumCoverage;
   const ffmSettings = (high) => (high ? {
     forces: { gravity: 'SPHERICAL_HARMONICS', degree: 20, order: 20, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined },
@@ -445,10 +449,10 @@ if (MODE === 'next') {
           if (holed(grid.map((l) => l.epoch))) continue;
         if (holed(grid.map((l) => l.epoch))) continue;
           if (grid.length < 100) continue;
-          const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms), gridB = S.gridBytes(epochs);
+          const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms);
           const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
           if (O.excluded) continue;
-          const ex = { rows: S.spwBytes(O.rows) };
+          const ex = { spw: fitWeather(O.rows, horizonOf(D0)) };
           const spw = driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
           const oem = S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId ?? '', norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
           const fa = await A.fit(oem, PCF_AP, ex); if (!fa.ok) continue;
@@ -463,9 +467,9 @@ if (MODE === 'next') {
           if (inFfm.some((b) => !b)) continue;
           const tracks = {
             reference: grid.map((l) => l.r),
-            AP: (await m.toAxes(await A.propagate(fa.omm, gridB, PCF_AP, ex, epochs.length), epochs, 'GCRF')).map((s) => s.r),
-            XP: (await m.toAxes(await A.propagate(fx.omm, gridB, PCF_XP, undefined, epochs.length), epochs, 'GCRF')).map((s) => s.r),
-            XPU: (await m.toAxes(await U.propagate(fu.omm, gridB, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+            AP: (await m.toAxes(await A.propagate(fa.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+            XP: (await m.toAxes(await A.propagate(fx.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r),
+            XPU: (await m.toAxes(await U.propagate(fu.ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r),
             SGP4: (await m.toAxes(sg, epochs, 'GCRF')).map((s) => s.r),
             FFM: (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((s) => s.r),
           };
