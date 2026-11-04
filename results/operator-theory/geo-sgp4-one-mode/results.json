@@ -1,11 +1,17 @@
 {
  "registered": "experiments/operator-theory/GEO-SGP4.md",
  "registration": "25a997bc0dc7f424d367e138b04b7294dc57a77b",
+ "amendment1": "b67b1bf6fd41567c458522732c5d7cd36062e2a2",
  "reading": "report only, a re-measurement",
  "runs": {
   "first": "2026-11-04T14:15:42.596Z",
   "last": "2026-11-04T14:19:23.848Z",
   "rows": 519
+ },
+ "runsAmendment1": {
+  "first": "2026-11-04T14:31:17.686Z",
+  "last": "2026-11-04T14:36:05.439Z",
+  "rows": 223
  },
  "storedHashes": {
   "/opt/data/sdn-archive/operator-theory/ap/b0411/regimes/rows-0.jsonl": "66ea1bce12c02e3d0cb19148c58446216b8372bfac75f39212e063b9587d7a42",
@@ -1065,7 +1071,14 @@
       "truthNodeNearestDeg": 86.40707828993254,
       "s1InclinationDeg": 0.04531118471091316,
       "s1NodeDeg": 330.4747753820555,
-      "largestShiftKm": 0.001159332918518885
+      "largestShiftKm": 0.001159332918518885,
+      "sRmsKm": 1.377947339632289,
+      "s1RmsKm": 1.3779473396298305,
+      "sInclinationDeg": 0.045311175868617486,
+      "s1InclinationDegRefit": 0.04531118471091316,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|EUTELSAT 117 WEST B|2026-09-26",
@@ -1081,7 +1094,14 @@
       "truthNodeNearestDeg": 86.53507602053821,
       "s1InclinationDeg": 0.045215351552271466,
       "s1NodeDeg": 321.5051545026143,
-      "largestShiftKm": 0.005084824617483719
+      "largestShiftKm": 0.005084824617483719,
+      "sRmsKm": 2.565386680260491,
+      "s1RmsKm": 2.5653866802446728,
+      "sInclinationDeg": 0.04521534271374129,
+      "s1InclinationDegRefit": 0.045215351552271466,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|GALAXY 30 (G-30)|2026-10-10",
@@ -1089,7 +1109,14 @@
       "truthNodeNearestDeg": 115.41918651745826,
       "s1InclinationDeg": 0.004044322435516422,
       "s1NodeDeg": 226.20930825788665,
-      "largestShiftKm": 572.5393661904602
+      "largestShiftKm": 572.5393661904602,
+      "sRmsKm": 1.3103220115358496,
+      "s1RmsKm": 1.2000042362314542,
+      "sInclinationDeg": 0.004045280829151362,
+      "s1InclinationDegRefit": 0.004044322435516422,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|EUTELSAT 117 WEST B|2026-09-12",
@@ -1121,7 +1148,14 @@
       "truthNodeNearestDeg": 92.22409174667183,
       "s1InclinationDeg": 0.0417886316612107,
       "s1NodeDeg": 329.86760923742935,
-      "largestShiftKm": 0.015935165958126163
+      "largestShiftKm": 0.015935165958126163,
+      "sRmsKm": 3.500318324025586,
+      "s1RmsKm": 3.50031832397302,
+      "sInclinationDeg": 0.041788637787126715,
+      "s1InclinationDegRefit": 0.0417886316612107,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|SES-15|2026-09-30",
@@ -1129,7 +1163,14 @@
       "truthNodeNearestDeg": 86.40707828993254,
       "s1InclinationDeg": 0.03894976576523871,
       "s1NodeDeg": 324.14382732038496,
-      "largestShiftKm": 0.0031411857946750388
+      "largestShiftKm": 0.0031411857946750388,
+      "sRmsKm": 1.31966741255317,
+      "s1RmsKm": 1.319667412558821,
+      "sInclinationDeg": 0.03894976593275068,
+      "s1InclinationDegRefit": 0.03894976576523871,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|SES-15|2026-10-02",
@@ -1137,7 +1178,14 @@
       "truthNodeNearestDeg": 86.40707828993254,
       "s1InclinationDeg": 0.03566822501573351,
       "s1NodeDeg": 331.29303817507883,
-      "largestShiftKm": 445.0326969908093
+      "largestShiftKm": 445.0326969908093,
+      "sRmsKm": 1.1950137880217662,
+      "s1RmsKm": 1.1227766185598114,
+      "sInclinationDeg": 0.03566967518453496,
+      "s1InclinationDegRefit": 0.03566822501573351,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|SES-15|2026-10-14",
@@ -1145,7 +1193,14 @@
       "truthNodeNearestDeg": 73.60892570016256,
       "s1InclinationDeg": 0.029004372397547547,
       "s1NodeDeg": 316.1892786533397,
-      "largestShiftKm": 315.7179565098081
+      "largestShiftKm": 315.7179565098081,
+      "sRmsKm": 1.08948839263863,
+      "s1RmsKm": 1.0217441743798776,
+      "sInclinationDeg": 0.02900365789816071,
+      "s1InclinationDegRefit": 0.029004372397547547,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|SES-15|2026-10-18",
@@ -1153,7 +1208,14 @@
       "truthNodeNearestDeg": 73.60892570016256,
       "s1InclinationDeg": 0.028220779508890265,
       "s1NodeDeg": 324.23169995383176,
-      "largestShiftKm": 489.66157470807286
+      "largestShiftKm": 489.66157470807286,
+      "sRmsKm": 0.7656551469088332,
+      "s1RmsKm": 0.888273331236676,
+      "sInclinationDeg": 0.02822012059185675,
+      "s1InclinationDegRefit": 0.028220779508890265,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|SES-15|2026-10-22",
@@ -1161,7 +1223,14 @@
       "truthNodeNearestDeg": 64.7372090725305,
       "s1InclinationDeg": 0.030630063848768204,
       "s1NodeDeg": 323.6212021382616,
-      "largestShiftKm": 168.77206760710425
+      "largestShiftKm": 168.77206760710425,
+      "sRmsKm": 0.870688795378019,
+      "s1RmsKm": 0.8567506231022572,
+      "sInclinationDeg": 0.0306304189481192,
+      "s1InclinationDegRefit": 0.030630063848768204,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      }
     ]
    }
@@ -1515,7 +1584,14 @@
       "truthNodeNearestDeg": 94.62250147184244,
       "s1InclinationDeg": 0.0015464569013719123,
       "s1NodeDeg": 227.54337003470675,
-      "largestShiftKm": 6.502460946659092
+      "largestShiftKm": 6.502460946659092,
+      "sRmsKm": 3.233101980797108,
+      "s1RmsKm": 3.3559683715676796,
+      "sInclinationDeg": 0.03533615874524753,
+      "s1InclinationDegRefit": 0.0015464569013719123,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|GALAXY 30 (G-30)|2026-09-06",
@@ -1523,7 +1599,14 @@
       "truthNodeNearestDeg": 130.11973934566788,
       "s1InclinationDeg": 0.03507636307801492,
       "s1NodeDeg": 316.1242536093059,
-      "largestShiftKm": 0.0011786293552678018
+      "largestShiftKm": 0.0011786293552678018,
+      "sRmsKm": 2.20684043817657,
+      "s1RmsKm": 2.206839646681611,
+      "sInclinationDeg": 0.035074538115483604,
+      "s1InclinationDegRefit": 0.03507636307801492,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|GALAXY 30 (G-30)|2026-10-10",
@@ -1531,7 +1614,14 @@
       "truthNodeNearestDeg": 115.41918651745826,
       "s1InclinationDeg": 0.00506310949651463,
       "s1NodeDeg": 220.370301279758,
-      "largestShiftKm": 0.0022442383099239294
+      "largestShiftKm": 0.0022442383099239294,
+      "sRmsKm": 3.410243715165427,
+      "s1RmsKm": 3.4102437150913385,
+      "sInclinationDeg": 0.0050631119424500715,
+      "s1InclinationDegRefit": 0.00506310949651463,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      },
      {
       "key": "WA|GALAXY 30 (G-30)|2026-09-14",
@@ -1539,7 +1629,14 @@
       "truthNodeNearestDeg": 149.0322231453614,
       "s1InclinationDeg": 0.045982109222582286,
       "s1NodeDeg": 343.6784014957478,
-      "largestShiftKm": 0.021179716118993497
+      "largestShiftKm": 0.021179716118993497,
+      "sRmsKm": 4.697264399637858,
+      "s1RmsKm": 4.697264399470913,
+      "sInclinationDeg": 0.04598210700032628,
+      "s1InclinationDegRefit": 0.045982109222582286,
+      "sReproduces": true,
+      "s1Reproduces": true,
+      "truthAsStored": true
      }
     ]
    }
@@ -1864,7 +1961,14 @@
       "key": "42709|2026-11-01T06:30:00.000Z|24",
       "holds": false,
       "truthNodeNearestDeg": 59.35885299019111,
-      "largestShiftKm": 0.07546452874821341
+      "largestShiftKm": 0.07546452874821341,
+      "sRmsKm": 0.5981730539950899,
+      "s1RmsKm": 0.5985978144036208,
+      "sInclinationDeg": 0.020950728977961644,
+      "s1InclinationDegRefit": 0.020950717188200643,
+      "sReproduces": false,
+      "s1Reproduces": true,
+      "truthAsStored": false
      }
     ]
    },
@@ -3405,6 +3509,926 @@
    "decision": {
     "libraryCleared": false,
     "fitConfirmed": false
+   }
+  }
+ ],
+ "armC": [
+  {
+   "group": "GE",
+   "windows": 45,
+   "satellites": 9,
+   "failed": {
+    "W9": 10,
+    "S9": 10,
+    "W91o": 10,
+    "S91o": 10
+   },
+   "errors": [
+    "coverage"
+   ],
+   "sets": {
+    "whiteroom": {
+     "leads": {
+      "1": {
+       "paired": 32,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 32,
+        "median": 0.03701443497698327,
+        "p95": 0.04938230885690697
+       },
+       "v9110": {
+        "n": 32,
+        "median": 0.21274779000994584,
+        "p95": 0.2583836450200108
+       },
+       "v99": {
+        "n": 32,
+        "median": 0.037014435238513485,
+        "p95": 0.050578910727308586
+       },
+       "9.9/whiteroom": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 0.999999972491016,
+        "interval": [
+         0.9999999634318046,
+         0.9999999879455725
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 0.18086457760579738,
+        "interval": [
+         0.16151650201462164,
+         0.2230784779426954
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -9.536128345311035e-10,
+       "medianDiff99Minus9110Km": -0.17571730596607193
+      },
+      "2": {
+       "paired": 33,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 33,
+        "median": 0.0507101188413446,
+        "p95": 1.4594706516606004
+       },
+       "v9110": {
+        "n": 33,
+        "median": 0.2078151210045386,
+        "p95": 1.5815028021535968
+       },
+       "v99": {
+        "n": 33,
+        "median": 0.05071011713258686,
+        "p95": 1.4592935224857433
+       },
+       "9.9/whiteroom": {
+        "n": 33,
+        "satellites": 9,
+        "ratio": 0.9999999910370176,
+        "interval": [
+         0.9999999779027742,
+         1.0000000051360953
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 33,
+        "satellites": 9,
+        "ratio": 0.33502075038130064,
+        "interval": [
+         0.2667256153784844,
+         0.3980735198127532
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -3.812417811999147e-10,
+       "medianDiff99Minus9110Km": -0.13927519639894625
+      },
+      "3": {
+       "paired": 30,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 30,
+        "median": 0.0698543368017532,
+        "p95": 4.697422925908314
+       },
+       "v9110": {
+        "n": 30,
+        "median": 0.17167435782321966,
+        "p95": 4.772356379163091
+       },
+       "v99": {
+        "n": 30,
+        "median": 0.07129048192220766,
+        "p95": 4.697259462081023
+       },
+       "9.9/whiteroom": {
+        "n": 30,
+        "satellites": 9,
+        "ratio": 0.9999999947155688,
+        "interval": [
+         0.9999999857284353,
+         1.0000000153824182
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 30,
+        "satellites": 9,
+        "ratio": 0.45029869463664335,
+        "interval": [
+         0.4040143791389791,
+         0.6072787345490154
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -4.201055128771891e-10,
+       "medianDiff99Minus9110Km": -0.09241622505904196
+      },
+      "7": {
+       "paired": 32,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 32,
+        "median": 0.22538287899601125,
+        "p95": 112.03370606350938
+       },
+       "v9110": {
+        "n": 32,
+        "median": 0.28661986984155446,
+        "p95": 112.0310424455052
+       },
+       "v99": {
+        "n": 32,
+        "median": 0.22538287921135144,
+        "p95": 112.03370606337892
+       },
+       "9.9/whiteroom": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 1.0000000000424325,
+        "interval": [
+         0.9999999937073958,
+         1.0000000150972725
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 0.849312764450648,
+        "interval": [
+         0.7045892033477485,
+         1.0000227865543103
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": 1.12544587538288e-9,
+       "medianDiff99Minus9110Km": -0.0334484872681756
+      }
+     },
+     "day1": {
+      "toWhiteroomKm": 2.615302141517617e-10,
+      "to9110Km": 0.17573335477143237,
+      "decision": "the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets"
+     }
+    },
+    "spaceForce": {
+     "leads": {
+      "1": {
+       "paired": 32,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 32,
+        "median": 0.047731879092219945,
+        "p95": 0.06352034124673464
+       },
+       "v9110": {
+        "n": 32,
+        "median": 0.21296978541569797,
+        "p95": 0.2596559192528665
+       },
+       "v99": {
+        "n": 32,
+        "median": 0.047731879324919575,
+        "p95": 0.06367884342104707
+       },
+       "9.9/whiteroom": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 1.0000000106792777,
+        "interval": [
+         1.0000000090161172,
+         1.0000000268857003
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 0.21598122298364586,
+        "interval": [
+         0.18774969571631336,
+         0.2923510314869284
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": 6.254382671488923e-10,
+       "medianDiff99Minus9110Km": -0.17039106736478865
+      },
+      "2": {
+       "paired": 33,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 33,
+        "median": 0.06458026162968962,
+        "p95": 1.4537314236916106
+       },
+       "v9110": {
+        "n": 33,
+        "median": 0.20979051511241775,
+        "p95": 1.5629205447082277
+       },
+       "v99": {
+        "n": 33,
+        "median": 0.06458026218716895,
+        "p95": 1.4539135446019686
+       },
+       "9.9/whiteroom": {
+        "n": 33,
+        "satellites": 9,
+        "ratio": 1.0000000081154612,
+        "interval": [
+         1.0000000000525762,
+         1.0000000211004771
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 33,
+        "satellites": 9,
+        "ratio": 0.37910900445605156,
+        "interval": [
+         0.2621414048768545,
+         0.5300554582806718
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": 6.788138939839428e-10,
+       "medianDiff99Minus9110Km": -0.1335420519807195
+      },
+      "3": {
+       "paired": 30,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 30,
+        "median": 0.08551706943590291,
+        "p95": 4.658720108613069
+       },
+       "v9110": {
+        "n": 30,
+        "median": 0.18784878352099055,
+        "p95": 4.7116024402859455
+       },
+       "v99": {
+        "n": 30,
+        "median": 0.08718746364358532,
+        "p95": 4.658868631415315
+       },
+       "9.9/whiteroom": {
+        "n": 30,
+        "satellites": 9,
+        "ratio": 1.0000000042950612,
+        "interval": [
+         0.9999999835307765,
+         1.0000000151281074
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 30,
+        "satellites": 9,
+        "ratio": 0.5738076031952496,
+        "interval": [
+         0.442373771009093,
+         0.6591930545027744
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": 6.013871137189319e-10,
+       "medianDiff99Minus9110Km": -0.08202079178821389
+      },
+      "7": {
+       "paired": 32,
+       "satellites": 9,
+       "whiteroom": {
+        "n": 32,
+        "median": 0.24772856863191012,
+        "p95": 111.98163738176864
+       },
+       "v9110": {
+        "n": 32,
+        "median": 0.2935192764817846,
+        "p95": 111.97897436009814
+       },
+       "v99": {
+        "n": 32,
+        "median": 0.24772856928971698,
+        "p95": 111.98163738217357
+       },
+       "9.9/whiteroom": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 1.0000000000164877,
+        "interval": [
+         0.9999999954736553,
+         1.0000000044001096
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 32,
+        "satellites": 9,
+        "ratio": 0.9018599382755335,
+        "interval": [
+         0.8216006287038204,
+         1.00002281143536
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": 5.70707744951271e-10,
+       "medianDiff99Minus9110Km": -0.03153706887395939
+      }
+     },
+     "day1": {
+      "toWhiteroomKm": 2.3269963039806996e-10,
+      "to9110Km": 0.1652379060907784,
+      "decision": "the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets"
+     }
+    }
+   },
+   "check": {
+    "whiteroom": {
+     "oracle9110VsModule9110": {
+      "windows": 35,
+      "maxAbsKm": 0.23842515467791023
+     },
+     "oracle9110VsWhiteroom": {
+      "windows": 35,
+      "maxAbsKm": 0.007900639767722983
+     },
+     "oracle99VsWhiteroom": {
+      "windows": 35,
+      "maxAbsKm": 0.005919418752433014
+     }
+    },
+    "spaceForce": {
+     "oracle9110VsModule9110": {
+      "windows": 35,
+      "maxAbsKm": 0.23511469786409095
+     },
+     "oracle9110VsWhiteroom": {
+      "windows": 35,
+      "maxAbsKm": 0.006251949976750937
+     },
+     "oracle99VsWhiteroom": {
+      "windows": 35,
+      "maxAbsKm": 0.005073312044982514
+     }
+    }
+   }
+  },
+  {
+   "group": "IG",
+   "windows": 60,
+   "satellites": 12,
+   "failed": {
+    "W9": 0,
+    "S9": 0,
+    "W91o": 0,
+    "S91o": 0
+   },
+   "errors": [],
+   "sets": {
+    "whiteroom": {
+     "leads": {
+      "1": {
+       "paired": 60,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 60,
+        "median": 0.03793714749101039,
+        "p95": 0.06022882507699305
+       },
+       "v9110": {
+        "n": 60,
+        "median": 0.1641682526526034,
+        "p95": 0.23616754146356217
+       },
+       "v99": {
+        "n": 60,
+        "median": 0.037937147272111255,
+        "p95": 0.06022882532786485
+       },
+       "9.9/whiteroom": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.9999999926094526,
+        "interval": [
+         0.9999999854507705,
+         0.9999999968799157
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.22472494893114006,
+        "interval": [
+         0.18648980597623946,
+         0.2717805364778409
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -3.084359295746353e-10,
+       "medianDiff99Minus9110Km": -0.12289852987563941
+      },
+      "2": {
+       "paired": 60,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 60,
+        "median": 0.05679904243636898,
+        "p95": 0.08335752250498676
+       },
+       "v9110": {
+        "n": 60,
+        "median": 0.17275045509154158,
+        "p95": 0.2450951768433296
+       },
+       "v99": {
+        "n": 60,
+        "median": 0.05679904246263619,
+        "p95": 0.08335752345284168
+       },
+       "9.9/whiteroom": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.9999999945903941,
+        "interval": [
+         0.9999999895913493,
+         1.000000001597889
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.3261796704622576,
+        "interval": [
+         0.2960133620163122,
+         0.36373046560304007
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -2.343400647142335e-10,
+       "medianDiff99Minus9110Km": -0.11833284361848952
+      },
+      "3": {
+       "paired": 60,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 60,
+        "median": 0.07865649051660722,
+        "p95": 0.1322455017259533
+       },
+       "v9110": {
+        "n": 60,
+        "median": 0.16243464143148567,
+        "p95": 0.2520373887613046
+       },
+       "v99": {
+        "n": 60,
+        "median": 0.07865649004385994,
+        "p95": 0.13224550348358355
+       },
+       "9.9/whiteroom": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.9999999962735959,
+        "interval": [
+         0.9999999922206808,
+         1.000000002231634
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.43173784370495083,
+        "interval": [
+         0.38822867787254894,
+         0.5447664207444388
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -2.833111557853929e-10,
+       "medianDiff99Minus9110Km": -0.08785532302858012
+      },
+      "7": {
+       "paired": 59,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 59,
+        "median": 0.16423105813977715,
+        "p95": 0.4959834676646768
+       },
+       "v9110": {
+        "n": 59,
+        "median": 0.21496854973522778,
+        "p95": 0.5063167876744186
+       },
+       "v99": {
+        "n": 59,
+        "median": 0.164231056115827,
+        "p95": 0.4959834715961486
+       },
+       "9.9/whiteroom": {
+        "n": 59,
+        "satellites": 12,
+        "ratio": 0.9999999995331651,
+        "interval": [
+         0.9999999972174916,
+         1.000000002202499
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 59,
+        "satellites": 12,
+        "ratio": 0.8950035312132383,
+        "interval": [
+         0.7940583787140959,
+         0.9273129766315559
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -8.371606186052816e-11,
+       "medianDiff99Minus9110Km": -0.027004171771977004
+      }
+     },
+     "day1": {
+      "toWhiteroomKm": 2.1889913492945112e-10,
+      "to9110Km": 0.12623110538049215,
+      "decision": "the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets"
+     }
+    },
+    "spaceForce": {
+     "leads": {
+      "1": {
+       "paired": 60,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 60,
+        "median": 0.0534953812443386,
+        "p95": 0.07720697441318998
+       },
+       "v9110": {
+        "n": 60,
+        "median": 0.16585569296477062,
+        "p95": 0.23766940943762538
+       },
+       "v99": {
+        "n": 60,
+        "median": 0.053495381480073975,
+        "p95": 0.0772069744519308
+       },
+       "9.9/whiteroom": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.999999997665483,
+        "interval": [
+         0.9999999922185957,
+         1.0000000049691369
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.289588926526109,
+        "interval": [
+         0.2684112225615384,
+         0.3200284454029531
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -1.0816346776576502e-10,
+       "medianDiff99Minus9110Km": -0.12454404251333859
+      },
+      "2": {
+       "paired": 60,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 60,
+        "median": 0.07533674230785922,
+        "p95": 0.11610821552008277
+       },
+       "v9110": {
+        "n": 60,
+        "median": 0.18280874798976782,
+        "p95": 0.24481577129760151
+       },
+       "v99": {
+        "n": 60,
+        "median": 0.0753367414703858,
+        "p95": 0.11610821738600005
+       },
+       "9.9/whiteroom": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.9999999961493012,
+        "interval": [
+         0.9999999948176324,
+         1.0000000061040912
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.43249114587972337,
+        "interval": [
+         0.38545331630939594,
+         0.4900411065910339
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -2.1692860355249088e-10,
+       "medianDiff99Minus9110Km": -0.1090037392416639
+      },
+      "3": {
+       "paired": 60,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 60,
+        "median": 0.09451653416631786,
+        "p95": 0.1762424381408288
+       },
+       "v9110": {
+        "n": 60,
+        "median": 0.18044047728238527,
+        "p95": 0.2631481810904202
+       },
+       "v99": {
+        "n": 60,
+        "median": 0.09451653481275338,
+        "p95": 0.17624243998530106
+       },
+       "9.9/whiteroom": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.9999999973704712,
+        "interval": [
+         0.9999999941398792,
+         1.000000003993322
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 60,
+        "satellites": 12,
+        "ratio": 0.6073905840541589,
+        "interval": [
+         0.48979851393399876,
+         0.632597493584669
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -2.294670009561628e-10,
+       "medianDiff99Minus9110Km": -0.07336849806978167
+      },
+      "7": {
+       "paired": 59,
+       "satellites": 12,
+       "whiteroom": {
+        "n": 59,
+        "median": 0.18325042500710675,
+        "p95": 0.5802544271196347
+       },
+       "v9110": {
+        "n": 59,
+        "median": 0.23224747946556606,
+        "p95": 0.5878128749115278
+       },
+       "v99": {
+        "n": 59,
+        "median": 0.1832504230230558,
+        "p95": 0.5802544294030286
+       },
+       "9.9/whiteroom": {
+        "n": 59,
+        "satellites": 12,
+        "ratio": 0.9999999996954044,
+        "interval": [
+         0.9999999967874785,
+         1.000000000981684
+        ]
+       },
+       "9.9/9.1.1.0": {
+        "n": 59,
+        "satellites": 12,
+        "ratio": 0.9021446205751933,
+        "interval": [
+         0.8656658226557213,
+         0.932662929191933
+        ]
+       },
+       "medianDiff99MinusWhiteroomKm": -7.411368740939395e-11,
+       "medianDiff99Minus9110Km": -0.026333799171363914
+      }
+     },
+     "day1": {
+      "toWhiteroomKm": 2.3573537566434766e-10,
+      "to9110Km": 0.11236031148469665,
+      "decision": "the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets"
+     }
+    }
+   },
+   "check": {
+    "whiteroom": {
+     "oracle9110VsModule9110": {
+      "windows": 60,
+      "maxAbsKm": 0.21833812748695292
+     },
+     "oracle9110VsWhiteroom": {
+      "windows": 60,
+      "maxAbsKm": 2.456941078365915e-8
+     },
+     "oracle99VsWhiteroom": {
+      "windows": 60,
+      "maxAbsKm": 4.138701548139778e-9
+     }
+    },
+    "spaceForce": {
+     "oracle9110VsModule9110": {
+      "windows": 60,
+      "maxAbsKm": 0.21368426482263586
+     },
+     "oracle9110VsWhiteroom": {
+      "windows": 60,
+      "maxAbsKm": 2.3763647050145664e-8
+     },
+     "oracle99VsWhiteroom": {
+      "windows": 60,
+      "maxAbsKm": 3.416316229909455e-9
+     }
+    }
+   }
+  }
+ ],
+ "eclipse": [
+  {
+   "group": "GE",
+   "windows": 45,
+   "counted": 45,
+   "eclipsed": 39,
+   "arcEclipsed": 39,
+   "flightEclipsed": 31,
+   "medianShadowMinutes": 215,
+   "leads": {
+    "1": {
+     "whiteroom|eclipsed": {
+      "n": 27,
+      "medianKm": 0.18250995920907792
+     },
+     "whiteroom|sunlit": {
+      "n": 5,
+      "medianKm": 0.057918627875444696
+     },
+     "spaceForce|eclipsed": {
+      "n": 27,
+      "medianKm": 0.17726227147139823
+     },
+     "spaceForce|sunlit": {
+      "n": 5,
+      "medianKm": 0.04595553095413548
+     }
+    },
+    "2": {
+     "whiteroom|eclipsed": {
+      "n": 28,
+      "medianKm": 0.15345914659507154
+     },
+     "whiteroom|sunlit": {
+      "n": 5,
+      "medianKm": 0.04838030247785311
+     },
+     "spaceForce|eclipsed": {
+      "n": 28,
+      "medianKm": 0.1497898133587921
+     },
+     "spaceForce|sunlit": {
+      "n": 5,
+      "medianKm": 0.03550452899434024
+     }
+    },
+    "3": {
+     "whiteroom|eclipsed": {
+      "n": 26,
+      "medianKm": 0.10584780248925507
+     },
+     "whiteroom|sunlit": {
+      "n": 4,
+      "medianKm": 0.04709664534428352
+     },
+     "spaceForce|eclipsed": {
+      "n": 26,
+      "medianKm": 0.09828781190937484
+     },
+     "spaceForce|sunlit": {
+      "n": 4,
+      "medianKm": 0.0379899138341943
+     }
+    },
+    "7": {
+     "whiteroom|eclipsed": {
+      "n": 27,
+      "medianKm": 0.03207918797747519
+     },
+     "whiteroom|sunlit": {
+      "n": 5,
+      "medianKm": 0.05882086837930245
+     },
+     "spaceForce|eclipsed": {
+      "n": 27,
+      "medianKm": 0.022320205676704258
+     },
+     "spaceForce|sunlit": {
+      "n": 5,
+      "medianKm": 0.03788979306628926
+     }
+    }
+   }
+  },
+  {
+   "group": "IG",
+   "windows": 60,
+   "counted": 60,
+   "eclipsed": 0,
+   "arcEclipsed": 0,
+   "flightEclipsed": 0,
+   "medianShadowMinutes": null,
+   "leads": {
+    "1": {
+     "whiteroom|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "whiteroom|sunlit": {
+      "n": 60,
+      "medianKm": 0.12289852990250313
+     },
+     "spaceForce|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "spaceForce|sunlit": {
+      "n": 60,
+      "medianKm": 0.12454404280356764
+     }
+    },
+    "2": {
+     "whiteroom|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "whiteroom|sunlit": {
+      "n": 60,
+      "medianKm": 0.11833284346194133
+     },
+     "spaceForce|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "spaceForce|sunlit": {
+      "n": 60,
+      "medianKm": 0.1090037393000762
+     }
+    },
+    "3": {
+     "whiteroom|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "whiteroom|sunlit": {
+      "n": 60,
+      "medianKm": 0.0878553225635473
+     },
+     "spaceForce|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "spaceForce|sunlit": {
+      "n": 60,
+      "medianKm": 0.07336849626405928
+     }
+    },
+    "7": {
+     "whiteroom|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "whiteroom|sunlit": {
+      "n": 59,
+      "medianKm": 0.027004171878096228
+     },
+     "spaceForce|eclipsed": {
+      "n": 0,
+      "medianKm": null
+     },
+     "spaceForce|sunlit": {
+      "n": 59,
+      "medianKm": 0.02633379901736882
+     }
+    }
    }
   }
  ],

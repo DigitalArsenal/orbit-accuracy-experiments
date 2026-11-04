@@ -130,8 +130,75 @@ WW: whiteroom set on the whiteroom propagator (stored); SS: Space Force set on t
 ## Reading
 
 - GE and IG: S1 equals S within 1 m on every window where both scored (GE 30 windows at day 1, IG 46); no GE or IG window meets the node condition. S1 fails 12 GE windows against S's 10, 10 IG against 11. The ratios against both XP builds are unchanged by the mode.
-- WA and part F: SGP4 moves on windows the registered node condition does not mark (WA 24 h 9, WA 72 h 4, GF 24 h 1); these satellites are station-kept below 0.05 degrees, and the condition reads the truth's osculating node, which at such inclinations need not track the theory's mean node (not tested).
+- WA and part F: SGP4 moves on windows the registered node condition does not mark (WA 24 h 9, WA 72 h 4, GF 24 h 1); these satellites are station-kept below 0.05 degrees (the part F window's broadcast truth has also grown since the stored run), and the condition reads the truth's osculating node, which at such inclinations need not track the theory's mean node (not tested).
 - The 2x2, day 1: the whiteroom set flown on the Space Force library scores 0.992 times the Space Force set there (GE; IG 0.985), and the Space Force set on the whiteroom propagator 1.24 times the whiteroom set (GE; IG 1.27): the gap follows the propagator, not the fitter. Neither registered statement (library cleared, fit confirmed) is met.
+- Arm (c), day 1: on 9.9 the whiteroom set scores 0.037 km and the Space Force set 0.048 km at GE (IG 0.038 and 0.053), equal to their whiteroom flights; the registered decision for every set and group: the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets. The oracle's own 9.1.1.0 leg also flies every set within 7.9 m of the whiteroom flight, so the 0.1 to 0.24 km departure is the sgp4-xp module's flight of these sets, not 9.1.1.0 as the oracle runs it.
+- Eclipse split: 39 of 45 GE windows and 0 of 60 IG windows enter the shadow cylinder; the module's 9.1.1.0-minus-whiteroom difference at day 1 is 0.123 km on IG with no shadow at all, so shadow does not explain it there; on GE it is 0.183 km on eclipsed windows and 0.058 km on the 5 sunlit ones.
+
+## Amendment 1, arm (c): the same sets on Sgp4Prop 9.9
+
+Amendment 1 (b67b1bf), written after the first run and before any of these flights (2026-11-04T14:31:17.686Z to 2026-11-04T14:36:05.439Z). Each fitter's set, as two-line text, flown on the whiteroom propagator, on the sgp4-xp module's 9.1.1.0, and on 9.9 through the oracle (predictions only). Median km (95th), windows where all three scored.
+
+| Group | Set | Day | Windows | Satellites | Whiteroom | 9.1.1.0 (module) | 9.9 (oracle) | 9.9 / whiteroom | 9.9 / 9.1.1.0 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| GE | whiteroom fit | 1 | 32 | 9 | 0.037 (0.049) | 0.213 (0.258) | 0.037 (0.051) | 1.000 [1.000, 1.000] | 0.181 [0.162, 0.223] |
+| GE | whiteroom fit | 2 | 33 | 9 | 0.051 (1.46) | 0.208 (1.58) | 0.051 (1.46) | 1.000 [1.000, 1.00] | 0.335 [0.267, 0.398] |
+| GE | whiteroom fit | 3 | 30 | 9 | 0.070 (4.70) | 0.172 (4.77) | 0.071 (4.70) | 1.000 [1.000, 1.00] | 0.450 [0.404, 0.607] |
+| GE | whiteroom fit | 7 | 32 | 9 | 0.225 (112.0) | 0.287 (112.0) | 0.225 (112.0) | 1.00 [1.000, 1.00] | 0.849 [0.705, 1.00] |
+| GE | Space Force fit | 1 | 32 | 9 | 0.048 (0.064) | 0.213 (0.260) | 0.048 (0.064) | 1.00 [1.00, 1.00] | 0.216 [0.188, 0.292] |
+| GE | Space Force fit | 2 | 33 | 9 | 0.065 (1.45) | 0.210 (1.56) | 0.065 (1.45) | 1.00 [1.00, 1.00] | 0.379 [0.262, 0.530] |
+| GE | Space Force fit | 3 | 30 | 9 | 0.086 (4.66) | 0.188 (4.71) | 0.087 (4.66) | 1.00 [1.000, 1.00] | 0.574 [0.442, 0.659] |
+| GE | Space Force fit | 7 | 32 | 9 | 0.248 (112.0) | 0.294 (112.0) | 0.248 (112.0) | 1.00 [1.000, 1.00] | 0.902 [0.822, 1.00] |
+| IG | whiteroom fit | 1 | 60 | 12 | 0.038 (0.060) | 0.164 (0.236) | 0.038 (0.060) | 1.000 [1.000, 1.000] | 0.225 [0.186, 0.272] |
+| IG | whiteroom fit | 2 | 60 | 12 | 0.057 (0.083) | 0.173 (0.245) | 0.057 (0.083) | 1.000 [1.000, 1.00] | 0.326 [0.296, 0.364] |
+| IG | whiteroom fit | 3 | 60 | 12 | 0.079 (0.132) | 0.162 (0.252) | 0.079 (0.132) | 1.000 [1.000, 1.00] | 0.432 [0.388, 0.545] |
+| IG | whiteroom fit | 7 | 59 | 12 | 0.164 (0.496) | 0.215 (0.506) | 0.164 (0.496) | 1.000 [1.000, 1.00] | 0.895 [0.794, 0.927] |
+| IG | Space Force fit | 1 | 60 | 12 | 0.053 (0.077) | 0.166 (0.238) | 0.053 (0.077) | 1.000 [1.000, 1.00] | 0.290 [0.268, 0.320] |
+| IG | Space Force fit | 2 | 60 | 12 | 0.075 (0.116) | 0.183 (0.245) | 0.075 (0.116) | 1.000 [1.000, 1.00] | 0.432 [0.385, 0.490] |
+| IG | Space Force fit | 3 | 60 | 12 | 0.095 (0.176) | 0.180 (0.263) | 0.095 (0.176) | 1.000 [1.000, 1.00] | 0.607 [0.490, 0.633] |
+| IG | Space Force fit | 7 | 59 | 12 | 0.183 (0.580) | 0.232 (0.588) | 0.183 (0.580) | 1.000 [1.000, 1.00] | 0.902 [0.866, 0.933] |
+
+- GE, whiteroom fit: day-1 median of 9.9 is 0.0 m from the whiteroom flight and 175.7 m from the module's 9.1.1.0; registered decision: the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets. The oracle's own 9.1.1.0 leg against the module's 9.1.1.0 flight: largest difference 0.238 km over 35 windows; against the whiteroom flight 7.901 m; 9.9 against whiteroom 5.919 m.
+- GE, Space Force fit: day-1 median of 9.9 is 0.0 m from the whiteroom flight and 165.2 m from the module's 9.1.1.0; registered decision: the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets. The oracle's own 9.1.1.0 leg against the module's 9.1.1.0 flight: largest difference 0.235 km over 35 windows; against the whiteroom flight 6.252 m; 9.9 against whiteroom 5.073 m.
+- IG, whiteroom fit: day-1 median of 9.9 is 0.0 m from the whiteroom flight and 126.2 m from the module's 9.1.1.0; registered decision: the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets. The oracle's own 9.1.1.0 leg against the module's 9.1.1.0 flight: largest difference 0.218 km over 60 windows; against the whiteroom flight 0.000 m; 9.9 against whiteroom 0.000 m.
+- IG, Space Force fit: day-1 median of 9.9 is 0.0 m from the whiteroom flight and 112.4 m from the module's 9.1.1.0; registered decision: the 9.1.1.0 C/WASM build departs from the Space Force's own XP on these sets. The oracle's own 9.1.1.0 leg against the module's 9.1.1.0 flight: largest difference 0.214 km over 60 windows; against the whiteroom flight 0.000 m; 9.9 against whiteroom 0.000 m.
+
+## Amendment 1: eclipse split
+
+A window is eclipsed when any truth state of its 72 h arc or its seven days after the cutoff lies in the cylinder of radius 6,378.137 km behind the Earth from the Sun (the Sun from foundation/frames, hourly). Median of the 9.1.1.0-minus-whiteroom flight difference, km, by flag (count in brackets).
+
+| Group | Day | Whiteroom set, eclipsed | Whiteroom set, sunlit | Space Force set, eclipsed | Space Force set, sunlit |
+| --- | --- | --- | --- | --- | --- |
+| GE | 1 | 0.183 (27) | 0.058 (5) | 0.177 (27) | 0.046 (5) |
+| GE | 2 | 0.153 (28) | 0.048 (5) | 0.150 (28) | 0.036 (5) |
+| GE | 3 | 0.106 (26) | 0.047 (4) | 0.098 (26) | 0.038 (4) |
+| GE | 7 | 0.032 (27) | 0.059 (5) | 0.022 (27) | 0.038 (5) |
+| IG | 1 | - (0) | 0.123 (60) | - (0) | 0.125 (60) |
+| IG | 2 | - (0) | 0.118 (60) | - (0) | 0.109 (60) |
+| IG | 3 | - (0) | 0.088 (60) | - (0) | 0.073 (60) |
+| IG | 7 | - (0) | 0.027 (59) | - (0) | 0.026 (59) |
+
+- GE: 39 of 45 windows eclipsed (39 in the arc, 31 in the flight), median 215.0 minutes in shadow.
+- IG: 0 of 60 windows eclipsed (0 in the arc, 0 in the flight), median - minutes in shadow.
+
+## Amendment 1: WA and part F windows that moved without the node rule (reported, not gated)
+
+| Group | Window | S1 inclination, deg | S in-arc RMS, km | S1 in-arc RMS, km | Largest shift, km | Refits reproduce (S, S1) | Truth as stored |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| WA 24 h | WA SES-15 2026-09-28 | 0.0453 | 1.38 | 1.38 | 0.001 | yes, yes | yes |
+| WA 24 h | WA SES-15 2026-09-26 | 0.0452 | 2.57 | 2.57 | 0.005 | yes, yes | yes |
+| WA 24 h | WA GALAXY 30 (G-30) 2026-10-10 | 0.0040 | 1.31 | 1.20 | 572.5 | yes, yes | yes |
+| WA 24 h | WA SES-15 2026-09-16 | 0.0418 | 3.50 | 3.50 | 0.016 | yes, yes | yes |
+| WA 24 h | WA SES-15 2026-09-30 | 0.0389 | 1.32 | 1.32 | 0.003 | yes, yes | yes |
+| WA 24 h | WA SES-15 2026-10-02 | 0.0357 | 1.20 | 1.12 | 445.0 | yes, yes | yes |
+| WA 24 h | WA SES-15 2026-10-14 | 0.0290 | 1.09 | 1.02 | 315.7 | yes, yes | yes |
+| WA 24 h | WA SES-15 2026-10-18 | 0.0282 | 0.766 | 0.888 | 489.7 | yes, yes | yes |
+| WA 24 h | WA SES-15 2026-10-22 | 0.0306 | 0.871 | 0.857 | 168.8 | yes, yes | yes |
+| WA 72 h | WA GALAXY 30 (G-30) 2026-10-22 | 0.0015 | 3.23 | 3.36 | 6.50 | yes, yes | yes |
+| WA 72 h | WA GALAXY 30 (G-30) 2026-09-06 | 0.0351 | 2.21 | 2.21 | 0.001 | yes, yes | yes |
+| WA 72 h | WA GALAXY 30 (G-30) 2026-10-10 | 0.0051 | 3.41 | 3.41 | 0.002 | yes, yes | yes |
+| WA 72 h | WA GALAXY 30 (G-30) 2026-09-14 | 0.0460 | 4.70 | 4.70 | 0.021 | yes, yes | yes |
+| GF 24 h | 42709 2026-11-01T06:30:00.000Z 24 | 0.0210 | 0.598 | 0.599 | 0.075 | no, yes | no: the broadcast has grown since the stored run, so S cannot be reproduced and the shift is not the mode's |
 
 ## What else changed
 

@@ -297,7 +297,7 @@ for (const o of await objects(GROUPS)) {
             const flown = await m.propagateSgp4(el, o.norad, epochsMs, gridMs / 1000);
             if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
             const days = await fly(flown);
-            return { rms3dKm: fr.rms3dKm, inclinationDeg: el.elements.INCLINATION, reproduces: Object.keys(check ?? {}).length > 0 && Object.entries(check).every(([k, v]) => days[k]?.e === v.e), days };
+            return { rms3dKm: fr.rms?.rms3dKm, inclinationDeg: el.elements.INCLINATION, reproduces: Object.keys(check ?? {}).length > 0 && Object.entries(check).every(([k, v]) => days[k]?.e === v.e), days };
           });
           if (!was.arms[`S${hours}`]?.ok || !A_ROWS.get(key)?.arms?.[`S1-${hours}`]?.ok) continue;
           await refit('R0', G0, was.arms[`S${hours}`].days);
@@ -392,7 +392,7 @@ if (['a', 'n', 'r'].includes(PART) && SHARD === 0) {
           try {
             const { fr, el } = await F.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: p.object, objectId: '' });
             const d = await gfScore(el);
-            row.arms[name] = { ok: true, rms3dKm: fr.rms3dKm, inclinationDeg: el.elements.INCLINATION, reproduces: !!check && Object.entries(check).every(([k, v]) => d[k]?.e === v.e), days: d };
+            row.arms[name] = { ok: true, rms3dKm: fr.rms?.rms3dKm, inclinationDeg: el.elements.INCLINATION, reproduces: !!check && Object.entries(check).every(([k, v]) => d[k]?.e === v.e), days: d };
           } catch (error) { row.arms[name] = { ok: false, error: String(error?.message ?? error).slice(0, 160) }; }
         }
         write(row);
