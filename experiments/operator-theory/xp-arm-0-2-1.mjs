@@ -117,7 +117,7 @@ const againstSgp4 = ['GE', 'IG'].map((group) => ({ group, days: Object.fromEntri
 // When the rows were made: the registration commit before the first row file of the store, amendment 1 before the first of its rows.
 const rowFiles = SETS.flatMap((s) => files(path.join(NEW, s.store), s.re)), attributionFiles = WORSE.flatMap((w) => files(path.join(NEW, 'attribution', w.group), LASER));
 const committed = (sha) => new Date(execFileSync('git', ['-C', REPO, 'show', '-s', '--format=%cI', sha]).toString().trim()).toISOString();
-const firstBorn = (list) => new Date(Math.min(...list.map((f) => fs.statSync(f).birthtimeMs))).toISOString();
+const firstBorn = (list) => (list.length ? new Date(Math.min(...list.map((f) => fs.statSync(f).birthtimeMs))).toISOString() : null);
 const runs = { registration: REGISTRATION, registered: committed(REGISTRATION), firstRowFile: firstBorn(rowFiles), rowFiles: rowFiles.length, amendment: AMENDMENT, amended: committed(AMENDMENT), firstAttributionFile: firstBorn(attributionFiles), attributionFiles: attributionFiles.length, log: fs.readFileSync(path.join(NEW, 'runs.log'), 'utf8').split('\n').filter(Boolean) };
 
 const doc = { registered: 'experiments/operator-theory/XP-ARM-0-2-1.md', reading: 'report only', build: BUILD_NOTE, builds: { '0.1.1': COLUMN_BUILDS.held.XPU.map((b) => b.key), '0.2.1': COLUMN_BUILDS.next.XPU.map((b) => b.key), records: BUILD_RECORDS }, runs, next, truth, prediction, attribution, againstSgp4, storedHashes: Object.fromEntries([...read].sort()) };
