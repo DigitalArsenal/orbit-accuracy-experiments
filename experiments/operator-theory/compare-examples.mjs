@@ -4,8 +4,8 @@
 //   node experiments/operator-theory/compare-examples.mjs --mode next --out <dir>
 //   node experiments/operator-theory/compare-examples.mjs --mode truth --out <dir>          (XP2F_CONTROL=1 and --mode truth2 for AP2.md's windows)
 // --pick showcase, in truth, truth2 and regimes modes: one example per regime, chosen to show AP's lead, not to be typical (see showcaseRank). --build names the AP store (default lib/build.mjs's).
-// Every pick, typical or showcase, skips a window whose example has a step inside its fit (lib/steps.mjs, as the publisher finds them: hour < fitHours) and takes the next; when
-// every window tried has one, <id>.json says so and holds no tracks. --ids a,b: those examples alone.
+// Every pick, typical or showcase, skips a window whose example has a step inside its fit (lib/steps.mjs, as the publisher finds them: hour < fitHours), or a hole in
+// its reference there, and takes the next; when every window tried has one, <id>.json says so and holds no tracks. --ids a,b: those examples alone.
 import fs from 'node:fs';
 import path from 'node:path';
 import { BUILD, AP_ARM } from './lib/build.mjs';
@@ -33,15 +33,21 @@ const write = (doc) => {
   fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, ...EXTRA, tracks: TRACKS })}\n`);
   console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.bin`)).size / 1024)} KB`);
 };
-/** The burn-free rule: false (and a line) when the example's tracks show a step inside its fit; else the example is written. */
+/**
+ * The burn-free rule: false (and a line) when the example's tracks show a step inside its fit, or its reference a hole there of more than two grid steps (a burn
+ * the product leaves out, which the step rule cannot see in the track's first orbit); else the example is written.
+ */
+const fitHoles = (t, fitHours) => { const out = []; for (let i = 1; i < t.length; i += 1) if (t[i] - t[i - 1] > 2 * (t[1] - t[0]) && t[i - 1] / 3600 < fitHours) out.push(`${Math.round(t[i - 1] / 360) / 10} h, ${Math.round(t[i] - t[i - 1])} s`); return out; };
+/** Before any fit: the hole rule on a precise-orbit window's grid (ms), so a window it refuses is not flown. */
+const holedFit = (id, key, epochsMs, fitEndMs) => { const holes = fitHoles(epochsMs.map((t) => (t - epochsMs[0]) / 1000), (fitEndMs - epochsMs[0]) / 3600000); if (holes.length) console.error(`${id} ${key}: a hole in its fit (${holes.join('; ')}); the next window`); return holes.length > 0; };
 const burnFree = (doc, tracks, key) => {
-  const inFit = pickedSteps(doc, tracks).filter((s) => s.hour < doc.fitHours);
-  if (inFit.length) { console.error(`${doc.id} ${key}: a step in its fit (${inFit.map((s) => `${s.hour} h, ${s.radialM} m`).join('; ')}); the next window`); return false; }
+  const inFit = pickedSteps(doc, tracks).filter((s) => s.hour < doc.fitHours), holes = fitHoles(doc.epochsSeconds, doc.fitHours);
+  if (inFit.length || holes.length) { console.error(`${doc.id} ${key}: ${inFit.length ? `a step in its fit (${inFit.map((s) => `${s.hour} h, ${s.radialM} m`).join('; ')})` : `a hole in its fit (${holes.join('; ')})`}; the next window`); return false; }
   write({ ...doc, tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
   return true;
 };
 /** Every window tried had a step in its fit: the example is dropped, and says so. */
-const dropped = (head) => { fs.writeFileSync(path.join(OUT, `${head.id}.json`), `${JSON.stringify({ ...head, ...(SHOWCASE ? { showcase: true } : {}), dropped: 'every window tried holds a step inside its fit' })}\n`); console.error(`${head.id}: dropped, every window tried holds a step inside its fit`); };
+const dropped = (head) => { fs.writeFileSync(path.join(OUT, `${head.id}.json`), `${JSON.stringify({ ...head, ...(SHOWCASE ? { showcase: true } : {}), dropped: 'every window tried holds a step or a hole inside its fit' })}\n`); console.error(`${head.id}: dropped, every window tried holds a step or a hole inside its fit`); };
 /**
  * A product's states on a uniform grid, so the worked examples show AP's short-period terms as smooth curves: one minute below 8,400 km, five above. Eight-point Lagrange in the product's own
  * states, a data step. A grid time whose eight nearest states span a gap in the product is left out.
@@ -380,6 +386,7 @@ if (MODE === 'next') {
         const grid = onGrid(whole, step);
         if (holed(grid.map((l) => l.epoch))) continue;
         const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms);
+        if (holedFit(id, pick.key, [t0, ...epochsMs], D0)) { stepped += 1; continue; }
         let ex, spw;
         if (!vacuum) {
           const R = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
@@ -475,6 +482,7 @@ if (MODE === 'next') {
         if (holed(grid.map((l) => l.epoch))) continue;
           if (grid.length < 100) continue;
           const epochs = grid.map((l) => l.epoch), epochsMs = epochs.map(ms);
+          if (holedFit(id, pick.key, [t0, ...epochsMs], D0)) { stepped += 1; continue; }
           const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
           if (O.excluded) continue;
           const ex = { spw: fitWeather(O.rows, horizonOf(D0)) };

@@ -77,7 +77,7 @@ await el.close();
   check(/\| Flagged \(in fit, in forecast\) \| Step-free \| Unchecked \|/.test(md) && t.length === 24 && t.every((c) => c.windows === c.flagged + c.stepFree + c.unchecked),
     `table.md and table.json carry flagged, step-free and unchecked columns (24 cells; Near 700 km F24 day 7: ${s1.flagged} flagged, ${s1.stepFree} step-free, ${s1.unchecked} unchecked of ${s1.windows})`);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'maneuver-flags-'));
-  execFileSync(process.execPath, [path.join(here, 'compare-cells.mjs'), '--out', path.join(tmp, 'cells.json'), '--examples', EXAMPLES_IN[0]], { stdio: ['ignore', 'ignore', 'inherit'] });
+  execFileSync(process.execPath, [path.join(here, 'compare-cells.mjs'), '--out', path.join(tmp, 'cells.json'), '--examples', EXAMPLES_IN.join(',')], { stdio: ['ignore', 'ignore', 'inherit'] });
   const cells = JSON.parse(fs.readFileSync(path.join(COMPARE, 'cells.json'), 'utf8'));
   check(fs.readFileSync(path.join(tmp, 'cells.json')).equals(fs.readFileSync(path.join(COMPARE, 'cells.json'))), `results/ap-truth/compare/cells.json reproduces from the stored rows and flags.json (${cells.rows.length} rows)`);
   const tested = cells.rows.filter((r) => Number.isInteger(r.burnsInFit) && Number.isInteger(r.burnsInForecast)), labels = new Set(tested.map((r) => r.regime));
@@ -92,11 +92,12 @@ await el.close();
   if (!fs.existsSync(path.join(out, 'index.json'))) { console.log('MANEUVER FLAGS E2E FAIL: no published examples'); process.exit(1); }
   const index = JSON.parse(fs.readFileSync(path.join(out, 'index.json'), 'utf8')), live = index.filter((e) => !e.held && !e.dropped);
   const docs = live.map((e) => JSON.parse(fs.readFileSync(path.join(out, `${e.id}.json`), 'utf8')));
-  const inFit = docs.filter((d) => d.steps.some((s) => s.hour < d.fitHours));
-  check(!inFit.length && docs.every((d) => Number.isInteger(d.burnsInFit) && Number.isInteger(d.burnsInForecast) && d.burnsInFit === 0), `${docs.length} published examples: none with a step inside its fit (${inFit.map((d) => d.id).join(', ') || 'none'}), each with burnsInFit 0 and burnsInForecast (${docs.filter((d) => d.burnsInForecast).length} with a burn after the fit)`);
-  const moved = { 'best-near-700-km': '2026-05-08', 'truth-near-700-km-sentinel-1c': '2026-04-19', 'next-gfz-low-orbit': '2026-03-13' };
+  const holed = (d) => d.epochsSeconds.some((t, i) => i > 0 && t - d.epochsSeconds[i - 1] > 2 * (d.epochsSeconds[1] - d.epochsSeconds[0]) && d.epochsSeconds[i - 1] / 3600 < d.fitHours);
+  const inFit = docs.filter((d) => d.steps.some((s) => s.hour < d.fitHours) || holed(d));
+  check(!inFit.length && docs.every((d) => Number.isInteger(d.burnsInFit) && Number.isInteger(d.burnsInForecast) && d.burnsInFit === 0), `${docs.length} published examples: none with a step or a reference hole inside its fit (${inFit.map((d) => d.id).join(', ') || 'none'}), each with burnsInFit 0 and burnsInForecast (${docs.filter((d) => d.burnsInForecast).length} with a burn after the fit)${index.some((e) => e.dropped) ? `; dropped: ${index.filter((e) => e.dropped).map((e) => e.id).join(', ')}` : ''}`);
+  const moved = { 'best-near-700-km': '2026-05-08', 'truth-near-700-km-sentinel-1a': '2026-01-18', 'truth-near-700-km-sentinel-1c': '2026-04-19', 'next-gfz-low-orbit': '2026-03-13' };
   const now = Object.fromEntries(Object.keys(moved).map((id) => { const d = docs.find((x) => x.id === id); return [id, d ? (d.cutoff ?? d.start).slice(0, 10) : index.find((x) => x.id === id)?.dropped ? 'dropped' : 'missing']; }));
-  check(Object.entries(moved).every(([id, was]) => now[id] !== was && now[id] !== 'missing'), `the three examples whose fit held a step were picked again: ${Object.entries(moved).map(([id, was]) => `${id} ${was} -> ${now[id]}`).join('; ')}`);
+  check(Object.entries(moved).every(([id, was]) => now[id] !== was && now[id] !== 'missing'), `the four examples whose fit held a step or a hole were picked again: ${Object.entries(moved).map(([id, was]) => `${id} ${was} -> ${now[id]}`).join('; ')}`);
   fs.rmSync(tmp, { recursive: true, force: true });
   // 7. The holds.
   const heldNames = /stella|terrasar|sentinel-1d|lageos ?1\b|starlink|swarm|grace/i;
