@@ -6,14 +6,15 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import * as flatbuffers from 'flatbuffers';
+import { modulesRoot } from './modules.mjs';
 
 const require = createRequire(import.meta.url);
 const standards = path.dirname(require.resolve('spacedatastandards.org/package.json'));
 const load = (code) => import(pathToFileURL(path.join(standards, `lib/js/${code}/main.js`)));
 export const [OMM, OEM, RFM, TIM] = await Promise.all(['OMM', 'OEM', 'RFM', 'TIM'].map(load));
-// The $OCM a fit emits (propagator/sgp4-xp 0.2.1: MEAN_ELEMENTS, ORBIT_DETERMINATION.FIT_STATISTICS) through the experiments'
-// own pin (spacedatastandards.org 1.276.0, the release that types them).
-const ocmStandards = path.dirname(createRequire(path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../../package.json')).resolve('spacedatastandards.org/package.json'));
+// The $OCM a fit emits (propagator/sgp4-xp 0.2.1: MEAN_ELEMENTS, ORBIT_DETERMINATION.FIT_STATISTICS) through the bindings
+// of the SDS release that module is built with (its own install, spacedatastandards.org 1.276.0, the release that types them).
+const ocmStandards = path.dirname(createRequire(path.join(modulesRoot(), 'propagator/sgp4-xp/package.json')).resolve('spacedatastandards.org/package.json'));
 export const OCM = await import(pathToFileURL(path.join(ocmStandards, 'lib/js/OCM/main.js')));
 export { flatbuffers };
 export const sdsVersion = JSON.parse(fs.readFileSync(path.join(standards, 'package.json'), 'utf8')).version;

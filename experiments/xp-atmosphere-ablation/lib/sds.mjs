@@ -1,13 +1,14 @@
-// The SDS records XA sends to propagator/sdn-ap and analysis/density-calibration, encoded with the bindings of the
-// experiments' own pin (package.json, spacedatastandards.org 1.276.0, the release propagator/sdn-ap 0.5.0 is built with):
-// $OEM blocks, the public set's $OMM (ingest_omm's input), $PCF, $SPW rows, $DCL; the fitted $OCM read by its typed fields.
-// Bytes only; every orbit computation is a module's.
+// The SDS records XA sends to propagator/sdn-ap and analysis/density-calibration, encoded with the bindings of the SDS
+// release the module is built with (1.276.0, propagator/sdn-ap 0.5.0's own dependency): $OEM blocks, the public set's $OMM
+// (ingest_omm's input), $PCF, $SPW rows, $DCL; the fitted $OCM read by its typed fields. Bytes only; every orbit
+// computation is a module's.
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
-import { root } from '../common.mjs';
+import { modulesRoot } from '../common.mjs';
 
-const req = createRequire(path.join(root, 'package.json'));
+const modules = modulesRoot();
+const req = createRequire(path.join(modules, 'propagator/sdn-ap/package.json'));
 const standards = path.dirname(req.resolve('spacedatastandards.org/package.json'));
 const load = (code) => import(pathToFileURL(path.join(standards, `lib/js/${code}/main.js`)).href);
 export const flatbuffers = await import(pathToFileURL(req.resolve('flatbuffers')).href);
