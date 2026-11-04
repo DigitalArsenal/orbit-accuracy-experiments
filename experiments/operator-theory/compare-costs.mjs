@@ -1,22 +1,21 @@
 // COMPARE.md: what each propagator costs on the same files, in one process, one call at a time. Each file's five arms run in an order that rotates by file, so a change of
 // load on the machine falls on all of them alike. The first file is a warm-up and is not counted. Fit: the file's first 48 h. Flight: every state of the file.
-//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-costs.mjs --root <store> --wasm <AP build> --out <file> [--files 40]
-// AP and XP (the same module, forces off) both come from --wasm, the build the site shows.
+//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-costs.mjs --root <store> --out <file> [--files 40] [--only XP,XPU]
+// AP and XP (the same module, forces off) both come from lib/build.mjs PIN, as does the Space Force XP.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { openFfmHost, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
-import { openAp, apForces } from './lib/ap.mjs';
+import { openAp, apForces, fitPcf, fitWeather, rowsOfSpw, horizonOf } from './lib/ap.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
-import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const ROOT = args.root, OUT = args.out, COUNT = Number(args.files ?? 40), HOUR = 3600000;
-if (!ROOT || !OUT || !args.wasm) throw new Error('--root, --wasm and --out');
+if (!ROOT || !OUT) throw new Error('--root and --out');
 
 const cycles = fs.readdirSync(ROOT).filter((d) => /^c\d{8}T\d{4}$/.test(d) && fs.existsSync(path.join(ROOT, d, 'products'))).sort();
 const refs = [];
@@ -30,13 +29,12 @@ for (const file of refs.sort((a, b) => rank(a).localeCompare(rank(b)))) {
 }
 
 const weather = weatherRows('2026-10-10', '2026-02-20', '2026-12-14');
-const spw = S.spwBytes(weather.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG })));
 const M = await openModules();
 const G = await openSgp4Fit();
 const F = await openFfmHost();
-const A = await openAp(args.wasm), U = await openUssfXp();
-const pcfXp = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { atmosphere: false, noTerms: true }), fit: null });
-const pcfAp = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null });
+const A = await openAp(), U = await openUssfXp();
+const pcfXp = fitPcf({ forces: apForces({ atmosphere: false, noTerms: true }), fit: null });
+const pcfAp = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null });
 const ffm = (degree, tides) => ({
   forces: { gravity: 'SPHERICAL_HARMONICS', degree, order: degree, thirdBodies: [10, 301], srp: true, drag: true, atmosphere: 'NRLMSISE00', solidTides: tides, relativity: undefined },
   integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
@@ -54,19 +52,20 @@ const ARMS = {
   XP: async ({ oem, epochs }) => {
     const [fit, fitSeconds] = await timed(() => A.fit(oem, pcfXp, undefined));
     if (!fit.ok) throw new Error(fit.error);
-    const [, flightSeconds] = await timed(() => A.propagate(fit.omm, S.gridBytes(epochs), pcfXp, undefined, epochs.length));
+    const [, flightSeconds] = await timed(() => A.propagate(fit.ocm, epochs, epochs.length));
     return { fitSeconds, flightSeconds };
   },
   XPU: async ({ oem, epochs }) => {
     const [fit, fitSeconds] = await timed(() => U.fit(oem));
     if (!fit.ok) throw new Error(fit.error);
-    const [, flightSeconds] = await timed(() => U.propagate(fit.omm, S.gridBytes(epochs), epochs.length));
+    const [, flightSeconds] = await timed(() => U.propagate(fit.ocm, epochs, epochs.length));
     return { fitSeconds, flightSeconds };
   },
-  AP: async ({ oem, epochs }) => {
-    const [fit, fitSeconds] = await timed(() => A.fit(oem, pcfAp, { rows: spw }));
+  AP: async ({ oem, epochs, t0 }) => {
+    const spw = fitWeather(rowsOfSpw(weather.rows), horizonOf(t0 + 48 * HOUR));
+    const [fit, fitSeconds] = await timed(() => A.fit(oem, pcfAp, { spw }));
     if (!fit.ok) throw new Error(fit.error);
-    const [, flightSeconds] = await timed(() => A.propagate(fit.omm, S.gridBytes(epochs), pcfAp, { rows: spw }, epochs.length));
+    const [, flightSeconds] = await timed(() => A.propagate(fit.ocm, epochs, epochs.length));
     return { fitSeconds, flightSeconds };
   },
 };
