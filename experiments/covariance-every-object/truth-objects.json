@@ -1,12 +1,8 @@
 {
  "note": "A2 section 3 minus NSGF (LARETS, Starlette, WESTPAC, Stella, LARES, LARES-2, Ajisai), minus Galileo, minus 44350/TerraSAR-X/Sentinel-1D/LAGEOS-1; TDRS unresolved (NAIF id to NORAD not read, V7 truth grade unverified) so excluded; TESS (HEO) not listed. Rebased on Part 1 placements (PLAN.md amendment 14).",
- "part1FrozenConstantsSha256": "daf3153ff6baf2596f1dbe1d22489182e69931cba15d7133307497b80638e3ba",
+ "part1FrozenConstantsSha256": "b62bfc50239e2679072da85d63101d829d8d4aa961bf8c8ed0cbed605f6c6a5f",
  "droppedFromEarlierTable": [
   25544,
-  44349,
-  44351,
-  44353,
-  44358,
   41589,
   46114,
   42709
@@ -23,7 +19,8 @@
   44337,
   44709,
   49336,
-  62876
+  62876,
+  68791
  ],
  "objects": [
   {
@@ -721,6 +718,42 @@
    "part1Regime": "GEO"
   },
   {
+   "name": "COSMIC-2 44349",
+   "norad": 44349,
+   "cluster": "Q2-0",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-M"
+  },
+  {
+   "name": "COSMIC-2 44351",
+   "norad": 44351,
+   "cluster": "Q2-1",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-M"
+  },
+  {
+   "name": "COSMIC-2 44353",
+   "norad": 44353,
+   "cluster": "Q2-3",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-M"
+  },
+  {
+   "name": "COSMIC-2 44358",
+   "norad": 44358,
+   "cluster": "Q2-2",
+   "from": "2025-10-03",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "LEO-M"
+  },
+  {
    "name": "GPS 44506",
    "norad": 44506,
    "cluster": "G6-4",
@@ -1025,6 +1058,15 @@
    "name": "GPS 67588",
    "norad": 67588,
    "cluster": "G6-1",
+   "from": "2024-09-24",
+   "to": "2026-05-31",
+   "c2cal": true,
+   "part1Regime": "MEO"
+  },
+  {
+   "name": "NORAD 68791",
+   "norad": 68791,
+   "cluster": "solo-68791",
    "from": "2024-09-24",
    "to": "2026-05-31",
    "c2cal": true,

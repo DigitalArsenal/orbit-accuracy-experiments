@@ -1,6 +1,6 @@
 {
  "status": "Part 1 block lengths (median over strata with an admitted bin) and SD-admitted bins; the S2.1 null condition is applied in the freeze",
- "admittedAxisCells": 33,
+ "admittedAxisCells": 26,
  "seed": 20261109,
  "blockDays": 3,
  "histories": 2000,
@@ -8,26 +8,26 @@
   {
    "n0": 5,
    "histories": 2000,
-   "pFlagU0": 0.1535,
-   "medianRatioAtLn4": 0.9548236689685455
+   "pFlagU0": 0.157,
+   "medianRatioAtLn4": 0.955075998389697
   },
   {
    "n0": 10,
    "histories": 2000,
-   "pFlagU0": 0.153,
-   "medianRatioAtLn4": 0.9387373303364798
+   "pFlagU0": 0.156,
+   "medianRatioAtLn4": 0.9445788567551076
   },
   {
    "n0": 20,
    "histories": 2000,
-   "pFlagU0": 0.1485,
-   "medianRatioAtLn4": 0.9093321806278997
+   "pFlagU0": 0.151,
+   "medianRatioAtLn4": 0.9256284689386143
   },
   {
    "n0": 40,
    "histories": 2000,
    "pFlagU0": 0.1435,
-   "medianRatioAtLn4": 0.8602676679437194
+   "medianRatioAtLn4": 0.8900609573153748
   }
  ],
  "n0": null

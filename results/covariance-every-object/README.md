@@ -21,7 +21,7 @@ The daily catalog applies the same row predicate as the dev rows, so the ISS, Sw
 
 ## Part 1's lists, placements and regimes
 
-The dev truth objects are Part 1's 113 placements. Against this file's earlier table, 8 NORADs dropped out (ISS, four COSMIC-2, three WAAS) and 12 entered on the ESA span. A pair's regime follows Part 1's definition (un-Kozai'd mean altitude, WGS-72). Four objects have a few pairs outside their Part 1 regime, all as HEO (a set with eccentricity at or above 0.25): 44709 (1 of 2,847 pairs), 62876 (3 of 6,418), 64202 (10 of 1,080) and 67588 (1 of 297); no object changes stratum otherwise.
+The dev truth objects are Part 1's 118 placements (599f1ab). Against this file's first table, 4 NORADs dropped out (ISS, three WAAS) and 13 entered (the four COSMIC-2 planes on their span, the rest on the ESA span). A pair's regime follows Part 1's definition (un-Kozai'd mean altitude, WGS-72). Five objects have a few pairs outside their Part 1 regime, all as HEO (eccentricity at or above 0.25): 44709 (1 of 2,847 pairs), 62876 (3 of 6,418), 64202 (10 of 1,080), 67588 (1 of 297) and 68791 (5 of 73); no object changes stratum otherwise.
 
 ## Admission, n0 and S2 on Part 1's dev rows
 
