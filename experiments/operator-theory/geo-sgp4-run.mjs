@@ -1,7 +1,9 @@
 // GEO-SGP4.md: arm (a), SGP4 refit in one mode (gp-error-model 0.14.0) on the stored GE, IG, WA and part F windows; the node count on those and on HE and HX;
 // arm (b), the 2x2 of fitters and libraries on GE and IG. Each window as all-regimes.mjs and geo-truth-files.mjs read it. Module calls only; the node and
 // inclination read from module-converted TEME states are classification statistics, no state enters a score.
-//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/geo-sgp4-run.mjs --part a|b|n --out <dir> --shard k/n
+// Amendment 1: arm (c), the 2x2 sets flown on Sgp4Prop 9.9 (and its 9.1.1.0 leg) through the oracle, a restricted source whose predictions alone are drawn; the eclipse
+// flag of each GE and IG window; and the in-arc RMS of both SGP4 fits on the WA and part F windows that moved without the node rule.
+//   SDN_MODULES_ROOT=<modules> [SDN_AP_ORACLE_ROOT=<oracle>] node experiments/operator-theory/geo-sgp4-run.mjs --part a|b|n|c|e|r --out <dir> --shard k/n
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -18,7 +20,7 @@ import { TYPE, oemLines } from '../xp-atmosphere-merit/lib/sds.mjs';
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const PART = args.part, OUT = args.out;
-if (!['a', 'b', 'n'].includes(PART) || !OUT) throw new Error('--part a|b|n and --out');
+if (!['a', 'b', 'n', 'c', 'e', 'r'].includes(PART) || !OUT) throw new Error('--part a|b|n|c|e|r and --out');
 export const STORE = '/opt/data/sdn-archive/operator-theory/ap/geo-sgp4-one-mode';
 const B0411 = '/opt/data/sdn-archive/operator-theory/ap/b0411';
 const BUILDS = {
@@ -67,7 +69,7 @@ async function openSgp4FitOneMode() {
         const fr = erm.decode(out.report).fits?.[0];
         if (!fr || !fr.converged) throw new Error(fr?.error ?? 'not converged');
         const u = S.OMM.OMM.getSizePrefixedRootAsOMM(new S.flatbuffers.ByteBuffer(new Uint8Array(out.elements))).unpack();
-        return { model: erm.decode(out.report).model, el: { epoch: u.EPOCH, objectName: identity.name, objectId: identity.objectId ?? '', elements: { MEAN_MOTION: u.MEAN_MOTION, ECCENTRICITY: u.ECCENTRICITY, INCLINATION: u.INCLINATION, RA_OF_ASC_NODE: u.RA_OF_ASC_NODE, ARG_OF_PERICENTER: u.ARG_OF_PERICENTER, MEAN_ANOMALY: u.MEAN_ANOMALY, BSTAR: u.BSTAR, MEAN_MOTION_DOT: u.MEAN_MOTION_DOT, MEAN_MOTION_DDOT: u.MEAN_MOTION_DDOT } } };
+        return { model: erm.decode(out.report).model, fr, el: { epoch: u.EPOCH, objectName: identity.name, objectId: identity.objectId ?? '', elements: { MEAN_MOTION: u.MEAN_MOTION, ECCENTRICITY: u.ECCENTRICITY, INCLINATION: u.INCLINATION, RA_OF_ASC_NODE: u.RA_OF_ASC_NODE, ARG_OF_PERICENTER: u.ARG_OF_PERICENTER, MEAN_ANOMALY: u.MEAN_ANOMALY, BSTAR: u.BSTAR, MEAN_MOTION_DOT: u.MEAN_MOTION_DOT, MEAN_MOTION_DDOT: u.MEAN_MOTION_DDOT } } };
       } finally { await h.destroy(); }
     },
   };
@@ -165,11 +167,71 @@ async function objects(groups) {
   return out;
 }
 
-const G = PART === 'a' ? await openSgp4FitOneMode() : null;
+const G = PART === 'a' || PART === 'r' ? await openSgp4FitOneMode() : null;
+const G0 = PART === 'r' ? await (await import('../xp2-fit-design/lib/sgp4fit.mjs')).openSgp4Fit() : null;
+/** The oracle (propagator/sdn-ap/test/lib/oracle.mjs's way): two-line text and minutes in, TEME states out, each leg alone. */
+async function openOracleLeg(version) {
+  if (!process.env.SDN_AP_ORACLE_ROOT) throw new Error('SDN_AP_ORACLE_ROOT is not set');
+  const spec = await import(pathToFileURL(path.join(process.env.SDN_AP_ORACLE_ROOT, 'oracle.mjs')).href);
+  const o = await spec.openOracle({ version });
+  return { version: o.version, async propagate(lines, minutes) { const st = await o.propagate(lines, minutes); return st ? st.map((x) => (x && x.error === 0 ? { r: x.r, v: x.v } : null)) : null; }, close: () => o.close() };
+}
+const TLE_COMMIT = 'f34c12c0e9d61981a6149c818271b34a5d6e6ff6', TLE_REL = 'propagator/sdn-ap/test/lib/tle.mjs';
+async function openTle() {
+  const file = path.join(STORE, 'build', TLE_COMMIT, TLE_REL);
+  if (!fs.existsSync(file)) { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, execFileSync('git', ['-C', MODULES, 'show', `${TLE_COMMIT}:${TLE_REL}`])); }
+  return import(pathToFileURL(file).href);
+}
+const O9 = PART === 'c' ? await openOracleLeg('9.9') : null, O91 = PART === 'c' ? await openOracleLeg('9.1.1.0') : null, TLE = PART === 'c' ? await openTle() : null;
+/** An OMM of either fitter (size-prefixed or not) as two-line text and its epoch in ms of the text's day fraction: { lines, epochMs }. */
+function twoLine(b64, norad) {
+  const bytes = new Uint8Array(Buffer.from(b64, 'base64'));
+  let u = S.OMM.OMM.getSizePrefixedRootAsOMM(new S.flatbuffers.ByteBuffer(bytes)).unpack();
+  if (!u.EPOCH) u = S.OMM.OMM.getRootAsOMM(new S.flatbuffers.ByteBuffer(bytes)).unpack();
+  const m = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(?:\.(\d+))?/.exec(u.EPOCH);
+  const year = Number(m[1]), jan1 = Date.UTC(year, 0, 1), dayStart = Date.UTC(year, Number(m[2]) - 1, Number(m[3]));
+  const seconds = Number(m[4]) * 3600 + Number(m[5]) * 60 + Number(m[6]) + Number(`0.${m[7] ?? '0'}`);
+  const day = Number((1 + (dayStart - jan1) / DAY + seconds / 86400).toFixed(8));
+  const lines = TLE.tleLines({ satnum: norad, year: year % 100, day, type: 4, bterm: u.BSTAR, agom: u.MEAN_MOTION_DDOT, inc: u.INCLINATION, raan: u.RA_OF_ASC_NODE, ecc: u.ECCENTRICITY, argp: u.ARG_OF_PERICENTER, ma: u.MEAN_ANOMALY, mm: u.MEAN_MOTION });
+  return { lines, day, jan1 };
+}
+/** foundation/frames: the unit vector from the Earth to the Sun (ICRF axes) at each UTC hour asked for, by the transform of the Earth's center to the Sun-centered ICRF. */
+async function openSun() {
+  const modules = XM.modulesRoot();
+  const { bytes, manifest } = XM.pinned(modules, 'foundation/frames');
+  const req = createRequire(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/frames.mjs'));
+  const { createBrowserModuleHarness: make } = await import(pathToFileURL(createRequire(path.join(modules, 'foundation/frames/package.json')).resolve('space-data-module-sdk/host/browser-module')).href);
+  const harness = await make({ wasmSource: bytes, manifest, surface: 'direct' });
+  const fb = await import(pathToFileURL(req.resolve('flatbuffers')).href);
+  const standards = path.dirname(req.resolve('spacedatastandards.org/package.json'));
+  const [Fm, Rm] = await Promise.all(['FRM', 'RFM'].map((c) => import(pathToFileURL(path.join(standards, `lib/js/${c}/main.js`)).href)));
+  const cache = new Map();
+  return async (hourMs) => {
+    if (cache.has(hourMs)) return cache.get(hourMs);
+    const epoch = new Date(hourMs).toISOString();
+    const sys = (name, body) => new Rm.RFMCoordinateSystemT(name, Rm.rfmAxisType.ICRF, new Rm.RFMOriginT(Rm.rfmOriginKind.CELESTIAL_BODY, body), body, epoch, 'UTC');
+    const st = new Fm.FRMStateVectorT(Fm.frmStateRepresentation.CARTESIAN, [0, 0, 0, 0, 0, 0], new Fm.FRMVector3T(0, 0, 0), new Fm.FRMVector3T(0, 0, 0), 'GCRF', epoch, 'UTC', 3.986004418e14);
+    const request = Object.assign(new Fm.FRMFrameTransformRequestT(), { OPERATION: Fm.frmOperationCode.STATE_TRANSFORM, SOURCE_COORDINATE_SYSTEM: sys('GCRF', 399), TARGET_COORDINATE_SYSTEM: sys('HCRF', 10), SOURCE_STATE: st, TARGET_REPRESENTATION: Fm.frmStateRepresentation.CARTESIAN, EPOCH: epoch, EPOCH_TIME_SYSTEM: 'UTC' });
+    const b = new fb.Builder(2048); Fm.FRM.finishFRMBuffer(b, new Fm.FRMT(request, null).pack(b));
+    const r0 = await harness.invoke({ methodId: 'transform_frame_position', inputs: [{ portId: 'request', typeRef: { schemaName: 'FRM.fbs', fileIdentifier: '$FRM', rootTypeName: 'FRM' }, payload: b.asUint8Array() }] });
+    if (r0.statusCode) throw new Error(`foundation/frames: ${r0.errorMessage}`);
+    const r = Fm.FRM.getRootAsFRM(new fb.ByteBuffer(new Uint8Array(r0.outputs[0].payload))).FRAME_TRANSFORM_RESULT();
+    if (r.STATUS() !== Fm.frmResultStatus.OK) throw new Error(`foundation/frames: ${r.ERROR_MESSAGE()}`);
+    const p = r.TARGET_STATE().POSITION(), e = [-p.X(), -p.Y(), -p.Z()], n = Math.hypot(...e), u = e.map((x) => x / n);
+    cache.set(hourMs, u);
+    return u;
+  };
+}
+const SUN = PART === 'e' ? await openSun() : null;
+const R_EARTH = 6378.137;
+const inShadow = (r, s) => { const d = r[0] * s[0] + r[1] * s[1] + r[2] * s[2]; return d < 0 && Math.hypot(r[0] - d * s[0], r[1] - d * s[1], r[2] - d * s[2]) < R_EARTH; };
+const B_ROWS = PART === 'c' ? storedKeys(path.join(STORE, 'b')) : null;
+const MOVED = PART === 'r' ? new Set(JSON.parse(fs.readFileSync(path.join(root, 'results/operator-theory/geo-sgp4-one-mode/results.json'), 'utf8')).armA.flatMap((c) => c.moved.detail.filter((d) => !d.holds).map((d) => d.key))) : null;
+const A_ROWS = PART === 'r' ? storedKeys(path.join(STORE, 'a')) : null;
 const A = PART === 'b' ? await openAp(pin('propagator/sdn-ap').file) : null;
 const U = PART === 'b' ? await openUssfXpPinned() : null;
 const stored = new Map([...storedKeys(path.join(B0411, 'regimes')), ...storedKeys(path.join(B0411, 'regimes-wa'))]);
-const GROUPS = PART === 'a' ? ['GE', 'IG', 'WA'] : PART === 'b' ? ['GE', 'IG'] : ['GE', 'IG', 'WA', 'HE', 'HX'];
+const GROUPS = { a: ['GE', 'IG', 'WA'], b: ['GE', 'IG'], c: ['GE', 'IG'], e: ['GE', 'IG'], r: ['WA'], n: ['GE', 'IG', 'WA', 'HE', 'HX'] }[PART];
 
 for (const o of await objects(GROUPS)) {
   const times = o.lines.map((l) => ms(l.epoch));
@@ -180,10 +242,21 @@ for (const o of await objects(GROUPS)) {
   for (const D0 of o.cutoffs) {
     const key = windowKey(o.group, o.name, D0), was = stored.get(key);
     if (!inShard(key) || done.has(key) || !was || was.error) continue;
+    if (PART === 'r' && !MOVED.has(key)) continue;
     const row = { key, group: o.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
     try {
       if (PART === 'n') {
         for (const hours of o.arcs) row.arms[`N${hours}`] = nodeCondition(await nodes(between(D0 - hours * HOUR, D0 + 7 * DAY)));
+        write(row);
+        continue;
+      }
+      if (PART === 'e') {
+        for (const hours of o.arcs) {
+          const span = between(D0 - hours * HOUR, D0 + 7 * DAY), stepMin = span.length > 1 ? (ms(span[1].epoch) - ms(span[0].epoch)) / 60000 : 0;
+          let arc = 0, flight = 0;
+          for (const l of span) { const t = ms(l.epoch); if (inShadow(l.r, await SUN(Math.round(t / HOUR) * HOUR))) { if (t <= D0) arc += 1; else flight += 1; } }
+          row.arms[`E${hours}`] = { states: span.length, stepMinutes: stepMin, arcStates: arc, flightStates: flight, eclipsed: arc + flight > 0, arcMinutes: arc * stepMin, flightMinutes: flight * stepMin };
+        }
         write(row);
         continue;
       }
@@ -217,6 +290,35 @@ for (const o of await objects(GROUPS)) {
           });
           continue;
         }
+        if (PART === 'r') {
+          const options = { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, id = { name: o.name, objectId: o.objectId };
+          const refit = async (name, F, check) => run(name, async () => {
+            const { fr, el } = await F.fit(oem, options, id);
+            const flown = await m.propagateSgp4(el, o.norad, epochsMs, gridMs / 1000);
+            if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
+            const days = await fly(flown);
+            return { rms3dKm: fr.rms3dKm, inclinationDeg: el.elements.INCLINATION, reproduces: Object.keys(check ?? {}).length > 0 && Object.entries(check).every(([k, v]) => days[k]?.e === v.e), days };
+          });
+          if (!was.arms[`S${hours}`]?.ok || !A_ROWS.get(key)?.arms?.[`S1-${hours}`]?.ok) continue;
+          await refit('R0', G0, was.arms[`S${hours}`].days);
+          await refit('R1', G, A_ROWS.get(key).arms[`S1-${hours}`].days);
+          continue;
+        }
+        if (PART === 'c') {
+          const sets = B_ROWS.get(key)?.arms ?? {};
+          for (const [name, from] of [['W9', 'WWr'], ['S9', 'SSr'], ['W91o', 'WWr'], ['S91o', 'SSr']]) {
+            await run(name, async () => {
+              const omm = sets[`${from}-${hours}`]?.omm;
+              if (!omm) throw new Error(`no ${from} set`);
+              const { lines, day, jan1 } = twoLine(omm, o.norad);
+              const minutes = epochsMs.map((t) => (t - jan1) / 60000 - (day - 1) * 1440);
+              const st = await (name.endsWith('o') ? O91 : O9).propagate(lines, minutes);
+              if (!st || st.some((x) => !x)) throw new Error(`the oracle returned ${st ? st.filter(Boolean).length : 0} of ${minutes.length} states`);
+              return { lines, days: await fly(st) };
+            });
+          }
+          continue;
+        }
         // Part b: the two fitters, each set flown on both propagators. The Space Force library's calls keep the stored order (fit, then its own set), then the whiteroom set.
         let wr = null, sf = null;
         await run('WWr', async () => { const f = await A.fit(oem, PCF_XP, undefined); if (!f.ok) throw new Error(f.error); wr = f.omm; return { omm: Buffer.from(f.omm).toString('base64'), days: await fly(await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length)) }; });
@@ -241,7 +343,7 @@ function interpolate(table, t) {
 }
 
 // Part F (GEO-TRUTH.md): the stored operator-file rows, S1 as geo-truth-files.mjs fits and flies S, and the node over the file's fit and the seven days after.
-if (PART !== 'b' && SHARD === 0) {
+if (['a', 'n', 'r'].includes(PART) && SHARD === 0) {
   const keys = storedKeys(path.join(B0411, 'geo-files'));
   const VENDORS = '/opt/data/sdn-archive/operator-theory/vendors', PRN = { 46114: 135, 42709: 133 }, MIN_DAY = 168;
   const files = new Map();
@@ -255,7 +357,7 @@ if (PART !== 'b' && SHARD === 0) {
     }
   }
   for (const [rowKey, was] of keys) {
-    if (done.has(`GF|${rowKey}`)) continue;
+    if (done.has(`GF|${rowKey}`) || (PART === 'r' && !MOVED.has(`GF|${rowKey}`.replace(/^GF\|/, '')) && !MOVED.has(rowKey))) continue;
     const p = files.get(rowKey.split('|').slice(0, 2).join('|'));
     const row = { key: `GF|${rowKey}`, group: 'GF', norad: was.norad, name: was.object, start: was.start, fitHours: was.fitHours, arms: {} };
     try {
@@ -277,6 +379,25 @@ if (PART !== 'b' && SHARD === 0) {
         row.operatorSame = days.every(([k], j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => Math.sqrt(s.reduce((acc, q) => acc + q[c] * q[c], 0) / s.length)); return Math.hypot(...ric) === was.arms.operator.days[k].e; });
       }
       const oem = S.oemBytes({ frame: 'GCRF', object: { name: p.object, id: '', norad: p.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+      if (PART === 'r') {
+        const gfScore = async (el) => {
+          const flown = await m.propagateSgp4(el, p.norad, epochsMs, 256);
+          if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
+          const e = await m.rtn(await m.toAxes(flown, epochs, 'GCRF'), states), out = {};
+          let i = 0;
+          days.forEach(([k], j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => Math.sqrt(s.reduce((acc, q) => acc + q[c] * q[c], 0) / s.length)); out[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; });
+          return out;
+        };
+        for (const [name, F, check] of [['R0', G0, was.arms.S?.days], ['R1', G, A_ROWS.get(`GF|${rowKey}`)?.arms?.S1?.days]]) {
+          try {
+            const { fr, el } = await F.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: p.object, objectId: '' });
+            const d = await gfScore(el);
+            row.arms[name] = { ok: true, rms3dKm: fr.rms3dKm, inclinationDeg: el.elements.INCLINATION, reproduces: !!check && Object.entries(check).every(([k, v]) => d[k]?.e === v.e), days: d };
+          } catch (error) { row.arms[name] = { ok: false, error: String(error?.message ?? error).slice(0, 160) }; }
+        }
+        write(row);
+        continue;
+      }
       try {
         const { el, model } = await G.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: p.object, objectId: '' });
         const flown = await m.propagateSgp4(el, p.norad, epochsMs, 256);
@@ -292,4 +413,5 @@ if (PART !== 'b' && SHARD === 0) {
 }
 console.error(`part ${PART} shard ${SHARD}/${SHARDS}: done`);
 await axes.close();
+await O9?.close(); await O91?.close();
 process.exit(0);
