@@ -143,12 +143,17 @@ function pcfOf(name, fit) {
   return S.pcfBytes({ theory: stock ? 'SGP4XP' : 'AP', forces, fit });
 }
 
-/** The condition's rows with the last one held, as PRD, on every later day through `throughMs`'s day: the drivers the
+/** The condition's rows with a missing day filled by the row before it and the last one held, as PRD, on every later day
+ *  through `throughMs`'s day: the drivers the
  *  registered build held past the last row (WEATHER_EXTENSION HOLD_LAST), now carried by the record. Under M the held
  *  days lie past the last truth epoch and no flight reads them. */
 function heldThrough(rows, throughMs) {
-  const out = [...rows], last = rows.at(-1);
-  for (let t = Date.parse(`${last.date}T00:00:00Z`) + DAY; t <= throughMs; t += DAY) out.push({ ...last, date: new Date(t).toISOString().slice(0, 10), held: true });
+  const out = [];
+  for (const r of rows) {
+    for (let t = out.length ? Date.parse(`${out.at(-1).date}T00:00:00Z`) + DAY : Infinity; t < Date.parse(`${r.date}T00:00:00Z`); t += DAY) out.push({ ...out.at(-1), date: new Date(t).toISOString().slice(0, 10), held: true });
+    out.push(r);
+  }
+  for (let t = Date.parse(`${out.at(-1).date}T00:00:00Z`) + DAY; t <= throughMs; t += DAY) out.push({ ...out.at(-1), date: new Date(t).toISOString().slice(0, 10), held: true });
   return out;
 }
 
