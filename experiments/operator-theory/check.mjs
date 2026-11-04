@@ -1,8 +1,9 @@
 // End-to-end check of the one-$OCM path (lib/build.mjs PIN: sdn-ap 0.5.1, sgp4-xp 0.2.1), every product re-fitted as $OCM on stored windows (inputs on disk):
 // 1. the forward test: score.mjs re-scores the first two registered cycles' pairs, one shard, the AP module's arms (X0, X2) re-fitted as $OCM on the older file's
 //    stored window; every arm, the operator's forecast, SGP4 and FFM with them, equals the registered row (forward/rows.jsonl).
-// 2. AP5 and AP6: ap-truth.mjs, truth-compare.mjs and all-regimes.mjs re-fit one shard of the registered windows. AP and whiteroom XP equal AP7's 0.4.11 rows of
-//    those windows (ap/b0411) byte for byte; the Space Force XP equals the 0.2.1 re-measure (ap/b051).
+// 2. AP5 and AP6: ap-truth.mjs, truth-compare.mjs and all-regimes.mjs re-fit one shard of the registered windows. On AP5's windows AP equals AP 0.4.18's stored rows
+//    (ap/b0418) and whiteroom XP AP7's 0.4.11 rows (ap/b0411), byte for byte; on AP6's, AP and XP equal the 0.5.1 re-measure (ap/b051), as does the Space Force XP
+//    (sgp4-xp 0.2.1) everywhere.
 //   node experiments/operator-theory/check.mjs [--root /opt/data/sdn-archive/operator-theory]
 import fs from 'node:fs';
 import os from 'node:os';
@@ -13,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const flag = process.argv.indexOf('--root');
 const ROOT = flag > 0 ? process.argv[flag + 1] : '/opt/data/sdn-archive/operator-theory';
-const OLD = path.join(ROOT, 'ap/b0411'), NEW = path.join(ROOT, 'ap/b051');
+const XP_STORE = path.join(ROOT, 'ap/b0411'), AP_STORE = path.join(ROOT, 'ap/b0418'), NEW = path.join(ROOT, 'ap/b051');
 const FIRST = ['c20261101T0326', 'c20261101T1526'];
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
@@ -63,11 +64,11 @@ try {
     return n;
   };
   const runs = [
-    ['AP5 T, AP', 'ap-truth.mjs', ['--arms', 'registered', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/64'], {}, 'truth', 'truth', /^AP24$/, OLD],
-    ['AP5 T, XP', 'truth-compare.mjs', ['--arms', 'XP', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/64'], {}, 'compare-truth', 'compare-truth', /^XP24$/, OLD],
-    ['AP5 N, AP', 'ap-truth.mjs', ['--xm', '--from', '2026-01-01', '--to', '2026-05-31', '--shard', '0/128'], { XP2F_CONTROL: '1' }, 'truth2', 'truth2', /^AP(24|72)$/, OLD],
-    ['AP5 N, Space Force XP', 'truth-compare.mjs', ['--xm', '--arms', 'U', '--from', '2026-01-01', '--to', '2026-05-31', '--shard', '0/256'], { XP2F_CONTROL: '1' }, 'ussf-truth2', 'ussf-truth2', /^U(24|72)$/, NEW],
-    ['AP6, AP and XP', 'all-regimes.mjs', ['--arms', 'AP,XP', '--shard', '0/48'], {}, 'regimes', 'regimes', /^(AP|XP)\d+$/, OLD],
+    ['AP5 T, AP', 'ap-truth.mjs', ['--arms', 'registered', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/64'], {}, 'truth', 'truth', /^AP24$/, AP_STORE],
+    ['AP5 T, XP', 'truth-compare.mjs', ['--arms', 'XP', '--from', '2025-04-01', '--to', '2025-12-21', '--shard', '0/64'], {}, 'compare-truth', 'compare-truth', /^XP24$/, XP_STORE],
+    ['AP5 N, AP', 'ap-truth.mjs', ['--xm', '--from', '2026-01-01', '--to', '2026-05-31', '--shard', '0/128'], { XP2F_CONTROL: '1' }, 'truth2', 'truth2', /^AP(24|72)$/, AP_STORE],
+    ['AP5 N, Space Force XP', 'truth-compare.mjs', ['--xm', '--arms', 'U', '--from', '2026-01-01', '--to', '2026-05-31', '--shard', '0/512'], { XP2F_CONTROL: '1' }, 'ussf-truth2', 'ussf-truth2', /^U(24|72)$/, NEW],
+    ['AP6, AP and XP', 'all-regimes.mjs', ['--arms', 'AP,XP', '--shard', '0/64'], {}, 'regimes', 'regimes', /^(AP|XP)\d+$/, NEW],
   ];
   for (const [what, script, args, env, dir, storedDir, arms, base] of runs) {
     const o = path.join(temp, dir);
