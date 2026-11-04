@@ -8,7 +8,7 @@ import { config, root, HOUR, DAY, iso, ms, rms, XM } from './lib/xp2.mjs';
 import { openSgp4Fit } from './lib/xp2.mjs';
 import { driverRows } from './lib/xm3.mjs';
 import { apForces, openAp, fitPcf, fitWeather, horizonOf, readOcm } from './lib/ap.mjs';
-import { openUssfXp } from './lib/ussf-xp.mjs';
+import { openUssfXp, openUssfXp011 } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
 import { HX, STATIC, DO9, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
 // AP9.md (DO9): its cutoffs fall in 2026, and the XP2 store's normalized RSGA set that xp2-fit-design/common.mjs pins ends 2025-12-31, so
@@ -25,9 +25,13 @@ const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
 // --arms U: the Space Force's SGP4-XP alone, in its own store. --arms AP,XP (any of AP, XP, S, F): only those, in their own store, as for a
-// later AP build (AP7.md). Without it, this file's registered arms, unchanged.
-const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.includes('U'), has = (a) => !ONLY_U && ARMS.includes(a);
-const m = await openModules(), A = has('AP') || has('XP') ? await openAp() : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null, U = ONLY_U ? await openUssfXp() : null;
+// later AP build (AP7.md). Without it, this file's registered arms, unchanged. XP-ARM-0-2-1.md's attribution, with U or alone: U11 sgp4-xp 0.1.1's set
+// flown on 0.2.1 (ingest_omm), U11F the same set on 0.1.1, UW 0.2.1's set flown on the whiteroom propagator. --arcs: those fit arcs alone.
+const USSF_ARMS = ['U', 'U11', 'U11F', 'UW'];
+const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.some((a) => USSF_ARMS.includes(a)), has = (a) => !ONLY_U && ARMS.includes(a), hasU = (a) => ONLY_U && ARMS.includes(a);
+const ARCS = args.arcs ? args.arcs.split(',').map(Number) : null;
+const m = await openModules(), A = has('AP') || has('XP') || hasU('UW') ? await openAp() : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null;
+const U = ONLY_U ? await openUssfXp() : null, U11 = hasU('U11') || hasU('U11F') ? await openUssfXp011() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null });
 const PCF_AP_VACUUM = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null });
@@ -129,7 +133,7 @@ for (const o of await objects()) {
       const arc = (hours) => { const raw = between(D0 - hours * HOUR, D0); const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
       const high = Math.hypot(...scored[0].r) >= 8400;
       const pcfAp = o.vacuum ? PCF_AP_VACUUM : PCF_AP;
-      for (const hours of o.arcs) {
+      for (const hours of o.arcs.filter((h) => !ARCS || ARCS.includes(h))) {
         const thin = arc(hours);
         const run = async (name, fn) => {
           if (!ONLY_U && !has(name)) return;
@@ -139,11 +143,14 @@ for (const o of await objects()) {
         };
         const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
         if (ONLY_U) {
-          await run('U', async () => {
-            const f = await U.fit(oem);
-            if (!f.ok) throw new Error(f.error);
-            return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.ocm, epochs, epochs.length), epochs, 'GCRF'), truth)) };
-          });
+          const flown = async (states) => score(await m.rtn(await m.toAxes(states, epochs, 'GCRF'), truth));
+          let f21, f11;
+          const fit21 = async () => { f21 ??= await U.fit(oem); if (!f21.ok) throw new Error(f21.error); return f21; };
+          const fit11 = async () => { f11 ??= await U11.fit(oem); if (!f11.ok) throw new Error(f11.error); return f11; };
+          if (hasU('U')) await run('U', async () => { const f = await fit21(); return { rms: readOcm(f.ocm).fitRmsKm, days: await flown(await U.propagate(f.ocm, epochs, epochs.length)) }; });
+          if (hasU('UW')) await run('UW', async () => ({ days: await flown(await A.propagate((await fit21()).ocm, epochs, epochs.length)) }));
+          if (hasU('U11')) await run('U11', async () => ({ days: await flown(await U.propagate(await U.ingest((await fit11()).omm), epochs, epochs.length)) }));
+          if (hasU('U11F')) await run('U11F', async () => ({ days: await flown(await U11.propagate((await fit11()).omm, epochs, epochs.length)) }));
           continue;
         }
         await run('AP', async () => {

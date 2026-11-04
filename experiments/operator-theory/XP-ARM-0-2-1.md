@@ -31,3 +31,13 @@ Not read: every Starlink group (its stored pairs are not flown; the SpaceX cells
 ## Statistics, as before
 
 Per cell of `results/ap-truth/compare/cells.json` (reference, regime, provider, satellite, fit, lead bin): the median and 95th percentile km and the count. Per provider, regime, fit and lead: the 0.1.1 median beside the 0.2.1 median on the same pairs. Rows: `/opt/data/sdn-archive/operator-theory/ap/xp-arm-0-2-1/ussf-laser` and `ussf-providers`. Tables: `results/operator-theory/xp-arm-0-2-1`.
+
+## Amendment 1, 2026-11-04, before any of its fits: the two cells that moved the wrong way
+
+The record's second amendment: two Space Force XP cells of `results/remeasure-0-5-1.md` are worse on 0.2.1, HX `U72` day 2 (1.46 to 1.90 km, 19 windows) and LS `U24` day 7 (8.98 to 10.78 km, 90 windows). Each window's change is split into a flight part and a fit part, by three flights beside the stored figures, a (0.1.1) and b (0.2.1):
+
+- `U11`: sgp4-xp 0.1.1's set (modules 1b905d16f68fc56e7da66c6392315970f9e7e6d0, wasm f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb, by `git show`, SHA-256 checked), taken into 0.2.1 by `ingest_omm` and flown on 0.2.1.
+- `U11F`: the same set flown on 0.1.1; it must give a. `U`, the 0.2.1 refit flown on 0.2.1, must give b.
+- `UW`: 0.2.1's set flown on the whiteroom propagator, `propagator/sdn-ap` 0.5.1 `propagate`.
+
+The flight part is `U11` less a, the fit part b less `U11`; a window is flight side when the flight part is the larger in size, fit side otherwise. `all-regimes.mjs --arms U,U11,U11F,UW`, HX with `--arcs 72` and LS with `--arcs 24`, into `ap/xp-arm-0-2-1/attribution`; every window reported in `results/operator-theory/xp-arm-0-2-1`. TESS (HE `U72`) is stated as measured. The geosynchronous ratio against SGP4 is the median of each window's ratio, on stored rows.

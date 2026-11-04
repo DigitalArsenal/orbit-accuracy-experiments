@@ -104,12 +104,12 @@ check(right, `AP names sdn-ap 0.5.1 on precise orbits and 0.4.11 on next files; 
 
 // 5. The registration precedes every fit, and the pairs flown are the registered ones.
 const registered = Date.parse(git('show', '-s', '--format=%cI', doc.runs.registration).toString().trim());
-const starts = doc.runs.log.filter((l) => /^(start|resume) /.test(l)).map((l) => Date.parse(l.split(' ').at(-2)));
+const starts = doc.runs.log.filter((l) => /^(start|resume|balanced) /.test(l)).map((l) => Date.parse(l.split(' ').at(-2)));
 check(registered < Date.parse(doc.runs.firstRowFile) && starts.every((t) => registered < t), `registration ${doc.runs.registration.slice(0, 7)} at ${new Date(registered).toISOString()} precedes the first of ${doc.runs.rowFiles} row files (${doc.runs.firstRowFile}) and every run start`);
 let ancestor = true;
 try { git('merge-base', '--is-ancestor', doc.runs.registration, 'HEAD'); } catch { ancestor = false; }
 check(ancestor && git('show', `${doc.runs.registration}:experiments/operator-theory/XP-ARM-0-2-1.md`).equals(fs.readFileSync(path.join(here, 'XP-ARM-0-2-1.md'))), 'XP-ARM-0-2-1.md is an ancestor of HEAD and unchanged since registration');
-for (const s of doc.next) check(s.run === s.registered && s.notRegistered === 0, `${s.set}: ${s.run} of ${s.registered} registered pairs flown on 0.2.1, none other (${Object.entries(s.failed).map(([a, f]) => `${a} without a figure ${f['0.2.1']}`).join(', ')})`);
+for (const s of doc.next) check(s.run === s.registered && s.notRegistered === 0 && s.flownTwice === 0, `${s.set}: ${s.run} of ${s.registered} registered pairs flown on 0.2.1 once each, none other (${Object.entries(s.failed).map(([a, f]) => `${a} without a figure ${f['0.2.1']}`).join(', ')})`);
 
 // 6. GE and IG day 1: the Space Force XP on 0.2.1 within 0.02 km of its sets flown on the whiteroom propagator (the 2x2's prediction).
 for (const p of doc.prediction) check(p.within && p.flown === p.windows, `${p.group} day 1 on the 2x2's ${p.windows} windows: Space Force XP ${p.spaceForce021} km (0.1.1: ${p.spaceForce011}), its sets on the whiteroom propagator ${p.spaceForceSetsOnWhiteroom}, ${p.lessSW >= 0 ? '+' : ''}${p.lessSW} km`);

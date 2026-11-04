@@ -10,6 +10,7 @@ import { weatherRows } from './lib/weather.mjs';
 import { openAp, apForces, fitPcf, fitWeather, rowsOfSpw, horizonOf } from './lib/ap.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openSgp4Fit } from './lib/xp2.mjs';
+import { HELD_NORADS } from './lib/pairs.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 
@@ -19,7 +20,8 @@ if (!ROOT || !OUT) throw new Error('--root and --out');
 
 const cycles = fs.readdirSync(ROOT).filter((d) => /^c\d{8}T\d{4}$/.test(d) && fs.existsSync(path.join(ROOT, d, 'products'))).sort();
 const refs = [];
-for (const c of cycles) for (const f of fs.readdirSync(path.join(ROOT, c, 'products'))) refs.push(path.join(ROOT, c, 'products', f));
+// A held satellite's file (lib/pairs.mjs HELD_NORADS) is never opened; none was ever among the chosen files.
+for (const c of cycles) for (const f of fs.readdirSync(path.join(ROOT, c, 'products'))) if (!HELD_NORADS.has(Number(f.split('-')[2]))) refs.push(path.join(ROOT, c, 'products', f));
 const rank = (p) => crypto.createHash('sha256').update(`compare-costs-20261102:${path.basename(p)}`).digest('hex');
 const chosen = [];
 for (const file of refs.sort((a, b) => rank(a).localeCompare(rank(b)))) {

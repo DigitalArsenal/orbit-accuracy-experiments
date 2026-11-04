@@ -2,6 +2,8 @@
 
 Every AP and whiteroom XP figure here is from AP 0.4.11 (modules a0f33bc545), rerun on the same windows, pairs and files after `experiments/operator-theory/AP7.md` passed: `cycle-ap7-site.sh`, then `ap7-merge.mjs`, which takes SGP4, FFM, the Space Force's XP and the operators' files from 0.4.0's store by key. The statements of AP5.md and AP6.md were registered on 0.4.0: their registered results are `truth-040.md` and `regimes-040.md`; `truth.md` and `regimes.md` are the same statistics on 0.4.11, report only. Every statement gives the same verdict on both builds.
 
+`cells.json`, since 2026-11-04 (`experiments/operator-theory/XP-ARM-0-2-1.md`): each row names its input, `operator-file` or `precise-orbit`, and each column's builds by SHA-256 (`builds`). Against precise orbits AP is `propagator/sdn-ap` 0.5.1 (`ap/b051`, byte for byte 0.4.18's); against the next file it is still 0.4.11's, the build of those rows. The Space Force XP is `propagator/sgp4-xp` 0.2.1 on AP5's and AP6's windows (`ap/b051`) and on every next-file pair (`ap/xp-arm-0-2-1`), except SpaceX: every Starlink group is held, so those rows keep 0.1.1's figures and name that build. Every other cell is as before. `xp-versions` and `sigma.json` still show the Space Force XP on 0.1.1; `results/operator-theory/xp-arm-0-2-1` sets 0.1.1 beside 0.2.1.
+
 ## Against precise orbits
 
 `experiments/operator-theory/AP5.md`, registered before XP with solar pressure free was run on these windows: strong drag, near 700 km and medium Earth orbit. AP beats XP in all four statements. Figures and every interval: `truth.md`, the same as data in `truth.json`. The windows had been read for AP, and for an XP arm with solar pressure held.
