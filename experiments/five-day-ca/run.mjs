@@ -80,9 +80,10 @@ async function check() {
   ok(products > 0 && productsMissing === 0, 'fitted $OCM products missing');
   ok(productDifferences === 0, 'fitted $OCM FIT_STATISTICS differ from the rows');
   // Six-day module replay of one complete window, every arm: AP, XP, S and F exact, U within 1 m.
-  const selected = readRows(dir('fits', 'regimes')).find((r) => ['AP72', 'XP72', 'S72'].every((a) => [1, 2, 3, 4, 5, 7].every((d) => Number.isFinite(r.arms[a]?.days?.[d]?.e))));
+  const merged = new Map();
+  for (const phase of FORECAST_PHASES) for (const r of readRows(dir(phase, 'regimes'))) { if (!merged.has(r.key)) merged.set(r.key, { ...r, arms: {} }); Object.assign(merged.get(r.key).arms, r.arms); }
+  const selected = [...merged.values()].find((r) => ['AP72', 'XP72', 'S72', 'U72'].every((a) => [1, 2, 3, 4, 5, 7].every((d) => Number.isFinite(r.arms[a]?.days?.[d]?.e))) && r.arms.F72?.ok);
   assert(selected, 'no complete six-day replay window');
-  for (const phase of ['ussf', 'ffm']) { const r = readRows(dir(phase, 'regimes')).find((x) => x.key === selected.key); assert(r, `no ${phase} replay window`); Object.assign(selected.arms, r.arms); }
   const out = `${store}/check/${Date.now()}`;
   const replayRun = spawnSync(process.execPath, ['experiments/five-day-ca/regimes.mjs', '--out', out, '--groups', selected.group, '--key', selected.key, '--arms', 'AP,XP,S,U,F'], { env: { ...process.env, SDN_MODULES_ROOT: modules() }, encoding: 'utf8', timeout: 900000 });
   assert.equal(replayRun.status, 0, replayRun.stderr);
