@@ -10,7 +10,7 @@ import { STATIC, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
 import { HELD_NORADS } from './lib/pairs.mjs';
 import { gfzDays } from './lib/weather.mjs';
 import { BUILD } from './lib/build.mjs';
-import { DAY, HOUR, LOW, GEO, openElements, revolutions, lowSteps, geoSteps, classOf, windowState } from './lib/steps.mjs';
+import { DAY, HOUR, LOW, GEO, openElements, revolutions, lowSteps, geoSteps, classOf, windowState, windowSteps } from './lib/steps.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const OUT = argOf('--out');
@@ -73,13 +73,7 @@ for (const [group, g] of Object.entries(GROUPS)) {
     objects.push({ group, name, steps: d.steps.map((s) => ({ t: iso(s.t), sizeM: r1(s.sizeM), ...(s.planeMdeg !== undefined ? { residualM: r1(s.residualM), planeMdeg: r1(s.planeMdeg), by: s.by } : {}) })),
       checked: d.checked.map(([a, b]) => [iso(a), iso(b)]), truth: [iso(d.truthFrom), iso(d.truthTo)], ...(d.medianResidualM !== undefined ? { medianResidualM: r1(d.medianResidualM), medianPlaneMdeg: Math.round(d.medianPlaneMdeg * 100) / 100 } : {}) });
     for (const r of list) {
-      const c = Date.parse(r.cutoff), from = c - SPAN.fitHours * HOUR, to = c + SPAN.leadHours * HOUR;
-      const steps = d.steps.filter((s) => s.t >= from && s.t <= to).map((s) => ({ t: iso(s.t), hours: r1((s.t - c) / HOUR), sizeM: r1(s.sizeM) }));
-      // The spans of [cutoff - 72 h, cutoff + 168 h] the detector could not cover, hours from the cutoff.
-      const unchecked = [];
-      let at = from;
-      for (const [a, b] of d.checked.filter(([a, b]) => b >= from && a <= to).sort((p, q) => p[0] - q[0])) { if (a > at + 2 * HOUR) unchecked.push([r1((at - c) / HOUR), r1((a - c) / HOUR)]); at = Math.max(at, b); }
-      if (at < to - 2 * HOUR) unchecked.push([r1((at - c) / HOUR), r1((to - c) / HOUR)]);
+      const c = Date.parse(r.cutoff), { steps, unchecked } = windowSteps(d, c, SPAN);
       const stormDays = group === 'WA' ? null : [...Array(10).keys()].map((k) => new Date(c + (k - 3) * DAY).toISOString().slice(0, 10)).filter((day) => storms.get(day) >= 30);
       windows.push({ key: r.key, group, name, cutoff: r.cutoff.slice(0, 10), steps, unchecked, stormDays });
     }

@@ -10,7 +10,7 @@ import { execFileSync } from 'node:child_process';
 import { config, root, XM } from './lib/xp2.mjs';
 import { STATIC, WA_CUTOFFS } from './lib/regimes.mjs';
 import { HELD_NORADS } from './lib/pairs.mjs';
-import { DAY, HOUR, LOW, openElements, revolutions, lowSteps, geoSteps, windowState } from './lib/steps.mjs';
+import { DAY, HOUR, LOW, openElements, revolutions, lowSteps, geoSteps, windowState, windowSteps } from './lib/steps.mjs';
 
 const here = path.dirname(new URL(import.meta.url).pathname), repo = path.resolve(here, '../..');
 const RESULTS = path.join(repo, 'results/operator-theory/maneuver-flags'), COMPARE = path.join(repo, 'results/ap-truth/compare');
@@ -21,15 +21,8 @@ const flags = JSON.parse(fs.readFileSync(path.join(RESULTS, 'flags.json'), 'utf8
 const W = new Map(flags.windows.map((w) => [w.key, w]));
 const iso = (t) => new Date(t).toISOString().slice(0, 16), r1 = (x) => Math.round(x * 10) / 10;
 const el = await openElements();
-/** One window's flag as maneuver-flags.mjs writes it, from steps and checked spans in ms. */
-const flagOf = (d, key) => {
-  const w = W.get(key), c = Date.parse(`${w.cutoff}T00:00:00Z`), from = c - 72 * HOUR, to = c + 168 * HOUR;
-  const steps = d.steps.filter((s) => s.t >= from && s.t <= to).map((s) => ({ t: iso(s.t), hours: r1((s.t - c) / HOUR), sizeM: r1(s.sizeM) }));
-  const unchecked = []; let at = from;
-  for (const [a, b] of d.checked.filter(([a, b]) => b >= from && a <= to).sort((p, q) => p[0] - q[0])) { if (a > at + 2 * HOUR) unchecked.push([r1((at - c) / HOUR), r1((a - c) / HOUR)]); at = Math.max(at, b); }
-  if (at < to - 2 * HOUR) unchecked.push([r1((at - c) / HOUR), r1((to - c) / HOUR)]);
-  return { steps, unchecked };
-};
+/** One window's flag as maneuver-flags.mjs writes it (lib/steps.mjs windowSteps). */
+const flagOf = (d, key) => windowSteps(d, Date.parse(`${W.get(key).cutoff}T00:00:00Z`));
 const same = (key, mine) => JSON.stringify(mine) === JSON.stringify({ steps: W.get(key).steps, unchecked: W.get(key).unchecked });
 
 // 1. Sentinel-1A, 2026-05-03, 24 h fit: the burn of 2026-05-06 on the truth's revolution time means (20 days of truth about the window).

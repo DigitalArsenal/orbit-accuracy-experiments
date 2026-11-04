@@ -28,3 +28,11 @@ On the step-free windows with both arms scored at day 7: FFM's error exceeds AP'
 ## Disclosure
 
 The thresholds are the record's (`graph/tasks/experiments-ffm-maneuver-flags-20261104.md`), not tuned: 50 %, 1, 8 m. The detector's rule was written after reading the 2026 windows' truth, and so was the measured 75 % above.
+
+## Amendment 1, 2026-11-04, before any fit, flight or truth read of these windows by this test
+
+The windows are not unread. `experiments/ffm-short-arc` (registered 2026-11-01 for windows where no FFM forecast had been scored) fitted and scored FFM 24 h arcs (its `A24`, on XM3's model) on Sentinel-1A and 1C at every cutoff from 2025-10-05 to 12-21: 156 of the 170. `experiments/ap-short-arc-priors-confirm` fitted and scored sdn-ap 0.4.7's AP, XP and Space Force XP arms on both at every third cutoff from 2025-10-04 to 12-18: 50 of them. Only the cutoffs 2025-12-22 to 12-28, 14 windows, were fitted by neither, under the floor of 30. No set of Sentinel-1 windows nobody has read exists in the archive: its Sentinel-1 truth begins 2025-10-01, AP5 read 2026-01 to 05, and C2 holds every cutoff from 2026-06-01. Found by a search of the archive's stores for these window keys after registration; no figure of either experiment was read.
+
+So the statement is not tested. `s1-step-free.mjs` flies the registered arms on all 170 windows, `s1-step-free-table.mjs` sets the figures beside the thresholds, and the report gives both readings: report only, no verdict. The truth from 2025-12-29 on had been read before registration, by AP5's 2026 windows and by `maneuver-flags.mjs`; here it is only the forecast span of the cutoffs from 12-22.
+
+Weather: the 2025 as-issued reports are xp2-fit-design's normalized RSGA set (its store, through 2025-12-31), the set AP5's 2025 windows read.

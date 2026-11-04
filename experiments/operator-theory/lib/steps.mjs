@@ -134,6 +134,18 @@ export async function geoSteps(lines, elements, rule = GEO) {
   return { steps, rows, checked, medianResidualM: mr, medianPlaneMdeg: mp };
 }
 
+/** A window's flag from an object's detector output ({ steps, checked } in ms): its steps in [cutoff - fit, cutoff + lead] by hours from the cutoff (sizes to 0.1 m), and the
+ *  spans of it the detector could not cover. */
+export function windowSteps(d, cutoffMs, { fitHours = 72, leadHours = 168 } = {}) {
+  const r1 = (x) => Math.round(x * 10) / 10, from = cutoffMs - fitHours * HOUR, to = cutoffMs + leadHours * HOUR;
+  const steps = d.steps.filter((s) => s.t >= from && s.t <= to).map((s) => ({ t: new Date(s.t).toISOString().slice(0, 16), hours: r1((s.t - cutoffMs) / HOUR), sizeM: r1(s.sizeM) }));
+  const unchecked = [];
+  let at = from;
+  for (const [a, b] of d.checked.filter(([a, b]) => b >= from && a <= to).sort((p, q) => p[0] - q[0])) { if (a > at + 2 * HOUR) unchecked.push([r1((at - cutoffMs) / HOUR), r1((a - cutoffMs) / HOUR)]); at = Math.max(at, b); }
+  if (at < to - 2 * HOUR) unchecked.push([r1((at - cutoffMs) / HOUR), r1((to - cutoffMs) / HOUR)]);
+  return { steps, unchecked };
+}
+
 /**
  * A flagged window (results/operator-theory/maneuver-flags/flags.json: its steps by hours from the cutoff, and the spans the detector could not cover) at a fit and
  * lead: a step in the fit arc [-fit, 0] or the forecast span (0, lead] flags it; with none it is step-free only where the detector covered both, else unchecked.

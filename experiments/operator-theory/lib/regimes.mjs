@@ -48,4 +48,6 @@ export const HX = [
   { name: 'CHANDRA', id: 'Chandra (-151)', norad: 25867, objectId: '1999-040B', file: `${NAIF}/chandra/chandra_merged.bsp`, from: '2018-03-01T00:00:00Z', to: '2018-04-30T00:00:00Z', arcs: [72, 168], cutoffs: every('2018-03-08', '2018-04-19', 7) },
 ];
 export const WA_CUTOFFS = every('2026-09-02', '2026-10-26', 2);
+// S1-STEP-FREE.md: Sentinel-1A and 1C, cutoff 00:00 UTC every day; read through xp-atmosphere-merit/lib/truth.mjs, keyed as AP5's.
+export const S1_STEP_FREE = { group: 'S1', norads: [39634, 62261], from: '2025-10-05', to: '2025-12-28', fitHours: 24, cutoffs: every('2025-10-05', '2025-12-28', 1) };
 export const windowKey = (group, name, t) => `${group}|${name}|${iso(t)}`;
