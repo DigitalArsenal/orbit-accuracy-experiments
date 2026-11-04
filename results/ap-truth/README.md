@@ -10,6 +10,34 @@ What it does not mean: every fit reads precise products, which are not real-time
 
 Everything below `## AP 0.4.0` is AP 0.3.0's record: build 783133149a, wasm 0b021c575466.
 
+## AP 0.4.18
+
+`experiments/operator-theory/AP9.md`, registered at eb43ba6 before any fit of this build on these data and before any fit of any build on the 150 new altimetry windows: modules 501508b98785, wasm 225bf936f2ad. The build adds one rule to 0.4.17: after a 72-hour fit between 800 and 1,400 km, refit with 0.4.11's band-median drag prior when the fitted drag term is wide (log posterior sigma above 0.5), or sits more than three sigma off the band median while the fit RMS is 25 % over the band's, or the two fitted states lie more than two revolutions apart, or an along-track velocity step of 0.002 m/s or more is found. Three arms: 0.4.18 (`b0418`), 0.4.17 (`b0417`) and 0.4.11 (`b0411`, the gate). Tables: `table-t-0418.md`, `table-t2-0418.md`, `table-l-0418.md`, `table-r-0418.md`, `table-s-0418.md` against 0.4.11; the same names with `-vs-0417` against 0.4.17, report only; the same as JSON beside them.
+
+| Statement | Result |
+|---|---|
+| 1. Part T, `APRa12` and `AP24` do not lose to 0.4.11, days 1, 2, 3, 7 | PASS: identical, 0.0 % [0.0, 0.0] at every day |
+| 2. `AP72` in `S1` and `GN` does not lose, days 1, 2, 3, 7 | PASS: identical in both, 0.0 % [0.0, 0.0]; `GN` 95th upper at most +2.5 % |
+| 3. Part L, `low` at 48 h fits (24 h, 72 h) and `navigation` at 72 h fits (72 h, 168 h) do not lose | PASS: 0.000 km [0.000, 0.000] everywhere |
+| 4a. `DO` on the new windows, `AP72` beats 0.4.11: rule 1 at days 1 and 3, rules 2 and 3 at days 1, 2, 3, 7 | **fail**: the median paired change is 0.0 % [0.0, 0.0] at every day, so rule 1 holds at neither day; the 95th upper is +7.2 %, +15.0 %, +10.8 % and +1.7 % at days 1, 2, 3 and 7, over rule 2's +10 % at days 2 and 3. The weaker "does not lose" reading fails on the same two days |
+| 4b. `DO`, `AP72` beats 0.4.17, report only | fail: median change 0.0 %; 95th upper +183 % at day 1 and +68.8 % at day 2, where the fall-back returns a window to 0.4.11's answer and gives up 0.4.17's |
+| 5. `LS` and `GD` do not lose to 0.4.11, days 1, 2, 3, 7 | PASS: both identical, 0.0 % [0.0, 0.0]. Against 0.4.17, report only: `GD` PASS, `LS` fail (95th upper +57 % to +123 %: the fall-back fires on laser spheres in the band and reverts them to 0.4.11) |
+| 6. `DO`, `AP72` beats `XP72` at 0.4.18, report either way | fail on the tail rule; medians 0.036 against 0.572 km at day 1 and 1.59 against 2.75 km at day 7 |
+| Part S, Starlink, report only | identical to 0.4.11 and 0.4.17 at every lead |
+
+Altimetry (`DO`), 148 of the 150 new windows (two had no lead bin), median km, 95th in brackets:
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP72 0.4.18 | 0.036 (0.68) | 0.086 (1.99) | 0.179 (4.34) | 1.591 (17.2) |
+| AP72 0.4.17 | 0.032 (0.68) | 0.074 (1.99) | 0.144 (4.34) | 1.096 (17.3) |
+| AP72 0.4.11 | 0.070 (0.68) | 0.211 (1.99) | 0.389 (4.34) | 2.050 (17.2) |
+| XP72 0.4.18 | 0.572 (1.01) | 0.685 (1.82) | 0.871 (4.25) | 2.750 (18.5) |
+
+By satellite the rule is a class switch, as the 0.4.18 landing read it: every Sentinel-3A, Sentinel-3B, SARAL, CryoSat-2, Sentinel-6 Michael Freilich and Sentinel-6B window falls back and equals 0.4.11 to the metre; no SWOT, Haiyang-2C, Haiyang-2D or Jason-3 window falls back, and those equal 0.4.17 (Haiyang-2C day 3: 0.055 km against 0.517 at 0.4.11). The pooled median halves, the paired median change is zero, and the windows that move the tail move it the wrong way. Statement 4a fails, so under AP9.md the site stays at 0.4.11.
+
+Run note: the first `do9` run of `cycle-ap9.sh` excluded all 150 windows ("no RSGA issued in the 72 h before the cutoff") at all three builds: `all-regimes.mjs` takes its weather configuration from `xp2-fit-design/common.mjs`, which pins the as-issued RSGA directory to the XP2 store's normalized set, and that set ends 2025-12-31. The directory list was extended with the archive's NOAA warehouse copy of the 2026 reports (the same files, fetched 2026-10-09, the same parser) in commit cc04c9f, the failed rows were set aside under `do9-apxp/failed-20261104T0241Z/`, and the three runs were repeated before any verdict was read. No fit had run, so nothing was read twice. The 2025 parts are untouched by the change.
+
 ## AP 0.4.17
 
 `experiments/operator-theory/AP8.md`, registered at 81d18ff before any fit of this build on these data: modules 3ae1eb289d, wasm 7d4920ee23f4, the same forces, weather and priors as 0.4.11. Each statement is this build against the same arm of 0.4.11, by pair, with AP7.md's rules. Tables: `table-t-0417.md`, `table-t2-0417.md`, `table-l-0417.md`, `table-s-0417.md`, `table-r-0417.md`, the same as JSON beside them.
