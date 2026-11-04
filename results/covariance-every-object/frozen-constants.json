@@ -1,9 +1,16 @@
 {
  "status": "DRAFT: items marked PENDING await Part 1",
+ "owner": {
+  "o5": "yes",
+  "answeredBy": "owner, 2026-11-03",
+  "recordedBy": "coordinator message 2026-11-04: the collectors backfill the truth feeds (first backfill 2026-11-04 03:40-03:46 UTC, daily reseal; seal manifests /opt/data/sdn-archive/reference-states/seal/latest.json)",
+  "o1_o4": "Part 1 defaults unless the task record says otherwise",
+  "note": "Part 1's frozen-constants.json still carries o5 false at 4bd8021; the pin is re-taken at its ready-to-freeze"
+ },
  "freezeDeadlineUtc": "2026-11-09T23:59:00Z",
- "codeSha256": "02752baf9ca716ce067badc8847662210aa88eb82e0bb92f2f1a1d395cdee78d",
+ "codeSha256": "e3ff1e82aa1a0a4337473060da81b5f0d8e1483419b762360dca5f8395e0fe1b",
  "codeFilesSha256": {
-  "PLAN.md": "d9a82f7e86a9475676ec89a4f5449bd0e6c04f3c6c50a4c9a67e5405942519b2",
+  "PLAN.md": "6896ca842c32e6161417bd3ecdb46ce1527863a4abd483ec8896becf5b635bee",
   "admission.mjs": "8cb857346ea17cd988bcd2de9f51bd4642df3c73bc9bdd421c0a9ba999301ea9",
   "audit.mjs": "377bda408fedbbc9fbee2ade8e8d8d6ee392294840223045347650dd4f4837b4",
   "build-truth.mjs": "4f7955a687ed77779bf55adb148600c6e68ddbec79b501e0840cc7159ad58401",
@@ -12,7 +19,7 @@
   "denominators.mjs": "ec893d3f103da2fd445c6c7b374f160401db287a771541800954912129d4bd38",
   "devs2-worker.mjs": "28dc9ff38d4b30747147ab217d265b72e48a1a0107c68bca0c8fa1e47603fd0d",
   "devs2.mjs": "f871033e984cac54252ec3b488b97cff8e8c6e65858c3bb55d9cab8717aee065",
-  "freeze.mjs": "28381e9265c032b31ec0b5273b2a67e90babcdbf56edcddc385977f29ef95d8b",
+  "freeze.mjs": "64f8b39390f36dfebbd110da6a31dc7455fa983572fea91c69ad06a579aef6c1",
   "index-worker.mjs": "12452a39268f5d88ff4b9a3ac04bb2366e5039959621f90eb9af8098af085025",
   "index.mjs": "7887c0c58e5b8e2fe852694cf5a44bcc07fedc2521b2d8677726ebf1f773f5ef",
   "lib/archive.mjs": "2395e5ff6396f730ebe0570542e328420a08b57b938cb40f78f6dac8346f8209",

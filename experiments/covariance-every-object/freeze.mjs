@@ -12,6 +12,7 @@ const P = (reason) => ({ status: 'PENDING', reason });
 const n0 = JSON.parse(rd(path.join(res, 'n0-rows.json')));
 const out = {
   status: p1 ? 'READY-TO-FREEZE-CHECK' : 'DRAFT: items marked PENDING await Part 1',
+  owner: { o5: 'yes', answeredBy: 'owner, 2026-11-03', recordedBy: 'coordinator message 2026-11-04: the collectors backfill the truth feeds (first backfill 2026-11-04 03:40-03:46 UTC, daily reseal; seal manifests /opt/data/sdn-archive/reference-states/seal/latest.json)', o1_o4: 'Part 1 defaults unless the task record says otherwise', note: 'Part 1\'s frozen-constants.json still carries o5 false at 4bd8021; the pin is re-taken at its ready-to-freeze' },
   freezeDeadlineUtc: '2026-11-09T23:59:00Z',
   codeSha256: sha(JSON.stringify(Object.entries(code))), codeFilesSha256: code,
   inputs: { provenanceAuditSha256: sha(rd(path.join(res, 'provenance-audit.json'))), truthObjectsSha256: code['truth-objects.json'], vendorsBlob: 'e9dd6db5b4df53fd9df0132faf59c12cae07947d', sgp4Pins: 'lib/sgp4.mjs PINS (space-data-network-modules origin/main 3ae1eb289)' },
