@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { config, root, XM } from './lib/xp2.mjs';
 import { S1_STEP_FREE as WINDOWS } from './lib/regimes.mjs';
-import { BUILD_NOTE, FFM_220 } from './lib/build.mjs';
+import { BUILD_NOTE, FFM_220, ORBITS_010 } from './lib/build.mjs';
 import { rand, pct } from './lib/compare.mjs';
 import { DAY, HOUR, LOW, openElements, revolutions, lowSteps, windowSteps, windowState } from './lib/steps.mjs';
 
@@ -22,7 +22,7 @@ if (foreign.length) throw new Error(`${foreign.length} rows were not flown on pr
 
 // The flag: every object's steps over its windows' spans and the detector's margin, its truth read day by day as AP5's runners read it.
 const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
-const el = await openElements();
+const el = await openElements({ build: ORBITS_010 });
 const flags = new Map(), objects = [];
 for (const norad of WINDOWS.norads) {
   const o = XM.config.groups.S1.objects.find((x) => x.norad === norad);
@@ -73,7 +73,7 @@ const scored = [...rows.values()].filter((r) => r.arms?.F24?.ok && r.arms?.AP24?
 const failures = Object.fromEntries(['F24', 'AP24'].map((arm) => [arm, [...rows.values()].filter((r) => !r.arms?.[arm]?.ok).length]));
 const doc = {
   registered: 'experiments/operator-theory/S1-STEP-FREE.md', reading: 'report only (amendment 1: the windows are spent)', thresholds: THRESHOLDS, detector: LOW,
-  builds: { ap: BUILD_NOTE, ffm: FFM_220, estimation: 'analysis/estimation 0.7.0 (7a555ca5b3ed), XM3\'s' },
+  builds: { ap: BUILD_NOTE, ffm: FFM_220, estimation: 'analysis/estimation 0.7.0 (7a555ca5b3ed), XM3\'s', flag: ORBITS_010 },
   windows: { registered: keys.length, bothArmsScored: scored, failed: failures, rowsFailedWhole: [...rows.values()].filter((r) => r.error).length },
   registeredCell: { ...reg, againstThresholds: reading },
   cells, objects, flags: Object.fromEntries([...flags].map(([k, v]) => [k, v])),
@@ -83,7 +83,7 @@ fs.writeFileSync(path.join(OUT, 'table.json'), `${JSON.stringify(doc, null, 1)}\
 const p = (x) => `${Math.round(x * 1000) / 10} %`;
 const md = ['# FFM against AP on step-free Sentinel-1 windows, 2025', '',
   `Report only, \`experiments/operator-theory/S1-STEP-FREE.md\`. Its windows are spent (amendment 1): no verdict rests on this table.`, '',
-  `Builds: FFM \`propagator/ffm\` ${FFM_220.version} (dist ${FFM_220.wasmSha256.slice(0, 12)}, modules ${FFM_220.modulesCommit?.slice(0, 10)}) fitted by \`analysis/estimation\` 0.7.0 (7a555ca5b3ed) at CHEAPER.md's settings; AP and the frames on ${BUILD_NOTE}.`, '',
+  `Builds: FFM \`propagator/ffm\` ${FFM_220.version} (dist ${FFM_220.wasmSha256.slice(0, 12)}, modules ${FFM_220.modulesCommit?.slice(0, 10)}) fitted by \`analysis/estimation\` 0.7.0 (7a555ca5b3ed) at CHEAPER.md's settings; AP on ${BUILD_NOTE}; the flag's \`foundation/orbits\` ${ORBITS_010.version} (dist ${ORBITS_010.wasmSha256.slice(0, 12)}, modules ${ORBITS_010.modulesCommit.slice(0, 10)}).`, '',
   `Windows: Sentinel-1A and 1C, cutoff every day from ${WINDOWS.from} to ${WINDOWS.to}, ${keys.length} in all; both arms scored on ${scored}; FFM failed on ${failures.F24}, AP on ${failures.AP24}.`, '',
   `The registered cell, step-free at day 7 from a 24 h fit: ${reg.n} windows, FFM worse in ${reg.n ? p(reg.ffmWorseShare) : '-'} [${reg.ffmWorseShareInterval?.map(p).join(', ') ?? '-'}], median FFM/AP ${reg.medianRatio ?? '-'} [${reg.medianRatioInterval?.join(', ') ?? '-'}].`, '',
   `Against the thresholds (share under 50 %, median under 1, at least 30 windows) it ${reading === 'inconclusive' ? 'is inconclusive' : `would ${reading}`}. As registered after amendment 1 it is report only, so it neither passes nor fails.`, '',

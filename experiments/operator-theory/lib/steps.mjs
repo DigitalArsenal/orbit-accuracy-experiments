@@ -12,6 +12,8 @@
 //   residual is that less the median of the same difference 1 to 3 sidereal days either side, so the satellite's drift does not count. A burn is the largest
 //   within a day either side of a residual 4 times the satellite's median residual or more, or of an angle between the two days' mean orbit normals 4 times its
 //   median angle or more.
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -24,11 +26,22 @@ const ms = (epoch) => Date.parse(/Z$/.test(epoch) ? epoch : `${epoch}Z`);
 const median = (v) => { const s = [...v].sort((a, b) => a - b), k = s.length >> 1; return s.length % 2 ? s[k] : (s[k - 1] + s[k]) / 2; };
 const mean = (v) => v.reduce((a, b) => a + b, 0) / v.length;
 
-/** foundation/orbits on one state: { aM: osculating semimajor axis in m, normal: unit orbit normal from inclination and node }. Its provenance beside it. */
-export async function openElements() {
+/**
+ * foundation/orbits on one state: { aM: osculating semimajor axis in m, normal: unit orbit normal from inclination and node }. From the modules checkout's dist, or
+ * by `build` ({ modulesCommit, wasmSha256 }: lib/ap.mjs pinnedFile, git show at the commit, SHA-256 checked).
+ */
+export async function openElements({ build } = {}) {
   const { openOrbits } = await import(pathToFileURL(path.join(MATCH, 'orbits.mjs')).href);
   const { modulesRoot } = await import(pathToFileURL(path.join(MATCH, 'modules.mjs')).href);
-  const orbits = await openOrbits(modulesRoot(), { gm: GM });
+  let modules = modulesRoot();
+  if (build) {
+    const file = (await import('./ap.mjs')).pinnedFile('foundation/orbits', build), at = path.join(os.tmpdir(), 'operator-theory-root', build.modulesCommit, 'foundation/orbits');
+    fs.mkdirSync(path.join(at, 'dist/isomorphic'), { recursive: true });
+    fs.copyFileSync(file, path.join(at, 'dist/isomorphic/module.wasm'));
+    fs.copyFileSync(path.join(path.dirname(file), 'plugin-manifest.json'), path.join(at, 'plugin-manifest.json'));
+    modules = path.join(os.tmpdir(), 'operator-theory-root', build.modulesCommit);
+  }
+  const orbits = await openOrbits(modules, { gm: GM });
   const rad = Math.PI / 180;
   return {
     async of(l) {
