@@ -1,4 +1,4 @@
-// $PRW framing for propagator/ffm's `invoke` method (SDS 1.240.0 PRW
+// $PRW framing for propagator/ffm's `invoke` method (SDS 1.276.0 PRW
 // execution request and result, Earth orientation and space weather arms).
 // Encoding and unit scaling only (km <-> m); the propagation, frames and time
 // scales are the module's.
@@ -46,8 +46,8 @@ export function executionFrame(request) {
     HAS_MASS_KG: f.massKg !== undefined, MASS_KG: f.massKg ?? 0,
   });
   const sphericalHarmonics = f.degree !== undefined;
-  const forces = table('PRWForceConfiguration', {
-    GRAVITY_CHOICE: sphericalHarmonics ? P.prwGravitySelection.SPHERICAL_HARMONICS : P.prwGravitySelection.POINT_MASS,
+  const forces = table('PCFForceModel', {
+    GRAVITY_CHOICE: sphericalHarmonics ? P.pcfGravitySelection.SPHERICAL_HARMONICS : P.pcfGravitySelection.POINT_MASS,
     ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
     ENABLE_J2: false, ENABLE_J3: false, ENABLE_J4: false, ENABLE_HIGHER_ZONALS: false,
     MAXIMUM_DEGREE: f.degree ?? 0, HAS_MAXIMUM_DEGREE: sphericalHarmonics,
@@ -55,13 +55,13 @@ export function executionFrame(request) {
     ENABLE_THIRD_BODY: (f.thirdBodies ?? []).length > 0, THIRD_BODY_IDS: f.thirdBodies ?? [],
     ENABLE_SRP: !!f.srp, ENABLE_DRAG: !!f.drag,
     INITIAL_MASS_KG: f.massKg ?? 1000, AREA_M2: f.areaM2 ?? 1, REFLECTIVITY_COEFFICIENT: f.cr ?? 1, DRAG_COEFFICIENT: f.cd ?? 2.2,
-    ATMOSPHERE_MODEL: P.prwAtmosphereFamily.NRLMSISE00,
+    ATMOSPHERE_MODEL: P.pcfAtmosphereFamily.NRLMSISE00,
     EPHEMERIS_SOURCE: request.kernel ? 'JPL_SPK' : 'Analytical',
-    SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
-    RELATIVITY: f.relativity ? P.prwRelativityTerms[f.relativity] : P.prwRelativityTerms.NONE,
+    SOLID_TIDES: f.solidTides ? P.pcfSolidTideModel.IERS_2010 : P.pcfSolidTideModel.NONE,
+    RELATIVITY: f.relativity ? P.pcfRelativityTerms[f.relativity] : P.pcfRelativityTerms.NONE,
   });
-  const integrator = table('PRWIntegratorSettings', {
-    ALGORITHM: P.prwSolverAlgorithm[it.algorithm ?? 'RK78'],
+  const integrator = table('PCFIntegratorSettings', {
+    ALGORITHM: P.pcfIntegratorAlgorithm[it.algorithm ?? 'RK78'],
     INITIAL_STEP_SECONDS: it.initialStep ?? 60, MINIMUM_STEP_SECONDS: it.minStep ?? 0.01, MAXIMUM_STEP_SECONDS: it.maxStep ?? 600,
     ABSOLUTE_TOLERANCES: Array(6).fill((it.tolerance ?? 1e-12) * 1000), RELATIVE_TOLERANCE: it.tolerance ?? 1e-12,
     MAXIMUM_STEPS: it.maxSteps ?? 1000000,

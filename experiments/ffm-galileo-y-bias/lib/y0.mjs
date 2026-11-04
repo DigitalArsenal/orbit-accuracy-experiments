@@ -8,7 +8,7 @@ export function slotToY0(frame) {
   const root = P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(frame.payload))).unpack();
   const q = root.EXECUTION_REQUEST;
   if (!q?.FORCES?.HAS_IN_TRACK_ACCELERATION_M_S2) return frame;
-  const e = new P.PRWEcom2T();
+  const e = new P.PCFEcom2T();
   e.Y0_M_S2 = q.FORCES.IN_TRACK_ACCELERATION_M_S2;
   q.FORCES.ECOM2 = e;
   q.FORCES.HAS_IN_TRACK_ACCELERATION_M_S2 = false;

@@ -1,4 +1,4 @@
-// propagator/ffm execution requests with the full force model (SDS 1.240.0
+// propagator/ffm execution requests with the full force model (SDS 1.276.0
 // PRW): EGM2008 to the stated degree and order in Earth-fixed axes (IERS EOP
 // on the earth_orientation input), Sun and Moon from a JPL DE440 kernel,
 // cannonball radiation pressure with the conical shadow, drag (JB2008 on SET
@@ -34,8 +34,8 @@ export function executionFrame(request) {
   const value = (kind, fallback) => request.parameters.find((p) => p.kind === kind)?.value ?? fallback;
   const n = 6 + request.parameters.length;
   const inTrack = value('IN_TRACK_ACCELERATION', request.fixed?.t);
-  const forces = table('PRWForceConfiguration', {
-    GRAVITY_CHOICE: P.prwGravitySelection.SPHERICAL_HARMONICS, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
+  const forces = table('PCFForceModel', {
+    GRAVITY_CHOICE: P.pcfGravitySelection.SPHERICAL_HARMONICS, ENABLE_POINT_MASS: true, GRAVITATIONAL_PARAMETER: 398600.4418e9,
     ENABLE_J2: false, ENABLE_J3: false, ENABLE_J4: false, ENABLE_HIGHER_ZONALS: false,
     MAXIMUM_DEGREE: f.degree, HAS_MAXIMUM_DEGREE: true, MAXIMUM_ORDER: f.order, HAS_MAXIMUM_ORDER: true,
     ENABLE_THIRD_BODY: (f.thirdBodies ?? []).length > 0, THIRD_BODY_IDS: f.thirdBodies ?? [],
@@ -45,10 +45,10 @@ export function executionFrame(request) {
     DRAG_COEFFICIENT: value('DRAG_AREA_OVER_MASS', request.fixed?.b ?? 0),
     // The in-track acceleration T (m/s^2), estimated or fixed: propagator/ffm reads it only when HAS_ is set.
     ...(inTrack === undefined ? {} : { HAS_IN_TRACK_ACCELERATION_M_S2: true, IN_TRACK_ACCELERATION_M_S2: inTrack }),
-    ATMOSPHERE_MODEL: P.prwAtmosphereFamily[f.atmosphere ?? 'NRLMSISE00'],
+    ATMOSPHERE_MODEL: P.pcfAtmosphereFamily[f.atmosphere ?? 'NRLMSISE00'],
     EPHEMERIS_SOURCE: 'JPL_SPK',
-    SOLID_TIDES: f.solidTides ? P.prwSolidTideModel.IERS_2010 : P.prwSolidTideModel.NONE,
-    RELATIVITY: P.prwRelativityTerms[f.relativity ?? 'NONE'],
+    SOLID_TIDES: f.solidTides ? P.pcfSolidTideModel.IERS_2010 : P.pcfSolidTideModel.NONE,
+    RELATIVITY: P.pcfRelativityTerms[f.relativity ?? 'NONE'],
   });
   const execution = table('PRWExecutionRequest', {
     INITIAL: table('PRWResidentState', {
@@ -59,8 +59,8 @@ export function executionFrame(request) {
       COORDINATE_SYSTEM: gcrf(), HAS_MASS_KG: false, MASS_KG: 0,
     }),
     TARGET_EPOCH: instant(request.samples.at(-1), 'UTC'),
-    INTEGRATOR: table('PRWIntegratorSettings', {
-      ALGORITHM: P.prwSolverAlgorithm.RK78, INITIAL_STEP_SECONDS: 60, MINIMUM_STEP_SECONDS: it.minStep ?? 0.01, MAXIMUM_STEP_SECONDS: it.maxStep,
+    INTEGRATOR: table('PCFIntegratorSettings', {
+      ALGORITHM: P.pcfIntegratorAlgorithm.RK78, INITIAL_STEP_SECONDS: 60, MINIMUM_STEP_SECONDS: it.minStep ?? 0.01, MAXIMUM_STEP_SECONDS: it.maxStep,
       ABSOLUTE_TOLERANCES: Array(6).fill(it.tolerance * 1000), RELATIVE_TOLERANCE: it.tolerance, MAXIMUM_STEPS: 1000000,
     }),
     FORCES: forces,
