@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- E13b operator capture, release 532bd3d4, by the README's installed command.
+     OPERATOR_SUBSETS is unset: the release's default path does not exist, so the capture stays in the fallback-all mode every window cycle ran in.
+     No KeepAlive: a halt (two network failures, 403 or 429) stays a halt; RunAtLoad starts it at login. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>io.spacedatanetwork.operator-capture</string>
+  <key>ProgramArguments</key>
+  <array><string>/opt/homebrew/bin/node</string><string>/opt/data/sdn-archive/operator-capture/_collector/releases/532bd3d4ec60f0e77bfb8d39af2fe84c0a7a06e0/collect.mjs</string></array>
+  <key>WorkingDirectory</key><string>/opt/data/sdn-archive/operator-capture/_collector/releases/532bd3d4ec60f0e77bfb8d39af2fe84c0a7a06e0</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>ARCHIVE_ROOT</key><string>/opt/data/sdn-archive</string>
+    <key>OPERATOR_CAPTURE_ROOT</key><string>/opt/data/sdn-archive/operator-capture</string>
+    <key>OPERATOR_MODULES_ROOT</key><string>/opt/data/sdn-archive/operator-capture/_collector/releases/532bd3d4ec60f0e77bfb8d39af2fe84c0a7a06e0/modules</string>
+    <key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><false/>
+  <key>ExitTimeOut</key><integer>60</integer>
+  <key>StandardOutPath</key><string>/opt/data/sdn-archive/operator-capture/collector.stdout.log</string>
+  <key>StandardErrorPath</key><string>/opt/data/sdn-archive/operator-capture/collector.stdout.log</string>
+</dict>
+</plist>
