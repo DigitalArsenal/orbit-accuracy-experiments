@@ -1,0 +1,3649 @@
+{
+ "record": "experiments-satnogs-optical-ap-registered-2-20261104",
+ "credit": "SatNOGS Optical contributors - https://optical.satnogs.org - CC BY-SA 4.0",
+ "inputClass": "observations/CC-BY-SA-4.0",
+ "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+ "modulesCommit": "2df8f50c",
+ "planSha256": "c199333d6cd7db4f0631cdeb478a045227a347d77f0fff0d565ca0b8c2bda37d",
+ "firstRegistration": {
+  "plan": "experiments/satnogs-optical-ap/PLAN.md",
+  "planSha256": "a1c9085cead46b29536c9a2cc971d25ce4a047873f9774cb3dcd637231cf3720",
+  "table": "results/satnogs-optical-ap/table.json"
+ },
+ "registeredCells": {
+  "ap": 42,
+  "b": 42
+ },
+ "rows": [
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:too-few-observations",
+   "refusal": "initial_orbit: too-few-observations: no crossing keeps 3 or more RA/Dec observations at distinct epochs; got 3 observations"
+  },
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:too-few-observations",
+   "refusal": "initial_orbit: too-few-observations: no crossing keeps 3 or more RA/Dec observations at distinct epochs; got 3 observations"
+  },
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:too-few-observations",
+   "refusal": "initial_orbit: too-few-observations: no crossing keeps 3 or more RA/Dec observations at distinct epochs; got 3 observations"
+  },
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 2.26,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.31932917922330695,
+   "p95_3dKm": 0.7563753370251761,
+   "medianAbsKm": {
+    "R": 0.06646151409342169,
+    "T": 0.2958265954453815,
+    "N": 0.08903865782708949
+   }
+  },
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 2.26,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.33506043953565223,
+   "p95_3dKm": 0.8368947797065066,
+   "medianAbsKm": {
+    "R": 0.06521797168515925,
+    "T": 0.28893852658943686,
+    "N": 0.11645910090172647
+   }
+  },
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 2.26,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.49957614890785007,
+   "p95_3dKm": 0.7879322908224418,
+   "medianAbsKm": {
+    "R": 0.08036480651747893,
+    "T": 0.4158807222484812,
+    "N": 0.17403707502609772
+   }
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (1 candidates)"
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (1 candidates)"
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (1 candidates)"
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 11.74,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.33603541300515716,
+   "p95_3dKm": 0.9006225596756845,
+   "medianAbsKm": {
+    "R": 0.07330764190278874,
+    "T": 0.30854702922931987,
+    "N": 0.07865509112967714
+   }
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 11.74,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.44179269485171824,
+   "p95_3dKm": 0.8341716423459598,
+   "medianAbsKm": {
+    "R": 0.07036384898419673,
+    "T": 0.40189452328340525,
+    "N": 0.09280150376719004
+   }
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "norad": 41240,
+   "object": "Jason-3",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 11.74,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.44536823488032634,
+   "p95_3dKm": 0.8232640753956499,
+   "medianAbsKm": {
+    "R": 0.09049310315763827,
+    "T": 0.3568986960573912,
+    "N": 0.15533697244005754
+   }
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "norad": 43437,
+   "object": "Sentinel-3B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no bound orbit above the surface: 11 starts converged (10 unbound, 1 with perigee below the surface); least far-sight miss 0.000581 arcsec"
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "norad": 43437,
+   "object": "Sentinel-3B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no bound orbit above the surface: 11 starts converged (10 unbound, 1 with perigee below the surface); least far-sight miss 0.000581 arcsec"
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "norad": 43437,
+   "object": "Sentinel-3B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no bound orbit above the surface: 11 starts converged (10 unbound, 1 with perigee below the surface); least far-sight miss 0.000581 arcsec"
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "norad": 43437,
+   "object": "Sentinel-3B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 15.44,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 2.335408146487066,
+   "p95_3dKm": 4.182988870225734,
+   "medianAbsKm": {
+    "R": 0.08994598589879771,
+    "T": 2.32855324597473,
+    "N": 0.12070910966365841
+   }
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "norad": 43437,
+   "object": "Sentinel-3B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 15.44,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 4.559581680667653,
+   "p95_3dKm": 6.33824229535726,
+   "medianAbsKm": {
+    "R": 0.09231601904166842,
+    "T": 4.553708105035606,
+    "N": 0.12209447985685501
+   }
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "norad": 43437,
+   "object": "Sentinel-3B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 15.44,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 6.837631832712699,
+   "p95_3dKm": 8.621191144009224,
+   "medianAbsKm": {
+    "R": 0.08756260819109096,
+    "T": 6.8369446770974704,
+    "N": 0.12068007916418033
+   }
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "norad": 46469,
+   "object": "HY-2C",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "truthProducts": 1,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 7.871984193059502,
+   "p95_3dKm": 14.326315293589726,
+   "medianAbsKm": {
+    "R": 2.859872055902214,
+    "T": 6.492683271999392,
+    "N": 1.4109066380240176
+   }
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "norad": 46469,
+   "object": "HY-2C",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "truthProducts": 1,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 6.684450294752093,
+   "p95_3dKm": 12.865994072249444,
+   "medianAbsKm": {
+    "R": 2.795927222415905,
+    "T": 4.982095493543082,
+    "N": 1.3906937740881007
+   }
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "norad": 46469,
+   "object": "HY-2C",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "truthProducts": 1,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 5.536713371555012,
+   "p95_3dKm": 11.376427634165278,
+   "medianAbsKm": {
+    "R": 2.8277388184110657,
+    "T": 4.540342039673388,
+    "N": 1.4078096262356938
+   }
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "norad": 46469,
+   "object": "HY-2C",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 5.7,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.5407849646781806,
+   "p95_3dKm": 1.027386665003907,
+   "medianAbsKm": {
+    "R": 0.12045776706834785,
+    "T": 0.43878331871541487,
+    "N": 0.18791101726466675
+   }
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "norad": 46469,
+   "object": "HY-2C",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 5.7,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.6643175539735852,
+   "p95_3dKm": 1.3573952753034102,
+   "medianAbsKm": {
+    "R": 0.15603460021879953,
+    "T": 0.5142349571736351,
+    "N": 0.2718409274172806
+   }
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "norad": 46469,
+   "object": "HY-2C",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 5.7,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.8739811331585332,
+   "p95_3dKm": 1.6366222751965545,
+   "medianAbsKm": {
+    "R": 0.19838121119948732,
+    "T": 0.725506008557066,
+    "N": 0.3790269150288248
+   }
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1,2: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (3 candidates)"
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1,2: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (3 candidates)"
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1,2: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (3 candidates)"
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 11.69,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.3887359658360229,
+   "p95_3dKm": 0.746685829686767,
+   "medianAbsKm": {
+    "R": 0.06804591974909341,
+    "T": 0.34991600353402386,
+    "N": 0.13249129642217894
+   }
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 11.69,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.41041334267641266,
+   "p95_3dKm": 0.7828771331342659,
+   "medianAbsKm": {
+    "R": 0.06536069036399852,
+    "T": 0.35736877437542547,
+    "N": 0.16007558715177
+   }
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 11.69,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.4172255153793817,
+   "p95_3dKm": 0.8705148190235577,
+   "medianAbsKm": {
+    "R": 0.07896397070280857,
+    "T": 0.3334508690556452,
+    "N": 0.177921971786793
+   }
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 2.9577087667636928,
+   "p95_3dKm": 5.021021547853075,
+   "medianAbsKm": {
+    "R": 0.8575701549169037,
+    "T": 2.6601964596433225,
+    "N": 0.5406674288271909
+   }
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 2.9739209630867505,
+   "p95_3dKm": 5.164236408501312,
+   "medianAbsKm": {
+    "R": 0.8511123238538951,
+    "T": 2.683313037138725,
+    "N": 0.5330715774964441
+   }
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 3.113666844979959,
+   "p95_3dKm": 5.311740069793463,
+   "medianAbsKm": {
+    "R": 0.8662211229117112,
+    "T": 2.8429665451242334,
+    "N": 0.508174885927489
+   }
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 21.05,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.3977954933144472,
+   "p95_3dKm": 0.7587609443719865,
+   "medianAbsKm": {
+    "R": 0.06902013188117287,
+    "T": 0.35666844037151857,
+    "N": 0.12219507122143095
+   }
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 21.05,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.4402716039605644,
+   "p95_3dKm": 0.7629447478332488,
+   "medianAbsKm": {
+    "R": 0.07062675339358168,
+    "T": 0.3523655050668717,
+    "N": 0.17516291642356646
+   }
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 21.05,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.4764131312775196,
+   "p95_3dKm": 0.8828563438680753,
+   "medianAbsKm": {
+    "R": 0.09207284300070408,
+    "T": 0.3340683868158044,
+    "N": 0.23189836863634972
+   }
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 1.4763210721988393,
+   "p95_3dKm": 2.4256420077024954,
+   "medianAbsKm": {
+    "R": 0.39051801544222864,
+    "T": 1.353922366205762,
+    "N": 0.17443606752517007
+   }
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 1.5209649875933728,
+   "p95_3dKm": 2.519233212052309,
+   "medianAbsKm": {
+    "R": 0.39013453374458845,
+    "T": 1.403390821588574,
+    "N": 0.17703859686738346
+   }
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 1.6340895948171665,
+   "p95_3dKm": 2.6314396395802473,
+   "medianAbsKm": {
+    "R": 0.3909967810251791,
+    "T": 1.5235846189710807,
+    "N": 0.1861027586717817
+   }
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 13.62,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.3880480086917759,
+   "p95_3dKm": 0.8201208528986346,
+   "medianAbsKm": {
+    "R": 0.0697147995587721,
+    "T": 0.36203981386894796,
+    "N": 0.08072966136596724
+   }
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 13.62,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.4138031924861437,
+   "p95_3dKm": 0.7962995295992706,
+   "medianAbsKm": {
+    "R": 0.0696650153695296,
+    "T": 0.3561145271693961,
+    "N": 0.13852375487690605
+   }
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 13.62,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.49194293808440026,
+   "p95_3dKm": 0.8348643358829954,
+   "medianAbsKm": {
+    "R": 0.08277522816039529,
+    "T": 0.3616561647081054,
+    "N": 0.22079235598006355
+   }
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:arc-too-short:3.88",
+   "refusal": "arc-too-short:3.88: the tracks span less than 24.000000 h"
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:arc-too-short:3.88",
+   "refusal": "arc-too-short:3.88: the tracks span less than 24.000000 h"
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:arc-too-short:3.88",
+   "refusal": "arc-too-short:3.88: the tracks span less than 24.000000 h"
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 157.95,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.8071538319677367,
+   "p95_3dKm": 1.2721950313195738,
+   "medianAbsKm": {
+    "R": 0.21331776891342097,
+    "T": 0.5458996245841479,
+    "N": 0.4810337755626749
+   }
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 157.95,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.8846106755694516,
+   "p95_3dKm": 1.3345699377102844,
+   "medianAbsKm": {
+    "R": 0.2486374476324764,
+    "T": 0.5844237112609532,
+    "N": 0.5093500319990263
+   }
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "norad": 46984,
+   "object": "Sentinel-6A",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 157.95,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.944220911536383,
+   "p95_3dKm": 1.5136102207759987,
+   "medianAbsKm": {
+    "R": 0.29198853827400173,
+    "T": 0.6519542215863687,
+    "N": 0.5643931886158137
+   }
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no start converged: 0 starts converged (0 unbound, 0 with perigee below the surface); least far-sight miss 276 arcsec"
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no start converged: 0 starts converged (0 unbound, 0 with perigee below the surface); least far-sight miss 276 arcsec"
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no start converged: 0 starts converged (0 unbound, 0 with perigee below the surface); least far-sight miss 276 arcsec"
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 7.16,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.41758933945438553,
+   "p95_3dKm": 1.242566531203584,
+   "medianAbsKm": {
+    "R": 0.07982477758658965,
+    "T": 0.3749836854763329,
+    "N": 0.10068879618980925
+   }
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 7.16,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.4712573770011889,
+   "p95_3dKm": 1.3081098098933073,
+   "medianAbsKm": {
+    "R": 0.08255843012211438,
+    "T": 0.41832799066279946,
+    "N": 0.12166178319096138
+   }
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 7.16,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.42903469700396135,
+   "p95_3dKm": 1.2159603400091326,
+   "medianAbsKm": {
+    "R": 0.07903915141708823,
+    "T": 0.35514923248900754,
+    "N": 0.15537871431124664
+   }
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 15.214872091547,
+   "p95_3dKm": 19.607810314338572,
+   "medianAbsKm": {
+    "R": 2.5746860909035276,
+    "T": 7.130989351739784,
+    "N": 11.563466257218431
+   }
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 14.770246692637484,
+   "p95_3dKm": 19.261108192734937,
+   "medianAbsKm": {
+    "R": 2.5841981225927824,
+    "T": 7.030484539099703,
+    "N": 11.122756227727898
+   }
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 14.247796686349648,
+   "p95_3dKm": 18.878223215596144,
+   "medianAbsKm": {
+    "R": 2.5848100380336554,
+    "T": 6.8900012011171725,
+    "N": 10.665898120248784
+   }
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 3.99,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.46053644685078077,
+   "p95_3dKm": 1.3371749782183748,
+   "medianAbsKm": {
+    "R": 0.08037308693300527,
+    "T": 0.418459087468663,
+    "N": 0.10326924750486995
+   }
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 3.99,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.5125924767256012,
+   "p95_3dKm": 1.3678559648269069,
+   "medianAbsKm": {
+    "R": 0.0757597391053546,
+    "T": 0.46543051303816096,
+    "N": 0.10136917594748708
+   }
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "norad": 54754,
+   "object": "SWOT",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 3.99,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.41693105291069377,
+   "p95_3dKm": 1.176439665237632,
+   "medianAbsKm": {
+    "R": 0.07121988031301188,
+    "T": 0.37550214685015126,
+    "N": 0.11829128699113989
+   }
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: Gooding's iteration over 2 crossings: no bound orbit above the surface: 6 starts converged (0 unbound, 6 with perigee below the surface); least middle-sight miss 7.59e-08 arcsec"
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: Gooding's iteration over 2 crossings: no bound orbit above the surface: 6 starts converged (0 unbound, 6 with perigee below the surface); least middle-sight miss 7.59e-08 arcsec"
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: Gooding's iteration over 2 crossings: no bound orbit above the surface: 6 starts converged (0 unbound, 6 with perigee below the surface); least middle-sight miss 7.59e-08 arcsec"
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 11.69,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.3862736954633863,
+   "p95_3dKm": 0.751032966860016,
+   "medianAbsKm": {
+    "R": 0.06852081007125102,
+    "T": 0.3479820321079472,
+    "N": 0.12901560916761337
+   }
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 11.69,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.39686997320105544,
+   "p95_3dKm": 0.7863055395476599,
+   "medianAbsKm": {
+    "R": 0.06641289575371877,
+    "T": 0.352213341111969,
+    "N": 0.1560781282582891
+   }
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 11.69,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.4178238623830367,
+   "p95_3dKm": 0.8815217003243938,
+   "medianAbsKm": {
+    "R": 0.0758630827635324,
+    "T": 0.32170317447697244,
+    "N": 0.1741173113033777
+   }
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 2.587840575033669,
+   "p95_3dKm": 4.702087898911558,
+   "medianAbsKm": {
+    "R": 0.9585356422329947,
+    "T": 2.0264539710212612,
+    "N": 0.8738431577772869
+   }
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 2.6928546101090176,
+   "p95_3dKm": 4.827762664725147,
+   "medianAbsKm": {
+    "R": 0.9340053129992083,
+    "T": 2.1354807888004554,
+    "N": 0.8921205093788493
+   }
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 2.769200282475599,
+   "p95_3dKm": 4.957768688169229,
+   "medianAbsKm": {
+    "R": 0.9460756578768847,
+    "T": 2.197584746042318,
+    "N": 0.9062184868267136
+   }
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 21.05,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.39902820549470597,
+   "p95_3dKm": 0.7579269931140505,
+   "medianAbsKm": {
+    "R": 0.0685459990010355,
+    "T": 0.3668845812941056,
+    "N": 0.11870752440753166
+   }
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 21.05,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.44079000135703883,
+   "p95_3dKm": 0.8056607875858036,
+   "medianAbsKm": {
+    "R": 0.06805080866761468,
+    "T": 0.3581106671953619,
+    "N": 0.17012588452428523
+   }
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 21.05,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.503526046246372,
+   "p95_3dKm": 0.8836508006832581,
+   "medianAbsKm": {
+    "R": 0.08781194065605864,
+    "T": 0.36005265323819635,
+    "N": 0.2312173984596716
+   }
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.956170442603241,
+   "p95_3dKm": 1.3096319939351408,
+   "medianAbsKm": {
+    "R": 0.1890720516259966,
+    "T": 0.7294875315009717,
+    "N": 0.46442480669338154
+   }
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 1.0140606422288787,
+   "p95_3dKm": 1.3784700485150394,
+   "medianAbsKm": {
+    "R": 0.18636218246487385,
+    "T": 0.7823324164750325,
+    "N": 0.46727889912683307
+   }
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "truthProducts": 2,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 1.0976589023529797,
+   "p95_3dKm": 1.4656479487524607,
+   "medianAbsKm": {
+    "R": 0.18816353447078016,
+    "T": 0.8746776144684598,
+    "N": 0.489116066687729
+   }
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 13.62,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.3855623016253875,
+   "p95_3dKm": 0.8124767222101668,
+   "medianAbsKm": {
+    "R": 0.06999691479254307,
+    "T": 0.35690170242298436,
+    "N": 0.08213170699426013
+   }
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 13.62,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.41719115319921,
+   "p95_3dKm": 0.7869594421555999,
+   "medianAbsKm": {
+    "R": 0.07029270062597996,
+    "T": 0.35284115257908755,
+    "N": 0.14047838654783898
+   }
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 13.62,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.49015048486973556,
+   "p95_3dKm": 0.8368315335929856,
+   "medianAbsKm": {
+    "R": 0.08177590501219256,
+    "T": 0.35459796323301673,
+    "N": 0.22583736624378592
+   }
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 1,
+   "status": "failure:arc-too-short:3.89",
+   "refusal": "arc-too-short:3.89: the tracks span less than 24.000000 h"
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 2,
+   "status": "failure:arc-too-short:3.89",
+   "refusal": "arc-too-short:3.89: the tracks span less than 24.000000 h"
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "AP",
+   "leadDay": 3,
+   "status": "failure:arc-too-short:3.89",
+   "refusal": "arc-too-short:3.89: the tracks span less than 24.000000 h"
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 1,
+   "setAgeHours": 137.34,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.7343358698724936,
+   "p95_3dKm": 1.210226066945131,
+   "medianAbsKm": {
+    "R": 0.1864710108347699,
+    "T": 0.5248845377724722,
+    "N": 0.42827145246804627
+   }
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 2,
+   "setAgeHours": 137.34,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.8028736305836848,
+   "p95_3dKm": 1.2581153832039176,
+   "medianAbsKm": {
+    "R": 0.21826241299567578,
+    "T": 0.5447175755002268,
+    "N": 0.45572442780275924
+   }
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "norad": 66514,
+   "object": "Sentinel-6B",
+   "build": "70eb486e3358a2f47460c3af954b2da166131a156a1afd2c7117e881f5efe611",
+   "inputClass": "observations/CC-BY-SA-4.0",
+   "arm": "B",
+   "leadDay": 3,
+   "setAgeHours": 137.34,
+   "status": "scored",
+   "samples": 1440,
+   "median3dKm": 0.8637872729798284,
+   "p95_3dKm": 1.4295237617288192,
+   "medianAbsKm": {
+    "R": 0.25898559181301795,
+    "T": 0.6056587004450802,
+    "N": 0.5120847448539256
+   }
+  }
+ ],
+ "pooled": {
+  "B|41240|1": {
+   "samples": 2880,
+   "median3dKm": 0.32989506787761447,
+   "p95_3dKm": 0.84716291279945
+  },
+  "B|all|1": {
+   "samples": 20160,
+   "median3dKm": 0.4779752709053319,
+   "p95_3dKm": 1.97423737518669
+  },
+  "B|41240|2": {
+   "samples": 2880,
+   "median3dKm": 0.39653055778651425,
+   "p95_3dKm": 0.8366266937985694
+  },
+  "B|all|2": {
+   "samples": 20160,
+   "median3dKm": 0.5121395517870213,
+   "p95_3dKm": 4.185047987758994
+  },
+  "B|41240|3": {
+   "samples": 2880,
+   "median3dKm": 0.4713239473130364,
+   "p95_3dKm": 0.8070663153739676
+  },
+  "B|all|3": {
+   "samples": 20160,
+   "median3dKm": 0.5853154944226202,
+   "p95_3dKm": 6.440513250689316
+  },
+  "B|43437|1": {
+   "samples": 1440,
+   "median3dKm": 2.335408146487066,
+   "p95_3dKm": 4.182988870225734
+  },
+  "B|43437|2": {
+   "samples": 1440,
+   "median3dKm": 4.559581680667653,
+   "p95_3dKm": 6.33824229535726
+  },
+  "B|43437|3": {
+   "samples": 1440,
+   "median3dKm": 6.837631832712699,
+   "p95_3dKm": 8.621191144009224
+  },
+  "AP|46469|1": {
+   "samples": 1440,
+   "median3dKm": 7.871984193059502,
+   "p95_3dKm": 14.326315293589726
+  },
+  "AP|all|1": {
+   "samples": 8640,
+   "median3dKm": 2.397738278193596,
+   "p95_3dKm": 16.9833170601925
+  },
+  "AP|46469|2": {
+   "samples": 1440,
+   "median3dKm": 6.684450294752093,
+   "p95_3dKm": 12.865994072249444
+  },
+  "AP|all|2": {
+   "samples": 8640,
+   "median3dKm": 2.6158528390254587,
+   "p95_3dKm": 16.361130226766406
+  },
+  "AP|46469|3": {
+   "samples": 1440,
+   "median3dKm": 5.536713371555012,
+   "p95_3dKm": 11.376427634165278
+  },
+  "AP|all|3": {
+   "samples": 8640,
+   "median3dKm": 2.7975002873669914,
+   "p95_3dKm": 15.715266146351892
+  },
+  "B|46469|1": {
+   "samples": 1440,
+   "median3dKm": 0.5407849646781806,
+   "p95_3dKm": 1.027386665003907
+  },
+  "B|46469|2": {
+   "samples": 1440,
+   "median3dKm": 0.6643175539735852,
+   "p95_3dKm": 1.3573952753034102
+  },
+  "B|46469|3": {
+   "samples": 1440,
+   "median3dKm": 0.8739811331585332,
+   "p95_3dKm": 1.6366222751965545
+  },
+  "B|46984|1": {
+   "samples": 5760,
+   "median3dKm": 0.47593519581608523,
+   "p95_3dKm": 1.0704854509317605
+  },
+  "B|46984|2": {
+   "samples": 5760,
+   "median3dKm": 0.48319310893857936,
+   "p95_3dKm": 1.1322174627343893
+  },
+  "B|46984|3": {
+   "samples": 5760,
+   "median3dKm": 0.5758803117251043,
+   "p95_3dKm": 1.2460583665228135
+  },
+  "AP|46984|1": {
+   "samples": 2880,
+   "median3dKm": 1.926726134859957,
+   "p95_3dKm": 4.94552312384736
+  },
+  "AP|46984|2": {
+   "samples": 2880,
+   "median3dKm": 1.983614888545259,
+   "p95_3dKm": 5.091537488136019
+  },
+  "AP|46984|3": {
+   "samples": 2880,
+   "median3dKm": 2.0956996500020777,
+   "p95_3dKm": 5.227392426380869
+  },
+  "B|54754|1": {
+   "samples": 2880,
+   "median3dKm": 0.4332918919062177,
+   "p95_3dKm": 1.2854369543119506
+  },
+  "B|54754|2": {
+   "samples": 2880,
+   "median3dKm": 0.4839254910557475,
+   "p95_3dKm": 1.3482158214503526
+  },
+  "B|54754|3": {
+   "samples": 2880,
+   "median3dKm": 0.4228510482426755,
+   "p95_3dKm": 1.196732127740904
+  },
+  "AP|54754|1": {
+   "samples": 1440,
+   "median3dKm": 15.214872091547,
+   "p95_3dKm": 19.607810314338572
+  },
+  "AP|54754|2": {
+   "samples": 1440,
+   "median3dKm": 14.770246692637484,
+   "p95_3dKm": 19.261108192734937
+  },
+  "AP|54754|3": {
+   "samples": 1440,
+   "median3dKm": 14.247796686349648,
+   "p95_3dKm": 18.878223215596144
+  },
+  "B|66514|1": {
+   "samples": 5760,
+   "median3dKm": 0.4654571736144645,
+   "p95_3dKm": 1.008957868299536
+  },
+  "B|66514|2": {
+   "samples": 5760,
+   "median3dKm": 0.47810460341209693,
+   "p95_3dKm": 1.05953085968431
+  },
+  "B|66514|3": {
+   "samples": 5760,
+   "median3dKm": 0.5704157117721418,
+   "p95_3dKm": 1.1678798657763063
+  },
+  "AP|66514|1": {
+   "samples": 2880,
+   "median3dKm": 1.2496857961254668,
+   "p95_3dKm": 4.620816090272469
+  },
+  "AP|66514|2": {
+   "samples": 2880,
+   "median3dKm": 1.291065338310005,
+   "p95_3dKm": 4.753506525826526
+  },
+  "AP|66514|3": {
+   "samples": 2880,
+   "median3dKm": 1.3549689605343698,
+   "p95_3dKm": 4.877106642331927
+  }
+ },
+ "common": {
+  "1": {
+   "cells": 6,
+   "arcs": [
+    "46469-2026-09-23-2026-09-24",
+    "46984-2026-09-13-2026-09-16",
+    "46984-2026-09-21-2026-09-26",
+    "54754-2026-09-21-2026-09-22",
+    "66514-2026-09-13-2026-09-16",
+    "66514-2026-09-21-2026-09-26"
+   ],
+   "apSamples": 8640,
+   "bSamples": 8640,
+   "apMedian3dKm": 2.397738278193596,
+   "bMedian3dKm": 0.4227199900316023,
+   "apP95_3dKm": 16.9833170601925,
+   "bP95_3dKm": 1.027122443241798,
+   "ratio": 5.672166764610168
+  },
+  "2": {
+   "cells": 6,
+   "arcs": [
+    "46469-2026-09-23-2026-09-24",
+    "46984-2026-09-13-2026-09-16",
+    "46984-2026-09-21-2026-09-26",
+    "54754-2026-09-21-2026-09-22",
+    "66514-2026-09-13-2026-09-16",
+    "66514-2026-09-21-2026-09-26"
+   ],
+   "apSamples": 8640,
+   "bSamples": 8640,
+   "apMedian3dKm": 2.6158528390254587,
+   "bMedian3dKm": 0.45612084380860374,
+   "apP95_3dKm": 16.361130226766406,
+   "bP95_3dKm": 1.202767211366461,
+   "ratio": 5.734999561044214
+  },
+  "3": {
+   "cells": 6,
+   "arcs": [
+    "46469-2026-09-23-2026-09-24",
+    "46984-2026-09-13-2026-09-16",
+    "46984-2026-09-21-2026-09-26",
+    "54754-2026-09-21-2026-09-22",
+    "66514-2026-09-13-2026-09-16",
+    "66514-2026-09-21-2026-09-26"
+   ],
+   "apSamples": 8640,
+   "bSamples": 8640,
+   "apMedian3dKm": 2.7975002873669914,
+   "bMedian3dKm": 0.5207273037023084,
+   "apP95_3dKm": 15.715266146351892,
+   "bP95_3dKm": 1.188273421754614,
+   "ratio": 5.372294226703884
+  }
+ },
+ "stationNights": [
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "session": "2026-09-12",
+   "station": 4,
+   "rows": 1,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 1,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "optical-bench1",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "session": "2026-09-13",
+   "station": 11,
+   "rows": 3,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 3,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "session": "2026-09-22",
+   "station": 11,
+   "rows": 105,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 105,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "session": "2026-09-23",
+   "station": 11,
+   "rows": 137,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 137,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "session": "2026-09-25",
+   "station": 11,
+   "rows": 111,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 111,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "session": "2026-09-26",
+   "station": 7,
+   "rows": 102,
+   "epochRefersTo": [
+    "exposure-start"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 102,
+   "refusedReasons": {
+    "exposure-start": 102
+   },
+   "unusable": "every row refused: {\"exposure-start\":102}",
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "session": "2026-09-26",
+   "station": 11,
+   "rows": 141,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 141,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "session": "2026-09-23",
+   "station": 11,
+   "rows": 720,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 720,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "session": "2026-09-24",
+   "station": 11,
+   "rows": 22,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 22,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "session": "2026-09-03",
+   "station": 12,
+   "rows": 276,
+   "epochRefersTo": [
+    "frame-arrival"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 276,
+   "refusedReasons": {
+    "epoch": 276
+   },
+   "unusable": "every row refused: {\"epoch\":276}",
+   "site": "optical-bench2",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ]
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "session": "2026-09-04",
+   "station": 11,
+   "rows": 205,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 205,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "optical-bench2",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "session": "2026-09-05",
+   "station": 11,
+   "rows": 776,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 776,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "optical-bench2",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ]
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "session": "2026-09-06",
+   "station": 11,
+   "rows": 74,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 74,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "session": "2026-09-13",
+   "station": 7,
+   "rows": 199,
+   "epochRefersTo": [
+    "exposure-start"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 199,
+   "refusedReasons": {
+    "exposure-start": 199
+   },
+   "unusable": "every row refused: {\"exposure-start\":199}",
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "session": "2026-09-13",
+   "station": 11,
+   "rows": 490,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 490,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "session": "2026-09-14",
+   "station": 11,
+   "rows": 324,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 324,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "session": "2026-09-15",
+   "station": 11,
+   "rows": 445,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 445,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "session": "2026-09-16",
+   "station": 11,
+   "rows": 232,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 232,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "session": "2026-09-21",
+   "station": 11,
+   "rows": 401,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 401,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "session": "2026-09-22",
+   "station": 11,
+   "rows": 875,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 875,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "session": "2026-09-23",
+   "station": 7,
+   "rows": 152,
+   "epochRefersTo": [
+    "exposure-start"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 152,
+   "refusedReasons": {
+    "exposure-start": 152
+   },
+   "unusable": "every row refused: {\"exposure-start\":152}",
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "session": "2026-09-23",
+   "station": 11,
+   "rows": 476,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 476,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "session": "2026-09-24",
+   "station": 11,
+   "rows": 529,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 529,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "session": "2026-09-25",
+   "station": 11,
+   "rows": 796,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 4,
+   "observations": 796,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "session": "2026-09-26",
+   "station": 11,
+   "rows": 315,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 315,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "session": "2026-10-02",
+   "station": 11,
+   "rows": 642,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 642,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "session": "2026-10-03",
+   "station": 7,
+   "rows": 40,
+   "epochRefersTo": [
+    "exposure-start"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 40,
+   "refusedReasons": {
+    "exposure-start": 40
+   },
+   "unusable": "every row refused: {\"exposure-start\":40}",
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "session": "2026-08-31",
+   "station": 11,
+   "rows": 689,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 689,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "optical-bench1",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "session": "2026-09-01",
+   "station": 11,
+   "rows": 104,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 104,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "session": "2026-09-21",
+   "station": 11,
+   "rows": 83,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 83,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "session": "2026-09-22",
+   "station": 11,
+   "rows": 287,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 287,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "session": "2026-09-03",
+   "station": 12,
+   "rows": 522,
+   "epochRefersTo": [
+    "frame-arrival"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 522,
+   "refusedReasons": {
+    "epoch": 522
+   },
+   "unusable": "every row refused: {\"epoch\":522}",
+   "site": "optical-bench2",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ]
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "session": "2026-09-04",
+   "station": 11,
+   "rows": 111,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 111,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "optical-bench2",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "session": "2026-09-05",
+   "station": 11,
+   "rows": 820,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 820,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "optical-bench2",
+   "siteLatLon": [
+    36.97,
+    22.15
+   ]
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "session": "2026-09-06",
+   "station": 11,
+   "rows": 170,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 170,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "session": "2026-09-13",
+   "station": 7,
+   "rows": 190,
+   "epochRefersTo": [
+    "exposure-start"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 190,
+   "refusedReasons": {
+    "exposure-start": 190
+   },
+   "unusable": "every row refused: {\"exposure-start\":190}",
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "session": "2026-09-13",
+   "station": 11,
+   "rows": 545,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 545,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "session": "2026-09-14",
+   "station": 11,
+   "rows": 413,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 413,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "session": "2026-09-15",
+   "station": 11,
+   "rows": 392,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 392,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "session": "2026-09-16",
+   "station": 11,
+   "rows": 242,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 242,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "session": "2026-09-21",
+   "station": 11,
+   "rows": 423,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 1,
+   "observations": 423,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "session": "2026-09-22",
+   "station": 11,
+   "rows": 714,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 714,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "session": "2026-09-23",
+   "station": 7,
+   "rows": 209,
+   "epochRefersTo": [
+    "exposure-start"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 209,
+   "refusedReasons": {
+    "exposure-start": 209
+   },
+   "unusable": "every row refused: {\"exposure-start\":209}",
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "session": "2026-09-23",
+   "station": 11,
+   "rows": 380,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 380,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "session": "2026-09-24",
+   "station": 11,
+   "rows": 521,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 521,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "session": "2026-09-25",
+   "station": 11,
+   "rows": 945,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 945,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "session": "2026-09-26",
+   "station": 11,
+   "rows": 168,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 2,
+   "observations": 168,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ]
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "session": "2026-10-02",
+   "station": 11,
+   "rows": 655,
+   "epochRefersTo": [
+    "exposure-mid"
+   ],
+   "tracks": 3,
+   "observations": 655,
+   "refused": 0,
+   "refusedReasons": {},
+   "site": "dwingeloo",
+   "siteLatLon": [
+    52.83,
+    6.38
+   ],
+   "stationRecordForArc": true
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "session": "2026-10-03",
+   "station": 7,
+   "rows": 126,
+   "epochRefersTo": [
+    "exposure-start"
+   ],
+   "tracks": 0,
+   "observations": 0,
+   "refused": 126,
+   "refusedReasons": {
+    "exposure-start": 126
+   },
+   "unusable": "every row refused: {\"exposure-start\":126}",
+   "site": "Drachten",
+   "siteLatLon": [
+    53.11,
+    6.11
+   ]
+  }
+ ],
+ "fits": [
+  {
+   "arc": "41240-2026-09-12-2026-09-13",
+   "status": "failure:too-few-observations",
+   "refusal": "initial_orbit: too-few-observations: no crossing keeps 3 or more RA/Dec observations at distinct epochs; got 3 observations",
+   "rows": 4,
+   "tracks": 3,
+   "observations": 4,
+   "fitHours": 24.32907102777778,
+   "fitEnd": "2026-09-13T22:49:59.299713000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:51.421Z",
+   "finished": "2026-11-04T22:08:52.035Z",
+   "initialOrbit": {
+    "epoch": null,
+    "method": null,
+    "refusal": "too-few-observations: no crossing keeps 3 or more RA/Dec observations at distinct epochs; got 3 observations",
+    "residualRmsArcsec": null
+   },
+   "stageReached": 0,
+   "estimate": null,
+   "ap": null,
+   "stages": []
+  },
+  {
+   "arc": "41240-2026-09-22-2026-09-23",
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (1 candidates)",
+   "rows": 242,
+   "tracks": 5,
+   "observations": 242,
+   "fitHours": 28.119488717777777,
+   "fitEnd": "2026-09-24T01:18:56.245402000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:45.429Z",
+   "finished": "2026-11-04T22:08:49.387Z",
+   "initialOrbit": {
+    "epoch": "2026-09-22T21:12:29.731259Z",
+    "method": "Gooding angles-only initial orbit (Gooding 1997) on Izzo's Lambert solver",
+    "refusal": null,
+    "residualRmsArcsec": 2.985740166405591e-8
+   },
+   "stageReached": 1,
+   "estimate": null,
+   "ap": null,
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "1 of 2",
+     "tracks": 3,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 4.040609044025341,
+       "rounds": 13
+      }
+     ],
+     "selectedWeightedRms": null,
+     "selectRefusal": "no-converged-revolution-count: stage nights 1: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (1 candidates)"
+    }
+   ]
+  },
+  {
+   "arc": "43437-2026-09-25-2026-09-26",
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no bound orbit above the surface: 11 starts converged (10 unbound, 1 with perigee below the surface); least far-sight miss 0.000581 arcsec",
+   "rows": 354,
+   "tracks": 2,
+   "observations": 252,
+   "fitHours": 23.5787432575,
+   "fitEnd": "2026-09-26T19:41:01.642807000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:49.414Z",
+   "finished": "2026-11-04T22:08:51.501Z",
+   "initialOrbit": {
+    "epoch": null,
+    "method": null,
+    "refusal": "no-initial-orbit: The far-sight iteration over 2 crossings: no bound orbit above the surface: 11 starts converged (10 unbound, 1 with perigee below the surface); least far-sight miss 0.000581 arcsec",
+    "residualRmsArcsec": null
+   },
+   "stageReached": 0,
+   "estimate": null,
+   "ap": null,
+   "stages": []
+  },
+  {
+   "arc": "46469-2026-09-23-2026-09-24",
+   "status": "fitted",
+   "refusal": null,
+   "rows": 742,
+   "tracks": 2,
+   "observations": 742,
+   "fitHours": 27.91346569027778,
+   "fitEnd": "2026-09-25T04:05:05.304435000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:47.402Z",
+   "finished": "2026-11-04T22:09:07.982Z",
+   "initialOrbit": {
+    "epoch": "2026-09-25T04:04:55.145798Z",
+    "method": "Angles-only initial orbit: one crossing's short arc (Izzo's Lambert solver, two-body + J2) to the other night's sight",
+    "refusal": null,
+    "residualRmsArcsec": 0.12274567859204676
+   },
+   "stageReached": 1,
+   "estimate": {
+    "epoch": "2026-09-25T04:04:55.145797968Z",
+    "observationsUsed": 741,
+    "residualRmsArcsec": 22.044739888279835,
+    "weightedRms": 0.8763264558669681,
+    "converged": true
+   },
+   "ap": {
+    "epoch": "2026-09-24T04:05:05.304192",
+    "fitRmsKm": 0.015719812964794324,
+    "fitStates": 1441,
+    "converged": true,
+    "bterm": 0.009931066044813053,
+    "pvnSourceKind": "Observation"
+   },
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "1,2 of 2",
+     "tracks": 2,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": -1,
+       "outcome": "propagator/ffm reentry: reentry: the trajectory descends below 100 km geodetic altitude (98.6 km) at 2026-09-25T03:31:16.281635463 UTC; FFM ends it there.",
+       "weightedRms": null,
+       "rounds": 0
+      },
+      {
+       "candidate": 2,
+       "revolutionOffset": 0,
+       "outcome": "converged",
+       "weightedRms": 1.7665357404379283,
+       "rounds": 11
+      },
+      {
+       "candidate": 3,
+       "revolutionOffset": 1,
+       "outcome": "converged",
+       "weightedRms": 0.8763264558669681,
+       "rounds": 10
+      }
+     ],
+     "selectedWeightedRms": 0.8763264558669681,
+     "selectRefusal": null
+    }
+   ]
+  },
+  {
+   "arc": "46984-2026-09-03-2026-09-06",
+   "status": "failure:no-converged-revolution-count",
+   "refusal": "no-converged-revolution-count: stage nights 1,2: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (3 candidates)",
+   "rows": 1331,
+   "tracks": 4,
+   "observations": 1055,
+   "fitHours": 48.77964808694445,
+   "fitEnd": "2026-09-07T02:00:28.057958000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:33.379Z",
+   "finished": "2026-11-04T22:09:02.760Z",
+   "initialOrbit": {
+    "epoch": "2026-09-05T01:13:52.330518Z",
+    "method": "Angles-only initial orbit: one crossing's short arc (Izzo's Lambert solver, two-body + J2) to the other night's sight",
+    "refusal": null,
+    "residualRmsArcsec": 0.14560213363431854
+   },
+   "stageReached": 1,
+   "estimate": null,
+   "ap": null,
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "1,2 of 3",
+     "tracks": 3,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": -1,
+       "outcome": "converged",
+       "weightedRms": 4.172242388453381,
+       "rounds": 11
+      },
+      {
+       "candidate": 2,
+       "revolutionOffset": 0,
+       "outcome": "converged",
+       "weightedRms": 3.7134158416646867,
+       "rounds": 10
+      },
+      {
+       "candidate": 3,
+       "revolutionOffset": 1,
+       "outcome": "converged",
+       "weightedRms": 4.7410776614399595,
+       "rounds": 11
+      }
+     ],
+     "selectedWeightedRms": null,
+     "selectRefusal": "no-converged-revolution-count: stage nights 1,2: no candidate kept its revolution count and converged with WEIGHTED_RMS at most 2 (3 candidates)"
+    }
+   ]
+  },
+  {
+   "arc": "46984-2026-09-13-2026-09-16",
+   "status": "fitted",
+   "refusal": null,
+   "rows": 1690,
+   "tracks": 7,
+   "observations": 1491,
+   "fitHours": 71.20519882583334,
+   "fitEnd": "2026-09-16T23:58:59.584169000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:37.378Z",
+   "finished": "2026-11-04T22:10:05.933Z",
+   "initialOrbit": {
+    "epoch": "2026-09-14T02:42:50.430677Z",
+    "method": "Gooding angles-only initial orbit (Gooding 1997) on Izzo's Lambert solver",
+    "refusal": null,
+    "residualRmsArcsec": 14.929216358337028
+   },
+   "stageReached": 4,
+   "estimate": {
+    "epoch": "2026-09-14T02:42:50.430676937Z",
+    "observationsUsed": 1487,
+    "residualRmsArcsec": 29.926175708375276,
+    "weightedRms": 1.2282593910314128,
+    "converged": true
+   },
+   "ap": {
+    "epoch": "2026-09-15T23:58:59.583936",
+    "fitRmsKm": 0.012724119091435046,
+    "fitStates": 1441,
+    "converged": true,
+    "bterm": 0.009949873353703714,
+    "pvnSourceKind": "Observation"
+   },
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "1 of 4",
+     "tracks": 3,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 0.7742483217386636,
+       "rounds": 7
+      }
+     ],
+     "selectedWeightedRms": 0.7742483217386636,
+     "selectRefusal": null
+    },
+    {
+     "stage": 2,
+     "nights": "1,2 of 4",
+     "tracks": 4,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": -1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      },
+      {
+       "candidate": 2,
+       "revolutionOffset": 0,
+       "outcome": "converged",
+       "weightedRms": 0.8066141521591793,
+       "rounds": 8
+      },
+      {
+       "candidate": 3,
+       "revolutionOffset": 1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      }
+     ],
+     "selectedWeightedRms": 0.8066141521591793,
+     "selectRefusal": null
+    },
+    {
+     "stage": 3,
+     "nights": "1,2,3 of 4",
+     "tracks": 6,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.1611943923948667,
+       "rounds": 12
+      }
+     ],
+     "selectedWeightedRms": 1.1611943923948667,
+     "selectRefusal": null
+    },
+    {
+     "stage": 4,
+     "nights": "1,2,3,4 of 4",
+     "tracks": 7,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.2282593910314128,
+       "rounds": 10
+      }
+     ],
+     "selectedWeightedRms": 1.2282593910314128,
+     "selectRefusal": null
+    }
+   ]
+  },
+  {
+   "arc": "46984-2026-09-21-2026-09-26",
+   "status": "fitted",
+   "refusal": null,
+   "rows": 3544,
+   "tracks": 16,
+   "observations": 3392,
+   "fitHours": 118.03159878611112,
+   "fitEnd": "2026-09-26T23:53:46.246880000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:29.370Z",
+   "finished": "2026-11-04T22:11:46.523Z",
+   "initialOrbit": {
+    "epoch": "2026-09-22T22:22:58.985950Z",
+    "method": "Gooding angles-only initial orbit (Gooding 1997) on Izzo's Lambert solver",
+    "refusal": null,
+    "residualRmsArcsec": 22.16284333814978
+   },
+   "stageReached": 6,
+   "estimate": {
+    "epoch": "2026-09-22T22:22:58.985949993Z",
+    "observationsUsed": 3386,
+    "residualRmsArcsec": 26.587204752949667,
+    "weightedRms": 1.142383937640646,
+    "converged": true
+   },
+   "ap": {
+    "epoch": "2026-09-25T23:53:46.246560",
+    "fitRmsKm": 0.012044547024412409,
+    "fitStates": 1441,
+    "converged": true,
+    "bterm": 0.009965224397167924,
+    "pvnSourceKind": "Observation"
+   },
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "2 of 6",
+     "tracks": 2,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.1030348277836783,
+       "rounds": 8
+      }
+     ],
+     "selectedWeightedRms": 1.1030348277836783,
+     "selectRefusal": null
+    },
+    {
+     "stage": 2,
+     "nights": "1,2 of 6",
+     "tracks": 4,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": -1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      },
+      {
+       "candidate": 2,
+       "revolutionOffset": 0,
+       "outcome": "converged",
+       "weightedRms": 1.1159780914659168,
+       "rounds": 6
+      },
+      {
+       "candidate": 3,
+       "revolutionOffset": 1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      }
+     ],
+     "selectedWeightedRms": 1.1159780914659168,
+     "selectRefusal": null
+    },
+    {
+     "stage": 3,
+     "nights": "1,2,3 of 6",
+     "tracks": 7,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.1464908758995978,
+       "rounds": 10
+      }
+     ],
+     "selectedWeightedRms": 1.1464908758995978,
+     "selectRefusal": null
+    },
+    {
+     "stage": 4,
+     "nights": "1,2,3,4 of 6",
+     "tracks": 9,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.1182203621754119,
+       "rounds": 10
+      }
+     ],
+     "selectedWeightedRms": 1.1182203621754119,
+     "selectRefusal": null
+    },
+    {
+     "stage": 5,
+     "nights": "1,2,3,4,5 of 6",
+     "tracks": 13,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.1602584884383849,
+       "rounds": 12
+      }
+     ],
+     "selectedWeightedRms": 1.1602584884383849,
+     "selectRefusal": null
+    },
+    {
+     "stage": 6,
+     "nights": "1,2,3,4,5,6 of 6",
+     "tracks": 16,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.142383937640646,
+       "rounds": 21
+      }
+     ],
+     "selectedWeightedRms": 1.142383937640646,
+     "selectRefusal": null
+    }
+   ]
+  },
+  {
+   "arc": "46984-2026-10-02-2026-10-03",
+   "status": "failure:arc-too-short:3.88",
+   "refusal": "arc-too-short:3.88: the tracks span less than 24.000000 h",
+   "rows": 682,
+   "tracks": 3,
+   "observations": 642,
+   "fitHours": 3.884201114166667,
+   "fitEnd": "2026-10-03T00:13:36.430611000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:41.390Z",
+   "finished": "2026-11-04T22:08:44.153Z",
+   "initialOrbit": {
+    "epoch": "2026-10-02T22:17:20.832699Z",
+    "method": "Gooding angles-only initial orbit (Gooding 1997) on Izzo's Lambert solver",
+    "refusal": null,
+    "residualRmsArcsec": 18.613718558392243
+   },
+   "stageReached": 1,
+   "estimate": null,
+   "ap": null,
+   "stages": [
+    {
+     "stage": 1,
+     "nights": null,
+     "tracks": null,
+     "planRefusal": "arc-too-short:3.88: the tracks span less than 24.000000 h",
+     "candidates": [],
+     "selectedWeightedRms": null,
+     "selectRefusal": null
+    }
+   ]
+  },
+  {
+   "arc": "54754-2026-08-31-2026-09-01",
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: The far-sight iteration over 2 crossings: no start converged: 0 starts converged (0 unbound, 0 with perigee below the surface); least far-sight miss 276 arcsec",
+   "rows": 793,
+   "tracks": 2,
+   "observations": 793,
+   "fitHours": 24.015860964722222,
+   "fitEnd": "2026-09-01T21:15:05.539989000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:53.424Z",
+   "finished": "2026-11-04T22:08:56.313Z",
+   "initialOrbit": {
+    "epoch": null,
+    "method": null,
+    "refusal": "no-initial-orbit: The far-sight iteration over 2 crossings: no start converged: 0 starts converged (0 unbound, 0 with perigee below the surface); least far-sight miss 276 arcsec",
+    "residualRmsArcsec": null
+   },
+   "stageReached": 0,
+   "estimate": null,
+   "ap": null,
+   "stages": []
+  },
+  {
+   "arc": "54754-2026-09-21-2026-09-22",
+   "status": "fitted",
+   "refusal": null,
+   "rows": 370,
+   "tracks": 2,
+   "observations": 370,
+   "fitHours": 24.01927137611111,
+   "fitEnd": "2026-09-23T02:50:26.832634000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:55.416Z",
+   "finished": "2026-11-04T22:09:17.062Z",
+   "initialOrbit": {
+    "epoch": "2026-09-22T02:49:32.817205Z",
+    "method": "Angles-only initial orbit: one crossing's short arc (Izzo's Lambert solver, two-body + J2) to the other night's sight",
+    "refusal": null,
+    "residualRmsArcsec": 0.12925854596525935
+   },
+   "stageReached": 1,
+   "estimate": {
+    "epoch": "2026-09-22T02:49:32.817204952Z",
+    "observationsUsed": 368,
+    "residualRmsArcsec": 26.753526319636705,
+    "weightedRms": 1.3006382889799009,
+    "converged": true
+   },
+   "ap": {
+    "epoch": "2026-09-22T02:50:26.832768",
+    "fitRmsKm": 0.015187257805988206,
+    "fitStates": 1441,
+    "converged": true,
+    "bterm": 0.009749272028141723,
+    "pvnSourceKind": "Observation"
+   },
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "1,2 of 2",
+     "tracks": 2,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": -1,
+       "outcome": "converged",
+       "weightedRms": 3.010012881170155,
+       "rounds": 13
+      },
+      {
+       "candidate": 2,
+       "revolutionOffset": 0,
+       "outcome": "converged",
+       "weightedRms": 1.3006382889799009,
+       "rounds": 12
+      },
+      {
+       "candidate": 3,
+       "revolutionOffset": 1,
+       "outcome": "converged",
+       "weightedRms": 1.2851930130985059,
+       "rounds": 13
+      }
+     ],
+     "selectedWeightedRms": 1.3006382889799009,
+     "selectRefusal": null
+    }
+   ]
+  },
+  {
+   "arc": "66514-2026-09-03-2026-09-06",
+   "status": "failure:no-initial-orbit",
+   "refusal": "initial_orbit: no-initial-orbit: Gooding's iteration over 2 crossings: no bound orbit above the surface: 6 starts converged (0 unbound, 6 with perigee below the surface); least middle-sight miss 7.59e-08 arcsec",
+   "rows": 1623,
+   "tracks": 5,
+   "observations": 1101,
+   "fitHours": 48.779705845833334,
+   "fitEnd": "2026-09-07T02:00:58.490943000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:35.364Z",
+   "finished": "2026-11-04T22:08:37.025Z",
+   "initialOrbit": {
+    "epoch": null,
+    "method": null,
+    "refusal": "no-initial-orbit: Gooding's iteration over 2 crossings: no bound orbit above the surface: 6 starts converged (0 unbound, 6 with perigee below the surface); least middle-sight miss 7.59e-08 arcsec",
+    "residualRmsArcsec": null
+   },
+   "stageReached": 0,
+   "estimate": null,
+   "ap": null,
+   "stages": []
+  },
+  {
+   "arc": "66514-2026-09-13-2026-09-16",
+   "status": "fitted",
+   "refusal": null,
+   "rows": 1782,
+   "tracks": 8,
+   "observations": 1592,
+   "fitHours": 71.20457392333333,
+   "fitEnd": "2026-09-16T23:59:30.618803000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:39.380Z",
+   "finished": "2026-11-04T22:10:14.310Z",
+   "initialOrbit": {
+    "epoch": "2026-09-14T02:43:18.359035Z",
+    "method": "Gooding angles-only initial orbit (Gooding 1997) on Izzo's Lambert solver",
+    "refusal": null,
+    "residualRmsArcsec": 14.001238068405888
+   },
+   "stageReached": 4,
+   "estimate": {
+    "epoch": "2026-09-14T02:43:18.359035015Z",
+    "observationsUsed": 1586,
+    "residualRmsArcsec": 27.448789394050447,
+    "weightedRms": 1.1013902809224396,
+    "converged": true
+   },
+   "ap": {
+    "epoch": "2026-09-15T23:59:30.618816",
+    "fitRmsKm": 0.012725707190489563,
+    "fitStates": 1441,
+    "converged": true,
+    "bterm": 0.009949839659606042,
+    "pvnSourceKind": "Observation"
+   },
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "1 of 4",
+     "tracks": 3,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 0.7188366131992936,
+       "rounds": 8
+      }
+     ],
+     "selectedWeightedRms": 0.7188366131992936,
+     "selectRefusal": null
+    },
+    {
+     "stage": 2,
+     "nights": "1,2 of 4",
+     "tracks": 4,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": -1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      },
+      {
+       "candidate": 2,
+       "revolutionOffset": 0,
+       "outcome": "converged",
+       "weightedRms": 0.7562166787161589,
+       "rounds": 8
+      },
+      {
+       "candidate": 3,
+       "revolutionOffset": 1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      }
+     ],
+     "selectedWeightedRms": 0.7562166787161589,
+     "selectRefusal": null
+    },
+    {
+     "stage": 3,
+     "nights": "1,2,3 of 4",
+     "tracks": 7,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.064486344418072,
+       "rounds": 10
+      }
+     ],
+     "selectedWeightedRms": 1.064486344418072,
+     "selectRefusal": null
+    },
+    {
+     "stage": 4,
+     "nights": "1,2,3,4 of 4",
+     "tracks": 8,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.1013902809224396,
+       "rounds": 10
+      }
+     ],
+     "selectedWeightedRms": 1.1013902809224396,
+     "selectRefusal": null
+    }
+   ]
+  },
+  {
+   "arc": "66514-2026-09-21-2026-09-26",
+   "status": "fitted",
+   "refusal": null,
+   "rows": 3360,
+   "tracks": 12,
+   "observations": 3151,
+   "fitHours": 118.02931779138889,
+   "fitEnd": "2026-09-26T23:54:07.466718000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:31.375Z",
+   "finished": "2026-11-04T22:10:51.343Z",
+   "initialOrbit": {
+    "epoch": "2026-09-22T22:23:29.432030Z",
+    "method": "Gooding angles-only initial orbit (Gooding 1997) on Izzo's Lambert solver",
+    "refusal": null,
+    "residualRmsArcsec": 16.80317394060787
+   },
+   "stageReached": 6,
+   "estimate": {
+    "epoch": "2026-09-22T22:23:29.432029963Z",
+    "observationsUsed": 3149,
+    "residualRmsArcsec": 24.324774127745773,
+    "weightedRms": 1.0477099572976198,
+    "converged": true
+   },
+   "ap": {
+    "epoch": "2026-09-25T23:54:07.466400",
+    "fitRmsKm": 0.012046085677144845,
+    "fitStates": 1441,
+    "converged": true,
+    "bterm": 0.009965217762657212,
+    "pvnSourceKind": "Observation"
+   },
+   "stages": [
+    {
+     "stage": 1,
+     "nights": "2 of 6",
+     "tracks": 3,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.086859015735907,
+       "rounds": 9
+      }
+     ],
+     "selectedWeightedRms": 1.086859015735907,
+     "selectRefusal": null
+    },
+    {
+     "stage": 2,
+     "nights": "1,2 of 6",
+     "tracks": 4,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": -1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      },
+      {
+       "candidate": 2,
+       "revolutionOffset": 0,
+       "outcome": "converged",
+       "weightedRms": 1.0711976912504615,
+       "rounds": 5
+      },
+      {
+       "candidate": 3,
+       "revolutionOffset": 1,
+       "outcome": "no-convergence:30: fit_batch ended MAXIMUM_ITERATIONS after 30 propagation rounds",
+       "weightedRms": null,
+       "rounds": 31
+      }
+     ],
+     "selectedWeightedRms": 1.0711976912504615,
+     "selectRefusal": null
+    },
+    {
+     "stage": 3,
+     "nights": "1,2,3 of 6",
+     "tracks": 6,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.0595676401688625,
+       "rounds": 5
+      }
+     ],
+     "selectedWeightedRms": 1.0595676401688625,
+     "selectRefusal": null
+    },
+    {
+     "stage": 4,
+     "nights": "1,2,3,4 of 6",
+     "tracks": 8,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.028911577482557,
+       "rounds": 10
+      }
+     ],
+     "selectedWeightedRms": 1.028911577482557,
+     "selectRefusal": null
+    },
+    {
+     "stage": 5,
+     "nights": "1,2,3,4,5 of 6",
+     "tracks": 10,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.0493031354292042,
+       "rounds": 11
+      }
+     ],
+     "selectedWeightedRms": 1.0493031354292042,
+     "selectRefusal": null
+    },
+    {
+     "stage": 6,
+     "nights": "1,2,3,4,5,6 of 6",
+     "tracks": 12,
+     "planRefusal": null,
+     "candidates": [
+      {
+       "candidate": 1,
+       "revolutionOffset": null,
+       "outcome": "converged",
+       "weightedRms": 1.0477099572976198,
+       "rounds": 5
+      }
+     ],
+     "selectedWeightedRms": 1.0477099572976198,
+     "selectRefusal": null
+    }
+   ]
+  },
+  {
+   "arc": "66514-2026-10-02-2026-10-03",
+   "status": "failure:arc-too-short:3.89",
+   "refusal": "arc-too-short:3.89: the tracks span less than 24.000000 h",
+   "rows": 781,
+   "tracks": 3,
+   "observations": 655,
+   "fitHours": 3.885175405,
+   "fitEnd": "2026-10-03T00:14:06.864124000Z",
+   "wasm": {
+    "data-source/satnogs-optical-source": "a23705bbdf052fa9a04b0dfd417a4478c78b076177a9ec95733992d715cf30df",
+    "data-source/eop-parser": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1",
+    "analysis/optical-astrometry": "5d7c19752340c7aa2682218727b4a4eaab9b22c098e669680b7ca0d403a26a9f",
+    "analysis/estimation": "b4319ba0cf63e80c23e803dafe9ea8803d966ec7ec80c3fac0031c1b01df4f86",
+    "propagator/ffm": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6",
+    "flows/observation-od": "86681788202dbe4b2786e328274e2c7055a21b21cafbb83bf1a44241a34f0e67",
+    "flows/angles-only-od": "8dceb574b30f97d7770e42c03b5db4e577143ebf35b9d027c08569914b515d36",
+    "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "started": "2026-11-04T22:08:43.391Z",
+   "finished": "2026-11-04T22:08:46.192Z",
+   "initialOrbit": {
+    "epoch": "2026-10-02T22:17:49.765852Z",
+    "method": "Gooding angles-only initial orbit (Gooding 1997) on Izzo's Lambert solver",
+    "refusal": null,
+    "residualRmsArcsec": 28.659880150497564
+   },
+   "stageReached": 1,
+   "estimate": null,
+   "ap": null,
+   "stages": [
+    {
+     "stage": 1,
+     "nights": null,
+     "tracks": null,
+     "planRefusal": "arc-too-short:3.89: the tracks span less than 24.000000 h",
+     "candidates": [],
+     "selectedWeightedRms": null,
+     "selectRefusal": null
+    }
+   ]
+  }
+ ]
+}
