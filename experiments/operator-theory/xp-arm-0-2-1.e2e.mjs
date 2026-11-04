@@ -104,7 +104,7 @@ check(right, `AP names sdn-ap 0.5.1 on precise orbits and 0.4.11 on next files; 
 
 // 5. The registration precedes every fit, and the pairs flown are the registered ones.
 const registered = Date.parse(git('show', '-s', '--format=%cI', doc.runs.registration).toString().trim());
-const starts = doc.runs.log.filter((l) => /^(start|resume|balanced) /.test(l)).map((l) => Date.parse(l.split(' ').at(-2)));
+const starts = doc.runs.log.filter((l) => /^(start|resume|balanced|pool|attribution) /.test(l)).map((l) => Date.parse(l.split(' ').at(-2)));
 check(registered < Date.parse(doc.runs.firstRowFile) && starts.every((t) => registered < t), `registration ${doc.runs.registration.slice(0, 7)} at ${new Date(registered).toISOString()} precedes the first of ${doc.runs.rowFiles} row files (${doc.runs.firstRowFile}) and every run start`);
 let ancestor = true;
 try { git('merge-base', '--is-ancestor', doc.runs.registration, 'HEAD'); } catch { ancestor = false; }
