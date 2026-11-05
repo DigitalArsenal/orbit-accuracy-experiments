@@ -10,6 +10,9 @@
 // sizes in the row, so they can be read as a cost.
 //   node experiments/operator-theory/arms.mjs --source starlink --count 12 --arcs 12,24,48 --out <dir> [--shard k/n]
 //   node experiments/operator-theory/arms.mjs --source iss --arcs 6,24,48,72 --out <dir>
+// --stored <cycle dir>: the source's files as that cycle stored them (each product file's compact $OEM: the GCRF states at the fit grid the arms were
+// fitted to), read from the archive with nothing fetched, at the cycle's weather day unless --weather names one; a file already in --out is not run again.
+// --fit-only: each FFM arm's fit and product, no flight over the file itself (score.mjs flies the products to the newer files).
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -127,18 +130,32 @@ async function cssFiles() {
 }
 // The forward test's four sources (PLAN.md), or a vendor added by VENDORS.md. Nothing below changes for the four.
 const VENDOR = !['starlink', 'iss', 'planet', 'css'].includes(SOURCE);
+const FIT_ONLY = args['fit-only'] === 'true';
+/** --stored: the cycle's product files of this source, oldest first; ISS files carry NASA's stated drag, which a product file does not keep. */
+function storedFiles(dir) {
+  if (SOURCE === 'iss') throw new Error('--stored: an ISS product file does not keep the stated drag its fit seeds');
+  const doneNames = new Set(fs.existsSync(path.join(OUT, `arms-${SOURCE}.jsonl`)) ? fs.readFileSync(path.join(OUT, `arms-${SOURCE}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).name) : []);
+  const stored = fs.readdirSync(path.join(dir, 'products')).filter((f) => f.startsWith(`${SOURCE}-`)).sort().map((f) => JSON.parse(fs.readFileSync(path.join(dir, 'products', f), 'utf8'))).filter((p) => p.start && p.forecastOem);
+  const days = new Set(stored.map((p) => p.weatherDay));
+  if (days.size > 1) throw new Error(`--stored: ${dir} holds ${SOURCE} files of ${days.size} weather days`);
+  storedWeatherDay = [...days][0];
+  return stored.filter((p) => !doneNames.has(p.name)).map((p) => ({ name: p.name, norad: p.norad, object: p.object, label: p.source, async read() {
+    return { lines: S.oemLines(Buffer.from(p.forecastOem, 'base64')).map((l) => ({ epoch: isoMs(Date.parse(l.epoch)), r: l.r, v: l.v })), meta: {}, frame: 'GCRF' };
+  } }));
+}
+let storedWeatherDay = null;
 // Exploratory (--lite): only cheaper FFM, 20x20, no tides or relativity, tolerance 1e-8, steps to 300 s; rows are read beside the store's by pair.
 // --ffm-ladder '[{name, degree, tides, rel, tolerance, maxStep, minStep, regime}]': those FFM settings, on low orbits unless regime is 'high'. --with-xp adds X0 beside them. --weather-from: the first weather day, for files before the default.
 const LADDER = args['ffm-ladder'] ? JSON.parse(args['ffm-ladder']) : null;
 const LITE = args.lite === 'true' || !!LADDER;
-const FILES = SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
+const FILES = args.stored ? storedFiles(args.stored) : SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
 const SUPGP_WINDOW_H = { iss: 6, css: 6, planet: 24 }[SOURCE] ?? (VENDOR ? 24 : 12);
 const BINS = { iss: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 240], [240, 360]],
   css: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168]],
   planet: [[0, 12], [12, 24], [24, 48], [48, 72], [72, 96], [96, 120]] }[SOURCE] ?? (VENDOR ? [[0, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 336]] : null) ?? [[0, 6], [6, 12], [12, 24], [24, 36], [36, 48], [48, 60], [60, 72]];
 
 // ---- weather in force today, as issued
-const today = args.weather ?? new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10);
+const today = args.weather ?? storedWeatherDay ?? new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10);
 const weather = weatherRows(today, args['weather-from'] ?? '2026-07-15', '2026-12-14');
 const daily = rowsOfSpw(weather.rows);
 const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
@@ -280,6 +297,7 @@ for (const file of FILES) {
           a.termination = f.termination; a.iterations = f.iterations; a.ffmCalls = f.ffmCalls;
           if (!f.state) throw new Error(f.error ?? f.termination);
           a.b = f.parameters?.[0]?.value;
+          if (FIT_ONLY) { a.ok = !!f.ok; a.product = { epoch: f.epoch, state: f.state, parameters: f.parameters, forces: settings.forces, fixed: settings.fixed, ...(LITE ? { integrator: settings.integrator } : {}) }; row.arms[`F-${variantName}@${arc}`] = a; continue; }
           const t2 = performance.now();
           const flown = await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, weather.rows);
           a.flyMs = performance.now() - t2;
@@ -321,6 +339,7 @@ for (const file of FILES) {
   const products = Object.fromEntries(Object.entries(row.arms).filter(([, a]) => a.product).map(([k, a]) => [k, a.product]));
   fs.writeFileSync(path.join(OUT, 'products', `${SOURCE}-${file.norad}-${started}.json`), JSON.stringify({ name: file.name, norad: file.norad, object: file.object, source: row.source, fetchedAt: row.fetchedAt, start: row.start, stop: row.stop, weatherDay: today, forecastOem: row.forecastOem ?? null, products }));
   delete row.forecastOem;
+  row.ffm = F.provenance.ffm;
   for (const a of Object.values(row.arms)) delete a.product;
   fs.appendFileSync(path.join(OUT, `arms-${SOURCE}.jsonl`), `${JSON.stringify(row)}\n`);
   console.error(`${file.object} ${row.error ?? 'ok'} ${row.wallSeconds.toFixed(0)} s`);

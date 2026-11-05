@@ -125,7 +125,7 @@ for (const [key, list] of items) {
         }
       } catch (error) { row.arms[name] = { error: String(error.message).slice(0, 160) }; }
     }
-    fs.appendFileSync(OUT, `${JSON.stringify(row)}\n`);
+    fs.appendFileSync(OUT, `${JSON.stringify({ ...row, ffm: F.provenance.ffm })}\n`);
     added += 1;
   }
 }

@@ -181,7 +181,7 @@ for (const o of await objects()) {
         });
       }
     } catch (error) { row.error = String(error?.message ?? error).slice(0, 180); }
-    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    fs.appendFileSync(outFile, `${JSON.stringify(F ? { ...row, ffm: F.provenance.ffm } : row)}\n`);
   }
 }
 console.error(`shard ${SHARD}/${SHARDS}: done`);
