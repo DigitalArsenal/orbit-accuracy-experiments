@@ -32,13 +32,14 @@ const XPU021 = record('propagator/sgp4-xp', PIN.versions['propagator/sgp4-xp'], 
 export const USSF_011 = { modulesCommit: '1b905d16f68fc56e7da66c6392315970f9e7e6d0', wasmSha256: 'f61b15c4fd658817e3e43c7818da18c4d08d453ad28e9d704b0cd11b616b7deb', version: '0.1.1' };
 const XPU011 = record('propagator/sgp4-xp', USSF_011.version, USSF_011.modulesCommit, USSF_011.wasmSha256);
 const SGP4 = [record('analysis/gp-error-model', '0.11.0', XM_COMMIT, '8e13eddbd5ccc3e0ee121f3b851e8314e426715cf5517823aa8d925566ef0e19'), record('propagator/sgp4', '1.4.1', XM_COMMIT, '2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643')];
-const FFM = [record('analysis/estimation', '0.7.0', XM3_COMMIT, '7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd'), record('propagator/ffm', '2.0.4', XM3_COMMIT, 'c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2')];
+// FFM: fitted by XM3's analysis/estimation 0.7.0, flown by propagator/ffm 2.2.0 (FFM_220) in every cell since 2026-11-05 (cycle-ffm220.sh).
+const FFM = [record('analysis/estimation', '0.7.0', XM3_COMMIT, '7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd'), record(FFM_220.module, FFM_220.version, FFM_220.modulesCommit, FFM_220.wasmSha256)];
 /** Each column's builds, by the rows a cell reads: precise-orbit cells fly AP 0.5.1 (ap/b051); next-file AP is 0.4.11's (no later run of those pairs);
- *  the Space Force XP is 0.2.1's except the held SpaceX cells, carried with 0.1.1's. Center is the operator's own file: no module. */
+ *  the Space Force XP is 0.2.1's except the held SpaceX cells, carried with 0.1.1's; their FFM (2.0.4) is dropped. Center is the operator's own file: no module. */
 export const COLUMN_BUILDS = {
   next: { SGP4, XP: [AP0411], XPU: [XPU021], AP: [AP0411], FFM20: FFM, FFM40: FFM, FFMfull: FFM, Center: [] },
   truth: { SGP4, XP: [AP0411], XPU: [XPU021], AP: [AP051], FFM20: FFM, FFM40: FFM },
-  held: { SGP4, XP: [AP0411], XPU: [XPU011], AP: [AP0411], FFM20: FFM, FFM40: FFM, FFMfull: FFM, Center: [] },
+  held: { SGP4, XP: [AP0411], XPU: [XPU011], AP: [AP0411], Center: [] },
 };
 /** Every record above by key: { module, version, commit, sha256 }. */
 export const BUILD_RECORDS = Object.fromEntries([AP0411, AP051, XPU021, XPU011, ...SGP4, ...FFM].map(({ key, ...b }) => [key, b]));
