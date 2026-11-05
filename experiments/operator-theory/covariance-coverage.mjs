@@ -376,7 +376,7 @@ function table(outDir) {
           x.push({ L, sh: sh.shares });
         }
       }
-      for (let h = 1; h <= HOURS; h += 1) {
+      for (let h = 1; h <= DAY_LEADS.at(-1); h += 1) {
         const x = byH.get(h) ?? [];
         const cell = { regime: s.regime, set, arm, h, n: x.length, axes: {} };
         AXES.forEach((ax, a) => {
