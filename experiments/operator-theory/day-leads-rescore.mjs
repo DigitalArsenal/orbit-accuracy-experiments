@@ -1,5 +1,5 @@
-// DAY-LEADS-RESCORE.md: ap/b051's window sets flown again by their own producers with every lead day 1 to 7 scored, the table of median forward error per
-// group, arm and day, and the control (days 1, 2, 3 and 7 equal the stored rows). Module calls only, through the producers.
+// DAY-LEADS-RESCORE.md: ap/b051's window sets flown again by their own producers with every lead day 1 to 7 scored, the table of median and 95th
+// percentile forward error per group, arm and day (the 95th percentile by the 2026-11-05 amendment), and the control (days 1, 2, 3 and 7 equal the stored rows). Module calls only, through the producers.
 //   node experiments/operator-theory/day-leads-rescore.mjs --run              every shard of every set (resumable), then --table
 //   node experiments/operator-theory/day-leads-rescore.mjs --worker <set> --shard k
 //   node experiments/operator-theory/day-leads-rescore.mjs --table [--out <dir>]
@@ -11,6 +11,7 @@ import crypto from 'node:crypto';
 import { spawn, execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { PIN } from './lib/build.mjs';
+import { pct, asc } from './lib/compare.mjs';
 
 const here = path.dirname(new URL(import.meta.url).pathname), repo = path.resolve(here, '../..');
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
@@ -38,6 +39,8 @@ const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const rowsIn = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).sort((a, b) => Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]))
   .flatMap((f) => fs.readFileSync(path.join(dir, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))) : []);
 const med = (v) => { const s = [...v].sort((a, b) => a - b); if (!s.length) return null; const x = (s.length - 1) / 2; return (s[Math.floor(x)] + s[Math.ceil(x)]) / 2; };
+// The 95th percentile as the registered statistics define it (lib/compare.mjs pct: linear between order statistics at (n - 1) * 0.95).
+const p95 = (v) => pct([...v].sort(asc), 0.95);
 const km = (x) => (x === null ? null : Number(x.toFixed(6)));
 const fmt = (x) => (x === null ? '' : x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toPrecision(3));
 const groupOf = (set, r) => (set === 'truth' || set === 'compare-truth' ? 'T' : r.group);
@@ -115,7 +118,7 @@ function control(set, rows) {
   return out;
 }
 
-// ---- table: per group and arm, the median error each day 1 to 7 and its count; the control; README.
+// ---- table: per group and arm, the median and 95th percentile error each day 1 to 7 and its count; the control; README.
 function table(dir) {
   const groups = new Map(), controls = {}, windows = {};
   for (const set of Object.keys(SETS)) {
@@ -134,23 +137,26 @@ function table(dir) {
   const order = Object.keys(GROUPS), armOrder = (a) => [/^AP\d/.test(a) ? 0 : /^APR/.test(a) ? 1 : 2, Number(a.match(/\d+$/)?.[0] ?? 0)];
   const entries = [...groups.values()].sort((a, b) => order.indexOf(a.group) - order.indexOf(b.group) || armOrder(a.arm)[0] - armOrder(b.arm)[0] || armOrder(a.arm)[1] - armOrder(b.arm)[1])
     .map((L) => ({ group: L.group, label: GROUPS[L.group], arm: L.arm, note: ARM_NOTE[L.arm] ?? ARM_NOTE[L.arm.replace(/\d+$/, '')], set: L.set, build: BUILD, windows: L.windows, ok: L.ok,
-      days: Object.fromEntries(LEADS.map((d) => [d, { medianKm: km(med(L.days[d])), n: L.days[d].length }])) }));
-  const doc = { title: 'Median forward error, lead days 1 to 7', registration: PLAN, store: OUT, stored: STORED, build: BUILD, leadDays: LEADS, windows, control: controls, entries };
+      days: Object.fromEntries(LEADS.map((d) => [d, { medianKm: km(med(L.days[d])), p95Km: km(p95(L.days[d])), n: L.days[d].length }])) }));
+  const doc = { title: 'Median and 95th percentile forward error, lead days 1 to 7', registration: PLAN, store: OUT, stored: STORED, build: BUILD, leadDays: LEADS, windows, control: controls, entries };
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'table.json'), `${JSON.stringify(doc, null, 1)}\n`);
   const at = (g, arm) => entries.find((e) => e.group === g && e.arm === arm);
   const ctl = Object.entries(controls).map(([s, c]) => `${s} ${c.differing} of ${c.scalarsCompared}`).join(', ');
   const total = Object.values(controls).reduce((n, c) => n + c.differing, 0), newly = Object.values(controls).flatMap((c) => c.newlyScored);
-  const lines = ['# Median forward error, lead days 1 to 7', '',
-    `\`experiments/operator-theory/DAY-LEADS-RESCORE.md\`. Every arm: \`${BUILD.module}\` ${BUILD.version}, wasm ${BUILD.wasmSha256.slice(0, 12)} (modules ${BUILD.modulesCommit.slice(0, 8)}). Each fit reads the arc ending at the cutoff and nothing after; lead day k is (k - 1, k] days after the cutoff; the error is the RSS of the radial, in-track and cross-track RMS over the day, in km, against precise orbits. Median over the windows where the day is scored (n).`, '',
+  const lines = ['# Median and 95th percentile forward error, lead days 1 to 7', '',
+    `\`experiments/operator-theory/DAY-LEADS-RESCORE.md\`. Every arm: \`${BUILD.module}\` ${BUILD.version}, wasm ${BUILD.wasmSha256.slice(0, 12)} (modules ${BUILD.modulesCommit.slice(0, 8)}). Each fit reads the arc ending at the cutoff and nothing after; lead day k is (k - 1, k] days after the cutoff; the error is the RSS of the radial, in-track and cross-track RMS over the day, in km, against precise orbits. Median and 95th percentile (linear between order statistics, \`lib/compare.mjs\`; the 2026-11-05 amendment) over the windows where the day is scored (n).`, '',
     `Control, days 1, 2, 3 and 7 against the stored rows (\`ap/b051\`): ${total} differing scalars (${ctl}).${newly.length ? ` Scored now for days 4 to 6 only (no day 1, 2, 3 or 7 bin): ${newly.length} windows.` : ''}`, '',
-    '## Day 5, the front page', '', '| Regime | Arm | Day 5 median km | n |', '|---|---|---:|---:|'];
-  for (const [g, arms] of FRONT) for (const arm of arms) { const e = at(g, arm); if (e) lines.push(`| ${GROUPS[g]} | ${arm} | ${fmt(e.days[5].medianKm)} | ${e.days[5].n} |`); }
+    '## Day 5, the front page', '', '| Regime | Arm | Day 5 median km | Day 5 95th percentile km | n |', '|---|---|---:|---:|---:|'];
+  for (const [g, arms] of FRONT) for (const arm of arms) { const e = at(g, arm); if (e) lines.push(`| ${GROUPS[g]} | ${arm} | ${fmt(e.days[5].medianKm)} | ${fmt(e.days[5].p95Km)} | ${e.days[5].n} |`); }
   for (const g of order) {
     const rows = entries.filter((e) => e.group === g);
     if (!rows.length) continue;
     lines.push('', `## ${GROUPS[g]}`, '', '| Arm | Windows | Day 1 | Day 2 | Day 3 | Day 4 | Day 5 | Day 6 | Day 7 |', '|---|---:|---:|---:|---:|---:|---:|---:|---:|');
-    for (const e of rows) lines.push(`| ${e.arm} | ${e.windows} | ${LEADS.map((d) => `${fmt(e.days[d].medianKm)} (${e.days[d].n})`).join(' | ')} |`);
+    for (const e of rows) {
+      lines.push(`| ${e.arm} | ${e.windows} | ${LEADS.map((d) => `${fmt(e.days[d].medianKm)} (${e.days[d].n})`).join(' | ')} |`);
+      lines.push(`| ${e.arm} 95th percentile | | ${LEADS.map((d) => fmt(e.days[d].p95Km)).join(' | ')} |`);
+    }
   }
   lines.push('', 'AP24, AP72, AP336: AP fitted to the last 24, 72 or 336 h. APRa12: AP fitted to the last 17 h with its drag held at the stored 12 h FFM fit\'s. XP: whiteroom XP, the same module with FORCES and FIT unset.');
   fs.writeFileSync(path.join(dir, 'README.md'), `${lines.join('\n')}\n`);
@@ -175,10 +181,13 @@ function check() {
   ok(doc.entries.length > 0 && doc.entries.every((e) => e.build.wasmSha256 === BUILD.wasmSha256), `every arm names its build: ${doc.entries.length} group-arms on ${BUILD.wasmSha256.slice(0, 12)}`);
   const no5 = doc.entries.filter((e) => !(e.days[5].n > 0 && Number.isFinite(e.days[5].medianKm)));
   ok(no5.length === 0, `a day-5 median for every group and arm: ${doc.entries.length - no5.length} of ${doc.entries.length}${no5.length ? ` (none: ${no5.map((e) => `${e.group} ${e.arm}`).join(', ')})` : ''}`);
+  // the 2026-11-05 amendment: a 95th percentile on every scored day of every group and arm, never below its median
+  const noP95 = doc.entries.filter((e) => !(e.days[5].n > 0 && LEADS.every((d) => (e.days[d].n > 0 ? Number.isFinite(e.days[d].p95Km) && e.days[d].p95Km >= e.days[d].medianKm : e.days[d].p95Km === null))));
+  ok(noP95.length === 0, `a 95th percentile on every scored day 1 to 7, day 5 included, for every group and arm: ${doc.entries.length - noP95.length} of ${doc.entries.length}${noP95.length ? ` (none: ${noP95.map((e) => `${e.group} ${e.arm}`).join(', ')})` : ''}`);
   const rows = Object.keys(SETS).flatMap((s) => rowsIn(path.join(OUT, s)));
   const bad = rows.filter((r) => GALILEO_HELD.includes(Number(r.norad)) || /starlink/i.test(r.name ?? '') || (SWARM_GRACE.includes(Number(r.norad)) && Date.parse(r.cutoff) + 7 * 86400000 > Date.parse('2026-10-31T00:00:00Z')));
   ok(bad.length === 0, `holds: ${rows.length} rows, none of a held Galileo satellite or a Starlink group, no Swarm or GRACE-FO truth after 2026-10-31`);
-  const d5 = FRONT.flatMap(([g, arms]) => arms.map((a) => doc.entries.find((e) => e.group === g && e.arm === a)).filter(Boolean).map((e) => `${e.group} ${e.arm} ${fmt(e.days[5].medianKm)} km (${e.days[5].n})`));
+  const d5 = FRONT.flatMap(([g, arms]) => arms.map((a) => doc.entries.find((e) => e.group === g && e.arm === a)).filter(Boolean).map((e) => `${e.group} ${e.arm} ${fmt(e.days[5].medianKm)} km, p95 ${fmt(e.days[5].p95Km)} km (${e.days[5].n})`));
   console.log(`DAY-LEADS-RESCORE: ${failures ? 'FAIL' : 'PASS'}: ${rows.length} windows, control ${differing} of ${compared} scalars differ on days 1, 2, 3, 7; day 5: ${d5.join('; ')}`);
   process.exit(failures ? 1 : 0);
 }
