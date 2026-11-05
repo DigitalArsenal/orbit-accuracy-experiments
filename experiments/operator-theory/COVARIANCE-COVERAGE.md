@@ -60,3 +60,7 @@ Rows: `/opt/data/sdn-archive/operator-theory/covariance-coverage/<set>/rows-<k>.
 ## Amendment 1, 2026-11-05, before any row of the run
 
 A smoke flight of four windows (rows under the lane's scratch, not the store) found no truth state at exactly cutoff + h hours: the precise-orbit series sit 2 s off the hour (10 s steps from 00:00:02), so the leads as written score nothing. No coverage value was read. The lead epoch of hour h is now the first state of the producer's own scoring grid (300 s, from its first truth state after the cutoff) at or after cutoff + h x 3600 s and within one grid step; each lead row records its offset in seconds. Nothing else changes.
+
+## Amendment 2, 2026-11-05, during the run
+
+The run's first rows, tabulated in the lane's scratch, score no window at hour 168: the producer reads truth through cutoff + 7 days, and hour 168's grid state lies 2 s past it. Day 7 in the table, the shares and the end to end is lead hour 167, the last hour every window can score; hours 1 to 167 are reported. No statistic, window or flight changes.

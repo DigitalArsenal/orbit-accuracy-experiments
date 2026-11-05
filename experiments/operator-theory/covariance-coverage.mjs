@@ -342,7 +342,9 @@ function control(set, rows) {
 }
 
 // ---- the table, from the rows alone.
-const SHARE_LEADS = [12, 24, 72, 168], DAY_LEADS = [24, 72, 168];
+// Day 7 is lead hour 167 (amendment 2): hour 168's grid state lies past the producer's 7-day truth read.
+const SHARE_LEADS = [12, 24, 72, 167], DAY_LEADS = [24, 72, 167];
+const leadLabel = (h) => (h === 167 ? 'day 7 (167 h)' : h % 24 ? `${h} h` : `day ${h / 24}`);
 /** Per lead: each term's share of each axis's variance, the mapped fit covariance's and the floor's; the sum's departure from 1. */
 function sharesOf(L, floor) {
   const full = L.v.full, out = {};
@@ -418,9 +420,9 @@ function table(outDir) {
     lines.push('## The ISS demo figure', '', `The demo's sample (${issRow.file.path}, ${issRow.file.states} states, ${issRow.file.fitStates} fitted), at its last state ${l.epoch} (${fmt(l.hoursFromStart)} h from its start, ${fmt(l.hoursAfterFit)} h after the fit's end): in-track 1-sigma ${l.sigmaKm[1].toFixed(2)} km (${issRow.startSigmaKm[1].toFixed(3)} km at the file's first state), error ${l.errorKm.toFixed(4)} km (in-track ${Math.abs(l.errorRicKm[1]).toFixed(4)} km); with the four process-noise terms off the in-track 1-sigma is ${fmt(l.sigmaOffKm[1])} km.`, '');
   }
   lines.push('## Median |z| by regime, arm, lead and axis', '', '| Regime | Arm | Lead | n | R | I | C | I width factor | I median 1-sigma km | I median error km | mean d2/3 | inside 95 % |', '|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
-  for (const c of cells.filter((q) => [12, ...DAY_LEADS].includes(q.h))) lines.push(`| ${REGIMES[c.regime]} | ${c.arm} | ${c.h % 24 ? `${c.h} h` : `day ${c.h / 24}`} | ${c.n} | ${AXES.map((ax) => fmt(c.axes[ax].medianAbsZ)).join(' | ')} | ${fmt(c.axes.I.widthFactor)} | ${fmt(c.axes.I.medianSigmaKm)} | ${fmt(c.axes.I.medianAbsErrorKm)} | ${fmt(c.meanD2Over3)} | ${fmt(c.inside95)} |`);
+  for (const c of cells.filter((q) => [12, ...DAY_LEADS].includes(q.h))) lines.push(`| ${REGIMES[c.regime]} | ${c.arm} | ${leadLabel(c.h)} | ${c.n} | ${AXES.map((ax) => fmt(c.axes[ax].medianAbsZ)).join(' | ')} | ${fmt(c.axes.I.widthFactor)} | ${fmt(c.axes.I.medianSigmaKm)} | ${fmt(c.axes.I.medianAbsErrorKm)} | ${fmt(c.meanD2Over3)} | ${fmt(c.inside95)} |`);
   lines.push('', 'With the four process-noise terms off (the mapped fit covariance and the floor):', '', '| Regime | Arm | Lead | R | I | C | mean d2/3 | inside 95 % |', '|---|---|---|---:|---:|---:|---:|---:|');
-  for (const c of cells.filter((q) => DAY_LEADS.includes(q.h))) lines.push(`| ${REGIMES[c.regime]} | ${c.arm} | day ${c.h / 24} | ${AXES.map((ax) => fmt(c.axes[ax].medianAbsZNoiseOff)).join(' | ')} | ${fmt(c.meanD2Over3NoiseOff)} | ${fmt(c.inside95NoiseOff)} |`);
+  for (const c of cells.filter((q) => DAY_LEADS.includes(q.h))) lines.push(`| ${REGIMES[c.regime]} | ${c.arm} | ${leadLabel(c.h)} | ${AXES.map((ax) => fmt(c.axes[ax].medianAbsZNoiseOff)).join(' | ')} | ${fmt(c.meanD2Over3NoiseOff)} | ${fmt(c.inside95NoiseOff)} |`);
   lines.push('', '## Which term grows', '', `Median share of the in-track variance by term (each term switched off through the record's COV_PROPAGATION field and flown again; the floor from the record's FLOOR_VV_KM2).`, '',
     '| Regime | Arm | Lead | n | s_e | s_i | s_l | s_d | mapped fit | floor |', '|---|---|---|---:|---:|---:|---:|---:|---:|---:|');
   for (const q of shares) lines.push(`| ${REGIMES[q.regime]} | ${q.arm} | ${q.h} h | ${q.n} | ${[...TERMS, 'mapped', 'floor'].map((t) => fmt(q.medianShare[t].I)).join(' | ')} |`);
