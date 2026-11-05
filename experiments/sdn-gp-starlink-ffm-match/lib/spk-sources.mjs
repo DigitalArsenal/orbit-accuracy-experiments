@@ -35,7 +35,24 @@ const tdbString = (start, offsetSeconds) => { // start + whole seconds, microsec
   return `${iso}.${String(start.micro).padStart(6, '0')}`;
 };
 
-/** All states of the SPK's segments that overlap [fromUtcMs, toUtcMs] (plus a one-minute margin), epochs still TDB strings. */
+/**
+ * A segment's own states (experiments/ap6-heo/TRUTH-SERIES.md): TESS's definitive kernels store a state every minute, but only one in ten is an orbit
+ * state; the nine between lie on the straight line between those nodes, position and velocity alike. A record is on that line when its second difference
+ * with both neighbors is zero to the kernel's precision (1 mm, 1 um/s; an orbit's own second difference over a minute is meters). The nodes are the rest,
+ * at one cadence and phase, and a segment's end records are kept only on that phase. A segment with no record on a line keeps every record.
+ */
+export function nodeRows(rows) {
+  const flat = (i, key, eps) => [0, 1, 2].every((k) => Math.abs(rows[i + 1][key][k] - 2 * rows[i][key][k] + rows[i - 1][key][k]) < eps);
+  const nodes = [];
+  let lined = 0;
+  for (let i = 1; i < rows.length - 1; i += 1) if (flat(i, 'r', 1e-6) && flat(i, 'v', 1e-9)) lined += 1; else nodes.push(i);
+  if (!lined || nodes.length < 2) return rows;
+  const mode = (xs) => [...xs.reduce((m, x) => m.set(x, (m.get(x) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0][0];
+  const cadence = mode(nodes.slice(1).map((n, j) => n - nodes[j])), phase = mode(nodes.map((n) => n % cadence));
+  return rows.filter((_, i) => i % cadence === phase);
+}
+
+/** All states of the SPK's segments that overlap [fromUtcMs, toUtcMs] (plus a one-minute margin), epochs still TDB strings, each segment's nodes only (nodeRows). */
 export function tdbStates(oem, fromUtcMs, toUtcMs) {
   const rows = [];
   for (const block of oem.EPHEMERIS_DATA_BLOCK) {
@@ -44,18 +61,22 @@ export function tdbStates(oem, fromUtcMs, toUtcMs) {
       const start = parseTdb(block.START_TIME), n = block.EPHEMERIS_DATA.length / block.STATE_VECTOR_SIZE;
       const first = start.second, last = start.second + (n - 1) * block.STEP_SIZE * 1000;
       if (last + margin < fromUtcMs || first - margin > toUtcMs) continue;
+      const own = [];
       for (let i = 0; i < n; i += 1) {
         const t = first + i * block.STEP_SIZE * 1000;
         if (t + margin < fromUtcMs || t - margin > toUtcMs) continue;
         const d = block.EPHEMERIS_DATA, k = i * block.STATE_VECTOR_SIZE;
-        rows.push({ tdb: tdbString(start, i * block.STEP_SIZE), r: [d[k], d[k + 1], d[k + 2]], v: [d[k + 3], d[k + 4], d[k + 5]] });
+        own.push({ tdb: tdbString(start, i * block.STEP_SIZE), r: [d[k], d[k + 1], d[k + 2]], v: [d[k + 3], d[k + 4], d[k + 5]] });
       }
+      rows.push(...nodeRows(own));
     } else {
+      const own = [];
       for (const l of block.EPHEMERIS_DATA_LINES ?? []) {
         const t = parseTdb(l.EPOCH).second;
         if (t + margin < fromUtcMs || t - margin > toUtcMs) continue;
-        rows.push({ tdb: l.EPOCH, r: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] });
+        own.push({ tdb: l.EPOCH, r: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] });
       }
+      rows.push(...nodeRows(own));
     }
   }
   return rows;
@@ -86,7 +107,7 @@ export async function spkObject(modules, { file, source, id, name, norad, fromUt
 
 /**
  * One ephemeris object from several overlapping SPK files of one target (TESS's definitive ephemeris is a file every few days):
- * the states of every file, every `stride`-th state of each segment, later files overriding earlier ones where they overlap
+ * the states of every file, every `stride`-th of each segment's nodes (nodeRows), later files overriding earlier ones where they overlap
  * (the newer solution), epochs to UTC by foundation/time. Files are given oldest first.
  */
 export async function spkObjectSeries(modules, { files, source, id, name, norad, fromUtc, toUtc, stride = 1, containers, time, raw = false }) {
@@ -100,7 +121,7 @@ export async function spkObjectSeries(modules, { files, source, id, name, norad,
       if (read.error) throw new Error(`${path.basename(file)}: ${read.error}`);
       for (const block of read.oem.EPHEMERIS_DATA_BLOCK) {
         const lines = block.EPHEMERIS_DATA?.length ? null : block.EPHEMERIS_DATA_LINES ?? [];
-        const rows = lines ? lines.map((l) => ({ tdb: l.EPOCH, r: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] })) : tdbStates({ EPHEMERIS_DATA_BLOCK: [block] }, Date.parse(fromUtc), Date.parse(toUtc));
+        const rows = lines ? nodeRows(lines.map((l) => ({ tdb: l.EPOCH, r: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] }))) : tdbStates({ EPHEMERIS_DATA_BLOCK: [block] }, Date.parse(fromUtc), Date.parse(toUtc));
         rows.forEach((row, i) => {
           if (i % stride) return;
           const t = parseTdb(row.tdb).second;
