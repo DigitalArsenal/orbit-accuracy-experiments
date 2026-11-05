@@ -1,6 +1,6 @@
 # The cost of each theory on the current builds
 
-Registered in `experiments/sdn-ap-cost-benchmark/BENCHMARK.md` before any run. One machine: Mac Studio (Mac15,14), Apple M3 Ultra, 28 cores (20 performance, 8 efficiency), 256 GiB, macOS 26.3.1, Node.js v25.4.0; one process at a time; every module wasi-sequential on the main thread. Step 300 s everywhere: the fit reads a 48 h arc thinned to 300 s (at most 577 states); the flight writes 2016 states, every 300 s for 7 days. 32 registered windows over 8 regimes of the comparison explorer's precise-orbit rows: Low orbit, laser spheres; Low orbit, altimetry; Laser geodetic; Geostationary; Inclined geosynchronous; Strong drag, 2026; Near 700 km; Medium Earth orbit.
+Registered in `experiments/sdn-ap-cost-benchmark/BENCHMARK.md` before any run. One machine: Mac Studio (Mac15,14), Apple M3 Ultra, 28 cores (20 performance, 8 efficiency), 256 GiB, macOS 26.3.1, Node.js v25.4.0; one process at a time; propagator/sdn-ap with its thread pool bounded to one, every other module a sequential artifact. Step 300 s everywhere: the fit reads a 48 h arc thinned to 300 s (at most 577 states); the flight writes 2016 states, every 300 s for 7 days. 32 registered windows over 8 regimes of the comparison explorer's precise-orbit rows: Low orbit, laser spheres; Low orbit, altimetry; Laser geodetic; Geostationary; Inclined geosynchronous; Strong drag, 2026; Near 700 km; Medium Earth orbit.
 
 ## Builds
 
