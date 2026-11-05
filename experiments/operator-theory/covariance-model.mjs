@@ -314,6 +314,152 @@ async function rows() {
 }
 
 // =====================================================================================================================================
+// Burns (amendment 3): lib/steps.mjs lowSteps (minimum 4 m) on the truth's revolution means, per object over its whole span of windows. Truth only.
+const STEP_RULE_M = 4, STEP_MARGIN_DAYS = 4.5, STEP_SHIFT_MS = 2 * HOUR, UNCHECKED_GAP_MS = 2 * HOUR;
+const C2_TRUTH_END = Date.parse('2026-06-01T00:00:00Z');
+const STEP_SETS = {
+  trT: { env: {}, producer: 'xp2', cutoffsFrom: path.join(TRAIN, 'truth') },
+  trS1: { env: { XP2F_CONTROL: '1' }, producer: 'xm', group: 'S1', cutoffsFrom: path.join(TRAIN, 'truth2') },
+  p26: { env: { XP2F_CONTROL: '1' }, producer: 'xm', group: 'P', from: '2026-01-01', to: '2026-05-31' },
+  s1q4: { env: {}, producer: 'xm', group: 'S1', from: '2025-10-04', to: '2025-12-21' },
+  dols: { env: {}, producer: 'regimes' },
+};
+async function steps(set) {
+  const s = STEP_SETS[set];
+  Object.assign(process.env, s.env);
+  const X = await import('./lib/xp2.mjs');
+  const { config, root, XM } = X;
+  const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
+  const { revolutions, lowSteps, openElements, LOW } = await import('./lib/steps.mjs');
+  const { ORBITS_010 } = await import('./lib/build.mjs');
+  const el = await openElements({ build: ORBITS_010 });
+  const rule = { ...LOW, minM: STEP_RULE_M };
+  // objects with their cutoffs and a reader of [a, b]
+  const objects = [];
+  if (s.producer === 'regimes') {
+    const { STATIC } = await import('./lib/regimes.mjs');
+    const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
+    for (const o of STATIC.filter((x) => (x.group === 'DO' || x.group === 'LS') && x.name !== 'stella')) {
+      const files = o.files(); if (!files.length) continue;
+      const series = SRC.chain(files), want = { ...NEAR, ...WEAK }[o.name];
+      if (series.norad !== want) throw new Error(`${o.name}: NORAD ${series.norad}, fixed ${want}`);
+      const t = series.lines.map((l) => msOf(l.epoch));
+      objects.push({ norad: series.norad, name: series.name || o.name, cutoffs: o.cutoffs, read: (a, b) => series.lines.filter((_, i) => t[i] >= a && t[i] <= b) });
+    }
+  } else {
+    const all = s.producer === 'xp2' ? Object.keys(X.config.spans).flatMap((sp) => X.windows(sp)).map((w) => w.o) : XM.config.groups[s.group].objects;
+    const byNorad = new Map(all.map((o) => [o.norad, o]));
+    const cuts = new Map();
+    if (s.cutoffsFrom) for (const r of rowsIn(s.cutoffsFrom)) (cuts.get(r.norad) ?? cuts.set(r.norad, []).get(r.norad)).push(Date.parse(r.cutoff));
+    else for (const o of XM.config.groups[s.group].objects) cuts.set(o.norad, XM.daysOf(s.from, s.to));
+    for (const [norad, c] of cuts) { const o = byNorad.get(norad); objects.push({ norad, name: o.name, cutoffs: c, read: (a, b) => { const out = []; for (let t = a; t < b; t += DAY) out.push(...T.series(o, t, Math.min(t + DAY, b) - 1).lines); return out; } }); }
+  }
+  fs.mkdirSync(path.join(OUT, 'steps'), { recursive: true });
+  for (const o of objects) {
+    const file = path.join(OUT, 'steps', `${set}-${o.norad}.json`);
+    if (fs.existsSync(file)) continue;
+    let from = Math.min(...o.cutoffs) - 72 * HOUR - STEP_MARGIN_DAYS * DAY, to = Math.max(...o.cutoffs) + 7 * DAY + STEP_MARGIN_DAYS * DAY;
+    if (C2_OBJECTS.includes(o.norad)) to = Math.min(to, C2_TRUTH_END);
+    if (SWARM_GRACE.includes(o.norad)) to = Math.min(to, SWARM_GRACE_LAST);
+    const t0 = Date.now(), lines = o.read(from, to);
+    const revs = await revolutions(lines, el), d = lowSteps(revs, rule);
+    fs.writeFileSync(file, `${JSON.stringify({ set, norad: o.norad, name: o.name, from: new Date(from).toISOString(), to: new Date(to).toISOString(), states: lines.length, revolutions: revs.length, rule,
+      steps: d.steps.map((x) => ({ t: new Date(x.t).toISOString(), sizeM: x.sizeM, changeM: x.changeM })), checked: d.checked.map(([a, b]) => [new Date(a).toISOString(), new Date(b).toISOString()]) })}\n`);
+    console.error(`${set} ${o.name}: ${lines.length} states, ${revs.length} revolutions, ${d.steps.length} steps (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
+  }
+  await el.close?.();
+  process.exit(0);
+}
+/** The catalog of one object: steps (ms, shifted 2 h earlier) and checked spans (ms), every set that read it merged. */
+let CATALOG = null;
+function catalog() {
+  if (CATALOG) return CATALOG;
+  CATALOG = new Map();
+  const dir = path.join(OUT, 'steps');
+  for (const f of fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => n.endsWith('.json')) : []) {
+    const c = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), e = CATALOG.get(c.norad) ?? { steps: [], checked: [] };
+    e.steps.push(...c.steps.map((x) => msOf(x.t) - STEP_SHIFT_MS)); e.checked.push(...c.checked.map(([a, b]) => [msOf(a), msOf(b)]));
+    CATALOG.set(c.norad, e);
+  }
+  for (const e of CATALOG.values()) { e.steps.sort((a, b) => a - b); e.checked.sort((a, b) => a[0] - b[0]); }
+  return CATALOG;
+}
+/** True when [a, b] holds no step and is covered by checked spans (gaps of 2 h or less). */
+function clean(norad, a, b) {
+  const e = catalog().get(norad);
+  if (!e) return false;
+  if (e.steps.some((t) => t >= a && t <= b)) return false;
+  let at = a;
+  for (const [x, y] of e.checked) { if (y < at) continue; if (x > at + UNCHECKED_GAP_MS) return false; at = Math.max(at, y); if (at >= b - UNCHECKED_GAP_MS) return true; }
+  return at >= b - UNCHECKED_GAP_MS;
+}
+const ARC_HOURS = { AP24: 24, APRa12: 17, AP72: 72 };
+/** Amendment 3's rule on one arm's samples: null if the fit arc is not clean, else the leads whose (cutoff, lead] is clean. */
+function censor(arm) {
+  if (process.env.COVM_UNCENSORED === '1') return arm;
+  const c = Date.parse(arm.cutoff);
+  if (!clean(arm.norad, c - ARC_HOURS[arm.arm] * HOUR, c)) return null;
+  const leads = arm.leads.filter((l) => clean(arm.norad, c, c + l.h * HOUR + (l.offsetS ?? 0) * 1000));
+  return leads.length ? { ...arm, leads } : null;
+}
+
+/** Amendment 3's validation and losses, before the catalog is used: OUT/censor-report.json. */
+function censorReport() {
+  const cat = catalog(), files = fs.readdirSync(path.join(OUT, 'steps')).filter((n) => n.endsWith('.json')).map((f) => JSON.parse(fs.readFileSync(path.join(OUT, 'steps', f), 'utf8')));
+  const raw = new Map(); // unshifted steps per norad
+  for (const c of files) for (const x of c.steps) (raw.get(c.norad) ?? raw.set(c.norad, []).get(c.norad)).push(msOf(x.t));
+  const day7 = JSON.parse(execFileSync('git', ['-C', repo, 'show', 'origin/main:results/operator-theory/s1-24h-day7/table.json'], { maxBuffer: 1 << 28 }));
+  const known = new Map(), quiet = [];
+  for (const w of day7.perWindow) {
+    const [, norad, date] = w.key.split('|'), c = Date.parse(`${date}T00:00:00Z`);
+    if (!w.truth.steps4m.length && Math.abs(w.arms?.F24?.jump?.sizeM ?? 99) <= 0.22) quiet.push({ key: w.key, norad: Number(norad), from: c - 24 * HOUR, to: c + 7 * DAY });
+    for (const x of w.truth.steps4m) { const t = c + x.hours * HOUR, l = known.get(Number(norad)) ?? known.set(Number(norad), []).get(Number(norad)); if (!l.some((u) => Math.abs(u - t) < 3 * HOUR)) l.push(t); }
+  }
+  const recall = [...known].map(([norad, ts]) => ({ norad, known: ts.length, found: ts.filter((t) => (raw.get(norad) ?? []).some((u) => Math.abs(u - t) <= 3 * HOUR)).length,
+    missed: ts.filter((t) => !(raw.get(norad) ?? []).some((u) => Math.abs(u - t) <= 3 * HOUR)).map((t) => new Date(t).toISOString()) }));
+  const quietAlarms = quiet.map((q) => ({ key: q.key, steps: (raw.get(q.norad) ?? []).filter((t) => t >= q.from && t <= q.to).map((t) => new Date(t).toISOString()), checked: clean(q.norad, q.from, q.to) || (raw.get(q.norad) ?? []).some((t) => t >= q.from && t <= q.to) }));
+  const checkedDays = (c) => c.checked.reduce((sum, [a, b]) => sum + (msOf(b) - msOf(a)) / DAY, 0);
+  const perObject = files.map((c) => ({ set: c.set, norad: c.norad, name: c.name, from: c.from, to: c.to, states: c.states, steps: c.steps.length, checkedDays: +checkedDays(c).toFixed(1), stepsPer30Days: +(c.steps.length / checkedDays(c) * 30).toFixed(2),
+    passive: [16908, 7646, 27944, 25398, 38077].includes(c.norad) }));
+  const passive = perObject.filter((o) => o.passive), falsePassive = { steps: passive.reduce((a, o) => a + o.steps, 0), days: +passive.reduce((a, o) => a + o.checkedDays, 0).toFixed(1) };
+  // losses: training from the rows; held-out from the window definitions (every cutoff and arm; producer coverage failures not yet known)
+  const tally = (list) => {
+    const out = {};
+    for (const x of list) { const k = `${x.regime}|${x.block ?? ''}|${x.name}`; const e = out[k] ??= { regime: x.regime, block: x.block ?? null, name: x.name, arms: 0, armsDropped: 0, leads: 0, leadsKept: 0 };
+      e.arms += 1; if (!x.arcClean) e.armsDropped += 1; e.leads += x.leads; e.leadsKept += x.kept; }
+    return Object.values(out);
+  };
+  const train = [], cells = {};
+  const cell = (regime, block, h, ok) => { const k = `${regime}|${block ?? 'all'}|${h}`; const e = cells[k] ??= { regime, block, h, before: 0, after: 0 }; e.before += 1; if (ok) e.after += 1; };
+  for (const set of TRAIN_SETS) for (const r of rowsIn(path.join(OUT, set))) for (const [arm, a] of Object.entries(r.arms ?? {})) {
+    if (!a.ok || !a.leads?.length) continue;
+    const c = Date.parse(r.cutoff), arcClean = clean(r.norad, c - ARC_HOURS[arm] * HOUR, c), regime = SETS[set].regime, block = blockOf(regime, r.cutoff.slice(0, 10));
+    const kept = a.leads.filter((l) => l.h <= HOURS && arcClean && clean(r.norad, c, c + l.h * HOUR + (l.offsetS ?? 0) * 1000));
+    train.push({ regime, block, name: r.name, arcClean, leads: a.leads.filter((l) => l.h <= HOURS).length, kept: kept.length });
+    for (const h of CELLS) if (a.leads.some((l) => l.h === h)) { cell(regime, block, h, kept.some((l) => l.h === h)); cell(regime, null, h, kept.some((l) => l.h === h)); }
+  }
+  const held = [];
+  const heldDefs = [];
+  for (const o of [39452, 39451, 39453, 43476, 43477]) for (const t of daysOf('2026-01-01', '2026-05-31')) heldDefs.push({ regime: 'H1', norad: o, cutoff: t, arms: ['AP72', 'AP24'] });
+  for (const o of [39634, 62261]) for (const t of daysOf('2025-10-04', '2025-12-21')) heldDefs.push({ regime: 'H2b', norad: o, cutoff: t, arms: ['AP72', 'AP24'] });
+  const every5 = []; for (let t = Date.parse('2025-10-10T00:00:00Z'); t <= Date.parse('2025-12-21T00:00:00Z'); t += 5 * DAY) every5.push(t);
+  for (const [name, norad] of Object.entries({ ...NEAR, ...WEAK })) for (const t of every5) heldDefs.push({ regime: regimeOfDols(name), norad, cutoff: t, arms: ['AP24', 'AP72'] });
+  const nameOf = new Map(files.map((c) => [c.norad, c.name]));
+  for (const w of heldDefs) for (const arm of w.arms) {
+    const arcClean = clean(w.norad, w.cutoff - ARC_HOURS[arm] * HOUR, w.cutoff);
+    let kept = 0; for (let h = 1; h <= HOURS; h += 1) if (arcClean && clean(w.norad, w.cutoff, w.cutoff + h * HOUR)) kept += 1;
+    held.push({ regime: w.regime, name: nameOf.get(w.norad) ?? String(w.norad), arcClean, leads: HOURS, kept });
+    for (const h of CELLS) cell(w.regime, null, h, arcClean && clean(w.norad, w.cutoff, w.cutoff + h * HOUR));
+  }
+  const out = { createdUtc: new Date().toISOString(), rule: { minM: STEP_RULE_M, shiftHours: STEP_SHIFT_MS / HOUR, uncheckedGapHours: UNCHECKED_GAP_MS / HOUR },
+    validation: { recall, recallTotal: { known: recall.reduce((a, r) => a + r.known, 0), found: recall.reduce((a, r) => a + r.found, 0) }, quietWindows: quietAlarms, passiveSpheres: { ...falsePassive, perDay: +(falsePassive.steps / falsePassive.days).toFixed(4) } },
+    perObject, losses: { training: tally(train), heldOut: tally(held) }, cells: Object.values(cells), under30: Object.values(cells).filter((c) => c.after < 30) };
+  fs.writeFileSync(path.join(OUT, 'censor-report.json'), `${JSON.stringify(out, null, 1)}\n`);
+  return out;
+}
+function daysOf(a, b) { const out = []; for (let t = Date.parse(`${a}T00:00:00Z`); t <= Date.parse(`${b}T00:00:00Z`); t += DAY) out.push(t); return out; }
+
+// =====================================================================================================================================
 // Samples: per window-arm and lead, the error and each term's variance contribution, as the identity of section 2 needs them.
 // Training rows (0.6.0, 10 digits, diagonal only); held-out rows (0.6.1, 17 digits, full RIC block).
 const N0 = 1e-6; // nu_0, 1/day
@@ -325,7 +471,7 @@ function armSamples(row, armName, a, full) {
     const d = (cut + l.h * HOUR + (l.offsetS ?? 0) * 1000 - stop) / DAY;
     if (full) {
       const p = l.p, diff = Object.fromEntries(TERMS.map((t) => [t, p.full.map((x, j) => x - p[t][j])]));
-      return { h: l.h, d, e: l.e, full: p.full, off: p.off, dk: diff, d2: l.d2 };
+      return { h: l.h, offsetS: l.offsetS ?? 0, d, e: l.e, full: p.full, off: p.off, dk: diff, d2: l.d2 };
     }
     // diagonal rows: indices 0, 2, 5 of the block
     const blk = (v) => [v[0], 0, v[1], 0, 0, v[2]];
@@ -344,7 +490,8 @@ function trainingArms() {
     if (bar) throw new Error(`training ${r.key}: ${bar}`);
     for (const [arm, a] of Object.entries(r.arms ?? {})) {
       if (!a.ok || !a.leads?.length || !a.covPropagation) continue;
-      const s = armSamples(r, arm, a, true);
+      const s = censor(armSamples(r, arm, a, true));
+      if (!s) continue;
       s.regime = r.regime; s.block = blockOf(r.regime, r.cutoff.slice(0, 10)); s.date = r.cutoff.slice(0, 10);
       out.push(s);
     }
@@ -359,7 +506,8 @@ function heldOutArms() {
     const regime = set === 'dols' ? regimeOfDols(Object.entries({ ...NEAR, ...WEAK }).find(([, n]) => n === r.norad)?.[0]) : SETS[set].regime;
     for (const [arm, a] of Object.entries(r.arms ?? {})) {
       if (!a.ok || !a.leads?.length || !a.covPropagation) continue;
-      const s = armSamples(r, arm, a, true);
+      const s = censor(armSamples(r, arm, a, true));
+      if (!s) continue;
       s.regime = regime; s.set = set; s.date = r.cutoff.slice(0, 10);
       out.push(s);
     }
@@ -762,9 +910,11 @@ function control() {
   return out;
 }
 
-export { trainingArms, heldOutArms, sizesOf, blockAt, formOf, evaluate, verdict, BLOCKS, CELLS, OUT };
+export { catalog, clean, censor, armSamples, rowsIn, STEP_SETS, trainingArms, heldOutArms, sizesOf, blockAt, formOf, evaluate, verdict, BLOCKS, CELLS, OUT };
 const main = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
 if (!main) { /* imported: no command */ }
+else if (process.argv.includes('--steps')) await steps(argOf('--steps'));
+else if (process.argv.includes('--censor-report')) { const r = censorReport(); console.log(JSON.stringify({ validation: r.validation, perObject: r.perObject.map((o) => `${o.set} ${o.name} ${o.steps} steps ${o.checkedDays} d ${o.stepsPer30Days}/30d`), under30: r.under30 }, null, 1)); }
 else if (process.argv.includes('--worker')) await worker(argOf('--worker'), Number(argOf('--shard')));
 else if (process.argv.includes('--rows')) await rows();
 else if (process.argv.includes('--fold')) fold(argOf('--fold'), argOf('--fold', 2));
