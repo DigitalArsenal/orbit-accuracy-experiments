@@ -394,9 +394,15 @@ function clean(norad, a, b) {
   return at >= b - UNCHECKED_GAP_MS;
 }
 const ARC_HOURS = { AP24: 24, APRa12: 17, AP72: 72 };
+// Amendment 4: the catalog censors the propulsive objects near 700 km only (Sentinel-1A, 1C; the DO altimetry satellites)
+const PROPULSIVE = new Set([39634, 62261, 36508, 39086, 41335, 43437, 41240, 46984, 66514, 54754, 46469, 48621]);
+// the cells each regime scores (amendment 4: Sentinel-1 at days 1 and 3)
+const CELLS_OF = { S1: [24, 72], H2b: [24, 72] };
+const cellsOf = (regime) => CELLS_OF[regime] ?? CELLS;
+const MIN_N = 30;
 /** Amendment 3's rule on one arm's samples: null if the fit arc is not clean, else the leads whose (cutoff, lead] is clean. */
 function censor(arm) {
-  if (process.env.COVM_UNCENSORED === '1') return arm;
+  if (process.env.COVM_UNCENSORED === '1' || !PROPULSIVE.has(arm.norad)) return arm;
   const c = Date.parse(arm.cutoff);
   if (!clean(arm.norad, c - ARC_HOURS[arm.arm] * HOUR, c)) return null;
   const leads = arm.leads.filter((l) => clean(arm.norad, c, c + l.h * HOUR + (l.offsetS ?? 0) * 1000));
@@ -678,7 +684,7 @@ function lossFn(form, arms) {
     for (let r = 0; r < regimes.length; r++) {
       let sum = 0, m = 0;
       for (let h = 0; h < HOURS; h++) {
-        const g = r * HOURS + h; if (!count[g]) continue;
+        const g = r * HOURS + h; if (count[g] < MIN_N) continue;
         for (let a = 0; a < 3; a++) { const med = quickMedian(Z[a].subarray(offsets[g], offsets[g + 1]), count[g]); const q = Math.log(med / HALF_NORMAL_MEDIAN); sum += Number.isFinite(q) ? q * q : 1e6; m += 1; }
       }
       total += sum / m;
@@ -729,10 +735,11 @@ function fitForm(form, arms) {
 const inBand = (q) => q >= BAND[0] && q <= BAND[1];
 function verdict(cells, regimes) {
   const out = [];
-  for (const c of cells) if (regimes.includes(c.regime) && CELLS.includes(c.h)) c.axes.forEach((a, i) => out.push({ regime: c.regime, h: c.h, axis: AXES[i], n: c.n, medianAbsZ: a.medianAbsZ, within1: a.within1, within2: a.within2,
-    pass: c.n >= 30 && inBand(a.medianAbsZ) && a.within2 >= TWO_SIGMA_MIN }));
+  for (const c of cells) if (regimes.includes(c.regime) && cellsOf(c.regime).includes(c.h)) c.axes.forEach((a, i) => out.push({ regime: c.regime, h: c.h, axis: AXES[i], n: c.n, medianAbsZ: a.medianAbsZ, within1: a.within1, within2: a.within2,
+    decidable: c.n >= MIN_N, pass: c.n >= MIN_N ? inBand(a.medianAbsZ) && a.within2 >= TWO_SIGMA_MIN : null }));
   return out;
 }
+const passes = (cells) => cells.some((c) => c.decidable) && cells.filter((c) => c.decidable).every((c) => c.pass);
 
 // ---- one fold: the form fitted on the training blocks other than `block` (less the 10-day guard), scored on `block`; `all`: every training row
 function foldArms(arms, block) {
@@ -747,11 +754,11 @@ function fold(formId, block) {
   const pre = evaluate(form, r.x, fit, Array.from({ length: HOURS }, (_, i) => i + 1), { precision: true });
   // the loss again from the evaluator's own medians (a check of the fast path)
   const byRegime = {};
-  for (const c of pre.cells) for (const a of c.axes) (byRegime[c.regime] ??= []).push(Math.log(a.medianAbsZ / HALF_NORMAL_MEDIAN) ** 2);
+  for (const c of pre.cells) if (c.n >= MIN_N) for (const a of c.axes) (byRegime[c.regime] ??= []).push(Math.log(a.medianAbsZ / HALF_NORMAL_MEDIAN) ** 2);
   const lossCheck = Object.values(byRegime).reduce((s, v) => s + v.reduce((p, q) => p + q, 0) / v.length, 0) / Object.keys(byRegime).length;
   const out = { form: formId, block, fitWindows: fit.length, scoreWindows: score.length, x: r.x, loss: r.loss, runs: r.runs, seconds: (Date.now() - t0) / 1000,
     precision: { flagged: pre.flagged, worstBound: pre.worstBound }, lossCheck };
-  if (block !== 'all') { const ev = evaluate(form, r.x, score, CELLS); out.cells = verdict(ev.cells, [BLOCKS[block][0]]); out.pass = out.cells.length === 9 && out.cells.every((c) => c.pass); }
+  if (block !== 'all') { const ev = evaluate(form, r.x, score, CELLS); out.cells = verdict(ev.cells, [BLOCKS[block][0]]); out.pass = passes(out.cells); }
   fs.mkdirSync(path.join(OUT, 'fits'), { recursive: true });
   fs.writeFileSync(path.join(OUT, 'fits', `${formId}-${block}.json`), `${JSON.stringify(out, null, 1)}\n`);
   console.error(`${formId} ${block}: loss ${r.loss.toPrecision(6)} ${block === 'all' ? '' : out.pass ? 'PASS' : 'fail'} (${out.seconds.toFixed(0)} s; flagged ${pre.flagged})`);
@@ -768,7 +775,8 @@ async function select() {
     const folds = Object.keys(BLOCKS).map((b) => JSON.parse(fs.readFileSync(fitFile(form.id, b), 'utf8')));
     const flagged = folds.reduce((s, f) => s + f.precision.flagged, 0) + JSON.parse(fs.readFileSync(fitFile(form.id, 'all'), 'utf8')).precision.flagged;
     const pass = folds.every((f) => f.pass) && flagged === 0;
-    record.forms.push({ form: form.id, pass, flagged, failingCells: folds.flatMap((f) => f.cells.filter((c) => !c.pass).map((c) => `${f.block} ${c.axis} ${c.h} h ${c.medianAbsZ.toFixed(3)} / ${c.within2.toFixed(3)}`)) });
+    record.forms.push({ form: form.id, pass, flagged, failingCells: folds.flatMap((f) => f.cells.filter((c) => c.pass === false).map((c) => `${f.block} ${c.axis} ${c.h} h ${c.medianAbsZ.toFixed(3)} / ${c.within2.toFixed(3)}`)),
+      notDecidable: folds.flatMap((f) => f.cells.filter((c) => !c.decidable).map((c) => `${f.block} ${c.axis} ${c.h} h n ${c.n}`)) });
     console.error(`${form.id}: ${pass ? 'selected' : 'fails'}${flagged ? ` (${flagged} samples need a flight)` : ''}`);
     if (flagged) { record.stoppedAt = form.id; record.reason = 'samples need a flight; the flight path is the next step'; break; }
     if (pass) { record.selected = form.id; break; }
@@ -793,12 +801,13 @@ function heldout() {
   const out = { computedUtc: new Date().toISOString(), selected: sel.selected ?? null, windows: Object.fromEntries([...new Set(arms.map((a) => a.regime))].map((r) => [r, arms.filter((a) => a.regime === r).length])), base061: base };
   if (sel.selected) {
     const s = score(sel.selected), req = s.cells.filter((c) => REQUIRED.includes(c.regime));
-    const present = REQUIRED.filter((r) => req.some((c) => c.regime === r && c.n >= 30));
+    const present = REQUIRED.filter((r) => req.some((c) => c.regime === r && c.decidable));
     const noharm = s.cells.filter((c) => NOHARM.includes(c.regime)).map((c) => {
       const b = base.cells.find((q) => q.regime === c.regime && q.h === c.h && q.axis === c.axis);
-      return { ...c, base: b?.medianAbsZ, ok: inBand(c.medianAbsZ) || Math.abs(Math.log(c.medianAbsZ / HALF_NORMAL_MEDIAN)) <= Math.abs(Math.log(b.medianAbsZ / HALF_NORMAL_MEDIAN)) };
+      return { ...c, base: b?.medianAbsZ, ok: !c.decidable ? null : inBand(c.medianAbsZ) || Math.abs(Math.log(c.medianAbsZ / HALF_NORMAL_MEDIAN)) <= Math.abs(Math.log(b.medianAbsZ / HALF_NORMAL_MEDIAN)) };
     });
-    out.score = { ...s, requiredPresent: present, pass: s.flagged === 0 && present.length > 0 && req.filter((c) => present.includes(c.regime)).every((c) => c.pass) && noharm.every((c) => c.ok), noharm };
+    out.score = { ...s, requiredPresent: present, notDecidable: s.cells.filter((c) => !c.decidable).map((c) => `${c.regime} ${c.axis} ${c.h} h n ${c.n}`),
+      pass: s.flagged === 0 && present.length > 0 && req.filter((c) => c.decidable).every((c) => c.pass) && noharm.every((c) => c.ok !== false), noharm };
   }
   fs.writeFileSync(file, `${JSON.stringify(out, null, 1)}\n`);
   // information only, afterwards
