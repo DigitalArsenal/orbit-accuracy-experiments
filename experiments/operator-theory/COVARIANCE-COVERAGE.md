@@ -56,3 +56,7 @@ Rows: `/opt/data/sdn-archive/operator-theory/covariance-coverage/<set>/rows-<k>.
 ## End to end
 
 `node experiments/operator-theory/covariance-coverage.mjs --check`: this registration's commit precedes the manifest's start; no held row; the control shows 0 differing scalars; the unchanged copy flies byte-equal and the shares sum to 1 within 1e-6; the table and README reproduce from the rows; a median |z| is present for every regime, arm, axis and lead day 1, 3 and 7; the ISS figure reproduces within the tolerances above; the growing term is named with its median in-track share at day 1.
+
+## Amendment 1, 2026-11-05, before any row of the run
+
+A smoke flight of four windows (rows under the lane's scratch, not the store) found no truth state at exactly cutoff + h hours: the precise-orbit series sit 2 s off the hour (10 s steps from 00:00:02), so the leads as written score nothing. No coverage value was read. The lead epoch of hour h is now the first state of the producer's own scoring grid (300 s, from its first truth state after the cutoff) at or after cutoff + h x 3600 s and within one grid step; each lead row records its offset in seconds. Nothing else changes.
