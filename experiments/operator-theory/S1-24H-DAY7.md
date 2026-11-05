@@ -37,3 +37,11 @@ With dT, dF and dFdef the slopes of the truth, FFM24 and FFMdef over the forecas
 4. Something else: the rest.
 
 Holds: no held object, no Sentinel-1 cutoff from 2026-06-01, no truth after 2026-06-08 (`maneuver-flags.mjs` EXCLUDE).
+
+## Amendment 1, 2026-11-05, after one window
+
+Written after the runner's trial on one window, S1|62261|2025-12-13, and nothing else. Its FFM24 flight matches the truth's revolution means to 0.1 m through the fit arc, then sits 6.2 m below them from the first revolution after the cutoff, an along-track drift of about 36 m an hour; the truth's own revolution means scatter by meters from revolution to revolution, which differencing against a flight cancels. So:
+
+- The 30 s flights and the truth's 30 s revolution means run from the arc's start (cutoff - 24 h) to day 7, and each arm's mean semimajor axis is read as its difference from the truth's, revolution by revolution (nearest crossing within 10 min): its slope over the forecast (the arm's decay error, m/day), its mean over the first 3 revolutions after the cutoff (the offset), and the largest change between consecutive revolutions (at most 2 periods apart).
+- Class 1, maneuver under the flag, is FFM24 less the truth changing by 1 m or more between consecutive revolutions in [cutoff - 24 h, cutoff + 168 h] (a step of the truth that FFM's flight does not make; 1 m of semimajor axis drifts about 1 km along-track in 7 days), or the 4 m truth step of the rule above. Both are reported for every window.
+- dF - dT and dFdef - dT in classes 2 and 3 are those difference slopes; dT is the truth's own slope.
