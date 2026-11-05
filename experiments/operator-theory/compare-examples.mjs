@@ -6,6 +6,11 @@
 // --pick showcase, in truth, truth2 and regimes modes: one example per regime, chosen to show AP's lead, not to be typical (see showcaseRank). --build names the AP store (default lib/build.mjs's).
 // Every pick, typical or showcase, skips a window whose example has a step inside its fit (lib/steps.mjs, as the publisher finds them: hour < fitHours), or a hole in
 // its reference there, and takes the next; when every window tried has one, <id>.json says so and holds no tracks. --ids a,b: those examples alone.
+// Each example names the build every arm flew (`builds`: arm to module@sha256[0, 12], as cells.json names its columns' builds).
+//   node experiments/operator-theory/compare-examples.mjs --check [--dir <published examples>]
+// --check reads the published examples (results/ap-truth/compare/examples) and cells.json and flies nothing: every arm of every example names a build, and it is
+// the one build cells.json's rows name for that arm; and on every example the Space Force XP track's largest jump between consecutive grid samples (its offset
+// vector from the reference where the reference is drawn, its distance from the reference in the AP-only form) is at most 3 times whiteroom XP's.
 import fs from 'node:fs';
 import path from 'node:path';
 import { BUILD, AP_ARM } from './lib/build.mjs';
@@ -13,6 +18,39 @@ import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
+if (args.check) {
+  const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
+  const dir = args.dir ?? path.join(root, 'results/ap-truth/compare/examples'), BOUND = 3;
+  const cells = JSON.parse(fs.readFileSync(path.join(root, 'results/ap-truth/compare/cells.json'), 'utf8'));
+  const want = {};
+  for (const r of cells.rows) for (const [col, keys] of Object.entries(r.build)) if (keys.length) (want[/^FFM/.test(col) ? 'FFM' : col] ??= new Set()).add(keys.join(' '));
+  const fails = [], measured = [];
+  for (const [arm, set] of Object.entries(want)) if (set.size !== 1) fails.push(`cells.json names ${set.size} builds for ${arm}`);
+  for (const e of JSON.parse(fs.readFileSync(path.join(dir, 'index.json'), 'utf8')).filter((x) => !x.held && !x.dropped)) {
+    const d = JSON.parse(fs.readFileSync(path.join(dir, `${e.id}.json`), 'utf8')), raw = fs.readFileSync(path.join(dir, `${e.id}.bin`));
+    const arms = d.offsets ?? d.errors, per = d.offsets ? 3 : 1, t = d.epochsSeconds;
+    for (const arm of new Set(['AP', ...arms])) {
+      const got = d.builds?.[arm]?.join(' '), w = [...(want[arm] ?? [])][0];
+      if (!got || got !== w) fails.push(`${e.id} ${arm}: ${got ?? 'no build named'}, cells.json ${w ?? 'none'}`);
+    }
+    const step = Math.min(...t.slice(1).map((x, i) => x - t[i]));
+    // An arm's block after the 24-byte-per-time track: Float32, `per` values per time, in `arms` order.
+    const jump = (arm) => {
+      const at = 24 * d.count + 4 * per * d.count * arms.indexOf(arm), a = new Float32Array(raw.buffer.slice(raw.byteOffset + at, raw.byteOffset + at + 4 * per * d.count));
+      let m = 0;
+      for (let i = 1; i < d.count; i += 1) if (Math.abs(t[i] - t[i - 1] - step) < 1e-6) m = Math.max(m, Math.hypot(...Array.from({ length: per }, (_, c) => a[per * i + c] - a[per * (i - 1) + c])));
+      return m;
+    };
+    const xpu = jump('XPU'), xp = jump('XP'), ratio = xpu / xp;
+    measured.push({ id: e.id, xpu, xp, ratio });
+    console.log(`${e.id}: largest ${step} s jump, Space Force XP ${xpu.toFixed(1)} m, whiteroom XP ${xp.toFixed(1)} m, ratio ${ratio.toFixed(2)}`);
+    if (!(ratio <= BOUND)) fails.push(`${e.id}: Space Force XP jump ${xpu.toFixed(1)} m is ${ratio.toFixed(2)} times whiteroom XP's ${xp.toFixed(1)} m`);
+  }
+  const worst = measured.reduce((a, b) => (b.ratio > a.ratio ? b : a), { ratio: 0 });
+  if (fails.length) { console.log(`COMPARE EXAMPLES CHECK FAIL: ${fails.length}: ${fails.slice(0, 12).join('; ')}`); process.exit(1); }
+  console.log(`COMPARE EXAMPLES CHECK PASS: ${measured.length} examples, every arm on cells.json's one build (${Object.entries(want).map(([a, s]) => `${a} ${[...s][0]}`).join('; ')}); largest Space Force XP to whiteroom XP jump ratio ${worst.ratio.toFixed(2)} (${worst.id}) <= ${BOUND}`);
+  process.exit(0);
+}
 if (!MODE || !OUT) throw new Error('--mode and --out');
 fs.mkdirSync(OUT, { recursive: true });
 const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap'), NEW = path.join(AP, args.build ?? BUILD);
@@ -20,7 +58,7 @@ const SHOWCASE = args.pick === 'showcase';
 const IDS = args.ids ? new Set(args.ids.split(',')) : null;
 // A pick tries windows in its order until one is written: at most `usable` that the burn-free rule passes (the tries before it) and 60 in all.
 const more = (tried, stepped, usable) => tried - stepped < usable && tried < 60;
-let EXTRA = {};
+let EXTRA = {}, BUILDS = null;
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
 const HOUR = 3600000, DAY = 86400000, MU = 398600.4418;
@@ -30,9 +68,17 @@ const meanMotion = (s) => { const r = Math.hypot(...s.r), v = Math.hypot(...s.v)
 // <id>.json describes the example; <id>.bin holds its positions, Float64 km, little endian, in TRACKS order. compare-examples-publish.mjs writes what the site reads.
 const { openUssfXp } = await import('./lib/ussf-xp.mjs');
 const U = await openUssfXp();
+const { build: SGP4_FIT } = await import('./lib/xp2.mjs');
+const buildKey = (rel, sha) => `${rel}@${sha.slice(0, 12)}`;
+/** The build each arm flies, from the modules this run opened: AP and whiteroom XP one sdn-ap, the Space Force XP its sgp4-xp, SGP4 its fit and flight, FFM its fit and flight. */
+const armBuilds = (A, M, F) => {
+  const ap = [buildKey('propagator/sdn-ap', A.build.wasmSha256)];
+  return { AP: ap, XP: ap, XPU: [buildKey('propagator/sgp4-xp', U.build.wasmSha256)], SGP4: [buildKey('analysis/gp-error-model', SGP4_FIT.wasmSha256['analysis/gp-error-model']), buildKey('propagator/sgp4', M.provenance.wasmSha256['propagator/sgp4'])], FFM: [buildKey('analysis/estimation', F.provenance.estimation.wasmSha256), buildKey('propagator/ffm', F.provenance.ffm.wasmSha256)] };
+};
 const write = (doc) => {
   fs.writeFileSync(path.join(OUT, `${doc.id}.bin`), Buffer.concat(TRACKS.map((k) => doc.tracks[k])));
-  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, ...EXTRA, tracks: TRACKS })}\n`);
+  if (!BUILDS) throw new Error('no arm builds');
+  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, ...EXTRA, builds: BUILDS, tracks: TRACKS })}\n`);
   console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.bin`)).size / 1024)} KB`);
 };
 /**
@@ -99,6 +145,7 @@ if (MODE === 'next') {
   const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost();
   // AP and XP from the same build: XP is that module with its atmosphere and added terms off.
   const A = await openAp();
+  BUILDS = armBuilds(A, M, F);
   const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
   const rows = rowsIn(path.join(NEW, 'laser', 'forward')).filter((r) => binOf(r.leadHours) === 72);
   const stores = ['laser-sgp4', 'laser-sgp4-high'].map((d) => new Map(rowsIn(path.join(NEW, d)).map((r) => [key(r), r])));
@@ -196,6 +243,7 @@ if (MODE === 'next') {
   const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
   const { driverRows } = ISS ? await import('./lib/xm3.mjs') : {};
   const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await openAp();
+  BUILDS = armBuilds(A, M, F);
   const axes = ISS ? await openAxes() : null;
   const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = fitPcf({ forces: {}, fit: null });
   const LABEL = { starlink: ['SpaceX', 'Low orbit, maneuvering'], iss: ['NASA ISS', 'Low orbit, crewed'], css: ['China Space Station', 'Low orbit, crewed'], planet: ['Planet (Flock)', 'Low orbit, imaging fleet'], gps: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], glonass: ['ESA ultra-rapid', 'Navigation, ultra-rapid'], intelsat: ['Intelsat', 'Geostationary, station-kept'], ses: ['SES', 'Geostationary, station-kept'] };
@@ -316,6 +364,7 @@ if (MODE === 'next') {
   const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
   const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
   const m = await openModules(), A = await openAp(), G = await openSgp4Fit(), F = await openFfmHost();
+  BUILDS = armBuilds(A, m, F);
   const GRID = XM.config.scoring.gridSeconds * 1000;
   const PCF_XP = fitPcf({ forces: {}, fit: null });
   const ffmSettings = (high) => (high ? {
@@ -445,6 +494,7 @@ if (MODE === 'next') {
   const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
   const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
   const m = await openModules(), A = await openAp(), G = await openSgp4Fit(), F = await openFfmHost();
+  BUILDS = armBuilds(A, m, F);
   const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = fitPcf({ forces: {}, fit: null });
   const MIN_COV = XM.config.fit.minimumCoverage;
   const ffmSettings = (high) => (high ? {
