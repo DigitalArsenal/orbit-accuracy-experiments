@@ -439,6 +439,31 @@
    }
   ]
  },
+ "iss": {
+  "epoch": "2026-07-14T00:00:00.000",
+  "hoursFromStart": 12,
+  "hoursAfterFit": 6,
+  "sigmaBeforeKm": [
+   5.1,
+   37.78,
+   0.02294
+  ],
+  "sigmaAfterKm": [
+   0.01658,
+   0.1473,
+   0.01534
+  ],
+  "errorRicKm": [
+   -0.006758,
+   0.308,
+   -0.01589
+  ],
+  "zAfter": [
+   0.408,
+   2.09,
+   1.04
+  ]
+ },
  "diagnostics": {
   "perRegime": {
    "T": {

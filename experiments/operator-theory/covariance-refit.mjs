@@ -223,17 +223,30 @@ function verdict(cells, block) {
   return out;
 }
 const leadLabel = (h) => (h === 167 ? 'day 7 (167 h)' : h % 24 ? `${h} h` : `day ${h / 24}`);
+/** The ISS demo figure (the coverage study's iss.json, its last state, 12 h from the file's start): each axis 1-sigma re-weighted to the fitted row. */
+function issPrediction(p) {
+  const iss = JSON.parse(fs.readFileSync(path.join(ROWS, 'iss.json'), 'utf8')), L = iss.leads.at(-1), cp = iss.covPropagation;
+  const x = new Float64Array(W);
+  x.set([...L.e, ...L.v.full, ...L.v.e, ...L.v.i, ...L.v.l, ...L.v.d, ...L.v.off, cp.FLOOR_UU_KM2, cp.FLOOR_VV_KM2, cp.FLOOR_WW_KM2,
+    cp.NOISE_ECCENTRICITY_PER_DAY, cp.NOISE_INCLINATION_PER_DAY, cp.NOISE_MEAN_MOTION_RELATIVE, cp.NON_GRAVITATIONAL_SHARE, Math.abs(cp.NON_GRAVITATIONAL_RATE_PER_DAY)]);
+  variances(x, 0, p, vv);
+  return { epoch: iss.last.epoch, hoursFromStart: iss.last.hoursFromStart, hoursAfterFit: L.h, sigmaBeforeKm: L.v.full.map((v) => sig(Math.sqrt(v), 4)),
+    sigmaAfterKm: [...vv].map((v) => sig(Math.sqrt(v), 4)), errorRicKm: L.e.map((e) => sig(e, 4)), zAfter: [...vv].map((v, a) => sig(Math.abs(L.e[a]) / Math.sqrt(v), 3)) };
+}
 function writeTable(outDir, data, fitted, checks) {
-  const p = fitted.best.table, cells = summarize(data, p), diagnostics = diagnose(data, fitted);
+  const p = fitted.best.table, cells = summarize(data, p), diagnostics = diagnose(data, fitted), iss = issPrediction(p);
   const held = verdict(cells, 'heldOut'), train = verdict(cells, 'training');
   const result = {
     study: PLAN, task: TASK, rows: ROWS, criterion: 'per regime, per RIC axis and lead hour 1 to 167: (ln(median |z| / 0.674))^2, averaged over axes and leads, the regimes averaged; pass: held-out median |z| inside [0.603, 0.754] per regime on R, I and C at lead hours 24, 72 and 167',
     blocks: Object.fromEntries(Object.values(SETS).map((s) => [s.regime, { training: s.training, heldOut: s.heldOut }])),
     windows: Object.fromEntries(Object.entries(data).map(([r, R]) => [r, R.windows])), checks,
     old: OLD, fitted: Object.fromEntries(PARAMS.map((k) => [k, Number(p[k].toPrecision(17))])), loss: { old: loss(data, OLD), fitted: fitted.best.loss }, runs: fitted.runs,
-    heldOutVerdict: { pass: held.every((v) => v.inside), cells: held }, trainingVerdict: { pass: train.every((v) => v.inside), cells: train }, diagnostics, cells,
+    heldOutVerdict: { pass: held.every((v) => v.inside), cells: held }, trainingVerdict: { pass: train.every((v) => v.inside), cells: train }, iss, diagnostics, cells,
   };
-  const L = [`# AP DRAG process-noise re-fit (COVARIANCE-REFIT.md)`, '',
+  const outside = held.filter((v) => !v.inside).length;
+  const L = [result.heldOutVerdict.pass ? `Acceptance: the realism criterion is met on the held-out windows (median |z| inside 0.603 to 0.754 per regime on R, I and C at days 1, 3 and 7).`
+    : `Acceptance NOT met: the realism E2E does not pass; on the held-out windows ${outside} of ${held.length} cells (per regime, R, I and C, days 1, 3 and 7) lie outside median |z| 0.603 to 0.754; the record's acceptance line "realism E2E PASS" is not met and the fitted row earns no realism label.`, '',
+    `# AP DRAG process-noise re-fit (COVARIANCE-REFIT.md)`, '',
     `Fitted from the coverage study's rows (sdn-ap 0.6.0, \`${ROWS}\`) by re-weighting the module's own per-term variances; training and held-out windows disjoint by cutoff with a 10-day guard. z = forward error component over the propagated 1-sigma; calibrated median |z| 0.674, band 0.603 to 0.754; within 1 and 2 sigma calibrated 0.683 and 0.954. Windows (window keys with a flown arm): ${Object.entries(result.windows).map(([r, w]) => `${REGIMES[r]} training ${w.training}, held-out ${w.heldOut}`).join('; ')}.`, '',
     '## The DRAG row', '', '| Term | 0.6.0 | Fitted |', '|---|---:|---:|',
     ...PARAMS.map((k) => `| ${k} | ${OLD[k]} | ${result.fitted[k]} |`), '',
@@ -243,6 +256,7 @@ function writeTable(outDir, data, fitted, checks) {
     '| Regime | Set | Lead | n | R before | I before | C before | R after | I after | C after | R within 1, 2 sigma | I within 1, 2 sigma | C within 1, 2 sigma | mean d2/3 (diag) | inside 95 % (diag) |',
     '|---|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|---|---:|---:|'];
   for (const c of cells.filter((q) => q.arm === 'both' && REPORT_LEADS.includes(q.h))) L.push(`| ${REGIMES[c.regime]} | ${c.block === 'heldOut' ? 'held-out' : 'training'} | ${leadLabel(c.h)} | ${c.n} | ${AXES.map((ax) => fmt(c.before.axes[ax].medianAbsZ)).join(' | ')} | ${AXES.map((ax) => fmt(c.after.axes[ax].medianAbsZ)).join(' | ')} | ${AXES.map((ax) => `${fmt(c.after.axes[ax].within1Sigma)}, ${fmt(c.after.axes[ax].within2Sigma)}`).join(' | ')} | ${fmt(c.after.meanD2Over3Diagonal)} | ${fmt(c.after.inside95Diagonal)} |`);
+  L.push('', '## The ISS demo figure, predicted', '', `The demo's ISS sample at its last state ${iss.epoch} (${fmt(iss.hoursFromStart)} h from its start, ${fmt(iss.hoursAfterFit)} h after the fit's end), the coverage study's flights re-weighted to the fitted row (a prediction, not a flight of a build): 1-sigma R / I / C ${iss.sigmaBeforeKm.map(fmt).join(' / ')} km before, ${iss.sigmaAfterKm.map(fmt).join(' / ')} km after, against the error ${iss.errorRicKm.map((e) => fmt(Math.abs(e))).join(' / ')} km (|z| after ${iss.zAfter.map(fmt).join(' / ')}).`);
   L.push('', '## Median |z| per arm after, days 1, 3, 7', '', '| Regime | Set | Arm | Lead | n | R | I | C |', '|---|---|---|---|---:|---:|---:|---:|');
   for (const c of cells.filter((q) => q.arm !== 'both' && DAY_LEADS.includes(q.h))) L.push(`| ${REGIMES[c.regime]} | ${c.block === 'heldOut' ? 'held-out' : 'training'} | ${c.arm} | ${leadLabel(c.h)} | ${c.n} | ${AXES.map((ax) => fmt(c.after.axes[ax].medianAbsZ)).join(' | ')} |`);
   const dc = (c) => DAY_LEADS.map((h) => AXES.map((ax) => fmt(c[h][ax])).join(' / ')).join('; ');
