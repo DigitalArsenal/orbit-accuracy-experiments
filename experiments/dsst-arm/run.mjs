@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // The DSST arm (DSST.md as amended 2026-11-05): fits | flights | tables | --check.
-//   node experiments/dsst-arm/run.mjs fits --store ap/b051/regimes [--workers 6] [--cost]   fit and fly a store's registered windows (truth-fits.mjs)
+//   node experiments/dsst-arm/run.mjs fits --store ap/b051/regimes [--workers 6] [--cost]   fit and fly a store's registered windows (truth-fits.mjs;
+//                                                                                           the ap/b0411 pair stores through pair-fits.mjs, its --iss pass with XP2F_CONTROL=1)
 //   node experiments/dsst-arm/run.mjs flights                                               the flights are flown with the fits; reports them
 //   node experiments/dsst-arm/run.mjs tables                                                results/dsst-arm/table.json and README.md from the stored rows
 //   node experiments/dsst-arm/run.mjs --check   the registration and amendment predate every row; the tables reproduce from the rows; holds kept
@@ -15,7 +16,7 @@ const here = path.dirname(new URL(import.meta.url).pathname);
 const repo = path.resolve(here, '../..');
 const STORE = path.join(ROOT, 'dsst-arm');
 const RESULTS = path.join(repo, 'results/dsst-arm');
-const FILES = ['DSST.md', 'windows.json', 'windows.mjs', 'run.mjs', 'truth-fits.mjs', 'DsstArm.java'];
+const FILES = ['DSST.md', 'windows.json', 'windows.mjs', 'run.mjs', 'truth-fits.mjs', 'pair-fits.mjs', 'DsstArm.java'];
 const COLUMN = 'DSST';
 const B051 = path.join(ROOT, 'ap/b051');
 
@@ -111,7 +112,7 @@ function buildTable(rows, registration) {
     }
   }
   return { registered: `experiments/dsst-arm/DSST.md at ${registration?.sha ?? 'uncommitted'}`, columns: { ...cells.columns, [COLUMN]: 'DSST (Orekit 13.1)' },
-    fields: `${cells.fields} windows, failed, unscored: the DSST rows of the cell and fit; failed: fits that threw or did not converge, counted, never dropped; unscored: windows the AP arm's runner also leaves unscored (no lead bin, arc coverage, an excluded weather span). apOverDsst: AP5.md's statistic on the paired windows, d = ln(e_AP / e_DSST), clusters the ISO week of the cutoff, 10,000-draw cluster bootstrap, 97.5 % percentile interval of the median; medianRatio = exp(median d) (above 1: DSST closer than AP).`,
+    fields: `${cells.fields} windows, failed, unscored: the DSST rows of the cell and fit; failed: fits that threw or did not converge, counted, never dropped; unscored: windows the AP arm's runner also leaves unscored (no lead bin, arc coverage, an excluded weather span, a file shorter than the fit) and pairs whose reference starts inside the fit (forward error only: a lead counts from the fit's end). apOverDsst: AP5.md's statistic on the paired windows, d = ln(e_AP / e_DSST), clusters the ISO week of the cutoff, 10,000-draw cluster bootstrap, 97.5 % percentile interval of the median; medianRatio = exp(median d) (above 1: DSST closer than AP).`,
     builds: rows.length ? rows[0].build : null, rows: out };
 }
 
@@ -183,6 +184,7 @@ else if (phase === 'fits') {
   if (!set) fail('fits: the archive is absent');
   const rest = process.argv.slice(3);
   console.error(`fits: registration ${registration.sha.slice(0, 12)} on origin/main, ${set.keys.size} windows`);
-  const r = spawnSync(process.execPath, [path.join(here, 'truth-fits.mjs'), ...rest], { stdio: 'inherit', env: process.env });
+  const runner = /--store\s+ap\/b0411\//.test(rest.join(' ')) ? 'pair-fits.mjs' : 'truth-fits.mjs';
+  const r = spawnSync(process.execPath, [path.join(here, runner), ...rest], { stdio: 'inherit', env: process.env });
   process.exit(r.status ?? 1);
 } else { console.error('usage: run.mjs fits --store <store> [--workers n] [--cost] | flights | tables | --check'); process.exit(2); }
