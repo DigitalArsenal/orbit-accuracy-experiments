@@ -28,6 +28,10 @@ import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
+// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-next-build-20261105): sdn-ap 0.6.1, its committed dist by SHA-256.
+const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.1', commit: '3b59e95b39d2507e8ba075dd438cb6dc411f26b3', sha256: '05dd4a6600fb4c65d5841e1f49dc26df64fca7c14f1084644cafcfa875fe0a87' };
+// The examples flown again on it: every one but the highly elliptical (TESS) examples, which the site withholds.
+const FLOWN_AGAIN = (d) => d.regime !== 'Highly elliptical';
 if (args.check) {
   const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
   const dir = args.dir ?? path.join(root, 'results/ap-truth/compare/examples'), BOUND = 3;
@@ -35,7 +39,9 @@ if (args.check) {
   const want = {};
   for (const r of cells.rows) for (const [col, keys] of Object.entries(r.build)) if (keys.length) (want[/^FFM/.test(col) ? 'FFM' : col] ??= new Set()).add(keys.join(' '));
   const fails = [], measured = [];
-  let full = 0;
+  const again = `${REFLIGHT_BUILD.module}@${REFLIGHT_BUILD.sha256.slice(0, 12)}`;
+  const recordOf = (k) => (k === again ? { module: REFLIGHT_BUILD.module, version: REFLIGHT_BUILD.version, commit: REFLIGHT_BUILD.commit, sha256: REFLIGHT_BUILD.sha256 } : cells.builds[k]);
+  let full = 0, ocms = 0;
   for (const [arm, set] of Object.entries(want)) if (set.size !== 1) fails.push(`cells.json names ${set.size} builds for ${arm}`);
   for (const e of JSON.parse(fs.readFileSync(path.join(dir, 'index.json'), 'utf8')).filter((x) => !x.held && !x.dropped)) {
     const d = JSON.parse(fs.readFileSync(path.join(dir, `${e.id}.json`), 'utf8')), raw = fs.readFileSync(path.join(dir, `${e.id}.bin`));
@@ -44,10 +50,17 @@ if (args.check) {
       raw.length !== (24 + 12 * ARMS.length + 16) * d.count && `${raw.length} bytes, not ${(24 + 12 * ARMS.length + 16) * d.count}`].filter(Boolean);
     if (form.length) { fails.push(`${e.id}: not the published form (${form.join(', ')})`); continue; }
     full += 1;
+    // AP and whiteroom XP flown again on REFLIGHT_BUILD (their tracks byte for byte the flights cells.json's build made, COMPARE.md), with the $OCM AP flew
+    // beside the example; every other arm on cells.json's build.
     for (const arm of new Set(['AP', ...arms])) {
-      const got = d.build?.[arm]?.join(' '), w = [...(want[arm] ?? [])][0];
-      if (!got || got !== w) fails.push(`${e.id} ${arm}: ${got ?? 'no build named'}, cells.json ${w ?? 'none'}`);
-      for (const k of d.build?.[arm] ?? []) if (JSON.stringify(d.builds?.[k]) !== JSON.stringify(cells.builds[k])) fails.push(`${e.id} ${k}: its record is not cells.json's`);
+      const got = d.build?.[arm]?.join(' '), w = FLOWN_AGAIN(d) && (arm === 'AP' || arm === 'XP') ? again : [...(want[arm] ?? [])][0];
+      if (!got || got !== w) fails.push(`${e.id} ${arm}: ${got ?? 'no build named'}, not ${w ?? 'none'}`);
+      for (const k of d.build?.[arm] ?? []) if (JSON.stringify(d.builds?.[k]) !== JSON.stringify(recordOf(k))) fails.push(`${e.id} ${k}: its record is not ${k === again ? 'the build flown again' : "cells.json's"}`);
+    }
+    if (FLOWN_AGAIN(d)) {
+      const ocm = path.join(dir, `${e.id}.ocm`), b = fs.existsSync(ocm) ? fs.readFileSync(ocm) : null;
+      if (!b || ![4, 8].some((at) => b.subarray(at, at + 4).toString('latin1') === '$OCM')) fails.push(`${e.id}: no $OCM beside it`);
+      else ocms += 1;
     }
     const step = Math.min(...t.slice(1).map((x, i) => x - t[i]));
     // An arm's block after the 24-byte-per-time track: Float32, `per` values per time, in `arms` order. On the grid only: a gap in the reference is no step. On a
@@ -72,7 +85,7 @@ if (args.check) {
   }
   const worst = measured.reduce((a, b) => (b.ratio > a.ratio ? b : a), { ratio: 0 });
   if (fails.length) { console.log(`COMPARE EXAMPLES CHECK FAIL: ${fails.length}: ${fails.slice(0, 12).join('; ')}`); process.exit(1); }
-  console.log(`COMPARE EXAMPLES CHECK PASS: ${measured.length} examples, ${full} in the full form (the reference's track and every arm's offset from it), every arm on cells.json's one build (${Object.entries(want).map(([a, s]) => `${a} ${[...s][0]}`).join('; ')}); largest Space Force XP to whiteroom XP jump ratio ${worst.ratio.toFixed(2)} (${worst.id}) <= ${BOUND}`);
+  console.log(`COMPARE EXAMPLES CHECK PASS: ${measured.length} examples, ${full} in the full form (the reference's track and every arm's offset from it), every arm on cells.json's one build (${Object.entries(want).map(([a, s]) => `${a} ${[...s][0]}`).join('; ')}) but AP and whiteroom XP, flown again on ${again} (sdn-ap ${REFLIGHT_BUILD.version}) with ${ocms} $OCM beside them; largest Space Force XP to whiteroom XP jump ratio ${worst.ratio.toFixed(2)} (${worst.id}) <= ${BOUND}`);
   process.exit(0);
 }
 if (!MODE || !OUT) throw new Error('--mode and --out');
@@ -82,12 +95,10 @@ const SHOWCASE = args.pick === 'showcase';
 const IDS = args.ids ? new Set(args.ids.split(',')) : null;
 // A pick tries windows in its order until one is written: at most `usable` that the burn-free rule passes (the tries before it) and 60 in all.
 const more = (tried, stepped, usable) => REFLIGHT || (tried - stepped < usable && tried < 60);
-// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-next-build-20261105): sdn-ap 0.6.1, its committed dist by SHA-256.
-const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.1', commit: '3b59e95b39d2507e8ba075dd438cb6dc411f26b3', sha256: '05dd4a6600fb4c65d5841e1f49dc26df64fca7c14f1084644cafcfa875fe0a87' };
 const REFLIGHT = args.reflight ? new Map(args.reflight.split(',').flatMap((dir) => fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => [f.slice(0, -5), dir]))) : null;
 /** A stored example: its description and its tracks' bytes (Float64 km, in its `tracks` order). */
 const stored = (id) => { const dir = REFLIGHT.get(id), d = JSON.parse(fs.readFileSync(path.join(dir, `${id}.json`), 'utf8')); return { d, raw: d.dropped ? null : fs.readFileSync(path.join(dir, `${id}.bin`)) }; };
-const reflown = (id) => REFLIGHT.has(id) && !/starlink/i.test(id) && !stored(id).d.dropped && stored(id).d.regime !== 'Highly elliptical';
+const reflown = (id) => REFLIGHT.has(id) && !/starlink/i.test(id) && !stored(id).d.dropped && FLOWN_AGAIN(stored(id).d);
 const considered = new Set(), written = new Set();
 const wanted = (id) => { const w = (!IDS || IDS.has(id)) && (!REFLIGHT || reflown(id)); if (w && REFLIGHT) considered.add(id); return w; };
 /** The window found again is the stored one's: start (next-file) or cutoff (precise orbit), and satellite. */

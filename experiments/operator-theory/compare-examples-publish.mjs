@@ -2,8 +2,9 @@
 // radial, in-track and cross-track distance from it at each time, and the reference's orbit-local axes at each time. Arithmetic on stored positions only.
 //   node experiments/operator-theory/compare-examples-publish.mjs --in <dir>,<dir> --out <dir> [--check]   (a later --in folder's example replaces an earlier one's)
 // --check writes nothing: every file this would write must equal the one in --out (the published examples) byte for byte.
-// --reflown <dir>: full examples compare-examples.mjs flew again (the same ids); each track is reported equal to --in's byte for byte, or by its largest
-// position difference, in m.
+// An example's <id>.ocm beside it in its folder (the $OCM AP flew, compare-examples.mjs --reflight) is copied as it is.
+// --reflown <dir>: full examples compare-examples.mjs flew again (the same ids); each track is reported equal to the one published from --in (the last folder
+// holding the example) byte for byte, or by its largest position difference, in m.
 import fs from 'node:fs';
 import path from 'node:path';
 import { offsetsOf, exampleSteps, exampleBurns, axesAt } from './lib/steps.mjs';
@@ -60,6 +61,8 @@ for (const [f, dir] of [...files].sort((a, b) => a[0].localeCompare(b[0]))) {
     const parts = [reference, ...arms.map((a) => offsets[a]), framesOf(reference, d.count)];
     put(`${d.id}.bin`, Buffer.concat(parts.map((p) => Buffer.from(p.buffer, p.byteOffset, p.byteLength))));
     put(`${d.id}.json`, `${JSON.stringify({ ...rest, center: 'reference', offsets: arms, steps, ...exampleBurns(d, steps) })}\n`);
+    const ocm = path.join(dir, f.replace(/\.json$/, '.ocm'));
+    if (fs.existsSync(ocm)) put(`${d.id}.ocm`, fs.readFileSync(ocm));
     index.push({ id: d.id, reference: d.reference, regime: d.regime, provider: d.provider, satellite: d.satellite, ...(d.showcase ? { showcase: true } : {}) });
   }
 }
@@ -68,7 +71,7 @@ console.log('examples', index.filter((e) => !e.held && !e.dropped).length, 'held
 if (argOf('--reflown')) {
   const dirs = argOf('--in').split(','), tally = {};
   for (const f of fs.readdirSync(argOf('--reflown')).filter((n) => n.endsWith('.json') && n !== 'index.json' && !/starlink/i.test(n)).sort()) {
-    const from = dirs.find((d) => fs.existsSync(path.join(d, f)));
+    const from = dirs.findLast((d) => fs.existsSync(path.join(d, f)));
     if (!from) { console.log(`${f}: not in --in`); continue; }
     const read = (dir) => ({ d: JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), b: fs.readFileSync(path.join(dir, f.replace(/\.json$/, '.bin'))) });
     const x = read(argOf('--reflown')), y = read(from), size = 24 * x.d.count, moved = [];
