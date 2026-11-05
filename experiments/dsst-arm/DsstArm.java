@@ -71,6 +71,21 @@ public class DsstArm {
   static final double AREA = 1000.0; // m^2 on Orekit's default 1,000 kg: each coefficient is an area-to-mass product in m^2/kg
   static final double PRIOR = 0.01;  // AP's priors for B and AGOM, m^2/kg: the start values
 
+  static final double GRID_S = 300.0; // the short-periodic coefficients on a 300 s grid, the scoring step (DSST.md, amendment 2026-11-05 (grid check))
+
+  /** The builder whose propagators, in the fit and the flight, compute their short-periodic coefficients on the 300 s grid. */
+  static final class GriddedBuilder extends DSSTPropagatorBuilder {
+    GriddedBuilder(final org.orekit.orbits.Orbit orbit, final org.orekit.propagation.conversion.ODEIntegratorBuilder integrator, final double scale, final PropagationType propagation, final PropagationType state) {
+      super(orbit, integrator, scale, propagation, state);
+    }
+    @Override
+    public DSSTPropagator buildPropagator(final double[] normalizedParameters) {
+      final DSSTPropagator p = super.buildPropagator(normalizedParameters);
+      p.setInterpolationGridToMaxTimeGap(GRID_S);
+      return p;
+    }
+  }
+
   public static void main(String[] args) throws Exception {
     final File common = new File(args[0]);
     final BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
@@ -187,7 +202,7 @@ public class DsstArm {
     final double period = mean.getKeplerianPeriod();
     // the mean-element steps (DSST.md, amendment 5): one Keplerian period capped at 43,200 s to a day, or to the period where it exceeds a day
     final double minStep = Math.min(period, 43200.0), maxStep = Math.max(86400.0, period);
-    final DSSTPropagatorBuilder builder = new DSSTPropagatorBuilder(mean, new DormandPrince853IntegratorBuilder(minStep, maxStep, 1.0), 1.0, PropagationType.OSCULATING, PropagationType.MEAN);
+    final DSSTPropagatorBuilder builder = new GriddedBuilder(mean, new DormandPrince853IntegratorBuilder(minStep, maxStep, 1.0), 1.0, PropagationType.OSCULATING, PropagationType.MEAN);
     builder.setAttitudeProvider(attitude);
     for (DSSTForceModel f : forces) builder.addForceModel(f);
     for (ParameterDriver d : builder.getPropagationParametersDrivers().getDrivers()) {
