@@ -29,3 +29,21 @@ a solution switch holds the step between two definitive solutions (12 to 221 m o
 and sized apart, as are the example lattice's stencils within four nodes of one. The joins are reported, not removed.
 
 E2E: `node experiments/ap6-heo/truth-series.e2e.mjs`.
+
+## Examples, regenerated on the node series (2026-11-05, scratch)
+
+`compare-examples.mjs --mode regimes` flew both TESS examples again on the same windows (cutoffs 2026-08-24 and 2026-07-27). The forecasts'
+first-axis second differences at samples 500, 1,500 and 2,500, AP, both XPs and FFM alike, in m:
+
+| Example | Before | After |
+|---|---|---|
+| truth-highly-elliptical-tess | 1,129, 643, 287 | 0.0, 0.0, 0.0 |
+| best-highly-elliptical | 1,822, 473, 269 | 0.0, 0.0, 0.0 |
+
+The reference's own second difference less the two-body term falls from a 584 m median to 2.1 m (the Moon and Sun); what remains above
+that sits at the 13:00 UTC solution switches. FFM's fit over the 72 h arc of the first example moves from 304 m radial RMS to 3 mm.
+
+## Scored cells
+
+`results/ap-truth/tess-nodes-20261105.md` (amendment of 2026-11-05): every HE window flown twice on the builds cells.json names, before and
+after the reader change (`rescore.mjs`); the before cells equal cells.json's TESS rows.
