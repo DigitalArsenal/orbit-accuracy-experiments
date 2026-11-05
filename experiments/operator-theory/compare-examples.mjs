@@ -15,6 +15,12 @@
 // of TRACKS, and a file of the reference's Float64 track, each arm's Float32 offset vector and the reference's Float32 rotations, 24 + 12 x 5 + 16 bytes per time.
 // The track is the arm's offset vector from the reference; a jump is the change between two consecutive samples less the change before it (the second difference),
 // so a steady trend in the error is not counted as a jump and a partial-step sawtooth is. The plain change between samples is printed beside it.
+//   node experiments/operator-theory/compare-examples.mjs --mode <mode> [--pick showcase] --reflight <dir>[,<dir>] --out <dir>
+// --reflight: the stored flights of the published examples (a later folder's example replacing an earlier one's). Each example's window is found again as its mode
+// finds it (its start or cutoff and satellite, then its reference track byte for byte), and AP and whiteroom XP alone are fitted and flown again, on
+// REFLIGHT_BUILD; every other track is the stored one. --out gets <id>.json and <id>.bin in the stored form with the AP and XP tracks and builds replaced, and
+// <id>.ocm, the $OCM AP flew, as the module wrote it. Each run prints AP's and XP's largest position difference from the stored track. The highly elliptical
+// (TESS) examples are not flown again (the site withholds that regime).
 import fs from 'node:fs';
 import path from 'node:path';
 import { BUILD, AP_ARM, BUILD_RECORDS } from './lib/build.mjs';
@@ -75,7 +81,57 @@ const STORE = '/opt/data/sdn-archive/operator-theory', AP = path.join(STORE, 'ap
 const SHOWCASE = args.pick === 'showcase';
 const IDS = args.ids ? new Set(args.ids.split(',')) : null;
 // A pick tries windows in its order until one is written: at most `usable` that the burn-free rule passes (the tries before it) and 60 in all.
-const more = (tried, stepped, usable) => tried - stepped < usable && tried < 60;
+const more = (tried, stepped, usable) => REFLIGHT || (tried - stepped < usable && tried < 60);
+// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-next-build-20261105): sdn-ap 0.6.1, its committed dist by SHA-256.
+const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.1', commit: '3b59e95b39d2507e8ba075dd438cb6dc411f26b3', sha256: '05dd4a6600fb4c65d5841e1f49dc26df64fca7c14f1084644cafcfa875fe0a87' };
+const REFLIGHT = args.reflight ? new Map(args.reflight.split(',').flatMap((dir) => fs.readdirSync(dir).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => [f.slice(0, -5), dir]))) : null;
+/** A stored example: its description and its tracks' bytes (Float64 km, in its `tracks` order). */
+const stored = (id) => { const dir = REFLIGHT.get(id), d = JSON.parse(fs.readFileSync(path.join(dir, `${id}.json`), 'utf8')); return { d, raw: d.dropped ? null : fs.readFileSync(path.join(dir, `${id}.bin`)) }; };
+const reflown = (id) => REFLIGHT.has(id) && !/starlink/i.test(id) && !stored(id).d.dropped && stored(id).d.regime !== 'Highly elliptical';
+const considered = new Set(), written = new Set();
+const wanted = (id) => { const w = (!IDS || IDS.has(id)) && (!REFLIGHT || reflown(id)); if (w && REFLIGHT) considered.add(id); return w; };
+/** The window found again is the stored one's: start (next-file) or cutoff (precise orbit), and satellite. */
+const storedWindow = (id, { start, cutoff, satellite }) => { const { d } = stored(id); return d.satellite === satellite && (start === undefined || d.start === start) && (cutoff === undefined || d.cutoff === cutoff); };
+/** propagator/sdn-ap at REFLIGHT_BUILD: lib/ap.mjs openAp's two calls on that build's bytes (pinnedFile: git show at its commit, SHA-256 checked). */
+async function openApAt(b) {
+  const { standalone } = await import('./lib/ap.mjs');
+  const { TYPE, oemLines, flightPcfBytes } = await import('../xp-atmosphere-merit/lib/sds.mjs');
+  const h = await standalone(b.module, { modulesCommit: b.commit, wasmSha256: b.sha256 });
+  return {
+    build: { modulesCommit: b.commit, version: b.version, wasmSha256: b.sha256 },
+    async fit(oem, pcf, extra) {
+      const inputs = [{ portId: 'ephemeris', typeRef: TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: TYPE('PCF'), payload: pcf }, ...(extra?.spw ? [{ portId: 'space_weather', typeRef: TYPE('SPW'), payload: extra.spw }] : [])];
+      const r = await h.invoke({ methodId: 'fit', inputs });
+      if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}` };
+      return { ok: true, ocm: new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload) };
+    },
+    async propagate(ocm, epochs, count) {
+      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: TYPE('PCF'), payload: flightPcfBytes(epochs) }] });
+      if (r.statusCode !== 0) throw new Error(`propagate: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
+      const lines = oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload));
+      if (lines.length !== count) throw new Error(`propagate returned ${lines.length} of ${count} states`);
+      return lines;
+    },
+  };
+}
+const apFor = (openAp) => (REFLIGHT ? openApAt(REFLIGHT_BUILD) : openAp());
+/** One example flown again: AP and whiteroom XP fitted on the window's arc with the stored flight's configuration, flown on its grid, written beside the stored tracks. */
+async function reflight({ id, A, M, oem, pcfAp, extraAp, pcfXp, reference, epochs }) {
+  const { d, raw } = stored(id), size = 24 * d.count, track = (t) => raw.subarray(size * d.tracks.indexOf(t), size * (d.tracks.indexOf(t) + 1));
+  if (d.count !== epochs.length || !encode(reference).equals(track('reference'))) throw new Error(`${id}: the window found again is not the stored one`);
+  const fa = await A.fit(oem, pcfAp, extraAp), fx = await A.fit(oem, pcfXp, undefined);
+  if (!fa.ok || !fx.ok) throw new Error(`${id}: ${fa.error ?? fx.error}`);
+  const fly = async (ocm) => encode((await M.toAxes(await A.propagate(ocm, epochs, epochs.length), epochs, 'GCRF')).map((s) => s.r));
+  const flown = { AP: await fly(fa.ocm), XP: await fly(fx.ocm) };
+  const key = buildKey(REFLIGHT_BUILD.module, REFLIGHT_BUILD.sha256), build = { ...d.build, AP: [key], XP: [key] };
+  const records = { ...d.builds, [key]: { module: REFLIGHT_BUILD.module, version: REFLIGHT_BUILD.version, commit: REFLIGHT_BUILD.commit, sha256: REFLIGHT_BUILD.sha256 } };
+  fs.writeFileSync(path.join(OUT, `${id}.bin`), Buffer.concat(d.tracks.map((t) => flown[t] ?? track(t))));
+  fs.writeFileSync(path.join(OUT, `${id}.json`), `${JSON.stringify({ ...d, build, builds: Object.fromEntries([...new Set(Object.values(build).flat())].map((k) => [k, records[k]])) })}\n`);
+  fs.writeFileSync(path.join(OUT, `${id}.ocm`), fa.ocm);
+  const moved = (t) => { const p = flown[t], q = track(t); let m = 0; for (let i = 0; i < p.length; i += 8) m = Math.max(m, Math.abs(p.readDoubleLE(i) - q.readDoubleLE(i))); return m * 1000; };
+  console.log(`${id}: AP ${moved('AP').toFixed(6)} m, XP ${moved('XP').toFixed(6)} m from the stored tracks; $OCM ${fa.ocm.length} bytes`);
+  written.add(id);
+}
 let EXTRA = {}, BUILDS = null;
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 const rowsIn = (dir) => fs.readdirSync(dir).filter((f) => /^rows-\d+\.jsonl$/.test(f)).flatMap((f) => jsonl(path.join(dir, f)));
@@ -164,7 +220,7 @@ if (MODE === 'next') {
   const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
   const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost();
   // AP and XP from the same build: XP is that module with its atmosphere and added terms off.
-  const A = await openAp();
+  const A = await apFor(openAp);
   BUILDS = armBuilds(A, M, F);
   const key = (r) => `${r.source}|${r.norad}|${r.olderStart}|${r.newerStart}`;
   const rows = rowsIn(path.join(NEW, 'laser', 'forward')).filter((r) => binOf(r.leadHours) === 72);
@@ -202,7 +258,7 @@ if (MODE === 'next') {
     const ffmName = leo ? 'F-M40@48' : 'F-H20@48';
     const ranked = nearestMedian(list.filter((r) => Number.isFinite(sgp(r)) && Number.isFinite(ffmRows.get(key(r))?.arms[ffmName]?.km)), (r) => r.arms[`${AP_ARM}@48`]?.km);
     const id = `next-${provider}-${regime.toLowerCase().replace(/\s+/g, '-')}`;
-    if (IDS && !IDS.has(id)) continue;
+    if (!wanted(id)) continue;
     if (!ranked.length) { console.error(`${id}: no forecast has every arm`); continue; }
     let done = false, stepped = 0, tried = 0;
     for (const pick of ranked) {
@@ -215,12 +271,20 @@ if (MODE === 'next') {
       if (!apP || !xpP || !ffP || !newer) { console.error(`${id}: a stored product is missing`); continue; }
       const older = lines(apP.forecastOem), next = lines(newer.forecastOem);
       const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), step = (leo ? 60 : 300) * 1000, end = tn + 3 * HOUR;
+      if (REFLIGHT && !storedWindow(id, { start: isoMs(t0), satellite: pick.object })) continue;
       const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
       const reference = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
       const keep = ms.map((_, i) => !!reference[i]);
       const epochsMs = ms.filter((_, i) => keep[i]), epochs = epochsMs.map(isoMs), refs = reference.filter(Boolean);
       const w = weatherRows(apP.weatherDay, '2026-02-20', '2026-12-14');
       const tracks = { reference: refs.map((s) => s.r) };
+      if (REFLIGHT) {
+        const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + 48 * HOUR);
+        const segOem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+        await reflight({ id, A, M, oem: segOem, pcfAp: fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), extraAp: { spw: fitWeather(rowsOfSpw(w.rows), horizonOf(Date.parse(seg.at(-1).epoch))) }, pcfXp: fitPcf({ forces: {}, fit: null }), reference: tracks.reference, epochs });
+        done = true;
+        break;
+      }
       const f = ffP.products[ffmName];
       // FFM first: its offsets from the reference carry the steps, so a window the burn-free rule refuses is not fitted by the other arms.
       tracks.FFM = (await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, { forces: f.forces, fixed: f.fixed, integrator: f.integrator }, w.rows)).map((s) => s.r);
@@ -262,7 +326,7 @@ if (MODE === 'next') {
   const { config: XMC } = await import('../xp-atmosphere-merit/common.mjs');
   const W = ISS ? await import('../xp-atmosphere-merit/lib/weather.mjs') : null;
   const { driverRows } = ISS ? await import('./lib/xm3.mjs') : {};
-  const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await openAp();
+  const M = await openModules(), G = await openSgp4Fit(), F = await openFfmHost(), A = await apFor(openAp);
   BUILDS = armBuilds(A, M, F);
   const axes = ISS ? await openAxes() : null;
   const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = fitPcf({ forces: {}, fit: null });
@@ -311,7 +375,7 @@ if (MODE === 'next') {
     const past = usable.filter((r) => r.leadHours >= FIT_H + 6);
     const ranked = nearestMedian(past.length ? past : usable, (r) => r.arms[`${AP_ARM}@${FIT_H}`]?.km);
     const id = `next-${provider.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${source}`;
-    if (IDS && !IDS.has(id)) continue;
+    if (!wanted(id)) continue;
     let done = false, stepped = 0, tried = 0;
     for (const pick of ranked) {
       if (!more(tried, stepped, 8)) break;
@@ -323,6 +387,7 @@ if (MODE === 'next') {
         const next = ISS ? await issFile(pick.newerStart) : newP && lines(newP.forecastOem);
         if (!older || !next) continue;
         const t0 = Date.parse(older[0].epoch), tn = Date.parse(next[0].epoch), leo = Math.hypot(...older[0].r) < 8400;
+        if (REFLIGHT && !storedWindow(id, { start: isoMs(t0), satellite: pick.object })) continue;
         const step = (leo ? 60 : 300) * 1000, end = tn + 3 * HOUR;
         const ms = []; for (let t = t0 + step; t <= end; t += step) ms.push(t);
         const refs = ms.map((t) => (t < tn ? interpolate(older, t) : interpolate(next, t)));
@@ -340,6 +405,7 @@ if (MODE === 'next') {
         }
         const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + FIT_H * HOUR);
         const oem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+        if (REFLIGHT) { await reflight({ id, A, M, oem, pcfAp: PCF_AP, extraAp: extra, pcfXp: PCF_XP, reference: reference.map((x) => x.r), epochs }); done = true; break; }
         const fa = await A.fit(oem, PCF_AP, extra); if (!fa.ok) continue;
         const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
         const fu = await U.fit(oem); if (!fu.ok) continue;
@@ -383,7 +449,7 @@ if (MODE === 'next') {
   const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
   const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
   const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-  const m = await openModules(), A = await openAp(), G = await openSgp4Fit(), F = await openFfmHost();
+  const m = await openModules(), A = await apFor(openAp), G = await openSgp4Fit(), F = await openFfmHost();
   BUILDS = armBuilds(A, m, F);
   const GRID = XM.config.scoring.gridSeconds * 1000;
   const PCF_XP = fitPcf({ forces: {}, fit: null });
@@ -444,12 +510,13 @@ if (MODE === 'next') {
       ? showcaseRank(rows.filter((r) => r.group === group), (r) => ({ ap: e3(r, 'AP72'), xp: e3(r, 'XP72'), s: e3(r, 'S72'), f: e3(r, 'F72') }))
       : nearestMedian(rows.filter((r) => r.group === group && r.name === only), (r) => r.arms.AP72?.days?.[D3]?.e);
     const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-    if (IDS && !IDS.has(id)) continue;
+    if (!wanted(id)) continue;
     let done = false, stepped = 0, tried = 0;
     for (const pick of ranked) {
       if (!more(tried, stepped, SHOWCASE ? 12 : Infinity)) break;
       tried += 1;
       const name = only ?? pick.name;
+      if (REFLIGHT && !storedWindow(id, { cutoff: iso(Date.parse(pick.cutoff.length === 10 ? `${pick.cutoff}T00:00:00Z` : pick.cutoff)), satellite: name })) continue;
       if (!seriesCache.has(name)) seriesCache.set(name, await seriesOf(group, name));
       const o = seriesCache.get(name);
       const times = o.lines.map((l) => ms(l.epoch));
@@ -476,6 +543,7 @@ if (MODE === 'next') {
         }
         const pcfAp = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20, atmosphere: !vacuum }), fit: null });
         const oem = S.oemBytes({ frame: 'GCRF', object: { name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
+        if (REFLIGHT) { await reflight({ id, A, M: m, oem, pcfAp, extraAp: ex, pcfXp: PCF_XP, reference: grid.map((l) => l.r), epochs }); done = true; break; }
         const fa = await A.fit(oem, pcfAp, ex); if (!fa.ok) continue;
         const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
         const fu = await U.fit(oem); if (!fu.ok) continue;
@@ -513,7 +581,7 @@ if (MODE === 'next') {
   const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
   const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
   const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
-  const m = await openModules(), A = await openAp(), G = await openSgp4Fit(), F = await openFfmHost();
+  const m = await openModules(), A = await apFor(openAp), G = await openSgp4Fit(), F = await openFfmHost();
   BUILDS = armBuilds(A, m, F);
   const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = fitPcf({ forces: {}, fit: null });
   const MIN_COV = XM.config.fit.minimumCoverage;
@@ -541,7 +609,7 @@ if (MODE === 'next') {
         : nearestMedian(inCut.filter((r) => r.name === only), (r) => r.arms[arm]?.days?.['3']?.e);
       const slug = cut.regime.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-      if (IDS && !IDS.has(id)) continue;
+      if (!wanted(id)) continue;
       let done = false, stepped = 0, tried = 0;
       for (const pick of ranked) {
         if (!more(tried, stepped, 12)) break;
@@ -549,6 +617,7 @@ if (MODE === 'next') {
         const w = byKey.get(pick.key);
         if (!w) continue;
         const name = only ?? pick.name;
+        if (REFLIGHT && !storedWindow(id, { cutoff: iso(w.cutoffMs), satellite: name })) continue;
         EXTRA = SHOWCASE ? { showcase: pick.showcase } : {};
         try {
           const { o, cutoffMs: D0 } = w;
@@ -571,6 +640,7 @@ if (MODE === 'next') {
           const ex = { spw: fitWeather(O.rows, horizonOf(D0)) };
           const spw = driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
           const oem = S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId ?? '', norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
+          if (REFLIGHT) { await reflight({ id, A, M: m, oem, pcfAp: PCF_AP, extraAp: ex, pcfXp: PCF_XP, reference: grid.map((l) => l.r), epochs }); done = true; break; }
           const fa = await A.fit(oem, PCF_AP, ex); if (!fa.ok) continue;
           const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
           const fu = await U.fit(oem); if (!fu.ok) continue;
@@ -600,5 +670,10 @@ if (MODE === 'next') {
     }
   }
   await F.close();
+}
+if (REFLIGHT) {
+  const missing = [...considered].filter((id) => !written.has(id));
+  console.log(`REFLIGHT ${written.size} of ${considered.size} examples flown again on sdn-ap ${REFLIGHT_BUILD.version}${missing.length ? `; not found again: ${missing.join(', ')}` : ''}`);
+  process.exit(missing.length ? 1 : 0);
 }
 process.exit(0);
