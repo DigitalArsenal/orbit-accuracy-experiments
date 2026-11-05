@@ -88,3 +88,12 @@ Each source's credit and license line, as the site's sources page states it:
 | China Space Station | China Space Station ephemerides (China Manned Space Agency) | Published with no stated license | China Manned Space Agency. |
 | Planet (Flock) | Planet Flock public ephemerides | CC BY-NC 4.0 | Copyright Planet Labs PBC (ephemerides.planet-labs.com). |
 
+
+## Amendment, 2026-11-05: AP and whiteroom XP flown again on sdn-ap 0.6.1, with each example's $OCM
+
+`compare-examples.mjs --reflight` finds each published example's window again (its start or cutoff and satellite, then its reference track byte for byte) and fits and flies AP and whiteroom XP alone again on `propagator/sdn-ap` 0.6.1 (modules 3b59e95b, dist 05dd4a6600fb), which changes only the covariance's noise table. It writes each example with those two tracks replaced, and `<id>.ocm`, the `$OCM` AP flew, to `ap/b061/compare-examples-reflight`:
+
+    node experiments/operator-theory/compare-examples.mjs --mode <next|providers|regimes|truth|truth2> [--pick showcase] \
+      --reflight <store>/ap/b0411/compare-examples-full,<store>/ap/b051/compare-examples-regen --out <store>/ap/b061/compare-examples-reflight
+
+with XP2F_CONTROL=1 for `truth2` and for `providers --only iss` (XM's own weather store), and SDN_MODULES_GIT naming a modules clone that holds 3b59e95b. Every published example but the two highly elliptical (TESS) examples was flown again: in all 56, the AP and whiteroom XP tracks equal the 0.5.1 flights byte for byte, a largest position difference of 0 m (`compare-examples-publish.mjs --reflown`, which now compares with the folder the publisher reads). `compare-examples-publish.mjs` takes `ap/b061/compare-examples-reflight` last and copies each `<id>.ocm` beside its example. Each published example names AP and whiteroom XP on 0.6.1; every other arm, the TESS examples and every cell keep the build they were measured on, and `compare-examples.mjs --check` holds both and finds one `$OCM` beside each of the 56.
