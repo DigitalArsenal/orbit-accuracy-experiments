@@ -10,8 +10,10 @@
 // commit and SHA-256 (lib/build.mjs BUILD_RECORDS).
 //   node experiments/operator-theory/compare-examples.mjs --check [--dir <published examples>]
 // --check reads the published examples (results/ap-truth/compare/examples) and cells.json and flies nothing: every arm of every example names a build, and it is
-// the one build cells.json's rows name for that arm, each key's record cells.json's; and on every example the Space Force XP track's largest jump between consecutive grid samples (its offset
-// vector from the reference where the reference is drawn, its distance from the reference in the AP-only form) is at most 3 times whiteroom XP's.
+// the one build cells.json's rows name for that arm, each key's record cells.json's; and on every example the Space Force XP track's largest jump between consecutive grid
+// samples is at most 3 times whiteroom XP's. The track is its offset vector from the reference where the reference is drawn, its distance from the reference in the AP-only
+// form; a jump is the change between two consecutive samples less the change before it (the second difference), so a steady trend in the error is not counted as a
+// jump and a partial-step sawtooth is. The plain change between samples is printed beside it.
 import fs from 'node:fs';
 import path from 'node:path';
 import { BUILD, AP_ARM, BUILD_RECORDS } from './lib/build.mjs';
@@ -36,17 +38,22 @@ if (args.check) {
       for (const k of d.build?.[arm] ?? []) if (JSON.stringify(d.builds?.[k]) !== JSON.stringify(cells.builds[k])) fails.push(`${e.id} ${k}: its record is not cells.json's`);
     }
     const step = Math.min(...t.slice(1).map((x, i) => x - t[i]));
-    // An arm's block after the 24-byte-per-time track: Float32, `per` values per time, in `arms` order.
-    const jump = (arm) => {
+    // An arm's block after the 24-byte-per-time track: Float32, `per` values per time, in `arms` order. On the grid only: a gap in the reference is no step.
+    const onStep = (i) => Math.abs(t[i] - t[i - 1] - step) < 1e-6;
+    const jumps = (arm) => {
       const at = 24 * d.count + 4 * per * d.count * arms.indexOf(arm), a = new Float32Array(raw.buffer.slice(raw.byteOffset + at, raw.byteOffset + at + 4 * per * d.count));
-      let m = 0;
-      for (let i = 1; i < d.count; i += 1) if (Math.abs(t[i] - t[i - 1] - step) < 1e-6) m = Math.max(m, Math.hypot(...Array.from({ length: per }, (_, c) => a[per * i + c] - a[per * (i - 1) + c])));
-      return m;
+      const delta = (i) => Array.from({ length: per }, (_, c) => a[per * i + c] - a[per * (i - 1) + c]);
+      let change = 0, jump = 0;
+      for (let i = 1; i < d.count; i += 1) if (onStep(i)) {
+        change = Math.max(change, Math.hypot(...delta(i)));
+        if (i > 1 && onStep(i - 1)) { const p = delta(i - 1); jump = Math.max(jump, Math.hypot(...delta(i).map((x, c) => x - p[c]))); }
+      }
+      return { change, jump };
     };
-    const xpu = jump('XPU'), xp = jump('XP'), ratio = xpu / xp;
-    measured.push({ id: e.id, xpu, xp, ratio });
-    console.log(`${e.id}: largest ${step} s jump, Space Force XP ${xpu.toFixed(1)} m, whiteroom XP ${xp.toFixed(1)} m, ratio ${ratio.toFixed(2)}`);
-    if (!(ratio <= BOUND)) fails.push(`${e.id}: Space Force XP jump ${xpu.toFixed(1)} m is ${ratio.toFixed(2)} times whiteroom XP's ${xp.toFixed(1)} m`);
+    const xpu = jumps('XPU'), xp = jumps('XP'), ratio = xpu.jump / xp.jump;
+    measured.push({ id: e.id, ratio });
+    console.log(`${e.id}: largest ${step} s jump, Space Force XP ${xpu.jump.toFixed(2)} m, whiteroom XP ${xp.jump.toFixed(2)} m, ratio ${ratio.toFixed(2)}; largest change ${xpu.change.toFixed(1)} m and ${xp.change.toFixed(1)} m`);
+    if (!(ratio <= BOUND)) fails.push(`${e.id}: Space Force XP jump ${xpu.jump.toFixed(2)} m is ${ratio.toFixed(2)} times whiteroom XP's ${xp.jump.toFixed(2)} m`);
   }
   const worst = measured.reduce((a, b) => (b.ratio > a.ratio ? b : a), { ratio: 0 });
   if (fails.length) { console.log(`COMPARE EXAMPLES CHECK FAIL: ${fails.length}: ${fails.slice(0, 12).join('; ')}`); process.exit(1); }
