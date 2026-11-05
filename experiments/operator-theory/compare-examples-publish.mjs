@@ -8,8 +8,8 @@
 // position difference, in m.
 import fs from 'node:fs';
 import path from 'node:path';
-import { axesAt, offsetsOf, exampleSteps, exampleBurns } from './lib/steps.mjs';
-import { NOT_REDRAWN } from './lib/licensed.mjs';
+import { offsetsOf, exampleSteps, exampleBurns } from './lib/steps.mjs';
+import { NOT_REDRAWN, framesOf } from './lib/licensed.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const OUT = argOf('--out'), CHECK = process.argv.includes('--check');
@@ -24,22 +24,6 @@ const put = (name, bytes) => {
   checked += 1;
   if (!fs.existsSync(file) || !fs.readFileSync(file).equals(b)) differ.push(name);
 };
-/** The rotation from a track's axes in-track, cross-track, radial to GCRF at each time, Float32 quaternions x, y, z, w. The site reads these and builds no axes of its own. */
-function framesOf(track, count) {
-  const out = new Float32Array(4 * count);
-  for (let i = 0; i < count; i += 1) {
-    const { R, I, C } = axesAt(track, count, i);
-    const m00 = I[0], m10 = I[1], m20 = I[2], m01 = C[0], m11 = C[1], m21 = C[2], m02 = R[0], m12 = R[1], m22 = R[2], t = m00 + m11 + m22;
-    let x, y, z, w;
-    if (t > 0) { const s = 2 * Math.sqrt(t + 1); w = s / 4; x = (m21 - m12) / s; y = (m02 - m20) / s; z = (m10 - m01) / s; }
-    else if (m00 >= m11 && m00 >= m22) { const s = 2 * Math.sqrt(1 + m00 - m11 - m22); w = (m21 - m12) / s; x = s / 4; y = (m01 + m10) / s; z = (m02 + m20) / s; }
-    else if (m11 >= m22) { const s = 2 * Math.sqrt(1 + m11 - m00 - m22); w = (m02 - m20) / s; x = (m01 + m10) / s; y = s / 4; z = (m12 + m21) / s; }
-    else { const s = 2 * Math.sqrt(1 + m22 - m00 - m11); w = (m10 - m01) / s; x = (m02 + m20) / s; y = (m12 + m21) / s; z = s / 4; }
-    out.set([x, y, z, w], 4 * i);
-  }
-  return out;
-}
-
 const index = [];
 // Every example of the --in folders, a later folder's file replacing an earlier one's of the same id. Every Starlink group is held: its example is not parsed,
 // and the index names it. An example dropped for want of a window without a step in its fit has no files; the index says why.
