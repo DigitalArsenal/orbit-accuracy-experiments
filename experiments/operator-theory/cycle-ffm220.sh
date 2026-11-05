@@ -2,7 +2,7 @@
 # Every FFM fit and flight behind results/ap-truth/compare/cells.json, again on propagator/ffm 2.2.0 (lib/build.mjs FFM_220, lib/host.mjs's FFM build)
 # at each arm's registered settings, on the same windows, files and pairs, into <archive>/operator-theory/ap/ffm220 beside the stores they replace in the
 # cells (COMPARE.md, 2026-11-05). FFM arms only: no AP, XP or SGP4 arm is run. A rerun adds only what is missing.
-#   cycle-ffm220.sh truth | providers | laser | all
+#   cycle-ffm220.sh truth | providers | laser | examples | all
 # At most 12 workers, and a new one starts only while the 1-minute load average is under 45.
 set -u
 OT=/opt/data/sdn-archive/operator-theory
@@ -62,10 +62,22 @@ laser() {
   drain; note "laser fitted"
   score "$O/cheaper" --weather-from 2026-02-20
 }
+# The worked examples: each stored example's FFM track flown again on its own window (compare-examples.mjs --ffm-only), every other track as stored; the
+# next-file ones after the laser products; EXAMPLES_IN names the stored examples (default the published ones' store). compare-examples-publish.mjs then writes the site's files.
+examples() {
+  local E=$O/compare-examples IN=${EXAMPLES_IN:-$OT/ap/b051/compare-examples-regen} m; PIDS=()
+  mkdir -p "$E/logs"
+  for m in "truth" "truth --pick showcase" "regimes" "regimes --pick showcase" "providers" "providers --only iss" "next"; do
+    run "$E/logs/${m// /_}.log" "${NODE[@]}" $CODE/compare-examples.mjs --mode $m --ffm-only "$IN" --out "$E"
+  done
+  for m in "truth2" "truth2 --pick showcase"; do run "$E/logs/${m// /_}.log" env XP2F_CONTROL=1 "${NODE[@]}" $CODE/compare-examples.mjs --mode $m --ffm-only "$IN" --out "$E"; done
+  drain; note "examples: $(ls "$E"/*.json 2>/dev/null | wc -l) flown again"
+}
 case "${1:-}" in
   truth) truth; truth_done ;;
   providers) providers ;;
   laser) laser ;;
-  all) note start; truth; providers; laser; truth_done; note finished ;;
+  examples) examples ;;
+  all) note start; truth; providers; laser; truth_done; examples; note finished ;;
   *) echo "truth, providers, laser or all" >&2; exit 2 ;;
 esac
