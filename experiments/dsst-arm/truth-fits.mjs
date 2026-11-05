@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import os from 'node:os';
 import { spawn, execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import * as fb from 'flatbuffers';
@@ -220,10 +221,10 @@ async function main() {
   console.error(`JVM PIDs: ${workers.map((w) => w.pid).join(' ')}`);
   fs.writeFileSync(path.join(SCRATCH, 'pids.txt'), workers.map((w) => w.pid).join('\n') + '\n');
   let next = 0, written = 0, failed = 0;
-  const one = async (wk) => {
-    for (;;) {
-      const job = jobs[next++];
-      if (!job) return;
+  // a window the AP arm also left unscored (no lead bin, arc coverage, an excluded weather span) is an unscored row, not a failed fit
+  const UNSCORED = /^(no lead bin|coverage|weather: )/;
+  /** One window's fit and flight: the row. */
+  const fitOne = async (wk, job) => {
       const { w, hours } = job, D0 = w.cutoffMs;
       const row = { key: w.key, store: STORE_NAME, reference: 'truth', input: 'precise-orbit', regime: regimeOf({ group: w.group, at: D0 }), group: w.group, norad: w.norad, name: w.name, cutoff: iso(D0), fit: hours, writtenAt: null, build: BUILD };
       try {
@@ -249,7 +250,7 @@ async function main() {
         fs.mkdirSync(dir, { recursive: true });
         if (!w.vacuum) {
           const R = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
-          if (R.excluded) throw new Error(R.excluded);
+          if (R.excluded) throw new Error(`weather: ${R.excluded}`);
           const spw = fitWeather(R.rows, horizonOf(D0));
           const rows = expandRows(R.rows, horizonOf(D0));
           const text = cssiText(rows);
@@ -262,6 +263,7 @@ async function main() {
         row.eopSha256 = sha256(finals); row.eopTableSha256 = EOP_TABLE_SHA;
         const req = path.join(dir, 'request.txt');
         fs.writeFileSync(req, [`key ${w.key}`, `cutoff ${iso(D0)}`, `fit ${hours}`, `dragBelowKm ${DRAG_BELOW_KM}`, `window ${dir}`, `arc ${thin.length}`, ...thin.map((l) => `${l.epoch} ${l.r.join(' ')} ${l.v.join(' ')}`), `out ${epochs.length}`, ...epochs].join('\n') + '\n');
+        const load = os.loadavg()[0];
         const reply = await wk.run(req);
         const res = readResponse(`${req}.out`);
         if (res.status !== 'ok') throw new Error(`fit: ${res.error ?? reply}`);
@@ -271,9 +273,20 @@ async function main() {
         entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); leads[k * 24] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2], states: sizes[j] }; });
         if (Object.values(leads).some((x) => !Number.isFinite(x.e))) throw new Error('non-finite state at a scored epoch');
         Object.assign(row, { drag: res.drag === 1, perigeeKm: res.perigeeKm, converged: true, iterations: res.iterations, evaluations: res.evaluations, rmsM: res.rms_m, cdAm: res.drag === 1 ? res.cd : null, crAm: res.drag === 1 ? 0.01 : res.cr, epoch: res.epoch, mean: res.mean, arcStates: thin.length, leads,
-          cost: { ...res.cost, objectDays: (ms(epochs.at(-1)) - D0) / DAY, stepSeconds: gridMs / 1000, singleThread: COST } });
+          ephemerisGapM: String(res.ephemerisGapM ?? '').split(' ').map(Number),
+          cost: { ...res.cost, objectDays: (ms(epochs.at(-1)) - D0) / DAY, stepSeconds: gridMs / 1000, singleThread: COST, load1: [load, os.loadavg()[0]] } });
         fs.rmSync(dir, { recursive: true, force: true });
-      } catch (error) { row.failed = true; row.error = String(error?.message ?? error).slice(0, 300); failed += 1; }
+      } catch (error) { const why = String(error?.message ?? error).slice(0, 300); if (UNSCORED.test(why)) row.unscored = why; else { row.failed = true; row.error = why; } }
+      return row;
+  };
+  // cost mode: one uncounted window warms the JVM (DSST.md, Cost); its row is not written
+  if (COST) await fitOne(workers[0], jobs[0]);
+  const one = async (wk) => {
+    for (;;) {
+      const job = jobs[next++];
+      if (!job) return;
+      const row = await fitOne(wk, job);
+      if (row.failed) failed += 1;
       row.writtenAt = new Date().toISOString();
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
       written += 1;

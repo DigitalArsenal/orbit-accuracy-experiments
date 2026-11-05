@@ -42,9 +42,9 @@ import org.orekit.models.earth.atmosphere.data.CssiSpaceWeatherData;
 import org.orekit.orbits.CartesianOrbit;
 import org.orekit.orbits.EquinoctialOrbit;
 import org.orekit.orbits.KeplerianOrbit;
-import org.orekit.propagation.BoundedPropagator;
-import org.orekit.propagation.EphemerisGenerator;
 import org.orekit.propagation.PropagationType;
+import org.orekit.propagation.sampling.OrekitStepHandler;
+import org.orekit.propagation.sampling.OrekitStepInterpolator;
 import org.orekit.propagation.Propagator;
 import org.orekit.propagation.SpacecraftState;
 import org.orekit.propagation.conversion.DSSTPropagatorBuilder;
@@ -84,6 +84,7 @@ public class DsstArm {
         System.out.println("done " + line);
       } catch (Throwable t) {
         final String why = brief(t);
+        t.printStackTrace(System.err);
         try (PrintWriter w = new PrintWriter(new File(line + ".out"), StandardCharsets.UTF_8)) { w.println("status fail " + why); }
         System.out.println("fail " + line + " " + why);
       }
@@ -172,12 +173,14 @@ public class DsstArm {
     forces.add(new DSSTThirdBody(sun, mu));
     forces.add(new DSSTThirdBody(moon, mu));
     forces.add(new DSSTSolarRadiationPressure(PRIOR, AREA, sun, earth, mu));
-    if (drag) forces.add(new DSSTAtmosphericDrag(new NRLMSISE00(new CssiSpaceWeatherData(new DataSource(cssi), utc), sun, earth), PRIOR, AREA, mu));
+    // the four-argument constructor: the window context's UT1, not the default context's (which holds no data)
+    if (drag) forces.add(new DSSTAtmosphericDrag(new NRLMSISE00(new CssiSpaceWeatherData(new DataSource(cssi), utc), sun, earth, ctx.getTimeScales().getUT1(IERSConventions.IERS_2010, true)), PRIOR, AREA, mu));
 
     final AttitudeProvider attitude = new FrameAlignedProvider(gcrf);
     final SpacecraftState osculating = new SpacecraftState(new CartesianOrbit(last, gcrf, mu));
     final EquinoctialOrbit mean = new EquinoctialOrbit(DSSTPropagator.computeMeanState(osculating, attitude, forces).getOrbit());
     final double period = mean.getKeplerianPeriod();
+    // the mean-element steps (DSST.md, amendment 5): one Keplerian period capped at 43,200 s to a day, or to the period where it exceeds a day
     final double minStep = Math.min(period, 43200.0), maxStep = Math.max(86400.0, period);
     final DSSTPropagatorBuilder builder = new DSSTPropagatorBuilder(mean, new DormandPrince853IntegratorBuilder(minStep, maxStep, 1.0), 1.0, PropagationType.OSCULATING, PropagationType.MEAN);
     builder.setAttitudeProvider(attitude);
@@ -211,23 +214,42 @@ public class DsstArm {
     final SpacecraftState initial = prop.getInitialState();
     final EquinoctialOrbit fo = new EquinoctialOrbit(initial.getOrbit());
 
-    // the flight: one propagation over the span, states at the scored epochs from the generated ephemeris; checked against a direct
-    // propagation at the first and last epoch (1 m), else every epoch is propagated directly
+    // the flight: one propagation from the fit epoch over the span; a step handler takes the state at every scored epoch from the
+    // integrator's dense output with the short periodics evaluated at that epoch, as the fit's own residuals are. The propagator keeps
+    // its initial state (no reset at the end), so direct propagations to the first and last epoch check the handler's states; the gaps
+    // are recorded, and above 100 m every epoch is propagated directly instead.
     final List<AbsoluteDate> dates = new ArrayList<>();
     for (String s : out) dates.add(date(s, utc));
+    final PVCoordinates[] sampled = new PVCoordinates[dates.size()];
     final List<PVCoordinates> states = new ArrayList<>();
-    String flightPath = "ephemeris";
+    String flightPath = "step-handler";
+    double gapFirst = 0.0, gapLast = 0.0;
     if (!dates.isEmpty()) {
-      final EphemerisGenerator gen = prop.getEphemerisGenerator();
-      prop.propagate(dates.get(dates.size() - 1));
-      final BoundedPropagator eph = gen.getGeneratedEphemeris();
-      final PVCoordinates checkFirst = eph.getPVCoordinates(dates.get(0), gcrf), directFirst = prop.propagate(dates.get(0)).getPVCoordinates(gcrf);
-      final PVCoordinates checkLast = eph.getPVCoordinates(dates.get(dates.size() - 1), gcrf), directLast = prop.propagate(dates.get(dates.size() - 1)).getPVCoordinates(gcrf);
-      if (Vector3D.distance(checkFirst.getPosition(), directFirst.getPosition()) <= 1.0 && Vector3D.distance(checkLast.getPosition(), directLast.getPosition()) <= 1.0) {
-        for (AbsoluteDate d : dates) states.add(eph.getPVCoordinates(d, gcrf));
+      final DSSTPropagator dsst = (DSSTPropagator) prop;
+      dsst.setResetAtEnd(false);
+      final int[] next = {0};
+      dsst.getMultiplexer().add(new OrekitStepHandler() {
+        @Override
+        public void handleStep(final OrekitStepInterpolator interpolator) {
+          final AbsoluteDate end = interpolator.getCurrentState().getDate();
+          while (next[0] < dates.size() && dates.get(next[0]).compareTo(end) <= 0) {
+            sampled[next[0]] = interpolator.getInterpolatedState(dates.get(next[0])).getPVCoordinates(gcrf);
+            next[0]++;
+          }
+        }
+      });
+      dsst.propagate(dates.get(dates.size() - 1));
+      dsst.clearStepHandlers();
+      for (int k = 0; k < sampled.length; k++) if (sampled[k] == null) throw new IllegalStateException("the step handler missed epoch " + out.get(k));
+      final PVCoordinates directFirst = dsst.propagate(dates.get(0)).getPVCoordinates(gcrf);
+      final PVCoordinates directLast = dsst.propagate(dates.get(dates.size() - 1)).getPVCoordinates(gcrf);
+      gapFirst = Vector3D.distance(sampled[0].getPosition(), directFirst.getPosition());
+      gapLast = Vector3D.distance(sampled[sampled.length - 1].getPosition(), directLast.getPosition());
+      if (gapFirst <= 100.0 && gapLast <= 100.0) {
+        for (PVCoordinates pv : sampled) states.add(pv);
       } else {
         flightPath = "direct";
-        for (AbsoluteDate d : dates) states.add(prop.propagate(d).getPVCoordinates(gcrf));
+        for (AbsoluteDate d : dates) states.add(dsst.propagate(d).getPVCoordinates(gcrf));
       }
     }
     final long c2 = os.getProcessCpuTime(), w2 = System.nanoTime();
@@ -245,6 +267,7 @@ public class DsstArm {
       w.println("epoch " + initial.getDate().toString(utc));
       w.println(String.format(Locale.ROOT, "mean %.6f %.12e %.12e %.12e %.12e %.12e", fo.getA(), fo.getEquinoctialEx(), fo.getEquinoctialEy(), fo.getHx(), fo.getHy(), fo.getLM()));
       w.println("cost " + (c1 - c0) + " " + (w1 - w0) + " " + (c2 - c1) + " " + (w2 - w1) + " " + peak + " " + flightPath);
+      w.println(String.format(Locale.ROOT, "ephemerisGapM %.3f %.3f", gapFirst, gapLast));
       for (int k = 0; k < dates.size(); k++) {
         final PVCoordinates pv = states.get(k);
         w.println(String.format(Locale.ROOT, "state %s %.9f %.9f %.9f %.12f %.12f %.12f", out.get(k), pv.getPosition().getX() / 1000.0, pv.getPosition().getY() / 1000.0, pv.getPosition().getZ() / 1000.0,

@@ -104,33 +104,33 @@ function buildTable(rows, registration) {
       if (!inCell.length) continue;
       const v = mine.map((r) => r.leads[lead].e).sort(asc);
       const pairs = mine.map((r) => ({ cutoff: r.cutoff, d: ap.has(`${r.key}@${fit}@${lead}`) ? Math.log(ap.get(`${r.key}@${fit}@${lead}`) / r.leads[lead].e) : null })).filter((p) => Number.isFinite(p.d));
-      out.push({ reference: cell.reference, regime: cell.regime, input: cell.input, fit, lead, n: other?.n ?? null, windows: inCell.length, failed: inCell.filter((r) => r.failed).length, burnsInFit: other?.burnsInFit ?? null, burnsInForecast: other?.burnsInForecast ?? null,
+      out.push({ reference: cell.reference, regime: cell.regime, input: cell.input, fit, lead, n: other?.n ?? null, windows: inCell.length, failed: inCell.filter((r) => r.failed).length, unscored: inCell.filter((r) => r.unscored).length, burnsInFit: other?.burnsInFit ?? null, burnsInForecast: other?.burnsInForecast ?? null,
         build: { ...(other?.build ?? {}), [COLUMN]: [...new Set(rows.map((r) => `orekit@${r.build?.orekit?.sha256?.slice(0, 12)}+DsstArm.java@${r.build?.driverSha256?.slice(0, 12)}`))] },
         arms: { ...(other?.arms ?? {}), ...(v.length ? { [COLUMN]: [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length] } : {}) },
         apOverDsst: pairedRatio(pairs) });
     }
   }
   return { registered: `experiments/dsst-arm/DSST.md at ${registration?.sha ?? 'uncommitted'}`, columns: { ...cells.columns, [COLUMN]: 'DSST (Orekit 13.1)' },
-    fields: `${cells.fields} windows, failed: the DSST rows of the cell and its fits that did not converge, counted, never dropped. apOverDsst: AP5.md's statistic on the paired windows, d = ln(e_AP / e_DSST), clusters the ISO week of the cutoff, 10,000-draw cluster bootstrap, 97.5 % percentile interval of the median; medianRatio = exp(median d) (above 1: DSST closer than AP).`,
+    fields: `${cells.fields} windows, failed, unscored: the DSST rows of the cell and fit; failed: fits that threw or did not converge, counted, never dropped; unscored: windows the AP arm's runner also leaves unscored (no lead bin, arc coverage, an excluded weather span). apOverDsst: AP5.md's statistic on the paired windows, d = ln(e_AP / e_DSST), clusters the ISO week of the cutoff, 10,000-draw cluster bootstrap, 97.5 % percentile interval of the median; medianRatio = exp(median d) (above 1: DSST closer than AP).`,
     builds: rows.length ? rows[0].build : null, rows: out };
 }
 
 /** The cost rows (the registered subsample, one window at a time, single thread): medians per (input, regime) and fit. */
 function buildCost(costRows) {
   const by = new Map();
-  for (const r of costRows.filter((r) => !r.failed && r.cost)) { const k = `${r.input}|${r.regime}|${r.fit}`; (by.get(k) ?? by.set(k, []).get(k)).push(r); }
+  for (const r of costRows.filter((r) => !r.failed && !r.unscored && r.cost)) { const k = `${r.input}|${r.regime}|${r.fit}`; (by.get(k) ?? by.set(k, []).get(k)).push(r); }
   const med = (list, f) => Number(median(list.map(f)).toPrecision(4));
   const rows = [...by].sort(([a], [b]) => a.localeCompare(b)).map(([k, list]) => { const [input, regime, fit] = k.split('|'); return { input, regime, fit: Number(fit), n: list.length,
     fitCpuSPerObjectDay: med(list, (r) => (r.cost.fitCpuS / (r.fit / 24))), fitWallSPerObjectDay: med(list, (r) => r.cost.fitWallS / (r.fit / 24)), flightCpuSPerObjectDay: med(list, (r) => r.cost.flightCpuS / r.cost.objectDays), flightWallSPerObjectDay: med(list, (r) => r.cost.flightWallS / r.cost.objectDays),
     stepSeconds: list[0].cost.stepSeconds, peakHeapBytes: Math.round(median(list.map((r) => r.cost.peakHeapBytes))), arcStates: Math.round(median(list.map((r) => r.arcStates))) }; });
   const summaries = fs.existsSync(STORE) ? fs.readdirSync(STORE).filter((f) => /^cost-.*\.json$/.test(f)).sort().map((f) => JSON.parse(fs.readFileSync(path.join(STORE, f), 'utf8'))) : [];
-  return { measures: 'per window: CPU user plus system (OperatingSystemMXBean.getProcessCpuTime) and wall for the fit, per object-day of the arc, and for the flight, per object-day flown at the step named; peak heap (the heap pools\' peak usage, reset before the call); the JVM\'s maximum resident set size per process (/usr/bin/time -l); jar bytes 8,496,500 (Orekit) + 3,055,806 (Hipparchus); one uncounted window warms each JVM only in the parallel runs, none here', machine: 'Mac Studio, Apple M3 Ultra, 28 cores', singleThread: true, processes: summaries, rows };
+  return { measures: 'per window: CPU user plus system (OperatingSystemMXBean.getProcessCpuTime) and wall for the fit, per object-day of the arc, and for the flight, per object-day flown at the step named; peak heap (the heap pools\' peak usage, reset before the call); the JVM\'s maximum resident set size per process (/usr/bin/time -l); jar bytes 8,496,500 (Orekit) + 3,055,806 (Hipparchus); one uncounted window warms the JVM; the 1-minute load average before and after each window is in its row', machine: 'Mac Studio, Apple M3 Ultra, 28 cores', singleThread: true, processes: summaries, rows };
 }
 
 const tableBytes = (table) => `${JSON.stringify(table, null, 1)}\n`;
 
 function readme(table, cost, rows) {
-  const lines = ['# DSST beside SGP4, both XPs, AP and FFM', '', `Registered: \`${table.registered}\`. ${rows.length} DSST rows (${rows.filter((r) => r.failed).length} failed fits, counted). Median km / 95th percentile km (n) per cell; \`table.json\` carries every column's build, the paired AP-over-DSST ratio with its interval, and the cost rows.`, '',
+  const lines = ['# DSST beside SGP4, both XPs, AP and FFM', '', `Registered: \`${table.registered}\`. ${rows.length} DSST rows (${rows.filter((r) => r.failed).length} failed fits, counted; ${rows.filter((r) => r.unscored).length} unscored windows). Median km / 95th percentile km (n) per cell; \`table.json\` carries every column's build, the paired AP-over-DSST ratio with its interval, and the cost rows.`, '',
     `Build: Orekit ${table.builds?.orekit?.version} (${table.builds?.orekit?.sha256?.slice(0, 12)}), Hipparchus ${table.builds?.hipparchus?.version}, ${table.builds?.jvm}, DsstArm.java ${table.builds?.driverSha256?.slice(0, 12)}. Cost rows on ${cost.machine}, single thread.`, '',
     '| Reference | Regime | Fit h | Lead h | ' + Object.keys(table.columns).join(' | ') + ' | AP/DSST median ratio [97.5 % interval of ln] |', '|---|---|---:|---:|' + Object.keys(table.columns).map(() => '---:').join('|') + '|---|'];
   for (const r of table.rows) lines.push(`| ${r.reference} | ${r.regime} | ${r.fit} | ${r.lead} | ${Object.keys(table.columns).map((c) => (r.arms[c] ? `${r.arms[c][0]} / ${r.arms[c][1]} (${r.arms[c][2]})` : '')).join(' | ')} | ${r.apOverDsst ? `${r.apOverDsst.medianRatio} [${r.apOverDsst.interval975.join(', ')}] n ${r.apOverDsst.n}` : ''} |`);
