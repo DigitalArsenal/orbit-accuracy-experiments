@@ -210,7 +210,8 @@ const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md, XP-ARM-0-2-1.md',
   columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
   fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those with a step of the truth\'s mean semimajor axis of 8 m or more in the fit arc, and in the forecast span to the lead (results/operator-theory/maneuver-flags); a window the detector could not cover counts in neither; null where no detector ran. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
-  builds: Object.fromEntries(Object.entries(BUILD_RECORDS).filter(([k]) => out.some((r) => Object.values(r.build ?? {}).some((keys) => keys.includes(k))))),
+  // the builds the rows name, and the build whiteroom XP was measured on (the provenance's measuredOn)
+  builds: Object.fromEntries(Object.entries(BUILD_RECORDS).filter(([k]) => k === XP_MEASURED || out.some((r) => Object.values(r.build ?? {}).some((keys) => keys.includes(k))))),
   provenance: {
     XP: {
       reference: 'truth',
