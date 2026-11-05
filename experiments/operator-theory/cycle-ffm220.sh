@@ -3,7 +3,7 @@
 # at each arm's registered settings, on the same windows, files and pairs, into <archive>/operator-theory/ap/ffm220 beside the stores they replace in the
 # cells (COMPARE.md, 2026-11-05). FFM arms only: no AP, XP or SGP4 arm is run. A rerun adds only what is missing.
 #   cycle-ffm220.sh truth | providers | laser | examples | all
-# At most 12 workers, and a new one starts only while the 1-minute load average is under 45.
+# Workers: at most 6 while the 1-minute load average is 40 or more, 12 below it (the coordinator, 2026-11-05: the machine is shared); a running worker is never stopped.
 set -u
 OT=/opt/data/sdn-archive/operator-theory
 O=$OT/ap/ffm220
@@ -11,7 +11,7 @@ cd "$(dirname "$0")/../.."
 [ -n "${SDN_MODULES_ROOT:-}" ] || { echo "SDN_MODULES_ROOT is not set" >&2; exit 2; }
 CODE=experiments/operator-theory
 NODE=(nice -n 10 node --max-old-space-size=3072)
-MAX=12 LOAD=45
+LOW=6 HIGH=12 LOAD=40
 CPF="cpf-cod cpf-esa cpf-gal cpf-sha cpf-dgf cpf-gfz cpf-sgf cpf-hts cpf-qss cpf-isr cpf-cne cpf-eum cpf-gsf cpf-gmv cpf-tub cpf-hds"
 TIGHT='"tolerance":1e-10,"maxStep":120,"minStep":1e-4'
 # CHEAPER.md's ladder less "old", which no cell reads.
@@ -20,7 +20,8 @@ LADDER='[{"name":"full","degree":70,"tides":true,"rel":true,'"$TIGHT"'},{"name":
 DEFAULT='[{"name":"NRLMSISE00","atmosphere":"NRLMSISE00","degree":70,"tides":true,"rel":true,'"$TIGHT"'},{"name":"NO-DRAG","regime":"high","degree":70,"tides":true,"rel":true,'"$TIGHT"'}]'
 mkdir -p "$O"
 load() { sysctl -n vm.loadavg | awk '{print $2}'; }
-slot() { while :; do [ "$(jobs -rp | wc -l)" -lt "$MAX" ] && awk -v l="$(load)" -v m="$LOAD" 'BEGIN { exit !(l < m) }' && return; sleep 10; done; }
+cap() { awk -v l="$(load)" -v m="$LOAD" -v lo="$LOW" -v hi="$HIGH" 'BEGIN { print (l < m ? hi : lo) }'; }
+slot() { while :; do [ "$(jobs -rp | wc -l)" -lt "$(cap)" ] && return; sleep 10; done; }
 PIDS=()
 run() { local log=$1; shift; mkdir -p "$(dirname "$log")"; slot; "$@" >> "$log" 2>&1 & PIDS+=($!); sleep 2; }
 drain() { local p; for p in "${PIDS[@]}"; do wait "$p"; done; PIDS=(); }
