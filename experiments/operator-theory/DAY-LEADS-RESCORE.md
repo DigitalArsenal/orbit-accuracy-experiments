@@ -52,3 +52,9 @@ No Starlink group, operator capture, C2 row or held Galileo satellite (pairs.mjs
 ## End to end
 
 `node experiments/operator-theory/day-leads-rescore.mjs --check`: this registration precedes the manifest's start; the table and README reproduce from the rows; the control shows 0 differing scalars on days 1, 2, 3 and 7 in every set; every arm names its build; a day-5 median is present for every group and arm in the table.
+
+## Amendment, 2026-11-05: the 95th percentile
+
+Report only, under `sdn-ap-site-front-page-followups-20261105`. The front page's 95th-percentile rows need day 5. No window is flown again and nothing in the store moves: the 95th percentile is computed from the landed rows under `/opt/data/sdn-archive/operator-theory/day-leads`, the same windows, arms, scored days and counts as the median.
+
+Statistic: per group, arm and day 1 to 7, over the windows where the arm is ok and the day is scored, the 95th percentile of the day's error, linear between the order statistics at (n - 1) × 0.95 (`lib/compare.mjs` `pct`, the statistic of the stored tables' `p95`); none when the day has no window. `table.json` gains `p95Km` beside `medianKm` on every day; `README.md` gains it on the day-5 table and as a row under each arm. `--check` adds: a 95th percentile on every scored day 1 to 7, day 5 included, for every group and arm, never below its median.
