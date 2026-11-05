@@ -615,7 +615,7 @@ async function select() {
   const fitFile = (f, b) => path.join(OUT, 'fits', `${f}-${b}.json`);
   for (const form of FORMS) {
     const jobs = [...Object.keys(BLOCKS), 'all'].map((b) => ({ f: form.id, b }));
-    const failed = await pool(jobs, (j) => ['--fold', j.f, j.b], (j) => path.join(OUT, 'logs', `fit-${j.f}-${j.b}.log`), (j) => fitFile(j.f, j.b));
+    const failed = await pool(jobs, (j) => ['--fold', j.f, j.b], (j) => path.join(OUT, 'logs', `fit-${j.f}-${j.b}.log`), (j) => path.join(OUT, 'logs', `fit-${j.f}-${j.b}.done`));
     if (failed.length) throw new Error(failed.join('; '));
     const folds = Object.keys(BLOCKS).map((b) => JSON.parse(fs.readFileSync(fitFile(form.id, b), 'utf8')));
     const flagged = folds.reduce((s, f) => s + f.precision.flagged, 0) + JSON.parse(fs.readFileSync(fitFile(form.id, 'all'), 'utf8')).precision.flagged;
@@ -762,7 +762,10 @@ function control() {
   return out;
 }
 
-if (process.argv.includes('--worker')) await worker(argOf('--worker'), Number(argOf('--shard')));
+export { trainingArms, heldOutArms, sizesOf, blockAt, formOf, evaluate, verdict, BLOCKS, CELLS, OUT };
+const main = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+if (!main) { /* imported: no command */ }
+else if (process.argv.includes('--worker')) await worker(argOf('--worker'), Number(argOf('--shard')));
 else if (process.argv.includes('--rows')) await rows();
 else if (process.argv.includes('--fold')) fold(argOf('--fold'), argOf('--fold', 2));
 else if (process.argv.includes('--select')) await select();
