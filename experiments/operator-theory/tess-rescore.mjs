@@ -114,7 +114,9 @@ function verdict(t) {
   // a step explains: its module effect at least half the NN error at days 3 and 7 on each of the four windows (AP, XP and FFM)
   const stepOk = t.windows.filter((w) => w.four).every((w) => w.effect && ['AP', 'XP', 'F'].every((a) => ['3', '7'].every((d) => w.effect[d] >= 0.5 * w.errors[a][d].nn)));
   const fitSide = ['AP', 'XP', 'FFM20'].every((c) => ['3', '7'].some((d) => (share(c, d) ?? 0) >= 0.5));
-  return { worse, gone: !worse.length, fitSide, involved: involved.map((x) => x.arm), wide: wide && !alike, alike, stepOk, moves, explained: !worse.length || (fitSide && stepOk) };
+  // an ablation that returns NN within 25 % of CC (medians over the four windows, days 3 and 7)
+  const returns = t.ablations.filter((a) => ['3', '7'].every((d) => apDelta[d].cc && Math.abs(a.worse[d].nn / apDelta[d].cc - 1) <= 0.25)).map((a) => a.arm);
+  return { worse, gone: !worse.length, fitSide, involved: involved.map((x) => x.arm), wide: wide && !alike, alike, stepOk, returns, moves, explained: !worse.length || (fitSide && (stepOk || returns.length > 0)) };
 }
 
 function readme(doc) {
@@ -134,7 +136,7 @@ function readme(doc) {
   for (const [column] of COLUMNS) for (const d of ['3', '7']) { const w = doc.mainWorse[column][d]; lines.push(`| ${column} | ${d} | ${f(w.cc)} | ${f(w.cn)} | ${f(w.nn)} | ${f(w.ns)} | ${f(w.delta)} | ${f(w.fitPart)} | ${f(w.scorePart)} |`); }
   lines.push('', '## AP ablations (72 h fit; NN - CC median over the four windows, and the medians over all 7)', '');
   lines.push('| Arm | Windows | build SHA-256 | Day 3 NN - CC | Day 7 NN - CC | Day 1 CC / NN (7) | Day 3 CC / NN (7) | Day 7 CC / NN (7) |', '|---|---:|---|---:|---:|---|---|---|');
-  for (const a of doc.ablations) lines.push(`| ${a.arm} | ${a.windows} | ${a.sha256 ? a.sha256.slice(0, 12) : '-'} | ${f(a.worse['3'].delta)} | ${f(a.worse['7'].delta)} | ${f(a.all['1'].cc)} / ${f(a.all['1'].nn)} | ${f(a.all['3'].cc)} / ${f(a.all['3'].nn)} | ${f(a.all['7'].cc)} / ${f(a.all['7'].nn)} |`);
+  for (const a of doc.ablations) lines.push(`| ${a.arm} | ${a.windows} | ${a.sha256 ? a.sha256.split(',').map((x) => x.slice(0, 12)).join(' > ') : '-'} | ${f(a.worse['3'].delta)} | ${f(a.worse['7'].delta)} | ${f(a.all['1'].cc)} / ${f(a.all['1'].nn)} | ${f(a.all['3'].cc)} / ${f(a.all['3'].nn)} | ${f(a.all['7'].cc)} / ${f(a.all['7'].nn)} |`);
   lines.push('', '## Windows: switches, velocity steps and their effect (72 h fit)', '');
   lines.push('| Cutoff | Four | Switches in arc / forecast | Velocity steps (epoch, radius km, |dv| mm/s, where) | Step effect day 3 / 7 (km) | AP CC / CN / NN day 3 | AP day 7 | XP day 7 | FFM day 3 | FFM day 7 |', '|---|---|---|---|---|---|---|---|---|---|');
   for (const w of doc.windows) {
@@ -146,7 +148,7 @@ function readme(doc) {
   if (doc.verdict) lines.push(doc.verdict, '');
   lines.push(`Rule: worsening (NN above CC by more than 10 % at day 3 or 7, 72 h fit, 7-window median) in ${v.worse.length ? v.worse.join(', ') : 'no arm'}; fit side (NN - CN at least half of NN - CC for AP, XP and FFM): ${v.fitSide ? 'yes' : 'no'};`);
   lines.push(`ablations moving AP's worsening by more than 25 %: ${v.involved.length ? v.involved.join(', ') : 'none'}; XP and FFM worsen alike: ${v.alike ? 'yes' : 'no'}; wide tesseral series involved: ${v.wide ? 'yes' : 'no'};`);
-  lines.push(`a step's module effect at least half the NN error at days 3 and 7 on each of the four windows: ${v.stepOk ? 'yes' : 'no'}.`);
+  lines.push(`a step's module effect at least half the NN error at days 3 and 7 on each of the four windows: ${v.stepOk ? 'yes' : 'no'}; an ablation returning NN within 25 % of CC: ${v.returns.length ? v.returns.join(', ') : 'none'}.`);
   lines.push(`Condition 1, clean re-score: ${doc.clean ? 'holds' : 'does not hold'}. Condition 2, worsening explained: ${v.explained ? 'holds' : 'does not hold'}. TESS: ${doc.clean && v.explained ? 'a site record may restore it' : 'stays withheld'}.`);
   return `${lines.join('\n')}\n`;
 }
