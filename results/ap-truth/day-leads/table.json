@@ -1,0 +1,1572 @@
+{
+ "title": "Median forward error, lead days 1 to 7",
+ "registration": "experiments/operator-theory/DAY-LEADS-RESCORE.md",
+ "store": "/opt/data/sdn-archive/operator-theory/day-leads",
+ "stored": "/opt/data/sdn-archive/operator-theory/ap/b051",
+ "build": {
+  "module": "propagator/sdn-ap",
+  "version": "0.5.1",
+  "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+  "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+ },
+ "leadDays": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "windows": {
+  "truth": 944,
+  "truth2": 1812,
+  "regimes": 407,
+  "compare-truth": 944,
+  "compare-truth2": 1812
+ },
+ "control": {
+  "truth": {
+   "stored": 944,
+   "flown": 944,
+   "missing": 0,
+   "extra": 0,
+   "armsCompared": 1888,
+   "scalarsCompared": 53808,
+   "differing": 0,
+   "newlyScored": [],
+   "differences": []
+  },
+  "truth2": {
+   "stored": 1812,
+   "flown": 1812,
+   "missing": 0,
+   "extra": 0,
+   "armsCompared": 3600,
+   "scalarsCompared": 101488,
+   "differing": 0,
+   "newlyScored": [],
+   "differences": []
+  },
+  "regimes": {
+   "stored": 407,
+   "flown": 407,
+   "missing": 0,
+   "extra": 0,
+   "armsCompared": 1260,
+   "scalarsCompared": 31363,
+   "differing": 0,
+   "newlyScored": [],
+   "differences": []
+  },
+  "compare-truth": {
+   "stored": 944,
+   "flown": 944,
+   "missing": 0,
+   "extra": 0,
+   "armsCompared": 944,
+   "scalarsCompared": 29264,
+   "differing": 0,
+   "newlyScored": [],
+   "differences": []
+  },
+  "compare-truth2": {
+   "stored": 1812,
+   "flown": 1812,
+   "missing": 0,
+   "extra": 0,
+   "armsCompared": 3600,
+   "scalarsCompared": 101488,
+   "differing": 0,
+   "newlyScored": [],
+   "differences": []
+  }
+ },
+ "entries": [
+  {
+   "group": "T",
+   "label": "Low orbit, strong drag, 2025",
+   "arm": "AP24",
+   "note": "AP",
+   "set": "truth",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 944,
+   "ok": 944,
+   "days": {
+    "1": {
+     "medianKm": 0.195364,
+     "n": 944
+    },
+    "2": {
+     "medianKm": 0.879765,
+     "n": 944
+    },
+    "3": {
+     "medianKm": 2.125034,
+     "n": 944
+    },
+    "4": {
+     "medianKm": 3.99537,
+     "n": 944
+    },
+    "5": {
+     "medianKm": 6.274853,
+     "n": 944
+    },
+    "6": {
+     "medianKm": 9.382469,
+     "n": 944
+    },
+    "7": {
+     "medianKm": 13.089047,
+     "n": 944
+    }
+   }
+  },
+  {
+   "group": "T",
+   "label": "Low orbit, strong drag, 2025",
+   "arm": "APRa12",
+   "note": "AP, 17 h fit, drag held at the stored 12 h FFM fit's",
+   "set": "truth",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 944,
+   "ok": 944,
+   "days": {
+    "1": {
+     "medianKm": 0.126172,
+     "n": 944
+    },
+    "2": {
+     "medianKm": 0.593433,
+     "n": 944
+    },
+    "3": {
+     "medianKm": 1.445655,
+     "n": 944
+    },
+    "4": {
+     "medianKm": 2.862541,
+     "n": 944
+    },
+    "5": {
+     "medianKm": 5.214178,
+     "n": 944
+    },
+    "6": {
+     "medianKm": 7.884998,
+     "n": 944
+    },
+    "7": {
+     "medianKm": 11.651429,
+     "n": 944
+    }
+   }
+  },
+  {
+   "group": "T",
+   "label": "Low orbit, strong drag, 2025",
+   "arm": "XP24",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "compare-truth",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 944,
+   "ok": 944,
+   "days": {
+    "1": {
+     "medianKm": 1.612177,
+     "n": 944
+    },
+    "2": {
+     "medianKm": 5.053221,
+     "n": 944
+    },
+    "3": {
+     "medianKm": 11.210535,
+     "n": 944
+    },
+    "4": {
+     "medianKm": 19.729597,
+     "n": 944
+    },
+    "5": {
+     "medianKm": 30.309121,
+     "n": 944
+    },
+    "6": {
+     "medianKm": 43.631171,
+     "n": 944
+    },
+    "7": {
+     "medianKm": 58.748355,
+     "n": 944
+    }
+   }
+  },
+  {
+   "group": "P",
+   "label": "Low orbit, strong drag, 2026",
+   "arm": "AP24",
+   "note": "AP",
+   "set": "truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 750,
+   "days": {
+    "1": {
+     "medianKm": 0.186791,
+     "n": 750
+    },
+    "2": {
+     "medianKm": 0.811002,
+     "n": 750
+    },
+    "3": {
+     "medianKm": 1.835885,
+     "n": 750
+    },
+    "4": {
+     "medianKm": 3.350311,
+     "n": 750
+    },
+    "5": {
+     "medianKm": 5.228372,
+     "n": 750
+    },
+    "6": {
+     "medianKm": 7.75944,
+     "n": 750
+    },
+    "7": {
+     "medianKm": 10.794789,
+     "n": 750
+    }
+   }
+  },
+  {
+   "group": "P",
+   "label": "Low orbit, strong drag, 2026",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 750,
+   "days": {
+    "1": {
+     "medianKm": 0.313657,
+     "n": 750
+    },
+    "2": {
+     "medianKm": 1.032505,
+     "n": 750
+    },
+    "3": {
+     "medianKm": 2.160895,
+     "n": 750
+    },
+    "4": {
+     "medianKm": 3.936707,
+     "n": 750
+    },
+    "5": {
+     "medianKm": 6.034703,
+     "n": 750
+    },
+    "6": {
+     "medianKm": 8.564643,
+     "n": 750
+    },
+    "7": {
+     "medianKm": 11.575185,
+     "n": 750
+    }
+   }
+  },
+  {
+   "group": "P",
+   "label": "Low orbit, strong drag, 2026",
+   "arm": "XP24",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "compare-truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 750,
+   "days": {
+    "1": {
+     "medianKm": 1.60739,
+     "n": 750
+    },
+    "2": {
+     "medianKm": 5.172523,
+     "n": 750
+    },
+    "3": {
+     "medianKm": 11.215163,
+     "n": 750
+    },
+    "4": {
+     "medianKm": 19.587337,
+     "n": 750
+    },
+    "5": {
+     "medianKm": 30.555648,
+     "n": 750
+    },
+    "6": {
+     "medianKm": 44.387016,
+     "n": 750
+    },
+    "7": {
+     "medianKm": 60.29377,
+     "n": 750
+    }
+   }
+  },
+  {
+   "group": "P",
+   "label": "Low orbit, strong drag, 2026",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "compare-truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 750,
+   "days": {
+    "1": {
+     "medianKm": 0.878066,
+     "n": 750
+    },
+    "2": {
+     "medianKm": 1.807101,
+     "n": 750
+    },
+    "3": {
+     "medianKm": 3.532744,
+     "n": 750
+    },
+    "4": {
+     "medianKm": 6.151651,
+     "n": 750
+    },
+    "5": {
+     "medianKm": 10.073217,
+     "n": 750
+    },
+    "6": {
+     "medianKm": 14.612103,
+     "n": 750
+    },
+    "7": {
+     "medianKm": 20.615101,
+     "n": 750
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "label": "Low orbit, near 700 km, 2026",
+   "arm": "AP24",
+   "note": "AP",
+   "set": "truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 300,
+   "ok": 287,
+   "days": {
+    "1": {
+     "medianKm": 0.104567,
+     "n": 276
+    },
+    "2": {
+     "medianKm": 0.367504,
+     "n": 274
+    },
+    "3": {
+     "medianKm": 0.744727,
+     "n": 275
+    },
+    "4": {
+     "medianKm": 1.009324,
+     "n": 275
+    },
+    "5": {
+     "medianKm": 1.355809,
+     "n": 274
+    },
+    "6": {
+     "medianKm": 1.830352,
+     "n": 274
+    },
+    "7": {
+     "medianKm": 2.051705,
+     "n": 274
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "label": "Low orbit, near 700 km, 2026",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 300,
+   "ok": 270,
+   "days": {
+    "1": {
+     "medianKm": 0.18525,
+     "n": 259
+    },
+    "2": {
+     "medianKm": 0.488456,
+     "n": 258
+    },
+    "3": {
+     "medianKm": 0.910075,
+     "n": 258
+    },
+    "4": {
+     "medianKm": 1.384073,
+     "n": 258
+    },
+    "5": {
+     "medianKm": 1.832584,
+     "n": 257
+    },
+    "6": {
+     "medianKm": 2.327164,
+     "n": 257
+    },
+    "7": {
+     "medianKm": 3.144379,
+     "n": 257
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "label": "Low orbit, near 700 km, 2026",
+   "arm": "XP24",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "compare-truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 300,
+   "ok": 287,
+   "days": {
+    "1": {
+     "medianKm": 2.366519,
+     "n": 276
+    },
+    "2": {
+     "medianKm": 8.012693,
+     "n": 274
+    },
+    "3": {
+     "medianKm": 17.124276,
+     "n": 275
+    },
+    "4": {
+     "medianKm": 29.504968,
+     "n": 275
+    },
+    "5": {
+     "medianKm": 45.929398,
+     "n": 274
+    },
+    "6": {
+     "medianKm": 64.471039,
+     "n": 274
+    },
+    "7": {
+     "medianKm": 86.486594,
+     "n": 274
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "label": "Low orbit, near 700 km, 2026",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "compare-truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 300,
+   "ok": 270,
+   "days": {
+    "1": {
+     "medianKm": 0.688645,
+     "n": 259
+    },
+    "2": {
+     "medianKm": 0.893647,
+     "n": 258
+    },
+    "3": {
+     "medianKm": 1.382739,
+     "n": 258
+    },
+    "4": {
+     "medianKm": 1.957582,
+     "n": 258
+    },
+    "5": {
+     "medianKm": 2.662392,
+     "n": 257
+    },
+    "6": {
+     "medianKm": 3.507826,
+     "n": 257
+    },
+    "7": {
+     "medianKm": 4.807294,
+     "n": 257
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "label": "Medium Earth orbit, 2026",
+   "arm": "AP24",
+   "note": "AP",
+   "set": "truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 749,
+   "days": {
+    "1": {
+     "medianKm": 0.023999,
+     "n": 748
+    },
+    "2": {
+     "medianKm": 0.045576,
+     "n": 748
+    },
+    "3": {
+     "medianKm": 0.069261,
+     "n": 748
+    },
+    "4": {
+     "medianKm": 0.094731,
+     "n": 748
+    },
+    "5": {
+     "medianKm": 0.12036,
+     "n": 748
+    },
+    "6": {
+     "medianKm": 0.147161,
+     "n": 748
+    },
+    "7": {
+     "medianKm": 0.174365,
+     "n": 748
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "label": "Medium Earth orbit, 2026",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 747,
+   "days": {
+    "1": {
+     "medianKm": 0.012416,
+     "n": 746
+    },
+    "2": {
+     "medianKm": 0.017776,
+     "n": 746
+    },
+    "3": {
+     "medianKm": 0.025554,
+     "n": 746
+    },
+    "4": {
+     "medianKm": 0.034635,
+     "n": 746
+    },
+    "5": {
+     "medianKm": 0.043998,
+     "n": 746
+    },
+    "6": {
+     "medianKm": 0.055078,
+     "n": 746
+    },
+    "7": {
+     "medianKm": 0.068714,
+     "n": 746
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "label": "Medium Earth orbit, 2026",
+   "arm": "XP24",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "compare-truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 749,
+   "days": {
+    "1": {
+     "medianKm": 0.055854,
+     "n": 748
+    },
+    "2": {
+     "medianKm": 0.102798,
+     "n": 748
+    },
+    "3": {
+     "medianKm": 0.152285,
+     "n": 748
+    },
+    "4": {
+     "medianKm": 0.199728,
+     "n": 748
+    },
+    "5": {
+     "medianKm": 0.256857,
+     "n": 748
+    },
+    "6": {
+     "medianKm": 0.310668,
+     "n": 748
+    },
+    "7": {
+     "medianKm": 0.365219,
+     "n": 748
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "label": "Medium Earth orbit, 2026",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "compare-truth2",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 750,
+   "ok": 747,
+   "days": {
+    "1": {
+     "medianKm": 0.038996,
+     "n": 746
+    },
+    "2": {
+     "medianKm": 0.054945,
+     "n": 746
+    },
+    "3": {
+     "medianKm": 0.071947,
+     "n": 746
+    },
+    "4": {
+     "medianKm": 0.090877,
+     "n": 746
+    },
+    "5": {
+     "medianKm": 0.110727,
+     "n": 746
+    },
+    "6": {
+     "medianKm": 0.128766,
+     "n": 746
+    },
+    "7": {
+     "medianKm": 0.145601,
+     "n": 746
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "label": "Low orbit, laser spheres",
+   "arm": "AP24",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 90,
+   "ok": 72,
+   "days": {
+    "1": {
+     "medianKm": 0.020833,
+     "n": 59
+    },
+    "2": {
+     "medianKm": 0.033765,
+     "n": 56
+    },
+    "3": {
+     "medianKm": 0.050602,
+     "n": 49
+    },
+    "4": {
+     "medianKm": 0.082772,
+     "n": 63
+    },
+    "5": {
+     "medianKm": 0.144117,
+     "n": 50
+    },
+    "6": {
+     "medianKm": 0.170771,
+     "n": 53
+    },
+    "7": {
+     "medianKm": 0.231883,
+     "n": 56
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "label": "Low orbit, laser spheres",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 90,
+   "ok": 78,
+   "days": {
+    "1": {
+     "medianKm": 0.024672,
+     "n": 65
+    },
+    "2": {
+     "medianKm": 0.036863,
+     "n": 63
+    },
+    "3": {
+     "medianKm": 0.057825,
+     "n": 57
+    },
+    "4": {
+     "medianKm": 0.082873,
+     "n": 62
+    },
+    "5": {
+     "medianKm": 0.128788,
+     "n": 56
+    },
+    "6": {
+     "medianKm": 0.148839,
+     "n": 60
+    },
+    "7": {
+     "medianKm": 0.205525,
+     "n": 64
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "label": "Low orbit, laser spheres",
+   "arm": "XP24",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 90,
+   "ok": 72,
+   "days": {
+    "1": {
+     "medianKm": 0.670052,
+     "n": 59
+    },
+    "2": {
+     "medianKm": 0.917978,
+     "n": 56
+    },
+    "3": {
+     "medianKm": 1.311513,
+     "n": 49
+    },
+    "4": {
+     "medianKm": 1.86373,
+     "n": 63
+    },
+    "5": {
+     "medianKm": 2.081195,
+     "n": 50
+    },
+    "6": {
+     "medianKm": 2.535121,
+     "n": 53
+    },
+    "7": {
+     "medianKm": 2.910458,
+     "n": 56
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "label": "Low orbit, laser spheres",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 90,
+   "ok": 78,
+   "days": {
+    "1": {
+     "medianKm": 0.462241,
+     "n": 65
+    },
+    "2": {
+     "medianKm": 0.550712,
+     "n": 63
+    },
+    "3": {
+     "medianKm": 0.623758,
+     "n": 57
+    },
+    "4": {
+     "medianKm": 0.695097,
+     "n": 62
+    },
+    "5": {
+     "medianKm": 0.841472,
+     "n": 56
+    },
+    "6": {
+     "medianKm": 0.904164,
+     "n": 60
+    },
+    "7": {
+     "medianKm": 1.01006,
+     "n": 64
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "arm": "AP24",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 138,
+   "ok": 136,
+   "days": {
+    "1": {
+     "medianKm": 0.062368,
+     "n": 136
+    },
+    "2": {
+     "medianKm": 0.274076,
+     "n": 132
+    },
+    "3": {
+     "medianKm": 0.65483,
+     "n": 121
+    },
+    "4": {
+     "medianKm": 1.177738,
+     "n": 112
+    },
+    "5": {
+     "medianKm": 1.7573,
+     "n": 112
+    },
+    "6": {
+     "medianKm": 2.717036,
+     "n": 108
+    },
+    "7": {
+     "medianKm": 4.016495,
+     "n": 103
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 138,
+   "ok": 136,
+   "days": {
+    "1": {
+     "medianKm": 0.038843,
+     "n": 136
+    },
+    "2": {
+     "medianKm": 0.094773,
+     "n": 132
+    },
+    "3": {
+     "medianKm": 0.25268,
+     "n": 121
+    },
+    "4": {
+     "medianKm": 0.449451,
+     "n": 112
+    },
+    "5": {
+     "medianKm": 0.755773,
+     "n": 112
+    },
+    "6": {
+     "medianKm": 1.237515,
+     "n": 108
+    },
+    "7": {
+     "medianKm": 1.677665,
+     "n": 103
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "arm": "XP24",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 138,
+   "ok": 136,
+   "days": {
+    "1": {
+     "medianKm": 0.768984,
+     "n": 136
+    },
+    "2": {
+     "medianKm": 1.368101,
+     "n": 132
+    },
+    "3": {
+     "medianKm": 1.995561,
+     "n": 121
+    },
+    "4": {
+     "medianKm": 2.641903,
+     "n": 112
+    },
+    "5": {
+     "medianKm": 3.389141,
+     "n": 112
+    },
+    "6": {
+     "medianKm": 4.271354,
+     "n": 108
+    },
+    "7": {
+     "medianKm": 5.580811,
+     "n": 103
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "label": "Low orbit, altimetry",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 138,
+   "ok": 136,
+   "days": {
+    "1": {
+     "medianKm": 0.585531,
+     "n": 136
+    },
+    "2": {
+     "medianKm": 0.702435,
+     "n": 132
+    },
+    "3": {
+     "medianKm": 0.959676,
+     "n": 121
+    },
+    "4": {
+     "medianKm": 1.411912,
+     "n": 112
+    },
+    "5": {
+     "medianKm": 1.963568,
+     "n": 112
+    },
+    "6": {
+     "medianKm": 2.702167,
+     "n": 108
+    },
+    "7": {
+     "medianKm": 3.597051,
+     "n": 103
+    }
+   }
+  },
+  {
+   "group": "GD",
+   "label": "Laser geodetic",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 55,
+   "ok": 54,
+   "days": {
+    "1": {
+     "medianKm": 0.006312,
+     "n": 54
+    },
+    "2": {
+     "medianKm": 0.007251,
+     "n": 54
+    },
+    "3": {
+     "medianKm": 0.008462,
+     "n": 54
+    },
+    "4": {
+     "medianKm": 0.00902,
+     "n": 54
+    },
+    "5": {
+     "medianKm": 0.009876,
+     "n": 53
+    },
+    "6": {
+     "medianKm": 0.010706,
+     "n": 54
+    },
+    "7": {
+     "medianKm": 0.011852,
+     "n": 54
+    }
+   }
+  },
+  {
+   "group": "GD",
+   "label": "Laser geodetic",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 55,
+   "ok": 54,
+   "days": {
+    "1": {
+     "medianKm": 0.104156,
+     "n": 54
+    },
+    "2": {
+     "medianKm": 0.106006,
+     "n": 54
+    },
+    "3": {
+     "medianKm": 0.107818,
+     "n": 54
+    },
+    "4": {
+     "medianKm": 0.118389,
+     "n": 54
+    },
+    "5": {
+     "medianKm": 0.127342,
+     "n": 53
+    },
+    "6": {
+     "medianKm": 0.138589,
+     "n": 54
+    },
+    "7": {
+     "medianKm": 0.145667,
+     "n": 54
+    }
+   }
+  },
+  {
+   "group": "IG",
+   "label": "Inclined geosynchronous",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 60,
+   "ok": 60,
+   "days": {
+    "1": {
+     "medianKm": 0.01138,
+     "n": 60
+    },
+    "2": {
+     "medianKm": 0.014278,
+     "n": 60
+    },
+    "3": {
+     "medianKm": 0.017095,
+     "n": 60
+    },
+    "4": {
+     "medianKm": 0.022355,
+     "n": 60
+    },
+    "5": {
+     "medianKm": 0.031208,
+     "n": 59
+    },
+    "6": {
+     "medianKm": 0.040114,
+     "n": 60
+    },
+    "7": {
+     "medianKm": 0.046269,
+     "n": 59
+    }
+   }
+  },
+  {
+   "group": "IG",
+   "label": "Inclined geosynchronous",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 60,
+   "ok": 60,
+   "days": {
+    "1": {
+     "medianKm": 0.037937,
+     "n": 60
+    },
+    "2": {
+     "medianKm": 0.056799,
+     "n": 60
+    },
+    "3": {
+     "medianKm": 0.078656,
+     "n": 60
+    },
+    "4": {
+     "medianKm": 0.099145,
+     "n": 60
+    },
+    "5": {
+     "medianKm": 0.119124,
+     "n": 59
+    },
+    "6": {
+     "medianKm": 0.145171,
+     "n": 60
+    },
+    "7": {
+     "medianKm": 0.164231,
+     "n": 59
+    }
+   }
+  },
+  {
+   "group": "GE",
+   "label": "Geostationary",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 45,
+   "ok": 35,
+   "days": {
+    "1": {
+     "medianKm": 0.020729,
+     "n": 32
+    },
+    "2": {
+     "medianKm": 0.031662,
+     "n": 33
+    },
+    "3": {
+     "medianKm": 0.045863,
+     "n": 30
+    },
+    "4": {
+     "medianKm": 0.075027,
+     "n": 33
+    },
+    "5": {
+     "medianKm": 0.107625,
+     "n": 32
+    },
+    "6": {
+     "medianKm": 0.149928,
+     "n": 33
+    },
+    "7": {
+     "medianKm": 0.209135,
+     "n": 32
+    }
+   }
+  },
+  {
+   "group": "GE",
+   "label": "Geostationary",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 45,
+   "ok": 35,
+   "days": {
+    "1": {
+     "medianKm": 0.037014,
+     "n": 32
+    },
+    "2": {
+     "medianKm": 0.05071,
+     "n": 33
+    },
+    "3": {
+     "medianKm": 0.069854,
+     "n": 30
+    },
+    "4": {
+     "medianKm": 0.099197,
+     "n": 33
+    },
+    "5": {
+     "medianKm": 0.125596,
+     "n": 32
+    },
+    "6": {
+     "medianKm": 0.158124,
+     "n": 33
+    },
+    "7": {
+     "medianKm": 0.225383,
+     "n": 32
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "label": "Highly elliptical",
+   "arm": "AP72",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 7,
+   "ok": 7,
+   "days": {
+    "1": {
+     "medianKm": 0.622996,
+     "n": 7
+    },
+    "2": {
+     "medianKm": 0.930464,
+     "n": 7
+    },
+    "3": {
+     "medianKm": 1.390852,
+     "n": 7
+    },
+    "4": {
+     "medianKm": 2.414953,
+     "n": 7
+    },
+    "5": {
+     "medianKm": 3.671027,
+     "n": 7
+    },
+    "6": {
+     "medianKm": 5.082941,
+     "n": 7
+    },
+    "7": {
+     "medianKm": 6.589518,
+     "n": 7
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "label": "Highly elliptical",
+   "arm": "AP336",
+   "note": "AP",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 7,
+   "ok": 7,
+   "days": {
+    "1": {
+     "medianKm": 1.900036,
+     "n": 7
+    },
+    "2": {
+     "medianKm": 4.528443,
+     "n": 7
+    },
+    "3": {
+     "medianKm": 7.017796,
+     "n": 7
+    },
+    "4": {
+     "medianKm": 9.088614,
+     "n": 7
+    },
+    "5": {
+     "medianKm": 11.351149,
+     "n": 7
+    },
+    "6": {
+     "medianKm": 16.528982,
+     "n": 7
+    },
+    "7": {
+     "medianKm": 26.274984,
+     "n": 7
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "label": "Highly elliptical",
+   "arm": "XP72",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 7,
+   "ok": 7,
+   "days": {
+    "1": {
+     "medianKm": 0.660389,
+     "n": 7
+    },
+    "2": {
+     "medianKm": 1.06102,
+     "n": 7
+    },
+    "3": {
+     "medianKm": 1.385641,
+     "n": 7
+    },
+    "4": {
+     "medianKm": 2.290262,
+     "n": 7
+    },
+    "5": {
+     "medianKm": 3.566036,
+     "n": 7
+    },
+    "6": {
+     "medianKm": 4.999291,
+     "n": 7
+    },
+    "7": {
+     "medianKm": 6.54073,
+     "n": 7
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "label": "Highly elliptical",
+   "arm": "XP336",
+   "note": "whiteroom XP (sdn-ap, FORCES and FIT unset)",
+   "set": "regimes",
+   "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.5.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "windows": 7,
+   "ok": 7,
+   "days": {
+    "1": {
+     "medianKm": 1.792458,
+     "n": 7
+    },
+    "2": {
+     "medianKm": 4.347857,
+     "n": 7
+    },
+    "3": {
+     "medianKm": 6.955385,
+     "n": 7
+    },
+    "4": {
+     "medianKm": 9.049538,
+     "n": 7
+    },
+    "5": {
+     "medianKm": 11.12649,
+     "n": 7
+    },
+    "6": {
+     "medianKm": 16.037099,
+     "n": 7
+    },
+    "7": {
+     "medianKm": 26.251304,
+     "n": 7
+    }
+   }
+  }
+ ]
+}
