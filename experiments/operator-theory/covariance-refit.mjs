@@ -43,8 +43,8 @@ const median = (a, n) => { // a Float64Array prefix of length n, sorted in place
 };
 
 // ---- samples: per regime and block, per lead hour, typed arrays of the error and the six variances on each axis.
-// Layout per sample (one window, arm and lead): e[3], full[3], e-off[3], i-off[3], l-off[3], d-off[3], off[3], floor[3], noise sizes (s_e, s_i, s_l, c).
-const W = 3 * 8 + 4;
+// Layout per sample (one window, arm and lead): e[3], full[3], e-off[3], i-off[3], l-off[3], d-off[3], off[3], floor[3], noise sizes (s_e, s_i, s_l, c), |n-dot_ng / n| (1/day).
+const W = 3 * 8 + 5;
 function load() {
   const out = {}, checks = { rows: 0, arms: 0, guard: 0, held: 0, repro: 0, reproOff: 0, maxRel: 0, maxRelOff: 0 };
   for (const [set, s] of Object.entries(SETS)) {
@@ -62,7 +62,7 @@ function load() {
         checks.arms += 1;
         windows[block].add(r.key);
         const cp = a.covPropagation, floor = [cp.FLOOR_UU_KM2, cp.FLOOR_VV_KM2, cp.FLOOR_WW_KM2];
-        const sizes = [cp.NOISE_ECCENTRICITY_PER_DAY, cp.NOISE_INCLINATION_PER_DAY, cp.NOISE_MEAN_MOTION_RELATIVE, cp.NON_GRAVITATIONAL_SHARE];
+        const sizes = [cp.NOISE_ECCENTRICITY_PER_DAY, cp.NOISE_INCLINATION_PER_DAY, cp.NOISE_MEAN_MOTION_RELATIVE, cp.NON_GRAVITATIONAL_SHARE, Math.abs(cp.NON_GRAVITATIONAL_RATE_PER_DAY)];
         for (const L of a.leads) {
           if (L.h > HOURS) continue;
           const rec = [...L.e, ...L.v.full, ...L.v.e, ...L.v.i, ...L.v.l, ...L.v.d, ...L.v.off, ...floor, ...sizes];
@@ -81,10 +81,10 @@ function load() {
   return { data: out, checks };
 }
 
-/** Per sample at table p: the three re-weighted variances (COVARIANCE-REFIT.md Terms). */
+/** Per sample at table p: the three re-weighted variances (COVARIANCE-REFIT.md Terms). p.c_i (diagnostic only, amendment 1): s_i + c_i |n-dot_ng / n|. */
 function variances(x, j, p, v) {
   const o = j * W, sz = o + 24;
-  const rho = [(p.s_e / x[sz]) ** 2, (p.s_i / x[sz + 1]) ** 2, (p.s_l / x[sz + 2]) ** 2, (p.c / x[sz + 3]) ** 2];
+  const rho = [(p.s_e / x[sz]) ** 2, ((p.c_i ? p.s_i + p.c_i * x[sz + 4] : p.s_i) / x[sz + 1]) ** 2, (p.s_l / x[sz + 2]) ** 2, (p.c / x[sz + 3]) ** 2];
   for (let a = 0; a < 3; a += 1) {
     const full = x[o + 3 + a];
     let s = x[o + 18 + a] + (p.k_F - 1) * x[o + 21 + a];
@@ -169,6 +169,35 @@ function solve(data) {
   return { runs, best };
 }
 
+// ---- amendment 1: why the held-out band is not met (report only; no table from here ships).
+const dayCells = (R, block, p) => Object.fromEntries(DAY_LEADS.map((h) => [h, Object.fromEntries(stats(R[block].get(h), p).axes.map((a, i) => [AXES[i], sig(a.medianAbsZ, 4)]))]));
+function diagnose(data, fitted) {
+  const start = fitted.best.table, out = { perRegime: {}, dragScaledCrossTrack: null, crossTrackRatio: {} };
+  // (a) each regime its own row, fitted on its own training windows by the registered loss and solver (one start, the fitted row)
+  for (const rg of Object.keys(data)) {
+    const one = { [rg]: data[rg] }, r = nelderMead((x) => loss(one, toTable(x)), fromTable(start), Math.log(10), 2000), p = toTable(r.x);
+    out.perRegime[rg] = { table: Object.fromEntries(PARAMS.map((k) => [k, sig(p[k], 6)])), loss: sig(r.value, 4), training: dayCells(data[rg], 'training', p), heldOut: dayCells(data[rg], 'heldOut', p) };
+  }
+  // (b) one row with the cross-track size growing with drag, s_i + c_i |n-dot_ng / n| (a form the module does not have)
+  const P6 = [...PARAMS, 'c_i'], to6 = (x) => Object.fromEntries(P6.map((k, i) => [k, Math.exp(x[i])]));
+  const r6 = nelderMead((x) => loss(data, to6(x)), [...fromTable(start), Math.log(0.1)], Math.log(10), 3000), p6 = to6(r6.x);
+  out.dragScaledCrossTrack = { table: Object.fromEntries(P6.map((k) => [k, sig(p6[k], 6)])), loss: sig(r6.value, 4),
+    cells: Object.fromEntries(Object.entries(data).map(([rg, R]) => [rg, { training: dayCells(R, 'training', p6), heldOut: dayCells(R, 'heldOut', p6) }])) };
+  // (c) cross-track at day 7 over s_i 1e-9 to 1e-3 and k_F 0.01 to 100 (steps of a quarter decade), the rest at the fitted row:
+  // where the strong-drag median |z| is inside the band, the range of the near-700 one
+  for (const block of ['training', 'heldOut']) {
+    let lo = Infinity, hi = -Infinity, points = 0;
+    for (let li = -9; li <= -3 + 1e-9; li += 0.25) for (let lk = -2; lk <= 2 + 1e-9; lk += 0.25) {
+      const p = { ...start, s_i: 10 ** li, k_F: 10 ** lk }, t = stats(data.T[block].get(167), p).axes[2].medianAbsZ;
+      if (t < BAND[0] || t > BAND[1]) continue;
+      const s1 = stats(data.S1[block].get(167), p).axes[2].medianAbsZ;
+      points += 1; lo = Math.min(lo, s1); hi = Math.max(hi, s1);
+    }
+    out.crossTrackRatio[block] = { points, nearMin: points ? sig(lo, 4) : null, nearMax: points ? sig(hi, 4) : null };
+  }
+  return out;
+}
+
 // ---- the table, from the rows alone.
 function summarize(data, p) {
   const cells = [];
@@ -195,14 +224,14 @@ function verdict(cells, block) {
 }
 const leadLabel = (h) => (h === 167 ? 'day 7 (167 h)' : h % 24 ? `${h} h` : `day ${h / 24}`);
 function writeTable(outDir, data, fitted, checks) {
-  const p = fitted.best.table, cells = summarize(data, p);
+  const p = fitted.best.table, cells = summarize(data, p), diagnostics = diagnose(data, fitted);
   const held = verdict(cells, 'heldOut'), train = verdict(cells, 'training');
   const result = {
     study: PLAN, task: TASK, rows: ROWS, criterion: 'per regime, per RIC axis and lead hour 1 to 167: (ln(median |z| / 0.674))^2, averaged over axes and leads, the regimes averaged; pass: held-out median |z| inside [0.603, 0.754] per regime on R, I and C at lead hours 24, 72 and 167',
     blocks: Object.fromEntries(Object.values(SETS).map((s) => [s.regime, { training: s.training, heldOut: s.heldOut }])),
     windows: Object.fromEntries(Object.entries(data).map(([r, R]) => [r, R.windows])), checks,
     old: OLD, fitted: Object.fromEntries(PARAMS.map((k) => [k, Number(p[k].toPrecision(17))])), loss: { old: loss(data, OLD), fitted: fitted.best.loss }, runs: fitted.runs,
-    heldOutVerdict: { pass: held.every((v) => v.inside), cells: held }, trainingVerdict: { pass: train.every((v) => v.inside), cells: train }, cells,
+    heldOutVerdict: { pass: held.every((v) => v.inside), cells: held }, trainingVerdict: { pass: train.every((v) => v.inside), cells: train }, diagnostics, cells,
   };
   const L = [`# AP DRAG process-noise re-fit (COVARIANCE-REFIT.md)`, '',
     `Fitted from the coverage study's rows (sdn-ap 0.6.0, \`${ROWS}\`) by re-weighting the module's own per-term variances; training and held-out windows disjoint by cutoff with a 10-day guard. z = forward error component over the propagated 1-sigma; calibrated median |z| 0.674, band 0.603 to 0.754; within 1 and 2 sigma calibrated 0.683 and 0.954. Windows (window keys with a flown arm): ${Object.entries(result.windows).map(([r, w]) => `${REGIMES[r]} training ${w.training}, held-out ${w.heldOut}`).join('; ')}.`, '',
@@ -216,6 +245,13 @@ function writeTable(outDir, data, fitted, checks) {
   for (const c of cells.filter((q) => q.arm === 'both' && REPORT_LEADS.includes(q.h))) L.push(`| ${REGIMES[c.regime]} | ${c.block === 'heldOut' ? 'held-out' : 'training'} | ${leadLabel(c.h)} | ${c.n} | ${AXES.map((ax) => fmt(c.before.axes[ax].medianAbsZ)).join(' | ')} | ${AXES.map((ax) => fmt(c.after.axes[ax].medianAbsZ)).join(' | ')} | ${AXES.map((ax) => `${fmt(c.after.axes[ax].within1Sigma)}, ${fmt(c.after.axes[ax].within2Sigma)}`).join(' | ')} | ${fmt(c.after.meanD2Over3Diagonal)} | ${fmt(c.after.inside95Diagonal)} |`);
   L.push('', '## Median |z| per arm after, days 1, 3, 7', '', '| Regime | Set | Arm | Lead | n | R | I | C |', '|---|---|---|---|---:|---:|---:|---:|');
   for (const c of cells.filter((q) => q.arm !== 'both' && DAY_LEADS.includes(q.h))) L.push(`| ${REGIMES[c.regime]} | ${c.block === 'heldOut' ? 'held-out' : 'training'} | ${c.arm} | ${leadLabel(c.h)} | ${c.n} | ${AXES.map((ax) => fmt(c.after.axes[ax].medianAbsZ)).join(' | ')} |`);
+  const dc = (c) => DAY_LEADS.map((h) => AXES.map((ax) => fmt(c[h][ax])).join(' / ')).join('; ');
+  L.push('', '## Why the band is not met (amendment 1, report only)', '',
+    'Median |z| R / I / C at days 1 | 3 | 7.', '',
+    '| Diagnostic | Loss | Regime | Training | Held-out |', '|---|---:|---|---|---|');
+  for (const [rg, d] of Object.entries(diagnostics.perRegime)) L.push(`| Own row per regime: ${Object.entries(d.table).map(([k, v]) => `${k} ${v}`).join(', ')} | ${fmt(d.loss)} | ${REGIMES[rg]} | ${dc(d.training)} | ${dc(d.heldOut)} |`);
+  for (const [rg, d] of Object.entries(diagnostics.dragScaledCrossTrack.cells)) L.push(`| One row, s_i + c_i n-dot_ng: ${Object.entries(diagnostics.dragScaledCrossTrack.table).map(([k, v]) => `${k} ${v}`).join(', ')} | ${fmt(diagnostics.dragScaledCrossTrack.loss)} | ${REGIMES[rg]} | ${dc(d.training)} | ${dc(d.heldOut)} |`);
+  L.push('', `Cross-track at day 7 over s_i 1e-9 to 1e-3 and k_F 0.01 to 100 (quarter-decade steps; the rest at the fitted row): where the strong-drag median |z| is inside the band, the near-700 km one is ${Object.entries(diagnostics.crossTrackRatio).map(([b, r]) => `${b === 'heldOut' ? 'held-out' : 'training'} ${r.points ? `${r.nearMin} to ${r.nearMax} (${r.points} points)` : 'never reached'}`).join('; ')}.`);
   L.push('', `The 3D figures here take d^2 as the sum of the three z^2 (the rows keep no cross-axis covariance); the module's E2E takes the full position block. Rows read: ${checks.rows}; arms flown: ${checks.arms}; windows in the guard: ${checks.guard}; hold-outs: ${checks.held}. Re-weighting at the 0.6.0 row reproduces the rows' full variances within ${checks.maxRel.toExponential(2)} relative, at all terms 0 the noise-off ones within ${checks.maxRelOff.toExponential(2)}.`);
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'table.json'), `${JSON.stringify(result, null, 1)}\n`);
