@@ -39,7 +39,7 @@ export const ARMS = ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40'];
 export const ARM_MODULES = { SGP4: ['analysis/gp-error-model', 'propagator/sgp4'], XP: ['propagator/sdn-ap'], XPU: ['propagator/sgp4-xp'], AP: ['propagator/sdn-ap'], FFM20: ['analysis/estimation', 'propagator/ffm'], FFM40: ['analysis/estimation', 'propagator/ffm'] };
 export const COLUMNS = { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40' };
 const PRODUCT = { SGP4: 'the $OMM the fitter emits', XP: 'the $OCM', XPU: 'the $OCM', AP: 'the $OCM', FFM20: 'the fit\'s epoch, state and parameters as UTF-8 JSON (no FlatBuffer product in the harness)', FFM40: 'the fit\'s epoch, state and parameters as UTF-8 JSON (no FlatBuffer product in the harness)' };
-const MACHINE = { model: 'Mac Studio (Mac15,14)', cpu: 'Apple M3 Ultra', cores: 28, performanceCores: 20, efficiencyCores: 8, memoryGiB: 256, os: 'macOS 26.3.1', node: process.version, arch: process.arch, threads: 'one process at a time; every module wasi-sequential on the main thread' };
+const MACHINE = { model: 'Mac Studio (Mac15,14)', cpu: 'Apple M3 Ultra', cores: 28, performanceCores: 20, efficiencyCores: 8, memoryGiB: 256, os: 'macOS 26.3.1', node: process.version, arch: process.arch, threads: 'one process at a time; propagator/sdn-ap with its thread pool bounded to one, every other module a sequential artifact' };
 
 const isoMs = (t) => new Date(t).toISOString();
 const ms = (e) => Date.parse(/Z$/.test(e) ? e : `${e}Z`);

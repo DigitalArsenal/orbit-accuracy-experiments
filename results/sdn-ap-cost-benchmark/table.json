@@ -11,7 +11,7 @@
   "os": "macOS 26.3.1",
   "node": "v25.4.0",
   "arch": "arm64",
-  "threads": "one process at a time; every module wasi-sequential on the main thread"
+  "threads": "one process at a time; propagator/sdn-ap with its thread pool bounded to one, every other module a sequential artifact"
  },
  "stepSeconds": 300,
  "fitHours": 48,
