@@ -149,6 +149,7 @@ let storedWeatherDay = null;
 const LADDER = args['ffm-ladder'] ? JSON.parse(args['ffm-ladder']) : null;
 const LITE = args.lite === 'true' || !!LADDER;
 const FILES = args.stored ? storedFiles(args.stored) : SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
+if (args.stored && !FILES.length) { console.error(`--stored: no ${SOURCE} file left to run in ${args.stored}`); process.exit(0); }
 const SUPGP_WINDOW_H = { iss: 6, css: 6, planet: 24 }[SOURCE] ?? (VENDOR ? 24 : 12);
 const BINS = { iss: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 240], [240, 360]],
   css: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168]],
