@@ -174,6 +174,8 @@ Control: ${doc.control.filter((c) => c.worstMm <= 1).length} of ${doc.control.le
 Published figure: THEMIS D 2013-02-13 on 0.5.1, ${f3(doc.published.measuredM)} m over the forecast (3.06 m published, fit and forecast spans).
 
 ## Builds
+propagator/sdn-ap dist SHA-256 (first 12): ${doc.builds.map((b) => `${b.version} ${b.sha256.slice(0, 12)}`).join(', ')}.
+
 ${head}
 ${sets('main')}
 
