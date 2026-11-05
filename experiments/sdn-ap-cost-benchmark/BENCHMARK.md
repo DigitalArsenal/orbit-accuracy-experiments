@@ -128,3 +128,27 @@ byte. One child process per arm per phase, arms in the order SGP4, XP, XPU, AP, 
 order; the 1-minute load before and after each child is in the rows. Rows: `/opt/data/sdn-archive/operator-theory/sdn-ap-cost-benchmark/`
 (`fits-<arm>.jsonl`, `flights-<arm>.jsonl`, `memory-<arm>.json`, `phases.jsonl`). Results: `results/sdn-ap-cost-benchmark/table.json`
 and `README.md`. Every state comes from a module; the host moves bytes, thins the arc, and times.
+
+## Amendments before the registered run (2026-11-05, after a two-window trial in a scratch directory; no record row read)
+
+1. Thinning and coverage follow the harness's rule exactly (xp-atmosphere-merit/lib/truth.mjs `thinned`, all-regimes.mjs
+   `arc`): coverage is the arc's states over 48 h / the product's own step (at least 0.9), and the arc is every
+   round(300 s / step)-th state from the first. The laser products (NSGF 180 s, ILRS 120 s) thin to 360 s, 481 states;
+   every other product here is on a 300 s or finer grid and gives 577 states at 300 s. The first text read "thinned to 300 s,
+   at most 577 states, 90 % of 577", which no 120 s or 180 s product can meet while the harness fits them. The output step
+   stays 300 s everywhere.
+2. One warm-up call per arm and phase, on the first window, is not counted: the harness's rule (compare-costs.mjs counts its
+   first file as a warm-up; speed.mjs times after one warm-up call). In the trial the first call of a fresh process carried
+   the engine's wasm tier-up on other threads (CPU above wall).
+3. The parent process reads the products once and writes the thinned arcs under the row directory (`arcs.json`, never the
+   repository); each arm's process reads them, so its RSS is its own and the readers' memory is not in it.
+4. The memory probe also wraps the `WebAssembly.Memory` constructor: propagator/sdn-ap is an emscripten-pthreads artifact
+   whose memory the host constructs and imports; the first probe (instances only) saw none of it.
+5. Every module runs one instance for the arm's whole phase, SGP4's fitter and propagator included. The harness makes a
+   fresh instance per call for those two (`openSgp4Fit`, `modules.mjs propagateSgp4`), which in the trial put the module's
+   compilation inside the timed call (flight CPU 0.069 s against 0.016 s wall): a cost of the host, not of the theory. The
+   call is the harness's unchanged (`fit_elements` with { epoch: first, fitBstar: true }, the same decoding; `propagate_ephemeris`
+   of the set in TEME at the step), on the same builds; SGP4's bytes per object is the size-prefixed `$OMM` the fitter emits.
+6. The thread bound: propagator/sdn-ap is opened with `maxThreads: 1` and `wasiThreadPoolSize: 1` (the SDK caps live guest
+   threads on Node through the second); after the warm-up the trial read AP's fit at 0.126 s CPU against 0.125 s wall, the
+   sequential path. Every other module here is a sequential artifact.
