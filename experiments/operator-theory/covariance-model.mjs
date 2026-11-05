@@ -48,7 +48,11 @@ const SETS = {
   p26: { regime: 'H1', label: 'Strong drag, 2026 (P)', producer: 'xm', env: { XP2F_CONTROL: '1' }, group: 'P', from: '2026-01-01', to: '2026-05-31', arms: ['AP72', 'AP24'], control: 'truth2' },
   s1q4: { regime: 'H2b', label: 'Near 700 km, Sentinel-1 2025', producer: 'xm', env: {}, group: 'S1', from: '2025-10-04', to: '2025-12-21', arms: ['AP72', 'AP24'], control: null },
   dols: { regime: null, label: 'DO and LS 2025', producer: 'regimes', env: {}, arms: ['AP24', 'AP72'], control: 'regimes' },
+  // the training windows re-flown on 0.6.1 at 17 digits (amendment 2: the precision rule's flight), exactly the coverage study's windows
+  trT: { regime: 'T', label: 'Strong drag, 2025 (training)', producer: 'xp2', env: {}, from: '2025-04-01', to: '2025-12-21', arms: ['AP24', 'APRa12'], control: 'truth', training: 'truth' },
+  trS1: { regime: 'S1', label: 'Near 700 km, 2026 (training)', producer: 'xm', env: { XP2F_CONTROL: '1' }, group: 'S1', from: '2026-01-01', to: '2026-05-31', arms: ['AP72', 'AP24'], control: 'truth2', training: 'truth2' },
 };
+const HELD_SETS = ['p26', 's1q4', 'dols'], TRAIN_SETS = ['trT', 'trS1'];
 const REGIME = { T: 'Strong drag, 2025', S1: 'Near 700 km, 2026', H1: 'Strong drag, 2026 (P)', H2a: 'Near 700 km, DO and LS 2025', H2b: 'Near 700 km, Sentinel-1 2025', H3: 'Weak drag, DO and LS 2025 (no-harm)' };
 const REQUIRED = ['H1', 'H2a', 'H2b'], NOHARM = ['H3'];
 const regimeOfDols = (name) => (name in NEAR ? 'H2a' : name in WEAK ? 'H3' : null);
@@ -177,15 +181,31 @@ async function worker(set, k) {
   const m = await openModules(), kit = await apKit(), gem = await scorer();
   const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
   const PCF = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null });
+  // the 2025 producer's held-B arm (APRa12: 17 h arc, BTERM held at the stored RFa12 value), as ap-truth.mjs --arms registered runs it
+  const storedB = new Map();
+  if (s.producer === 'xp2') for (const f of fs.readdirSync(path.join(X.store, 'rows')).filter((n) => n.endsWith('.jsonl'))) for (const l of fs.readFileSync(path.join(X.store, 'rows', f), 'utf8').split('\n')) if (l) { const r = JSON.parse(l); if (r.arms?.RFa12?.bHeld) storedB.set(r.key, r.arms.RFa12.bHeld); }
+  const FIT = { srpPrior: XM.config.fit.srpPrior };
+  const heldPcf = (b) => fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: { dragPrior: { form: 'LOG_NORMAL', mean: b, sigma: 1e-6 }, ...(FIT.srpPrior ? { srpPrior: FIT.srpPrior } : {}) } });
+  const trainingKeys = s.training ? new Set(rowsIn(path.join(TRAIN, s.training)).map((r) => r.key)) : null;
   const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === k;
   const outDir = path.join(OUT, set), outFile = path.join(outDir, `rows-${k}.jsonl`);
   fs.mkdirSync(outDir, { recursive: true });
   const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
   // objects: { group, name, norad, objectId, series(from, to) -> lines, cutoffs, regime }
   let objects;
-  if (s.producer === 'xm') {
+  if (s.producer === 'xp2') {
+    const byObject = new Map();
+    for (const w of Object.keys(X.config.spans).flatMap((sp) => X.windows(sp))) {
+      if (w.date < s.from || w.date > s.to || !trainingKeys.has(w.key)) continue;
+      if (!byObject.has(w.o.norad)) byObject.set(w.o.norad, { o: w.o, ws: new Map() });
+      byObject.get(w.o.norad).ws.set(w.cutoffMs, w.key);
+    }
+    objects = [...byObject.values()].map(({ o, ws }) => ({ group: null, name: o.name, norad: o.norad, objectId: o.objectId ?? '', o, cutoffs: [...ws.keys()], regime: s.regime,
+      key: (t) => ws.get(t), series: (a, b) => T.series(o, a, b).lines }));
+  } else if (s.producer === 'xm') {
     objects = XM.config.groups[s.group].objects.map((o) => ({ group: s.group, name: o.name, norad: o.norad, objectId: o.objectId ?? '', o, cutoffs: XM.daysOf(s.from, s.to), regime: s.regime,
-      key: (t) => `${s.group}|${o.norad}|${XM.dateOf(t)}`, series: (a, b) => T.series(o, a, b).lines }));
+      key: (t) => `${s.group}|${o.norad}|${XM.dateOf(t)}`, series: (a, b) => T.series(o, a, b).lines }))
+      .map((x) => (trainingKeys ? { ...x, cutoffs: x.cutoffs.filter((t) => trainingKeys.has(x.key(t))) } : x));
   } else {
     // all-regimes.mjs's objects of groups DO and LS (Stella is barred: its files are never listed), its truth chain
     const { STATIC, windowKey } = await import('./lib/regimes.mjs');
@@ -231,13 +251,14 @@ async function worker(set, k) {
       const score = (e) => { const days = {}; let i = 0; entered.forEach((d, j) => { const q = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(q.map((x) => x[c]))); days[d] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
       const arc = (hours) => { const raw = o.series(D0 - hours * HOUR, D0); const cov = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return cov >= MIN_COV ? T.thinned(raw).chosen : null; };
       for (const name of s.arms) {
-        const hours = Number(name.slice(2)), a = { ok: false };
-        let f;
+        const hours = name === 'APRa12' ? 17 : Number(name.slice(2)), a = { ok: false };
+        let f, pcf = PCF;
         try {
+          if (name === 'APRa12') { const b = storedB.get(key); if (!(b > 0)) throw new Error('no positive B'); pcf = heldPcf(b); a.bHeld = b; }
           const thin = arc(hours);
           if (!thin) throw new Error('coverage');
           f = await kit.fit([['ephemeris', 'OEM', S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) })],
-            ['configuration', 'PCF', PCF], ['space_weather', 'SPW', spw]]);
+            ['configuration', 'PCF', pcf], ['space_weather', 'SPW', spw]]);
           if (!f.ok) throw new Error(f.error);
           const info = readOcm(f.ocm);
           a.bterm = info.bterm; a.agom = info.agom; a.rms = info.fitRmsKm;
@@ -285,9 +306,10 @@ async function rows() {
   if (!fs.existsSync(manifestFile)) fs.writeFileSync(manifestFile, `${JSON.stringify({ startedUtc: new Date().toISOString(), commit: git(repo, 'rev-parse', 'HEAD').toString().trim(),
     runner: sha256(fs.readFileSync(new URL(import.meta.url))), build: BUILD, modulesRoot: process.env.SDN_MODULES_ROOT ?? null, apRoot: AP_ROOT, hours: HOURS, sets: SETS }, null, 1)}\n`);
   const jobs = [];
-  for (let k = 0; k < SHARDS; k += 1) for (const set of Object.keys(SETS)) jobs.push({ set, k });
+  const only = argOf('--sets')?.split(',') ?? HELD_SETS;
+  for (let k = 0; k < SHARDS; k += 1) for (const set of only) jobs.push({ set, k });
   const failed = await pool(jobs, (j) => ['--worker', j.set, '--shard', String(j.k)], (j) => path.join(OUT, 'logs', `${j.set}-${j.k}.log`), (j) => path.join(OUT, 'logs', `${j.set}-${j.k}.done`));
-  fs.writeFileSync(path.join(OUT, 'run.json'), `${JSON.stringify({ finishedUtc: new Date().toISOString(), failed }, null, 1)}\n`);
+  fs.writeFileSync(path.join(OUT, `run-${only.join('-')}.json`), `${JSON.stringify({ finishedUtc: new Date().toISOString(), failed }, null, 1)}\n`);
   if (failed.length) { console.error(`failed: ${failed.join('; ')}`); process.exit(1); }
 }
 
@@ -317,12 +339,12 @@ function armSamples(row, armName, a, full) {
 
 function trainingArms() {
   const out = [];
-  for (const set of ['truth', 'truth2']) for (const r of rowsIn(path.join(TRAIN, set))) {
+  for (const set of TRAIN_SETS) for (const r of rowsIn(path.join(OUT, set))) {
     const bar = barred(r.norad, Date.parse(r.cutoff), r.name);
     if (bar) throw new Error(`training ${r.key}: ${bar}`);
     for (const [arm, a] of Object.entries(r.arms ?? {})) {
       if (!a.ok || !a.leads?.length || !a.covPropagation) continue;
-      const s = armSamples(r, arm, a, false);
+      const s = armSamples(r, arm, a, true);
       s.regime = r.regime; s.block = blockOf(r.regime, r.cutoff.slice(0, 10)); s.date = r.cutoff.slice(0, 10);
       out.push(s);
     }
@@ -331,7 +353,7 @@ function trainingArms() {
 }
 function heldOutArms() {
   const out = [];
-  for (const set of Object.keys(SETS)) for (const r of rowsIn(path.join(OUT, set))) {
+  for (const set of HELD_SETS) for (const r of rowsIn(path.join(OUT, set))) {
     const bar = barred(r.norad, Date.parse(r.cutoff), r.name);
     if (bar) throw new Error(`held-out ${r.key}: ${bar}`);
     const regime = set === 'dols' ? regimeOfDols(Object.entries({ ...NEAR, ...WEAK }).find(([, n]) => n === r.norad)?.[0]) : SETS[set].regime;
@@ -707,7 +729,7 @@ function control() {
       for (const arm of s.arms) {
         const x = a?.arms?.[arm], y = r.arms?.[arm];
         if (!x && !y) continue;
-        const fields = set === 'dols' ? ['ok', 'rms'] : ['ok', 'bterm', 'agom', 'rms'];
+        const fields = set === 'dols' ? ['ok', 'rms'] : set === 'trT' ? ['ok', 'bterm', 'agom', 'rms', 'bHeld'] : ['ok', 'bterm', 'agom', 'rms'];
         const cmp = (name, p, q) => { out.scalarsCompared += 1; if (JSON.stringify(p ?? null) !== JSON.stringify(q ?? null)) { out.differing += 1; if (out.differences.length < 20) out.differences.push({ key: r.key, arm, name, stored: p ?? null, flown: q ?? null }); } };
         for (const f of fields) cmp(f, x?.[f], y?.[f]);
         for (const d of ['1', '2', '3', '7']) for (const f of ['e', 'r', 't', 'n']) cmp(`days.${d}.${f}`, x?.days?.[d]?.[f], y?.days?.[d]?.[f]);
