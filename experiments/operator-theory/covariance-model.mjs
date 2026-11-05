@@ -23,7 +23,7 @@ const argOf = (name, k = 1) => { const at = process.argv.indexOf(name); return a
 const ARCHIVE = '/opt/data/sdn-archive/operator-theory', TRAIN = path.join(ARCHIVE, 'covariance-coverage'), B051 = path.join(ARCHIVE, 'ap/b051');
 const OUT = process.env.COVM_OUT ?? path.join(ARCHIVE, 'covariance-model');
 const RESULTS = path.join(repo, 'results/ap-truth/covariance-model'), PLAN = 'experiments/operator-theory/COVARIANCE-MODEL.md';
-const SHARDS = 12, WORKERS = Number(process.env.COVM_WORKERS ?? 6), LOAD_BELOW = 42, HOURS = 167, HOUR = 3600000, DAY = 86400000;
+const SHARDS = 12, WORKERS = Number(process.env.COVM_WORKERS ?? 6), LOAD_BELOW = Number(process.env.COVM_LOAD_BELOW ?? 42), HOURS = 167, HOUR = 3600000, DAY = 86400000;
 const BUILD = { module: 'propagator/sdn-ap', version: '0.6.1', modulesCommit: '3b59e95b3', wasmSha256: '05dd4a6600fb4c65d5841e1f49dc26df64fca7c14f1084644cafcfa875fe0a87' };
 const AP_ROOT = process.env.SDN_AP_ROOT ?? '/Users/tj/software/private/coordinator-d9/space-data-network-modules-pin';
 const K_F_061 = 1.5127596877626373; // the floor scale the 0.6.1 record's FLOOR fields carry (SPEC 12.2)
@@ -769,7 +769,7 @@ async function select() {
   const record = { startedUtc: new Date().toISOString(), commit: git(repo, 'rev-parse', 'HEAD').toString().trim(), order: FORMS.map((f) => f.id), forms: [] };
   const fitFile = (f, b) => path.join(OUT, 'fits', `${f}-${b}.json`);
   for (const form of FORMS) {
-    const jobs = [...Object.keys(BLOCKS), 'all'].map((b) => ({ f: form.id, b }));
+    const jobs = [...Object.keys(BLOCKS), 'all'].map((b) => ({ f: form.id, b })).filter((j) => !fs.existsSync(fitFile(j.f, j.b)));
     const failed = await pool(jobs, (j) => ['--fold', j.f, j.b], (j) => path.join(OUT, 'logs', `fit-${j.f}-${j.b}.log`), (j) => path.join(OUT, 'logs', `fit-${j.f}-${j.b}.done`));
     if (failed.length) throw new Error(failed.join('; '));
     const folds = Object.keys(BLOCKS).map((b) => JSON.parse(fs.readFileSync(fitFile(form.id, b), 'utf8')));
