@@ -1,0 +1,479 @@
+{
+ "about": "DSST.md, Windows: the window set by store, group and count, and the SHA-256 of the sorted keys over every store (windows.mjs --list prints them). Keys only; no arm figure is read. Held windows are dropped and counted.",
+ "cellsFrom": "results/ap-truth/compare/cells.json",
+ "holds": {
+  "starlink": "every Starlink source",
+  "galileo": [
+   43567,
+   37847,
+   41862,
+   41174,
+   43055,
+   41175
+  ],
+  "swarmGraceFoAfter": "2026-10-31",
+  "vendorExcludedNorads": [
+   31698,
+   66315,
+   22824,
+   8820,
+   39451,
+   39452,
+   39453,
+   43476,
+   43477,
+   43567,
+   37847,
+   41862,
+   41174,
+   43055,
+   41175
+  ],
+  "vendorExcludedTargets": [
+   "terrasarx",
+   "sentinel1d",
+   "stella",
+   "lageos1",
+   "swarma",
+   "swarmb",
+   "swarmc",
+   "gracefo1",
+   "gracefo2"
+  ]
+ },
+ "windows": 24764,
+ "digest": "d42db35f66b1a779578771406c71565b90667e7ca0aa0ee6ebe693f0cd9c3f5e",
+ "stores": [
+  {
+   "store": "ap/b051/truth",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP5.md Part T",
+   "windows": 944,
+   "groups": {
+    "P": 944
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/truth2",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP5.md Part N",
+   "windows": 1812,
+   "groups": {
+    "P": 755,
+    "S1": 302,
+    "GN": 755
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/regimes",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP6.md",
+   "windows": 407,
+   "groups": {
+    "LS": 90,
+    "DO": 150,
+    "GD": 55,
+    "IG": 60,
+    "GE": 45,
+    "HE": 7
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/regimes-hx",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP6.md, HX",
+   "windows": 19,
+   "groups": {
+    "HX": 19
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/regimes-wa",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "GEO-TRUTH.md",
+   "windows": 84,
+   "groups": {
+    "WA": 84
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b0411/laser/forward",
+   "reference": "next",
+   "input": "operator-file",
+   "registration": "COMPARE.md",
+   "windows": 19399,
+   "groups": {
+    "cpf-cne-leo": 855,
+    "cpf-cod-high": 2612,
+    "cpf-dgf-leo": 1140,
+    "cpf-dgf-high": 1140,
+    "cpf-esa-leo": 236,
+    "cpf-esa-high": 1995,
+    "cpf-eum-leo": 570,
+    "cpf-gal-high": 709,
+    "cpf-gfz-leo": 285,
+    "cpf-hds-leo": 273,
+    "cpf-hts-leo": 1699,
+    "cpf-hts-high": 844,
+    "cpf-isr-high": 559,
+    "cpf-qss-high": 715,
+    "cpf-sgf-leo": 1710,
+    "cpf-sgf-high": 1140,
+    "cpf-sha-high": 2159,
+    "cpf-sha-leo": 636,
+    "cpf-gsf-high": 122
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b0411/providers",
+   "reference": "next",
+   "input": "operator-file",
+   "registration": "providers-run.mjs",
+   "windows": 1893,
+   "groups": {
+    "gps": 979,
+    "intelsat": 126,
+    "planet": 100,
+    "ses": 33,
+    "glonass": 617,
+    "css": 1,
+    "iss": 37
+   },
+   "dropped": {
+    "starlink": 357
+   }
+  },
+  {
+   "store": "ap/ap-observations-2/rows",
+   "reference": "truth",
+   "input": "laser-normal-points",
+   "registration": "ap-observations-2/PLAN.md",
+   "windows": 206,
+   "groups": {
+    "NP": 206
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  }
+ ],
+ "cells": {
+  "next|Geodetic": {
+   "reference": "next",
+   "regime": "Geodetic",
+   "input": "operator-file",
+   "fits": [
+    48,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "next|Geostationary, station-kept": {
+   "reference": "next",
+   "regime": "Geostationary, station-kept",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    72,
+    96,
+    168
+   ]
+  },
+  "next|Low orbit": {
+   "reference": "next",
+   "regime": "Low orbit",
+   "input": "operator-file",
+   "fits": [
+    48,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "next|Low orbit, crewed": {
+   "reference": "next",
+   "regime": "Low orbit, crewed",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    48,
+    72,
+    96,
+    120,
+    168
+   ]
+  },
+  "next|Low orbit, imaging fleet": {
+   "reference": "next",
+   "regime": "Low orbit, imaging fleet",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    24
+   ]
+  },
+  "next|Low orbit, maneuvering": {
+   "reference": "next",
+   "regime": "Low orbit, maneuvering",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    24,
+    36
+   ]
+  },
+  "next|Navigation": {
+   "reference": "next",
+   "regime": "Navigation",
+   "input": "operator-file",
+   "fits": [
+    48,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "next|Navigation, ultra-rapid": {
+   "reference": "next",
+   "regime": "Navigation, ultra-rapid",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "truth|Geostationary": {
+   "reference": "truth",
+   "regime": "Geostationary",
+   "input": "precise-orbit",
+   "fits": [
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Highly elliptical": {
+   "reference": "truth",
+   "regime": "Highly elliptical",
+   "input": "precise-orbit",
+   "fits": [
+    72,
+    336
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Highly elliptical, THEMIS and Chandra": {
+   "reference": "truth",
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "input": "precise-orbit",
+   "fits": [
+    72,
+    168
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Inclined geosynchronous": {
+   "reference": "truth",
+   "regime": "Inclined geosynchronous",
+   "input": "precise-orbit",
+   "fits": [
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Laser geodetic": {
+   "reference": "truth",
+   "regime": "Laser geodetic",
+   "input": "precise-orbit",
+   "fits": [
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Low orbit, altimetry": {
+   "reference": "truth",
+   "regime": "Low orbit, altimetry",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Low orbit, laser spheres": {
+   "reference": "truth",
+   "regime": "Low orbit, laser spheres",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Medium Earth orbit": {
+   "reference": "truth",
+   "regime": "Medium Earth orbit",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Near 700 km": {
+   "reference": "truth",
+   "regime": "Near 700 km",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Strong drag, 2025": {
+   "reference": "truth",
+   "regime": "Strong drag, 2025",
+   "input": "precise-orbit",
+   "fits": [
+    24
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Strong drag, 2026": {
+   "reference": "truth",
+   "regime": "Strong drag, 2026",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  }
+ }
+}
