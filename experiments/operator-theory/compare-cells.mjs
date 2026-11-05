@@ -208,7 +208,7 @@ if (!argOf('--only')) for (const r of held) { const { example, ...row } = r; out
 // Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's. Never a showcase example: those are chosen to show AP's lead, not to be typical.
 // --examples a,b: the full examples' folders, a later folder's example replacing an earlier one's of the same id, as compare-examples-publish.mjs reads them; a dropped one links nothing.
 // --check reads the examples the committed cells.json was written with.
-const EXAMPLES = argOf('--examples') ?? (process.argv.includes('--check') ? '/opt/data/sdn-archive/operator-theory/ap/b0411/compare-examples-full,/opt/data/sdn-archive/operator-theory/ap/b051/compare-examples-burn-free,/opt/data/sdn-archive/operator-theory/ap/ffm220/compare-examples' : null);
+const EXAMPLES = argOf('--examples') ?? (process.argv.includes('--check') ? '/opt/data/sdn-archive/operator-theory/ap/b0411/compare-examples-full,/opt/data/sdn-archive/operator-theory/ap/b051/compare-examples-burn-free,/opt/data/sdn-archive/operator-theory/ap/b051/compare-examples-regen,/opt/data/sdn-archive/operator-theory/ap/ffm220/compare-examples' : null);
 if (EXAMPLES) {
   const files = new Map();
   for (const dir of EXAMPLES.split(',')) for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json') && n !== 'index.json' && !/starlink/i.test(n))) files.set(f, path.join(dir, f));
