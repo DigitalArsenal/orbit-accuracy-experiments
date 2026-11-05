@@ -173,8 +173,13 @@ public class DsstArm {
     forces.add(new DSSTThirdBody(sun, mu));
     forces.add(new DSSTThirdBody(moon, mu));
     forces.add(new DSSTSolarRadiationPressure(PRIOR, AREA, sun, earth, mu));
-    // the four-argument constructor: the window context's UT1, not the default context's (which holds no data)
-    if (drag) forces.add(new DSSTAtmosphericDrag(new NRLMSISE00(new CssiSpaceWeatherData(new DataSource(cssi), utc), sun, earth, ctx.getTimeScales().getUT1(IERSConventions.IERS_2010, true)), PRIOR, AREA, mu));
+    // the four-argument constructor: the window context's UT1, not the default context's (which holds no data). The atmosphere's
+    // ceiling is the registered drag switch, 2,500 km (DSST.md, amendment 2026-11-05 (review 2), 1), in place of Orekit's 1,000 km.
+    if (drag) {
+      final DSSTAtmosphericDrag atmosphericDrag = new DSSTAtmosphericDrag(new NRLMSISE00(new CssiSpaceWeatherData(new DataSource(cssi), utc), sun, earth, ctx.getTimeScales().getUT1(IERSConventions.IERS_2010, true)), PRIOR, AREA, mu);
+      atmosphericDrag.setRbar(Constants.WGS84_EARTH_EQUATORIAL_RADIUS + dragBelowKm * 1000.0);
+      forces.add(atmosphericDrag);
+    }
 
     final AttitudeProvider attitude = new FrameAlignedProvider(gcrf);
     final SpacecraftState osculating = new SpacecraftState(new CartesianOrbit(last, gcrf, mu));
@@ -192,8 +197,8 @@ public class DsstArm {
     }
     final BatchLSEstimator estimator = new BatchLSEstimator(new LevenbergMarquardtOptimizer(), builder);
     estimator.setParametersConvergenceThreshold(1e-3);
-    estimator.setMaxIterations(20);
-    estimator.setMaxEvaluations(25);
+    estimator.setMaxIterations(50);
+    estimator.setMaxEvaluations(100);
     for (Position m : measurements) estimator.addMeasurement(m);
     final Propagator[] fitted = estimator.estimate();
     final long c1 = os.getProcessCpuTime(), w1 = System.nanoTime();

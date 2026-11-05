@@ -18,9 +18,8 @@ const STORE = path.join(ROOT, 'dsst-arm');
 const RESULTS = path.join(repo, 'results/dsst-arm');
 const FILES = ['DSST.md', 'windows.json', 'windows.mjs', 'run.mjs', 'truth-fits.mjs', 'pair-fits.mjs', 'DsstArm.java'];
 const COLUMN = 'DSST';
-const B051 = path.join(ROOT, 'ap/b051'), B0411 = path.join(ROOT, 'ap/b0411');
-const { binOf } = await import(path.join(repo, 'experiments/operator-theory/lib/compare.mjs'));
-const { AP_ARM } = await import(path.join(repo, 'experiments/operator-theory/lib/build.mjs'));
+const { AP_ARM, COLUMN_BUILDS } = await import(path.join(repo, 'experiments/operator-theory/lib/build.mjs'));
+const { windowState } = await import(path.join(repo, 'experiments/operator-theory/lib/steps.mjs'));
 
 const git = (...a) => execFileSync('git', a, { cwd: repo, maxBuffer: 1 << 26, stdio: ['ignore', 'pipe', 'ignore'] });
 const fail = (message) => { console.error(`FAIL: ${message}`); process.exit(1); };
@@ -63,31 +62,6 @@ const pct = (sorted, p) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.c
 const round = (x) => Number(x >= 100 ? x.toFixed(1) : x >= 1 ? x.toFixed(3) : x.toFixed(4));
 const median = (v) => { const a = [...v].sort(asc); const k = Math.floor(a.length / 2); return a.length % 2 ? a[k] : (a[k - 1] + a[k]) / 2; };
 
-/** AP's e (km) per window and lead, for the paired ratios: { `${key}@${fit}@${lead}`: e }; the truth windows from the b051 stores, the pairs
- *  from the b0411 stores' AP arm (lib/build.mjs AP_ARM), the arm and stores compare-cells.mjs reads for the cells. */
-function apErrors() {
-  const out = new Map();
-  for (const dir of ['truth', 'truth2', 'regimes', 'regimes-hx', 'regimes-wa']) {
-    const d = path.join(B051, dir);
-    if (!fs.existsSync(d)) continue;
-    for (const f of fs.readdirSync(d).filter((n) => /^rows-\d+\.jsonl$/.test(n))) for (const l of fs.readFileSync(path.join(d, f), 'utf8').split('\n')) {
-      if (!l) continue;
-      const r = JSON.parse(l);
-      for (const [arm, a] of Object.entries(r.arms ?? {})) { const m = /^AP(\d+)$/.exec(arm); if (!m || !a?.days) continue; for (const [day, v] of Object.entries(a.days)) if (Number.isFinite(v?.e)) out.set(`${r.key}@${m[1]}@${Number(day) * 24}`, v.e); }
-    }
-  }
-  for (const dir of ['laser/forward', 'providers']) {
-    const d = path.join(B0411, dir);
-    if (!fs.existsSync(d)) continue;
-    for (const f of fs.readdirSync(d).filter((n) => /^rows(-iss)?-\d+\.jsonl$/.test(n))) for (const l of fs.readFileSync(path.join(d, f), 'utf8').split('\n')) {
-      if (!l || STARLINK.test(l)) continue;
-      const r = JSON.parse(l), lead = binOf(r.leadHours);
-      for (const [arm, a] of Object.entries(r.arms ?? {})) { const m = new RegExp(`^${AP_ARM}@(\\d+)$`).exec(arm); if (m && Number.isFinite(a?.km)) out.set(`${r.source}|${r.norad ?? r.object}|${r.olderStart}|${r.newerStart}@${m[1]}@${lead}`, a.km); }
-    }
-  }
-  return out;
-}
-
 /** AP5.md's statistic: d = ln(e_AP / e_DSST) per window, clusters the ISO week of the cutoff, a 10,000-draw cluster bootstrap of the median, 97.5 % percentile interval. */
 function pairedRatio(pairs) {
   if (pairs.length < 2) return null;
@@ -103,28 +77,82 @@ function pairedRatio(pairs) {
   return { n: pairs.length, clusters: groups.length, medianLnRatio: Number(median(pairs.map((p) => p.d)).toFixed(4)), interval975: [Number(pct(medians, 0.0125).toFixed(4)), Number(pct(medians, 0.9875).toFixed(4))], medianRatio: Number(Math.exp(median(pairs.map((p) => p.d))).toFixed(4)) };
 }
 
-/** results/dsst-arm/table.json from the rows: the DSST column per (reference, regime, fit, lead) beside the cells' columns, unchanged, with the paired ratio. */
+/** Every other arm's error (km) on exactly the windows and pairs DSST scored, read by key from the stores compare-cells.mjs reads for
+ *  results/ap-truth/compare/cells.json (DSST.md, amendment 2026-11-05 (review 2), 2): of(row, fit, lead) -> { column: km }. */
+function otherArms() {
+  const rowsOf = (dir, re = /^rows(-iss)?-\d+\.jsonl$/) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => re.test(f)).flatMap((f) => fs.readFileSync(path.join(dir, f), 'utf8').split('\n').filter((l) => l && !STARLINK.test(l)).map((l) => JSON.parse(l))) : []);
+  const byKey = (dir, key = (r) => r.key) => new Map(rowsOf(dir).map((r) => [key(r), r]));
+  const A = path.join(ROOT, 'ap'), cache = new Map(), load = (dir, key) => cache.get(dir) ?? cache.set(dir, byKey(dir, key)).get(dir);
+  // truth: SGP4, XP and FFM from the 0.4.11 build's stores, the Space Force XP and AP by window from ap/b051 (compare-cells.mjs CUTS and AP6's regimes)
+  const TRUTH = {
+    'ap/b051/truth': { base: 'b0411/compare-truth', ussf: 'b051/ussf-truth', ap: 'b051/truth' },
+    'ap/b051/truth2': { base: 'b0411/compare-truth2', ussf: 'b051/ussf-truth2', ap: 'b051/truth2' },
+    'ap/b051/regimes': { base: 'b0411/regimes', ussf: 'b051/ussf-regimes', ap: 'b051/regimes' },
+    'ap/b051/regimes-hx': { base: 'b0411/regimes-hx', ussf: 'b051/ussf-regimes-hx', ap: 'b051/regimes-hx' },
+    'ap/b051/regimes-wa': { base: 'b0411/regimes-wa', ussf: 'b051/ussf-regimes-wa', ap: 'b051/regimes-wa' },
+  };
+  const e = (r, arm, day) => r?.arms?.[arm]?.days?.[day]?.e;
+  const pairKey = (r) => `${r.source}|${r.norad ?? r.object}|${r.olderStart}|${r.newerStart}`;
+  const km = (stores, k, names) => { for (const name of names) for (const s of stores) { const v = s.get(k)?.arms?.[name]?.km; if (Number.isFinite(v)) return v; } return undefined; };
+  // the laser pairs: compare-cells.mjs stores and armsOf
+  const laserStores = () => [path.join(A, 'b0411/laser/forward'), path.join(A, 'b0411/laser-xp/forward'), path.join(ROOT, 'cheaper/forward'), path.join(A, 'b0411/laser-sgp4'), path.join(A, 'b0411/laser-sgp4-high'), path.join(A, 'b0411/laser-sgp4-72'), path.join(A, 'xp-arm-0-2-1/ussf-laser')].map((d) => load(d, pairKey));
+  const laserArms = (regime, fit) => (regime === 'Low orbit'
+    ? { SGP4: [`S@${fit}`], XP: [`A-XP@${fit}`], XPU: [`U-XP@${fit}`], AP: [`${AP_ARM}@${fit}`], FFM20: fit === 48 ? ['F-M20@48'] : [], FFM40: fit === 48 ? ['F-M40@48'] : [], FFMfull: fit === 48 ? ['F-full@48'] : [], Center: ['operator'] }
+    : { SGP4: [`S@${fit}`], XP: [`A-XP@${fit}`], XPU: [`U-XP@${fit}`], AP: [`${AP_ARM}@${fit}`], FFM20: fit === 48 ? ['F-H20@48'] : [], FFMfull: fit === 48 ? ['F-Hfull@48'] : [], Center: ['operator'] });
+  // the provider pairs: compare-cells.mjs kmOf and cell
+  const providerStores = () => [load(path.join(A, 'b0411/providers'), pairKey), new Map([...rowsOf(path.join(ROOT, 'forward'), /^rows-\d+\.jsonl$/), ...rowsOf(path.join(ROOT, 'vendors/forward'), /^rows-\d+\.jsonl$/)].map((r) => [pairKey(r), r])), load(path.join(A, 'xp-arm-0-2-1/ussf-providers'), pairKey)];
+  const providerArms = (fit) => ({ SGP4: [`S@${fit}`], XP: [`A-XP@${fit}`], XPU: [`U-XP@${fit}`], AP: [`${AP_ARM}@${fit}`], FFM40: [`F-M40@${fit}`], FFMfull: [`F-NRLMSISE00@${fit}`, `F-NO-DRAG@${fit}`], Center: ['operator'] });
+  let laser = null, providers = null;
+  return (row, fit, lead) => {
+    const out = {};
+    if (row.reference === 'truth') {
+      const src = TRUTH[row.store], day = String(lead / 24), ffm = ['P', 'S1', 'LS', 'DO'].includes(row.group) ? 'FFM40' : 'FFM20';
+      const base = load(path.join(A, src.base)).get(row.key), ussf = load(path.join(A, src.ussf)).get(row.key), ap = load(path.join(A, src.ap)).get(row.key);
+      for (const [column, r, arm] of [['SGP4', base, `S${fit}`], ['XP', base, `XP${fit}`], ['XPU', ussf, `U${fit}`], ['AP', ap, `AP${fit}`], [ffm, base, `F${fit}`]]) { const v = e(r, arm, day); if (Number.isFinite(v)) out[column] = v; }
+    } else {
+      const laserPair = row.store === 'ap/b0411/laser/forward';
+      const stores = laserPair ? (laser ??= laserStores()) : (providers ??= providerStores());
+      for (const [column, names] of Object.entries(laserPair ? laserArms(row.regime, fit) : providerArms(fit))) { const v = km(stores, row.key, names); if (Number.isFinite(v)) out[column] = v; }
+    }
+    return out;
+  };
+}
+
+/** results/dsst-arm/table.json from the rows: per (reference, regime, fit, lead), every column on the same subset, the windows and pairs DSST
+ *  scored, each arm read by key from its own store (never the cells' full-set figures); the paired AP-over-DSST ratio on that subset. */
 function buildTable(rows, registration) {
   const cells = JSON.parse(fs.readFileSync(path.join(repo, 'results/ap-truth/compare/cells.json'), 'utf8'));
   const grid = cellGrid();
-  const ap = apErrors();
+  const of = otherArms();
+  const flags = new Map(JSON.parse(fs.readFileSync(path.join(repo, 'results/operator-theory/maneuver-flags/flags.json'), 'utf8')).windows.map((w) => [w.key, w]));
+  const TRUTH_LEADS = grid['truth|Strong drag, 2025']?.leads ?? [24, 48, 72, 168];
+  const groups = new Map();
+  for (const r of rows) {
+    const leads = r.reference === 'truth' ? TRUTH_LEADS : [r.lead];
+    for (const lead of leads) { const k = `${r.reference}|${r.regime}|${r.fit}|${lead}`; (groups.get(k) ?? groups.set(k, { reference: r.reference, regime: r.regime, input: r.input, fit: r.fit, lead, rows: [] }).get(k)).rows.push(r); }
+  }
   const out = [];
-  for (const [, cell] of Object.entries(grid)) {
-    for (const fit of cell.fits) for (const lead of cell.leads) {
-      const inCell = rows.filter((r) => r.reference === cell.reference && r.regime === cell.regime && r.fit === fit);
-      const mine = inCell.filter((r) => Number.isFinite(r.leads?.[lead]?.e));
-      const other = cells.rows.find((r) => r.level === 'regime' && r.provider === 'All' && r.reference === cell.reference && r.regime === cell.regime && r.fit === fit && r.lead === lead);
-      if (!inCell.length) continue;
-      const v = mine.map((r) => r.leads[lead].e).sort(asc);
-      const pairs = mine.map((r) => ({ cutoff: r.cutoff, d: ap.has(`${r.key}@${fit}@${lead}`) ? Math.log(ap.get(`${r.key}@${fit}@${lead}`) / r.leads[lead].e) : null })).filter((p) => Number.isFinite(p.d));
-      out.push({ reference: cell.reference, regime: cell.regime, input: cell.input, fit, lead, n: other?.n ?? null, windows: inCell.length, failed: inCell.filter((r) => r.failed).length, unscored: inCell.filter((r) => r.unscored).length, burnsInFit: other?.burnsInFit ?? null, burnsInForecast: other?.burnsInForecast ?? null,
-        build: { ...(other?.build ?? {}), [COLUMN]: [...new Set(rows.map((r) => `orekit@${r.build?.orekit?.sha256?.slice(0, 12)}+DsstArm.java@${r.build?.driverSha256?.slice(0, 12)}`))] },
-        arms: { ...(other?.arms ?? {}), ...(v.length ? { [COLUMN]: [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length] } : {}) },
-        apOverDsst: pairedRatio(pairs) });
+  for (const g of [...groups.values()].sort((a, b) => a.reference.localeCompare(b.reference) || a.regime.localeCompare(b.regime) || a.fit - b.fit || a.lead - b.lead)) {
+    const scored = g.rows.filter((r) => Number.isFinite(r.leads?.[g.lead]?.e));
+    const values = { [COLUMN]: [] }, pairs = [];
+    for (const r of scored) {
+      const mine = r.leads[g.lead].e, others = of(r, g.fit, g.lead);
+      values[COLUMN].push(mine);
+      for (const [column, v] of Object.entries(others)) (values[column] ??= []).push(v);
+      if (Number.isFinite(others.AP)) pairs.push({ cutoff: r.cutoff, d: Math.log(others.AP / mine) });
     }
+    const arms = {};
+    for (const column of [...Object.keys(cells.columns), COLUMN]) { const v = (values[column] ?? []).sort(asc); if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length]; }
+    const flagged = g.reference === 'truth' && scored.length && scored.every((r) => flags.has(r.key)) ? scored.map((r) => windowState(flags.get(r.key), g.fit, g.lead)) : null;
+    const builds = COLUMN_BUILDS[g.reference] ?? {};
+    out.push({ reference: g.reference, regime: g.regime, input: g.input, fit: g.fit, lead: g.lead, windows: g.rows.length, scored: scored.length,
+      failed: g.rows.filter((r) => r.failed).length, unscored: g.rows.filter((r) => r.unscored).length,
+      burnsInFit: flagged ? flagged.filter((x) => x.inFit).length : null, burnsInForecast: flagged ? flagged.filter((x) => x.inForecast).length : null,
+      build: { ...Object.fromEntries(Object.keys(arms).filter((c) => builds[c]).map((c) => [c, builds[c].map((b) => b.key)])), [COLUMN]: [...new Set(g.rows.map((r) => `orekit@${r.build?.orekit?.sha256?.slice(0, 12)}+DsstArm.java@${r.build?.driverSha256?.slice(0, 12)}`))] },
+      arms, apOverDsst: pairedRatio(pairs) });
   }
   return { registered: `experiments/dsst-arm/DSST.md at ${registration?.sha ?? 'uncommitted'}`, columns: { ...cells.columns, [COLUMN]: 'DSST (Orekit 13.1)' },
-    fields: `${cells.fields} windows, failed, unscored: the DSST rows of the cell and fit; failed: fits that threw or did not converge, counted, never dropped; unscored: windows the AP arm's runner also leaves unscored (no lead bin, arc coverage, an excluded weather span, a file shorter than the fit) and pairs whose reference starts inside the fit (forward error only: a lead counts from the fit's end). apOverDsst: AP5.md's statistic on the paired windows, d = ln(e_AP / e_DSST), clusters the ISO week of the cutoff, 10,000-draw cluster bootstrap, 97.5 % percentile interval of the median; medianRatio = exp(median d) (above 1: DSST closer than AP).`,
+    fields: 'Per (reference, regime, fit, lead): windows, the DSST rows of the cell (a truth window enters every lead); scored, those with a DSST error at the lead; failed: fits that threw or did not converge, counted, never dropped; unscored: windows the AP arm\'s runner also leaves unscored (no lead bin, arc coverage, an excluded weather span, a file shorter than the fit) and pairs whose reference starts inside the fit (forward error only: a lead counts from the fit\'s end). arms: column to [median km, 95th percentile km, n], every column on the scored subset only, each arm read by key from the store compare-cells.mjs reads for it; a column with no row for a key leaves it out, so its n can be below scored. burnsInFit, burnsInForecast: of the scored truth windows, those with a maneuver step in the fit arc and in the forecast span to the lead (results/operator-theory/maneuver-flags); null where no detector covered every window. apOverDsst: AP5.md\'s statistic on the scored windows with an AP figure, d = ln(e_AP / e_DSST), clusters the ISO week of the cutoff, 10,000-draw cluster bootstrap, 97.5 % percentile interval of the median; medianRatio = exp(median d) (above 1: DSST closer than AP).',
     builds: rows.length ? rows[0].build : null, rows: out };
 }
 
