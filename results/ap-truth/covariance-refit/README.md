@@ -1,3 +1,5 @@
+Acceptance NOT met: the realism E2E does not pass; on the held-out windows 10 of 18 cells (per regime, R, I and C, days 1, 3 and 7) lie outside median |z| 0.603 to 0.754; the record's acceptance line "realism E2E PASS" is not met and the fitted row earns no realism label.
+
 # AP DRAG process-noise re-fit (COVARIANCE-REFIT.md)
 
 Fitted from the coverage study's rows (sdn-ap 0.6.0, `/opt/data/sdn-archive/operator-theory/covariance-coverage`) by re-weighting the module's own per-term variances; training and held-out windows disjoint by cutoff with a 10-day guard. z = forward error component over the propagated 1-sigma; calibrated median |z| 0.674, band 0.603 to 0.754; within 1 and 2 sigma calibrated 0.683 and 0.954. Windows (window keys with a flown arm): Strong drag, 2025 training 396, held-out 518; Near 700 km, 2026 training 140, held-out 130.
@@ -52,6 +54,10 @@ Held-out verdict (median |z| inside [0.603, 0.754] per regime on R, I and C at d
 | Near 700 km, 2026 | held-out | day 3 | 247 | 1.50e-4 | 1.63e-3 | 0.207 | 0.638 | 0.487 | 0.560 | 0.656, 0.968 | 0.745, 0.943 | 0.826, 0.964 | 0.953 | 0.939 |
 | Near 700 km, 2026 | held-out | day 5 | 247 | 1.54e-4 | 2.16e-3 | 0.149 | 1.01 | 0.644 | 0.450 | 0.498, 0.879 | 0.721, 0.923 | 0.874, 0.955 | 1.16 | 0.915 |
 | Near 700 km, 2026 | held-out | day 7 (167 h) | 249 | 1.05e-4 | 2.28e-3 | 0.116 | 0.852 | 0.674 | 0.380 | 0.582, 0.936 | 0.655, 0.896 | 0.880, 0.964 | 1.10 | 0.920 |
+
+## The ISS demo figure, predicted
+
+The demo's ISS sample at its last state 2026-07-14T00:00:00.000 (12.0 h from its start, 6.00 h after the fit's end), the coverage study's flights re-weighted to the fitted row (a prediction, not a flight of a build): 1-sigma R / I / C 5.10 / 37.8 / 0.0229 km before, 0.0166 / 0.147 / 0.0153 km after, against the error 6.76e-3 / 0.308 / 0.0159 km (|z| after 0.408 / 2.09 / 1.04).
 
 ## Median |z| per arm after, days 1, 3, 7
 
