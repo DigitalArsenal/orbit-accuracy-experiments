@@ -7,6 +7,9 @@
 // re-measured on 0.5.1 byte for byte on every stored window of its stores (PROOF): its cells name 0.5.1, the proof in the provenance block. Next-file AP and
 // whiteroom XP ran on 0.4.11 alone and are left out until their 0.5.x rerun. Every Starlink group is held: no Starlink row or example is parsed, and the SpaceX
 // rows are carried from HELD_FROM's cells.json, less their cells on builds no longer current (AP and whiteroom XP 0.4.11, the Space Force XP 0.1.1).
+// Each FFM cell names the integrator its fits and flights ran: the one algorithm every FFM request of this harness carries (lib/frame.mjs, the request
+// builder lib/fit.mjs and lib/host.mjs go through), read from that source at generation and never retyped; the site labels each FFM cell with its
+// build and integrator ("FFM 2.0.4, RK78"). --check also holds every FFM cell to that integrator and counts them.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -20,6 +23,11 @@ const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ?
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
 const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD), B051 = path.join(AP, 'b051'), XPARM = path.join(AP, 'xp-arm-0-2-1');
 const HELD_FROM = '71b27aa50112ec0533359572597eb408491cdb2f';
+// The integrator every FFM fit and flight ran: lib/frame.mjs builds each request's integrator settings with one ALGORITHM, read here from its source.
+const FRAME = fs.readFileSync(path.join(REPO, 'experiments/operator-theory/lib/frame.mjs'), 'utf8');
+const ALGORITHMS = [...new Set([...FRAME.matchAll(/ALGORITHM:\s*P\.\w+\.(\w+)\b/g)].map((m) => m[1]))];
+if (ALGORITHMS.length !== 1) throw new Error(`lib/frame.mjs names ${ALGORITHMS.length ? ALGORITHMS.join(', ') : 'no'} integrator algorithm; every FFM request carries one`);
+const INTEGRATOR = ALGORITHMS[0];
 // The proof that whiteroom XP on precise orbits is sdn-ap 0.5.1's: the re-measure on modules ea824356 found every stored XP window of these stores equal to
 // 0.4.11's byte for byte (remeasure-0-5-1.json pairs: different 0). The SDN-AP session's ruling of 2026-11-05 relabels those cells and no others.
 const PROOF = {
@@ -52,15 +60,16 @@ const round = (x) => (x === null || x === undefined ? null : Number(x >= 100 ? x
 /** The input class of a row's fits, and its builds: for each column in it, the keys of BUILD_RECORDS. */
 const INPUT = { next: 'operator-file', truth: 'precise-orbit' };
 const named = (row, set) => {
-  const builds = COLUMN_BUILDS[set], build = {};
+  const builds = COLUMN_BUILDS[set], build = {}, integrator = {};
   const arms = Object.fromEntries(Object.entries(row.arms).filter(([column]) => !(DROPPED[set] ?? []).includes(column)));
   for (const column of Object.keys(arms)) {
     if (!builds[column]) throw new Error(`no build for ${column} in ${set}`);
     build[column] = builds[column].map((b) => b.key);
+    if (column.startsWith('FFM')) integrator[column] = INTEGRATOR;
     if (set === 'truth' && column === 'XP') { if (build.XP.join() !== XP_MEASURED) throw new Error('whiteroom XP on precise orbits is not the measured build'); build.XP = [XP_EQUAL]; }
   }
   const { arms: _all, ...head } = row;
-  return { ...head, input: INPUT[row.reference], build, arms };
+  return { ...head, input: INPUT[row.reference], build, integrator, arms };
 };
 /** Each truth XP value's store (the windows the re-measure covered), as read: store name to the window keys. */
 const xpFrom = new Map();
@@ -209,7 +218,7 @@ out.sort((a, b) => a.reference.localeCompare(b.reference) || order[a.level] - or
 const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md, XP-ARM-0-2-1.md',
   columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
-  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those with a step of the truth\'s mean semimajor axis of 8 m or more in the fit arc, and in the forecast span to the lead (results/operator-theory/maneuver-flags); a window the detector could not cover counts in neither; null where no detector ran. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
+  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. integrator: for each FFM column in the row, the integrator algorithm its fits and flights ran, read at generation from the one request builder every FFM call of this harness goes through (experiments/operator-theory/lib/frame.mjs); the tolerances and steps are each writer\'s settings (arms.mjs, truth-compare.mjs, all-regimes.mjs, providers-run.mjs, score.mjs). arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those with a step of the truth\'s mean semimajor axis of 8 m or more in the fit arc, and in the forecast span to the lead (results/operator-theory/maneuver-flags); a window the detector could not cover counts in neither; null where no detector ran. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
   // the builds the rows name, and the build whiteroom XP was measured on (the provenance's measuredOn)
   builds: Object.fromEntries(Object.entries(BUILD_RECORDS).filter(([k]) => k === XP_MEASURED || out.some((r) => Object.values(r.build ?? {}).some((keys) => keys.includes(k))))),
   provenance: {
@@ -249,7 +258,9 @@ function check() {
   if (relabeled.some((r) => r.reference !== 'truth')) faults.push('a row off precise orbits names whiteroom XP on 0.5.1');
   if (doc.rows.some((r) => r.build?.XP?.includes(XP_MEASURED) || r.build?.AP?.includes(XP_MEASURED) || Object.values(r.build ?? {}).some((k) => k.some((x) => doc.builds[x]?.version === '0.1.1')))) faults.push('a cell names sdn-ap 0.4.11 or sgp4-xp 0.1.1');
   if (doc.rows.some((r) => r.reference === 'next' && (r.arms.XP || r.arms.AP))) faults.push('a next-file row carries AP or whiteroom XP');
-  console.log(faults.length ? `COMPARE CELLS: FAIL\n${faults.slice(0, 10).join('\n')}` : `COMPARE CELLS: PASS (${doc.rows.length} rows reproduce; whiteroom XP on 0.5.1 in ${relabeled.length} precise-orbit rows, fed by ${[...xpFrom].map(([k, v]) => `${k} ${v.size}`).join(', ')}, each a store the proof covers with no differing window; no cell on sdn-ap 0.4.11 or sgp4-xp 0.1.1)`);
+  const ffmCells = doc.rows.flatMap((r) => Object.keys(r.arms).filter((c) => c.startsWith('FFM')).map((c) => r.integrator?.[c]));
+  if (ffmCells.some((x) => x !== INTEGRATOR) || doc.rows.some((r) => Object.keys(r.integrator ?? {}).some((c) => !r.arms[c]))) faults.push(`an FFM cell does not name the integrator lib/frame.mjs carries (${INTEGRATOR})`);
+  console.log(faults.length ? `COMPARE CELLS: FAIL\n${faults.slice(0, 10).join('\n')}` : `COMPARE CELLS: PASS (${doc.rows.length} rows reproduce; whiteroom XP on 0.5.1 in ${relabeled.length} precise-orbit rows, fed by ${[...xpFrom].map(([k, v]) => `${k} ${v.size}`).join(', ')}, each a store the proof covers with no differing window; no cell on sdn-ap 0.4.11 or sgp4-xp 0.1.1; ${ffmCells.length} FFM cells name their integrator, ${INTEGRATOR})`);
   process.exit(faults.length ? 1 : 0);
 }
 const counts = {};

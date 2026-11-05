@@ -6,6 +6,8 @@ Every AP and whiteroom XP figure here is from AP 0.4.11 (modules a0f33bc545), re
 
 `cells.json` rows also count their windows with a burn in the fit and in the forecast to the lead (`burnsInFit`, `burnsInForecast`, from `results/operator-theory/maneuver-flags`): Sentinel-1 and the altimetry satellites; null where no detector ran. `examples/` holds the worked examples the site's globe reads (`experiments/operator-theory/compare-examples-publish.mjs`); none is built on a fit holding a burn, and each carries its own `burnsInFit` and `burnsInForecast`.
 
+`cells.json` rows name, for each FFM column, the integrator its fits and flights ran (`integrator`): the one algorithm every FFM request of the harness carries, read from `experiments/operator-theory/lib/frame.mjs` when the file is generated, never retyped. Every FFM cell here flew RK78 on `propagator/ffm` 2.0.4; the site labels each FFM cell with its build and integrator (`FFM 2.0.4, RK78`). `compare-cells.mjs --check` holds this file to the bytes the generator writes.
+
 ## Against precise orbits
 
 `experiments/operator-theory/AP5.md`, registered before XP with solar pressure free was run on these windows: strong drag, near 700 km and medium Earth orbit. AP beats XP in all four statements. Figures and every interval: `truth.md`, the same as data in `truth.json`. The windows had been read for AP, and for an XP arm with solar pressure held.
