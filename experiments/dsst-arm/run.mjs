@@ -18,7 +18,9 @@ const STORE = path.join(ROOT, 'dsst-arm');
 const RESULTS = path.join(repo, 'results/dsst-arm');
 const FILES = ['DSST.md', 'windows.json', 'windows.mjs', 'run.mjs', 'truth-fits.mjs', 'pair-fits.mjs', 'DsstArm.java'];
 const COLUMN = 'DSST';
-const B051 = path.join(ROOT, 'ap/b051');
+const B051 = path.join(ROOT, 'ap/b051'), B0411 = path.join(ROOT, 'ap/b0411');
+const { binOf } = await import(path.join(repo, 'experiments/operator-theory/lib/compare.mjs'));
+const { AP_ARM } = await import(path.join(repo, 'experiments/operator-theory/lib/build.mjs'));
 
 const git = (...a) => execFileSync('git', a, { cwd: repo, maxBuffer: 1 << 26, stdio: ['ignore', 'pipe', 'ignore'] });
 const fail = (message) => { console.error(`FAIL: ${message}`); process.exit(1); };
@@ -61,7 +63,8 @@ const pct = (sorted, p) => sorted[Math.min(sorted.length - 1, Math.max(0, Math.c
 const round = (x) => Number(x >= 100 ? x.toFixed(1) : x >= 1 ? x.toFixed(3) : x.toFixed(4));
 const median = (v) => { const a = [...v].sort(asc); const k = Math.floor(a.length / 2); return a.length % 2 ? a[k] : (a[k - 1] + a[k]) / 2; };
 
-/** AP's e (km) per window and lead from the b051 stores, for the paired ratios: { `${key}@${fit}@${lead}`: e }. */
+/** AP's e (km) per window and lead, for the paired ratios: { `${key}@${fit}@${lead}`: e }; the truth windows from the b051 stores, the pairs
+ *  from the b0411 stores' AP arm (lib/build.mjs AP_ARM), the arm and stores compare-cells.mjs reads for the cells. */
 function apErrors() {
   const out = new Map();
   for (const dir of ['truth', 'truth2', 'regimes', 'regimes-hx', 'regimes-wa']) {
@@ -71,6 +74,15 @@ function apErrors() {
       if (!l) continue;
       const r = JSON.parse(l);
       for (const [arm, a] of Object.entries(r.arms ?? {})) { const m = /^AP(\d+)$/.exec(arm); if (!m || !a?.days) continue; for (const [day, v] of Object.entries(a.days)) if (Number.isFinite(v?.e)) out.set(`${r.key}@${m[1]}@${Number(day) * 24}`, v.e); }
+    }
+  }
+  for (const dir of ['laser/forward', 'providers']) {
+    const d = path.join(B0411, dir);
+    if (!fs.existsSync(d)) continue;
+    for (const f of fs.readdirSync(d).filter((n) => /^rows(-iss)?-\d+\.jsonl$/.test(n))) for (const l of fs.readFileSync(path.join(d, f), 'utf8').split('\n')) {
+      if (!l || STARLINK.test(l)) continue;
+      const r = JSON.parse(l), lead = binOf(r.leadHours);
+      for (const [arm, a] of Object.entries(r.arms ?? {})) { const m = new RegExp(`^${AP_ARM}@(\\d+)$`).exec(arm); if (m && Number.isFinite(a?.km)) out.set(`${r.source}|${r.norad ?? r.object}|${r.olderStart}|${r.newerStart}@${m[1]}@${lead}`, a.km); }
     }
   }
   return out;
