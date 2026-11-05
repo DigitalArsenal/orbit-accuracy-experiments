@@ -5,10 +5,11 @@ import {config,registration,analysisProvenance,hash,dir,store} from './guard.mjs
 import {readRows} from './statistics.mjs';
 import {arcs as expectedArcs} from './coverage.mjs';
 import {openPairStatistics} from './lib/covariance-modules.mjs';
+import {inRegisteredOrder} from './lib/reference.mjs';
 import {gOf,scaled,axesMleRef,median,truthTerm,availableAt} from '../ffm-covariance-adaptive/lib/model.mjs';
 registration();
 const constants=JSON.parse(fs.readFileSync('results/ffm-covariance-adaptive/frozen-constants.json')).classes;
-const rows=['regimes','truth2','truth'].flatMap(label=>readRows(dir('covariance',label)).map(r=>({...r,labelSource:label}))),inputs={};
+const rows=['regimes','truth2','truth'].flatMap(label=>inRegisteredOrder(readRows(dir('covariance',label)),'covariance',label,readRows).map(r=>({...r,labelSource:label}))),inputs={};
 for(const label of ['regimes','truth2','truth']){const d=dir('covariance',label);if(fs.existsSync(d))for(const f of fs.readdirSync(d).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${d}/${f}`]=hash(fs.readFileSync(`${d}/${f}`));}
 // Pin every stored fit, endpoint, OMM and public-set extraction used by the products.
 for(const phase of ['fits','ffm','gp-products'])for(const label of ['regimes','truth2','truth']){const d=dir(phase,label);if(fs.existsSync(d))for(const f of fs.readdirSync(d).filter(f=>/^(rows|endpoints|ocm-products|fit-products|encounter-errors)-\d+\.jsonl$/.test(f)))inputs[`${d}/${f}`]=hash(fs.readFileSync(`${d}/${f}`));}
