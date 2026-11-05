@@ -120,3 +120,7 @@ The forms, the loss and the module plan stand. Where these rulings and the text 
 **R6 What the E2E gates.** The CA verified-producer list, the module's realism label and what the site's pop-outs may say about realism; not the hero wording.
 
 **Precision rule, restated before any fit.** The rows print each variance to 10 significant digits, so a re-weighted term carries an absolute error up to rho_k x 1e-9 x v_full,a. A sample is evaluated by flight when, on any axis, the sum of those bounds over the terms exceeds 1e-3 of its re-weighted variance v_a'. A flight here is one extra flight per window-arm of a copy with only that term set, at a size that resolves it, written at 17 digits; its column is scaled to the form's size (the column is linear in its size), which is the same as flying the form's size.
+
+## Amendment 1, 2026-11-05, before the held-out run
+
+A smoke flight of one or two windows per held-out set (rows under the lane's scratch, not the store; only their keys, arm status and the fit control were looked at, no coverage value): the P and DO/LS fits reproduce their stored rows (0 differing scalars), and every unchanged copy flies byte-equal. H2b under XM's control store finds no as-issued 2025 report ("no RSGA issued in the 72 h before the cutoff"); it runs with the XP2 store's settings instead, the path the coverage study's 2025 strong-drag set ran (its normalized reports cover 2025), with XM's truth reader, fit, grid and arms unchanged.
