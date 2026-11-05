@@ -54,7 +54,7 @@ Where it departs from what the package states:
 - The library has no fitter, so nothing about the fit comes from the Space Force, and it neither wrote, reviewed nor approved this work.
 - Its release notes say certain XP results of this C build do not match the Fortran baseline, which they attribute to SHADOW calculations. This arm is the C build.
 
-`compare-examples-publish.mjs` writes what the site's globe reads: each forecast's positions and, at each time, its radial, in-track and cross-track distance from the reference. The reference's own positions go out only where its source's terms allow them to be redrawn.
+`compare-examples-publish.mjs` writes what the site's globe reads, in one form for every example: the reference's positions and, at each time, each forecast's radial, in-track and cross-track distance from it. Every reference here is public data, and every source's credit and license line goes with it (below).
 
 The same step finds where the reference's orbit steps: the forecast's orbit-mean radial distance from the reference, the orbit after less the orbit before, at least 8 times its typical size for that example and at least 5 m. `analysis/maneuver-detection` is not used here: its floors were set on the ISS, and they miss these orbit-keeping burns of about 0.01 m/s on one precise orbit. On a passive satellite the same step is called a step in the reference, since it cannot maneuver. A forecast knows none of these, and they are not removed from any table.
 
@@ -71,3 +71,20 @@ To rebuild: `compare-sgp4.mjs` with 8 shards into `<store>/ap/b040/laser-sgp4`, 
 ## Re-flown 2026-11-04 on one $OCM in, report only
 
 Build: modules ea824356, `propagator/sdn-ap` 0.5.1 (wasm d29acd2b5d92) and `propagator/sgp4-xp` 0.2.1 (816fd137d761), replacing AP 0.4.11 (e4edacb03daf) and sgp4-xp 0.1.1 of the examples. Every example of `ap/b0411/compare-examples-full` was flown again by `compare-examples.mjs` at a3c40ab, each AP, XP and Space Force XP set fitted as one `$OCM` on the stored window and flown from it alone (`results/reflown-0-5-1.txt`). Of 59 examples: the reference, whiteroom XP, SGP4 and FFM tracks are byte-identical in all 59; AP in 41, and in 18 it moves (at most 2.6 km, the THEMIS and Chandra orbits; 241.8 m and 65.4 m on two low-orbit next-file examples; under 15 m elsewhere), the windows where AP 0.4.18, which 0.5.1 equals byte for byte, departs from 0.4.11 (AP9.md); the Space Force XP moves in all 59 (sgp4-xp 0.2.1 flies whole integrator steps): by up to 5.2 km in highly elliptical orbit, 881 m in geostationary and inclined geosynchronous orbit, 740 m in navigation orbits and 1.2 km on one strong-drag window (Swarm C, 2026), each example's figure in the file. `compare-examples-publish.mjs --check` writes the published files again from the stored examples and finds all 119 equal byte for byte. The site's examples and tables stay on the stored tracks until the site's AP build and the Space Force XP rerun of every next-file pair move them.
+
+## Amendment, 2026-11-05: every example in the full form
+
+The owner, 2026-11-05, verbatim: "all data for these is distributable, it's all public data". This replaces the licensed form of the same day, which published 19 examples (Swarm strong drag 2025 and 2026, ESA navigation finals, ESA ultra-rapid, Intelsat, SES, the China Space Station and Planet) as AP's track and each forecast's distance alone. `compare-examples-publish.mjs` now writes every example, from the stored flights of `ap/b0411/compare-examples-full` and `ap/b051/compare-examples-regen` (no new flights), as the reference's track, every arm's offset vector from it and the reference's axes; the AP-only form, its provider list and its proof are gone. The 39 examples already in this form keep their positions byte for byte. `compare-examples.mjs --check` holds every published example to this form. On a next-file example it no longer counts a change that uses a sample within one grid step of the reference's change of files: that edge is the reference's own and enters every arm alike.
+
+The highly elliptical (TESS) examples are unchanged here; the site withholds that regime for its truth, not for its license.
+
+Each source's credit and license line, as the site's sources page states it:
+
+| Provider in the examples | Source | License | Credit |
+|---|---|---|---|
+| ESA | ESA Swarm precise orbits | ESA Earth Observation data terms: free, with the required statement and © ESA on analyzed information | Data provided by the European Space Agency (ESA). Results derived from these data © ESA 2026. |
+| ESA navigation, ESA ultra-rapid | ESA/ESOC Navigation Support Office orbits (IGS analysis center) | Navigation Support Office data terms (ownership and © marking); also IGS analysis-center products under the IGS terms of use | © Navigation Support Office at ESA/ESOC 2026. |
+| Intelsat, SES | Intelsat and SES satellite orbital data | Published with no stated license | Intelsat; SES. |
+| China Space Station | China Space Station ephemerides (China Manned Space Agency) | Published with no stated license | China Manned Space Agency. |
+| Planet (Flock) | Planet Flock public ephemerides | CC BY-NC 4.0 | Copyright Planet Labs PBC (ephemerides.planet-labs.com). |
+

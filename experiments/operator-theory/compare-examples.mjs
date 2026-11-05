@@ -11,9 +11,10 @@
 //   node experiments/operator-theory/compare-examples.mjs --check [--dir <published examples>]
 // --check reads the published examples (results/ap-truth/compare/examples) and cells.json and flies nothing: every arm of every example names a build, and it is
 // the one build cells.json's rows name for that arm, each key's record cells.json's; and on every example the Space Force XP track's largest jump between consecutive grid
-// samples is at most 3 times whiteroom XP's. The track is its offset vector from the reference where the reference is drawn, its distance from the reference in the AP-only
-// form; a jump is the change between two consecutive samples less the change before it (the second difference), so a steady trend in the error is not counted as a
-// jump and a partial-step sawtooth is. The plain change between samples is printed beside it.
+// samples is at most 3 times whiteroom XP's. Every example is in the one published form (compare-examples-publish.mjs): center the reference, `offsets` the five arms
+// of TRACKS, and a file of the reference's Float64 track, each arm's Float32 offset vector and the reference's Float32 rotations, 24 + 12 x 5 + 16 bytes per time.
+// The track is the arm's offset vector from the reference; a jump is the change between two consecutive samples less the change before it (the second difference),
+// so a steady trend in the error is not counted as a jump and a partial-step sawtooth is. The plain change between samples is printed beside it.
 import fs from 'node:fs';
 import path from 'node:path';
 import { BUILD, AP_ARM, BUILD_RECORDS } from './lib/build.mjs';
@@ -28,18 +29,26 @@ if (args.check) {
   const want = {};
   for (const r of cells.rows) for (const [col, keys] of Object.entries(r.build)) if (keys.length) (want[/^FFM/.test(col) ? 'FFM' : col] ??= new Set()).add(keys.join(' '));
   const fails = [], measured = [];
+  let full = 0;
   for (const [arm, set] of Object.entries(want)) if (set.size !== 1) fails.push(`cells.json names ${set.size} builds for ${arm}`);
   for (const e of JSON.parse(fs.readFileSync(path.join(dir, 'index.json'), 'utf8')).filter((x) => !x.held && !x.dropped)) {
     const d = JSON.parse(fs.readFileSync(path.join(dir, `${e.id}.json`), 'utf8')), raw = fs.readFileSync(path.join(dir, `${e.id}.bin`));
-    const arms = d.offsets ?? d.errors, per = d.offsets ? 3 : 1, t = d.epochsSeconds;
+    const arms = d.offsets ?? [], per = 3, t = d.epochsSeconds, ARMS = ['AP', 'XP', 'XPU', 'SGP4', 'FFM'];
+    const form = [d.center !== 'reference' && `center ${d.center}`, arms.join() !== ARMS.join() && `offsets ${arms.join() || 'none'}`, 'errors' in d && 'an errors list', 'referenceDrawn' in d && 'a referenceDrawn flag',
+      raw.length !== (24 + 12 * ARMS.length + 16) * d.count && `${raw.length} bytes, not ${(24 + 12 * ARMS.length + 16) * d.count}`].filter(Boolean);
+    if (form.length) { fails.push(`${e.id}: not the published form (${form.join(', ')})`); continue; }
+    full += 1;
     for (const arm of new Set(['AP', ...arms])) {
       const got = d.build?.[arm]?.join(' '), w = [...(want[arm] ?? [])][0];
       if (!got || got !== w) fails.push(`${e.id} ${arm}: ${got ?? 'no build named'}, cells.json ${w ?? 'none'}`);
       for (const k of d.build?.[arm] ?? []) if (JSON.stringify(d.builds?.[k]) !== JSON.stringify(cells.builds[k])) fails.push(`${e.id} ${k}: its record is not cells.json's`);
     }
     const step = Math.min(...t.slice(1).map((x, i) => x - t[i]));
-    // An arm's block after the 24-byte-per-time track: Float32, `per` values per time, in `arms` order. On the grid only: a gap in the reference is no step.
-    const onStep = (i) => Math.abs(t[i] - t[i - 1] - step) < 1e-6;
+    // An arm's block after the 24-byte-per-time track: Float32, `per` values per time, in `arms` order. On the grid only: a gap in the reference is no step. On a
+    // next-file example the reference changes files at leadHours; a sample within one grid step of that junction is the reference's own edge, common to every arm
+    // (on next-esa-ultra-rapid-gps it moves AP's second difference from 0.03 m to 0.34 m), so no change that uses one is counted.
+    const junction = d.reference === 'next' ? 3600 * d.leadHours : null, edge = (i) => junction !== null && Math.abs(t[i] - junction) <= step + 1e-6;
+    const onStep = (i) => Math.abs(t[i] - t[i - 1] - step) < 1e-6 && !edge(i) && !edge(i - 1);
     const jumps = (arm) => {
       const at = 24 * d.count + 4 * per * d.count * arms.indexOf(arm), a = new Float32Array(raw.buffer.slice(raw.byteOffset + at, raw.byteOffset + at + 4 * per * d.count));
       const delta = (i) => Array.from({ length: per }, (_, c) => a[per * i + c] - a[per * (i - 1) + c]);
@@ -57,7 +66,7 @@ if (args.check) {
   }
   const worst = measured.reduce((a, b) => (b.ratio > a.ratio ? b : a), { ratio: 0 });
   if (fails.length) { console.log(`COMPARE EXAMPLES CHECK FAIL: ${fails.length}: ${fails.slice(0, 12).join('; ')}`); process.exit(1); }
-  console.log(`COMPARE EXAMPLES CHECK PASS: ${measured.length} examples, every arm on cells.json's one build (${Object.entries(want).map(([a, s]) => `${a} ${[...s][0]}`).join('; ')}); largest Space Force XP to whiteroom XP jump ratio ${worst.ratio.toFixed(2)} (${worst.id}) <= ${BOUND}`);
+  console.log(`COMPARE EXAMPLES CHECK PASS: ${measured.length} examples, ${full} in the full form (the reference's track and every arm's offset from it), every arm on cells.json's one build (${Object.entries(want).map(([a, s]) => `${a} ${[...s][0]}`).join('; ')}); largest Space Force XP to whiteroom XP jump ratio ${worst.ratio.toFixed(2)} (${worst.id}) <= ${BOUND}`);
   process.exit(0);
 }
 if (!MODE || !OUT) throw new Error('--mode and --out');
