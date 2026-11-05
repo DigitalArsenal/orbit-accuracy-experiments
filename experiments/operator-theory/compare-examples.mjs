@@ -6,14 +6,15 @@
 // --pick showcase, in truth, truth2 and regimes modes: one example per regime, chosen to show AP's lead, not to be typical (see showcaseRank). --build names the AP store (default lib/build.mjs's).
 // Every pick, typical or showcase, skips a window whose example has a step inside its fit (lib/steps.mjs, as the publisher finds them: hour < fitHours), or a hole in
 // its reference there, and takes the next; when every window tried has one, <id>.json says so and holds no tracks. --ids a,b: those examples alone.
-// Each example names the build every arm flew (`builds`: arm to module@sha256[0, 12], as cells.json names its columns' builds).
+// Each example names the build every arm flew as cells.json names its columns': `build`, arm to keys module@sha256[0, 12]; `builds`, each key's module, version,
+// commit and SHA-256 (lib/build.mjs BUILD_RECORDS).
 //   node experiments/operator-theory/compare-examples.mjs --check [--dir <published examples>]
 // --check reads the published examples (results/ap-truth/compare/examples) and cells.json and flies nothing: every arm of every example names a build, and it is
-// the one build cells.json's rows name for that arm; and on every example the Space Force XP track's largest jump between consecutive grid samples (its offset
+// the one build cells.json's rows name for that arm, each key's record cells.json's; and on every example the Space Force XP track's largest jump between consecutive grid samples (its offset
 // vector from the reference where the reference is drawn, its distance from the reference in the AP-only form) is at most 3 times whiteroom XP's.
 import fs from 'node:fs';
 import path from 'node:path';
-import { BUILD, AP_ARM } from './lib/build.mjs';
+import { BUILD, AP_ARM, BUILD_RECORDS } from './lib/build.mjs';
 import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
@@ -30,8 +31,9 @@ if (args.check) {
     const d = JSON.parse(fs.readFileSync(path.join(dir, `${e.id}.json`), 'utf8')), raw = fs.readFileSync(path.join(dir, `${e.id}.bin`));
     const arms = d.offsets ?? d.errors, per = d.offsets ? 3 : 1, t = d.epochsSeconds;
     for (const arm of new Set(['AP', ...arms])) {
-      const got = d.builds?.[arm]?.join(' '), w = [...(want[arm] ?? [])][0];
+      const got = d.build?.[arm]?.join(' '), w = [...(want[arm] ?? [])][0];
       if (!got || got !== w) fails.push(`${e.id} ${arm}: ${got ?? 'no build named'}, cells.json ${w ?? 'none'}`);
+      for (const k of d.build?.[arm] ?? []) if (JSON.stringify(d.builds?.[k]) !== JSON.stringify(cells.builds[k])) fails.push(`${e.id} ${k}: its record is not cells.json's`);
     }
     const step = Math.min(...t.slice(1).map((x, i) => x - t[i]));
     // An arm's block after the 24-byte-per-time track: Float32, `per` values per time, in `arms` order.
@@ -78,7 +80,9 @@ const armBuilds = (A, M, F) => {
 const write = (doc) => {
   fs.writeFileSync(path.join(OUT, `${doc.id}.bin`), Buffer.concat(TRACKS.map((k) => doc.tracks[k])));
   if (!BUILDS) throw new Error('no arm builds');
-  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, ...EXTRA, builds: BUILDS, tracks: TRACKS })}\n`);
+  const keys = [...new Set(Object.values(BUILDS).flat())], missing = keys.filter((k) => !BUILD_RECORDS[k]);
+  if (missing.length) throw new Error(`builds not in lib/build.mjs BUILD_RECORDS: ${missing.join(', ')}`);
+  fs.writeFileSync(path.join(OUT, `${doc.id}.json`), `${JSON.stringify({ ...doc, ...EXTRA, build: BUILDS, builds: Object.fromEntries(keys.map((k) => [k, BUILD_RECORDS[k]])), tracks: TRACKS })}\n`);
   console.error(`${doc.id}: ${doc.count} states, ${Math.round(fs.statSync(path.join(OUT, `${doc.id}.bin`)).size / 1024)} KB`);
 };
 /**
