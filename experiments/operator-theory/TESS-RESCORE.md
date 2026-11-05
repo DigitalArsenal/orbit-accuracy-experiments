@@ -62,3 +62,9 @@ Both hold: a site record restores TESS (cells, whitepaper, xp-record, the 3D exa
 Rows: /opt/data/sdn-archive/operator-theory/tess-rescore/rows-<shard>.jsonl, one per window, arm, fit and truth. Table: results/ap-truth/tess-rescore/table.json
 and README.md. Run with at most 2 workers under nice -n 10. E2E: `node experiments/operator-theory/tess-rescore.mjs --check` re-derives the table from the
 rows and holds the control and the zero-interpolation count.
+
+## Amendment 1 (2026-11-05, before any floor row; the main, ablation and step rows of windows 07-27 to 08-17 had been read)
+The step effect of plan item 5 also carries the two 24 h fits' own disagreement (an apogee arc covers little of the 13.7 day orbit). Its floor, the same
+construction at nodes with no step: the node nearest the midpoint of each pair of consecutive solution switches whose midpoint lies in [cutoff - 72 h - 4 d,
+cutoff + 7 d] and whose 24 h on each side hold no step and no switch; per window the median of those controls per lead day. A step now explains a window's
+day-3 and day-7 error only when its effect is also at least twice that floor. Nothing else in the rule changes.

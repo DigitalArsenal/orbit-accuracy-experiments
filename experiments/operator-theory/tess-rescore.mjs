@@ -86,11 +86,11 @@ function table(rows) {
   const ablate = rows.filter((r) => r.part === 'ablate');
   const ablations = [...new Set(ablate.map((r) => r.arm))].map((arm) => ({ arm, windows: ablate.filter((r) => r.arm === arm && r.ok).length, sha256: ablate.find((r) => r.arm === arm)?.sha256 ?? null, worse: worsening(ablate, arm),
     all: Object.fromEntries(['1', '3', '7'].map((d) => [d, { cc: median(ablate.filter((r) => r.arm === arm).map((r) => e(r, 'CC', d))), nn: median(ablate.filter((r) => r.arm === arm).map((r) => e(r, 'NN', d))) }])) }));
-  const stepRows = rows.filter((r) => r.part === 'steps');
+  const stepRows = rows.filter((r) => r.part === 'steps'), floorRows = rows.filter((r) => r.part === 'floor');
   const windows = [...new Set(main.map((r) => r.key))].sort().map((key) => {
-    const s = stepRows.find((r) => r.key === key);
+    const s = stepRows.find((r) => r.key === key), fl = floorRows.find((r) => r.key === key);
     const at = (arm, d, score) => e(main.find((r) => r.key === key && r.arm === arm && r.fit === 72), score, d);
-    return { key, four: FOUR.includes(keyDate(key)), steps: s?.steps ?? [], switches: s?.switches ?? null, effect: s?.effect ?? null,
+    return { key, four: FOUR.includes(keyDate(key)), steps: s?.steps ?? [], switches: s?.switches ?? null, effect: s?.effect ?? null, floor: fl?.floor ?? null, controls: fl?.controls?.length ?? 0,
       errors: Object.fromEntries(['AP', 'XP', 'F'].map((a) => [a, Object.fromEntries(['3', '7'].map((d) => [d, { cc: round(at(a, d, 'CC')), cn: round(at(a, d, 'CN')), nn: round(at(a, d, 'NN')), ns: round(at(a, d, 'NS')) }]))])) };
   });
   const nodes = { scored: main.reduce((s, r) => s + (r.scores?.NN?.epochs ?? 0), 0), offNode: main.reduce((s, r) => s + (r.scores?.NN?.offNode ?? 0) + (r.scores?.CN?.offNode ?? 0), 0), interpolated: 0, nearest: main.reduce((s, r) => s + (r.scores?.NN?.nearest ?? 0), 0), leadsOnNode: main.every((r) => r.scores?.NN?.leadsOnNode !== false) };
@@ -112,7 +112,7 @@ function verdict(t) {
   const wide = involved.some((x) => x.arm === 'AP(0,20)@0.5.1') || (() => { const a = t.ablations.find((x) => x.arm === 'AP(31,20)@0.4.14'), b = t.ablations.find((x) => x.arm === 'AP(31,20)@0.4.15'); return a && b && ['3', '7'].some((d) => b.worse[d].delta && Math.abs(a.worse[d].delta / b.worse[d].delta - 1) > 0.25); })();
   const alike = ['XP', 'FFM20'].every((c) => ['3', '7'].some((d) => t.mainWorse[c][d].delta > 0.5 * apDelta[d].delta));
   // a step explains: its module effect at least half the NN error at days 3 and 7 on each of the four windows (AP, XP and FFM)
-  const stepOk = t.windows.filter((w) => w.four).every((w) => w.effect && ['AP', 'XP', 'F'].every((a) => ['3', '7'].every((d) => w.effect[d] >= 0.5 * w.errors[a][d].nn)));
+  const stepOk = t.windows.filter((w) => w.four).every((w) => w.effect && w.floor && ['AP', 'XP', 'F'].every((a) => ['3', '7'].every((d) => w.effect[d] >= 0.5 * w.errors[a][d].nn && w.effect[d] >= 2 * w.floor[d])));
   const fitSide = ['AP', 'XP', 'FFM20'].every((c) => ['3', '7'].some((d) => (share(c, d) ?? 0) >= 0.5));
   // an ablation that returns NN within 25 % of CC (medians over the four windows, days 3 and 7)
   const returns = t.ablations.filter((a) => ['3', '7'].every((d) => apDelta[d].cc && Math.abs(a.worse[d].nn / apDelta[d].cc - 1) <= 0.25)).map((a) => a.arm);
@@ -138,17 +138,17 @@ function readme(doc) {
   lines.push('| Arm | Windows | build SHA-256 | Day 3 NN - CC | Day 7 NN - CC | Day 1 CC / NN (7) | Day 3 CC / NN (7) | Day 7 CC / NN (7) |', '|---|---:|---|---:|---:|---|---|---|');
   for (const a of doc.ablations) lines.push(`| ${a.arm} | ${a.windows} | ${a.sha256 ? a.sha256.split(',').map((x) => x.slice(0, 12)).join(' > ') : '-'} | ${f(a.worse['3'].delta)} | ${f(a.worse['7'].delta)} | ${f(a.all['1'].cc)} / ${f(a.all['1'].nn)} | ${f(a.all['3'].cc)} / ${f(a.all['3'].nn)} | ${f(a.all['7'].cc)} / ${f(a.all['7'].nn)} |`);
   lines.push('', '## Windows: switches, velocity steps and their effect (72 h fit)', '');
-  lines.push('| Cutoff | Four | Switches in arc / forecast | Velocity steps (epoch, radius km, |dv| mm/s, where) | Step effect day 3 / 7 (km) | AP CC / CN / NN day 3 | AP day 7 | XP day 7 | FFM day 3 | FFM day 7 |', '|---|---|---|---|---|---|---|---|---|---|');
+  lines.push('| Cutoff | Four | Switches in arc / forecast | Velocity steps (epoch, radius km, |dv| mm/s, where) | Step effect day 3 / 7 (km) | Floor day 3 / 7 (km; controls) | AP CC / CN / NN day 3 | AP day 7 | XP day 7 | FFM day 3 | FFM day 7 |', '|---|---|---|---|---|---|---|---|---|---|---|');
   for (const w of doc.windows) {
     const st = w.steps.map((s) => `${s.epoch.slice(5, 16)} ${Math.round(s.radiusKm)} ${f(s.dvMmS, 1)} ${s.where}`).join('; ') || 'none';
     const tri = (x) => `${f(x.cc)} / ${f(x.cn)} / ${f(x.nn)}`;
-    lines.push(`| ${keyDate(w.key)} | ${w.four ? 'yes' : ''} | ${w.switches ? `${w.switches.arc} / ${w.switches.forecast}` : '-'} | ${st} | ${w.effect ? `${f(w.effect['3'])} / ${f(w.effect['7'])}` : '-'} | ${tri(w.errors.AP['3'])} | ${tri(w.errors.AP['7'])} | ${tri(w.errors.XP['7'])} | ${tri(w.errors.F['3'])} | ${tri(w.errors.F['7'])} |`);
+    lines.push(`| ${keyDate(w.key)} | ${w.four ? 'yes' : ''} | ${w.switches ? `${w.switches.arc} / ${w.switches.forecast}` : '-'} | ${st} | ${w.effect ? `${f(w.effect['3'])} / ${f(w.effect['7'])}` : '-'} | ${w.floor ? `${f(w.floor['3'])} / ${f(w.floor['7'])} (${w.controls})` : '-'} | ${tri(w.errors.AP['3'])} | ${tri(w.errors.AP['7'])} | ${tri(w.errors.XP['7'])} | ${tri(w.errors.F['3'])} | ${tri(w.errors.F['7'])} |`);
   }
   lines.push('', '## Verdict', '');
   if (doc.verdict) lines.push(doc.verdict, '');
   lines.push(`Rule: worsening (NN above CC by more than 10 % at day 3 or 7, 72 h fit, 7-window median) in ${v.worse.length ? v.worse.join(', ') : 'no arm'}; fit side (NN - CN at least half of NN - CC for AP, XP and FFM): ${v.fitSide ? 'yes' : 'no'};`);
   lines.push(`ablations moving AP's worsening by more than 25 %: ${v.involved.length ? v.involved.join(', ') : 'none'}; XP and FFM worsen alike: ${v.alike ? 'yes' : 'no'}; wide tesseral series involved: ${v.wide ? 'yes' : 'no'};`);
-  lines.push(`a step's module effect at least half the NN error at days 3 and 7 on each of the four windows: ${v.stepOk ? 'yes' : 'no'}; an ablation returning NN within 25 % of CC: ${v.returns.length ? v.returns.join(', ') : 'none'}.`);
+  lines.push(`a step's module effect at least half the NN error at days 3 and 7 and at least twice the floor, on each of the four windows: ${v.stepOk ? 'yes' : 'no'}; an ablation returning NN within 25 % of CC: ${v.returns.length ? v.returns.join(', ') : 'none'}.`);
   lines.push(`Condition 1, clean re-score: ${doc.clean ? 'holds' : 'does not hold'}. Condition 2, worsening explained: ${v.explained ? 'holds' : 'does not hold'}. TESS: ${doc.clean && v.explained ? 'a site record may restore it' : 'stays withheld'}.`);
   return `${lines.join('\n')}\n`;
 }
@@ -202,7 +202,7 @@ const { openContainers, readSpk } = await import(pathToFileURL(path.join(root, '
 const { openTime, convertAll } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/timeconv.mjs')).href);
 const { withT } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/windows.mjs')).href);
 const { gate } = await import(pathToFileURL(path.join(root, 'harness/truth-gate.mjs')).href);
-const PARTS = (args.parts ?? 'main,ablate,steps').split(',');
+const PARTS = (args.parts ?? 'main,ablate,steps,floor').split(',');
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage, LEADS = XM.config.scoring.leadDays;
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
@@ -354,6 +354,52 @@ async function singleFor(D0) { // the newest file that covers (D0, D0 + 7 d], no
   return singles.get(s.file);
 }
 
+// Velocity steps on the node series: TRUTH-SERIES.md's residual above 0.5 m, away from a switch; |dv| about 2 x residual / h. A step between nodes i and
+// i + 1 flags both: one step per pair.
+const tN = N.map((l) => ms(l.epoch)), STEPS = [];
+{
+  const flagged = [];
+  for (let i = 1; i + 1 < N.length; i += 1) {
+    const h = (tN[i] - tN[i - 1]) / 1000;
+    if (h !== NODE_S || tN[i + 1] - tN[i] !== NODE_S * 1000) continue;
+    if (switches.some((x) => tN[i - 1] < x && x <= tN[i + 1])) continue;
+    const res = 1000 * Math.hypot(...[0, 1, 2].map((k) => N[i + 1].r[k] - 2 * N[i].r[k] + N[i - 1].r[k] - ((N[i + 1].v[k] - N[i - 1].v[k]) * h) / 2));
+    if (res > 0.5) flagged.push({ i, res });
+  }
+  for (let j = 0; j < flagged.length; j += 1) {
+    const a = flagged[j], b = flagged[j + 1];
+    if (b && b.i === a.i + 1) { STEPS.push({ before: a.i, after: b.i, res: Math.max(a.res, b.res) }); j += 1; } else STEPS.push({ before: a.i, after: a.i, res: a.res });
+  }
+}
+/**
+ * A step's effect by module: FFM fits on the 24 h of nodes up to node `before` and from node `after` (whether another step or a switch lies inside is
+ * recorded), both flown on the window's node grid from `after` on; per lead day, the 3D RMS of one flight against the other over the bin (epochs before
+ * `after` count 0).
+ */
+async function pairEffect(before, after, w, others) {
+  const pre = N.filter((l, i) => i <= before && tN[i] >= tN[before] - DAY), post = N.filter((l, i) => i >= after && tN[i] <= tN[after] + DAY);
+  const clean = (list) => !switches.some((x) => ms(list[0].epoch) < x && x <= ms(list.at(-1).epoch)) && !others.some((o) => ms(list[0].epoch) <= tN[o.before] && tN[o.after] <= ms(list.at(-1).epoch));
+  const e = { cleanArcs: clean(pre) && clean(post) };
+  try {
+    const settings = ffmHigh();
+    const fa = await F.fit(pre, [...pre[0].r, ...pre[0].v], settings, undefined, ms(pre.at(-1).epoch));
+    const fb = await F.fit(post, [...post[0].r, ...post[0].v], settings, undefined, ms(post.at(-1).epoch));
+    if (!fa.state || !fb.state) throw new Error(`fit: ${fa.termination ?? fa.error} / ${fb.termination ?? fb.error}`);
+    const later = w.epochs.filter((x) => ms(x) >= tN[after]);
+    const days = {};
+    if (later.length) {
+      const A1 = await F.forecast({ epoch: fa.epoch, state: fa.state, parameters: fa.parameters }, later, settings, undefined);
+      const B1 = await F.forecast({ epoch: fb.epoch, state: fb.state, parameters: fb.parameters }, later, settings, undefined);
+      const diff = await m.rtn(B1, A1.map((x) => ({ r: x.r, v: x.v })));
+      const byEpoch = new Map(later.map((x, i) => [x, Math.hypot(...diff[i])]));
+      let i = 0;
+      w.entered.forEach((k, j) => { const bin = w.epochs.slice(i, i + w.sizes[j]); i += w.sizes[j]; days[k] = Math.sqrt(bin.reduce((acc, x) => acc + (byEpoch.get(x) ?? 0) ** 2, 0) / bin.length); });
+    } else w.entered.forEach((k) => { days[k] = 0; });
+    Object.assign(e, { days, preFitOk: !!fa.ok, postFitOk: !!fb.ok });
+  } catch (error) { e.error = String(error?.message ?? error).slice(0, 200); }
+  return e;
+}
+
 fs.mkdirSync(STORE, { recursive: true });
 const outFile = path.join(STORE, `rows-${SHARD}.jsonl`);
 const done = new Set(rowsOf(STORE).map((r) => `${r.part}#${r.key}#${r.arm}#${r.fit}`));
@@ -386,55 +432,34 @@ for (const D0 of TESS.cutoffs) {
     emit({ part: 'ablate', key, cutoff: iso(D0), arm: a.arm, fit: 72, sha256: [...new Set([BUILDS[a.fit].sha256, BUILDS[a.fly].sha256])].join(','), ok: !!scores.CC && !!scores.NN, scores, errors, seconds: (Date.now() - t0) / 1000 });
     console.error(`${key} ${a.arm}: day 7 CC ${scores.CC?.days?.[7]?.e?.toFixed(3)} NN ${scores.NN?.days?.[7]?.e?.toFixed(3)}${Object.keys(errors).length ? ` ${JSON.stringify(errors)}` : ''}`);
   }
+  const lo = D0 - 72 * HOUR, hi = D0 + 7 * DAY;
+  const mine = STEPS.filter((s) => tN[s.after] >= lo && tN[s.before] <= hi).map((s) => ({ ...s, epoch: N[s.before].epoch, radiusKm: Math.hypot(...N[s.before].r), dvMmS: (2 * s.res / NODE_S) * 1000,
+    where: tN[s.after] <= D0 ? `arc, ${((D0 - tN[s.before]) / HOUR).toFixed(1)} h before the cutoff` : `forecast, ${((tN[s.before] - D0) / HOUR).toFixed(1)} h after the cutoff` }));
   if (PARTS.includes('steps') && !done.has(`steps#${key}#steps#72`)) {
-    // Velocity steps on the node series: TRUTH-SERIES.md's residual above 0.5 m, away from a switch; |dv| about 2 x residual / h.
-    const t = N.map((l) => ms(l.epoch)), flagged = [];
-    for (let i = 1; i + 1 < N.length; i += 1) {
-      const h = (t[i] - t[i - 1]) / 1000;
-      if (h !== NODE_S || t[i + 1] - t[i] !== NODE_S * 1000) continue;
-      if (switches.some((x) => t[i - 1] < x && x <= t[i + 1])) continue;
-      const res = 1000 * Math.hypot(...[0, 1, 2].map((k) => N[i + 1].r[k] - 2 * N[i].r[k] + N[i - 1].r[k] - ((N[i + 1].v[k] - N[i - 1].v[k]) * h) / 2));
-      if (res > 0.5) flagged.push({ i, res });
-    }
-    const steps = [];
-    for (let j = 0; j < flagged.length; j += 1) { // a step between nodes i and i + 1 flags both: one step per pair
-      const a = flagged[j], b = flagged[j + 1];
-      if (b && b.i === a.i + 1) { steps.push({ before: a.i, after: b.i, res: Math.max(a.res, b.res) }); j += 1; } else steps.push({ before: a.i, after: a.i, res: a.res });
-    }
-    const lo = D0 - 72 * HOUR, hi = D0 + 7 * DAY;
-    const mine = steps.filter((s) => t[s.after] >= lo && t[s.before] <= hi).map((s) => ({ ...s, epoch: N[s.before].epoch, radiusKm: Math.hypot(...N[s.before].r), dvMmS: (2 * s.res / NODE_S) * 1000,
-      where: t[s.after] <= D0 ? `arc, ${((D0 - t[s.before]) / HOUR).toFixed(1)} h before the cutoff` : `forecast, ${((t[s.before] - D0) / HOUR).toFixed(1)} h after the cutoff` }));
     const sw = { arc: switches.filter((x) => x > lo && x <= D0).length, forecast: switches.filter((x) => x > D0 && x <= hi).length };
-    // Each step's effect by module: FFM fits on the 24 h of nodes before and after it (none of the window's other steps or a switch inside), both flown on the
-    // window's node grid after the step; per lead day, the 3D RMS of one flight against the other over the bin (epochs before the step count 0).
     const effects = [];
-    for (const s of mine) {
-      const pre = N.filter((l, i) => i <= s.before && t[i] >= t[s.before] - DAY), post = N.filter((l, i) => i >= s.after && t[i] <= t[s.after] + DAY);
-      const clean = (list) => !switches.some((x) => ms(list[0].epoch) < x && x <= ms(list.at(-1).epoch)) && !mine.some((o) => o !== s && ms(list[0].epoch) <= ms(N[o.before].epoch) && ms(N[o.after].epoch) <= ms(list.at(-1).epoch));
-      const e = { epoch: s.epoch, cleanArcs: clean(pre) && clean(post) };
-      try {
-        const settings = ffmHigh();
-        const fa = await F.fit(pre, [...pre[0].r, ...pre[0].v], settings, undefined, ms(pre.at(-1).epoch));
-        const fb = await F.fit(post, [...post[0].r, ...post[0].v], settings, undefined, ms(post.at(-1).epoch));
-        if (!fa.state || !fb.state) throw new Error(`fit: ${fa.termination ?? fa.error} / ${fb.termination ?? fb.error}`);
-        const later = wN.epochs.filter((x) => ms(x) >= t[s.after]);
-        const days = {};
-        if (later.length) {
-          const A1 = await F.forecast({ epoch: fa.epoch, state: fa.state, parameters: fa.parameters }, later, settings, undefined);
-          const B1 = await F.forecast({ epoch: fb.epoch, state: fb.state, parameters: fb.parameters }, later, settings, undefined);
-          const diff = await m.rtn(B1, A1.map((x) => ({ r: x.r, v: x.v })));
-          const byEpoch = new Map(later.map((x, i) => [x, Math.hypot(...diff[i])]));
-          let i = 0;
-          wN.entered.forEach((k, j) => { const bin = wN.epochs.slice(i, i + wN.sizes[j]); i += wN.sizes[j]; days[k] = Math.sqrt(bin.reduce((acc, x) => acc + (byEpoch.get(x) ?? 0) ** 2, 0) / bin.length); });
-        } else wN.entered.forEach((k) => { days[k] = 0; });
-        Object.assign(e, { days, preFitOk: !!fa.ok, postFitOk: !!fb.ok });
-      } catch (error) { e.error = String(error?.message ?? error).slice(0, 200); }
-      effects.push(e);
-    }
+    for (const s of mine) effects.push({ epoch: s.epoch, ...(await pairEffect(s.before, s.after, wN, mine.filter((o) => o !== s))) });
     // the window's step effect per day: the root sum square of its steps' effects (each step's own difference flight)
     const effect = Object.fromEntries(['1', '2', '3', '7'].map((k) => [k, Math.sqrt(effects.reduce((acc, x) => acc + (x.days?.[k] ?? 0) ** 2, 0))]));
     emit({ part: 'steps', key, cutoff: iso(D0), arm: 'steps', fit: 72, ok: true, steps: mine.map(({ before, after, ...x }) => x), switches: sw, effects, effect });
     console.error(`${key} steps: ${mine.map((s) => `${s.epoch} ${s.dvMmS.toFixed(1)} mm/s ${s.where}`).join('; ')}; effect day 3 ${effect['3'].toFixed(3)} day 7 ${effect['7'].toFixed(3)} km`);
+  }
+  // Amendment 1 (TESS-RESCORE.md): the method's floor, the same construction at a node with no step: the node nearest the midpoint of each pair of consecutive
+  // switches whose midpoint lies in [cutoff - 72 h - 4 d, cutoff + 7 d] and whose 24 h on each side hold no step and no switch.
+  if (PARTS.includes('floor') && !done.has(`floor#${key}#floor#72`)) {
+    const controls = [];
+    for (let j = 0; j + 1 < switches.length; j += 1) {
+      const mid = (switches[j] + switches[j + 1]) / 2;
+      if (mid < lo - 4 * DAY || mid > hi) continue;
+      if (STEPS.some((x) => Math.abs(tN[x.before] - mid) <= DAY + NODE_S * 1000 || Math.abs(tN[x.after] - mid) <= DAY + NODE_S * 1000)) continue;
+      if (switches.some((x) => Math.abs(x - mid) <= DAY + NODE_S * 1000)) continue;
+      let i = 0;
+      while (i + 1 < tN.length && Math.abs(tN[i + 1] - mid) <= Math.abs(tN[i] - mid)) i += 1;
+      controls.push({ epoch: N[i].epoch, radiusKm: Math.hypot(...N[i].r), ...(await pairEffect(i, i + 1, wN, [])) });
+    }
+    const floor = Object.fromEntries(['1', '2', '3', '7'].map((k) => [k, median(controls.map((x) => x.days?.[k]))]));
+    emit({ part: 'floor', key, cutoff: iso(D0), arm: 'floor', fit: 72, ok: true, controls, floor });
+    console.error(`${key} floor: ${controls.map((c) => `${c.epoch} r ${Math.round(c.radiusKm)} day 7 ${c.days?.['7']?.toFixed(3)}`).join('; ')}`);
   }
 }
 await containers.destroy(); await time.destroy(); await axes.close(); await F?.close(); await m.close?.();
