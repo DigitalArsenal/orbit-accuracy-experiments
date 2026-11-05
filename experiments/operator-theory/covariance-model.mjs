@@ -496,25 +496,44 @@ function d2Of(b, e) {
 // Fast path: per regime and lead, preallocated buffers.
 function lossFn(form, arms) {
   const regimes = [...new Set(arms.map((a) => a.regime))].sort();
-  const ri = arms.map((a) => regimes.indexOf(a.regime));
-  const count = new Int32Array(regimes.length * HOURS);
-  arms.forEach((arm, k) => { for (const l of arm.leads) count[ri[k] * HOURS + l.h - 1] += 1; });
-  const bufs = Array.from(count, (n) => [new Float64Array(n), new Float64Array(n), new Float64Array(n)]), fill = new Int32Array(count.length), blk = new Float64Array(6);
+  let n = 0;
+  for (const arm of arms) n += arm.leads.length;
+  // flat samples: e (3), off diagonal (3), floor diagonal (3), term differences e, i, l, d on the diagonal (12), d (days); the arm and the group
+  const W = 22, D = new Float64Array(n * W), armOf = new Int32Array(n), groupOf = new Int32Array(n), count = new Int32Array(regimes.length * HOURS);
+  let i = 0;
+  arms.forEach((arm, k) => {
+    const ri = regimes.indexOf(arm.regime);
+    for (const l of arm.leads) {
+      const o = i * W, diag = [0, 2, 5];
+      for (let a = 0; a < 3; a++) { const j = diag[a]; D[o + a] = Math.abs(l.e[a]); D[o + 3 + a] = l.off[j]; D[o + 6 + a] = arm.F[j]; TERMS.forEach((t, q) => { D[o + 9 + q * 3 + a] = l.dk[t][j]; }); }
+      D[o + 21] = Math.max(l.d, 1e-9);
+      armOf[i] = k; groupOf[i] = ri * HOURS + l.h - 1; count[groupOf[i]] += 1; i += 1;
+    }
+  });
+  const offsets = new Int32Array(count.length + 1);
+  for (let g = 0; g < count.length; g++) offsets[g + 1] = offsets[g] + count[g];
+  const Z = [new Float64Array(n), new Float64Array(n), new Float64Array(n)], fill = new Int32Array(count.length);
+  const A = new Float64Array(arms.length * 9); // per arm: rho e, i, l, d; kb diagonal (3); p_l; inv_tau
   return (x) => {
+    for (let k = 0; k < arms.length; k++) { const z = sizesOf(form, x, arms[k]), o = k * 9; A[o] = z.rho.e; A[o + 1] = z.rho.i; A[o + 2] = z.rho.l; A[o + 3] = z.rho.d; A[o + 4] = z.kb[0]; A[o + 5] = z.kb[2]; A[o + 6] = z.kb[5]; A[o + 7] = z.p_l; A[o + 8] = z.inv_tau; }
     fill.fill(0);
-    for (let k = 0; k < arms.length; k++) {
-      const arm = arms[k], z = sizesOf(form, x, arm), base = ri[k] * HOURS - 1;
-      for (const lead of arm.leads) {
-        blockAt(arm, z, lead, blk, false);
-        const g = base + lead.h, b = bufs[g], i = fill[g]++;
-        b[0][i] = Math.abs(lead.e[0]) / Math.sqrt(blk[0]); b[1][i] = Math.abs(lead.e[1]) / Math.sqrt(blk[2]); b[2][i] = Math.abs(lead.e[2]) / Math.sqrt(blk[5]);
+    for (let s = 0; s < n; s++) {
+      const o = s * W, a9 = armOf[s] * 9, dd = D[o + 21];
+      const fl = A[a9 + 7] === 1 ? 1 : dd ** (2 * (A[a9 + 7] - 1)), ft = (1 + dd * A[a9 + 8]) ** 2;
+      const g = groupOf[s], at = offsets[g] + fill[g]++;
+      for (let a = 0; a < 3; a++) {
+        const v = D[o + 3 + a] + A[a9 + 4 + a] * D[o + 6 + a] + A[a9] * D[o + 9 + a] + A[a9 + 1] * D[o + 12 + a] + A[a9 + 2] * fl * D[o + 15 + a] + A[a9 + 3] * ft * D[o + 18 + a];
+        Z[a][at] = D[o + a] / Math.sqrt(v);
       }
     }
     let total = 0;
     for (let r = 0; r < regimes.length; r++) {
-      let s = 0, n = 0;
-      for (let h = 0; h < HOURS; h++) { const g = r * HOURS + h; if (!count[g]) continue; for (let a = 0; a < 3; a++) { const m = quickMedian(bufs[g][a], count[g]); const q = Math.log(m / HALF_NORMAL_MEDIAN); s += Number.isFinite(q) ? q * q : 1e6; n += 1; } }
-      total += s / n;
+      let sum = 0, m = 0;
+      for (let h = 0; h < HOURS; h++) {
+        const g = r * HOURS + h; if (!count[g]) continue;
+        for (let a = 0; a < 3; a++) { const med = quickMedian(Z[a].subarray(offsets[g], offsets[g + 1]), count[g]); const q = Math.log(med / HALF_NORMAL_MEDIAN); sum += Number.isFinite(q) ? q * q : 1e6; m += 1; }
+      }
+      total += sum / m;
     }
     return total / regimes.length;
   };
@@ -578,8 +597,12 @@ function fold(formId, block) {
   const form = formOf(formId), arms = trainingArms(), { fit, score } = foldArms(arms, block);
   const t0 = Date.now(), r = fitForm(form, fit);
   const pre = evaluate(form, r.x, fit, Array.from({ length: HOURS }, (_, i) => i + 1), { precision: true });
+  // the loss again from the evaluator's own medians (a check of the fast path)
+  const byRegime = {};
+  for (const c of pre.cells) for (const a of c.axes) (byRegime[c.regime] ??= []).push(Math.log(a.medianAbsZ / HALF_NORMAL_MEDIAN) ** 2);
+  const lossCheck = Object.values(byRegime).reduce((s, v) => s + v.reduce((p, q) => p + q, 0) / v.length, 0) / Object.keys(byRegime).length;
   const out = { form: formId, block, fitWindows: fit.length, scoreWindows: score.length, x: r.x, loss: r.loss, runs: r.runs, seconds: (Date.now() - t0) / 1000,
-    precision: { flagged: pre.flagged, worstBound: pre.worstBound } };
+    precision: { flagged: pre.flagged, worstBound: pre.worstBound }, lossCheck };
   if (block !== 'all') { const ev = evaluate(form, r.x, score, CELLS); out.cells = verdict(ev.cells, [BLOCKS[block][0]]); out.pass = out.cells.length === 9 && out.cells.every((c) => c.pass); }
   fs.mkdirSync(path.join(OUT, 'fits'), { recursive: true });
   fs.writeFileSync(path.join(OUT, 'fits', `${formId}-${block}.json`), `${JSON.stringify(out, null, 1)}\n`);
