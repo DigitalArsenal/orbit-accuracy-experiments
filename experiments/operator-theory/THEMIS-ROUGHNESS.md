@@ -67,3 +67,11 @@ roughness per day and axis, the spectrum's peaks). Table: results/ap-truth/themi
 E2E: `node experiments/operator-theory/themis-roughness.mjs --check` re-derives table.json from the rows, holds the control, and
 requires 0.5.1's AP roughness on THEMIS D 2013-02-13 within 25 % of the published 3.06 m figure (forecast span only here; the
 published figure spans fit and forecast).
+
+## Amendment 1 (2026-11-05, written after one smoke window and before the full run; committed while the run was in progress, after its first bisection rows; it changes no verdict rule)
+The smoke window (THEMIS D 2013-02-13, the six main arms) held the control exactly and read AP roughness 0.071 m on 0.4.11 and
+3.095 m on 0.5.1 and 0.6.0. Its second-difference spectrum is the same comb of mean-motion harmonics on every arm, 0.4.11 and XP
+included (the perigee passes dominate the power), so reading 4 cannot separate the term. Two readings are added, both from the rows
+and their stored tracks, metric and control unchanged: (a) the roughness of the triples whose middle sample lies inside and outside
+the window's median reference radius; (b) the spectrum of the difference track AP(31,20) minus AP(0,20) on 0.5.1 (what the tesseral
+terms add to the flown track), its five largest peaks in cycles per day and as multiples of the fitted mean motion.
