@@ -89,6 +89,23 @@ export function peaks(d2, meanMotionRevDay) {
   return local.map((x) => ({ cyclesPerDay: x.cpd, share: x.p / total, perRev: meanMotionRevDay ? x.cpd / meanMotionRevDay : null }));
 }
 
+/** The share of the second-difference track's power (R, I, C summed) at frequencies up to `limit` times the mean motion. */
+export function shareBelow(d2, meanMotionRevDay, limit) {
+  const N = d2.length, cpd = 86400 / STEP_S;
+  let below = 0, total = 0;
+  for (let k = 1; k < N / 2; k += 1) {
+    let p = 0;
+    for (let c = 0; c < 3; c += 1) {
+      let re = 0, im = 0;
+      for (let j = 0; j < N; j += 1) { const a = (-2 * Math.PI * k * j) / N; re += d2[j].v[c] * Math.cos(a); im += d2[j].v[c] * Math.sin(a); }
+      p += re * re + im * im;
+    }
+    total += p;
+    if ((k * cpd) / N <= limit * meanMotionRevDay) below += p;
+  }
+  return below / total;
+}
+
 /** Table: per arm, the median over windows of the roughness and of each day's 3D error; the control; the published figure. */
 function table(rows) {
   const ok = rows.filter((r) => r.ok);
@@ -124,7 +141,7 @@ function table(rows) {
     if (!a || !b || a.length !== b.length) continue;
     const n = a.length / 3, d2 = [];
     for (let i = 1; i + 1 < n; i += 1) { const v = [0, 1, 2].map((c) => (a[3 * (i + 1) + c] - b[3 * (i + 1) + c]) - 2 * (a[3 * i + c] - b[3 * i + c]) + (a[3 * (i - 1) + c] - b[3 * (i - 1) + c])); d2.push({ v, n: Math.hypot(...v) }); }
-    tesseral.push({ key: r.key, rough: median(d2.map((x) => x.n)), peaks: peaks(d2, mm || null) });
+    tesseral.push({ key: r.key, rough: median(d2.map((x) => x.n)), meanMotionRevDay: mm || null, shareUpTo34n: mm ? shareBelow(d2, mm, 34) : null, peaks: peaks(d2, mm || null) });
   }
   const pub = ok.find((r) => r.key === PUBLISHED.key && r.fit === PUBLISHED.version && r.fly === PUBLISHED.version && r.d === 31 && r.z === 20);
   return { per, control, tesseral, published: { ...PUBLISHED, measuredM: pub?.rough ?? null } };
@@ -169,9 +186,9 @@ ${head}
 ${sets('forces')}
 ${doc.per.some((p) => p.set === 'cross') ? `\n## Fit against flight (fit@build>flight build)\n${head}\n${sets('cross')}\n` : ''}
 ## What the tesseral terms add on 0.5.1 (AP(31,20) minus AP(0,20))
-| Window | Roughness of the difference (m) | Largest peaks of its second difference |
-| --- | --: | --- |
-${doc.tesseral.map((x) => `| ${x.key} | ${f3(x.rough)} | ${peaksLine(x.peaks)} |`).join('\n')}
+| Window | Roughness of the difference (m) | Power share at or below 34 n | Largest peaks of its second difference |
+| --- | --: | --: | --- |
+${doc.tesseral.map((x) => `| ${x.key.replace(/\|/g, ' ')} | ${f3(x.rough)} | ${f3(x.shareUpTo34n)} | ${peaksLine(x.peaks)} |`).join('\n')}
 
 ## Verdict
 ${doc.verdict ?? ''}
