@@ -303,7 +303,19 @@ async function run() {
     }
     await new Promise((r) => setTimeout(r, running.size ? 15000 : 60000));
   }
+  await timingFlights();
   assemble(reg);
+}
+
+async function timingFlights() {
+  const dir = process.env.SCALE_FLIGHT_ROWS ?? path.join(SCRATCH, 'flight-rows');
+  const env = { ...process.env, SDN_MODULES_ROOT: '/Users/tj/software/private/coordinator-d9/space-data-network-modules-bench2', SDN_MODULES_GIT: MODULES, SCALE_FLIGHT_ROWS: dir };
+  for (const [arm, run] of Object.entries(FLIGHT_RUN)) {
+    if (fs.existsSync(path.join(dir, run, `flights-${arm}.jsonl`))) continue;
+    for (;;) { const g = guards(); if (g.ok) break; console.log(`${nowUtc()} timing guard holds: ${JSON.stringify(g)}`); await new Promise((r) => setTimeout(r, 60000)); }
+    console.log(`${nowUtc()} timing ${arm} (${run})`);
+    await new Promise((resolve) => spawn(process.execPath, [path.join(HERE, 'cost-flights.mjs'), 'flights', '--run', run, '--arms', arm], { stdio: ['ignore', 'inherit', 'inherit'], env }).on('close', resolve));
+  }
 }
 
 function assemble(reg) {
@@ -328,7 +340,7 @@ function assemble(reg) {
   crows.push({ id: 'coverage', ...cov });
   fs.mkdirSync(OUT, { recursive: true });
   fs.writeFileSync(path.join(OUT, 'rows.jsonl'), rows.map((x) => JSON.stringify(x)).join('\n') + '\n');
-  const tim = ['sgp4', 'xp', 'ap', 'ffm'].filter((t) => fs.existsSync(path.join(resDir, `timing-${t}.json`))).map((t) => { const x = JSON.parse(fs.readFileSync(path.join(resDir, `timing-${t}.json`), 'utf8')); return { theory: x.theory, objects: x.objects, states: x.states, stepSeconds: x.stepSeconds, wasmSha256: x.wasmSha256, startedUtc: x.startedUtc, cpuUsPerState: x.cpuUsPerState, range: x.range, reps: x.reps }; });
+  const tim = timingRows();
   fs.writeFileSync(path.join(OUT, 'timing.jsonl'), tim.map((x) => JSON.stringify(x)).join('\n') + '\n');
   fs.writeFileSync(path.join(OUT, 'counts.jsonl'), crows.map((x) => JSON.stringify(x)).join('\n') + '\n');
   const meta = {
@@ -344,6 +356,24 @@ function assemble(reg) {
   };
   fs.writeFileSync(path.join(OUT, 'meta.json'), JSON.stringify(meta, null, 2) + '\n');
   console.log('rows written', rows.length);
+}
+
+// ---------- timing arm rows (Amendment 3) ----------
+const FLIGHT_RUN = { SGP4: 'a13cb468', XPU: 'a13cb468', XP: 'sdn-ap-0.6.3', AP: 'sdn-ap-0.6.3', FFM20: 'ffm-2.2.1', FFM40: 'ffm-2.2.1' };
+const FLIGHT_BUILD = { SGP4: 'sgp4 1.4.1', XPU: 'sgp4-xp 0.2.2', XP: 'sdn-ap 0.6.3', AP: 'sdn-ap 0.6.3', FFM20: 'ffm 2.2.1', FFM40: 'ffm 2.2.1' };
+function timingRows() {
+  const dir = process.env.SCALE_FLIGHT_ROWS ?? path.join(SCRATCH, 'flight-rows');
+  const out = [];
+  const med = (v) => { const a = [...v].sort((x, y) => x - y); return a.length % 2 ? a[(a.length - 1) / 2] : (a[a.length / 2 - 1] + a[a.length / 2]) / 2; };
+  for (const [arm, run] of Object.entries(FLIGHT_RUN)) {
+    const f = path.join(dir, run, `flights-${arm}.jsonl`);
+    if (!fs.existsSync(f)) continue;
+    const ok = fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => r.ok && !r.refused);
+    const by = new Map();
+    for (const r of ok) { const us = (r.flightCpuSeconds / 10080) * 1e6; for (const k of ['pooled', r.regime]) (by.get(k) ?? by.set(k, []).get(k)).push(us); }
+    for (const [regime, v] of by) out.push({ arm, run, build: FLIGHT_BUILD[arm], regime, n: v.length, cpuUsPerState: med(v), min: Math.min(...v), max: Math.max(...v) });
+  }
+  return out;
 }
 
 // ---------- statistics ----------
@@ -419,19 +449,24 @@ function build(rows, meta, cov, extra) {
   const f2 = (v) => v.toFixed(2), f1 = (v) => v.toFixed(1);
   const c = conversion.ladder, d = conversion.dates;
   const sentence = `With p = ${f2(L.p)} (95 percent interval ${f2(L.lo)} to ${f2(L.hi)}; ${L.verdict}) on the thinning ladder, one eighth of the compute buys 3 / p = ${f2(c.doublings)} doublings of the object count (${f2(c.doublingsRange[0])} to ${f2(c.doublingsRange[1])}): ${f1(c.payloadYears)} years (${f1(c.payloadYearsRange[0])} to ${f1(c.payloadYearsRange[1])}) at the payload doubling time of ${B1.payloadDoublingYears} years (catalog growth 2018-2026, exponential), and ${f1(c.allYears)} years (${f1(c.allYearsRange[0])} to ${f1(c.allYearsRange[1])}) at the all-objects fit of ${B1.allObjectsDoublingYears} years (2018-2026, undecided between exponential and linear). The real-dates fit gives p = ${f2(D.p)} (${f2(D.lo)} to ${f2(D.hi)}; ${D.verdict}): ${f2(d.doublings)} doublings, ${f1(d.payloadYears)} years at ${B1.payloadDoublingYears} and ${f1(d.allYears)} years at ${B1.allObjectsDoublingYears}.`;
-  // Amendment 2: Amdahl conversion and the derived series (timing arm); a propagation 1/8 as costly changes the total by f = (1 - s) + s / 8
-  const tm = Object.fromEntries((extra.timing ?? []).map((x) => [x.theory, x]));
-  const cS = tm.sgp4?.cpuUsPerState ?? null;
+  // Amendments 2 and 3: Amdahl conversion and the derived series per arm and per regime; a propagation 1/8 as costly changes the total by f = (1 - s) + s / 8
+  const tm = Object.fromEntries((extra.timing ?? []).map((x) => [`${x.arm}|${x.regime}`, x]));
+  const regimes = [...new Set((extra.timing ?? []).map((x) => x.regime))];
   const amdahl = (s, f) => { const fac = (1 - s) + s / 8; const dbl = Math.log2(1 / fac) / f.p, dblLo = Math.log2(1 / fac) / f.hi, dblHi = Math.log2(1 / fac) / f.lo; return { s, factor: fac, doublings: dbl, doublingsRange: [dblLo, dblHi], payloadYears: dbl * B1.payloadDoublingYears, allYears: dbl * B1.allObjectsDoublingYears }; };
   const derivedBase = (r) => ({ index: r.index, base: r.cpuS.search + r.cpuS.index + r.cpuS.host, refine: r.cpuS.refine, N: r.index * extra.n0 });
   const derivedPoints = [...rows.filter((r) => r.kind !== 'full').map(derivedBase), { index: 1, base: ref.search + median(full.map((r) => r.cpuS.index + r.cpuS.host)), refine: ref.refine, N: extra.n0 }];
   const derived = {};
-  for (const th of ['xp', 'ap', 'ffm']) {
-    if (!tm[th] || !cS) continue;
-    const c = tm[th].cpuUsPerState;
-    const pts = derivedPoints.map((d) => { const prop = c * 1e-6 * d.N * 10080; const lower = d.base + d.refine + prop, upper = d.base + d.refine * (c / cS) + prop; return { index: d.index, lower, upper, sLo: prop / upper, sHi: prop / lower }; }).sort((a, b) => a.index - b.index);
-    const fullPt = pts.find((x) => x.index === 1);
-    derived[th] = { cpuUsPerState: c, range: tm[th].range, points: pts, amdahl: { sLoCase: amdahl(fullPt.sLo, L), sHiCase: amdahl(fullPt.sHi, L) } };
+  for (const regime of regimes) {
+    const cS = tm[`SGP4|${regime}`]?.cpuUsPerState;
+    if (!cS) continue;
+    for (const arm of ['XP', 'XPU', 'AP', 'FFM20', 'FFM40']) {
+      const x = tm[`${arm}|${regime}`];
+      if (!x) continue;
+      const c = x.cpuUsPerState;
+      const pts = derivedPoints.map((d) => { const prop = c * 1e-6 * d.N * 10080; const lower = d.base + d.refine + prop, upper = d.base + d.refine * (c / cS) + prop; return { index: d.index, lower, upper, sLo: prop / upper, sHi: prop / lower }; }).sort((a, b) => a.index - b.index);
+      const fullPt = pts.find((y) => y.index === 1);
+      (derived[arm] ??= {})[regime] = { cpuUsPerState: c, n: x.n, points: pts, amdahl: { sLoCase: amdahl(fullPt.sLo, L), sHiCase: amdahl(fullPt.sHi, L) } };
+    }
   }
   const sgp4Amdahl = amdahl(fullShare, L);
   const overlap = !(L.hi < D.lo || D.hi < L.lo);
@@ -442,11 +477,12 @@ function build(rows, meta, cov, extra) {
     ladder: { points: ladder.map((p) => chartPoint(p, ref)), fits: fits.ladder },
     dates: { points: rows.filter((r) => r.kind === 'date').map(pointOf).concat([mergedFull]).map((p) => chartPoint(p, ref)), fits: fits.dates },
     propagationShare: fullShare, conversion, amdahlSgp4: sgp4Amdahl,
-    derived: { label: 'derived from measured parts; only SGP4 flew the whole screen', assumption: 'candidate and event counts held at SGP4\'s', series: Object.fromEntries(Object.entries(derived).map(([k, v]) => [k, v.points.map((x) => ({ index: x.index, lower: x.lower / ref.total, upper: x.upper / ref.total }))])) },
+    derived: { label: 'derived from measured parts; only SGP4 flew the whole screen', assumption: 'candidate and event counts held at SGP4\'s', series: Object.fromEntries(Object.entries(derived).map(([k, byRegime]) => [k, Object.fromEntries(Object.entries(byRegime).map(([rg, v]) => [rg, v.points.map((x) => ({ index: x.index, lower: x.lower / ref.total, upper: x.upper / ref.total }))]))])) },
   };
   return { derived, sgp4Amdahl, timing: tm, fits, shares, noise, theories, conversion, sentence, verdict, overlap, parity: meta.parity, chart, ladderN: ladder.length, datesN: dates.length };
 }
 
+const regimes0 = (t) => [...new Set(Object.keys(t.timing).map((k) => k.split('|')[1]))].filter((r) => r !== 'pooled');
 function render(rows, meta, cov, extra) {
   const t = build(rows, meta, cov, extra);
   const fmt = (v, n = 3) => (v === null || v === undefined ? '-' : Number(v).toFixed(n));
@@ -461,14 +497,14 @@ function render(rows, meta, cov, extra) {
   lines.push('', `Run-to-run range of the total CPU over the three full-catalog repeats: ${(100 * t.noise.totalCpuRelativeRange).toFixed(1)} percent of the median.`, '');
   lines.push('## Propagation share by theory', '', '| Theory | Flown | Covered share of the catalog | Propagation share of the screen CPU | Note |', '|---|---|---|---|---|');
   for (const th of t.theories) lines.push(`| ${th.theory} | ${th.flown ? 'yes' : 'no'} | ${fmt(th.coveredShare, 4)} | ${th.propagationShare === null ? '-' : fmt(th.propagationShare, 3)} | ${th.reason ?? `range over cases ${fmt(th.shareRange[0], 3)} to ${fmt(th.shareRange[1], 3)}; zero-cost propagator bound ${fmt(th.maxSpeedup, 2)}x`} |`);
-  lines.push('', '## Timing arm: propagation CPU per state at 7 days x 60 s (own module flights, timing only)', '', '| Theory | Timing objects | CPU us per state | Range | Module SHA-256 (first 12) |', '|---|---|---|---|---|');
-  for (const x of Object.values(t.timing)) lines.push(`| ${x.theory} | ${x.objects} | ${fmt(x.cpuUsPerState, 3)} | ${fmt(x.range[0], 3)} to ${fmt(x.range[1], 3)} | ${(x.wasmSha256 ?? '-').slice(0, 12)} |`);
-  if (!t.timing.ffm) lines.push('', 'FFM: not measured (no driver was built inside the time box); it has no derived series.');
-  lines.push('', '## Amdahl conversion (a propagation 1/8 as costly; doublings = log2(1 / f) / p, f = (1 - s) + s / 8)', '', '| Theory | s | f | Doublings | Interval from p | Years at 3.8 | Years at 9.6 (undecided fit) |', '|---|---|---|---|---|---|---|');
-  const am = (name, a) => lines.push(`| ${name} | ${fmt(a.s, 3)} | ${fmt(a.factor, 3)} | ${fmt(a.doublings, 2)} | ${fmt(a.doublingsRange[0], 2)} to ${fmt(a.doublingsRange[1], 2)} | ${fmt(a.payloadYears, 1)} | ${fmt(a.allYears, 1)} |`);
-  am('SGP4 (measured in the screen)', t.sgp4Amdahl);
-  for (const [k, v] of Object.entries(t.derived)) { am(`${k} (derived, s low)`, v.amdahl.sLoCase); am(`${k} (derived, s high)`, v.amdahl.sHiCase); }
-  lines.push('', 'Derived series: derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the theory\'s measured CPU per state times N times 10,080; refine is a band (lower: as measured with SGP4; upper: scaled by the ratio of the theory\'s CPU per state to SGP4\'s). Hidden assumption: candidate and event counts are held at SGP4\'s; whether better accuracy allows a smaller threshold is another study. The whole-screen bound 3 / p applies only to a speedup of the whole screen.');
+  lines.push('', '## Timing arm: propagation CPU per state at 7 days x 60 s, the cost benchmark\'s own flights (median over a regime\'s windows, microseconds)', '', `| Arm | Build | ${['pooled', ...regimes0(t)].join(' | ')} |`, `|---|---|${['pooled', ...regimes0(t)].map(() => '---').join('|')}|`);
+  for (const arm of ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40']) { const x = t.timing[`${arm}|pooled`]; if (!x) { lines.push(`| ${arm} | - | not measured |`); continue; } lines.push(`| ${arm} | ${x.build} | ${['pooled', ...regimes0(t)].map((rg) => { const y = t.timing[`${arm}|${rg}`]; return y ? `${fmt(y.cpuUsPerState, 2)} (n ${y.n})` : '-'; }).join(' | ')} |`); }
+  lines.push('', 'Four windows per regime (the benchmark\'s), 32 pooled: the pooled figure is not the catalog\'s regime mix. FFM 40x40 flies below 8,400 km only. A window an arm refused or failed is absent from n.');
+  lines.push('', '## Amdahl conversion (a propagation 1/8 as costly; doublings = log2(1 / f) / p, f = (1 - s) + s / 8)', '', '| Theory | Regime | s | f | Doublings | Interval from p | Years at 3.8 | Years at 9.6 (undecided fit) |', '|---|---|---|---|---|---|---|---|');
+  const am = (name, rg, a) => lines.push(`| ${name} | ${rg} | ${fmt(a.s, 3)} | ${fmt(a.factor, 3)} | ${fmt(a.doublings, 2)} | ${fmt(a.doublingsRange[0], 2)} to ${fmt(a.doublingsRange[1], 2)} | ${fmt(a.payloadYears, 1)} | ${fmt(a.allYears, 1)} |`);
+  am('SGP4 (measured in the screen)', 'all', t.sgp4Amdahl);
+  for (const [k, byRegime] of Object.entries(t.derived)) for (const [rg, v] of Object.entries(byRegime)) { am(`${k} (derived, s low)`, rg, v.amdahl.sLoCase); am(`${k} (derived, s high)`, rg, v.amdahl.sHiCase); }
+  lines.push('', 'Derived series: derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the arm\'s measured CPU per state in that regime times N times 10,080; refine is a band (lower: as measured with SGP4; upper: scaled by the ratio of the arm\'s CPU per state to SGP4\'s in the same regime). Hidden assumption: candidate and event counts are held at SGP4\'s; whether better accuracy allows a smaller threshold is another study. The whole-screen bound 3 / p applies only to a speedup of the whole screen.');
   lines.push('', '## Conversion', '', t.sentence, '', '## Parity guard', '', `Phased path and fused path on ${meta.parity.id}: events ${meta.parity.phasedEvents} and ${meta.parity.fusedEvents}, event-set digests ${meta.parity.equal ? 'equal' : 'DIFFER'}.`, '', '## Verdict', '', t.verdict, '');
   return { 'table.json': JSON.stringify({ fits: t.fits, theories: t.theories, conversion: t.conversion, sentence: t.sentence, verdict: t.verdict, noise: t.noise, parity: meta.parity }, null, 1) + '\n', 'README.md': lines.join('\n'), 'chart.json': JSON.stringify(t.chart, null, 1) + '\n', _t: t };
 }
@@ -515,6 +551,7 @@ function check() {
   if (t.datesN !== 8) fails.push(`dates has ${t.datesN} points, registered 8`);
   if (!rows.every((r) => Number.isFinite(r.events) && Number.isFinite(r.index))) fails.push('events or index missing');
   if (!t.theories.every((th) => th.flown ? Number.isFinite(th.propagationShare) : Number.isFinite(th.coveredShare))) fails.push('propagation share or coverage missing');
+  for (const arm of ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40']) if (!t.timing[`${arm}|pooled`]) fails.push(`timing arm ${arm} not measured`);
   if (!/doublings/.test(t.sentence) || !/years/.test(t.sentence)) fails.push('conversion sentence');
   if (!meta.parity.equal) fails.push('parity guard: phased and fused events differ');
   const chart = fs.readFileSync(path.join(OUT, 'chart.json'), 'utf8');
