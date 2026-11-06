@@ -1,0 +1,12 @@
+{"fixture":"Molniya","build":"0.4.14","day":{"1":{"alongTrack":83.89,"radial":83.41},"3":{"alongTrack":172.68,"radial":83.56},"7":{"alongTrack":460.98,"radial":260.43}},"bterm":0.04293774362081801}
+{"fixture":"Molniya","build":"0.6.2","day":{"1":{"alongTrack":33.1,"radial":36.63},"3":{"alongTrack":52.3,"radial":25.21},"7":{"alongTrack":276.53,"radial":208.4}},"bterm":0.04478058452343159}
+{"fixture":"Molniya","build":"C7","day":{"1":{"alongTrack":31.6,"radial":28.74},"3":{"alongTrack":210.61,"radial":127.84},"7":{"alongTrack":886.49,"radial":676.83}},"bterm":0.04662161585747794}
+{"fixture":"Molniya","build":"final","day":{"1":{"alongTrack":18.42,"radial":20.97},"3":{"alongTrack":136.65,"radial":83.11},"7":{"alongTrack":627.47,"radial":475.39}},"bterm":0.04562159555134586}
+{"fixture":"Molniya-pinned","build":"0.4.14","day":{"1":{"alongTrack":68.71,"radial":85.22},"3":{"alongTrack":100.97,"radial":72.1},"7":{"alongTrack":159.13,"radial":92.15}},"bterm":0.044000000000024665}
+{"fixture":"Molniya-pinned","build":"0.6.2","day":{"1":{"alongTrack":27.26,"radial":34.97},"3":{"alongTrack":34.63,"radial":27.72},"7":{"alongTrack":78.66,"radial":55.21}},"bterm":0.044000000000021786}
+{"fixture":"Molniya-pinned","build":"C7","day":{"1":{"alongTrack":14.06,"radial":23.21},"3":{"alongTrack":26.68,"radial":17.14},"7":{"alongTrack":213.86,"radial":145.2}},"bterm":0.04400000000004263}
+{"fixture":"Molniya-pinned","build":"final","day":{"1":{"alongTrack":14.06,"radial":23.25},"3":{"alongTrack":26.66,"radial":17.15},"7":{"alongTrack":213.85,"radial":145.23}},"bterm":0.04400000000007185}
+{"fixture":"Molniya, no drag","build":"0.4.14","day":{"1":{"alongTrack":70.58,"radial":86.98},"3":{"alongTrack":93.98,"radial":76.32},"7":{"alongTrack":108.12,"radial":102.29}},"bterm":-6.410783421955306e-20}
+{"fixture":"Molniya, no drag","build":"0.6.2","day":{"1":{"alongTrack":27.16,"radial":35.28},"3":{"alongTrack":39.34,"radial":31.98},"7":{"alongTrack":51.71,"radial":35.88}},"bterm":1.3988652803584177e-20}
+{"fixture":"Molniya, no drag","build":"C7","day":{"1":{"alongTrack":16.41,"radial":23.92},"3":{"alongTrack":17.65,"radial":16.84},"7":{"alongTrack":179.08,"radial":126.05}},"bterm":8.684897425689534e-20}
+{"fixture":"Molniya, no drag","build":"final","day":{"1":{"alongTrack":16.4,"radial":23.95},"3":{"alongTrack":17.64,"radial":16.84},"7":{"alongTrack":179.09,"radial":126.06}},"bterm":8.344142779433701e-20}
