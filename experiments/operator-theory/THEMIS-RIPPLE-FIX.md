@@ -179,3 +179,16 @@ worker flying 100 records above e 0.3 in sequence (the HEO example records, repe
 Init time per object and per fit iteration reported beside it.
 Report only: the old series' residual against the quadrature at e 0.29 and 0.30 (the step an object takes when its eccentricity crosses
 the switch in flight); it changes nothing unless it exceeds the bounds, and then goes to the coordinator.
+
+## Amendment 7 (2026-11-06, the SDN-AP session's ruling on the switch; before any sizing of it is read)
+The e 0.29 / 0.30 residual (21 m RMS, 44 m maximum) exceeds the bounds, so the switch goes by the bound. The single switch parameter
+(today kWideE = 0.3) becomes a threshold function e*(n, i), sized offline against the full-field quadrature only, across the catalog
+regimes' mean motions and inclinations (the regimes of lib/regimes.mjs and the site's cells: low orbit, altimetry, laser geodetic, MEO,
+inclined geosynchronous and quasi-zenith, geostationary, highly elliptical): the narrow set (q in {-1, 0, 1}) is kept only where it meets
+the bounds (1 m RMS, 5 m maximum, 0.1 m roughness of the difference, 7 days at 300 s); the grid is used everywhere else. The step at the
+threshold is bounded by construction (both sides within the bounds of the field there) and its measured maximum is reported. The method
+is chosen once per flight at init from the fitted mean elements, never per step, so an object near e* cannot flip in flight.
+No harm: byte-identical output wherever the narrow set is kept. Scope: every published figure whose object moves to the grid, listed by
+applying e*(n, i) to each published object's fitted elements before any re-measurement (expected: the quasi-zenith cells, e about 0.075
+with a one-day period, and any stored window with 0.05 < e < 0.3); each is re-measured on 0.6.3 and moved in the one site push; TESS
+stays withheld.
