@@ -188,7 +188,7 @@ async function windowsOf() {
 // windows, with every GC logged, so DSST's peak memory is the largest heap used after a GC during the window's fit and flight; an
 // accuracy JVM runs under a bound well above the live set. The governor's memory guard drains a JVM by naming its PID in DRAIN: the
 // worker takes no further window, and a run left with windows exits 3 so its chain runs the store again later.
-const COST_HEAP = '', ACCURACY_HEAP = '16g';
+const COST_HEAP = '8g', ACCURACY_HEAP = '16g';
 if (COST && !COST_HEAP) throw new Error('cost: the fixed heap is not yet registered (DSST.md, amendment 2026-11-06 (memory)); no cost row is written');
 const DRAIN = '/Users/tj/software/terrain-work/body-look/claude-dsst-d9/run2/drain.pids';
 const drained = (pid) => { try { return fs.readFileSync(DRAIN, 'utf8').split(/\s+/).includes(String(pid)); } catch { return false; } };
