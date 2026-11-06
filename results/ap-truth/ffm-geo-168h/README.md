@@ -7,7 +7,7 @@ Registered in `experiments/operator-theory/FFM-GEO-168H.md`. report only; no mod
 **a loss at 72/168 the settings table reads to FFM's weaker setting: Gravity: field and degree at GEO.**
 
 - Loss 72/168: FFM/AP 1.04 on 32 windows (FFM worse on 22); window-cluster interval [1.000276, 1.520433] unrounded; object-week [0.998, 1.692].
-- Margin: the loss rests on the window-cluster lower bound 1.000276 at 72/168 against 1; the object-week interval of the same cell holds 1 ([0.998, 1.692]), as results/ap-truth/compare/ffm-ap-ratio.json read it; the rule is the window-cluster bound and is applied as registered.
+- Margin: the loss rests on the window-cluster lower bound 1.000276 at 72/168 against 1; the object-week interval of the same cell holds 1 ([0.998, 1.692]), as results/ap-truth/compare/ffm-ap-ratio.json read it; the rule is the window-cluster bound and is applied as registered. SDN-AP, 2026-11-06: the loss stands by the registered letter, "by 0.0003; the object-week interval [0.998, 1.692] holds 1; a bound this close is within the bootstrap's own Monte Carlo spread".
 - Record named: `modules-ffm-geo-gravity-field-and-degree-at-geo-20261106` (setting: Gravity: field and degree at GEO). What it should test: refly the same GE windows' F72 at FFM-1's catalog degree (70x70, every coefficient, so the field holds every term of degree 21 to 70) and read 72/168 again by this record's statistic; a ratio and interval that do not move clear the row.
 - No GEO burn verdict comes out of this record: the GFZ cells are read with no burn selection, and the MT9 burns are counted only.
 
@@ -45,7 +45,11 @@ a second population: separate satellites, separate truth. Never read against the
 | 72/72 | 75 | 27 | 1 | [0.999, 1] over 75 windows | [0.999, 1] over 26 | 9.588 | 9.592 | 8 / 4 |
 | 72/168 | 74 | 40 | 1 | [1, 1.001] over 74 windows | [0.999, 1.001] over 26 | 27.187 | 27.23 | 8 / 12 |
 
+The MT9 ratios of 1.000 with intervals [0.999, 1.000] and [1.000, 1.001] mean that both arms' errors on this truth are dominated by the same truth noise: the two forecasts differ from each other by far less than either differs from the broadcast (median errors of kilometers against a window-to-window ratio within 0.1 % of 1). Stated as such; nothing is read from it.
+
 ## The settings table
+
+The two gravity fields are different models, not only different truncations: FFM flies the embedded EGM2008 (every coefficient to degree and order 20); AP flies EGM-96 (the theory's zonals, the zonal tail, the resonant and tesseral tables of 16.2 and 16.3). The settings table reads sources only; no figure here measures what either model or truncation does to a GEO forecast. The brief's "fixed Cr against fitted AGOM" premise did not hold for the stored rows: both arms fit one cannonball coefficient per window (FFM SRP_AREA_OVER_MASS through analysis/estimation, AP AGOM), as the first row reads from the sources.
 
 FFM 2.2.1 (wasm a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4) beside AP 0.6.3 (wasm aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e), modules 93cb5a0584fa728864e4426cc9ceb368936589f9; every entry from the files named, by SHA-256 (first 8 hex here, full in `table.json`). The rows were flown on FFM 2.2.0 and AP 0.5.1:
 

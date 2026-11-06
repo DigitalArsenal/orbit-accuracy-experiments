@@ -206,7 +206,7 @@ function build() {
     : { losses: losses.map((c) => ({ cell: `${c.fit}/${c.lead}`, ratio: c.ratio, windowClusterLower: c.windowCluster.lower, windowClusterUpper: c.windowCluster.upper, objectWeek: c.objectWeek.interval, windows: c.windows, ffmWorse: c.ffmWorse })),
       records: weakerRows.map((s) => ({ setting: s.setting, record: `modules-ffm-geo-${s.setting.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-20261106`,
         shouldTest: 'refly the same GE windows\' F72 at FFM-1\'s catalog degree (70x70, every coefficient, so the field holds every term of degree 21 to 70) and read 72/168 again by this record\'s statistic; a ratio and interval that do not move clear the row' })),
-      margin: `the loss rests on the window-cluster lower bound ${losses.map((c) => `${c.windowCluster.lower} at ${c.fit}/${c.lead}`).join(', ')} against 1; the object-week interval of the same cell holds 1 (${losses.map((c) => `[${c.objectWeek.interval.join(', ')}]`).join(', ')}), as results/ap-truth/compare/ffm-ap-ratio.json read it; the rule is the window-cluster bound and is applied as registered`,
+      margin: `the loss rests on the window-cluster lower bound ${losses.map((c) => `${c.windowCluster.lower} at ${c.fit}/${c.lead}`).join(', ')} against 1; the object-week interval of the same cell holds 1 (${losses.map((c) => `[${c.objectWeek.interval.join(', ')}]`).join(', ')}), as results/ap-truth/compare/ffm-ap-ratio.json read it; the rule is the window-cluster bound and is applied as registered. SDN-AP, 2026-11-06: the loss stands by the registered letter, "by 0.0003; the object-week interval [0.998, 1.692] holds 1; a bound this close is within the bootstrap's own Monte Carlo spread"`,
       statement: weakerRows.length ? `a loss at ${losses.map((c) => `${c.fit}/${c.lead}`).join(', ')} the settings table reads to FFM's weaker setting: ${weakerRows.map((s) => s.setting).join('; ')}` : `a loss at ${losses.map((c) => `${c.fit}/${c.lead}`).join(', ')} the settings do not explain; no record named` };
   return {
     registered: 'experiments/operator-theory/FFM-GEO-168H.md',
@@ -224,6 +224,7 @@ function build() {
       ],
     },
     settings: SETTINGS,
+    settingsNote: 'The two gravity fields are different models, not only different truncations: FFM flies the embedded EGM2008 (every coefficient to degree and order 20); AP flies EGM-96 (the theory\'s zonals, the zonal tail, the resonant and tesseral tables of 16.2 and 16.3). The settings table reads sources only; no figure here measures what either model or truncation does to a GEO forecast. The brief\'s "fixed Cr against fitted AGOM" premise did not hold for the stored rows: both arms fit one cannonball coefficient per window (FFM SRP_AREA_OVER_MASS through analysis/estimation, AP AGOM), as the first row reads from the sources.',
     statistic: 'exp(median over windows of ln(F72.e / AP72.e)); e the 3D RMS position error (km) of the lead day\'s bin, counted from the end of the 72 h fit (experiments/ffm-atmosphere-xm3/config.json scoring). windowCluster: 95 % bootstrap with the window as the cluster, 10,000 draws, seed SHA-256 of the tag. objectWeek: the same over satellite x ISO-week clusters, report only.',
     gfz: { truth: 'GFZ multi-GNSS rapid orbits; BeiDou-2G, BeiDou-3G, QZS-2G; cutoffs 2025-10-04 to 2025-10-12 every 2 days', windows: ge.map((r) => r.key), cells: gfz },
     mt9: {
@@ -231,6 +232,7 @@ function build() {
       truth: 'WAAS message type 9 broadcast (URA 2 m): Galaxy 30, SES-15, Eutelsat 117 West B; cutoffs 2026-09-02 to 2026-10-26 every 2 days',
       noise: 'revolution-to-revolution noise about 45 m: the per-rev record\'s measurement (experiments-ffm-step-flag-per-rev-20261105) as the SDN-AP session states it; not measured here, and no landed per-rev file at experiments 1d12fb5b prints the figure. Measured bound in this store: FFM fitted to 24 h of Galaxy 30\'s broadcast predicts it one day ahead to a median of 0.060 km between burns (results/ap-truth/geo/README.md).',
       ffmBuild: 'FFM 2.0.4 (not 2.2.x); see builds.rows.mt9.ffm.note',
+      sameNoise: 'The MT9 ratios of 1.000 with intervals [0.999, 1.000] and [1.000, 1.001] mean that both arms\' errors on this truth are dominated by the same truth noise: the two forecasts differ from each other by far less than either differs from the broadcast (median errors of kilometers against a window-to-window ratio within 0.1 % of 1). Stated as such; nothing is read from it.',
       windows: wa.map((r) => r.key), cells: mt9,
     },
     verdict,
@@ -258,7 +260,8 @@ function readme(t) {
   L.push('', '## WAAS message type 9: a second population', '', `${t.mt9.population} ${t.mt9.truth}; ${t.mt9.windows.length} windows. AP ${t.builds.rows.mt9.ap.version} (\`${t.builds.rows.mt9.ap.store}\`) against **FFM ${t.builds.rows.mt9.ffm.version}** (\`${t.builds.rows.mt9.ffm.store}\`): ${t.builds.rows.mt9.ffm.note}. Beside every figure: ${t.mt9.noise}`, '');
   L.push('| Fit / lead (h) | Windows | FFM worse | FFM/AP | 95 % window-cluster | 95 % object-week (report only) | Median FFM km | Median AP km | Registered burns in fit / in forecast (counted only) |', '| --- | ---: | ---: | ---: | --- | --- | ---: | ---: | --- |');
   for (const c of t.mt9.cells) L.push(`| ${c.fit}/${c.lead} | ${c.windows} | ${c.ffmWorse} | ${c.ratio} | [${c.windowCluster.interval.join(', ')}] over ${c.windowCluster.clusters} windows | [${c.objectWeek.interval.join(', ')}] over ${c.objectWeek.clusters} | ${c.medianKm.ffm} | ${c.medianKm.ap} | ${c.registeredBurns.inFit} / ${c.registeredBurns.inForecast} |`);
-  L.push('', '## The settings table', '', `FFM ${t.builds.settingsTable.ffm.version} (wasm ${t.builds.settingsTable.ffm.wasmSha256}) beside AP ${t.builds.settingsTable.ap.version} (wasm ${t.builds.settingsTable.ap.wasmSha256}), modules ${t.builds.settingsTable.modulesCommit}; every entry from the files named, by SHA-256 (first 8 hex here, full in \`table.json\`). The rows were flown on FFM 2.2.0 and AP 0.5.1:`, '');
+  L.push('', t.mt9.sameNoise);
+  L.push('', '## The settings table', '', t.settingsNote, '', `FFM ${t.builds.settingsTable.ffm.version} (wasm ${t.builds.settingsTable.ffm.wasmSha256}) beside AP ${t.builds.settingsTable.ap.version} (wasm ${t.builds.settingsTable.ap.wasmSha256}), modules ${t.builds.settingsTable.modulesCommit}; every entry from the files named, by SHA-256 (first 8 hex here, full in \`table.json\`). The rows were flown on FFM 2.2.0 and AP 0.5.1:`, '');
   for (const s of t.builds.identities) L.push(`- ${s}`);
   L.push('', '| Setting | FFM 2.2.1 | AP 0.6.3 | Reading |', '| --- | --- | --- | --- |');
   const cite = (side) => `${side.value} Sources: ${side.sources.map((s) => `\`${s.file}\` ${short(s.sha256)}${s.where ? ` (${s.where})` : ''}`).join('; ')}.`;
