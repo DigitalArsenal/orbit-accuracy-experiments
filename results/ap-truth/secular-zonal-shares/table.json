@@ -101,16 +101,8 @@
     "GEO",
     "Molniya"
    ],
-   "tailArmZonalMoved": [
-    "GPS",
-    "Galileo",
-    "Molniya"
-   ],
-   "tailArmSecularMoved": [
-    "GPS",
-    "Galileo",
-    "Molniya"
-   ]
+   "tailArmZonalMoved": [],
+   "tailArmSecularMoved": []
   },
   "grid": {
    "read": 60,
@@ -20048,8 +20040,8 @@
      "forwardSecularM": 1.4556387840440765,
      "primaryForwardZonalM": 0.025496206720789154,
      "primaryForwardSecularM": 1.4556114554253206,
-     "zonalMoved": true,
-     "secularMoved": true
+     "zonalMoved": null,
+     "secularMoved": null
     }
    },
    "cost": {
@@ -21856,8 +21848,8 @@
      "forwardSecularM": 3.7701963337116235,
      "primaryForwardZonalM": 0.08557615730012184,
      "primaryForwardSecularM": 3.770155900183822,
-     "zonalMoved": true,
-     "secularMoved": true
+     "zonalMoved": null,
+     "secularMoved": null
     }
    },
    "cost": {
@@ -25772,8 +25764,8 @@
      "forwardSecularM": 4.790923451156696,
      "primaryForwardZonalM": 0.23541527327033934,
      "primaryForwardSecularM": 4.790923451156696,
-     "zonalMoved": false,
-     "secularMoved": false
+     "zonalMoved": null,
+     "secularMoved": null
     }
    },
    "cost": {
@@ -27580,8 +27572,8 @@
      "forwardSecularM": 14.016879727609169,
      "primaryForwardZonalM": 0.2455379036808965,
      "primaryForwardSecularM": 14.016879727609169,
-     "zonalMoved": false,
-     "secularMoved": false
+     "zonalMoved": null,
+     "secularMoved": null
     }
    },
    "cost": {
@@ -29388,8 +29380,8 @@
      "forwardSecularM": 44.42294978981164,
      "primaryForwardZonalM": 0.24904682539667916,
      "primaryForwardSecularM": 44.42294978981164,
-     "zonalMoved": false,
-     "secularMoved": false
+     "zonalMoved": null,
+     "secularMoved": null
     }
    },
    "cost": {
@@ -31196,8 +31188,8 @@
      "forwardSecularM": 1.7964383413140366,
      "primaryForwardZonalM": 0.014271933445924107,
      "primaryForwardSecularM": 1.7964383380526456,
-     "zonalMoved": true,
-     "secularMoved": true
+     "zonalMoved": null,
+     "secularMoved": null
     }
    },
    "cost": {

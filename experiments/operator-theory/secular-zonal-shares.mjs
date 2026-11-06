@@ -226,6 +226,7 @@ function compare(P, S, floorM) {
 }
 const within3 = (x, s) => Number.isFinite(s) && s > 0 && x >= s / 3 && x <= s * 3;
 /** Amendment 2: |T1| < |T_a| / 3: the radial offset is a bias at fixed mean motion, not a semi-major-axis error. */
+const shareMoved = (t, p) => (t.se && p.se ? Math.abs(t.rmsM - p.rmsM) > 2 * (t.se.rmsM + p.se.rmsM) : null);
 const radialBias = (a) => Boolean(a?.trend && a.absorption && Math.abs(a.trend.T1.point) < Math.abs(a.absorption.Ta_mPerDay) / 3);
 /** Item 4's reading on the three re-flown arms of a regime. */
 function termReading(pri, sec, tail) {
@@ -246,9 +247,8 @@ function termReading(pri, sec, tail) {
   if (tail?.absorption) {
     const Tt = tail.absorption.Tr, includesSec = Tt.se != null && Ts.point >= Tt.lo && Ts.point <= Tt.hi;
     const moved = Tt.se != null && Tp.se != null && Math.abs(Tt.point - Tp.point) > 2 * (Tt.se + Tp.se) && Math.abs(Tt.point - Ts.point) < Math.abs(Tp.point - Ts.point);
-    tailArm = { Tr: Tt, reading: Tt.se == null ? 'no interval' : includesSec ? 'the tail\'s rates close the gap' : moved ? 'the tail\'s rates close the gap partly' : 'the tail\'s rates do not close the gap', forwardZonalM: tail.forward.shares.zonal.rmsM, forwardSecularM: tail.forward.shares.secular.rmsM, primaryForwardZonalM: pri.forward.shares.zonal.rmsM, primaryForwardSecularM: pri.forward.shares.secular.rmsM, zonalMoved: Math.abs(tail.forward.shares.zonal.rmsM - pri.forward.shares.zonal.rmsM) > 2 * ((tail.forward.shares.zonal.se?.rmsM ?? 0) + (pri.forward.shares.zonal.se?.rmsM ?? 0)),
-      // Amendment 3: the share-level fact beside the uninformative 4(c) rule
-      secularMoved: Math.abs(tail.forward.shares.secular.rmsM - pri.forward.shares.secular.rmsM) > 2 * ((tail.forward.shares.secular.se?.rmsM ?? 0) + (pri.forward.shares.secular.se?.rmsM ?? 0)) };
+    tailArm = { Tr: Tt, reading: Tt.se == null ? 'no interval' : includesSec ? 'the tail\'s rates close the gap' : moved ? 'the tail\'s rates close the gap partly' : 'the tail\'s rates do not close the gap', forwardZonalM: tail.forward.shares.zonal.rmsM, forwardSecularM: tail.forward.shares.secular.rmsM, primaryForwardZonalM: pri.forward.shares.zonal.rmsM, primaryForwardSecularM: pri.forward.shares.secular.rmsM, // Amendment 3: the share-level fact beside the uninformative 4(c) rule; null (no interval) where either arm carries no jackknife
+      zonalMoved: shareMoved(tail.forward.shares.zonal, pri.forward.shares.zonal), secularMoved: shareMoved(tail.forward.shares.secular, pri.forward.shares.secular) };
   }
   return { state: 'read', tailSecular, own, tailArm };
 }
@@ -299,7 +299,7 @@ export function table(outDir = RESULTS) {
     ...regimes.flatMap((r) => ['primary', 'secondary', 'tail'].map((n) => armLine(r, n))), '',
     `## The term reading per regime`,
     `| Regime | Tail secular share (primary minus secondary, m/day) | AP's own secular theory (secondary T_r) | Tail arm (caps 31 / 31) | Tail arm zonal share moved? |`, `| --- | --- | --- | --- | --- |`,
-    ...regimes.map((r) => (r.terms.state === 'read' ? `| ${r.regime} | ${r.terms.tailSecular.reading} | ${r.terms.own.reading} | ${r.terms.tailArm.reading ?? r.terms.tailArm.state} | ${r.terms.tailArm.state === 'unmeasured' ? '-' : `${r.terms.tailArm.zonalMoved ? 'yes' : 'no'} (${f(r.terms.tailArm.primaryForwardZonalM)} -> ${f(r.terms.tailArm.forwardZonalM)} m; secular ${f(r.terms.tailArm.primaryForwardSecularM)} -> ${f(r.terms.tailArm.forwardSecularM)} m)`} |` : `| ${r.regime} | ${r.terms.state} | | | |`)), '',
+    ...regimes.map((r) => (r.terms.state === 'read' ? `| ${r.regime} | ${r.terms.tailSecular.reading} | ${r.terms.own.reading} | ${r.terms.tailArm.reading ?? r.terms.tailArm.state} | ${r.terms.tailArm.state === 'unmeasured' ? '-' : `${r.terms.tailArm.zonalMoved == null ? 'no interval' : r.terms.tailArm.zonalMoved ? 'yes' : 'no'}; secular ${r.terms.tailArm.secularMoved == null ? 'no interval' : r.terms.tailArm.secularMoved ? 'yes' : 'no'} (${f(r.terms.tailArm.primaryForwardZonalM)} -> ${f(r.terms.tailArm.forwardZonalM)} m; secular ${f(r.terms.tailArm.primaryForwardSecularM)} -> ${f(r.terms.tailArm.forwardSecularM)} m)`} |` : `| ${r.regime} | ${r.terms.state} | | | |`)), '',
     `## The cost line (per regime: the primary e 0.001 fitted set flown to 65 epochs with MAXIMUM_ZONAL_DEGREE 20 as fitted and repacked to 31; medians of fresh invokes on the command surface, instantiation included)`,
     `| Regime | 20 (ms) | 31 (ms) | Difference (ms) | Within the 100 ms cold target | Payloads differ | Terms added | Bytes added |`, `| --- | --: | --: | --: | --- | --- | --: | --: |`,
     ...regimes.map((r) => (r.cost.state === 'measured' ? `| ${r.regime} | ${f(r.cost.ms20Median, 0)} | ${f(r.cost.ms31Median, 0)} | ${f(r.cost.differenceMs, 0)} | ${r.cost.withinColdTarget ? 'within' : 'OVER'} | ${r.cost.payloadsDiffer ? 'yes' : 'NO (equal bytes)'} | ${r.cost.terms} | ${r.cost.bytes} |` : `| ${r.regime} | ${r.cost.state}${r.cost.error ? `: ${r.cost.error}` : ''} | | | | | | |`)), ''].join('\n');

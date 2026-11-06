@@ -119,8 +119,8 @@ the runner's commit 657223cc.
 Item 4(c)'s "the tail's rates close the gap" reads true in all 11 regimes with an interval, because T_r's interval carries 1.5 n SE_R0
 (hundreds of m/day in low orbit) and so always includes the secondary's T_r: the rule is uninformative as registered and is kept beside
 the share-level fact, which decides: the tail arm's forward zonal and secular shares against the primary's, "moved" when the change
-exceeds 2 (SE_tail + SE_primary) of the all-regimes jackknife. On the first table the tail arm moved neither share in any regime
-(CryoSat-2: zonal 16.21 -> 15.47 m, secular 38.78 -> 38.74 m, against the secondary's 5.95 / 11.51 m). The registered prediction (the tail
+exceeds 2 (SE_tail + SE_primary) of the all-regimes jackknife ("no interval" where either arm carries none: the half-day and one-day
+orbits' forward day). On the first table the tail arm moved neither share in any regime with an interval (CryoSat-2: zonal 16.21 -> 15.47 m, secular 38.78 -> 38.74 m, against the secondary's 5.95 / 11.51 m). The registered prediction (the tail
 arm moves the secular share and not the m = 0 short-period share) is falsified on its first half: the module's first-order zonal rates for
 J21 to J31 change the forward error by less than the estimator's spread, and the primary-secondary difference is the reference's J21-J31
 content the module's tail does not represent (short-period and long-period effects, not the secular rates). The table's summary carries
