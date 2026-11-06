@@ -205,3 +205,10 @@ in the table); no row was refused. The dist bytes came by `git show` from the re
 (sdn-ap 0.6.2 from `space-data-network-modules-pin`, 0.6.3 and FFM 2.2.1 from `space-data-network-modules-covm`,
 `SDN_MODULES_GIT`); the SDK, the Space Data Standards bindings (1.276.0, the harness's registered versions) and the host
 files came from this lane's own clone at the registered run's commit 890c8655f2.
+
+The chain (recorded 2026-11-06): the registration commit b55203d7 (committed 2026-11-06T01:59:44-05:00, pushed to
+`wip/experiments-cost-benchmark-remeasure-shipped-build-20261105/bench2` before any measurement) and the results commit
+81e00c98 (2026-11-06T02:20:54-05:00) are the registration chain, tagged
+`registered/experiments-cost-benchmark-remeasure-shipped-build-20261105-81e00c98`; the chain is merged with main, never
+rebased. The ref `.../bench2-2` holds rebased copies of the two (feab3f8f and 0e811e08, both re-committed
+2026-11-06T02:21:28-05:00, the same trees); they are not the chain and nothing points at them.
