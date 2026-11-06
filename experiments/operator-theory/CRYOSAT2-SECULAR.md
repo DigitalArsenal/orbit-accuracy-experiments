@@ -111,23 +111,32 @@ Per cell, with "beyond the spread" meaning |x| > 2 sqrt of the sum of the two T1
   rate freedom was used) and is reported with the drift it removed.
 
 ## Amendment 1 (2026-11-06, this lane; disclosure, written after the 42 rows and the first table, before landing; no row changes, no rule changes)
+- Registration slip, disclosed (SDN-AP review, record experiments-sdn-ap-cryosat2-secular-wording-20261106): the registration calls i 86
+  the mirror of 92 about the pole. The mirror of 92 is 88; 86 is 4 degrees on the other side of the pole and lies further from it than 92
+  does. The i 86 reading is therefore not a symmetry test; it is a second inclination beside 98. No new cell is flown and the registration
+  text above stands as written; the reading below is worded for what the cell is.
 - Question 1 as registered: the base reproduces the landed re-flight exactly (T1 -14.22 [-27.64, -0.80], R0 9.50). Inclination carries it
   (one cell): i 86 moves T1 to +8.91 [-4.96, 22.77], D 23.13 m/day [3.83, 42.42]; i 98 reads removed within the spread (-7.01 [-26.11,
-  12.09]). Both inclination cells move T1 toward or through zero while the four mean-motion shifts (-12.62, -14.84, -10.63, -7.58) and the
-  two arcs (-12.89 at 2 days, -16.97 [-23.70, -10.24] at 6 days: a tighter interval, the mismatch still there) do not; the DRAG_PRIOR
-  freedom was not used by the fit (BTERM -2.5e-26 m^2/kg, every figure byte-equal to the base). The single "moved" cell carries the
-  registered 5 per cent nominal false rate. R0 (8.2 to 9.6 m) moved in no cell: the radial bias at fixed mean motion is common to every
-  cell of this regime and is not separated by any candidate.
-- Question 2 as registered: "not separable" in all four cells, because the registered strong rule resolves nothing below 19 to 35 m/day in
-  these cells while the measured changes are 5.6 to 8.3 m/day. Stated beside it, from the same rows and without a rule change: the element
-  reading a dn of the two fitted sets (an exact difference, no estimator spread) equals the set effect to 0.1 m/day in every cell
-  (Jason-3 0.07: 4.79 against 4.84; Jason-3 0.1: 6.78 against 6.85; Ajisai 0.1: 7.23 against 7.33; Ajisai 0.15: 11.62 against 11.66),
-  and the model effect (set A flown on 0.6.4 against 0.6.3) is 2.01, 0.24, 0.98 and -6.03 m/day: the drift change is the change of the
-  fitted mean motion between the two fits, as the registered prediction stated (the 0.6.4 change is short-period only); the rate absorbs,
-  read on the element difference, not on the jackknife rule. The 6-day arc does not reduce the drift: it raises |T1| in both Jason-3 cells
-  (Jason-3 0.1: 17.82 -> 52.54 on 0.6.3 and 24.91 -> 52.50 on 0.6.4, beyond the spread) and leaves the Ajisai cells within it; the
-  DRAG_PRIOR freedom is used only in Ajisai 0.1 (BTERM 7.4e-4 on 0.6.3, 5.4e-4 m^2/kg on 0.6.4) and raises |T1| there. So the forward
-  drift is the fitted mean motion of a noise-free arc trading against the model's slow error, and neither public input reduces it.
+  12.09]). The four mean-motion shifts (-12.62, -14.84, -10.63, -7.58) and the two arcs (-12.89 at 2 days, -16.97 [-23.70, -10.24] at
+  6 days: a tighter interval, the mismatch still there) do not move it; the DRAG_PRIOR freedom was not used by the fit (BTERM -2.5e-26
+  m^2/kg, every figure byte-equal to the base). The one "moved" cell carries the registered 5 per cent nominal per-cell false rate, about
+  0.4 false "moved" readings expected over the 9 candidate cells; no mechanism is named: the reading says the inclination input moves T1
+  in one of two cells, not why, and nothing here reads as near-polar geometry causing the mismatch. R0 (8.2 to 9.6 m) moved in no cell:
+  the radial bias at fixed mean motion is common to every cell of this regime and is not separated by any candidate.
+- Question 2 as registered: "not separable" in all four cells, and that stands: the registered strong rule resolves nothing below 19 to
+  35 m/day in these cells while the measured changes are 5.6 to 8.3 m/day. Stated beside it, from the same rows and without a rule
+  change: the element reading a dn of the two fitted sets (an exact difference, no estimator spread) equals the set effect to 0.1 m/day in
+  every cell (Jason-3 0.07: 4.79 against 4.84; Jason-3 0.1: 6.78 against 6.85; Ajisai 0.1: 7.23 against 7.33; Ajisai 0.15: 11.62 against
+  11.66). The model effect (set A flown on 0.6.4 against 0.6.3) is 2.01, 0.24 and 0.98 m/day in the first three cells: there the model
+  effect is within the spread and small, the drift change is the change of the fitted mean motion between the two fits, as the registered
+  prediction stated (the 0.6.4 change is short-period only), and the rate absorbs, read on the element difference, not on the jackknife
+  rule. In Ajisai 0.15 the model effect is -6.03 m/day against a set effect of 11.66 and a net change of 5.63: the set effect is the
+  larger, the model effect is not negligible, and a short-period change can alias into a one-day slope; that cell reads "set effect the
+  larger", not "the fitted mean motion alone". The 6-day arc does not reduce the drift: it raises |T1| in both Jason-3 cells (Jason-3 0.1:
+  17.82 -> 52.54 on 0.6.3 and 24.91 -> 52.50 on 0.6.4, beyond the spread) and leaves the Ajisai cells within it; the DRAG_PRIOR freedom is
+  used only in Ajisai 0.1 (BTERM 7.4e-4 on 0.6.3, 5.4e-4 m^2/kg on 0.6.4) and raises |T1| there. So, in these vacuum fixtures, on
+  noise-free arcs, the forward drift is the fitted mean motion trading against the model's slow error, and neither public input reduces it
+  there; the reference carries no drag, so the DRAG_PRIOR arm says nothing about a fit on a real drag arc.
 
 ## Outputs and check
 `SDN_MODULES_ROOT=<the pinned root> SDNAP_064_WASM=<the -pin clone's 0.6.4 dist> SDN_AP_HEO_CACHE=<this lane's scratch> node
