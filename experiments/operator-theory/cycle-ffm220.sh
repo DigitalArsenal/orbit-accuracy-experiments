@@ -28,7 +28,8 @@ drain() { local p; for p in "${PIDS[@]}"; do wait "$p"; done; PIDS=(); }
 note() { echo "ffm220 $* $(date -u +%FT%TZ)" | tee -a "$O/run.log"; }
 score() { # root, then the score.mjs arguments after the shard
   local R=$1; shift; mkdir -p "$R/forward"
-  PIDS=(); for k in $(seq 0 11); do run "$R/forward/score-$k.log" "${NODE[@]}" $CODE/score.mjs --root "$R" --out "$R/forward/rows-$k.jsonl" --shard "$k/12" "$@"; done
+  # 48 short shards, so a pause at a shard boundary comes soon; a shard's pairs are fixed by the count, so it stays 48.
+  PIDS=(); for k in $(seq 0 47); do run "$R/forward/score-$k.log" "${NODE[@]}" $CODE/score.mjs --root "$R" --out "$R/forward/rows-$k.jsonl" --shard "$k/48" "$@"; done
   drain; note "scored $(basename "$R"): $(cat "$R"/forward/rows-*.jsonl 2>/dev/null | wc -l) pairs"
 }
 # Each phase queues its workers; truth's are waited for at the end, the fits of a store before its scoring.
