@@ -460,3 +460,20 @@ between the two builds (RMS of the difference relative to the column's RMS).
 (SPEC 12.8), on 0.6.2 and on the fixed build.
 (3) The fix lands in the same binary; acceptance: Molniya with drag fitted at or below 0.6.2's day 1 / 3 / 7 plus noise (taken as 5 %),
 every other fixture and the THEMIS fixture not worse than 0.6.2 by more than 5 %, and the end-to-end check against the pinned FFM truth.
+
+## Amendment 22 (2026-11-06, the SDN-AP session's choice (i); registered before the flag is built or measured)
+Read: (1a) the exact-grid variant fits Molniya's coefficient at 0.04462 with day 7 238.0 / 173.9 m (fixed 0.04571, 521.4 / 394.6;
+0.6.2 0.04478, 276.5 / 208.4). Design: xp_init takes an exact-grid flag (default off); a set initialized with it builds its own grid at
+its own elements, for its epoch and every schedule node, and shares none; flights and covariance keep sharing. The fitter record
+(modules-sdn-ap-fit-second-solution-robustness-20261106, lane fitfix) sets the flag for a fit's perturbed copies in fit_oem.inc; this
+record adds the flag and its consumer in tesseral.inc and xp_theory.inc and states it in SPEC 16.11, and merges the fitter's WIP ref
+(merge, never rebase) before measuring.
+Molniya set: six fixtures on the pinned truth (FFM d635a3d5, $SPW d7018d1d), drag in the truth (0.044) and fitted, at mean anomaly 10
+and argument of perigee 270 deg (the E2E's), and at argument of perigee 270 with mean anomaly 100, 190 and 280 deg (perigee phase at
+the arc's start), and argument of perigee 240 and 300 deg with mean anomaly 10 (apsidal state); each fitted (72 h) and flown 7 days
+hourly on 0.6.2 (84d50dca) and on the candidate (the fixed build with the flag set by the fitter's change).
+Rule (THEMIS's, Amendment 8): per fixture the ratio candidate / 0.6.2 of the whole-day RMS along-track and radial at days 1, 3 and 7;
+the median ratio with a window-cluster bootstrap (10,000 draws, seed 20261106, 95 % percentile interval); upper bound at or below 1.05
+for each of the six (day, component) cells. Beside it: the fit's wall (median over the six) against 0.6.2's, and the fit's peak wasm
+memory. If (i) passes: 0.6.3 = the grid + (i) + the fitter's guard E2E. If day 3 fails systematically: step (2) observability and the
+fix go to the SDN-AP session first.
