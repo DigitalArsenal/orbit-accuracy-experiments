@@ -1,0 +1,426 @@
+{
+ "registration": "experiments/operator-theory/FIT-SECOND-SOLUTION.md",
+ "published": 6312,
+ "scanned": 3873,
+ "fitted": 3816,
+ "secondSolutions": 0,
+ "lowerSameBand": [
+  {
+   "mode": "regimes",
+   "key": "GE|J003 QZS-2G|2025-10-04",
+   "arm": "AP72",
+   "ok": true,
+   "rms": 0.00520228250460584,
+   "bterm": 0.0005000000000000001,
+   "probeRms": 0.0049284616362986105,
+   "probeBterm": 0.0005000000000000001,
+   "from": "A1",
+   "second": false,
+   "lowerSameB": true,
+   "control": null,
+   "publishedRms": 0.00520228250460584,
+   "samePublished": true
+  },
+  {
+   "mode": "wa",
+   "key": "WA|GALAXY 30 (G-30)|2026-09-20",
+   "arm": "AP24",
+   "ok": true,
+   "rms": 0.021078280218668814,
+   "bterm": 0.010000000000000004,
+   "probeRms": 0.020550145546277782,
+   "probeBterm": 0.010000000000000004,
+   "from": "A1",
+   "second": false,
+   "lowerSameB": true,
+   "control": true,
+   "publishedRms": 0.021078280218668814,
+   "samePublished": true
+  }
+ ],
+ "samePublishedFit": {
+  "compared": 3816,
+  "equal": 3802
+ },
+ "control": {
+  "compared": 584,
+  "equal": 584
+ },
+ "byMode": {
+  "truth": {
+   "published": 1888,
+   "scanned": 1888,
+   "fitted": 1888,
+   "second": 0
+  },
+  "truth2": {
+   "published": 3600,
+   "scanned": 1161,
+   "fitted": 1161,
+   "second": 0
+  },
+  "regimes": {
+   "published": 630,
+   "scanned": 630,
+   "fitted": 585,
+   "second": 0
+  },
+  "hx": {
+   "published": 26,
+   "scanned": 26,
+   "fitted": 26,
+   "second": 0
+  },
+  "wa": {
+   "published": 168,
+   "scanned": 168,
+   "fitted": 156,
+   "second": 0
+  }
+ },
+ "hits": [],
+ "failed": [
+  {
+   "mode": "regimes",
+   "key": "LS|STARLETTE|2025-10-25",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|WESTPAC|2025-10-10",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARETS|2025-11-29",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARETS|2025-11-29",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C018 BDS-2G|2025-10-12",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C229 BDS-3G|2025-10-10",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STARLETTE|2025-11-29",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STARLETTE|2025-11-29",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STELLA|2025-11-29",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STELLA|2025-11-29",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|WESTPAC|2025-11-29",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|WESTPAC|2025-11-29",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C011 BDS-2G|2025-10-08",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STELLA|2025-11-14",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STELLA|2025-12-04",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STELLA|2025-12-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|WESTPAC|2025-11-14",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|WESTPAC|2025-11-19",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARES|2025-10-25",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARES|2025-11-14",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARETS|2025-11-14",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C016 BDS-2G|2025-10-08",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "DO|SENTINEL-6B|2025-11-19",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "DO|SENTINEL-6B|2025-11-19",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C006 BDS-2G|2025-10-06",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C231 BDS-3G|2025-10-06",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STELLA|2025-11-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|WESTPAC|2025-10-25",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARES|2025-12-04",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C231 BDS-3G|2025-10-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|AJISAI|2025-10-25",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|AJISAI|2025-10-25",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|AJISAI|2025-11-29",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|AJISAI|2025-11-29",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|STELLA|2025-10-25",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARES|2025-11-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARES|2025-11-29",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARES|2025-11-29",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "LS|LARETS|2025-10-25",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "DO|SENTINEL-6B|2025-11-24",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "DO|SENTINEL-6B|2025-11-24",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GD|LARES-2|2025-11-29",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C006 BDS-2G|2025-10-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C011 BDS-2G|2025-10-10",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "regimes",
+   "key": "GE|C016 BDS-2G|2025-10-06",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-10-24",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-10-18",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-10-10",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-10-16",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-10-20",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|SES-15|2026-10-08",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-09-08",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-09-08",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-09-10",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-09-16",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-10-22",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "wa",
+   "key": "WA|EUTELSAT 117 WEST B|2026-10-22",
+   "arm": "AP72",
+   "error": "coverage"
+  }
+ ]
+}

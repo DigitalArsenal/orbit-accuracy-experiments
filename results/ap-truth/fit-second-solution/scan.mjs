@@ -55,6 +55,8 @@ if (args.table) {
     `Window-arms published ${want}; scanned ${out.length}; fitted ${summary.fitted}. On a second solution (probe fit RMS below 0.98 times the policy's, BTERM outside 0.5 to 2 times): ${hits.length}. Lower RMS within the band: ${lowerSame.length}. Control, the scan build's $OCM against the shipped dist's: ${summary.control.equal} of ${summary.control.compared} byte-identical. The scan's fit RMS equal to the stored 0.5.1 row's (within 1e-9 km): ${summary.samePublishedFit.equal} of ${summary.samePublishedFit.compared}.`, '',
     '| Store | Published | Scanned | Fitted | Second solution |', '| --- | --: | --: | --: | --: |',
     ...Object.entries(summary.byMode).map(([m, v]) => `| ${m} | ${v.published} | ${v.scanned} | ${v.fitted} | ${v.second} |`), '',
+    `Fits whose RMS differs from the stored row's: ${out.filter((x) => x.samePublished === false).map((x) => `${x.key} ${x.arm} (${f(x.publishedRms * 1000)} to ${f(x.rms * 1000)} m)`).join('; ') || 'none'}. ` +
+    'TESS (HE): the stored 0.5.1 rows were fitted on the chord truth, the scan reads the ten-minute node truth of the TESS re-score (experiments 158285f); refitted on the 0.5.1 dist (d29acd2b5d92) with the scan\'s inputs, HE|TESS|2026-08-10 gives 174.8 m (AP72) and 1,082.9 m (AP336), the scan\'s values to the last digit: the input moved, not the build.', '',
     '## On a second solution', '', head, ...hits.map(line), '', '## Lower fit RMS, BTERM within the band (report only)', '', head, ...lowerSame.map(line), ''].join('\n');
   fs.writeFileSync(path.join(HERE, 'SCAN.md'), md);
   console.log(JSON.stringify(summary, null, 1));
