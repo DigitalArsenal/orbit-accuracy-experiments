@@ -130,6 +130,33 @@ Expectation written from the landed rows before flying (the rows decide): the 2 
 way), and its Galileo / GPS ratio 1.59 is near the a^4 ratio 1.54 of the lunisolar short-period scaling; so P1 is expected for the 2 n
 group at small e, P2 for the e-growing part.
 
+## Amendment 1 (2026-11-06 13:05Z, this lane; committed before any row of the table)
+First pass (23 flown cells, 5 Etalon reads; rows kept apart in results/ap-truth/half-day-resonance/first-pass-two-fits/rows-*.jsonl,
+entering no table; first row 13:00:28Z, after the registration): the registered arm Z is not readable. Measured: E_Z's in-arc RMS 46 to
+804 m with an unexplained share of 32 to 251 m; S's in-arc secular share 626 to 5,596 m; the mixed share's jackknife SE 11 to 76 m on
+E_Z and 11 to 74 m on D; every cell read "shared (intervals overlap)"; E_Z's forward RMS 50 to 2,720 m. Arm F reproduced the landed
+mixed shares to 0.00 m in-arc. The cause, read from the numbers and the source: a reference without tesserals lacks the class's resonant
+drift (S's secular share is that drift, kilometers over 6 days), while the module at tesseral cap 0 still integrates the SGP4XP class
+terms (src/xp_theory.inc 1559 to 1566), so the arm Z fit absorbs a drift the truth does not have into distorted elements, and the
+series carry a long-period content the fixed estimator's trend does not hold. No estimator changes; the arms change, as follows.
+1. No second fit. AP_F0 is the arm F fitted set flown by the module with MAXIMUM_TESSERAL_DEGREE 0 (the all-regimes A flight, ocm.mjs
+   repackOcm) on the arc's and the forward day's epochs; Ref_Z is the zonal-only reference (EGM96 degree 31 order 0, Sun and Moon) from
+   the same initial state, as registered. Series, inertial differences projected in RTN at Ref_F: E_F = AP_F - Ref_F (whole);
+   T = AP_F - AP_F0 (the module's own tesseral content: its short-period tables and its class and tail rates less the SGP4XP class
+   rates); M = AP_F0 - Ref_Z (the m = 0 member's miss: the zonal and lunisolar model at the fitted elements against the zonal-only
+   truth, plus the class-rate drift against none); S = Ref_F - Ref_Z (the reference's tesseral signal); D = E_F - M = T - S (the
+   tesseral members' miss). E_F = M + D exactly.
+2. Legs. (a) The 6-day in-arc leg (289 samples, blocks of one day, quadratic trend) for E_F and T only, both free of the divergence
+   (T's long-period content is the AP-less-SGP4XP class-rate difference, reported as its secular share). (b) The first-day leg for
+   E_F, M, D, S and T: the arc's first 1.5 days (73 samples at 30 minutes, 3 revolutions in these regimes), blocks of one revolution
+   (3 blocks: the registered interval), the estimator's trend for a window under 5 days (constant and linear); there the divergence is
+   t^2-small (S's secular share over the window is reported as the measure) and its projection on a k n group is below 3 % of it at
+   k = 1 and 1 % at k = 2 (the projection of t^2 on cos 2 pi f t over the window, arithmetic). Self-consistency: E_F's first-day k n
+   groups against its 6-day ones, reported per cell. (c) The forward day as registered (2 blocks, no interval).
+3. The reading rule is unchanged and read on the first-day leg (m0 = M's mixed share, tes = D's mixed share, intervals from the 3
+   revolution blocks); the 6-day leg adds the module-side statement: T's k n group amplitudes beside E_F's.
+4. --check adds: this amendment's commit precedes the first row of the table; the first-pass rows stay in their folder and enter no table.
+
 ## Outputs and check
 `SDN_MODULES_ROOT=<root> node experiments/operator-theory/half-day-resonance.mjs --run [--shard k/n]` (at most 4) writes
 results/ap-truth/half-day-resonance/rows-<shard>.jsonl: one row per cell with both arms' fitted elements, the four attributions in-arc and

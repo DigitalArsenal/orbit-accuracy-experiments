@@ -1,7 +1,8 @@
-// HALF-DAY-RESONANCE.md: the half-day class's mixed (2:1 resonant) share by family (report only). Per cell the full arm (the landed
-// frame re-flown), the zonal-only arm (reference EGM96 31x0 with the Sun and Moon against the module at tesseral cap 0), the difference
-// series D = E_F - E_Z (the m > 0 members' miss) and the reference's own tesseral signal S = Ref_F - Ref_Z, each attributed with the
-// all-regimes record's exported attribute() unchanged (Amendment 7: the estimator is fixed).
+// HALF-DAY-RESONANCE.md (with Amendment 1): the half-day class's mixed (2:1 resonant) share by family (report only). Per cell the landed
+// frame re-flown (E_F), the fitted set flown again at tesseral cap 0 (AP_F0), a zonal-only reference (Ref_Z), and the series T = AP_F - AP_F0
+// (the module's own tesseral content), M = AP_F0 - Ref_Z (the m = 0 member's miss), S = Ref_F - Ref_Z (the reference's tesseral signal) and
+// D = E_F - M (the tesseral members' miss), each attributed with the all-regimes record's exported attribute() unchanged (Amendment 7:
+// the estimator is fixed).
 //   SDN_MODULES_ROOT=<root> node half-day-resonance.mjs --run [--shard k/n]     node half-day-resonance.mjs --table     --check
 // Every state comes from a module (propagator/sdn-ap through propagator/sdn-ap/test/lib/heo-model-truth.mjs and ocm.mjs; the reference
 // from propagator/ffm inside that harness); this file moves bytes and does arithmetic (differences of vectors, RTN projection through the
@@ -16,6 +17,7 @@ import { pathToFileURL } from 'node:url';
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const HERE = path.dirname(new URL(import.meta.url).pathname), REPO = path.resolve(HERE, '../..');
 const RESULTS = path.join(REPO, 'results/ap-truth/half-day-resonance');
+const FIRST_PASS = path.join(RESULTS, 'first-pass-two-fits');
 const LANDED = path.join(REPO, 'results/ap-truth/tesseral-all-regimes');
 const REGISTRATION = 'experiments/operator-theory/HALF-DAY-RESONANCE.md';
 export const PIN = {
@@ -29,8 +31,9 @@ const RUNNER = sha256(fs.readFileSync(new URL(import.meta.url)));
 const argvSave = process.argv; process.argv = process.argv.slice(0, 2);
 const AR = await import(pathToFileURL(path.join(HERE, 'tesseral-all-regimes.mjs')).href);
 process.argv = argvSave;
-const DAY = 86400000, THETA = 1.00273781;
-export const ARMS = { F: { field: [31, 31], caps: [31, 20] }, Z: { field: [31, 0], caps: [0, 20] } };
+const DAY = 86400000, THETA = 1.00273781, FIRST_DAYS = 1.5;
+export const ARMS = { F: { field: [31, 31], caps: [31, 20] }, Z: { field: [31, 0], caps: [31, 20], flown: 'the arm F set at MAXIMUM_TESSERAL_DEGREE 0 (no second fit; Amendment 1)' } };
+export const SERIES = ['EF', 'T', 'M', 'S', 'D'];
 /** The cells (HALF-DAY-RESONANCE.md): flown regimes and their e grid in the registered order; Etalon is read from the landed rows. */
 export const FLOWN = { GPS: [0.001, 0.1, 0.2, 0.01, 0.05], Galileo: [0.001, 0.1, 0.2, 0.01, 0.05], GLONASS: [0.001, 0.1, 0.2, 0.01, 0.05], Molniya: [0.001, 0.1, 0.2, 0.01, 0.05], GTO: [0.001, 0.1, 0.2] };
 export const READ = { Etalon: [0.001, 0.01, 0.05, 0.1, 0.2] };
@@ -53,10 +56,10 @@ function ladders(attr) {
   return { even: [1, 2, 3, 4].map((k) => { const g = find(`(0,${k})`); return { k, cyclesPerDay: g?.cyclesPerDay ?? null, kind: g?.kind ?? null, labels: g?.labels ?? null, amplitudeM: g?.amplitudeM ?? null }; }), deep: Object.fromEntries(['(2,1)', '(4,2)'].map((l) => { const g = find(l); return [l, g ? { cyclesPerDay: g.cyclesPerDay, kind: g.kind, labels: g.labels, amplitudeM: g.amplitudeM } : null]; })) };
 }
 const mixedShare = (attr) => attr.shares.mixed;
-/** The reading rule (HALF-DAY-RESONANCE.md): in-arc, m0 = E_Z mixed, tes = D mixed. */
-export function reading(EF, EZ, D) {
-  if (!(EF.conditioned && EZ.conditioned && D.conditioned)) return 'withheld (estimator)';
-  const m0 = mixedShare(EZ), tes = mixedShare(D);
+/** The reading rule (HALF-DAY-RESONANCE.md): m0 = M's mixed share, tes = D's mixed share, on the first-day leg (Amendment 1). */
+export function reading(EF, M, D) {
+  if (!(EF.conditioned && M.conditioned && D.conditioned)) return 'withheld (estimator)';
+  const m0 = mixedShare(M), tes = mixedShare(D);
   if (!m0.lo || !tes.lo) return 'undecided (no interval)';
   if (tes.hi.rmsM < m0.lo.rmsM) return 'm = 0 member dominant';
   if (m0.hi.rmsM < tes.lo.rmsM) return 'tesseral members dominant';
@@ -92,6 +95,7 @@ if (args.run) {
   };
   const stamp = () => ({ createdUtc: new Date().toISOString(), runner: RUNNER, modulesCommit: PIN.modulesCommit, sdnAp: PIN.sdnAp, ffm: PIN.ffm, shard: SHARD });
   const sub = (a, b) => a.map((x, k) => x - b[k]);
+  const linesOf = (oemPayload) => OEM.getRootAsOEM(new fb.ByteBuffer(oemPayload)).unpack().EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES;
   for (const c of list) {
     const t0 = Date.now();
     const land = landed.find((r) => r.key === c.key);
@@ -106,54 +110,61 @@ if (args.run) {
     try {
       const gridMinutes = AR.gridSeconds(c.n) / 60;
       const base = { n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: 0, drag: false, thirdBody: true, fitDays: c.arcDays, hourly: true, gridMinutes, forecastDays: 1, referenceTolerance: 1e-12, referenceMaxStep: 300, modulePath: apWasm };
-      const arm = async (name) => {
-        const fixture = { ...base, name: `${c.key}|${name}`, field: ARMS[name].field, forces: ARMS[name].caps };
-        const r = await runModelTruth(fixture);
-        const set = Buffer.from(r.omm, 'base64');
-        const arcOem = OEM.getRootAsOEM(new fb.ByteBuffer((await runModelTruth({ ...fixture, fitInput: true })).ephemeris.payload)).unpack().EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES;
-        const arcFlown = await fly(set, arcOem.map((l) => l.EPOCH));
-        return { fixture, r, arcOem, arcFlown, fwdFlown: r.flown.map((s) => s.slice(0, 3)), fwdRef: r.referenceStates };
-      };
-      const F = await arm('F'), Z = await arm('Z');
-      row.slipCyclesPerDay = slip(F.r.fitted.n);
-      row.fitted = { F: F.r.fitted, Z: Z.r.fitted };
-      row.initialGcrfKm = F.r.fixture.initialGcrfKm;
-      // In-arc (6 days, 30-minute samples): the four series in RTN at Ref_F (E_Z at Ref_Z), from the inertial vectors.
-      const arcTau = F.arcOem.map((l) => (Date.parse(`${l.EPOCH}Z`) - Date.parse(`${F.arcOem[0].EPOCH}Z`)) / DAY);
-      const refF = F.arcOem.map((l) => ({ p: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] })), refZ = Z.arcOem.map((l) => ({ p: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] }));
-      if (Z.arcOem.some((l, k) => l.EPOCH !== F.arcOem[k].EPOCH)) throw new Error('the two arms sample different arc epochs');
-      const series = (n, apF, rF, apZ, rZ) => {
-        const EF = [], EZ = [], D = [], S = [];
-        for (let k = 0; k < n; k += 1) {
-          const eF = sub(apF[k], rF[k].p), eZ = sub(apZ[k], rZ[k].p);
-          EF.push(AR.rtnOf(eF, rF[k].p, rF[k].v)); EZ.push(AR.rtnOf(eZ, rZ[k].p, rZ[k].v));
-          D.push(AR.rtnOf(sub(eF, eZ), rF[k].p, rF[k].v)); S.push(AR.rtnOf(sub(rF[k].p, rZ[k].p), rF[k].p, rF[k].v));
+      const fixF = { ...base, name: `${c.key}|F`, field: ARMS.F.field, forces: ARMS.F.caps };
+      const F = await runModelTruth(fixF);
+      const setF = Buffer.from(F.omm, 'base64');
+      const set0 = O.repackOcm(setF, (t) => { t.PERTURBATIONS.MAXIMUM_TESSERAL_DEGREE = 0; });
+      const arcF = linesOf((await runModelTruth({ ...fixF, fitInput: true })).ephemeris.payload);
+      const epochs = arcF.map((l) => l.EPOCH);
+      const apF = await fly(setF, epochs), ap0 = await fly(set0, epochs);
+      const fixZ = { ...base, name: `${c.key}|Z`, field: ARMS.Z.field, forces: ARMS.Z.caps, omm: set0 };
+      const Zr = await runModelTruth(fixZ);
+      const arcZ = linesOf((await runModelTruth({ ...fixZ, fitInput: true })).ephemeris.payload);
+      if (arcZ.some((l, k) => l.EPOCH !== arcF[k].EPOCH)) throw new Error('the two references sample different arc epochs');
+      row.slipCyclesPerDay = slip(F.fitted.n);
+      row.fitted = F.fitted;
+      row.initialGcrfKm = F.fixture.initialGcrfKm;
+      const nFit = F.fitted.n;
+      // The five series from inertial vectors (km), projected in RTN at Ref_F (m).
+      const series = (count, APF, AP0, RF, RZ) => {
+        const out = { EF: [], T: [], M: [], S: [], D: [] };
+        for (let k = 0; k < count; k += 1) {
+          const rtn = (d) => AR.rtnOf(d, RF[k].p, RF[k].v);
+          const eF = sub(APF[k], RF[k].p), m = sub(AP0[k], RZ[k].p);
+          out.EF.push(rtn(eF)); out.T.push(rtn(sub(APF[k], AP0[k]))); out.M.push(rtn(m)); out.S.push(rtn(sub(RF[k].p, RZ[k].p))); out.D.push(rtn(sub(eF, m)));
         }
-        return { EF, EZ, D, S };
+        return out;
       };
-      const arc = series(F.arcOem.length, F.arcFlown, refF, Z.arcFlown, refZ);
-      const nFit = F.r.fitted.n;
-      const leg = (ser, tau, windowDays, blockDays) => Object.fromEntries(Object.entries(ser).map(([name, s]) => { const a = AR.attribute(tau, s, nFit, windowDays, blockDays); return [name, { rmsM: rms(s.map((p) => Math.hypot(...p))), maxM: Math.max(...s.map((p) => Math.hypot(...p))), ...a, ladders: ladders(a) }]; }));
-      const inArc = { samples: arc.EF.length, ...leg(arc, arcTau, c.arcDays, 1) };
-      // Forward day: 64 samples a revolution.
-      const fwdRefF = F.fwdRef.map((s) => ({ p: s.position, v: s.velocity })), fwdRefZ = Z.fwdRef.map((s) => ({ p: s.position, v: s.velocity }));
-      const tau = F.r.profile.map((p) => p.h / 24);
-      const fwd = series(F.fwdFlown.length, F.fwdFlown, fwdRefF, Z.fwdFlown, fwdRefZ);
-      const forward = { samples: fwd.EF.length, gridSeconds: AR.gridSeconds(c.n), ...leg(fwd, tau, 1, 1 / nFit) };
-      const shares = (L) => ({ whole: mixedShare(L.EF), m0: mixedShare(L.EZ), tes: mixedShare(L.D), signal: mixedShare(L.S), secularEF: L.EF.shares.secular, secularD: L.D.shares.secular, tesseralEF: L.EF.shares.tesseral });
-      Object.assign(row, { flown: true, inArc, forward, shares: { inArc: shares(inArc), forward: shares(forward) }, reading: { inArc: reading(inArc.EF, inArc.EZ, inArc.D), forward: reading(forward.EF, forward.EZ, forward.D) },
+      const refOf = (lines) => lines.map((l) => ({ p: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] }));
+      const arc = series(arcF.length, apF, ap0, refOf(arcF), refOf(arcZ));
+      const arcTau = arcF.map((l) => (Date.parse(`${l.EPOCH}Z`) - Date.parse(`${arcF[0].EPOCH}Z`)) / DAY);
+      const attr = (s, tau, windowDays, blockDays) => { const a = AR.attribute(tau, s, nFit, windowDays, blockDays); return { rmsM: rms(s.map((p) => Math.hypot(...p))), maxM: Math.max(...s.map((p) => Math.hypot(...p))), ...a, ladders: ladders(a) }; };
+      // (a) the 6-day leg: E_F and T. (b) the first-day leg: the arc's first 1.5 days, blocks of one revolution. (c) forward.
+      const inArc = { samples: arc.EF.length, windowDays: c.arcDays, blockDays: 1, EF: attr(arc.EF, arcTau, c.arcDays, 1), T: attr(arc.T, arcTau, c.arcDays, 1) };
+      const firstIdx = arcTau.map((t, k) => (t <= FIRST_DAYS + 1e-9 ? k : -1)).filter((k) => k >= 0);
+      const fTau = firstIdx.map((k) => arcTau[k]);
+      const firstDay = { samples: firstIdx.length, windowDays: FIRST_DAYS, blockDays: 1 / nFit, ...Object.fromEntries(SERIES.map((s) => [s, attr(firstIdx.map((k) => arc[s][k]), fTau, FIRST_DAYS, 1 / nFit)])) };
+      const fwdRefF = F.referenceStates.map((s) => ({ p: s.position, v: s.velocity })), fwdRefZ = Zr.referenceStates.map((s) => ({ p: s.position, v: s.velocity }));
+      const fwd = series(F.flown.length, F.flown.map((s) => s.slice(0, 3)), Zr.flown.map((s) => s.slice(0, 3)), fwdRefF, fwdRefZ);
+      const tau = F.profile.map((p) => p.h / 24);
+      const forward = { samples: fwd.EF.length, gridSeconds: AR.gridSeconds(c.n), windowDays: 1, blockDays: 1 / nFit, ...Object.fromEntries(SERIES.map((s) => [s, attr(fwd[s], tau, 1, 1 / nFit)])) };
+      const shares = (L) => ({ whole: mixedShare(L.EF), model: mixedShare(L.T), m0: L.M ? mixedShare(L.M) : null, tes: L.D ? mixedShare(L.D) : null, signal: L.S ? mixedShare(L.S) : null, secularEF: L.EF.shares.secular, secularT: L.T.shares.secular, secularS: L.S?.shares.secular ?? null, tesseralEF: L.EF.shares.tesseral });
+      const consistency = inArc.EF.ladders.even.map((g, k) => ({ k: g.k, sixDayM: g.amplitudeM, firstDayM: firstDay.EF.ladders.even[k].amplitudeM }));
+      Object.assign(row, { flown: true, inArc, firstDay, forward, shares: { inArc: shares(inArc), firstDay: shares(firstDay), forward: shares(forward) }, consistency,
+        reading: { firstDay: reading(firstDay.EF, firstDay.M, firstDay.D), forward: reading(forward.EF, forward.M, forward.D) },
         reproduction: land ? { inArcMixedM: inArc.EF.shares.mixed.rmsM - land.inArc.shares.mixed.rmsM, forwardMixedM: forward.EF.shares.mixed.rmsM - land.forward.shares.mixed.rmsM } : null,
-        reference: `propagator/ffm ${PIN.ffm.version}: EGM96 31x31 (F) and 31x0 (Z), Sun and Moon point masses (DE440), no drag, SRP, tides, relativity or Earth radiation; RK78 rel 1e-12 abs 1e-9, steps 0.01 to 300 s; zero EOP`,
-        referenceIntegrator: F.r.fixture.referenceIntegrator, kernelSha256: F.r.kernelSha256 });
+        reference: `propagator/ffm ${PIN.ffm.version}: EGM96 31x31 (Ref_F) and 31x0 (Ref_Z) from the same initial state, Sun and Moon point masses (DE440), no drag, SRP, tides, relativity or Earth radiation; RK78 rel 1e-12 abs 1e-9, steps 0.01 to 300 s; zero EOP`,
+        referenceIntegrator: F.fixture.referenceIntegrator, kernelSha256: F.kernelSha256 });
       if (c.convergence) {
-        const r2 = await runModelTruth({ ...Z.fixture, referenceTolerance: 1e-13, referenceMaxStep: 150 });
-        row.convergenceZMaxM = Math.max(...Z.fwdRef.map((s, k) => Math.hypot(...s.position.map((x, ax) => (x - r2.referenceStates[k].position[ax]) * 1000))));
+        const r2 = await runModelTruth({ ...fixZ, referenceTolerance: 1e-13, referenceMaxStep: 150 });
+        row.convergenceZMaxM = Math.max(...Zr.referenceStates.map((s, k) => Math.hypot(...s.position.map((x, ax) => (x - r2.referenceStates[k].position[ax]) * 1000))));
       }
       row.seconds = (Date.now() - t0) / 1000;
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
-      const sh = (s) => `whole ${f(s.whole.rmsM)} [${f(s.whole.lo?.rmsM)},${f(s.whole.hi?.rmsM)}] m0 ${f(s.m0.rmsM)} [${f(s.m0.lo?.rmsM)},${f(s.m0.hi?.rmsM)}] tes ${f(s.tes.rmsM)} [${f(s.tes.lo?.rmsM)},${f(s.tes.hi?.rmsM)}] signal ${f(s.signal.rmsM)}`;
-      const lad = (L) => L.EF.ladders.even.map((g, k) => `k${g.k} EF ${f(g.amplitudeM)} EZ ${f(L.EZ.ladders.even[k].amplitudeM)} D ${f(L.D.ladders.even[k].amplitudeM)} S ${f(L.S.ladders.even[k].amplitudeM)}`).join('; ');
-      console.log(c.key, row.reading.inArc, `| in-arc ${sh(row.shares.inArc)} | ${lad(inArc)} | fwd ${sh(row.shares.forward)} | fit n F ${F.r.fitted.n.toFixed(6)} Z ${Z.r.fitted.n.toFixed(6)} | repro ${f(row.reproduction?.inArcMixedM)}/${f(row.reproduction?.forwardMixedM)}`, row.convergenceZMaxM !== undefined ? `convZ ${row.convergenceZMaxM.toExponential(1)}` : '', `${row.seconds.toFixed(0)} s`);
+      const iv = (s) => (s ? `${f(s.rmsM)} [${f(s.lo?.rmsM)},${f(s.hi?.rmsM)}]` : '-');
+      const sh = (s) => `whole ${iv(s.whole)} m0 ${iv(s.m0)} tes ${iv(s.tes)} model ${iv(s.model)} signal ${iv(s.signal)} secS ${f(s.secularS?.rmsM)}`;
+      const lad = (L) => L.EF.ladders.even.map((g, k) => `k${g.k} EF ${f(g.amplitudeM)} T ${f(L.T.ladders.even[k].amplitudeM)}${L.M ? ` M ${f(L.M.ladders.even[k].amplitudeM)} D ${f(L.D.ladders.even[k].amplitudeM)} S ${f(L.S.ladders.even[k].amplitudeM)}` : ''}`).join('; ');
+      console.log(c.key, row.reading.firstDay, `| first-day ${sh(row.shares.firstDay)} | ${lad(firstDay)} | 6-day ${lad(inArc)} | fwd ${sh(row.shares.forward)} | repro ${f(row.reproduction?.inArcMixedM)}/${f(row.reproduction?.forwardMixedM)}`, row.convergenceZMaxM !== undefined ? `convZ ${row.convergenceZMaxM.toExponential(1)}` : '', `${row.seconds.toFixed(0)} s`);
     } catch (error) {
       row.flown = false; row.error = String(error?.message ?? error).slice(0, 400); row.seconds = (Date.now() - t0) / 1000;
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
@@ -182,48 +193,53 @@ export function table(outDir = RESULTS) {
   const perRegime = regimes.map((name) => {
     const cs = all.filter((c) => c.regime === name).map((c) => byKey.get(c.key) ?? { ...c, state: 'unmeasured' }).sort((a, b) => a.e - b.e);
     const fl = cs.filter((r) => r.flown);
-    const readings = fl.map((r) => r.reading.inArc);
+    const readings = fl.map((r) => r.reading.firstDay);
     const count = (s) => readings.filter((x) => x === s).length;
-    const deep = fl.length ? { inArcEF: fl.map((r) => ({ e: r.e, '(2,1)': r.inArc.EF.ladders.deep['(2,1)'], '(4,2)': r.inArc.EF.ladders.deep['(4,2)'] })), inArcS: fl.map((r) => ({ e: r.e, '(2,1)': r.inArc.S.ladders.deep['(2,1)'], '(4,2)': r.inArc.S.ladders.deep['(4,2)'] })), secularEF: fl.map((r) => ({ e: r.e, rmsM: r.inArc.EF.shares.secular.rmsM, lo: r.inArc.EF.shares.secular.lo?.rmsM, hi: r.inArc.EF.shares.secular.hi?.rmsM })) } : null;
+    const deep = fl.length ? { inArcEF: fl.map((r) => ({ e: r.e, '(2,1)': r.inArc.EF.ladders.deep['(2,1)'], '(4,2)': r.inArc.EF.ladders.deep['(4,2)'] })), inArcT: fl.map((r) => ({ e: r.e, '(2,1)': r.inArc.T.ladders.deep['(2,1)'], '(4,2)': r.inArc.T.ladders.deep['(4,2)'] })), secularEF: fl.map((r) => ({ e: r.e, rmsM: r.inArc.EF.shares.secular.rmsM, lo: r.inArc.EF.shares.secular.lo?.rmsM, hi: r.inArc.EF.shares.secular.hi?.rmsM })) } : null;
     const slip_ = fl[0]?.slipCyclesPerDay ?? (name === 'Etalon' ? slip(cs.find((r) => r.landed)?.landed?.fitted?.n ?? NaN) : null);
     const separable = Number.isFinite(slip_) ? Math.abs(slip_) >= 1.5 / (cs[0]?.arcDays ?? 6) : null;
     return {
       regime: name, arcDays: cs[0]?.arcDays, slipCyclesPerDay: slip_, deepPeriodDays: Number.isFinite(slip_) && slip_ !== 0 ? 1 / Math.abs(slip_) : null, deepSeparableInArc: separable,
-      cells: cs.map((r) => ({ e: r.e, state: r.flown ? 'flown' : r.read ? 'read (landed)' : r.error ? `error: ${r.error}` : 'unmeasured', reading: r.reading ?? null, fitted: r.fitted ?? null, shares: r.shares ?? null, landed: r.landed ? { inArcMixed: r.landed.inArcMixed, forwardMixed: r.landed.forwardMixed, verdict: r.landed.verdict } : null, reproduction: r.reproduction ?? null, ladders: r.flown ? { inArc: ['EF', 'EZ', 'D', 'S'].map((a) => ({ arm: a, even: r.inArc[a].ladders.even })), forward: ['EF', 'EZ', 'D', 'S'].map((a) => ({ arm: a, even: r.forward[a].ladders.even })) } : null, conditioned: r.flown ? { inArc: ['EF', 'EZ', 'D', 'S'].map((a) => r.inArc[a].conditioned), forward: ['EF', 'EZ', 'D', 'S'].map((a) => r.forward[a].conditioned) } : null, convergenceZMaxM: r.convergenceZMaxM, createdUtc: r.createdUtc })),
-      readings: { 'm = 0 member dominant': count('m = 0 member dominant'), 'tesseral members dominant': count('tesseral members dominant'), 'shared (intervals overlap)': count('shared (intervals overlap)'), withheld: count('withheld (estimator)') },
-      slopes: fl.length ? { tesInArc: slope(fl.map((r) => [r.e, r.shares.inArc.tes.rmsM])), m0InArc: slope(fl.map((r) => [r.e, r.shares.inArc.m0.rmsM])), wholeInArc: slope(fl.map((r) => [r.e, r.shares.inArc.whole.rmsM])), signalInArc: slope(fl.map((r) => [r.e, r.shares.inArc.signal.rmsM])) } : null,
+      cells: cs.map((r) => ({ e: r.e, state: r.flown ? 'flown' : r.read ? 'read (landed)' : r.error ? `error: ${r.error}` : 'unmeasured', reading: r.reading ?? null, fitted: r.fitted ?? null, shares: r.shares ?? null, consistency: r.consistency ?? null, landed: r.landed ? { inArcMixed: r.landed.inArcMixed, forwardMixed: r.landed.forwardMixed, verdict: r.landed.verdict } : null, reproduction: r.reproduction ?? null,
+        ladders: r.flown ? { inArc: ['EF', 'T'].map((a) => ({ arm: a, even: r.inArc[a].ladders.even })), firstDay: SERIES.map((a) => ({ arm: a, even: r.firstDay[a].ladders.even })), forward: SERIES.map((a) => ({ arm: a, even: r.forward[a].ladders.even })) } : null,
+        conditioned: r.flown ? { inArc: ['EF', 'T'].map((a) => r.inArc[a].conditioned), firstDay: SERIES.map((a) => r.firstDay[a].conditioned), forward: SERIES.map((a) => r.forward[a].conditioned) } : null, convergenceZMaxM: r.convergenceZMaxM, createdUtc: r.createdUtc })),
+      readings: { 'm = 0 member dominant': count('m = 0 member dominant'), 'tesseral members dominant': count('tesseral members dominant'), 'shared (intervals overlap)': count('shared (intervals overlap)'), withheld: count('withheld (estimator)'), 'undecided (no interval)': count('undecided (no interval)') },
+      slopes: fl.length ? { tesFirstDay: slope(fl.map((r) => [r.e, r.shares.firstDay.tes.rmsM])), m0FirstDay: slope(fl.map((r) => [r.e, r.shares.firstDay.m0.rmsM])), wholeInArc: slope(fl.map((r) => [r.e, r.shares.inArc.whole.rmsM])), modelInArc: slope(fl.map((r) => [r.e, r.shares.inArc.model.rmsM])), signalFirstDay: slope(fl.map((r) => [r.e, r.shares.firstDay.signal.rmsM])) } : null,
       deep,
     };
   });
-  // P1 to P3 per regime (the registered reading rule).
+  // P1 to P3 per regime (the registered reading rule, Amendment 1 legs).
   const findings = perRegime.map((R) => {
     const fl = R.cells.filter((c) => c.state === 'flown');
     if (!fl.length) return { regime: R.regime, P1: R.regime === 'Etalon' ? 'read from GLONASS (its landed rows equal GLONASS to 0.01 m)' : 'unmeasured', P2: '-', P3: '-' };
     const small = fl.filter((c) => c.e <= 0.01), large = fl.filter((c) => c.e >= 0.1);
-    const summar = (cs) => cs.map((c) => `e ${c.e}: ${c.reading.inArc} (m0 ${f(c.shares.inArc.m0.rmsM)}, tes ${f(c.shares.inArc.tes.rmsM)}, whole ${f(c.shares.inArc.whole.rmsM)} m)`).join('; ');
+    const summar = (cs) => cs.map((c) => `e ${c.e}: ${c.reading.firstDay} (first-day m0 ${iv(c.shares.firstDay.m0)}, tes ${iv(c.shares.firstDay.tes)}, whole ${iv(c.shares.firstDay.whole)}, signal ${f(c.shares.firstDay.signal.rmsM)} m; 6-day k = 2 group E_F ${f(c.ladders.inArc[0].even[1].amplitudeM)} m, module content T ${f(c.ladders.inArc[1].even[1].amplitudeM)} m)`).join('; ');
     const P1 = `at small e: ${summar(small)}`;
-    const P2 = `at e 0.1 to 0.2: ${summar(large)}; slope of tes against e ${f(R.slopes.tesInArc)}, of m0 ${f(R.slopes.m0InArc)}, of the reference signal ${f(R.slopes.signalInArc)}`;
-    const d21 = fl.map((c) => { const g = R.deep.inArcEF.find((x) => x.e === c.e)['(2,1)'], s = R.deep.inArcS.find((x) => x.e === c.e)['(2,1)']; return g ? `e ${c.e}: (2,1) group ${g.cyclesPerDay} cpd E_F ${f(g.amplitudeM)} m against the signal ${f(s?.amplitudeM)} m` : null; }).filter(Boolean);
-    const P3 = R.deepSeparableInArc ? d21.join('; ') : `not separable from the trend on ${R.arcDays} days (period ${f(R.deepPeriodDays, 0)} days); E_F in-arc secular share bounds them: ${R.deep.secularEF.map((x) => `e ${x.e}: ${f(x.rmsM)} m`).join(', ')}`;
+    const P2 = `at e 0.1 to 0.2: ${summar(large)}; slope against e of tes ${f(R.slopes.tesFirstDay)}, of m0 ${f(R.slopes.m0FirstDay)}, of the module's tesseral content T (6-day) ${f(R.slopes.modelInArc)}, of the signal ${f(R.slopes.signalFirstDay)}`;
+    const d21 = fl.map((c) => { const g = R.deep.inArcEF.find((x) => x.e === c.e)['(2,1)'], t = R.deep.inArcT.find((x) => x.e === c.e)['(2,1)']; return g ? `e ${c.e}: the (2,1) group ${g.cyclesPerDay} cpd in E_F ${f(g.amplitudeM)} m, in the module's tesseral content T ${f(t?.amplitudeM)} m` : null; }).filter(Boolean);
+    const P3 = R.deepSeparableInArc ? d21.join('; ') : `not separable from the trend on ${R.arcDays} days (period ${f(R.deepPeriodDays, 0)} days); E_F's 6-day secular share bounds them: ${R.deep.secularEF.map((x) => `e ${x.e}: ${iv(x.rmsM !== undefined ? { rmsM: x.rmsM, lo: x.lo !== undefined ? { rmsM: x.lo } : null, hi: x.hi !== undefined ? { rmsM: x.hi } : null } : null)} m`).join(', ')}`;
     return { regime: R.regime, P1, P2, P3 };
   });
-  const out = { registration: REGISTRATION, pins: PIN, arms: ARMS, rows: rows.length, flown: flown.length, read: rows.filter((r) => r.read).length, errors: rows.filter((r) => !r.flown && !r.read).length, unmeasured: all.filter((c) => !byKey.has(c.key)).map((c) => c.key), regimes: perRegime, findings };
+  const out = { registration: REGISTRATION, pins: PIN, arms: ARMS, legs: { inArc: 'the 6-day arc, 289 samples at 30 minutes, blocks of one day: E_F and T', firstDay: `the arc's first ${FIRST_DAYS} days, blocks of one revolution: E_F, T, M, S, D (the reading)`, forward: 'the day after the fit, 64 samples a revolution, 2 blocks (no interval)' }, rows: rows.length, flown: flown.length, read: rows.filter((r) => r.read).length, errors: rows.filter((r) => !r.flown && !r.read).length, unmeasured: all.filter((c) => !byKey.has(c.key)).map((c) => c.key), firstPassRows: readRows(FIRST_PASS).length, regimes: perRegime, findings };
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'table.json'), `${JSON.stringify(out, null, 1)}\n`);
   const md = ['# The half-day class: the mixed (2:1 resonant) share by family (propagator/sdn-ap 0.6.3; report only)', '',
-    `Registration: ${REGISTRATION}. Ground: the landed all-regimes rows (TESSERAL-ALL-REGIMES.md, Amendments 1 to 7, estimator fixed). Pins: modules ${PIN.modulesCommit.slice(0, 9)}, sdn-ap ${PIN.sdnAp.version} ${PIN.sdnAp.wasmSha256.slice(0, 12)}, ffm ${PIN.ffm.version} ${PIN.ffm.wasmSha256.slice(0, 12)}. Arms per cell: F = FFM EGM96 31x31 with DE440 Sun and Moon against the module at caps 31 / 20 (the landed frame re-flown); Z = FFM EGM96 degree 31 order 0 with the same Sun and Moon from the same initial state against the module at caps 0 / 20; D = E_F - E_Z (the m > 0 members' miss); S = Ref_F - Ref_Z (the reference's tesseral signal); all four attributed with the all-regimes attribute() (Amendment 3 conditioning, Amendment 6 jackknife, intervals point +- 2 SE; in-arc 6 days of 30-minute samples in blocks of one day; forward 64 samples a revolution, 2 blocks, no interval). Shares are RMS (m) of the reconstructed mixed groups (the even ladders at k n): whole = E_F, m0 = E_Z (the zonal and lunisolar short-period model, m = 0), tes = D (the tesseral members), signal = S. Reading (in-arc): m = 0 member dominant when tes's upper bound is below m0's lower bound; tesseral members dominant when the reverse; else shared.`, '',
-    `## Summary`, `Rows ${rows.length}; cells flown ${flown.length}, read from the landed rows ${out.read}, errors ${out.errors}, unmeasured ${out.unmeasured.length}${out.unmeasured.length ? ` (${out.unmeasured.join(', ')})` : ''}.`, '',
-    `| regime | arc d | slip n - 2 theta (cpd) | (2,1) period (d) | deep families separable in-arc | m = 0 dominant | tesseral dominant | shared | withheld | slope tes / m0 / signal vs e |`, `|---|---|---|---|---|---|---|---|---|---|`,
-    ...perRegime.map((R) => `| ${R.regime} | ${R.arcDays ?? '-'} | ${f(R.slipCyclesPerDay, 6)} | ${f(R.deepPeriodDays, 1)} | ${R.deepSeparableInArc === null ? '-' : R.deepSeparableInArc ? 'yes' : 'no'} | ${R.readings['m = 0 member dominant']} | ${R.readings['tesseral members dominant']} | ${R.readings['shared (intervals overlap)']} | ${R.readings.withheld} | ${R.slopes ? `${f(R.slopes.tesInArc)} / ${f(R.slopes.m0InArc)} / ${f(R.slopes.signalInArc)}` : '-'} |`), '',
-    `## Per cell (in-arc shares with intervals; forward beside; landed mixed share for the reproduction)`, '',
-    `| cell | state | reading in-arc | whole E_F | m0 E_Z | tes D | signal S | landed in-arc mixed | fwd whole / m0 / tes / signal | fit n F / Z | fit e F / Z | conv Z (m) |`, `|---|---|---|---|---|---|---|---|---|---|---|---|`,
-    ...perRegime.flatMap((R) => R.cells.map((c) => `| ${R.regime}\\|${c.e} | ${c.state} | ${c.reading?.inArc ?? '-'} | ${iv(c.shares?.inArc.whole)} | ${iv(c.shares?.inArc.m0)} | ${iv(c.shares?.inArc.tes)} | ${iv(c.shares?.inArc.signal)} | ${c.landed ? iv(c.landed.inArcMixed) : '-'} | ${c.shares ? `${f(c.shares.forward.whole.rmsM)} / ${f(c.shares.forward.m0.rmsM)} / ${f(c.shares.forward.tes.rmsM)} / ${f(c.shares.forward.signal.rmsM)}` : c.landed ? `landed fwd mixed ${f(c.landed.forwardMixed.rmsM)}` : '-'} | ${c.fitted ? `${c.fitted.F.n.toFixed(6)} / ${c.fitted.Z.n.toFixed(6)}` : '-'} | ${c.fitted ? `${c.fitted.F.e.toFixed(5)} / ${c.fitted.Z.e.toFixed(5)}` : '-'} | ${c.convergenceZMaxM !== undefined ? c.convergenceZMaxM.toExponential(1) : '-'} |`)), '',
-    `## The even ladders in-arc (group amplitude, m, at k n for k = 1 to 4: E_F / E_Z / D / S)`, '',
+    `Registration: ${REGISTRATION} (Amendment 1). Ground: the landed all-regimes rows (TESSERAL-ALL-REGIMES.md, Amendments 1 to 7, estimator fixed). Pins: modules ${PIN.modulesCommit.slice(0, 9)}, sdn-ap ${PIN.sdnAp.version} ${PIN.sdnAp.wasmSha256.slice(0, 12)}, ffm ${PIN.ffm.version} ${PIN.ffm.wasmSha256.slice(0, 12)}. Per cell: Ref_F = FFM EGM96 31x31 with DE440 Sun and Moon; AP_F = the module at caps 31 / 20 fitted to Ref_F's arc (the landed frame re-flown); AP_F0 = the same set flown at MAXIMUM_TESSERAL_DEGREE 0; Ref_Z = FFM EGM96 degree 31 order 0 with the same Sun and Moon from the same initial state. Series in RTN at Ref_F: E_F = AP_F - Ref_F (whole); T = AP_F - AP_F0 (the module's own tesseral content); M = AP_F0 - Ref_Z (the m = 0 member's miss: zonal and lunisolar short-period model, with the class-rate drift against a truth without it in its trend); S = Ref_F - Ref_Z (the reference's tesseral signal); D = E_F - M = T - S (the tesseral members' miss). Each attributed with the all-regimes attribute() (Amendment 3 conditioning, Amendment 6 jackknife, intervals point +- 2 SE). Legs: the 6-day arc (blocks of one day) for E_F and T; the first-day leg (the arc's first ${FIRST_DAYS} days, blocks of one revolution, constant and linear trend) for all five, where the reading is made; the forward day (2 blocks, no interval). Shares are RMS (m) of the reconstructed mixed groups (the even ladders at k n): whole = E_F, m0 = M, tes = D, model = T, signal = S. Reading (first-day leg): m = 0 member dominant when tes's upper bound is below m0's lower bound; tesseral members dominant when the reverse; else shared. The first pass (two fits; Amendment 1) is kept in first-pass-two-fits/ and enters no table.`, '',
+    `## Summary`, `Rows ${rows.length}; cells flown ${flown.length}, read from the landed rows ${out.read}, errors ${out.errors}, unmeasured ${out.unmeasured.length}${out.unmeasured.length ? ` (${out.unmeasured.join(', ')})` : ''}; first-pass rows set apart ${out.firstPassRows}.`, '',
+    `| regime | arc d | slip n - 2 theta (cpd) | (2,1) period (d) | deep families separable in-arc | m = 0 dominant | tesseral dominant | shared | withheld | slope vs e: tes / m0 / T / signal |`, `|---|---|---|---|---|---|---|---|---|---|`,
+    ...perRegime.map((R) => `| ${R.regime} | ${R.arcDays ?? '-'} | ${f(R.slipCyclesPerDay, 6)} | ${f(R.deepPeriodDays, 1)} | ${R.deepSeparableInArc === null ? '-' : R.deepSeparableInArc ? 'yes' : 'no'} | ${R.readings['m = 0 member dominant']} | ${R.readings['tesseral members dominant']} | ${R.readings['shared (intervals overlap)']} | ${R.readings.withheld + R.readings['undecided (no interval)']} | ${R.slopes ? `${f(R.slopes.tesFirstDay)} / ${f(R.slopes.m0FirstDay)} / ${f(R.slopes.modelInArc)} / ${f(R.slopes.signalFirstDay)}` : '-'} |`), '',
+    `## Per cell (first-day leg shares with intervals; 6-day whole and module content; landed mixed share for the reproduction)`, '',
+    `| cell | state | reading (first day) | whole E_F | m0 M | tes D | model T | signal S | S trend (drift over the window) | 6-day whole E_F | 6-day T | landed in-arc mixed | fwd whole / m0 / tes / T / S | fit n / e | conv Z (m) |`, `|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|`,
+    ...perRegime.flatMap((R) => R.cells.map((c) => `| ${R.regime}\\|${c.e} | ${c.state} | ${c.reading?.firstDay ?? '-'} | ${iv(c.shares?.firstDay.whole)} | ${iv(c.shares?.firstDay.m0)} | ${iv(c.shares?.firstDay.tes)} | ${iv(c.shares?.firstDay.model)} | ${iv(c.shares?.firstDay.signal)} | ${f(c.shares?.firstDay.secularS?.rmsM)} | ${iv(c.shares?.inArc.whole)} | ${iv(c.shares?.inArc.model)} | ${c.landed ? iv(c.landed.inArcMixed) : '-'} | ${c.shares ? `${f(c.shares.forward.whole.rmsM)} / ${f(c.shares.forward.m0.rmsM)} / ${f(c.shares.forward.tes.rmsM)} / ${f(c.shares.forward.model.rmsM)} / ${f(c.shares.forward.signal.rmsM)}` : c.landed ? `landed fwd mixed ${f(c.landed.forwardMixed.rmsM)}` : '-'} | ${c.fitted ? `${c.fitted.n.toFixed(6)} / ${c.fitted.e.toFixed(5)}` : '-'} | ${c.convergenceZMaxM !== undefined ? c.convergenceZMaxM.toExponential(1) : '-'} |`)), '',
+    `## The even ladders on the first-day leg (group amplitude, m, at k n for k = 1 to 4: E_F / M / D / T / S)`, '',
     `| cell | k = 1 | k = 2 | k = 3 | k = 4 |`, `|---|---|---|---|---|`,
-    ...perRegime.flatMap((R) => R.cells.filter((c) => c.ladders).map((c) => `| ${R.regime}\\|${c.e} | ${[0, 1, 2, 3].map((k) => `${f(c.ladders.inArc[0].even[k].cyclesPerDay, 3)} cpd: ${c.ladders.inArc.map((a) => f(a.even[k].amplitudeM)).join(' / ')}`).join(' | ')} |`)), '',
+    ...perRegime.flatMap((R) => R.cells.filter((c) => c.ladders).map((c) => { const pick = (name) => c.ladders.firstDay.find((a) => a.arm === name).even; const order = ['EF', 'M', 'D', 'T', 'S'].map(pick); return `| ${R.regime}\\|${c.e} | ${[0, 1, 2, 3].map((k) => `${f(order[0][k].cyclesPerDay, 3)} cpd: ${order.map((a) => f(a[k].amplitudeM)).join(' / ')}`).join(' | ')} |`; })), '',
+    `## The even ladders on the 6-day arc (E_F / T) and the first-day self-consistency of E_F`, '',
+    `| cell | k = 1 E_F / T (first-day E_F) | k = 2 | k = 3 | k = 4 |`, `|---|---|---|---|---|`,
+    ...perRegime.flatMap((R) => R.cells.filter((c) => c.ladders).map((c) => `| ${R.regime}\\|${c.e} | ${[0, 1, 2, 3].map((k) => `${f(c.ladders.inArc[0].even[k].amplitudeM)} / ${f(c.ladders.inArc[1].even[k].amplitudeM)} (${f(c.consistency[k].firstDayM)})`).join(' | ')} |`)), '',
     `## The deep resonant families (2,1) and (4,2)`, '', ...findings.map((x) => `- ${x.regime}: ${x.P3}`), '',
     `## Findings against the registered predictions`, '', ...findings.flatMap((x) => [`### ${x.regime}`, `- P1 (small e): ${x.P1}`, `- P2 (e 0.1 to 0.2): ${x.P2}`, `- P3 (deep families): ${x.P3}`, '']),
-    `Etalon is read from the landed rows (its landed shares equal GLONASS's to 0.01 m); GLONASS carries the arms for both. The forward leg carries 2 blocks and decides nothing. The Z arm's trend holds the SGP4XP native class terms against a reference without tesserals and is not read as the resonant theory's accuracy; the deep families are read on E_F alone.`, ''];
+    `Etalon is read from the landed rows (its landed shares equal GLONASS's to 0.01 m); GLONASS carries the arms for both. The forward leg carries 2 blocks and decides nothing. M's and S's trends hold the class-rate drift against a truth without tesserals and are not read as the resonant theory's accuracy; the deep families are read on E_F and T alone.`, ''];
   fs.writeFileSync(path.join(outDir, 'README.md'), md.join('\n'));
   return out;
 }
@@ -235,19 +251,23 @@ if (args.check) {
   const rows = readRows(RESULTS);
   const regSha = git('log', '--reverse', '--format=%H', '--', REGISTRATION).split('\n')[0];
   const regAt = Date.parse(git('show', '-s', '--format=%cI', regSha));
+  const firstPass = readRows(FIRST_PASS);
   const first = rows.map((r) => r.createdUtc).sort()[0];
   check(rows.length > 0 && regAt < Date.parse(first), `registration ${regSha.slice(0, 8)} (${git('show', '-s', '--format=%cI', regSha)}) precedes the first of ${rows.length} rows (${first})`);
+  check(firstPass.length > 0 && regAt < Date.parse(firstPass.map((r) => r.createdUtc).sort()[0]), `the ${firstPass.length} first-pass rows (first-pass-two-fits/, no table) follow the registration and are set apart`);
+  const amendment1 = git('log', '--format=%H %cI', '-S', 'Amendment 1 (2026-11-06', '--', REGISTRATION).split('\n').filter(Boolean).at(-1);
+  check(Boolean(amendment1) && Date.parse(amendment1.split(' ')[1]) < Date.parse(first), `Amendment 1 (${(amendment1 ?? '').slice(0, 8)}) precedes the first row of the table (${first})`);
   check(rows.every((r) => r.sdnAp?.wasmSha256 === PIN.sdnAp.wasmSha256 && r.ffm?.wasmSha256 === PIN.ffm.wasmSha256 && r.modulesCommit === PIN.modulesCommit), `every row on sdn-ap ${PIN.sdnAp.version} (${PIN.sdnAp.wasmSha256.slice(0, 12)}) and ffm ${PIN.ffm.version} (${PIN.ffm.wasmSha256.slice(0, 12)})`);
   const flown = rows.filter((r) => r.flown);
-  const arms = ['EF', 'EZ', 'D', 'S'];
-  check(flown.length > 0 && flown.every((r) => ['inArc', 'forward'].every((leg) => arms.every((a) => r[leg]?.[a]?.shares?.mixed && 'lo' in r[leg][a].shares.mixed && r[leg][a].ladders?.even?.length === 4)) && r.shares?.inArc?.whole && r.shares?.inArc?.m0 && r.shares?.inArc?.tes && r.shares?.inArc?.signal && typeof r.reading?.inArc === 'string' && r.fitted?.F && r.fitted?.Z), `${flown.length} flown cells each carry the four attributions (E_F, E_Z, D, S) in-arc and forward with the ladder groups k 1 to 4, the shares with intervals (or "no interval" stated), both arms' fitted elements and a reading`);
-  check(flown.every((r) => r.arms?.F?.field?.[1] === 31 && r.arms?.Z?.field?.[1] === 0 && r.arms?.Z?.caps?.[0] === 0 && r.arms?.F?.caps?.[0] === 31), `every flown cell's arms are F = 31x31 against caps 31 / 20 and Z = 31x0 against caps 0 / 20`);
+  const has = (leg, names) => (r) => names.every((a) => r[leg]?.[a]?.shares?.mixed && 'lo' in r[leg][a].shares.mixed && r[leg][a].ladders?.even?.length === 4);
+  check(flown.length > 0 && flown.every((r) => has('inArc', ['EF', 'T'])(r) && has('firstDay', SERIES)(r) && has('forward', SERIES)(r) && r.shares?.firstDay?.whole && r.shares?.firstDay?.m0 && r.shares?.firstDay?.tes && r.shares?.firstDay?.signal && r.shares?.firstDay?.model && typeof r.reading?.firstDay === 'string' && r.fitted && Array.isArray(r.consistency)), `${flown.length} flown cells each carry E_F and T on the 6-day arc, the five series on the first-day and forward legs, with the ladder groups k 1 to 4, the shares with intervals (or "no interval" stated), the fitted elements, the self-consistency and a reading`);
+  check(flown.every((r) => r.arms?.F?.field?.[1] === 31 && r.arms?.Z?.field?.[1] === 0 && r.arms?.F?.caps?.[0] === 31), `every flown cell's references are Ref_F 31x31 and Ref_Z 31x0 against the arm F set at caps 31 / 20 and at tesseral cap 0`);
   check(flown.filter((r) => r.convergence).every((r) => Number.isFinite(r.convergenceZMaxM)), `every e 0.001 cell carries the Z reference's 1e-13 / 150 s figure`);
   const landed = landedRows();
   check(rows.filter((r) => r.landed).every((r) => landed.some((l) => l.key === r.key && l.createdUtc === r.landed.createdUtc && l.runner === r.landed.runner)), `every row that names a landed row reads the landed all-regimes row of its key (createdUtc and runner match)`);
   const etalon = rows.filter((r) => r.regime === 'Etalon');
   check(etalon.length === READ.Etalon.length && etalon.every((r) => r.read && r.landed), `Etalon's ${etalon.length} rows are read from the landed rows and name them`);
-  check(flown.filter((r) => !r.reading.inArc.startsWith('withheld')).every((r) => arms.every((a) => r.inArc[a].conditioned)), `every read in-arc attribution is conditioned (shares in quadrature within 1.5 of the series RMS)`);
+  check(flown.filter((r) => !r.reading.firstDay.startsWith('withheld')).every((r) => SERIES.every((a) => r.firstDay[a].conditioned)), `every read first-day attribution is conditioned (shares in quadrature within 1.5 of the series RMS)`);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'half-day-resonance-'));
   table(tmp);
   check(['table.json', 'README.md'].every((n) => fs.existsSync(path.join(RESULTS, n)) && fs.readFileSync(path.join(tmp, n)).equals(fs.readFileSync(path.join(RESULTS, n)))), `results/ap-truth/half-day-resonance/table.json and README.md reproduce from the rows`);
