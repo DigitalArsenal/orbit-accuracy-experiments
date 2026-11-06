@@ -245,14 +245,7 @@
     1.257455843925189,
     1.2582759276889495
    ],
-   "doublings": [
-    -0.3052006787743783,
-    -0.30606924370397404
-   ],
-   "doublingsRange": [
-    -0.29092597722698427,
-    -0.32195928991091294
-   ]
+   "reading": "no gain against FFM 20x20 here; AP costs 1.26 times as much"
   },
   {
    "regime": "Medium Earth orbit",
@@ -264,14 +257,7 @@
     1.730958112843285,
     1.7337348873438017
    ],
-   "doublings": [
-    -0.7309600360295992,
-    -0.7330954611240106
-   ],
-   "doublingsRange": [
-    -0.6968243879951804,
-    -0.7710971518753448
-   ]
+   "reading": "no gain against FFM 20x20 here; AP costs 1.74 times as much"
   },
   {
    "regime": "Geostationary",
