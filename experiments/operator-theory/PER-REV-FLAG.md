@@ -117,6 +117,21 @@ A window is flagged at fit F and lead L when a step lies in [C - F, C + L]; burn
 
 Holds unchanged: Swarm and GRACE-FO, the held Galileo satellites, every Starlink group, C2's objects and every Sentinel-1 cutoff from 2026-06-01, operator captures.
 
+### Result, 2026-11-06: rule (c) fails as registered; the flag is parked (`results/operator-theory/per-rev-flag/c`)
+
+Known burns 41 of 84 within 13 h (Sentinel-1 26 of 27, the one miss without a fit; altimetry 15 of 57). Injected 54 of 57 used windows at each of 2, 3, 4 and 8 m (Sentinel-1 34 of 37, altimetry 20 of 20). False alarms 6 of 68 windows with a verdict, 3 allowed (11 of 79 flown without a verdict). Nothing was tuned. At the SDN-AP session's ruling the per-revolution flag is parked with no rule (d): the flags are probably real, and a detector of burns under 4 m would be validated against a reference that is itself the question. The near-700 km and geostationary burn verdicts stay unresolved; the geostationary question stays with its own record.
+
+Report only: SARAL's flag of about 118.6 m between 2026-02-08T23:16 and 02-09T00:57, seen from four overlapping cutoffs (2026-02-03 to 02-06), is in neither catalog; it is an uncataloged maneuver or a discontinuity of the truth product, not decided here.
+
+## Amendment 2026-11-06: near 700 km, Sentinel-1 split by the validated catalog, registered before reading (report only)
+
+Run only after the FFM 2.2.0 rerun lands its `cells.json`; nothing of the split is read before. Script `s1-burn-split.mjs`, report `results/operator-theory/per-rev-flag/split`.
+
+- Catalog: `COVARIANCE-MODEL.md` amendment 3 (commit ac438c3a; amendment 4, 0da3ecd3), its 4 m truth-step detector, validated on Sentinel-1 only (26 of 26 known burns, 0 false alarms on the quiet windows). Files `covariance-model/steps/trS1-39634.json` (SHA-256 f21d25b9bf42381a12c415d71a6992aa389e957eb56f4000b6a003b0520d4eb1) and `trS1-62261.json` (d058dad7759febce8b6ad6794f0116f05ec79efddc85edf9e2bfa39ff26a8f05), checked by the script. Its rule as `covariance-model.mjs` applies it: each step taken 2 h earlier; a span is covered when its checked spans leave no gap over 2 h.
+- Windows: the near-700 km cells' Sentinel-1 windows (AP5's 2026 rows, `ap/b0411/truth2` group S1 without error; no cutoff from 2026-06-01). FFM from `ap/ffm220/compare-truth2` (propagator/ffm 2.2.0), AP from `ap/b051/truth2` (sdn-ap 0.5.1); if the landed `cells.json` reads other stores, an amendment points the script at them before any split is read. Per fit (24, 72 h) and lead (24, 48, 72, 168 h), a window is burn-affected when a catalog step lies in [cutoff - fit, cutoff + lead], burn-free when none does and the catalog covers that span, unchecked otherwise (reported). The altimetry satellites near 700 km get no verdict: the catalog is validated on Sentinel-1 only (and the near-700 km cells hold no altimetry window).
+- Statistic: on each part, exp(median by window of ln(FFM / AP)) with its 95 % interval over object-week clusters (10,000 draws, seed SHA-256 of `PERREV-SPLIT|<fit>|<day>|<part>`), as `ffm220-ratio.mjs`.
+- Reading rule, fixed now: a cell with 10 or more burn-free windows whose burn-free interval holds 1 or lies below it has FFM at or below parity, and the Sentinel-1 part of that cell is explained by burns; a burn-free interval wholly above 1 is a candidate FFM defect for its own record; under 10 burn-free windows the cell gets no reading.
+
 ## Holds
 
 Never read: C2's held objects (TerraSAR-X, Stella, Sentinel-1D, LAGEOS-1, its six Galileo satellites), Swarm and GRACE-FO, every Starlink group, any Sentinel-1 cutoff from 2026-06-01 (Sentinel-1 truth to 2026-06-08), any operator capture.
