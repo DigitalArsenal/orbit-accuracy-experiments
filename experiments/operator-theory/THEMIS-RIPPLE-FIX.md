@@ -99,3 +99,17 @@ term count, the roughness of the displacement and its difference from every harm
 Cost: wall per propagation step (7 days at 300 s) and per fit, median of 5, on THEMIS D 2013-02-12, THEMIS E 2013-02-16 and TESS cutoff
 2026-07-27 (timing only; no error read), before (base) and after (candidate); and the e <= 0.3 path (seeded LEO, GPS-like and e 0.25
 sets, propagate) unchanged in cost within the run-to-run spread. A higher cost above e 0.3 is reported as measured.
+
+## Amendment 2 (2026-11-06, before the sizing's output is read; a sizing run had started and its output is unread)
+Bounds on the sum, not the per-term screen alone. On the two correctness windows, the candidate set's first-order displacement (the
+quadrature's coefficients on the set's terms, through the same Lagrange integration) against the full-field quadrature (every harmonic
+of l 2 to 12, m 1 to l, |j| <= 2047, |psi-dot| >= 0.045 n, no class term, not m-daily): RMS <= 1 m, maximum <= 5 m and roughness of the
+difference <= 0.1 m over 7 days at 300 s. The screen (keep threshold) and any j or q limit are sized against these bounds from the
+quadrature only, never against truth. If Amendment 1's rule at 0.5 m misses a bound, the keep threshold is lowered in the steps 0.2,
+0.1, 0.05 m (the rule otherwise unchanged) until both windows meet all three; the first step that meets them is the candidate. The
+degree cap l <= 12 (kSpCap) is unchanged; the field above it is outside this record.
+Baseline (git history of src/tesseral.inc and SPEC 16.11): 0.4.11 to 0.4.14 hold, at every eccentricity, q in {-1, 0, 1} with
+|j| <= l + 1 (G exact at e0 above e 0.03, linear in e), the 0.5 m keep and its bound with |G| <= (l + 1) e0; 0.4.15 (d50689f1e) adds
+the wide set above e 0.3 (|q| <= 10, |j| <= 33). 0.4.11's 0.07 to 0.12 m is the smoothness of a set holding only the lowest harmonics,
+not a bound on the sum: its displacement against the full-field quadrature is reported on the two windows beside the candidate's.
+Cost reference: 0.4.11's wall per propagation step and per fit is the reference point of the cost comparison (0.4.11, base, candidate).
