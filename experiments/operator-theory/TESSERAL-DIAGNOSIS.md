@@ -104,3 +104,50 @@ of both dists and of the runner and createdUtc). `--table` writes table.json and
 registration's commit precedes the first row, that every row is on the two pinned dists, that every cell under diagnosis carries its
 families with paths, its failing family, its grid-arm statement, its cost reference and its identity reading, that the table reproduces
 byte for byte, and exits 0 only then.
+
+## Amendment 1 (2026-11-06 12:05Z, SDN-AP ruling through the coordinator; committed before any probe row)
+Rows read so far (first pass, shard 0, the registered items only): the 48 cell readings and the three pair readings from the landed rows;
+the cost rows of the three 0.31 sets; the 68 identity items (seeded sets; 50 flown, 18 below the perigee floor). Two findings of that pass
+bind the rest of the record:
+1. The SDK's command surface instantiates a fresh wasm instance for every invoke (space-data-module-sdk
+   src/host/browserModuleHarness.js, the command context at line 836), so through that surface "cold" and "warm" are both one
+   instantiation plus one flight (Molniya 0.31: 1,224 / 1,294 / 1,296 ms at epoch / fit end / a day on; GTO 1,229 / 1,533 / 1,577 ms;
+   THEMIS D 148 / 343 / 364 ms), the grid counters `sdnap_wide_grid_cache` and `sdnap_wide_grid_stats` read on the harness's direct
+   instance belong to an instance that flew nothing (0 grids, 64 MB), and the identity check's "grid in the cache for C" reads the same
+   unused instance. Those cost rows stand as what the command surface gives, labeled so; the identity rows stand as determinism of the set
+   path across fresh instances (A = B = C), with C's cache not observable through this surface. The registered budget's cold / warm /
+   memory figures (catalog.mjs) are not reproduced here; the cost measure of this record becomes a difference on one surface: the same set
+   bytes flown to one epoch by two builds that differ only in where the grid starts, median over five fresh invokes each, the difference
+   being the grid's cost per flight (grid builds included) at that eccentricity; memory per worker is not observable here and is reported
+   from the probe's grid count times SPEC 16.11's 3.1 MB per grid, stated as arithmetic.
+2. The landed pairs decide the grid at the module's own threshold only. The record's question at e 0.05 to 0.2 needs the grid flown
+   there, which the ruling allows without any change on main: a diagnostic build from a WIP branch of the modules repository whose only
+   source change makes kWideE a build-time parameter (`SDNAP_WIDE_E`, default 0.3 so the shipped build is unchanged; build.mjs passes it
+   from the environment and records it in the provenance), built with SDNAP_WIDE_E 0.01 in /Users/tj/software/private/coordinator-d9/
+   space-data-network-modules-pin on branch wip/experiments-sdn-ap-tesseral-diagnosis-20261106/kwide-probe (pushed as a WIP ref, never
+   main; never pinned, never shipped; dist written to this lane's scratch by SDNAP_DIST_DIR, never to dist/). Its SHA-256 is recorded in
+   the table and README as experiments-only, with the control build's SHA-256 (the same branch built with SDNAP_WIDE_E unset) against
+   aa3ed22a, stated as reproduced or not.
+The probe arm, registered before its rows:
+- Identity above the switch: seeded AP sets (caps 31 / 20) at Molniya's, GTO's and THEMIS D's elements at e 0.31, 0.5 and 0.75 and the
+  three 0.31 fitted sets of the cost rows (refitted, same fixture), each flown to 65 epochs over a day in GCRF by the probe and by 0.6.3
+  in fresh invokes: the $OEM payload bytes must be equal for every set, so the only difference between the builds is where the grid starts.
+  Any difference is reported by set with the first differing byte, and the probe's cell rows are then read as "withheld (probe not
+  identical above the switch)".
+- Cells flown on the probe, in the all-regimes frame and code (tesseral-all-regimes.mjs's exported attribute, verdictOf, bounds, rtnOf,
+  gridSeconds, arcDays; the same fixture, reference, arc, sampling, A and bounds; the three-way reading of Amendments 5 to 7): the 17
+  attributed fails and their regimes' e 0.05, 0.1 and 0.2 cells: Ajisai|0.05, 0.1 (0.2 is below the perigee floor); LAGEOS-1|0.05, 0.1,
+  0.2; LAGEOS-2|0.05, 0.1, 0.2; Etalon|0.05, 0.1, 0.2; GLONASS|0.05, 0.1, 0.2; GPS|0.05, 0.1, 0.2; Molniya|0.001, 0.01, 0.05, 0.1, 0.2,
+  0.29: 23 cells, at most 4 shards. The probe's fitted eccentricity is reported; the grid is exercised when it is above 0.01. Per cell:
+  the probe's raw line and attributed verdict beside the landed set verdict, the tesseral, mixed, zonal and secular shares both ways, the
+  failing family's amplitude both ways, and "grid passes" when the probe's cell verdict is pass (raw or attributed), "grid fails" when
+  fail (attributed), else "grid undecided"; the reading rule's "grid passes" clause is then read on this measured number and the pair
+  reading of the registration stays beside it.
+- Cost at those eccentricities, by the difference of Amendment 1.1: for every probe cell the probe-fitted set's one-epoch flight (fit end
+  plus one minute) on the probe (grid) and on 0.6.3 (set), five fresh invokes each, medians and their difference in ms; the grid count the
+  probe needs for that flight is the arc's 48-hour nodes (ceil(arcDays / 2) + 1) and the memory arithmetic is that count times 3.1 MB
+  per grid, against the Amendment 16 targets (100 ms per object cold; 40 ms per record per worker warm, not observable here; 512 MB per
+  worker) with the surface's caveat stated on every figure.
+The reading rule gains the measured clause: a cell is a candidate for a registered switch change elsewhere when its failing family is on
+the `set` path, the probe's verdict in that cell is pass (grid passes), the identity above the switch is kept, and the grid's differential
+cost is within the cold target; the module change itself, if any, stays a separate registered module record decided on these numbers.
