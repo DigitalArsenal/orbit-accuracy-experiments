@@ -1,0 +1,27 @@
+{
+  "what": "sdn-ap 0.6.3 version step: the versioned dist against the candidate it was cut from; tool correctness/idcheck.mjs",
+  "dist": { "version": "0.6.3", "wasmSha256": "aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e", "bytes": 966222, "signed": false, "signing": "unsigned like every lane build until the owner rules on signing" },
+  "candidate": { "modules": "01acfb8183cbef7dcf4f3022c813344c5b5a95e6", "wasmSha256": "cfc113d36c779f763a9b2db0b2cf230d056f0b469f001f917cad9dfe4f62ad47", "producerVersion": "0.6.2" },
+  "rule": "products compared with PRODUCER's version read as the candidate's; $ODR by decoded value (Object.is) with RUN_ID and OCM_CONTENT_ID excluded (each the CID of its own build's $OCM); the wasm bytes differ in 71 places (the version text and the data addresses it moves), so the comparison is of outputs",
+  "examples": { "dir": "results/ap-truth/compare/examples", "sets": 56, "identical": 56, "epochsFlown": 265802, "covarianceTimes": 22156 },
+  "fits": {
+    "count": 6, "identical": 6, "odrValues": 22578,
+    "each": [
+      { "fit": "THEMIS A 2013-02-15", "odrValues": 10377, "bterm": 0.012145223361863964 },
+      { "fit": "Molniya start 0 (fixture)", "odrValues": 1749, "bterm": 0.04461633761935712 },
+      { "fit": "GTO", "odrValues": 1749, "bterm": 3.523060022360304e-17 },
+      { "fit": "Molniya, drag fitted", "odrValues": 1749, "bterm": 0.04461633761935712 },
+      { "fit": "LEO, AP", "odrValues": 3477, "bterm": 0.0020248319184313648 },
+      { "fit": "LEO, SGP4XP", "odrValues": 3477, "bterm": 0.0029142000000000005 }
+    ],
+    "alsoCompared": "each fit's $OCM bytes and its set flown 7 days hourly in TEME"
+  },
+  "accuracyFixtures": { "count": 8, "identicalDayFiguresAndCoefficient": 8 },
+  "e2es": {
+    "themis-ripple.e2e.mjs": "rc 0: switch trace identical, second order identical, cache 2 / 6193152 before and after, GTO fit 88.1 MiB; 12 windows roughness 0.06725, paired 0.948 [0.915, 0.962], 0.990 [0.964, 1.014], 0.999 [0.973, 1.030]",
+    "fit-second-solution.e2e.mjs": "PASS (THEMIS A 104.8 m, BTERM 0.01215; Molniya start 0 BTERM 0.04461633761935712; LEO AP, LEO SGP4XP, GEO AP byte-identical to 0.6.2)",
+    "fit.e2e.mjs (SDNAP_EXAMPLES)": "PASS: 10 of 10 products identical to 0.6.2; 53 of 53 example sets at e 0.3 and below identical to 0.6.2 (257164 epochs, 21436 covariance times); 3 above e 0.3 flown on both",
+    "gto-high-degree-perigee-terms.e2e.mjs": "PASS"
+  },
+  "ledger": "scripts/artifact-provenance.json and docs/current-module-parity-index.json regenerated; check-artifact-ledger PASS (243/243), check-current-module-index PASS (160 modules)"
+}

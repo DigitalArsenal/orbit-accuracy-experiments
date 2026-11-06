@@ -1,0 +1,42 @@
+// The AP (31, 20) vacuum fit's mean elements on the two correctness-test windows (THEMIS-RIPPLE-FIX.md (a)); module calls only.
+import fs from 'node:fs';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { createRequire } from 'node:module';
+const EXP = '/Users/tj/software/private/coordinator-d9/orbit-accuracy-experiments-cov/experiments/operator-theory';
+const { config, root, iso, ms, XM } = await import(`${EXP}/lib/xp2.mjs`);
+const { apForces, fitPcf } = await import(`${EXP}/lib/ap.mjs`);
+const { openAxes } = await import(`${EXP}/lib/host.mjs`);
+const { HX } = await import(`${EXP}/lib/regimes.mjs`);
+const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
+const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
+const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
+const MOD = process.env.SDN_MODULES_ROOT;
+const wasm = process.env.SDN_AP_WASM;
+const entry = createRequire(path.join(MOD, 'propagator/sdn-ap/package.json')).resolve('space-data-module-sdk/testing/isomorphic');
+const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
+const h = await createStandaloneHarness('browser', wasm, { surface: 'direct' });
+const STEP_S = 300, HOUR = 3600000, ARC_H = 72;
+const WINDOWS = [['THEMIS D', '2013-02-14'], ['THEMIS D', '2013-02-16']];
+const axes = await openAxes();
+const out = [];
+for (const [name, day] of WINDOWS) {
+  const x = HX.find((v) => v.name === name), D0 = Date.parse(`${day}T00:00:00Z`);
+  const s = await spkObjectSeries(MOD, { files: [x.file], source: 'ap6-heo', id: x.id, name: x.name, norad: x.norad, fromUtc: x.from, toUtc: x.to, stride: 1 });
+  const norm = s.lines.map((l) => ({ ...l, epoch: new Date(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`)).toISOString() }));
+  const first = Math.round(ms(norm[0].epoch) / 1000) * 1000;
+  const lines = await axes.convert(norm.filter((l) => (Math.round(ms(l.epoch) / 1000) * 1000 - first) % (STEP_S * 1000) === 0).map((l) => ({ ...l, epoch: new Date(Math.round(ms(l.epoch) / 1000) * 1000).toISOString() })), 'EME2000', 'GCRF');
+  const raw = lines.filter((l) => ms(l.epoch) >= D0 - ARC_H * HOUR && ms(l.epoch) <= D0);
+  const thin = T.thinned(raw).chosen;
+  const oem = S.oemBytes({ frame: 'GCRF', object: { name: x.name, id: x.objectId, norad: x.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
+  const pcf = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null });
+  const r = await h.invoke({ methodId: 'fit', inputs: [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }] });
+  if (r.statusCode !== 0) throw new Error(`${r.errorCode} ${r.errorMessage}`);
+  const set = new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload);
+  const me = S.readFitOcm(set).o.MEAN_ELEMENTS;
+  out.push({ window: `${name} ${day}`, epoch: me.EPOCH, meanMotionRevDay: me.MEAN_MOTION, e: me.ECCENTRICITY, iDeg: me.INCLINATION, raanDeg: me.RA_OF_ASC_NODE, argpDeg: me.ARG_OF_PERICENTER, maDeg: me.MEAN_ANOMALY });
+  console.error(JSON.stringify(out.at(-1)));
+}
+await axes.close();
+fs.writeFileSync(process.argv[2], `${JSON.stringify(out, null, 1)}\n`);
+process.exit(0);
