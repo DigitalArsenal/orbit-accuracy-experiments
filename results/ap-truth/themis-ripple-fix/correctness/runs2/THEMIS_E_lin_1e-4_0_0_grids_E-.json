@@ -1,0 +1,1 @@
+{"window":"THEMIS E","de":0.0001,"daRel":0,"di":0,"rows":[{"grid":"fixed","interpolant":"cubic","N":128,"rmsM":1.6040,"maxM":8.4599},{"grid":"fixed","interpolant":"cubic","N":256,"rmsM":1.6055,"maxM":7.8004},{"grid":"element-linear","interpolant":"cubic","N":128,"rmsM":0.1300,"maxM":2.5773},{"grid":"element-linear","interpolant":"cubic","N":256,"rmsM":0.0082,"maxM":0.1613}]}

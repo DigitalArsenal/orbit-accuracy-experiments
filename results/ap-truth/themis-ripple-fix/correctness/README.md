@@ -45,3 +45,46 @@ Output: resum-themis-d.json, resum-themis-e.json (`resum`). 246 (m, w) families.
 
 N = 128 meets every bound on both windows. Today's table through sp_six in the same harness: 5.1 / 5.4 us per step. The global Fourier
 evaluation (6 x N complex terms per family per step) is the cost; a local interpolant on the same grid is the next sizing step.
+
+## Amendments 4 and 5: local cubic, re-grid thresholds, element-linear grid
+resum.cpp (runs/), resum2.cpp (runs2/). Four-point periodic Lagrange cubic on the uniform E grid, D / E:
+
+| N | Grid bytes | RMS (m) | Maximum (m) | Roughness of the difference (m) | Output roughness (m) | Harness wall per step (us) |
+| --: | --: | --: | --: | --: | --: | --: |
+| 128 | 3,022,848 | 0.119 / 0.130 | 2.33 / 2.57 | 0.0032 / 0.0034 | 0.073 / 0.077 | 7.5 / 6.8 |
+| 256 | 6,045,696 | 0.0095 / 0.0077 | 0.196 / 0.150 | 0.0002 / 0.0003 | 0.073 / 0.077 | 12.5 / 10.4 |
+| 512 | 12,091,392 | 0.0006 / 0.0006 | 0.014 / 0.011 | < 0.0001 | 0.072 / 0.077 | 7.4 / 9.2 |
+
+The cubic at N = 128 meets the bounds (Amendment 4: taken). Today's table through sp_six: 5.1 / 5.4 us per step.
+Harmonics left out of every family (both windows): m-daily 42, one-day class 27 (the class's 27 terms, carried once, in the rates),
+slow band 36; kept 519,206 / 512,352 (|j| <= 2047).
+
+Drift (cubic, N = 128; RMS / maximum in m against the quadrature at the shifted elements; registered test: RMS <= 0.25 m), D / E:
+
+| Step | Fixed grid | Element-linear grid |
+| --- | --- | --- |
+| de 1e-5 | 0.187 / 0.201 | 0.119 / 0.130 |
+| de 3e-5 | 0.454 / 0.492 | 0.119 / 0.130 |
+| de 1e-4 | 1.470 / 1.604 | 0.119 / 0.130 |
+| de 3e-4 | 4.420 / 4.829 | 0.122 / 0.132 |
+| de 1e-3 | 14.94 / 16.31 | 0.323 / 0.319 |
+| di 1e-5 rad | 0.128 / 0.139 | 0.119 / 0.130 |
+| di 3e-5 rad | 0.177 / 0.183 | 0.119 / 0.130 |
+| di 1e-4 rad | 0.447 / 0.429 | 0.119 / 0.130 |
+| da / a 3e-6 | 0.135 / 0.150 | 0.118 / 0.129 |
+| da / a 1e-5 | 0.250 / 0.301 | 0.116 / 0.128 |
+| da / a 1e-4 | 2.264 / 2.828 | 0.133 / 0.105 |
+
+Thresholds: fixed grid de* = 1e-5, di* = 3e-5 rad, da/a* = 3e-6; element-linear grid de* = 3e-4, di* >= 1e-4 rad, da/a* >= 1e-4 (the
+largest steps tested). Drift a flight sees (elements-drift.json: THEMIS D fits at cutoffs 2013-02-12, 14, 16, epochs two days apart):
+e 0.822174, 0.821712, 0.821167 (about -2.5e-4 per day), i +9.5e-5 rad then -2e-6 rad, n -4.8e-5 then -4.2e-5 rev/day (da/a about
++3e-5 per two days). Over 7 days: about 1.8e-3 in e. Re-grids per 7-day flight: fixed grid about 180 (e-limited), element-linear about 6.
+Memory: fixed 3.0 MB, element-linear 12.1 MB (grid and three derivative grids) per object above e 0.3.
+
+## Cost before (cost.mjs, cost-before.json; median of 5; fit and 7-day flight at 300 s, 2,016 steps; owner Mac under lane load)
+| Window | 0.4.11 fit (ms) | 0.4.11 per step (us) | base fit (ms) | base per step (us) |
+| --- | --: | --: | --: | --: |
+| THEMIS D 2013-02-12 | 2,080 | 275.7 | 33,770 | 2,544.8 |
+| THEMIS E 2013-02-16 | 3,674 | 279.9 | 20,281 | 2,732.6 |
+| TESS 2026-07-27 | 211 | 51.1 | 1,880 | 324.3 |
+Base: the modules 34b1b2c58 dist (sdn-ap 0.6.1, SHA-256 05dd4a6600fb4c65...); 0.6.2 was not yet on origin/main.
