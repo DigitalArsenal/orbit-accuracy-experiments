@@ -86,3 +86,16 @@ it runs.
 ## Outputs
 results/ap-truth/themis-ripple-fix: the correctness test's per-term table, the arms' rows summarized per object (days 1, 3, 7 with
 intervals; roughness), README.md. Rows: /opt/data/sdn-archive/operator-theory/themis-ripple-fix/.
+
+## Amendment 1 (2026-11-06, after the correctness test's result and before any sizing of the extended set)
+(a) found no defect: every held term passes; the ripple and a mean-track displacement of about 65 m RMS are the truncation |q| <= 10,
+|j| <= 33 (results/ap-truth/themis-ripple-fix/correctness). Candidate 2 is taken: the harmonic set extended to the series' convergence.
+Rule (fixed before any count is read; the term count is its consequence): above e 0.3, for each (l, m, p) with l <= 12 (the family's
+16.2 cap), q is walked outward from 0 in each direction; each term is kept by 16.2's rules (the 0.5 m position test with G and dG/de
+exact at e0, the class, slow-band and m-daily exclusions); the walk in a direction stops at the first term under 0.5 m that lies beyond
+the largest term of that family in that direction (the tail of the Hansen series beyond its peak decreases). No |q| or |j| cap other
+than the quadrature's own resolution, |j| <= 2047. The harness applies the same rule to the quadrature's coefficients and reports the
+term count, the roughness of the displacement and its difference from every harmonic, before the module change.
+Cost: wall per propagation step (7 days at 300 s) and per fit, median of 5, on THEMIS D 2013-02-12, THEMIS E 2013-02-16 and TESS cutoff
+2026-07-27 (timing only; no error read), before (base) and after (candidate); and the e <= 0.3 path (seeded LEO, GPS-like and e 0.25
+sets, propagate) unchanged in cost within the run-to-run spread. A higher cost above e 0.3 is reported as measured.
