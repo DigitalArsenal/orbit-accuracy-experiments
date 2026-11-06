@@ -163,7 +163,8 @@
    "regime": "Low orbit, laser spheres",
    "comparator": "FFM40",
    "apOverFfm": 0.3203443944447846,
-   "apOverSgp4": 96.47548518896835,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     0.3211241812081061,
@@ -182,7 +183,8 @@
    "regime": "Low orbit, altimetry",
    "comparator": "FFM40",
    "apOverFfm": 0.33823734272372763,
-   "apOverSgp4": 188.30784210526315,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     0.33896357263830657,
@@ -201,7 +203,8 @@
    "regime": "Strong drag, 2026",
    "comparator": "FFM40",
    "apOverFfm": 0.3519964087633874,
-   "apOverSgp4": 207.62387430542248,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     0.3526890761737631,
@@ -220,7 +223,8 @@
    "regime": "Near 700 km",
    "comparator": "FFM40",
    "apOverFfm": 0.401348043459548,
-   "apOverSgp4": 200.9630049179422,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     0.402107314243346,
@@ -239,7 +243,8 @@
    "regime": "Laser geodetic",
    "comparator": "FFM20",
    "apOverFfm": 1.2595909680148232,
-   "apOverSgp4": 142.81895242295067,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     1.257455843925189,
@@ -251,7 +256,8 @@
    "regime": "Medium Earth orbit",
    "comparator": "FFM20",
    "apOverFfm": 1.738071882275569,
-   "apOverSgp4": 177.6843278552543,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     1.730958112843285,
@@ -263,7 +269,8 @@
    "regime": "Geostationary",
    "comparator": "FFM20",
    "apOverFfm": 0.18155043699585655,
-   "apOverSgp4": 13.236513683900974,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     0.18661928261914185,
@@ -282,7 +289,8 @@
    "regime": "Inclined geosynchronous",
    "comparator": "FFM20",
    "apOverFfm": 0.19118819401015102,
-   "apOverSgp4": 14.675696654505938,
+   "apOverSgp4": null,
+   "apOverSgp4Note": "not printed: to be re-measured with a longer SGP4 flight",
    "step": "60 s",
    "f": [
     0.19617063921564024,
