@@ -171,7 +171,9 @@ The table's rows (23 flown, 5 read; first row 13:08:17Z, after Amendment 1) are 
    ladder's tesseral members are O(1) terms the module carries (k = 2 at e 0.001 to 0.05 in every regime), a tesseral miss of that size
    would need the module to misstate its own content at k n by more than 100 % while it states the k = 1 content ((2,2) and (2,0),
    24 m at GPS and Molniya, 10 m at GLONASS) to within E_F's k = 1 group (0.07 to 0.9 m at e 0.001 to 0.05); the miss at k n is then
-   the m = 0 member (the zonal and lunisolar short-period at k u), as P1 expected. Where T grows toward E_F with e (k = 2 at e 0.1 to
+   the m = 0 member (zonal or lunisolar short-period at k u; the reading cannot choose between the two), as P1 expected. The reading
+   holds only as far as that assumption holds: a small T at 2n cannot by itself exclude a tesseral term the module LACKS, because a
+   missing term also shows a small T. Where T grows toward E_F with e (k = 2 at e 0.1 to
    0.2 in GPS and Molniya: T 6.5 to 11.8 m against E_F 12.9 to 17.0 m), the tesseral members' share is open and P2's slope is read on
    T and on E_F; the registered split stays "shared".
 3. The deep families at Galileo and GTO: the registered basis chains the (2,1) line (0.305 and 0.395 cycles per day) with a neighbor
