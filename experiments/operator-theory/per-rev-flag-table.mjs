@@ -97,7 +97,7 @@ for (const R of REGIMES) {
       after: { flagged: flagged.length, burnFree: free.length, unchecked: count('after', 'unchecked'), notFlown: count('after', 'not flown') },
       ratioAll: ratio(pairs), intervalAll: all.interval, ratioFlagged: ratio(flagged), ratioBurnFree: ratio(free), intervalBurnFree: ci.interval, clustersBurnFree: ci.clusters,
       ffmWorseBurnFree: free.length ? round(free.filter((x) => x.f > x.a).length / free.length) : null };
-    if (R.decide) cell.verdict = !free.length ? 'no burn-free window' : ci.interval[0] <= 1 ? (ci.interval[1] < 1 ? 'explained: FFM ahead of AP on the burn-free windows' : 'explained: parity on the burn-free windows (the interval holds 1)') : 'FFM defect: FFM worse than AP on the burn-free windows';
+    if (R.decide) cell.verdict = !free.length ? (flagged.length && flagged.length === pairs.length - count('after', 'not flown') ? 'explained: every flown window holds a burn under the flag (no burn-free window)' : 'undecided: no burn-free window') :ci.interval[0] <= 1 ? (ci.interval[1] < 1 ? 'explained: FFM ahead of AP on the burn-free windows' : 'explained: parity on the burn-free windows (the interval holds 1)') : 'FFM defect: FFM worse than AP on the burn-free windows';
     if (R.quiet) cell.falseAlarms = { flagged: flagged.length, of: flagged.length + free.length + count('after', 'unchecked'), share: round(flagged.length / Math.max(1, pairs.length - count('after', 'not flown'))) };
     cells.push(cell);
   }
