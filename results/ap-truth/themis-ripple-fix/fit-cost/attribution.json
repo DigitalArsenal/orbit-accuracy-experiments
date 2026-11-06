@@ -1,0 +1,31 @@
+{
+  "what": "THEMIS-RIPPLE-FIX amendment 26 and SDN-AP condition (2): the fit's wall, iterations, grids built and wasm memory size (MiB), each fit in a fresh instance, against 0.6.2; tool correctness/fitcost.mjs",
+  "perBuildCost": "a fresh instance flies 5 GTO-like sets of distinct keys (12 h at 600 s) once, then again with their grids held: (first - again) / builds",
+  "builds": {
+    "0.6.2": { "wasm": "sdn-ap 0.6.2 dist (c82160de7)" },
+    "head": { "modules": "fb9c8eb4cf5d5d8df5b1d14c71f1a9cc96886a21 (the fitter's abd04b70 merged)", "wasmSha256": "3ae6e9a6974683434b09372958494f2864683023390950788adadab1e87f5b9b", "note": "the fallback's copies read the nominal's grid: Molniya start-0 coefficient 0.04571 (defect)" },
+    "fd": { "modules": "fb9c8eb4c without fit.inc's finite-difference-fallback GridShareScope line (scratch; the fitter's amendment 6)", "wasmSha256": "e5f1ce0f2245b2f9120a06e68e540f0f7a8898e14236cfb989b053a15dccf82f" }
+  },
+  "fits": [
+    { "build": "0.6.2", "fixture": "THEMIS A 2013-02-15", "fitSeconds": 38.4, "iterations": 28, "rmsM": 109.52, "highWaterMiB": 65.1 },
+    { "build": "0.6.2", "fixture": "GTO", "fitSeconds": 13.2, "iterations": 17, "rmsM": 80.46, "highWaterMiB": 72.5 },
+    { "build": "0.6.2", "fixture": "Molniya, drag fitted", "fitSeconds": 20.4, "iterations": 24, "rmsM": 42.68, "highWaterMiB": 72.6 },
+    { "build": "head", "fixture": "THEMIS A 2013-02-15", "fitSeconds": 14.7, "iterations": 41, "rmsM": 104.78, "gridsBuilt": 235, "highWaterMiB": 80.6 },
+    { "build": "head", "fixture": "GTO", "fitSeconds": 23.4, "iterations": 21, "rmsM": 61.76, "gridsBuilt": 188, "highWaterMiB": 85.0 },
+    { "build": "head", "fixture": "Molniya, drag fitted", "fitSeconds": 23.2, "iterations": 23, "rmsM": 21.23, "gridsBuilt": 190, "highWaterMiB": 85.0 },
+    { "build": "fd", "fixture": "THEMIS A 2013-02-15", "fitSeconds": 14.7, "iterations": 41, "rmsM": 104.78, "gridsBuilt": 235, "highWaterMiB": 80.6 },
+    { "build": "fd", "fixture": "GTO", "fitSeconds": 27.2, "iterations": 19, "rmsM": 61.76, "gridsBuilt": 254, "highWaterMiB": 88.1 },
+    { "build": "fd", "fixture": "Molniya, drag fitted", "fitSeconds": 18.3, "iterations": 23, "rmsM": 21.80, "gridsBuilt": 151, "highWaterMiB": 85.0 }
+  ],
+  "msPerBuild": { "head": 44.9, "fd": 48.6 },
+  "gtoAttribution": {
+    "build": "fd",
+    "iterations": "19 against 0.6.2's 17 (2 more)",
+    "gridsBuilt": 254,
+    "gridsPerIteration": 13.4,
+    "buildSeconds": "254 x 44.9 to 48.6 ms = 11.4 to 12.3 s",
+    "restSeconds": "27.2 - 11.4 to 12.3 = 14.9 to 15.8 s, 0.78 to 0.83 s per iteration against 0.6.2's 13.2 / 17 = 0.78 s",
+    "reading": "the GTO slowdown is the grid builds (about 12 s of the 14.0 s); the iterations add about 2 x 0.8 s; the rest of an iteration costs what 0.6.2's does"
+  },
+  "budget": "160 MiB per fit (SDN-AP, 2026-11-06); fd's largest 88.1 MiB, margin 71.9 MiB"
+}

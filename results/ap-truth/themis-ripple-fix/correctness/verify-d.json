@@ -1,0 +1,1 @@
+{"window":"THEMIS D 2013-02-12","excluded":105,"rows":["module":{"ok":1,"families":288,"bytes":7077888,"buildMs":214.0,"usPerStep":14.50,"rmsM":0.1190,"maxM":2.3273,"roughDiffM":0.00319,"outputRoughM":0.0725},{"NE":256,"families":287,"buildMs":33.8,"gridMaxDiffRel":3.199e-10,"cubic128":{"rmsM":0.1190,"maxM":2.3273,"roughDiffM":0.00319}}]}

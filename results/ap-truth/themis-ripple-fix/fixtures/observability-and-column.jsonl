@@ -1,0 +1,6 @@
+{"step":2,"build":"0.6.2","bterm":0.04478058452343159,"sigmaLog":0.22418332375009073,"sigmaOverValue":0.22418332375009073,"wrms":0.042677269818208366,"accepted":145,"prior":null,"bModel":"posterior 0.04478058452343159 +- 0.010039060277934766 m^2/kg"}
+{"step":2,"build":"fixed","bterm":0.045713939530005854,"sigmaLog":0.10962974383683298,"sigmaOverValue":0.10962974383683298,"wrms":0.0212243348938326,"accepted":145,"prior":null,"bModel":"posterior 0.045713939530005854 +- 0.005011607480447015 m^2/kg"}
+{"step":2,"build":"exact","bterm":0.04461633761935712,"sigmaLog":0.1153694261912166,"sigmaOverValue":0.1153694261912166,"wrms":0.021800715473184688,"accepted":145,"prior":null,"bModel":"posterior 0.04461633761935712 +- 0.005147361269898822 m^2/kg"}
+{"step":"1b","build":"0.6.2","columnRmsMPerUnit":12563.1,"againstLastRms":0.21,"relative":0.000017}
+{"step":"1b","build":"fixed","columnRmsMPerUnit":12563.1,"againstLastRms":0.01,"relative":5.613e-7}
+{"step":"1b","build":"exact","columnRmsMPerUnit":12563.1,"againstLastRms":0,"relative":0}
