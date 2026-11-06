@@ -124,6 +124,12 @@ grids. The guard E2E asserts 0 shared and more than 0 exact lookups over the fit
 fit 571.9 MB against 0.6.2's 68.2 MB (39.5 to 40.2 s). The memory is the ripple lane's next item (exact grids released at scope exit);
 the Molniya cost and paired lines are the ripple lane's (it holds the set).
 
+Amendment 3.2 (2026-11-06): exact grids freed by their last holder (ripple 66926aee2, merged at modules 2a6dcee99; scratch build
+5043e898), the scope as in 3.1. THEMIS A (fitcost.mjs, two runs each, alternating, load 55-62): fit 16.44 / 16.60 s against 0.6.2's
+40.78 / 40.56 s; wasm high-water after the fit 165,150,720 bytes (165.2 MB; 157.5 MiB) against 0.6.2's 68,222,976 (68.2 MB), over a
+160 MB budget by 5.2 MB read in decimal megabytes, under it read in MiB. FIT_RMS 104.78 m, BTERM 0.012145; grid lookups 0 shared, 302
+exact; the guard E2E and fit.e2e.mjs PASS.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
