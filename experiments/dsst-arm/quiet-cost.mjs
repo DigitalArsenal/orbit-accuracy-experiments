@@ -6,7 +6,10 @@
 // any quiet figure: the five regimes with the most scored cost rows (ties by name), and in each the median window of the loaded rows by
 // CPU per object-day (fit CPU per object-day of the arc plus flight CPU per object-day flown; the lower middle when even, ties by key).
 // Quiet rows go to quiet-cost/ beside the cost store, never into a table directly; the per-regime ratio, quiet over loaded, is printed and
-// written to quiet-cost/summary.json. Within 10 % the loaded rows stand; otherwise the published cost scales by the ratio and says so.
+// written to quiet-cost/summary.json. Within 10 % the loaded rows stand; otherwise the published cost scales by the ratio and says so
+// (a regime without a quiet window by the median of the five). A window whose load is still above 22.83 after a 30-minute wait runs
+// nothing: the status is "not quiet, undecided", the hold is released and the exit is 2, so the caller retries at a lower-load moment;
+// a measurement above the ceiling never serves as the quiet reference. The hold's length, warm-ups included, is printed and recorded.
 //   node experiments/dsst-arm/quiet-cost.mjs [--dry]   --dry prints the five windows and holds nothing
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,6 +32,7 @@ const byRegime = new Map();
 for (const r of loaded) (byRegime.get(r.regime) ?? byRegime.set(r.regime, []).get(r.regime)).push(r);
 const regimes = [...byRegime].sort(([a, x], [b, y]) => y.length - x.length || a.localeCompare(b)).slice(0, REGIMES);
 const picks = regimes.map(([regime, list]) => { const s = [...list].sort((a, b) => metric(a) - metric(b) || a.key.localeCompare(b.key)); return { regime, n: list.length, row: s[Math.floor((s.length - 1) / 2)] }; });
+if (!picks.length) console.log('no rows: no scored cost row on the 12 GiB heap yet');
 for (const p of picks) console.log(`${p.regime}: ${p.row.key} fit ${p.row.fit} h (${p.row.store}), loaded ${metric(p.row).toFixed(3)} CPU s per object-day, median of ${p.n}`);
 if (DRY) process.exit(0);
 if (picks.length < REGIMES) throw new Error(`only ${picks.length} regimes hold scored cost rows`);
@@ -43,10 +47,13 @@ const held = accuracyJvms();
 fs.writeFileSync(HOLD, `${held.join('\n')}\n`);
 const deadline = Date.now() + 120000;
 while (!held.every((p) => ps('state', p).startsWith('T') || !ps('state', p))) { if (Date.now() > deadline) throw new Error(`accuracy JVMs not all paused: ${held.join(' ')}`); execFileSync('sleep', ['2']); }
+const heldAt = Date.now();
 console.log(`held ${held.length} accuracy JVMs: ${held.join(' ')}`);
 
-// one window at a time, through a copy of its runner that writes to quiet-cost/ and runs that window alone
+// one window at a time, through a copy of its runner that writes to quiet-cost/ and runs that window alone; a window whose load is still
+// above the ceiling after the wait runs nothing: the check stops "not quiet, undecided" and the caller retries at a lower-load moment
 const results = [];
+let notQuiet = null;
 try {
   fs.mkdirSync(QUIET, { recursive: true });
   for (const p of picks) {
@@ -63,11 +70,12 @@ try {
       patch('/claude-dsst-d9/run/${', '/claude-dsst-d9/run-quiet/${');
       patch('.slice(0, LIMIT);', '.filter((j) => `${j.w.key}@${j.hours}` === process.env.DSST_QUIET_JOB);');
     }
-    fs.writeFileSync(copy, text);
     const waitFrom = Date.now();
     while (os.loadavg()[0] > LOAD_MAX && Date.now() - waitFrom < LOAD_WAIT_MS) execFileSync('sleep', ['10']);
     const load = os.loadavg()[0];
-    console.log(`${p.regime}: ${p.row.key} fit ${p.row.fit} h, 1-minute load ${load.toFixed(2)}${load > LOAD_MAX ? ' (above 22.83 after 30 min: run anyway, recorded)' : ''}`);
+    if (load > LOAD_MAX) { notQuiet = { regime: p.regime, key: p.row.key, fit: p.row.fit, load: Number(load.toFixed(2)) }; console.log(`${p.regime}: 1-minute load ${load.toFixed(2)} above 22.83 after 30 min: nothing run`); break; }
+    fs.writeFileSync(copy, text);
+    console.log(`${p.regime}: ${p.row.key} fit ${p.row.fit} h, 1-minute load ${load.toFixed(2)}`);
     const env = { ...process.env, DSST_QUIET_JOB: `${p.row.key}@${p.row.fit}`, XP2F_CONTROL: iss || p.row.store === 'ap/b051/truth2' ? '1' : '0', SDN_MODULES_ROOT: process.env.SDN_MODULES_ROOT ?? '/Users/tj/software/private/coordinator-d9/space-data-network-modules-r2' };
     const run = spawnSync(process.execPath, [copy, '--store', p.row.store, '--cost', ...(iss ? ['--iss'] : [])], { cwd: path.resolve(here, '../..'), env, stdio: 'inherit' });
     const quietFile = path.join(QUIET, p.row.file); // the runner names its rows file as the loaded run did
@@ -80,12 +88,18 @@ try {
   }
 } finally {
   fs.writeFileSync(HOLD, before);
-  console.log(`hold list restored (${before.trim() ? before.trim().split(/\s+/).length : 0} PIDs)`);
+  console.log(`hold list restored (${before.trim() ? before.trim().split(/\s+/).length : 0} PIDs); accuracy JVMs held ${((Date.now() - heldAt) / 60000).toFixed(1)} min, warm-ups included`);
+}
+const pauseMinutes = Number(((Date.now() - heldAt) / 60000).toFixed(1));
+if (notQuiet) {
+  fs.writeFileSync(path.join(QUIET, 'summary.json'), `${JSON.stringify({ status: 'not quiet, undecided', window: notQuiet, completed: results.length, pauseMinutes, loadMax: LOAD_MAX }, null, 1)}\n`);
+  console.log('not quiet, undecided: no measurement above the ceiling serves as the quiet reference; retry at a lower-load moment');
+  process.exit(2);
 }
 
 const rows = results.map((r) => ({ ...r, ratio: r.quiet ? Number((r.quiet.cpuPerObjectDay / r.loaded.cpuPerObjectDay).toFixed(4)) : null }));
 for (const r of rows) r.agrees = r.ratio !== null && Math.abs(r.ratio - 1) <= AGREE;
-const summary = { rule: 'five regimes with the most scored cost rows (ties by name); in each the median loaded window by fit CPU per object-day of the arc plus flight CPU per object-day flown (lower middle, ties by key); quiet run one window at a time on the fixed 12 GiB heap at a 1-minute load at or under 22.83, accuracy JVMs held; agreement within 10 %', loadMax: LOAD_MAX, rows,
+const summary = { status: 'decided', pauseMinutes, rule: 'five regimes with the most scored cost rows (ties by name); in each the median loaded window by fit CPU per object-day of the arc plus flight CPU per object-day flown (lower middle, ties by key); quiet run one window at a time on the fixed 12 GiB heap at a 1-minute load at or under 22.83, accuracy JVMs held; agreement within 10 %', loadMax: LOAD_MAX, rows,
   verdict: rows.every((r) => r.agrees) ? 'the loaded rows stand' : 'the published cost scales by the quiet-over-loaded ratio per regime' };
 fs.writeFileSync(path.join(QUIET, 'summary.json'), `${JSON.stringify(summary, null, 1)}\n`);
 console.log('| Regime | Window | Load before | Loaded CPU s / object-day | Quiet | Quiet / loaded |');
