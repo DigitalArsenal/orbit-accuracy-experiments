@@ -83,17 +83,20 @@ the 2.5th and 97.5th percentiles of the draw medians, exponentiated. Beside it, 
 so the two can be read together. Per satellite, the same ratio and its window count, information only.
 
 WAAS message type 9, the owner's truth for commercial GEO: no GFZ window has an MT9 counterpart (the GFZ satellites are BeiDou and QZSS;
-MT9 carries Galaxy 30, SES-15 and Eutelsat 117 West B), so no cell overlaps. The second column therefore stands beside the GFZ column, on
-its own windows: group `WA` (`lib/regimes.mjs`; `GEO-TRUTH.md` part W; cutoffs 2026-09-02 to 2026-10-26 every 2 days, 84 windows), the
-same fit (72 h) and leads, AP 0.5.1 `AP72` of `ap/b051/regimes-wa` against FFM `F72` of `ap/b0411/regimes-wa`, which is `propagator/ffm`
-2.0.4 (wasm c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2): `cycle-ffm220.sh` did not rerun `regimes-wa`, and the
-column says so. The 2.0.4 to 2.2.0 move was 0.000 on every geostationary cell of `ffm-ap-ratio.json` (before equals after in all four).
-The statistic and intervals as above, seeds `FFM-GEO-168H|MT9|...`. Beside every MT9 figure: the broadcast's revolution-to-revolution
-noise is about 45 m, the SDN-AP session's figure stated in the task record, not measured here; the measured bound this store holds is
-that FFM fitted to 24 h of Galaxy 30's broadcast predicts it one day ahead to a median of 0.060 km between burns
-(`results/ap-truth/geo/README.md` sha256 324443db). The registered WAAS burns (`results/ap-truth/geo/burns-waas.json` sha256 4965572b,
-Galaxy 30's five north-south burns) are counted per cell in the fit arc and in the forecast to the lead, information only; no window is
-selected or dropped by them.
+MT9 carries Galaxy 30, SES-15 and Eutelsat 117 West B), so no cell overlaps. The MT9 column is a second population: separate satellites,
+separate truth. It stands beside the GFZ column and is never read against it; agreement or disagreement between the two columns is not
+validation of either and is not read as such, here or in the table (SDN-AP session, 2026-11-06). Its windows: group `WA` (`lib/regimes.mjs`;
+`GEO-TRUTH.md` part W; cutoffs 2026-09-02 to 2026-10-26 every 2 days, 84 windows), the same fit (72 h) and leads, AP 0.5.1 `AP72` of
+`ap/b051/regimes-wa` against FFM `F72` of `ap/b0411/regimes-wa`, which is `propagator/ffm` 2.0.4 (wasm
+c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2): `cycle-ffm220.sh` did not rerun `regimes-wa`; the column is labeled
+FFM 2.0.4, never 2.2.x, with the identity cited: the 2.0.4 to 2.2.0 move was 0.000 on every geostationary cell of `ffm-ap-ratio.json`
+(before equals after in all four). The statistic and intervals as above, seeds `FFM-GEO-168H|MT9|...`. Beside every MT9 figure: the
+broadcast's revolution-to-revolution noise is about 45 m, the per-rev record's measurement (experiments-ffm-step-flag-per-rev-20261105,
+as the SDN-AP session states it); it is not measured here, and no landed per-rev file at experiments 1d12fb5b prints the figure, so the
+table cites it as relayed. The measured bound this store holds beside it: FFM fitted to 24 h of Galaxy 30's broadcast predicts it one
+day ahead to a median of 0.060 km between burns (`results/ap-truth/geo/README.md` sha256 324443db). The registered WAAS burns
+(`results/ap-truth/geo/burns-waas.json` sha256 4965572b, Galaxy 30's five north-south burns) are counted per cell in the fit arc and in
+the forecast to the lead, information only; no window is selected or dropped by them.
 
 ## The verdict rule
 
@@ -102,8 +105,8 @@ For a loss, the settings table is read row by row for a setting where FFM's choi
 not, a coarser model of the same term, or a parameter AP fits and FFM holds. A row where FFM's choice is the richer cannot explain an
 FFM loss. A setting found names an FFM record to fix, `modules-ffm-geo-<setting>-20261106`, with the row and both hashes. A loss with no
 such row is reported as a loss the settings do not explain, and names no record. With no loss in any GFZ cell the verdict is "nothing
-to explain at GEO today". The MT9 column informs the reading and decides nothing: its windows are other satellites on other dates and its
-FFM build is 2.0.4. No GEO burn verdict comes out of this record: burns are counted where a registered record counts them, never judged.
+to explain at GEO today". The MT9 column decides nothing and checks nothing: a second population (separate satellites, separate truth,
+other dates, FFM 2.0.4), reported for itself and never as a cross-check of the GFZ ratios. No GEO burn verdict comes out of this record: burns are counted where a registered record counts them, never judged.
 
 ## Outputs
 
