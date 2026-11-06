@@ -833,9 +833,16 @@ function table(dir) {
   const selLine = sel.selected ? `Selected on training (leave-one-block-out): ${sel.selected}.` : `No form passed leave-one-block-out on training${sel.stoppedAt ? ` (stopped at ${sel.stoppedAt}: ${sel.reason})` : ''}; nothing is scored on the held-out set as a verdict and nothing ships.`;
   const heldLine = held?.score ? `Held-out verdict for ${held.selected}: ${held.score.pass ? 'PASS' : 'FAIL'}.` : 'Held-out verdict: none.';
   L.push(`${selLine} ${heldLine}`, '', '# AP DRAG process-noise model (COVARIANCE-MODEL.md)', '');
-  L.push('Forms fitted on the coverage study\'s rows (sdn-ap 0.6.0) by re-weighting the module\'s own per-term variances; selected in the registered order by leave-one-block-out on five season blocks (T-a, T-b, T-c, S1-a, S1-b; 10-day guards): every left-out cell (R, I, C at 24, 72, 167 h) median |z| in [0.603, 0.754] and the share within 2 sigma at least 0.90. The selected form alone is scored once on the held-out windows (sdn-ap 0.6.1 flights).', '');
-  L.push('## Selection', '', '| Form | Parameters | Folds passed | Failing cells (block axis lead median / 2-sigma share) |', '|---|---:|---:|---|');
-  for (const f of sel.forms) L.push(`| ${f.form} | ${formOf(f.form).params.length} | ${fits.filter((q) => q.form === f.form && q.block !== 'all' && q.pass).length} of 5 | ${f.failingCells.slice(0, 8).join('; ')}${f.failingCells.length > 8 ? `; ${f.failingCells.length - 8} more` : ''} |`);
+  L.push('Forms fitted on the training windows (the coverage study\'s windows re-flown on sdn-ap 0.6.1 at 17 digits with the full RIC block, amendment 2) by re-weighting the module\'s own per-term variances; burn-censored near 700 km (amendment 4: Sentinel-1A and 1C; strong drag uncensored, no maneuver record held). Selected in the registered order by leave-one-block-out on five season blocks (T-a, T-b, T-c strong drag 2025; S1-a, S1-b near 700 km 2026; 10-day guards): a fold passes when every decidable left-out cell (R, I, C at 24, 72, 167 h; Sentinel-1 at 24 and 72 h; at least 30 window-arms) has median |z| in [0.603, 0.754] and a share within 2 sigma of at least 0.90. Only a selected form is scored on the held-out windows, once; no held-out row has been read.', '');
+  const foldOf = (form, b) => fits.find((q) => q.form === form && q.block === b);
+  const blockIds = Object.keys(BLOCKS);
+  L.push('## Selection', '', `| Form | Parameters | Training loss | ${blockIds.map((b) => `${b} failed / decidable`).join(' | ')} |`, `|---|---:|---:|${blockIds.map(() => '---:').join('|')}|`);
+  for (const f of sel.forms) L.push(`| ${f.form} | ${formOf(f.form).params.length} | ${foldOf(f.form, 'all')?.loss.toPrecision(3) ?? ''} | ${blockIds.map((b) => { const q = foldOf(f.form, b); return q ? `${q.cells.filter((c) => c.pass === false).length} / ${q.cells.filter((c) => c.decidable).length}` : ''; }).join(' | ')} |`);
+  const persist = {};
+  for (const f of sel.forms) for (const b of blockIds) for (const c of foldOf(f.form, b)?.cells ?? []) if (c.pass === false) (persist[`${b} ${c.axis} ${c.h} h`] ??= []).push(c);
+  const every = Object.entries(persist).filter(([, v]) => v.length === sel.forms.length);
+  L.push('', `## Cells failing under every form (${every.length})`, '', '| Left-out block, axis, lead | Median \\|z\\| over the forms | Share within 2 sigma over the forms |', '|---|---|---|');
+  for (const [k, v] of every) { const m = v.map((c) => c.medianAbsZ), w = v.map((c) => c.within2); L.push(`| ${k} | ${Math.min(...m).toFixed(3)} to ${Math.max(...m).toFixed(3)} | ${Math.min(...w).toFixed(3)} to ${Math.max(...w).toFixed(3)} |`); }
   L.push('', '## Fitted on all training rows', '', '| Form | Loss | Parameters |', '|---|---:|---|');
   for (const f of fits.filter((q) => q.block === 'all')) L.push(`| ${f.form} | ${f.loss.toPrecision(4)} | ${Object.entries(f.x).map(([k, v]) => `${k} ${Number(v).toPrecision(6)}`).join(', ')} |`);
   if (held) {
@@ -869,7 +876,8 @@ function check() {
   }
   // bars: every row read
   let read = 0;
-  for (const dir of [path.join(TRAIN, 'truth'), path.join(TRAIN, 'truth2'), ...Object.keys(SETS).map((s) => path.join(OUT, s))]) for (const r of rowsIn(dir)) {
+  const scoredHeld = !!sel.selected;
+  for (const dir of [path.join(TRAIN, 'truth'), path.join(TRAIN, 'truth2'), ...TRAIN_SETS.map((s) => path.join(OUT, s)), ...(scoredHeld ? HELD_SETS.map((s) => path.join(OUT, s)) : [])]) for (const r of rowsIn(dir)) {
     read += 1; const b = barred(r.norad, Date.parse(r.cutoff), r.name); ok(!b, `${r.key}: ${b}`);
   }
   // training: the identity at the rows' own sizes reproduces their full variances
@@ -882,27 +890,28 @@ function check() {
   ok(maxRel <= 1e-6, `the identity reproduces the training rows' full variances within ${maxRel}`);
   ok(arms.every((a) => a.block), 'a training window in no block');
   // held-out control and repack
-  const held = heldOutArms();
-  const repack = Object.keys(SETS).flatMap((s) => rowsIn(path.join(OUT, s))).flatMap((r) => Object.values(r.arms ?? {})).filter((a) => a.leads);
+  const held = scoredHeld ? heldOutArms() : [];
+  const repack = (scoredHeld ? Object.keys(SETS) : TRAIN_SETS).flatMap((s) => rowsIn(path.join(OUT, s))).flatMap((r) => Object.values(r.arms ?? {})).filter((a) => a.leads);
   ok(repack.every((a) => a.repackEqual === true), 'an unchanged copy did not fly byte-equal');
-  const ctl = control();
+  const ctl = control(scoredHeld ? Object.keys(SETS) : TRAIN_SETS);
+  if (!scoredHeld) ok(!fs.existsSync(path.join(OUT, 'heldout.json')), 'a held-out score exists though no form was selected');
   ok(ctl.differing === 0, `the control differs on ${ctl.differing} of ${ctl.scalarsCompared} scalars`);
   // results reproduce
   const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'covariance-model-'));
   table(scratch);
   for (const f of ['table.json', 'README.md']) ok(fs.existsSync(path.join(RESULTS, f)) && fs.readFileSync(path.join(scratch, f), 'utf8') === fs.readFileSync(path.join(RESULTS, f), 'utf8'), `${f} does not reproduce from the rows`);
   fs.rmSync(scratch, { recursive: true, force: true });
-  console.log(`rows read ${read}; training arms ${arms.length}; held-out arms ${held.length}; identity max relative ${maxRel.toExponential(2)}; control ${ctl.scalarsCompared} scalars, ${ctl.differing} differing`);
+  console.log(`rows read ${read} (${scoredHeld ? 'training and held-out' : 'training only: no form was selected, no held-out row is read'}); training arms ${arms.length}; held-out arms ${held.length}; identity max relative ${maxRel.toExponential(2)}; control ${ctl.scalarsCompared} scalars, ${ctl.differing} differing`);
   console.log(sel.selected ? `selected ${sel.selected}` : `no form selected${sel.stoppedAt ? ` (stopped at ${sel.stoppedAt})` : ''}`);
   if (fs.existsSync(path.join(OUT, 'heldout.json'))) { const h = JSON.parse(fs.readFileSync(path.join(OUT, 'heldout.json'), 'utf8')); if (h.score) console.log(`held-out ${h.selected}: ${h.score.pass ? 'PASS' : 'FAIL'}`); }
   if (fails.length) { console.error(`FAIL\n${fails.join('\n')}`); process.exit(1); }
   console.log('PASS');
 }
 /** The reproduced fits against the producers' stored rows (P: ap/b051/truth2; DO and LS: ap/b051/regimes): ok, error, bterm, agom, rms and lead days 1, 2, 3, 7. */
-function control() {
+function control(sets) {
   const out = { scalarsCompared: 0, differing: 0, differences: [] };
   for (const [set, s] of Object.entries(SETS)) {
-    if (!s.control) continue;
+    if (!s.control || !sets.includes(set)) continue;
     const stored = new Map(rowsIn(path.join(B051, s.control)).map((r) => [r.key, r]));
     for (const r of rowsIn(path.join(OUT, set))) {
       const a = stored.get(r.key);
