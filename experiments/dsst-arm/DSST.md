@@ -160,3 +160,16 @@ The SDN-AP session's correction, committed before any calibration figure is read
 1. The largest heap after any collection counts old-generation garbage under the serial collector (5.59 GiB against 0.84 to 1.86 GiB after full collections) and is not a published memory figure.
 2. Each cost row records the JVM's resident set size, its largest value sampled once a second during the window (`rssMaxBytes`), and the largest heap after a full collection during the window's fit and flight where one occurred (`heapAfterFullGcMaxBytes`, else null), under the fixed 8 GiB heap; each cost process records its maximum resident set size (`/usr/bin/time -l`) as before.
 3. The published memory statement comes from a heap-size calibration on the 5 grid-check windows (the 8 fits of amendment 2026-11-05 (grid check)), one JVM at a time with the cost JVM's flags (serial collector, one processor, `-Xms` equal to `-Xmx`, every collection logged, under `/usr/bin/time -l`), at fixed heaps of 3, 4, 6 and 8 GiB (2 GiB is known to spend most of its time in collection). Per heap: the fits completed and failed, the collection time (the sum of the logged pause times, the collector running on the one processor) as a share of the process's CPU (user plus system), the largest heap after a full collection, and the maximum resident set size. "The heap DSST needs" is the smallest of those heaps at which all 8 fits complete (a fit failing at the iteration limit, as STARLETTE 24 h does under every grid, counts as complete) with collection under 10 % of CPU; it is reported beside the 8 GiB cost bound and the resident set sizes. The calibration writes no cost row.
+
+## Amendment 2026-11-06 (heap calibration result)
+
+The calibration of amendment 2026-11-06 (heap calibration), run 2026-11-06 01:59Z to 03:54Z on `DsstArm.java` as registered. STARLETTE 24 h ran to the iteration limit at every heap and counts as complete (completion, not convergence):
+
+| Heap | Fits completed (converged / at the limit) | Collections (full) | Collection s | CPU s | Collection % of CPU | Largest heap after a full collection MiB | Maximum resident set MiB |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 3 GiB | 8 (7 / 1) | 4,472 (873) | 844 | 2,325 | 36.3 | 2,774 | 3,369 |
+| 4 GiB | 8 (7 / 1) | 2,809 (14) | 59 | 1,524 | 3.8 | 2,800 | 4,364 |
+| 6 GiB | 8 (7 / 1) | 1,888 (3) | 50 | 1,581 | 3.1 | 2,750 | 6,356 |
+| 8 GiB | 8 (7 / 1) | 1,441 (2) | 48 | 1,613 | 3.0 | 843 | 8,321 |
+
+The heap DSST needs: 4 GiB (3.8 % of CPU in collection; 36.3 % at 3 GiB). The live set is 2.8 GiB (the largest heap after a full collection at 3, 4 and 6 GiB; at 8 GiB the two full collections came early), above the 1.86 GiB amendment 2026-11-06 (cost heap) took from a run stopped on its first window. The SDN-AP session's rule: keep the 8 GiB cost heap only if the 8 GiB run spends 2 % or less of its CPU in collection, else 4 times the live set; at 3.0 % each cost JVM runs on a fixed 12 GiB heap (`-Xms12g -Xmx12g`), replacing 8 GiB. The accuracy bound of 16 GiB is 5.7 times the live set and stands. The runners' SHA-256 changes for runners started after this commit (the cost heap value only).
