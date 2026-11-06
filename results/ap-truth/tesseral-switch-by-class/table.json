@@ -1,6 +1,6 @@
 {
  "registration": "experiments/operator-theory/TESSERAL-SWITCH-BY-CLASS.md",
- "runner": "02da5a2a4aab5405a40c100505aa0b62f448c1ab1ab9ac02b3a100b201360a4f",
+ "runner": "88dd130feba5341faf666bcedea726a1f018e68f74e1e695a4a90f177d510532",
  "pins": {
   "base": {
    "version": "0.6.3",
@@ -9,6 +9,9 @@
   },
   "next": {
    "version": "0.6.4",
+   "preSignSha256": "e245de29ea050b08244dc9d69fd892ad2473699843b92988fd34a47a466b15f8",
+   "canonicalSha256": "fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5",
+   "bundleSha256": null,
    "wasmSha256": "e245de29ea050b08244dc9d69fd892ad2473699843b92988fd34a47a466b15f8",
    "modulesHead": "416a67e9a6411840f5b385f9c350018fe9922e3d"
   },

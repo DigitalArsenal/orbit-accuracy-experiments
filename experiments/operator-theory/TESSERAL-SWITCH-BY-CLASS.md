@@ -117,6 +117,25 @@ so every worker holds about 62 band, 31 above and 31 outside records), whose ref
 The SDN-AP session's word on P1's paired clause (raw forward RMS, moved by the secular share the all-regimes line never charges) and on
 P2's warm line (missed by the above-e-0.3 records' path, unchanged by 0.6.4, on the contiguous assignment) is requested with the numbers.
 
+## Amendment 2 (2026-11-06 12:58Z, the SDN-AP session's ruling through the coordinator, after the re-run's table was read)
+Version go for 0.6.4 with the two clause misses disclosed exactly as measured:
+- P1: the registered paired-raw-RMS clause misses in 2 of 20 cells (Ajisai 0.1 and 0.15): the fit's forward-day secular drift rose while
+  the tesseral share fell and the fit RMS improved (Ajisai 0.15: secular 42.7 -> 70.6 m, tesseral 27.5 -> 9.7 m, fit RMS 51 -> 42 m;
+  Ajisai 0.1: secular 6.3 -> 24.7 m, tesseral 18.4 -> 5.2 m, fit RMS 29 -> 22 m); the cause is fit-rate sensitivity. The four cells
+  whose raw forward RMS rose (the two Ajisai cells and Jason-3 0.07 and 0.1, both passing) go to the CryoSat-2 secular record, which the
+  coordinator widens. The three-way clauses hold: no fail on 0.6.4 (8 on 0.6.3), passes 10 (2), the tesseral forward share lower in
+  every exercised cell.
+- P2: the warm figure depends on the worker assignment and on whether the refresh epoch crosses a 48 h grid node (the ripple record's
+  1.2 s refresh did not cross one; this record's refresh to the epoch plus one day builds the next node for the above-0.3 records, 66 ms
+  each on both builds). On the registered contiguous assignment the slowest worker is 5,436 ms on 0.6.4 against 5,842 ms on 0.6.3,
+  carried by the above-e-0.3 path 0.6.3 already flies; interleaved 2,308 ms on 0.6.4 against 5,674 ms on 0.6.3; 0.6.4 is faster than
+  0.6.3 on every record class (band 33.1 against 46.0 ms cold and 3.4 against 47.5 ms warm; above 107.7 against 108.3 cold and 66.1
+  against 65.1 warm; outside 3.9 against 3.8 cold and 4.5 against 4.0 warm; medians); cold median 33.6 ms and peak 466 MB within.
+- Signing (the owner's decision, 12:45Z): 0.6.4 is the first module version shipped signed, with the module-owner-2026-10-15 key through
+  SDM_MODULE_SIGNING_KEYPAIR_PATH alone; its identity is the SDK canonical module hash fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5
+  (sds.* custom sections stripped, what the signature covers; equal for the unsigned build every row here flew and for the signed dist),
+  with the signed whole-file bundle hash stated beside it in the table and the module's headers.
+
 ## Outputs
 `SDN_MODULES_ROOT=<the -pin clone with the 0.6.4 dist> SDNAP_BASE_WASM=<a copy of the 0.6.3 dist> node
 experiments/operator-theory/tesseral-switch-by-class.mjs --run [--shard k/n]` (at most 4 shards; the catalog measurement runs on shard 0
