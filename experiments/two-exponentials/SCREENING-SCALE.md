@@ -68,3 +68,7 @@ Before each run (and before each start when two run at once): the 1-minute load 
 - `table.json`, `README.md`: the tables, both fits with intervals and pass chances, propagation share per theory, the conversion sentence, the verdict.
 - `chart.json`: for Phase C, the N index, CPU per phase normalized to the current catalog = 1, events normalized, p and its intervals; no raw count.
 - `--check`: registration before the first row; the table reproducing byte for byte; p with intervals for both fits; events per N; propagation share per theory; the conversion sentence; the verdict; the parity guard.
+
+## Amendment 1 (2026-11-06, before any row; coordinator request)
+
+SGP4 flies the whole population because the GP element sets exist for every object of every case; no other theory has states for the whole catalog. The propagation share measured here is therefore SGP4 propagation inside this module. The sentence about what a cheaper propagator buys is about replacing SGP4-class propagation cost only. It says nothing about AP unless AP flies a covered share of the population, and the study reports AP only by its covered share.
