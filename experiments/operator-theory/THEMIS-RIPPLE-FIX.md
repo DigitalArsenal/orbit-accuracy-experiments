@@ -243,3 +243,21 @@ Diagnosis, THEMIS A 2013-02-15, arms base and C4 (and C1, C3 rows already stored
    epoch elements at day 3 are read from the drift rate (elements at successive cutoffs) and compared with the other windows'.
 Outcome rule: a defect found is fixed and the 12 windows rerun; else C4 is not acceptable with a 10x regression on one window, and the
 report states the cause found and stops for the coordinator.
+
+## Amendment 10 (2026-11-06, the SDN-AP session's inputs; written after Amendment 9's stored rows of THEMIS A 2013-02-15 were read and
+before any of the checks below is run)
+Already read (Amendment 9, items 1 to 4 from stored rows): on this window C1, C2 and C4 fit BTERM 4.29 to 4.51 against the base's
+0.012 (C3: 0.012), with fit residual RMS 249 to 250 m against 110 m (C3: 105 m); the day errors grow quadratically on those arms; the
+base fit flown on the candidate gives day 1 / 3 / 7 126.1 / 440.6 / 857.1 m against 211.7 / 314.1 / 419.9 m; the roughness study's
+rows give this window 173.8 / 260.7 / 910.1 m on 0.4.11 to 0.4.14 and 211.7 / 314.1 / 419.9 m on 0.4.15 to 0.6.0.
+1. Small divisors: per window (the 12 THEMIS elements as fitted by the base), each grid family's smallest |k - nu| over the kept
+   harmonics and its psi-dot / n, and the largest family amplitude (position, m); THEMIS A 2013-02-15 against the others. Before any
+   fix: the grid against the full-field quadrature at THEMIS A 2013-02-15's base-fitted elements (resum3.cpp's check): agreement within
+   the bounds means the fit is the problem, disagreement means the cut.
+2. Re-grid replacement: a re-grid on a fixed schedule in flight time, every k hours from the set's epoch, the same for every set of a
+   fit; across each boundary the old and new grids are blended linearly over the last fifth of the interval so no step adds
+   roughness; k sized against the quadrature with the measured drift (de 3e-3 per week, linear in time) so that 1 m RMS, 5 m maximum
+   and 0.1 m roughness hold over 7 days; k from {6, 12, 24, 48} h, the largest that holds.
+3. Init in wasm: target 100 ms per object or less (report-only until met). Measured: 1,000 records above e* flown to one epoch, wall time
+   and peak wasm memory, on one worker and on a pool of the console's size (8 workers); the choice of N and of C3 against C4 weighs this
+   beside the fit cost.
