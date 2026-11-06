@@ -156,3 +156,12 @@ wall per step; the smallest such N is taken; otherwise Fourier at N = 128 stands
 Re-grid thresholds (Addition 2): the grid built at the window's elements against the full-field quadrature at shifted elements, one
 element at a time: de in {1e-4, 3e-4, 1e-3, 3e-3}, da / a in {1e-5, 1e-4, 1e-3}, di in {1e-4, 1e-3} rad; each threshold is the largest
 step whose RMS stays at or under 0.25 m on both windows.
+
+## Amendment 5 (2026-11-06, after the Amendment 4 cubic and drift rows, before the steps below)
+Read so far: the cubic at N = 128 meets the bounds on both windows (it is taken: Amendment 4's rule); on the drift steps registered, only
+da / a = 1e-5 stays at or under 0.25 m: de = 1e-4 and di = 1e-4 rad already exceed it. Added, before they run: (1) smaller steps
+de in {1e-5, 3e-5}, di in {1e-5, 3e-5} rad, da / a = 3e-6; (2) a grid linear in the elements as the alternative to re-gridding: the
+grid and its first derivatives in e, i and a (central differences of the grid at the same steps h as the quadrature's), evaluated as
+grid + sum of derivative x the elements' current offset; its RMS against the quadrature on the Amendment 4 steps, same 0.25 m test;
+memory four times the grid's. (3) The mean-element drift a 7-day flight sees, from the AP (31, 20) fits of THEMIS D at cutoffs 2013-02-14
+and 2013-02-16 against 2013-02-12 (non-scored cutoffs; elements only, no forecast error), to state the re-grids per flight.
