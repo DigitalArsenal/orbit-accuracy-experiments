@@ -109,6 +109,7 @@ async function scan(key, arm, oem, pcf, extra) {
     if (controlled(key)) {
       const c = await fitOn(C, oem, pcf, extra);
       row.control = c.ok && Buffer.compare(Buffer.from(c.ocm), Buffer.from(f.ocm)) === 0;
+      if (c.ok) { const ci = readOcm(c.ocm); row.controlFit = { rms: ci.fitRmsKm, bterm: ci.bterm }; }
     }
   } catch (error) { row.error = String(error?.message ?? error).slice(0, 200); }
   row.seconds = (Date.now() - t0) / 1000;

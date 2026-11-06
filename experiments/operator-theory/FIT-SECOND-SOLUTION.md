@@ -64,3 +64,16 @@ Acceptance:
    fixture numbers; byte-identical fixtures where the rule does not fire).
 
 Report only: Chandra and TESS paired ratios; the fit cost of the rule.
+
+## Amendment 1 (2026-11-06, before any part 2 row but THEMIS A 2013-02-15's was read)
+
+Read before this amendment: THEMIS A 2013-02-15 on the three part-2 builds (run.mjs): the 0.6.2 base 109.52 m, BTERM 0.012046; the grid
+alone (ripple 6f3b82ef3, the shipping candidate: grids shared within a set's perturbed copies) 104.78 m, BTERM 0.012027148315, days 1 / 3 /
+7 201.1 / 294.3 / 421.8 m: the shipping grid does not reach the second solution there (C1, C2 and C4 did); rule A as registered 104.78 m,
+BTERM 0.012027148426, 53 iterations against 27, the same days. And the E2E's synthetic GEO arc: rule A as registered moved the fit RMS by
+8e-14 km, so the set's bytes changed for nothing.
+
+Change: rule A keeps a restart only when its cost is below 0.96 times the policy's (the scan's 0.98 on the fit RMS, squared), so that
+it acts on a second minimum and leaves a converged solution's bytes alone. Added, report only: a diagnostic build of the merged tree with
+the grid sharing tolerances at zero (kShareE, kShareI, kShareA 0: each perturbed set its own grid, C4's arrangement), with and without
+rule A, on THEMIS A 2013-02-15: whether the rule returns C4's second solution to the first.
