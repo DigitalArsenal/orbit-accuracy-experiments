@@ -304,3 +304,14 @@ CryoSat-2 14.52 / 92.0; LAGEOS-1 6.39 / 109.8; LAGEOS-2 6.47 / 52.6; Etalon 2.13
 5 m maximum, 0.1 m roughness of the difference); no failure up to 0.3: e* = 0.3. Where the narrow set fails, the grid is checked
 against the quadrature at the same case (verify.cpp) and must hold the bounds; a regime where neither holds is reported, not
 switched. The module's e*(n, i) is the table of regimes, each object taking the regime nearest in (n, i).
+
+## Amendment 13 (2026-11-06, before C7 is flown)
+Known limit, pending the SDN-AP session's ruling on the e* sweep: kWideE stays 0.3; an object whose eccentricity crosses 0.3 changes
+from the narrow set (21.4 m RMS, 44.0 m at most from the field at THEMIS-like elements) to the grid (0.12 m RMS): a step of that size at
+the switch. The e* sweep (results/ap-truth/themis-ripple-fix/estar) found the narrow set 1 to 8 m RMS from the field at near-circular
+eccentricities in 16 of 17 regimes; nothing is applied from it.
+Arm C7: C6's source (the 48 h scheduled, blended re-grid with each set keeping its last two nodes' grids; modules WIP 53fff2c00) with
+C3's sharing: a set within the grid's linear range of a cached grid (|de| <= 3e-4, |di| <= 1e-4 rad, |da / a| <= 1e-4) shares it,
+element-linear. Flown on the 12 THEMIS windows with the paired test of Amendment 8 (margin 1.05) against the base; beside it, C6 (C4's
+exact grid per set with the same schedule) on the same windows, and for both: peak wasm memory and the one-epoch propagate's wall
+(memtest.mjs) and the 1,000-record catalog case on 8 workers.
