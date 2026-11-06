@@ -148,6 +148,17 @@ Measured (modules 7a0459bad, scratch build 8ddc78d3, fitcost.mjs two runs each, 
 s; wasm high-water 571,867,136 bytes (571.9 MB) against 0.6.2's 68.2 MB and Amendment 3.2's 165.2 MB: over the 160 MB budget (not
 diagnosed; the likely cause, not measured: the keyed grids of the fit's distinct element sets are kept idle, up to kGridIdle). Guard E2E and fit.e2e.mjs PASS.
 
+## Amendment 5 (2026-11-06), registered before any row it governs
+
+The ripple lane replaces ExactGridScope with `tess::FitGridScope` (exact keys everywhere; a grid built by a set initialized while a
+FitGridScope lives on its thread is freed when its last holder drops it, never kept idle; xp_init's exact_grid parameter removed;
+sdnap_wide_grid_stats counts [0] lookups by sets outside a fit and [1] by a fit's sets; sdnap_wide_grid_cache reports the held grids
+and their bytes). Change: src/fit_oem.inc declares `xpt::tess::FitGridScope fit_grids;` right after `++block_index;` in fit_blocks
+(where ExactGridScope was); Amendment 4's GridShareScope in src/fit.inc stays. The guard E2E asserts every grid lookup of the THEMIS A
+fit is a fit set's ([0] 0, [1] > 0) and that sdnap_wide_grid_cache shows no fit grid held after the fit; its fixtures are kept.
+Measured and reported: THEMIS A fit time and wasm high-water in MiB (expected about 80.6 MiB, 14.7 s) against 0.6.2 (65.1 MiB);
+the guard E2E and fit.e2e.mjs PASS.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
