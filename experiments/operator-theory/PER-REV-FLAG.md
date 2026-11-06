@@ -89,6 +89,12 @@ A window is flagged at fit F and lead L when a step lies in [C - F, C + L]; burn
 
 Holds unchanged: Swarm and GRACE-FO, the held Galileo satellites, every Starlink group, C2's objects and cutoffs, operator captures.
 
+### Result, 2026-11-06: rule (b) fails as registered (`results/operator-theory/per-rev-flag/validate`)
+
+Known burns 11 of 26 (pass line 25). Injected, Sentinel-1 (40 windows): 2 m 36, 3 m 38, 4 m 38, 8 m 30 of 40 (7 no verdict); geostationary (GFZ, 40 windows; 85 of the 128 registered had no truth over their span, the 2026 GFZ product holding the BeiDou geostationary satellites only to 2026-04-20 and 02-07): 15, 18, 18 and 18 of 40. False alarms 0 of 79 quiet windows (pass). The near-700 km and geostationary verdicts stay unresolved.
+
+Read after the result, not registered, and not used to change anything: every one of the 26 known burns has a step of rule (b) (3.0 to 9.9 m) within 11.5 h of the catalog epoch, but 15 lie outside one period plus 3 h; the catalog's epochs come from 12-revolution medians, whose epoch the earlier study found within 13 h of the flight-differenced step. At geostationary orbit N = 6 revolutions spans six days, so a window keeps only its largest step (burns of hundreds of meters in the flown span hide the injected one), the typical change and the drift come from about eight revolutions and move with the injected step, and QZS-2G yields no node-to-node revolutions. On Sentinel-1 at 8 m the typical change of 7 windows rises from about 0.03 to 0.3 m with the injected step, which points at the injection (two separately integrated flights differenced) as much as at the rule.
+
 ## Holds
 
 Never read: C2's held objects (TerraSAR-X, Stella, Sentinel-1D, LAGEOS-1, its six Galileo satellites), Swarm and GRACE-FO, every Starlink group, any Sentinel-1 cutoff from 2026-06-01 (Sentinel-1 truth to 2026-06-08), any operator capture.
