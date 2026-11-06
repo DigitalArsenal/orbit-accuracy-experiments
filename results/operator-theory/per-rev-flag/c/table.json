@@ -1,0 +1,601 @@
+{
+ "registered": "PER-REV-FLAG.md, amendment of 2026-11-06 (c)",
+ "rule": {
+  "k": 10,
+  "floorM": 1,
+  "noVerdictM": 0.2,
+  "spanH": 10,
+  "minSide": 3,
+  "maxGapPeriods": 7,
+  "endPeriods": 2,
+  "fromHours": -24,
+  "toHours": 168
+ },
+ "toleranceHours": 13,
+ "known": {
+  "windows": 84,
+  "detected": 41,
+  "rate": 0.488,
+  "pass": false,
+  "byFamily": {
+   "Sentinel-1": {
+    "windows": 27,
+    "detected": 26
+   },
+   "altimetry": {
+    "windows": 57,
+    "detected": 15
+   }
+  },
+  "missed": [
+   {
+    "key": "S1|62261|2025-11-02|2025-11-04T18:16",
+    "family": "Sentinel-1",
+    "detected": false,
+    "why": "coverage"
+   },
+   {
+    "key": "DO|CryoSat-2|2025-10-11|2025-10-13T14:58",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.023
+   },
+   {
+    "key": "DO|CryoSat-2|2025-10-31|2025-11-02T22:55",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -77.7,
+    "nearestM": -47.58,
+    "tauM": 0.036
+   },
+   {
+    "key": "DO|CryoSat-2|2025-11-07|2025-11-09T13:42",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": 64.5,
+    "nearestM": 3.28,
+    "tauM": 0.037
+   },
+   {
+    "key": "DO|CryoSat-2|2025-11-27|2025-11-29T20:00",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.018
+   },
+   {
+    "key": "DO|SARAL|2025-10-14|2025-10-16T06:03",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.017
+   },
+   {
+    "key": "DO|SARAL|2025-10-16|2025-10-19T06:07",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.021
+   },
+   {
+    "key": "DO|SARAL|2025-10-19|2025-10-21T21:49",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.015
+   },
+   {
+    "key": "DO|SARAL|2025-11-07|2025-11-09T21:42",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": 58.7,
+    "nearestM": 2.2,
+    "tauM": 0.025
+   },
+   {
+    "key": "DO|SARAL|2025-11-17|2025-11-19T06:18",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.014
+   },
+   {
+    "key": "DO|SARAL|2025-11-20|2025-11-22T14:45",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.016
+   },
+   {
+    "key": "DO|SARAL|2025-11-28|2025-12-01T19:59",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.019
+   },
+   {
+    "key": "DO|SARAL|2025-12-03|2025-12-05T06:07",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.021
+   },
+   {
+    "key": "DO|SARAL|2025-12-05|2025-12-07T21:48",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.017
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-10-14|2025-10-17T00:08",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.023
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-10-26|2025-10-28T10:29",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -122.9,
+    "nearestM": -24.19,
+    "tauM": 0.014
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-10-29|2025-11-01T13:47",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.017
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-02|2025-11-04T20:54",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.025
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-03|2025-11-05T22:09",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.026
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-05|2025-11-08T07:22",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.02
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-07|2025-11-09T11:59",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": 65.6,
+    "nearestM": 2.79,
+    "tauM": 0.026
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-13|2025-11-16T22:24",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -82.5,
+    "nearestM": -30.35,
+    "tauM": 0.055
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-22|2025-11-24T10:29",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -99.3,
+    "nearestM": -18.94,
+    "tauM": 0.012
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-25|2025-11-28T13:47",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.017
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-28|2025-12-01T20:54",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.018
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-11-30|2025-12-02T22:09",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.025
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-12-15|2025-12-17T20:39",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.01
+   },
+   {
+    "key": "DO|Sentinel-3A|2025-12-18|2025-12-21T12:10",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.018
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-10-11|2025-10-14T14:16",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -52.2,
+    "nearestM": 13.48,
+    "tauM": 0.016
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-10-13|2025-10-15T12:09",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -20.2,
+    "nearestM": 1.33,
+    "tauM": 0.054
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-10-21|2025-10-23T13:42",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -102.7,
+    "nearestM": -28.42,
+    "tauM": 0.013
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-10-24|2025-10-26T20:49",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.016
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-10-28|2025-10-30T07:17",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.016
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-10-31|2025-11-03T22:22",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": 58.9,
+    "nearestM": -25.58,
+    "tauM": 0.012
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-11-05|2025-11-07T22:19",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -37,
+    "nearestM": -25.52,
+    "tauM": 0.032
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-11-13|2025-11-15T08:43",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.037
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-11-20|2025-11-22T20:49",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -58.9,
+    "nearestM": -35.02,
+    "tauM": 0.053
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-11-23|2025-11-26T07:17",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -141.4,
+    "nearestM": -35.13,
+    "tauM": 0.015
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-11-28|2025-11-30T22:22",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.017
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-12-02|2025-12-04T22:19",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.019
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-12-13|2025-12-16T13:42",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": -121.2,
+    "nearestM": -29.85,
+    "tauM": 0.011
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-12-17|2025-12-19T20:49",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.014
+   },
+   {
+    "key": "DO|Sentinel-3B|2025-12-21|2025-12-23T10:39",
+    "family": "altimetry",
+    "detected": false,
+    "why": "no step within 13 h",
+    "nearestHours": null,
+    "nearestM": null,
+    "tauM": 0.01
+   }
+  ]
+ },
+ "injected": {
+  "registered": 60,
+  "used": 57,
+  "notUsed": {
+   "coverage": 3
+  },
+  "bySize": {
+   "2": {
+    "windows": 57,
+    "detected": 54,
+    "rate": 0.947,
+    "noVerdict": 0,
+    "sentinel1": {
+     "windows": 37,
+     "detected": 34,
+     "rate": 0.919,
+     "noVerdict": 0
+    },
+    "altimetry": {
+     "windows": 20,
+     "detected": 20,
+     "rate": 1,
+     "noVerdict": 0
+    },
+    "realizedMedianM": 2
+   },
+   "3": {
+    "windows": 57,
+    "detected": 54,
+    "rate": 0.947,
+    "noVerdict": 0,
+    "sentinel1": {
+     "windows": 37,
+     "detected": 34,
+     "rate": 0.919,
+     "noVerdict": 0
+    },
+    "altimetry": {
+     "windows": 20,
+     "detected": 20,
+     "rate": 1,
+     "noVerdict": 0
+    },
+    "realizedMedianM": 3
+   },
+   "4": {
+    "windows": 57,
+    "detected": 54,
+    "rate": 0.947,
+    "noVerdict": 0,
+    "sentinel1": {
+     "windows": 37,
+     "detected": 34,
+     "rate": 0.919,
+     "noVerdict": 0
+    },
+    "altimetry": {
+     "windows": 20,
+     "detected": 20,
+     "rate": 1,
+     "noVerdict": 0
+    },
+    "realizedMedianM": 4
+   },
+   "8": {
+    "windows": 57,
+    "detected": 54,
+    "rate": 0.947,
+    "noVerdict": 0,
+    "sentinel1": {
+     "windows": 37,
+     "detected": 34,
+     "rate": 0.919,
+     "noVerdict": 0
+    },
+    "altimetry": {
+     "windows": 20,
+     "detected": 20,
+     "rate": 1,
+     "noVerdict": 0
+    },
+    "realizedMedianM": 8
+   }
+  },
+  "pass": false
+ },
+ "quiet": {
+  "windows": 83,
+  "flown": 79,
+  "noVerdict": 11,
+  "eligible": 68,
+  "allowed": 3,
+  "flagged": 6,
+  "rate": 0.088,
+  "decided": true,
+  "pass": false,
+  "flags": [
+   {
+    "key": "DO|CryoSat-2|2025-10-16",
+    "epochs": [
+     {
+      "t": "2025-10-18T20:40",
+      "sizeM": 1.02
+     }
+    ]
+   },
+   {
+    "key": "DO|CryoSat-2|2025-11-12",
+    "epochs": [
+     {
+      "t": "2025-11-12T06:13",
+      "sizeM": 2.63
+     },
+     {
+      "t": "2025-11-13T03:43",
+      "sizeM": 1.17
+     }
+    ]
+   },
+   {
+    "key": "DO|SARAL|2026-02-03",
+    "epochs": [
+     {
+      "t": "2026-02-08T23:16",
+      "sizeM": 118.56
+     }
+    ]
+   },
+   {
+    "key": "DO|SARAL|2026-02-04",
+    "epochs": [
+     {
+      "t": "2026-02-08T23:16",
+      "sizeM": 118.53
+     }
+    ]
+   },
+   {
+    "key": "DO|SARAL|2026-02-05",
+    "epochs": [
+     {
+      "t": "2026-02-09T00:57",
+      "sizeM": 118.63
+     }
+    ]
+   },
+   {
+    "key": "DO|SARAL|2026-02-06",
+    "epochs": [
+     {
+      "t": "2026-02-08T23:16",
+      "sizeM": 118.56
+     }
+    ]
+   }
+  ],
+  "notFlown": [
+   {
+    "key": "LS|larets|2025-12-08",
+    "family": "spheres",
+    "flown": false,
+    "why": "coverage"
+   },
+   {
+    "key": "LS|starlette|2025-11-27",
+    "family": "spheres",
+    "flown": false,
+    "why": "coverage"
+   },
+   {
+    "key": "LS|larets|2025-11-10",
+    "family": "spheres",
+    "flown": false,
+    "why": "coverage"
+   },
+   {
+    "key": "LS|westpac|2025-12-08",
+    "family": "spheres",
+    "flown": false,
+    "why": "coverage"
+   }
+  ]
+ },
+ "pass": false
+}
