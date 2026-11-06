@@ -133,3 +133,17 @@ harness; in the module, after the change, wall per propagation step and per fit 
 THEMIS E 2013-02-16 and TESS cutoff 2026-07-27.
 No change at e <= 0.3: the e <= 0.3 branch is untouched; themis-ripple.e2e.mjs asserts byte-identical propagate output and unchanged
 cost on the seeded LEO, GPS-like and e 0.25 and 0.3 sets against the base.
+Additions (SDN-AP session, before any A1 sizing output is read):
+1. Resonance: each family's forcing is built from its individual harmonics, and a harmonic is left out of it by the rules of today's
+   table: m-daily (w = j = 0), a term the class carries in the rates (section 6; THEMIS D and E are in the one-day class), and
+   |psi-dot| < 0.045 n (the slow band). No divisor below 0.045 n enters a grid, so the periodic solution has no vanishing divisor. A class
+   term is counted once, in the mean-element rates; a slow non-class term is carried nowhere, as in 0.4.11 to 0.6.2. The sizing lists,
+   per window, the harmonics left out by each rule and checks that no class term appears in any family.
+2. Element drift: the grid is built at init from the epoch mean elements and the epoch secular rates. It is rebuilt when the current
+   mean elements leave |de| <= de*, |da / a| <= da*, |di| <= di* of the elements it was built from; de*, da*, di* are sized from the
+   quadrature (the grid at e0 against the quadrature at e0 + de, and likewise a and i) as the largest steps that keep the RMS at 0.25 m,
+   a quarter of the bound. The module reports the re-grids per 7-day flight on the measurement set.
+3. Interpolant: Fourier in the eccentric anomaly (trigonometric interpolation on N uniform points in E). The bounds apply to the
+   interpolated output at the 300 s epochs (the harness evaluates at each output epoch's E), not to the grid points.
+4. Memory and cost: grid bytes in wasm linear memory (families x N x 6 complex doubles), init time and wall per step, before (the base's
+   table) and after, on THEMIS D, THEMIS E and TESS; these enter the cost re-measure if 0.6.3 ships.
