@@ -113,3 +113,23 @@ Baseline (git history of src/tesseral.inc and SPEC 16.11): 0.4.11 to 0.4.14 hold
 the wide set above e 0.3 (|q| <= 10, |j| <= 33). 0.4.11's 0.07 to 0.12 m is the smoothness of a set holding only the lowest harmonics,
 not a bound on the sum: its displacement against the full-field quadrature is reported on the two windows beside the candidate's.
 Cost reference: 0.4.11's wall per propagation step and per fit is the reference point of the cost comparison (0.4.11, base, candidate).
+
+## Amendment 3 (2026-11-06, the coordinator's decision (A); before any sizing of it is run)
+Candidate: the closed-form family re-sum. Above e 0.3 the first-order tesseral short-periodics are not a series in harmonics of M.
+For each (l, m, p) the sum over q of G_lpq e^{i(w+q)M} is (a/r)^(l+1) e^{iwf} (Hansen's definition), so each family's first-order
+displacement (Lagrange's equations integrated over psi = w omega + j M + m beta, each harmonic divided by its psi-dot, lambda also by
+psi-dot squared through n) is a periodic function of the anomaly, complete in j. Two implementations:
+(A1) per (m, w) family (the l summed), the six-component displacement (n, e, i, e varpi, sin i Omega, lambda) sampled at init on a
+uniform grid of N eccentric anomalies from the series complete to the quadrature's resolution, and trigonometrically interpolated in E
+at output time, multiplied by e^{i(w omega + m beta)} at the current omega and beta; (A2) integration in the true anomaly, where
+(a/r)^(l-1) e^{iwf} is a trigonometric polynomial of degree l - 1 + |w|, with the Earth-rotation phase expanded about the
+anomaly's own frequency. A1 is sized first: the E grid absorbs the perigee pulse (the pulse is (1 - e) times narrower in M than in E),
+it needs no new expansion, and its error is the interpolation error alone, measured directly against the quadrature.
+Sizing (quadrature only, no truth): N in {64, 128, 256, 512} on the two correctness windows against the same full-field quadrature
+(every harmonic of l 2 to 12, |j| <= 2047, |psi-dot| >= 0.045 n, no class term, not m-daily); bounds unchanged: RMS <= 1 m, maximum
+<= 5 m, roughness of the difference <= 0.1 m; the smallest N meeting all three on both windows is the candidate's grid. Beside it:
+the number of families, memory per object (families x 6 x N complex values), init time of the table and wall per output step in the
+harness; in the module, after the change, wall per propagation step and per fit against 0.4.11 and the base on THEMIS D 2013-02-12,
+THEMIS E 2013-02-16 and TESS cutoff 2026-07-27.
+No change at e <= 0.3: the e <= 0.3 branch is untouched; themis-ripple.e2e.mjs asserts byte-identical propagate output and unchanged
+cost on the seeded LEO, GPS-like and e 0.25 and 0.3 sets against the base.
