@@ -35,6 +35,25 @@ Per regime, fit and lead: windows flagged, burn-free and unchecked under the 8 m
 
 A near-700 km or geostationary cell whose burn-free ratio interval holds 1 or lies below 1 is explained by maneuvers. A cell whose burn-free interval lies above 1 names an FFM defect for the coordinator; no fix is made here. No propagator or estimation change.
 
+## Counts, 2026-11-06, after the run
+
+Written after every re-flag row was read (1,522 windows, `results/operator-theory/per-rev-flag`). Windows flagged before (the 8 m step, the geosynchronous burn record) and after, at the longest lead (168 h):
+
+| Regime | Fit, h | Windows | Flagged before | Flagged after | Burn-free after | Burn-free FFM/AP [95 %] | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Near 700 km | 24 | 274 | 116 | 267 | 5 | 0.185 [0.143, 0.813] | explained |
+| Near 700 km | 72 | 257 | 122 | 250 | 2 | 0.538 | explained |
+| Geostationary (GFZ) | 72 | 32 | 14 | 8 | 23 | 1.463 [1.028, 1.97] | FFM defect |
+| Geostationary, WAAS | 24 | 76 | 33 | 75 | 1 | 0.998 | explained |
+| Geostationary, WAAS | 72 | 74 | 33 | 71 | 0 | - | undecided |
+| Medium Earth orbit | 24 / 72 | 748 / 746 | no record | 7 / 9 | 741 / 737 | 0.314 / 0.843 | - |
+| Inclined geosynchronous | 72 | 59 | no record | 59 | 0 | - | - |
+| Low orbit, altimetry | 24 / 72 | 103 / 103 | 32 / 40 | 32 / 40 | 69 / 61 | 0.129 / 0.442 | - |
+| Laser spheres | 24 / 72 | 49 / 56 | no record | 29 / 29 | 16 / 15 | 0.67 / 0.541 | false alarms |
+| Laser geodetic | 72 | 43 | no record | 1 | 41 | 0.499 | false alarm |
+
+Near 700 km at 72 h fits: 72/48 burn-free 28 at 0.714 [0.431, 0.956], 72/72 18 at 0.926 [0.496, 1.321]; geostationary (GFZ) 72/72 28 at 1.142 [0.904, 1.527]: explained. The false alarms named in advance: LARETS, WESTPAC and Starlette are flagged on 12, 12 and 13 of their 15 windows at 24/168 (changes of 1.35 to 4.52 m, recurring at the same epochs from different cutoffs); Ajisai, LARES, Etalon-1, Etalon-2 and LARES-2 on none; LAGEOS-2 once (a single -28 km change). The flag therefore also fires on signals that are not burns below about 1,100 km, and the near-700 km burn-free sets are small. The WAAS broadcast truth flags nearly every window. Every cell is in `table.json`.
+
 ## Holds
 
 Never read: C2's held objects (TerraSAR-X, Stella, Sentinel-1D, LAGEOS-1, its six Galileo satellites), Swarm and GRACE-FO, every Starlink group, any Sentinel-1 cutoff from 2026-06-01 (Sentinel-1 truth to 2026-06-08), any operator capture.

@@ -46,6 +46,14 @@ if (fs.existsSync(path.join(RESULTS, 'table.json'))) {
   execFileSync(process.execPath, [path.join(here, 'per-rev-flag-table.mjs'), '--out', tmp], { stdio: ['ignore', 'ignore', 'inherit'] });
   for (const f of ['table.json', 'README.md']) check(fs.readFileSync(path.join(tmp, f)).equals(fs.readFileSync(path.join(RESULTS, f))), `results/operator-theory/per-rev-flag/${f} reproduces from the stored rows`);
   fs.rmSync(tmp, { recursive: true, force: true });
+  // The decision cells as measured (PER-REV-FLAG.md, counts and ratios).
+  const T = JSON.parse(fs.readFileSync(path.join(RESULTS, 'table.json'), 'utf8')), C = (g, fit, lead) => T.cells.find((c) => c.group === g && c.fit === fit && c.lead === lead);
+  const s1 = C('S1', 24, 168), ge = C('GE', 72, 168);
+  check(s1.before.flagged === 116 && s1.after.flagged === 267 && s1.after.burnFree === 5 && s1.ratioBurnFree === 0.185 && ge.after.burnFree === 23 && ge.ratioBurnFree === 1.463 && ge.intervalBurnFree[0] > 1
+    && ['S1|72|48', 'S1|72|72', 'S1|72|168', 'GE|72|72'].every((k) => C(...k.split('|').map((x, i) => (i ? Number(x) : x))).verdict.startsWith('explained')) && ge.verdict.startsWith('FFM defect'),
+    `near 700 km 24/168: flagged ${s1.before.flagged} -> ${s1.after.flagged}, burn-free ${s1.after.burnFree} at FFM/AP ${s1.ratioBurnFree} [${s1.intervalBurnFree}]; near 700 km 72/48, 72/72, 72/168 and GEO 72/72 explained; GEO 72/168 burn-free ${ge.after.burnFree} at ${ge.ratioBurnFree} [${ge.intervalBurnFree}]: FFM defect`);
+  const fa = T.cells.filter((c) => c.falseAlarms && c.lead === 168);
+  check(fa.map((c) => `${c.group}${c.fit}:${c.falseAlarms.flagged}`).join(',') === 'LS24:29,LS72:29,GD72:1', `false alarms at lead 168 on the passive satellites named in advance: ${fa.map((c) => `${c.regime} fit ${c.fit} ${c.falseAlarms.flagged} (${c.falseAlarms.share})`).join('; ')}`);
 } else check(false, 'results/operator-theory/per-rev-flag/table.json is written');
 // 5. cells.json splits on the new flag and reproduces from the stored rows (compare-cells.mjs --check).
 let cellsOk = true;
