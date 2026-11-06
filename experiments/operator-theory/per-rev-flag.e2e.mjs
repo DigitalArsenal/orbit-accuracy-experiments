@@ -47,6 +47,11 @@ if (fs.existsSync(path.join(RESULTS, 'table.json'))) {
   for (const f of ['table.json', 'README.md']) check(fs.readFileSync(path.join(tmp, f)).equals(fs.readFileSync(path.join(RESULTS, f))), `results/operator-theory/per-rev-flag/${f} reproduces from the stored rows`);
   fs.rmSync(tmp, { recursive: true, force: true });
 } else check(false, 'results/operator-theory/per-rev-flag/table.json is written');
+// 5. cells.json splits on the new flag and reproduces from the stored rows (compare-cells.mjs --check).
+let cellsOk = true;
+try { execFileSync(process.execPath, [path.join(here, 'compare-cells.mjs'), '--check'], { stdio: ['ignore', 'ignore', 'inherit'] }); } catch { cellsOk = false; }
+const cells = JSON.parse(fs.readFileSync(path.join(repo, 'results/ap-truth/compare/cells.json'), 'utf8')).rows.filter((r) => Number.isInteger(r.burnsInFit));
+check(cellsOk && cells.length > 0, `results/ap-truth/compare/cells.json reproduces (compare-cells.mjs --check) with burn counts from the new flag on ${cells.length} rows (${[...new Set(cells.map((r) => r.regime))].join(', ')})`);
 // 5. The holds.
 check(rows.every((r) => !heldWindow(r)) && rows.every((r) => !EXCLUDE.norads.has(Number(r.norad))), `holds: no held object, no Sentinel-1 cutoff from ${EXCLUDE.s1CutoffBefore}, no Swarm or GRACE-FO, no Starlink`);
 console.log(failures ? `PER REV FLAG E2E FAIL: ${failures}` : 'PER REV FLAG E2E PASS');

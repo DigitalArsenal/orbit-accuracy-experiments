@@ -17,7 +17,6 @@ import { binOf, pct, asc } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
 import { BUILD, AP_ARM, COLUMN_BUILDS, BUILD_RECORDS } from './lib/build.mjs';
 import { HELD_ROW } from './lib/pairs.mjs';
-import { windowState } from './lib/steps.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
@@ -40,14 +39,14 @@ const AP_OF = (version) => Object.entries(BUILD_RECORDS).find(([, b]) => b.modul
 const XP_MEASURED = AP_OF('0.4.11'), XP_EQUAL = AP_OF('0.5.1');
 // The columns on builds no longer current: next-file AP and whiteroom XP (0.4.11), the held cells' Space Force XP (0.1.1).
 const DROPPED = { next: ['XP', 'AP'], held: ['XP', 'XPU', 'AP'] };
-// The maneuver flag (maneuver-flags.mjs): each cell's windows with a step of the truth's mean semimajor axis in the fit arc and in the forecast span to the lead.
-// null where no detector ran: every next-file row, and the precise-orbit regimes other than Sentinel-1 and the altimetry satellites.
-const FLAGGED = new Map(JSON.parse(fs.readFileSync(path.join(REPO, 'results/operator-theory/maneuver-flags/flags.json'), 'utf8')).windows.map((w) => [w.key, w]));
+// The maneuver flag (PER-REV-FLAG.md, results/operator-theory/per-rev-flag): each cell's windows with a drift-free change of 1 m or more in FFM24's flight less
+// the truth, revolution by revolution, in the fit arc and in the forecast span to the lead; a window the flag could not cover counts in neither. null where the
+// flag was not flown on every window of the cell (every next-file row, the held strong-drag rows) or at a fit arc it does not reach.
+const FLAGGED = new Map(JSON.parse(fs.readFileSync(path.join(REPO, 'results/operator-theory/per-rev-flag/table.json'), 'utf8')).perWindow.map((w) => [w.key, w]));
 const NOT_TESTED = { burnsInFit: null, burnsInForecast: null };
 const burns = (list, fit, lead) => {
-  const flags = list.map((r) => FLAGGED.get(r.key));
-  if (flags.some((w) => !w)) return NOT_TESTED;
-  const at = flags.map((w) => windowState(w, fit, lead));
+  const at = list.map((r) => FLAGGED.get(r.key)?.at?.[`${fit}/${lead}`]);
+  if (!at.length || at.some((x) => !x || x.after === 'not flown')) return NOT_TESTED;
   return { burnsInFit: at.filter((x) => x.inFit).length, burnsInForecast: at.filter((x) => x.inForecast).length };
 };
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter((l) => l && !HELD_ROW.test(l)).map((l) => JSON.parse(l));
@@ -218,7 +217,7 @@ out.sort((a, b) => a.reference.localeCompare(b.reference) || order[a.level] - or
 const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md, XP-ARM-0-2-1.md',
   columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
-  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. integrator: for each FFM column in the row, the integrator algorithm its fits and flights ran, read at generation from the one request builder every FFM call of this harness goes through (experiments/operator-theory/lib/frame.mjs); the tolerances and steps are each writer\'s settings (arms.mjs, truth-compare.mjs, all-regimes.mjs, providers-run.mjs, score.mjs). arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those with a step of the truth\'s mean semimajor axis of 8 m or more in the fit arc, and in the forecast span to the lead (results/operator-theory/maneuver-flags); a window the detector could not cover counts in neither; null where no detector ran. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
+  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. integrator: for each FFM column in the row, the integrator algorithm its fits and flights ran, read at generation from the one request builder every FFM call of this harness goes through (experiments/operator-theory/lib/frame.mjs); the tolerances and steps are each writer\'s settings (arms.mjs, truth-compare.mjs, all-regimes.mjs, providers-run.mjs, score.mjs). arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those where FFM24\'s flight less the truth, as mean semimajor axis per revolution with the drift removed, changes by 1 m or more between consecutive revolutions in the fit arc, and in the forecast span to the lead (results/operator-theory/per-rev-flag); a window the flag could not cover counts in neither; null where the flag was not flown on every window of the cell. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
   // the builds the rows name, and the build whiteroom XP was measured on (the provenance's measuredOn)
   builds: Object.fromEntries(Object.entries(BUILD_RECORDS).filter(([k]) => k === XP_MEASURED || out.some((r) => Object.values(r.build ?? {}).some((keys) => keys.includes(k))))),
   provenance: {

@@ -78,7 +78,9 @@ for (const R of REGIMES) {
     const at = {};
     for (const fit of fits) for (const day of DAYS) {
       const lead = Number(day) * 24, f = x ? revFlag(x.d, x.p, D0 - fit * HOUR, D0 + lead * HOUR) : null;
-      at[`${fit}/${lead}`] = { before: before(w, fit, lead), after: !r ? 'not flown' : !f ? 'unchecked' : f.flagged ? 'flagged' : f.burnFree ? 'burnFree' : 'unchecked', largestM: f?.largest ? round(f.largest.sizeM, 2) : null, atHours: f?.largest ? round((f.largest.t - D0) / HOUR, 1) : null };
+      const big = f ? f.changes.filter((s) => Math.abs(s.sizeM) >= PER_REV.jumpM) : [];
+      at[`${fit}/${lead}`] = { before: before(w, fit, lead), after: !r ? 'not flown' : !f ? 'unchecked' : f.flagged ? 'flagged' : f.burnFree ? 'burnFree' : 'unchecked', inFit: big.some((s) => s.t <= D0), inForecast: big.some((s) => s.t > D0),
+        largestM: f?.largest ? round(f.largest.sizeM, 2) : null, atHours: f?.largest ? round((f.largest.t - D0) / HOUR, 1) : null };
     }
     perWindow.push({ key: w.key, group: R.group, name: w.name, cutoff: w.cutoff.slice(0, 10), flown: r ? (r.ok ? 'ok' : r.error) : 'not flown', b: r?.ok ? round(r.b, 6) : null, stepS: r?.stepS ?? null, at });
   }
