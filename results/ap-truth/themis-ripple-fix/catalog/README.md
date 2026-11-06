@@ -21,7 +21,20 @@ inits and flights (31 ms without them), the same path that costs the base 4,133 
 load (666 against 618 ms), so retention across refreshes saves at most the 87 ms build. Schedule nodes are lazy already: a one-epoch
 propagate builds node 0 only (the epoch grid).
 
-Against the registered budget: (1) cold, median at or below 100 ms per object: 618 ms (8 workers; the one-worker run follows), missed;
+## Amendment 15: records without covariance (STRIP_COV=1; inclination offset k x 0.01 deg so no two records share a grid)
+| Run | Load median, ms per record | Load, s per worker | Refresh, s per worker | Grid held, ms per record | Peak wasm memory per worker |
+| --- | --: | --: | --: | --: | --: |
+| 1 worker, 1,000 records | 183.1 | 187.0 | 176.9 | 35.1 | 129,826,816 |
+| 8 workers, 1,000 records | 238.3 | 31.9 | 26.1 | 32.6 | 129,826,816 |
+| 8 workers, records sharing neighbors' grids (inclination not offset) | 46.1 | 6.7 | 6.0 | 43.5 | 107,675,648 |
+
+Against Amendment 15: (a) cold median at or below 100 ms per object: 183.1 ms, missed; warm refresh of 1,000 records on 8 workers at or
+below 5 s: 26.1 s, missed (with every grid held a refresh would cost 32.6 to 35.1 ms per record, 4.1 to 4.4 s per worker, but holding
+125 grids per worker is 885 MB, over (c)); (b) records with covariance not worse than shipped: 618 against 4,133 ms, held;
+(c) memory at or below 512 MB per worker: 130 MB, held. The gap: a cold grid costs about 150 ms in wasm under one worker (183 - 35 ms),
+against 100 ms for the whole object; a refresh within 5 s needs either a build under about 30 ms or held grids under 4 MB each.
+
+Against the budget as first registered: (1) cold, median at or below 100 ms per object: 618 ms (8 workers; the one-worker run follows), missed;
 (2) warm, one refresh of 1,000 records on 8 workers at or below 5 s: 77.7 s, missed; (3) memory at or below 512 MB per worker:
 108 MB, held (eviction: the four most recently dropped grids kept, the oldest freed first). The misses are the covariance's
 per-set init, present on the base at 6.7 times C7's cost; without covariance C7 flies a record in 31 ms.
