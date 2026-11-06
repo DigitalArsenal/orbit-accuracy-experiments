@@ -84,7 +84,7 @@ const ARMS = args.arms.split(',').map((x) => {
   return { arm, file, flyFile, sha256: file === flyFile ? sha256(fs.readFileSync(file)) : `${sha256(fs.readFileSync(file)).slice(0, 32)}${sha256(fs.readFileSync(flyFile)).slice(0, 32)}` };
 });
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
-const inShard = (key) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
+const inShard = (key) => (!args.key || key === args.key) && parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % SHARDS === SHARD;
 const TESS_FILES = fs.readdirSync(TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(TESS.dir, f));
 // (b): THEMIS A, D, E (12), Chandra (7, 72 h arcs), TESS (7, 72 h arcs)
 const OBJECTS = [

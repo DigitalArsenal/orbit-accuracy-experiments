@@ -325,6 +325,21 @@ int main(int argc, char** argv) {
     std::nth_element(o2.begin(), o2.begin() + o2.size() / 2, o2.end());
     std::printf("\"module\":{\"ok\":%d,\"families\":%d,\"bytes\":%zu,\"buildMs\":%.1f,\"usPerStep\":%.2f,\"rmsM\":%.4f,\"maxM\":%.4f,\"roughDiffM\":%.5f,\"outputRoughM\":%.4f},",
                 ok, g.count, static_cast<size_t>(g.count) * 4 * 6 * tess::kGridN * 2 * sizeof(float), ms, us, std::sqrt(s2 / steps), mx, d2[d2.size() / 2], o2[o2.size() / 2]);
+    // small divisors: each family's nu and its distance from the nearest integer; the largest family amplitude (lambda x a, m)
+    double dmin = 1e9, amax = 0; int dm = 0, dw = 0, am = 0, aw = 0; double dnu = 0;
+    for (int f = 0; f < g.count; ++f) {
+      const int m = g.m[f], w = g.w[f];
+      const double nu = -(w * ob.wdot + m * (ob.node_rate - kOmegaE)) / ob.mdot, d = std::fabs(nu - std::round(nu));
+      if (d < dmin) { dmin = d; dm = m; dw = w; dnu = nu; }
+      const size_t per = static_cast<size_t>(6) * tess::kGridN * 2;
+      for (int k = 0; k < tess::kGridN; ++k) {
+        const float* v = g.v + static_cast<size_t>(f) * 4 * per + (5 * tess::kGridN + k) * 2;
+        const double amp = std::hypot(v[0], v[1]) * ob.a0 * kRe * 1000.0;
+        if (amp > amax) { amax = amp; am = m; aw = w; }
+      }
+    }
+    std::printf("\"divisor\":{\"family\":[%d,%d],\"nu\":%.5f,\"distance\":%.5f,\"psidotOverN\":%.5f},\"largestLambdaAmplitudeM\":{\"family\":[%d,%d],\"m\":%.1f},",
+                dm, dw, dnu, dmin, dmin * ob.mdot / ob.n0, am, aw, amax);
     tess::wide_grid_release(g);
   }
   for (int NE : {256}) {
