@@ -408,3 +408,18 @@ grid family's smallest |k - nu| (psi-dot over n), the largest family amplitude (
 quadrature (verify.cpp: RMS, maximum, roughness of the difference over 7 days at 300 s, bounds 1 m, 5 m, 0.1 m).
 Byte check source: the 56 published example sets at experiments results/ap-truth/compare/examples/<id>.ocm (main aa2a0a7 or later),
 the e <= 0.3 ones flown on the final build and on 0.6.2's dist, ephemerides compared byte for byte.
+
+## Amendment 20 (2026-11-06, a defect; registered before any post-fix row is read)
+Found by themis-ripple.e2e.mjs on the final build: the GTO fixture (n 2.4, e 0.72, i 27, omega 270) is 66.0 m RMS, 161.9 m at most from
+the full-field quadrature, while THEMIS D and E (one-day class) hold 0.12 / 0.13 m. Defect: the half-day class's resonant tail (class 2;
+l 6 to 31, even m, j = m / 2) is carried in the mean rates (SPEC 16.2) and left out of the output-time table by sp_terms' weight_of, but
+wide_families did not leave it out of the grid's forcing, so at half-day-class orbits (GTO, Molniya) those harmonics were counted twice.
+Fix: wide_families leaves them out by the same per-harmonic subtraction the class terms use (the table's existing rule; not a new
+resonant treatment, not a wider band). The native harness references descended from resum.cpp (verify.cpp, the one the module checks
+used) had the same omission, which is why the GTO check passed at 0.063 m before; estar.cpp and the E2E's reference had the rule. The
+references are corrected to state the same exclusion as the module (m-daily, the class's terms, the half-day tail in class 2,
+|psi-dot| < 0.045 n), so reference and module agree by construction only where that rule is shared and stated.
+Pre-fix state, reported as such: the four-build Molniya table run already started on the pre-fix final build (a7771b14).
+After the fix: the quadrature at the GTO fixture (omega 270 and 300) and at Molniya's elements (verify.cpp and the E2E); the paired
+four-build table (0.4.14 / 0.6.2 / C7 / the fixed build) on every GTO and Molniya fixture in one environment with build hashes; the 12
+THEMIS windows re-flown (class 1: expected unchanged); the e <= 0.3 byte identity re-run; the GTO E2E's truth pinned.
