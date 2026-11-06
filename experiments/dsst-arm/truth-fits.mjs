@@ -188,7 +188,7 @@ async function windowsOf() {
 // with every GC logged; each cost row records the largest heap after a full collection during the window and the JVM's resident set,
 // sampled once a second; an accuracy JVM runs under a bound well above the live set. The governor's memory guard drains a JVM by naming its PID in DRAIN: the
 // worker takes no further window, and a run left with windows exits 3 so its chain runs the store again later.
-const COST_HEAP = '8g', ACCURACY_HEAP = '16g';
+const COST_HEAP = '12g', ACCURACY_HEAP = '16g';
 if (COST && !COST_HEAP) throw new Error('cost: the fixed heap is not yet registered (DSST.md, amendment 2026-11-06 (memory)); no cost row is written');
 const DRAIN = '/Users/tj/software/terrain-work/body-look/claude-dsst-d9/run2/drain.pids';
 const drained = (pid) => { try { return fs.readFileSync(DRAIN, 'utf8').split(/\s+/).includes(String(pid)); } catch { return false; } };
@@ -205,6 +205,17 @@ function fullGcHeapMax(file, t0, t1) {
     if (best === null || after > best) best = after;
   }
   return best;
+}
+/** The collection time (s) between t0 and t1 (ms): the sum of the logged pause times; the serial collector runs on the one processor. */
+function gcSeconds(file, t0, t1) {
+  let ms = 0;
+  for (const l of (fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '').split('\n')) {
+    const m = /^\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+)([+-]\d\d)(\d\d)\].*Pause.* ([\d.]+)ms$/.exec(l);
+    if (!m) continue;
+    const t = Date.parse(`${m[1]}${m[2]}:${m[3]}`);
+    if (t >= t0 && t <= t1) ms += Number(m[4]);
+  }
+  return ms / 1000;
 }
 /** Samples the cost JVM's resident set once a second (the JVM is the child of /usr/bin/time, which execs nice, which execs java). */
 function rssSampler(wk) {
@@ -308,7 +319,7 @@ async function main() {
         if (Object.values(leads).some((x) => !Number.isFinite(x.e))) throw new Error('non-finite state at a scored epoch');
         Object.assign(row, { drag: res.drag === 1, perigeeKm: res.perigeeKm, converged: true, iterations: res.iterations, evaluations: res.evaluations, rmsM: res.rms_m, cdAm: res.drag === 1 ? res.cd : null, crAm: res.drag === 1 ? 0.01 : res.cr, epoch: res.epoch, mean: res.mean, arcStates: thin.length, leads,
           ephemerisGapM: String(res.ephemerisGapM ?? '').split(' ').map(Number),
-          cost: { ...res.cost, objectDays: (ms(epochs.at(-1)) - D0) / DAY, stepSeconds: gridMs / 1000, singleThread: COST, load1: [load, os.loadavg()[0]], heapBound: COST ? COST_HEAP : ACCURACY_HEAP, heapAfterFullGcMaxBytes: COST ? fullGcHeapMax(wk.gcLog, t0w, t1w) : null, rssMaxBytes } });
+          cost: { ...res.cost, objectDays: (ms(epochs.at(-1)) - D0) / DAY, stepSeconds: gridMs / 1000, singleThread: COST, load1: [load, os.loadavg()[0]], heapBound: COST ? COST_HEAP : ACCURACY_HEAP, heapAfterFullGcMaxBytes: COST ? fullGcHeapMax(wk.gcLog, t0w, t1w) : null, rssMaxBytes, gcSeconds: COST ? gcSeconds(wk.gcLog, t0w, t1w) : null } });
         fs.rmSync(dir, { recursive: true, force: true });
       } catch (error) { const why = String(error?.message ?? error).slice(0, 300); if (UNSCORED.test(why)) row.unscored = why; else { row.failed = true; row.error = why; } }
       return row;
