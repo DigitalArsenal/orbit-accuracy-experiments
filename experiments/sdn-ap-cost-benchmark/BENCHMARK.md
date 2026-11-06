@@ -195,3 +195,13 @@ Procedure. `run.mjs fits --run <run>`, `flights --run <run>` and `memory --run <
 ffm-2.2.1 in that order, one child process per arm, arms and windows in the registered order; then `tables` reads every
 run's rows; `--check` reproduces both files byte for byte. Rows under the registered row directory, `builds/<run>`.
 One warm-up call per arm and phase as amendment 2.
+
+The box as it was (recorded after the run, 2026-11-06): the DSST run's seven accuracy JVMs were SIGSTOPped through the DSST
+governor from 2026-11-06T07:05:58Z to 07:19:17Z, around the benchmark (07:12:32Z to 07:18:58Z, 386 s of wall time for the
+three runs). The FFM rerun lane's eight single-thread scoring workers (`score.mjs`) ran throughout; the coordinator
+disclosed them at 07:12Z and did not stop another lane's processes. The 1-minute load was 11.7 to 12.7 at every phase
+boundary and under the 22.83 ceiling before and after every row (`loadBefore`, `loadAfter` in the rows; `load` per column
+in the table); no row was refused. The dist bytes came by `git show` from the read-only clones the brief names
+(sdn-ap 0.6.2 from `space-data-network-modules-pin`, 0.6.3 and FFM 2.2.1 from `space-data-network-modules-covm`,
+`SDN_MODULES_GIT`); the SDK, the Space Data Standards bindings (1.276.0, the harness's registered versions) and the host
+files came from this lane's own clone at the registered run's commit 890c8655f2.

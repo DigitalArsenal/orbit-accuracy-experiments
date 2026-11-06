@@ -39,13 +39,14 @@ export const REGISTERED_BUILDS = {
 export const ARMS = ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40'];
 /** The runs (BENCHMARK.md amendment 2026-11-06): the registered run and one run per shipped build, each with its own row directory and the arms it reruns;
  *  every other module at its registered build. */
+const QUIET_BOX = 'the DSST run\'s seven accuracy JVMs SIGSTOPped through the DSST governor from 2026-11-06T07:05:58Z to 07:19:17Z, around the benchmark (07:12:32Z to 07:18:58Z); the FFM rerun lane\'s eight single-thread scoring workers ran throughout (disclosed by the coordinator at 07:12Z); 1-minute load 11.7 to 12.7 at every phase boundary, under the ceiling';
 export const RUNS = {
-  a13cb468: { label: 'the registered run, 2026-11-05', rows: ROWS_ROOT, builds: REGISTERED_BUILDS, arms: ARMS },
-  'sdn-ap-0.6.2': { label: 'propagator/sdn-ap 0.6.2', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.2-84d50dca'), arms: ['XP', 'AP'],
+  a13cb468: { label: 'the registered run, 2026-11-05', rows: ROWS_ROOT, builds: REGISTERED_BUILDS, arms: ARMS, machine: 'shared with other lanes; the load before and after each arm in load' },
+  'sdn-ap-0.6.2': { label: 'propagator/sdn-ap 0.6.2', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.2-84d50dca'), arms: ['XP', 'AP'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.2', commit: 'e1e4fad87ae810dd71e9acb568e9f083df1cc9b8', sha256: '84d50dca4efdfea87eff7e3b4618d795c26a7d0a6df0e877341e69bc73161f41' } } },
-  'sdn-ap-0.6.3': { label: 'propagator/sdn-ap 0.6.3', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.3-aa3ed22a'), arms: ['XP', 'AP'],
+  'sdn-ap-0.6.3': { label: 'propagator/sdn-ap 0.6.3', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.3-aa3ed22a'), arms: ['XP', 'AP'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.3', commit: '93cb5a0584fa728864e4426cc9ceb368936589f9', sha256: 'aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e' } } },
-  'ffm-2.2.1': { label: 'propagator/ffm 2.2.1', rows: path.join(ROWS_ROOT, 'builds', 'ffm-2.2.1-a9133120'), arms: ['FFM20', 'FFM40'],
+  'ffm-2.2.1': { label: 'propagator/ffm 2.2.1', rows: path.join(ROWS_ROOT, 'builds', 'ffm-2.2.1-a9133120'), arms: ['FFM20', 'FFM40'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/ffm': { version: '2.2.1', commit: '9cb02c8e22f5a738a9984992e8af2246cd11e090', sha256: 'a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4' } } },
 };
 /** The shipped build of each arm: the run whose column the comparison page and the paper read (table.json arms, builds, byRegime). */
@@ -456,7 +457,7 @@ function buildTable() {
   const runs = Object.fromEntries(Object.entries(RUNS).map(([run, R]) => {
     const phases = phasesOf(run);
     const t0 = phases.length ? Math.min(...phases.map((p) => Date.parse(p.startedAt))) : null, t1 = phases.length ? Math.max(...phases.map((p) => Date.parse(p.startedAt) + p.seconds * 1000)) : null;
-    return [run, { label: R.label, arms: R.arms, rows: R.rows, builds: R.builds, startedAt: t0 === null ? null : isoMs(t0), endedAt: t1 === null ? null : isoMs(t1), wallSeconds: t0 === null ? null : fig((t1 - t0) / 1000), loadCeiling: run === 'a13cb468' ? null : LOAD_CEILING }];
+    return [run, { label: R.label, arms: R.arms, rows: R.rows, builds: R.builds, machine: R.machine, startedAt: t0 === null ? null : isoMs(t0), endedAt: t1 === null ? null : isoMs(t1), wallSeconds: t0 === null ? null : fig((t1 - t0) / 1000), loadCeiling: run === 'a13cb468' ? null : LOAD_CEILING }];
   }));
   return {
     registered: 'experiments/sdn-ap-cost-benchmark/BENCHMARK.md',
@@ -505,7 +506,7 @@ function buildReadme(t) {
   L.push('', '## AP\'s flight over FFM 40×40\'s, low Earth orbit', '', 'Flight CPU seconds per object-day, AP over FFM 40×40, on the windows below 8,400 km both arms completed: per window, median (10th to 90th percentile, windows); per regime, each regime\'s median over the other\'s, and the median of those (the site\'s rule; its rounded reciprocal is the front page\'s fraction).', '', `- Shipped: ${ratioText(t.lowOrbitRatio.shipped)}`);
   for (const [k, r] of Object.entries(t.lowOrbitRatio.comparison)) L.push(`- ${k}: ${ratioText(r)}`);
   const refused = [...Object.values(t.arms), ...Object.values(t.comparison)].flatMap((c) => c.refused.map((r) => `${c.column}, ${r.key}, ${r.phase}: load ${r.load} after the call, above ${LOAD_CEILING}`));
-  L.push('', '## Runs', '', ...Object.entries(t.runs).map(([run, r]) => `- ${run} (${r.label}): arms ${r.arms.join(', ')}; ${r.startedAt ? `${r.startedAt} to ${r.endedAt}, ${r.wallSeconds} s of wall time` : 'not run'}${r.loadCeiling ? `; load ceiling ${r.loadCeiling}, the DSST run's JVMs paused by the coordinator for the duration` : ''}; rows \`${r.rows}\`.`));
+  L.push('', '## Runs', '', ...Object.entries(t.runs).map(([run, r]) => `- ${run} (${r.label}): arms ${r.arms.join(', ')}; ${r.startedAt ? `${r.startedAt} to ${r.endedAt}, ${r.wallSeconds} s of wall time` : 'not run'}${r.loadCeiling ? `; load ceiling ${r.loadCeiling}` : ''}; ${r.machine}; rows \`${r.rows}\`.`));
   L.push('', '## Rows refused by the load ceiling', '', ...(refused.length ? refused.map((f) => `- ${f}`) : ['- none']));
   const failed = [...Object.entries(t.arms).map(([, a]) => a), ...Object.values(t.comparison)].flatMap((a) => a.failed.map((f) => `${a.column}, ${f.key}, ${f.phase}: ${f.error}`));
   const notRun = [...Object.values(t.arms), ...Object.values(t.comparison)].filter((a) => a.notRun.length).map((a) => `${a.column}: ${a.notRun.length} windows at or above 8,400 km (no such arm in the harness)`);
