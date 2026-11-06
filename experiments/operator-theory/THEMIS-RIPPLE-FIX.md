@@ -335,3 +335,13 @@ output is unread): on the C7 dist with whatever lazy-node or retention design is
     wasm memory at or below 512 MB per worker under the retention policy used, the eviction rule stated. All three: the grid ships in
     0.6.3 with the fitter fix; any miss: 0.6.3 is the fitter fix alone and the grid waits. The wasm/native gap is profiled before any
     optimization (wasm libm trig and exp in the build, memory.grow count during init, missing SIMD in the inner loops).
+
+## Amendment 15 (2026-11-06, the SDN-AP session's ruling; written AFTER the C7 catalog numbers were read)
+Disclosure: written after C7's 1,000-record numbers (618 ms per record with covariance, 77.7 s refresh, 108 MB) and the init split
+(614 ms with the record's covariance, 31 ms without; base 4,133 and 230 ms) were read. The registered budget gated the whole covariance
+propagate path, whose cost predates the grid (shipped 0.6.1: 4,133 ms per record on that path); applied literally it would keep a
+binary 6.7 times costlier and still rippling. The grid ships in 0.6.3 if: (a) records without covariance: cold median at or below 100 ms
+per object (one worker, 1,000 records) and a warm refresh of 1,000 records on 8 workers at or below 5 s, both measured; (b) records
+with covariance: not worse than the shipped build on the same path (614 against 4,133 ms per record); (c) memory at or below 512 MB per
+worker. The covariance path's re-initialization (1 + 2 x 8 sets, each initialized) is a design defect with its own record, which
+inherits the original budget; it is not changed here.
