@@ -115,3 +115,19 @@ holds them, verifies that this file's registering commit predates the store's fi
 and prints PASS or FAIL. Acceptance: `node experiments/operator-theory/ffm-geo-70x70.mjs --check` PASS.
 
 What follows is named by the verdict and done in its own record, never here: no module, catalog or `cells.json` change.
+
+## Amendment 1, written after the 45 rows were flown and read (disclosed)
+
+The 70x70 rows came out bit-identical to the stored 20x20 rows: every one of the 127 lead-day figures equal to the double, so the
+degree effect is 1 exactly and every 70x70 cell repeats the audit's cell to the digit. That is what double precision predicts at GEO
+(a degree-21 term is of order (R_E/r)^21, about 6e-18, times a coefficient of order 1e-8, against a total acceleration of 1: below
+the 1.1e-16 the sum can hold), and the module's request parser takes degrees two through seventy on this path
+(`prw_dynamics.cpp` sha256 fd334bbd, the `field` lambda: `truncationDegree = degree`). It is also what a degree that never reached the
+module would look like, so the instrument is checked by measurement, information only, before the verdict is read:
+
+- the same 45 windows, the same settings, the gravity field at 8x8 and at 12x12 (`--fly --degree 8`, `--fly --degree 12`, stores
+  `ap/ffm221-70x70/probe-8x8` and `probe-12x12`), each read against the stored 20x20 rows by the degree-effect statistic (five seeds,
+  tags `FFM-GEO-70X70|probe-8x8|...`, `|probe-12x12|...`), with the exact ratio and the largest single-window move in meters;
+- the reading: a degree below 20 that moves the figures shows the degree is in force and where the field stops reaching a GEO forecast;
+  one that does not move them is reported as such. The check enters no verdict and names no record; the verdict rule above stands as
+  registered, and `--check` holds both probe stores complete (45 rows each) beside the 70x70 store.

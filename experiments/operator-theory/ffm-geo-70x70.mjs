@@ -19,6 +19,9 @@ const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../.
 const OUT = path.join(REPO, 'results/ap-truth/ffm-geo-70x70');
 const AP = '/opt/data/sdn-archive/operator-theory/ap';
 const STORE = path.join(AP, 'ffm221-70x70/regimes');
+// Amendment 1: the instrument check, the same windows at 8x8 and 12x12 (--fly --degree <d>), information only.
+const PROBES = [8, 12];
+const storeOf = (degree) => (degree === 70 ? STORE : path.join(AP, `ffm221-70x70/probe-${degree}x${degree}`));
 const REGISTRATION = 'experiments/operator-theory/FFM-GEO-70X70.md';
 const TASK = 'modules-ffm-geo-gravity-field-and-degree-at-geo-20261106';
 // Installs and XM's pins from the -bench2 clone (SDS 1.276.0 installed, as XM's modulesRoot() demands); FFM 2.2.1's bytes by git show from the clone
@@ -37,7 +40,8 @@ const MODULES_COMMIT = '93cb5a0584fa728864e4426cc9ceb368936589f9';
 const FFM_221 = { module: 'propagator/ffm', version: '2.2.1', modulesCommit: MODULES_COMMIT, wasmSha256: 'a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4' };
 const FFM_220_WASM = 'd635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153';
 const AP_051_WASM = 'd29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb';
-const DEGREE = 70;
+const DEGREE = 70, FLY_DEGREE = Number(args.degree ?? DEGREE);
+if (![DEGREE, ...PROBES].includes(FLY_DEGREE)) throw new Error(`--degree is one of ${[DEGREE, ...PROBES].join(', ')}`);
 
 // The 45 windows, by id (FFM-GEO-168H.md; ap/b0411/regimes group GE with no error).
 const SATS = ['C006 BDS-2G', 'C011 BDS-2G', 'C016 BDS-2G', 'C018 BDS-2G', 'C020 BDS-2G', 'C217 BDS-3G', 'C229 BDS-3G', 'C231 BDS-3G', 'J003 QZS-2G'];
@@ -48,7 +52,7 @@ const WINDOWS = SATS.flatMap((s) => CUTOFFS.map((d) => `GE|${s}|${d}`));
 const SRC = {
   experiments: {
     'experiments/operator-theory/FFM-GEO-168H.md': 'e393727da7c2b4091cf91f82a1fc7a829fe8fcb0b25febdb70cc166b6d595d2f',
-    'experiments/operator-theory/all-regimes.mjs': 'b09c0d16ddf3831b5d007e355ab29924ce1c9798bd8d2b668bf5c58bd0c286d6',
+    'experiments/operator-theory/all-regimes.mjs': '9de45623b6c8b2031ca9f6b3a1f647d50cef9fb2ad507dbce5e96b229bf507b7',
     'experiments/operator-theory/lib/frame.mjs': '9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce',
     'experiments/operator-theory/lib/fit.mjs': 'e8393b0264378b3fa2e0901798503ad0eee5e7e50369c55c5774c539bb5db329',
     'experiments/operator-theory/lib/host.mjs': '47373ddbb3503f19c4dd12355388105cbb772794e068874c2444cd96ccc6220d',
@@ -82,17 +86,18 @@ async function fly() {
   const m = await openModules(), F = await openFfmHost({ ffm: FFM_221 });
   if (F.provenance.ffm.wasmSha256 !== FFM_221.wasmSha256 || F.provenance.ffm.version !== FFM_221.version) throw new Error(`FFM opened is ${F.provenance.ffm.version} ${F.provenance.ffm.wasmSha256}`);
   const LEAD_DAYS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
-  // all-regimes.mjs ffmHigh(), the degree and order at 70.
+  // all-regimes.mjs ffmHigh(), the degree and order at 70 (or the probe's degree).
   const settings = () => ({
-    forces: { gravity: 'SPHERICAL_HARMONICS', degree: DEGREE, order: DEGREE, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined },
+    forces: { gravity: 'SPHERICAL_HARMONICS', degree: FLY_DEGREE, order: FLY_DEGREE, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined },
     integrator: { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
     parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixed: {}, apriori: apriori([0.2]),
   });
   function apriori(parameterSigmas) { const diag = [...Array(3).fill(1e10), ...Array(3).fill(100), ...parameterSigmas.map((s) => s * s)]; const n = diag.length; return Array.from({ length: n * n }, (_, j) => (Math.floor(j / n) === j % n ? diag[j % n] : 0)); }
   const inShard = (key) => parseInt(sha256(key).slice(0, 8), 16) % SHARDS === SHARD;
-  fs.mkdirSync(STORE, { recursive: true });
-  fs.appendFileSync(path.join(STORE, 'run.log'), `start ${new Date().toISOString()} shard ${SHARD}/${SHARDS} registration ${regCommit} ffm ${F.provenance.ffm.version} ${F.provenance.ffm.wasmSha256} estimation ${F.provenance.estimation.version} ${F.provenance.estimation.wasmSha256}\n`);
-  const outFile = path.join(STORE, `rows-${SHARD}.jsonl`);
+  const store = storeOf(FLY_DEGREE);
+  fs.mkdirSync(store, { recursive: true });
+  fs.appendFileSync(path.join(store, 'run.log'), `start ${new Date().toISOString()} shard ${SHARD}/${SHARDS} degree ${FLY_DEGREE} registration ${regCommit} ffm ${F.provenance.ffm.version} ${F.provenance.ffm.wasmSha256} estimation ${F.provenance.estimation.version} ${F.provenance.estimation.wasmSha256}\n`);
+  const outFile = path.join(store, `rows-${SHARD}.jsonl`);
   const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
   const want = new Set(WINDOWS);
   let flown = 0;
@@ -132,7 +137,7 @@ async function fly() {
         } catch (error) { a.error = String(error?.message ?? error).slice(0, 180); }
         row.arms[`F${FIT}`] = a;
       } catch (error) { row.error = String(error?.message ?? error).slice(0, 180); }
-      fs.appendFileSync(outFile, `${JSON.stringify({ ...row, ffm: F.provenance.ffm, degree: DEGREE, flownAt: new Date().toISOString() })}\n`);
+      fs.appendFileSync(outFile, `${JSON.stringify({ ...row, ffm: F.provenance.ffm, degree: FLY_DEGREE, flownAt: new Date().toISOString() })}\n`);
       flown += 1;
       console.error(`${key}: ${row.arms.F72?.ok ? `day 7 ${row.arms.F72.days?.[7]?.e?.toFixed(4) ?? '-'} km` : row.arms.F72?.error ?? row.error}`);
     }
@@ -175,7 +180,10 @@ function cell(tag, members, num, den, day, lead) {
   const w = members.map((key) => ({ key, name: key.split('|')[1], cutoff: key.split('|')[2], a: num(key, day), b: den(key, day) }))
     .filter((x) => scored(x.a) && scored(x.b)).map((x) => ({ ...x, ln: Math.log(x.a / x.b) }));
   if (!w.length) return { fit: FIT, lead, day: Number(day), windows: 0 };
+  const largest = w.reduce((best, x) => (Math.abs(x.ln) > Math.abs(best.ln) ? x : best), w[0]);
   return { fit: FIT, lead, day: Number(day), windows: w.length, satellites: new Set(w.map((x) => x.name)).size, numeratorWorse: w.filter((x) => x.ln > 0).length, ratio: ratio(w),
+    ratioExact: r6(Math.exp(median(w.map((x) => x.ln)))),
+    largestMove: { key: largest.key, ratio: r6(Math.exp(largest.ln)), deltaM: r3((largest.a - largest.b) * 1000) },
     windowCluster: seeds(`FFM-GEO-70X70|${tag}|${FIT}|${lead}`, w, (x) => x.key),
     objectWeek: seeds(`FFM-GEO-70X70|${tag}|${FIT}|${lead}|object-week`, w, (x) => `${x.name}|${isoWeek(x.cutoff)}`),
     perSatellite: Object.fromEntries(SATS.filter((n) => w.some((x) => x.name === n)).map((n) => { const s = w.filter((x) => x.name === n); return [n, { windows: s.length, ratio: ratio(s) }]; })),
@@ -195,6 +203,13 @@ function build() {
   const cells20 = LEADS.map(([lead, day]) => cell('GFZ-20x20', WINDOWS, F20, AP72, day, lead));
   const effect = LEADS.map(([lead, day]) => cell('degree-effect', WINDOWS, F70, F20, day, lead));
   const failures = rows70.filter((r) => !r.arms?.F72?.ok).map((r) => ({ key: r.key, error: r.arms?.F72?.error ?? r.error }));
+  // Amendment 1: the instrument check, each probe degree against the stored 20x20 rows.
+  const probes = PROBES.map((degree) => {
+    const fp = byKey(storeOf(degree)), rows = WINDOWS.map((k) => fp.get(k)).filter(Boolean);
+    const bad = [...new Set(rows.map((r) => `${r.ffm?.version}@${r.ffm?.wasmSha256}@${r.degree}`))].filter((b) => b !== `${FFM_221.version}@${FFM_221.wasmSha256}@${degree}`);
+    return { degree, store: path.relative(AP, storeOf(degree)), rowsPresent: rows.length, rowsFlown: rows.filter((r) => r.arms?.F72?.ok).length, badBuild: bad,
+      cells: LEADS.map(([lead, day]) => cell(`probe-${degree}x${degree}`, WINDOWS, (k, d) => e(fp.get(k), `F${FIT}`, d), F20, day, lead)) };
+  });
   const firstRow = rows70.map((r) => r.flownAt).filter(Boolean).sort()[0] ?? null;
   const registration = git('log', '-1', '--format=%H %cI', '--', REGISTRATION);
   const [regCommit, regDate] = registration.split(' ');
@@ -206,7 +221,8 @@ function build() {
     const wc = c.windowCluster, de = d.windowCluster;
     const allAbove = wc.lowerAbove1 === SEEDS, noneAbove = wc.lowerAbove1 === 0;
     const effectBelow = d.ratio < 1 && de.spread.upperMax < 1, effectHolds1 = !(de.spread.upperMax < 1) && !(de.spread.lowerMin > 1);
-    const facts = `72/168: FFM 70x70 / AP ${c.ratio} on ${c.windows} windows (FFM worse on ${c.numeratorWorse}); window-cluster lower bound ${wc.side} (${wc.spread.lowerMin} to ${wc.spread.lowerMax}, range ${wc.spread.lowerRange}); degree effect 70x70 / 20x20 ${d.ratio}, interval [${de.interval.join(', ')}] (upper over seeds ${de.spread.upperMin} to ${de.spread.upperMax})`;
+    const a20 = cells20[2].windowCluster;
+    const facts = `72/168: FFM 70x70 / AP ${c.ratio} on ${c.windows} windows (FFM worse on ${c.numeratorWorse}); window-cluster lower bound ${wc.side} (${wc.spread.lowerMin} to ${wc.spread.lowerMax}, range ${wc.spread.lowerRange}); degree effect 70x70 / 20x20 ${d.ratioExact} (largest window move ${d.largestMove.ratio}, ${d.largestMove.deltaM} m, ${d.largestMove.key}), interval [${de.interval.join(', ')}] (upper over seeds ${de.spread.upperMin} to ${de.spread.upperMax}); the audit's 20x20 cell under the same five seeds: lower bound ${a20.spread.lowerMin} to ${a20.spread.lowerMax} (range ${a20.spread.lowerRange}, ${a20.side}; the bootstrap median takes values from the paired ratios themselves, so its percentile is discrete and moves little between seeds)`;
     if (allAbove) verdict = { reading: 'still worse', statement: 'FFM at 70x70 is still worse than AP at 72/168 by the registered rule: gravity is ruled out; the eclipse model, the ephemeris and the frames stay report-only candidates; no record named', facts, record: null };
     else if (noneAbove && effectBelow) verdict = { reading: 'no longer worse', statement: 'FFM at 70x70 is no longer worse than AP at 72/168 and the field measurably lowers its own error: the 20x20 choice at GEO leaves out terms that matter there; an FFM configuration record follows', facts,
       record: { id: 'modules-ffm-geo-degree-configuration-20261106', shouldSet: `CHEAPER.md's and the harness high arm's GEO degree: the field at GEO flown at ${DEGREE}x${DEGREE} (or the smallest degree the follow-up ladder shows equal to it), every other setting unchanged; report-only until that ladder is flown` } };
@@ -229,6 +245,7 @@ function build() {
     gfz: { label: 'FFM 2.2.1 at 70x70 against AP 0.5.1 as stored', cells },
     gfz20: { label: 'the audit cells, FFM 2.2.0 at 20x20 against AP 0.5.1, read again under the five seeds (information)', cells: cells20 },
     degreeEffect: { label: 'FFM 70x70 against FFM 20x20 on the same windows (information): what the field does to FFM\'s own GEO error', cells: effect },
+    instrumentCheck: { label: 'Amendment 1: the same windows and settings at a degree below 20, each against the stored 20x20 rows (information): the degree is in force where the figures move', probes },
     verdict,
   };
 }
@@ -251,7 +268,19 @@ function readme(t) {
   for (const n of SATS) L.push(`| ${n} | ${t.gfz.cells.map((c) => c.perSatellite?.[n] ? `${c.perSatellite[n].windows}, ${c.perSatellite[n].ratio}` : '-').join(' | ')} |`);
   L.push('', '## The degree effect: FFM 70x70 against FFM 20x20 (information)', '', `${t.degreeEffect.label}; the 20x20 rows are \`${t.builds.ffm20.store}\` (FFM ${t.builds.ffm20.version}, wasm ${t.builds.ffm20.wasmSha256}).`, '');
   table(t.degreeEffect.cells, 'FFM 70x70', 'FFM 20x20');
-  L.push('', '## The audit cells under the five seeds (information)', '', `${t.gfz20.label}.`, '');
+  L.push('', 'Exact ratio and the largest single-window move (70x70 minus 20x20, meters):', '');
+  for (const c of t.degreeEffect.cells) if (c.windows) L.push(`- ${c.fit}/${c.lead}: ${c.ratioExact}; largest ${c.largestMove.ratio} (${c.largestMove.deltaM} m) at ${c.largestMove.key}.`);
+  L.push('', '## Instrument check (Amendment 1, information)', '', `${t.instrumentCheck.label}.`, '');
+  for (const p of t.instrumentCheck.probes) {
+    L.push(`### ${p.degree}x${p.degree} against 20x20`, '', `\`${p.store}\`: ${p.rowsPresent} rows, ${p.rowsFlown} flown.`, '');
+    if (p.rowsFlown) {
+      table(p.cells, `FFM ${p.degree}x${p.degree}`, 'FFM 20x20');
+      L.push('', 'Exact ratio and the largest single-window move (probe minus 20x20, meters):', '');
+      for (const c of p.cells) if (c.windows) L.push(`- ${c.fit}/${c.lead}: ${c.ratioExact}; largest ${c.largestMove.ratio} (${c.largestMove.deltaM} m) at ${c.largestMove.key}.`);
+    }
+    L.push('');
+  }
+  L.push('## The audit cells under the five seeds (information)', '', `${t.gfz20.label}.`, '');
   table(t.gfz20.cells, 'FFM 20x20', 'AP');
   L.push('', '## Settings', '', `${t.builds.settings}. ${t.builds.identity221}. ${t.builds.ap.identity}.`, '');
   return `${L.join('\n')}\n`;
@@ -273,6 +302,7 @@ if (FLY) { await fly(); } else {
   for (const c of table.gfz.cells) console.log(line('70x70/AP ', c));
   for (const c of table.degreeEffect.cells) console.log(line('70x70/20 ', c));
   for (const c of table.gfz20.cells) console.log(line('20x20/AP ', c));
+  for (const p of table.instrumentCheck.probes) for (const c of p.cells) console.log(line(`${String(p.degree).padStart(2)}x${String(p.degree).padEnd(2)}/20 `, c.windows ? { ...c, ratio: c.ratioExact } : c));
   console.log(`rows: ${table.builds.ffm70.rowsFlown} of ${WINDOWS.length} flown (${table.builds.ffm70.rowsPresent} present); registration ${table.registration.commit?.slice(0, 8)} ${table.registration.committed} before first row ${table.registration.firstRowFlownAt}: ${table.registration.registrationBeforeFirstRow}`);
   console.log(`verdict: ${table.verdict.reading}: ${table.verdict.statement}`);
   console.log(`sources: ${Object.keys(SRC.experiments).length} experiments files re-hashed, ${hashes.modulesChecked} of ${Object.keys(SRC.modules).length} module files re-hashed${hashes.modulesRoot ? ` at ${hashes.modulesRoot}` : ' (no modules root)'}${hashes.missing.length ? `; not found: ${hashes.missing.join(', ')}` : ''}${hashes.bad.length ? `; MISMATCH: ${hashes.bad.join(', ')}` : ''}`);
@@ -283,6 +313,7 @@ if (FLY) { await fly(); } else {
   if (CHECK) {
     if (!table.registration.registrationBeforeFirstRow) problems.push('the registration does not predate the first row');
     if (table.builds.ffm70.rowsPresent !== WINDOWS.length) problems.push(`${table.builds.ffm70.rowsPresent} of ${WINDOWS.length} windows have a row`);
+    for (const p of table.instrumentCheck.probes) { if (p.rowsPresent !== WINDOWS.length) problems.push(`probe ${p.degree}x${p.degree}: ${p.rowsPresent} of ${WINDOWS.length} rows`); if (p.badBuild.length) problems.push(`probe ${p.degree}x${p.degree} rows not on 2.2.1 at ${p.degree}: ${p.badBuild.join(', ')}`); }
     const same = (name, bytes) => fs.existsSync(path.join(OUT, name)) && fs.readFileSync(path.join(OUT, name), 'utf8') === bytes;
     if (!same('table.json', tableBytes) || !same('README.md', readmeBytes)) problems.push('table.json or README.md differs from what the stores give');
     console.log(problems.length ? `FAIL: ${problems.join('; ')}` : `PASS: table.json and README.md reproduce from the stores; every row on FFM ${FFM_221.version} at ${DEGREE}x${DEGREE}; registration before the first row; every reachable source holds its hash; the five-seed spread and the verdict stand`);
