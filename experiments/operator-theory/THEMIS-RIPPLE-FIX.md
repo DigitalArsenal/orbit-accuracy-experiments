@@ -521,3 +521,14 @@ sums, no thread-order reductions). Re-checks on the final build: the history E2E
 instance, and a second call order); quadrature for nominal flights; the covariance path's cost; the catalog budget (cold, warm,
 memory); the THEMIS and Molniya pairs; the fit high-water (160 MB) on THEMIS A, GTO and Molniya with the fitter's 20a09144b merged.
 The covariance code (src/covariance.inc) is outside this record's paths: the scope's call there is requested of the coordinator.
+
+## Amendment 25 (2026-11-06, the fit without ExactGridScope; registered before any of it is read)
+Read: with the scope and release a GTO fit takes 26.9 s against 0.6.2's 13.2 s (high-water 85.9 MB). Test on the exact-key build
+(amendment 24) without ExactGridScope, the fit's perturbed copies opening GridShareScope(the iteration's nominal) so they read the
+nominal's exact-key grid linearly (one build per iteration's nominal and schedule node): Molniya start 0 (its coefficient against the
+exact-grid 0.04462 and 0.6.2's 0.04478), THEMIS A 2013-02-15 (104.8 m, coefficient 0.01215), the six Molniya fixtures, and the fit's
+wall and high-water against 0.6.2 on THEMIS A, GTO and Molniya. Decision rule: the coefficient and the fit residual within the
+fixtures' noise of the exact-grid variant (on Molniya start 0: |B - 0.04462| at or below 0.3 of the posterior sigma, 0.0015; residual
+within 5 %): the scope is dropped and the guard becomes "every grid read inside a fit is the set's own exact-key grid or its nominal's
+under GridShareScope"; otherwise the scope stays with the release and the HEO fit-time loss goes to the SDN-AP session with the numbers.
+Where the fit's copies are made (src/fit.inc) is outside this record's paths; the GridShareScope call there is the fitter lane's.
