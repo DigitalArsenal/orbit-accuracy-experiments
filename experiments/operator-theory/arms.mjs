@@ -11,7 +11,8 @@
 //   node experiments/operator-theory/arms.mjs --source starlink --count 12 --arcs 12,24,48 --out <dir> [--shard k/n]
 //   node experiments/operator-theory/arms.mjs --source iss --arcs 6,24,48,72 --out <dir>
 // --stored <cycle dir>: the source's files as that cycle stored them (each product file's compact $OEM: the GCRF states at the fit grid the arms were
-// fitted to), read from the archive with nothing fetched, at the cycle's weather day unless --weather names one; a file already in --out is not run again.
+// fitted to), read from the archive with nothing fetched, at the cycle's weather day unless --weather names one; a file already in --out is not run again;
+// --shard k/n takes every n-th file from the k-th.
 // --fit-only: each FFM arm's fit and product, no flight over the file itself (score.mjs flies the products to the newer files).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -139,7 +140,8 @@ function storedFiles(dir) {
   const days = new Set(stored.map((p) => p.weatherDay));
   if (days.size > 1) throw new Error(`--stored: ${dir} holds ${SOURCE} files of ${days.size} weather days`);
   storedWeatherDay = [...days][0];
-  return stored.filter((p) => !doneNames.has(p.name)).map((p) => ({ name: p.name, norad: p.norad, object: p.object, label: p.source, async read() {
+  const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
+  return stored.filter((p, i) => i % n === k && !doneNames.has(p.name)).map((p) => ({ name: p.name, norad: p.norad, object: p.object, label: p.source, async read() {
     return { lines: S.oemLines(Buffer.from(p.forecastOem, 'base64')).map((l) => ({ epoch: isoMs(Date.parse(l.epoch)), r: l.r, v: l.v })), meta: {}, frame: 'GCRF' };
   } }));
 }
