@@ -158,6 +158,9 @@ function subsetOf(norad, fraction, seed) {
   return ranked.slice(0, want).map((r) => r[1]).sort((a, b) => a - b);
 }
 
+// the event-set digest: one SHA-256 over the sorted event keys, fed key by key (a joined string of every event is too long for a full catalog)
+const digestOf = (keys) => { const h = createHash('sha256'); for (const k of keys) h.update(k).update('\n'); return h.digest('hex'); };
+
 // ---------- the screen (child) ----------
 async function child(caseId, smoke) {
   verifyPins();
@@ -203,8 +206,8 @@ async function child(caseId, smoke) {
     if (c.fused) {
       const full = await cs.screenCatalog({ invoke, propagator: 'sgp4', catalog: chosen, windows, controls });
       const fusedCpuS = cpuS(process.cpuUsage(screenCpu));
-      const canon = full.events.map((e) => JSON.stringify(e, (k, v) => (typeof v === 'bigint' ? v.toString() : v))).sort();
-      return emit({ ...base(), fused: true, fusedCpuS, fusedWallS: (performance.now() - screenT) / 1000, events: canon.length, candidates: full.candidates, excluded: full.excluded.length, digest: sha256(canon.join('\n')) });
+      const canon = full.events.map((e) => `${Math.min(Number(e.PRIMARY_NORAD_ID), Number(e.SECONDARY_NORAD_ID))}|${Math.max(Number(e.PRIMARY_NORAD_ID), Number(e.SECONDARY_NORAD_ID))}|${e.TCA.JULIAN_DATE.toFixed(8)}|${e.MISS_DISTANCE_M.toFixed(3)}`).sort();
+      return emit({ ...base(), fused: true, fusedCpuS, fusedWallS: (performance.now() - screenT) / 1000, events: canon.length, candidates: full.candidates, excluded: full.excluded.length, digest: digestOf(canon) });
     }
     const handle = await cs.prepareIndex(invoke, sources, [], CATALOG);
     for (const w of windows) {
@@ -222,16 +225,16 @@ async function child(caseId, smoke) {
   } finally { await harness.destroy?.(); }
   const total = { cpuS: cpuS(process.cpuUsage(screenCpu)), wallS: (performance.now() - screenT) / 1000 };
   const merged = av.mergeWindowEvents(events, cutoffs);
-  const canon = merged.map((e) => JSON.stringify(e, (k, v) => (typeof v === 'bigint' ? v.toString() : v))).sort();
+  const canon = merged.map((e) => `${Math.min(Number(e.PRIMARY_NORAD_ID), Number(e.SECONDARY_NORAD_ID))}|${Math.max(Number(e.PRIMARY_NORAD_ID), Number(e.SECONDARY_NORAD_ID))}|${e.TCA.JULIAN_DATE.toFixed(8)}|${e.MISS_DISTANCE_M.toFixed(3)}`).sort();
   const phases = Object.fromEntries(['propagation', 'search', 'refine', 'index'].map((k) => [k, acc[k] ?? { cpuS: 0, wallS: 0, calls: 0 }]));
   const hostCpuS = total.cpuS - Object.values(phases).reduce((s, p) => s + p.cpuS, 0);
   return emit({ ...base(), phases, hostCpuS, totalCpuS: total.cpuS, totalWallS: total.wallS, load: loadS, moduleStartCpuS,
-    events: canon.length, candidates, excluded: cutoffs.size, digest: sha256(canon.join('\n')) });
+    events: canon.length, candidates, excluded: cutoffs.size, digest: digestOf(canon) });
 
   function base() {
     return { id: c.id, startedUtc, endedUtc: nowUtc(), objects: chosen.length, load1Start: +load0.toFixed(1), load1End: +os.loadavg()[0].toFixed(1), workers: controls.workers };
   }
-  function emit(row) { row.endedUtc = nowUtc(); if (!smoke) fs.writeFileSync(path.join(SCRATCH, 'results', `${c.id}.json`), JSON.stringify(row) + '\n'); console.log(`ROW ${JSON.stringify(row)}`); return row; }
+  function emit(row) { row.endedUtc = nowUtc(); if (!smoke) fs.writeFileSync(path.join(SCRATCH, 'results', `${process.env.SCALE_QUIET ? 'quiet-' : ''}${c.id}.json`), JSON.stringify(row) + '\n'); console.log(`ROW ${JSON.stringify(row)}`); return row; }
 }
 
 // ---------- coverage ----------
@@ -341,6 +344,7 @@ function assemble(reg) {
   fs.mkdirSync(OUT, { recursive: true });
   fs.writeFileSync(path.join(OUT, 'rows.jsonl'), rows.map((x) => JSON.stringify(x)).join('\n') + '\n');
   const tim = timingRows();
+  fs.writeFileSync(path.join(OUT, 'flights.jsonl'), flightRowsOf(process.env.SCALE_FLIGHT_ROWS ?? path.join(SCRATCH, 'flight-rows')).map((r) => JSON.stringify(r)).join('\n') + '\n');
   fs.writeFileSync(path.join(OUT, 'timing.jsonl'), tim.map((x) => JSON.stringify(x)).join('\n') + '\n');
   fs.writeFileSync(path.join(OUT, 'counts.jsonl'), crows.map((x) => JSON.stringify(x)).join('\n') + '\n');
   const meta = {
@@ -374,6 +378,47 @@ function timingRows() {
     for (const [regime, v] of by) out.push({ arm, run, build: FLIGHT_BUILD[arm], regime, n: v.length, cpuUsPerState: med(v), min: Math.min(...v), max: Math.max(...v) });
   }
   return out;
+}
+
+const QUIET_CASES = ['ladder-1-8-s1', 'ladder-1-2-s1', 'current-full-r1'];
+const QUIET_KEYS = ['LS|LARETS|2025-10-25', 'DO|SENTINEL 3B|2025-11-29'];
+const QUIET_ARMS = ['SGP4', 'AP', 'FFM40'];
+function flightRowsOf(dir, only) {
+  const out = [];
+  for (const [arm, run] of Object.entries(FLIGHT_RUN)) {
+    const f = path.join(dir, run, `flights-${arm}.jsonl`);
+    if (!fs.existsSync(f)) continue;
+    for (const r of fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))) {
+      if (!r.ok || r.refused || (only && !only.includes(r.key))) continue;
+      out.push({ arm, run, key: r.key, regime: r.regime, cpuUsPerState: (r.flightCpuSeconds / 10080) * 1e6, wallS: r.flightWallSeconds, loadBefore: r.loadBefore, loadAfter: r.loadAfter });
+    }
+  }
+  return out;
+}
+async function quiet() {
+  verifyPins();
+  const resDir = path.join(SCRATCH, 'results');
+  let below = 0;
+  for (;;) {
+    const l = os.loadavg()[0];
+    below = l <= 28 ? below + 1 : 0;
+    console.log(`${nowUtc()} quiet window: load ${l.toFixed(1)}, ${below} of 30 minutes`);
+    if (below >= 30) break;
+    await new Promise((r) => setTimeout(r, 60000));
+  }
+  const quietStartedUtc = nowUtc();
+  for (const id of QUIET_CASES) {
+    await new Promise((resolve) => spawn(process.execPath, [SELF, '--child', id], { stdio: ['ignore', 'inherit', 'inherit'], env: { ...process.env, SCALE_QUIET: '1' } }).on('close', resolve));
+  }
+  const dir = path.join(SCRATCH, 'quiet-flight-rows');
+  const env = { ...process.env, SDN_MODULES_ROOT: '/Users/tj/software/private/coordinator-d9/space-data-network-modules-bench2', SDN_MODULES_GIT: MODULES, SCALE_FLIGHT_ROWS: dir };
+  for (const arm of QUIET_ARMS) {
+    await new Promise((resolve) => spawn(process.execPath, [path.join(HERE, 'cost-flights.mjs'), 'flights', '--run', FLIGHT_RUN[arm], '--arms', arm, '--only', QUIET_KEYS.join(',')], { stdio: ['ignore', 'inherit', 'inherit'], env }).on('close', resolve));
+  }
+  const rowsQ = QUIET_CASES.map((id) => JSON.parse(fs.readFileSync(path.join(resDir, `quiet-${id}.json`), 'utf8')));
+  fs.mkdirSync(OUT, { recursive: true });
+  fs.writeFileSync(path.join(OUT, 'quiet.jsonl'), JSON.stringify({ kind: 'window', quietStartedUtc, endedUtc: nowUtc(), loadAtEnd: +os.loadavg()[0].toFixed(1) }) + '\n' + rowsQ.map((r) => JSON.stringify({ kind: 'screen', id: r.id, startedUtc: r.startedUtc, cpuS: { propagation: r.phases.propagation.cpuS, search: r.phases.search.cpuS, refine: r.phases.refine.cpuS, total: r.totalCpuS }, events: r.events, load1Start: r.load1Start, load1End: r.load1End })).join('\n') + '\n' + flightRowsOf(dir, QUIET_KEYS).map((r) => JSON.stringify({ kind: 'flight', ...r })).join('\n') + '\n');
+  console.log('quiet rows written');
 }
 
 // ---------- statistics ----------
@@ -469,6 +514,22 @@ function build(rows, meta, cov, extra) {
     }
   }
   const sgp4Amdahl = amdahl(fullShare, L);
+  const pearson = (x, y) => { const n = x.length, mx = x.reduce((a, b) => a + b, 0) / n, my = y.reduce((a, b) => a + b, 0) / n; let sxy = 0, sxx = 0, syy = 0; for (let i = 0; i < n; i++) { sxy += (x[i] - mx) * (y[i] - my); sxx += (x[i] - mx) ** 2; syy += (y[i] - my) ** 2; } return sxy / Math.sqrt(sxx * syy); };
+  const lnN = rows.map((r) => Math.log(r.index)), loadMean = rows.map((r) => (r.load1Start + r.load1End) / 2), startOrder = rows.map((r) => Date.parse(r.startedUtc));
+  const correlation = { lnNvsLoad: pearson(lnN, loadMean), lnNvsStartOrder: pearson(lnN, startOrder), loadRange: [Math.min(...loadMean), Math.max(...loadMean)] };
+  const qa = extra.quiet ?? [];
+  let quietCheck = { run: false };
+  if (qa.length) {
+    const win = qa.find((x) => x.kind === 'window'), qs = qa.filter((x) => x.kind === 'screen'), qf = qa.filter((x) => x.kind === 'flight');
+    const rel = (a, b) => a / b - 1;
+    const screen = qs.map((x) => { const l = rows.find((r) => r.id === x.id); const ph = ['propagation', 'search', 'refine', 'total'].map((k) => ({ phase: k, quiet: x.cpuS[k], loaded: l.cpuS[k], rel: rel(x.cpuS[k], l.cpuS[k]) })); return { id: x.id, phases: ph, events: [x.events, l.events] }; });
+    const flightsLoaded = extra.flights ?? [];
+    const sum = (list, arm) => list.filter((f) => f.arm === arm && QUIET_KEYS.includes(f.key)).reduce((a, f) => a + f.cpuUsPerState, 0);
+    const ratios = [['AP/FFM40', 'AP', 'FFM40'], ['AP/SGP4', 'AP', 'SGP4']].map(([name, a, b]) => { const rq = sum(qf, a) / sum(qf, b), rl = sum(flightsLoaded, a) / sum(flightsLoaded, b); return { name, quiet: rq, loaded: rl, rel: rel(rq, rl) }; });
+    const arms = QUIET_ARMS.map((arm) => ({ arm, quiet: sum(qf, arm), loaded: sum(flightsLoaded, arm), rel: rel(sum(qf, arm), sum(flightsLoaded, arm)) }));
+    const worst = Math.max(...screen.flatMap((x) => x.phases.map((p) => Math.abs(p.rel))), ...ratios.map((r) => Math.abs(r.rel)));
+    quietCheck = { run: true, window: win, screen, ratios, arms, worstRelativeDifference: worst, agree: worst <= 0.10 };
+  }
   const overlap = !(L.hi < D.lo || D.hi < L.lo);
   const verdict = `Ladder p = ${f2(L.p)} (${f2(L.lo)} to ${f2(L.hi)}): ${L.verdict}. Dates p = ${f2(D.p)} (${f2(D.lo)} to ${f2(D.hi)}): ${D.verdict}. The two intervals ${overlap ? 'overlap' : 'do not overlap'}. Propagation takes ${(100 * fullShare).toFixed(1)} percent of the screen CPU at the full catalog (SGP4); a propagator of zero cost cuts the screen CPU at most by a factor ${f2(1 / (1 - fullShare))}.`;
   const chartPoint = (p, ref_) => ({ index: p.index, cpu: p.total / ref_.total, propagation: p.propagation / ref_.total, search: p.search / ref_.total, refine: p.refine / ref_.total, events: p.events / ref_.events });
@@ -479,7 +540,7 @@ function build(rows, meta, cov, extra) {
     propagationShare: fullShare, conversion, amdahlSgp4: sgp4Amdahl,
     derived: { label: 'derived from measured parts; only SGP4 flew the whole screen', assumption: 'candidate and event counts held at SGP4\'s', series: Object.fromEntries(Object.entries(derived).map(([k, byRegime]) => [k, Object.fromEntries(Object.entries(byRegime).map(([rg, v]) => [rg, v.points.map((x) => ({ index: x.index, lower: x.lower / ref.total, upper: x.upper / ref.total }))]))])) },
   };
-  return { derived, sgp4Amdahl, timing: tm, fits, shares, noise, theories, conversion, sentence, verdict, overlap, parity: meta.parity, chart, ladderN: ladder.length, datesN: dates.length };
+  return { correlation, quietCheck, derived, sgp4Amdahl, timing: tm, fits, shares, noise, theories, conversion, sentence, verdict, overlap, parity: meta.parity, chart, ladderN: ladder.length, datesN: dates.length };
 }
 
 const regimes0 = (t) => [...new Set(Object.keys(t.timing).map((k) => k.split('|')[1]))].filter((r) => r !== 'pooled');
@@ -505,8 +566,19 @@ function render(rows, meta, cov, extra) {
   am('SGP4 (measured in the screen)', 'all', t.sgp4Amdahl);
   for (const [k, byRegime] of Object.entries(t.derived)) for (const [rg, v] of Object.entries(byRegime)) { am(`${k} (derived, s low)`, rg, v.amdahl.sLoCase); am(`${k} (derived, s high)`, rg, v.amdahl.sHiCase); }
   lines.push('', 'Derived series: derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the arm\'s measured CPU per state in that regime times N times 10,080; refine is a band (lower: as measured with SGP4; upper: scaled by the ratio of the arm\'s CPU per state to SGP4\'s in the same regime). Hidden assumption: candidate and event counts are held at SGP4\'s; whether better accuracy allows a smaller threshold is another study. The whole-screen bound 3 / p applies only to a speedup of the whole screen.');
+  lines.push('', '## Case order', '', `Pearson correlation of ln(N index) with the 1-minute load (mean of start and end) across the ${rows.length} screen rows: ${fmt(t.correlation.lnNvsLoad, 3)}; with the start time: ${fmt(t.correlation.lnNvsStartOrder, 3)}. Load across the rows: ${fmt(t.correlation.loadRange[0], 1)} to ${fmt(t.correlation.loadRange[1], 1)}.`);
+  lines.push('', '## Quiet-window check', '');
+  if (!t.quietCheck.run) lines.push('Not run: every absolute CPU figure in this file reads "under load, not quiet-checked" and is not for the page. The ratios and p stand with that caveat.');
+  else {
+    lines.push(`Quiet window: load at or below 28 for 30 minutes, then the re-runs (started ${t.quietCheck.window.quietStartedUtc}, ended ${t.quietCheck.window.endedUtc}, load at end ${t.quietCheck.window.loadAtEnd}). Agreement line 10 percent. Worst relative difference: ${fmt(100 * t.quietCheck.worstRelativeDifference, 1)} percent: ${t.quietCheck.agree ? 'the loaded and quiet figures agree' : 'they DISAGREE beyond the line; the absolute figures and s are read from the quiet rows'}.`, '', '| Case | Phase | Quiet CPU s | Loaded CPU s | Quiet / loaded - 1 |', '|---|---|---|---|---|');
+    for (const x of t.quietCheck.screen) for (const p of x.phases) lines.push(`| ${x.id} | ${p.phase} | ${fmt(p.quiet, 2)} | ${fmt(p.loaded, 2)} | ${fmt(100 * p.rel, 1)} % |`);
+    lines.push('', '| Timing arm (two windows) | Quiet us | Loaded us | Difference |', '|---|---|---|---|');
+    for (const a of t.quietCheck.arms) lines.push(`| ${a.arm} | ${fmt(a.quiet, 2)} | ${fmt(a.loaded, 2)} | ${fmt(100 * a.rel, 1)} % |`);
+    lines.push('', '| Ratio | Quiet | Loaded | Difference |', '|---|---|---|---|');
+    for (const r of t.quietCheck.ratios) lines.push(`| ${r.name} | ${fmt(r.quiet, 4)} | ${fmt(r.loaded, 4)} | ${fmt(100 * r.rel, 1)} % |`);
+  }
   lines.push('', '## Conversion', '', t.sentence, '', '## Parity guard', '', `Phased path and fused path on ${meta.parity.id}: events ${meta.parity.phasedEvents} and ${meta.parity.fusedEvents}, event-set digests ${meta.parity.equal ? 'equal' : 'DIFFER'}.`, '', '## Verdict', '', t.verdict, '');
-  return { 'table.json': JSON.stringify({ fits: t.fits, theories: t.theories, conversion: t.conversion, sentence: t.sentence, verdict: t.verdict, noise: t.noise, parity: meta.parity }, null, 1) + '\n', 'README.md': lines.join('\n'), 'chart.json': JSON.stringify(t.chart, null, 1) + '\n', _t: t };
+  return { 'table.json': JSON.stringify({ correlation: t.correlation, quietCheck: t.quietCheck, fits: t.fits, theories: t.theories, conversion: t.conversion, sentence: t.sentence, verdict: t.verdict, noise: t.noise, parity: meta.parity }, null, 1) + '\n', 'README.md': lines.join('\n'), 'chart.json': JSON.stringify(t.chart, null, 1) + '\n', _t: t };
 }
 
 function readAll() {
@@ -515,7 +587,9 @@ function readAll() {
   const counts = fs.readFileSync(path.join(OUT, 'counts.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
   const tf = path.join(OUT, 'timing.jsonl');
   const timing = fs.existsSync(tf) ? fs.readFileSync(tf, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
-  return { rows, meta, cov: counts.find((x) => x.id === 'coverage'), extra: { timing, n0: counts.find((x) => x.id === 'current-full-r1').objects } };
+  const jl = (f) => (fs.existsSync(path.join(OUT, f)) ? fs.readFileSync(path.join(OUT, f), 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []);
+  const qrows = jl('quiet.jsonl'), flights = jl('flights.jsonl');
+  return { rows, meta, cov: counts.find((x) => x.id === 'coverage'), extra: { timing, quiet: qrows, flights, n0: counts.find((x) => x.id === 'current-full-r1').objects } };
 }
 function table() {
   const { rows, meta, cov, extra } = readAll();
@@ -643,6 +717,8 @@ if (mode === '--timing') await timing(process.argv[3]);
 else if (mode === '--populations') await populations();
 else if (mode === '--coverage') coverage();
 else if (mode === '--run') await run();
+else if (mode === '--quiet') await quiet();
+else if (mode === '--assemble') assemble(registration());
 else if (mode === '--child') await child(process.argv[3]);
 else if (mode === '--smoke') {
   // plumbing only: a fixed subset of the current snapshot, not a row
