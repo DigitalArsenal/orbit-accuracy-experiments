@@ -187,6 +187,42 @@ cause of the constant cross-track offset and belongs in the module record's term
 explained everywhere, the record says so and names the Z2 arm's reading. If a module record is warranted, its title, terms, the measured
 gain and the e >= 0.05 identity questions are stated in the table's summary for the coordinator to file.
 
+## Amendment 1 (2026-11-06, this lane, on the SDN-AP session's review through the coordinator; committed before any row)
+1. Fit absorption (the serious one). The prototype of item 3 adds the terms to output states after a fit that had none of them; a module
+   carrying the terms fits with them, and a fitted mean set absorbs modeled-term errors (the 11-06 trap), so a "not reduced" from the
+   post-fit arm is confounded, and the constant normal member especially can land in the fitted inclination and node. Added arms P1F and
+   P1F + P1N (pre-fit): the displacement of items 2a and 2b, built at the fixture's mean motion and the reference arc's own inclination
+   (a and n from the registered n; the difference from the fitted n is second order), is subtracted from the reference arc's states
+   BEFORE the fit (position and velocity, RTN to GCRF at each arc state; the velocity carries the displacement's rate and the frame's
+   rotation), the module fits that arc (the same fit call, configuration and weather frames the harness uses: public inputs only), the
+   fitted set flies to the same epochs against the unchanged reference, and the displacement at the flight's own angles is added back:
+   what a module with these terms does to first order. The share table reports before / post-fit (P1, P1 + P1N) / pre-fit (P1F, P1F +
+   P1N) side by side, and P1F + P1N + P2 (P2 stays an output-step bound). If the post-fit and pre-fit readings differ, the pre-fit
+   reading is the one a module record may cite and the difference is the measured absorption. The fitted inclination and node of the
+   pre-fit set against the standard fit's are reported as a sin i dOmega and a di in m (from the two flights' first states, the fit's
+   end), per cell: whether a module carrying the constant normal member changes the fitted plane. Applied to the six e 0.001 cells and
+   to the end-to-end windows (item 5: before / P1 + P1N / P1F + P1N / P1F + P1N + P2). The verdict's clauses read the pre-fit step
+   P1F + P1N where item 8 says P1 + P1N, and P1F + P1N + P2 where it says P1 + P1N + P2.
+2. Real-window arm 5b, report only: on the accuracy table's already-read precise-orbit windows for LARES, Starlette, Ajisai and Jason-3
+   (nothing barred: no Swarm, GRACE-FO, Galileo, Starlink or operator data), the same 72 h fit with and without the pre-fit correction,
+   the same forward flight, the 3D error at 24, 72 and 168 h against the precise orbit, paired per window: median, interval, share of
+   windows improved; with 10 to 15 windows the two-sided sign test resolves only a unanimous or near-unanimous sign (p = 0.002 at 10 of
+   10, 0.021 at 10 of 11, 0.039 at 11 of 13, 0.035 at 13 of 15), so a split of 8 of 12 reads nothing. Order: LARES first (the largest
+   fraction), then Starlette, Ajisai, Jason-3; a regime the box does not reach is reported "unmeasured", never filled. 5b decides nothing
+   in item 8; it is the report line a module record would cite beside the synthetic end-to-end arm.
+3. Multiplicity in item 8: the end-to-end reading is 6 regimes x 3 leads x 2 steps = 36 sign tests at p = 0.031 each, so about 1.1
+   false "moved" are expected when nothing moves; a single "moved" is read with that and the table states the count expected by chance
+   beside the count observed; with six windows 0.031 is the smallest p available, so the test resolves nothing finer than all six
+   agreeing.
+4. N0 has its own line in the verdict, not folded into the share: the J3 hand prediction of item 2b lands inside or next to the measured
+   interval in all six regimes with the right sign, written before the rows; if the exact l = 3 and 5 prediction holds (item 4 (b)) it
+   is the first explained term in this chain and costs 4 bytes; the line states per regime explained / not explained, the pre-fit arm's
+   fitted-plane change, and the N0 that remains after P1N. P2 stays empirical and labeled an upper bound (Kozai 1962 is not barred; a
+   later module record may fetch it; this one need not).
+5. Wording of item 5: the harness seeds every flight at the argument of latitude equal to the argument of perigee (heo-model-truth.mjs
+   state_of_elements at u = argp), so the window phase k x 60 degrees is set as RAAN and the initial argument of latitude (argp), not
+   the mean anomaly; at e 0.001 the two are the same phase. Nothing else changes.
+
 ## Outputs and check
 `SDN_MODULES_ROOT=<the pinned -covm root> SDNAP_064_WASM=<this lane's copy of the signed 0.6.4 dist> SDN_AP_HEO_CACHE=<this lane's scratch>
 node experiments/operator-theory/j2-j5-short-period.mjs --run [--shard k/n]` (at most 4 shards, cells by position) writes
