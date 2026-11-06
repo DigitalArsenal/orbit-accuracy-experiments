@@ -200,6 +200,14 @@ reported in-arc and forward as Amendment 3 states; their verdict is labeled "pas
 (discarded): Starlette forward tesseral 6.42 m [1.57, 11.27] against 8.68 m, undecided; GPS in-arc 1.06 m [0.70, 1.42] against 1.00 m,
 undecided. Amendment 5's three-way rule is otherwise unchanged.
 
+## Amendment 7 (2026-11-06 11:25Z, SDN-AP ruling through the coordinator; committed before the table is written)
+Amendment 6 stands on the same ground as 3 and 4, on three conditions: the trial reads stay word for word in the disclosure (Starlette
+6.42 [1.57, 11.27] against 8.68; GPS 1.06 [0.70, 1.42] against 1.00); Starlette and GPS enter the table only as registered rows flown
+again, never carried over from the trial; this is the LAST estimator change: if the table, once begun, shows another estimator failure,
+those cells are reported "withheld (estimator)" and any new method is a new record. An empty share is not a pass: at GEO, IGSO, QZSS and
+THEMIS D the label is "not separable (resonant class)", with the mixed share's size in-arc and forward as the finding; a forward leg with
+fewer than 3 blocks decides nothing and the in-arc leg decides.
+
 ## Outputs and check
 Rows: results/ap-truth/tesseral-all-regimes/rows-<shard>.jsonl (one per cell: regime, elements, fitted elements, A, the bounds, RMS,
 maximum, roughness, the convergence figure where measured, families, verdict, the SHA-256 of both dists and of the runner, createdUtc).
