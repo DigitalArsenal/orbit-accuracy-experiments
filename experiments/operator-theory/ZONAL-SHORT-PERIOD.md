@@ -163,7 +163,7 @@ RMS floor needs the after share's point below 1 - 2 SE: 0.30, 0.66, 0.20, 0.46, 
 verdict's first clause then cannot meet; it is stated as the reason when that is what blocks it. The after share's SE is not known
 before the rows; it is measured and the realized thresholds are stated in the table.
 
-## Amendment 1 (2026-11-06 14:08Z, this lane; committed before any row of the table)
+## Amendment 1 (2026-11-06 14:05Z, this lane; committed 31302171 before any row of the table)
 The first flight (Starlette secondary e 0.001 at 14:02:55Z, after the registration; its row is kept apart in
 results/ap-truth/zonal-short-period/first-pass/rows-0.jsonl and enters no table) showed the registered V1 unreadable, the same failure
 the half-day record's arm Z met (HALF-DAY-RESONANCE.md Amendment 1): D = Ref[20, 0] - Ref[5, 0] from one osculating state diverges
