@@ -113,3 +113,55 @@ with XP2F_CONTROL=1 for `truth2` and for `providers --only iss` (XM's own weathe
       --reflight <store>/ap/b0411/compare-examples-full,<store>/ap/b051/compare-examples-regen,<store>/ap/b062/compare-examples-reflight --out <store>/ap/b063/compare-examples-reflight
 
 with XP2F_CONTROL=1 for `truth2` and for `providers --only iss`, SDN_MODULES_GIT naming a modules clone that holds 93cb5a058 and SDN_MODULES_ROOT one with the registered installs. Every published example but the two highly elliptical (TESS) examples was flown again, 56 of 56 (`compare-examples-publish.mjs --reflown` against the published 0.6.2 examples): whiteroom XP equals the 0.6.2 flight byte for byte in all 56; AP equals it byte for byte in the 53 examples at an eccentricity of 0.3 and below (largest position difference 0 m) and moves in the 3 THEMIS and Chandra examples above it, the grid's change: THEMIS D (`best-highly-elliptical-themis-and-chandra`) by up to 314.5 m, THEMIS A by up to 314.2 m, Chandra by up to 22.7 m. On their stored windows (72 h fit, 7 days of forecast, 300 s grid; days counted from the fit's end; |AP offset| at the sample nearest the day; the roughness the median |second difference| of the offset at the grid step; arithmetic on the stored positions; 0.6.2 then 0.6.3): THEMIS D day 1 170.3 then 181.3 m, day 3 387.9 then 407.9 m, day 7 615.0 then 638.3 m, RMS over the span 598.2 then 570.1 m, largest 3,151.3 then 2,782.1 m, roughness 3.059 then 0.039 m; THEMIS A day 1 120.8 then 105.0 m, day 3 249.5 then 248.6 m, day 7 520.5 then 540.0 m, RMS 298.5 then 287.9 m, largest 1,164.4 then 915.4 m, roughness 2.180 then 0.056 m; Chandra day 1 207.6 then 209.2 m, day 3 454.2 then 456.1 m, day 7 12,413.9 then 12,411.2 m, RMS 14,630.5 then 14,630.0 m, roughness 0.063 then 0.040 m. The ripple is gone from both THEMIS tracks (the roughness falls by a factor of about 40 to 80) and Chandra's roughness falls from 0.063 to 0.040 m; the single-epoch errors at days 1, 3 and 7 move both ways by under 25 m, within each orbit's own swing between perigee and apogee passages; the RMS over the span and the largest error fall on both THEMIS windows. `compare-examples-publish.mjs` takes `ap/b063/compare-examples-reflight` last and copies each `<id>.ocm` beside its example. Each published example names AP and whiteroom XP on 0.6.3; every other arm, the TESS examples and every cell keep the build they were measured on, and `compare-examples.mjs --check` holds both and finds one `$OCM` beside each of the 56.
+
+## Amendment, 2026-11-06: every AP and whiteroom XP cell on precise orbits names sdn-ap 0.6.3
+
+Report only (`sdn-ap-site-accuracy-tables-0-6-3-20261106`). The site ships `propagator/sdn-ap` 0.6.3 (modules 93cb5a058, dist aa3ed22aa61a), and its accuracy tables name the build each figure runs. 0.6.3 changes the theory above an eccentricity of 0.3 alone, so the cells divide in two.
+
+**The Highly elliptical THEMIS and Chandra rows, flown again.** `all-regimes.mjs --arms AP --groups HX --ap-build 0.6.3@93cb5a0584fa728864e4426cc9ceb368936589f9@aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e` (the flag opens `propagator/sdn-ap` at the named build through `lib/ap.mjs` `standalone()`, git show at the commit, SHA-256 checked; without it the tool is unchanged) on the same 19 windows, truth, grid, settings and measures as the 0.5.1 rows of `ap/b051/regimes-hx`: THEMIS A, D and E at 4 cutoffs each with a 72 h fit, Chandra at 7 cutoffs with 72 h and 168 h fits, 26 fits, every one flown, into `ap/b063/regimes-hx` (4 shards; rows-0 to rows-3 SHA-256 7724d06d7590b7cb, 3fc3307bfb4947b8, d46e925b3e3fed00, 6d5bb92568545f84). The first flight of the same windows ran before the flag existed, the same `all-regimes.mjs` with `lib/build.mjs` `PIN` pointed at 0.6.3 by a `node --import` preload (`ap/b063/regimes-hx-preload`); the flag's run equals it byte for byte in all four shards. `compare-cells.mjs` reads the HX regime's AP windows from `ap/b063/regimes-hx` and writes `results/ap-truth/compare/hx-0-6-3.json`, the change window by window; `--check` holds both files to the stores. 3D forward error in meters at days 1, 2, 3 and 7 past the fit's end, and the fit's RMS, 0.5.1 then 0.6.3:
+
+| Window | Fit | Day 1, m | Day 2, m | Day 3, m | Day 7, m | Fit RMS, m |
+| --- | --: | --: | --: | --: | --: | --: |
+| CHANDRA 2018-03-08 | 168 h | 2,285.2 then 2,286.7 | 11,116.9 then 11,122.7 | 10,462.4 then 10,466.9 | 19,649.5 then 19,665.0 | 4,221.0 then 4,219.8 |
+| CHANDRA 2018-03-08 | 72 h | 70.1 then 69.0 | 186.4 then 185.5 | 168.7 then 168.4 | 2,114.7 then 2,113.8 | 40.4 then 39.5 |
+| CHANDRA 2018-03-15 | 168 h | 1,222.3 then 1,217.9 | 749.1 then 746.8 | 1,302.9 then 1,293.3 | 11,198.7 then 11,200.3 | 637.9 then 637.9 |
+| CHANDRA 2018-03-15 | 72 h | 169.9 then 167.9 | 203.2 then 201.7 | 275.7 then 269.0 | 13,192.6 then 13,190.1 | 18.8 then 14.6 |
+| CHANDRA 2018-03-22 | 168 h | 13,797.9 then 13,789.1 | 18,329.5 then 18,319.4 | 13,530.6 then 13,516.8 | 53,554.9 then 53,521.0 | 7,295.8 then 7,294.6 |
+| CHANDRA 2018-03-22 | 72 h | 154.4 then 159.2 | 317.8 then 321.5 | 141.7 then 138.3 | 20,936.8 then 20,968.3 | 41.3 then 40.6 |
+| CHANDRA 2018-03-29 | 168 h | 3,123.6 then 3,125.3 | 12,889.3 then 12,894.9 | 13,687.8 then 13,694.9 | 17,340.4 then 17,344.5 | 4,848.5 then 4,848.5 |
+| CHANDRA 2018-03-29 | 72 h | 78.3 then 80.4 | 309.0 then 312.3 | 292.7 then 296.6 | 3,629.1 then 3,624.3 | 21.1 then 18.5 |
+| CHANDRA 2018-04-05 | 168 h | 2,325.4 then 2,322.8 | 1,660.7 then 1,658.6 | 3,408.6 then 3,411.7 | 9,403.2 then 9,406.9 | 1,055.0 then 1,056.8 |
+| CHANDRA 2018-04-05 | 72 h | 2,808.3 then 2,811.2 | 3,374.2 then 3,376.4 | 5,135.9 then 5,149.9 | 12,498.4 then 12,513.0 | 1,180.8 then 1,183.1 |
+| CHANDRA 2018-04-12 | 168 h | 2,964.1 then 2,969.1 | 5,927.7 then 5,930.7 | 2,400.2 then 2,403.8 | 23,558.8 then 23,568.7 | 2,053.7 then 2,054.3 |
+| CHANDRA 2018-04-12 | 72 h | 3,210.0 then 3,212.3 | 7,035.0 then 7,033.8 | 2,179.5 then 2,181.1 | 22,792.1 then 22,786.9 | 848.6 then 848.5 |
+| CHANDRA 2018-04-19 | 168 h | 1,689.7 then 1,690.1 | 1,715.8 then 1,717.5 | 1,842.8 then 1,844.4 | 4,177.2 then 4,178.3 | 1,139.4 then 1,139.4 |
+| CHANDRA 2018-04-19 | 72 h | 1,614.8 then 1,615.9 | 2,996.2 then 2,998.5 | 3,387.5 then 3,389.9 | 6,550.0 then 6,552.0 | 713.9 then 714.2 |
+| THEMIS A 2013-02-11 | 72 h | 377.0 then 379.6 | 854.6 then 855.8 | 1,217.7 then 1,231.9 | 2,661.9 then 2,658.7 | 96.1 then 92.4 |
+| THEMIS A 2013-02-13 | 72 h | 123.5 then 113.7 | 178.7 then 168.2 | 311.2 then 298.0 | 990.2 then 961.8 | 62.1 then 56.9 |
+| THEMIS A 2013-02-15 | 72 h | 211.7 then 201.3 | 271.6 then 255.9 | 314.1 then 294.9 | 419.9 then 422.5 | 109.5 then 104.8 |
+| THEMIS A 2013-02-17 | 72 h | 148.7 then 138.2 | 208.0 then 200.4 | 276.7 then 273.9 | 914.2 then 910.8 | 90.6 then 76.0 |
+| THEMIS D 2013-02-11 | 72 h | 282.6 then 273.1 | 540.5 then 533.0 | 713.9 then 707.0 | 864.1 then 886.0 | 84.8 then 66.8 |
+| THEMIS D 2013-02-13 | 72 h | 234.4 then 224.4 | 434.1 then 425.1 | 605.1 then 587.5 | 1,019.1 then 962.3 | 94.3 then 68.8 |
+| THEMIS D 2013-02-15 | 72 h | 178.5 then 168.8 | 316.7 then 318.0 | 411.6 then 419.6 | 696.6 then 721.5 | 88.7 then 61.3 |
+| THEMIS D 2013-02-17 | 72 h | 164.0 then 149.1 | 271.1 then 267.0 | 363.8 then 366.3 | 1,154.0 then 1,203.9 | 88.7 then 56.7 |
+| THEMIS E 2013-02-11 | 72 h | 230.2 then 220.5 | 525.1 then 515.0 | 788.6 then 772.5 | 1,184.7 then 1,155.4 | 65.9 then 58.0 |
+| THEMIS E 2013-02-13 | 72 h | 236.2 then 232.2 | 479.9 then 484.6 | 709.7 then 720.3 | 1,385.3 then 1,377.2 | 81.9 then 62.4 |
+| THEMIS E 2013-02-15 | 72 h | 148.6 then 135.1 | 282.9 then 279.5 | 398.6 then 404.2 | 767.3 then 813.4 | 87.1 then 58.8 |
+| THEMIS E 2013-02-17 | 72 h | 155.4 then 131.6 | 259.2 then 233.8 | 342.6 then 312.3 | 1,052.6 then 1,004.1 | 84.2 then 55.7 |
+
+The regime-level cells of `cells.json`, median and 95th percentile of the 3D error in km, 0.5.1 then 0.6.3:
+
+| Fit | Lead | Windows | Median, km | 95th percentile, km |
+| --: | --: | --: | --: | --: |
+| 72 h | 24 h | 19 | 0.1785 then 0.1688 | 2.848 then 2.851 |
+| 72 h | 48 h | 19 | 0.3167 then 0.318 | 3.74 then 3.742 |
+| 72 h | 72 h | 19 | 0.3986 then 0.4042 | 3.562 then 3.566 |
+| 72 h | 168 h | 19 | 1.185 then 1.204 | 21.122 then 21.15 |
+| 168 h | 24 h | 7 | 2.325 then 2.323 | 10.596 then 10.59 |
+| 168 h | 48 h | 7 | 5.928 then 5.931 | 16.697 then 16.692 |
+| 168 h | 72 h | 7 | 3.409 then 3.412 | 13.641 then 13.641 |
+| 168 h | 168 h | 7 | 17.34 then 17.344 | 44.556 then 44.535 |
+
+On the twelve THEMIS windows the fit RMS falls on every window (by 4 to 29 m) and the day-1 error falls on eleven of twelve; days 2, 3 and 7 move both ways, by under 60 m. On Chandra the fits and the day figures move by under 0.1 % of their size either way; Chandra's errors are dominated by its orbit, not by the build. No cell moves by more than 6 % of its value; the 72 h fit's day-1 median falls from 178.5 to 168.8 m and its day-7 median rises from 1.185 to 1.204 km. These per-row figures belong here and in the record alone: the site states the 0.6.3 figures.
+
+**Every other precise-orbit AP cell, and every whiteroom XP cell, relabeled on an identity.** No flight. At an eccentricity of 0.3 and below 0.6.3 is 0.6.2's theory: the 0.6.3 version step (`results/ap-truth/themis-ripple-fix/version-step.json` at 9de1a40ff) finds the versioned dist equal to the candidate it was cut from on 56 of 56 published example sets, 6 of 6 fits and 8 of 8 accuracy fixtures, and the candidate's acceptance list (`final-build.json`, the same commit) finds 53 of 53 example sets at e 0.3 and below identical to 0.6.2, the 3 THEMIS and Chandra sets above it changed by design; 0.6.2 equals 0.5.1 on all 56 published examples (amendment of 2026-11-05, aa2a0a7b), and whiteroom XP equals through 0.6.3 on all 56 (amendment above, 58dcdd66). Every precise-orbit AP cell outside the HX regime was flown on 0.5.1 (`ap/b051`) and names 0.6.3 (`propagator/sdn-ap@aa3ed22aa61a`); every whiteroom XP cell on precise orbits, flown on 0.4.11 and re-measured on 0.5.1 (the proof at 71b27aa5), names 0.6.3 the same way. `cells.json` carries the chain in its `provenance` block (`XP`: measured on, re-measured on, proof and identity; `AP`: measured on, identity, and the re-measured regime with its store, tool and `hx-0-6-3.json`), and its `builds` keep the measured builds' records beside the named one. `compare-cells.mjs --check` reads the identity at 9de1a40ff and holds: 56 of 56 and 53 of 53; every precise-orbit AP and whiteroom XP cell on 0.6.3 and none off precise orbits; no cell on 0.4.11, 0.5.1 or sgp4-xp 0.1.1; the 19 HX windows, 26 fits, all flown. The FFM cells stay on 2.2.0 by hash: no identity to 2.2.1 has been flown.
