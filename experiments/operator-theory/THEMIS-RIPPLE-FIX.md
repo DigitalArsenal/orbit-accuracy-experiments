@@ -209,3 +209,16 @@ terms) of tens of meters are absent from both models; the old truncated table's 
 fit. Test that would confirm it (next box): the fit residuals' spectrum on the candidate against the base's, power at harmonics of M
 above 10 n larger on the candidate, and a second-order displacement estimate from the quadrature (the first-order displacement fed
 back into the potential's gradient) of the size of the day-3 change.
+Additions (SDN-AP session, before any row of Amendment 8 is read):
+1. "Not worse" is a paired test: per window, the ratio candidate / base of the 3D RMS at days 1, 3 and 7; the median ratio with a
+   window-cluster bootstrap (10,000 draws, seed 20261106, 95 % percentile interval); non-inferiority margin 1.05 (the upper bound of
+   the median ratio at or below 1.05 at each day). If the upper bound cannot clear the margin at 12 windows while the median ratio is
+   at or below 1.0, THEMIS windows are added in this order before any is flown: cutoffs 2013-02-12, 14 and 16 for A, D and E (THEMIS D
+   2013-02-12 and THEMIS E 2013-02-16 excluded, the correctness windows), then 2013-02-10 and 2013-02-18 if the kernels cover the arc
+   and the 7-day flight.
+2. The in-flight re-grid is dropped (a re-grid at different moments in a fit's perturbed sets breaks the finite-difference partials'
+   continuity); the grid is built once at init and read linearly in the elements' offsets. Recorded with it: the partials' consistency
+   between per-set exact grids and the shared grid (C4 against C3: fitted elements and day errors), and the 7-day drift error with no
+   re-grid against the quadrature at the drift a flight sees (de up to 3e-3, harness, element-linear grid); the 1 m RMS bound must hold.
+3. If the residual spectrum confirms second-order terms, the lane stops and reports: starting any second-order work is the SDN-AP
+   session's decision.
