@@ -1,7 +1,7 @@
 // PER-REV-FLAG.md end to end: the amendment precedes every re-flag row; the flag (lib/steps.mjs revFlag) reproduces S1-24H-DAY7's classification from its stored
 // rows (35 of 35 day-7 FFM losses flagged, its 5 burn-free windows not); every re-flag row written by the committed runner on propagator/ffm 2.2.0; the tables
 // reproduce from the stored rows; the holds.
-//   node experiments/operator-theory/per-rev-flag.e2e.mjs
+//   node experiments/operator-theory/steps.e2e.mjs
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
