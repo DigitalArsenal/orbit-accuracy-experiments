@@ -164,6 +164,19 @@ Measured (ripple 3e6a88a44 merged; modules abd04b701, scratch build 226a7a8c; fi
 FIT_RMS 104.78 m, BTERM 0.012145; grid lookups 0 outside a fit, 236 by the fit's sets; grid cache 0 grids, 0 bytes before and after
 the fit. Guard E2E and fit.e2e.mjs PASS.
 
+## Amendment 6 (2026-11-06), registered before any row it governs
+
+Finding (the ripple lane, on modules abd04b70's fit path, Molniya): Amendment 4's GridShareScope in fit.inc's finite-difference
+fall-back brings the Molniya drag bias back: start 0 BTERM 0.045714 against the exact-grid variant's 0.044616 (threshold 0.00045), day
+7 521 / 395 m against 238 / 174 m. With only that scope removed: BTERM 0.04461633761935712, days 15.5 / 54.9 / 238.0, bit-equal to the
+exact-grid variant. Cause: the fall-back columns' copies, reading the nominal's grid linearly, miss the grid's own derivative in the
+elements, so the solve converges elsewhere. The drag-rate probe's and the AGOM column's scopes are harmless (their copies have the
+nominal's n, e and i, the same key). Fix: the fall-back's `xpt::GridShareScope share(nominal.s);` line is deleted; the other two scopes
+and fit_oem.inc's FitGridScope stay. Cost bound: the fall-back runs at most twice per fit (fd_used < 2), so its copies' own exact-key
+grid builds are bounded, and under FitGridScope they are freed when dropped. Measured and reported: THEMIS A fit time and wasm
+high-water in MiB against 0.6.2 and Amendment 5; the guard E2E (0 lookups outside a fit, the cache identical before and after) and
+fit.e2e.mjs PASS.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
