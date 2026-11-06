@@ -147,6 +147,45 @@ export async function geoSteps(lines, elements, rule = GEO) {
   return { steps, rows, checked, medianResidualM: mr, medianPlaneMdeg: mp };
 }
 
+// The maneuver flag (PER-REV-FLAG.md, replacing the 8 m truth step in every table it writes): FFM24's flight less the truth as mean semimajor axis per revolution
+// (both through `revolutions`), each flight revolution against the truth revolution starting within 10 minutes of it; the change between consecutive compared
+// revolutions k = 1 to 7 periods apart, less k times the drift (the median change at k = 1 over the span); a change of 1 m or more flags the window.
+export const PER_REV = { jumpM: 1, matchMs: 600000, maxGapPeriods: 7, endPeriods: 2 };
+
+/** Flight revolution means less the truth's, revolution by revolution: [[t ms, m]] from two [[t ms, aM]] lists in time order. */
+export function revDifferences(flight, truth, rule = PER_REV) {
+  const out = [];
+  let j = 0;
+  if (!truth.length) return out;
+  for (const [t, a] of flight) {
+    while (j + 1 < truth.length && Math.abs(truth[j + 1][0] - t) <= Math.abs(truth[j][0] - t)) j += 1;
+    if (Math.abs(truth[j][0] - t) <= rule.matchMs) out.push([t, a - truth[j][1]]);
+  }
+  return out;
+}
+
+/** The period: the median spacing of a revolution list ([[t ms, aM]]). */
+export const periodOf = (revs) => { const g = revs.slice(1).map((x, i) => x[0] - revs[i][0]).sort((a, b) => a - b); return g[g.length >> 1]; };
+
+/**
+ * The flag over [from, to] (ms) from the differences: { flagged, burnFree, unchecked, largest: { t, sizeM, periods } | null, driftM, changes }. Burn-free needs the
+ * compared revolutions to cover the span: no hole over maxGapPeriods, the first and last within endPeriods of its ends.
+ */
+export function revFlag(diff, period, from, to, rule = PER_REV) {
+  const span = diff.filter(([t]) => t >= from && t <= to), steps = [];
+  for (let i = 1; i < span.length; i += 1) {
+    const k = Math.round((span[i][0] - span[i - 1][0]) / period);
+    if (k >= 1 && k <= rule.maxGapPeriods) steps.push({ t: span[i][0], k, d: span[i][1] - span[i - 1][1] });
+  }
+  const ones = steps.filter((s) => s.k === 1).map((s) => s.d), drift = ones.length ? median(ones) : 0;
+  const changes = steps.map((s) => ({ t: s.t, sizeM: s.d - drift * s.k, periods: s.k }));
+  const largest = changes.reduce((b, s) => (!b || Math.abs(s.sizeM) > Math.abs(b.sizeM) ? s : b), null);
+  const flagged = changes.some((s) => Math.abs(s.sizeM) >= rule.jumpM);
+  const holed = span.length < 2 || span.slice(1).some((x, i) => x[0] - span[i][0] > (rule.maxGapPeriods + 0.5) * period);
+  const covered = !holed && span[0][0] - from <= rule.endPeriods * period && to - span.at(-1)[0] <= rule.endPeriods * period;
+  return { flagged, burnFree: !flagged && covered, unchecked: !flagged && !covered, largest, driftM: drift, changes };
+}
+
 /** A window's flag from an object's detector output ({ steps, checked } in ms): its steps in [cutoff - fit, cutoff + lead] by hours from the cutoff (sizes to 0.1 m), and the
  *  spans of it the detector could not cover. */
 export function windowSteps(d, cutoffMs, { fitHours = 72, leadHours = 168 } = {}) {
