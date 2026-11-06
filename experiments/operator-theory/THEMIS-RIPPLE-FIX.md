@@ -532,3 +532,14 @@ fixtures' noise of the exact-grid variant (on Molniya start 0: |B - 0.04462| at 
 within 5 %): the scope is dropped and the guard becomes "every grid read inside a fit is the set's own exact-key grid or its nominal's
 under GridShareScope"; otherwise the scope stays with the release and the HEO fit-time loss goes to the SDN-AP session with the numbers.
 Where the fit's copies are made (src/fit.inc) is outside this record's paths; the GridShareScope call there is the fitter lane's.
+
+## Amendment 26 (2026-11-06, a fit's transient grids; registered before it is built or measured)
+Read: on the fitter's 7a0459bad (GridShareScope on each iteration's nominal, no ExactGridScope) THEMIS A fits with residual 104.78 m
+and coefficient 0.012145 (the exact-grid variant's), 268 own-key lookups, 0 exact, 14.4 s (0.6.2 40 s), but its wasm high-water is
+571.9 MB (0.6.2 68.2 MB): the exact-key grids built for each iteration's transient nominal stay idle up to kGridIdle. Rule: a set
+initialized while a tess::FitGridScope lives on its thread (the fit opens it around its whole solve; it replaces ExactGridScope, and
+xp_init's exact_grid flag is removed) takes its grid by exact key like any set, but a grid built by such a set is freed when its last
+holder drops it and never kept idle; matching is by exact key everywhere, so a fit's grid and a retained one with the same key are the
+same bytes. Measured on the fixed build with the fitter's scope call: the high-water of THEMIS A, GTO and Molniya fits (at or below
+160 MB, 0.6.2 68.2 MB) and their fit time against 0.6.2; then the six Molniya fixtures (coefficient against the exact-grid 0.04462),
+the history E2E in two call orders, quadrature, the covariance cost, the catalog budget and the THEMIS pair.
