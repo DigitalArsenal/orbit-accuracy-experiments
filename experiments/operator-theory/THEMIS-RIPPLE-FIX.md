@@ -222,3 +222,24 @@ Additions (SDN-AP session, before any row of Amendment 8 is read):
    re-grid against the quadrature at the drift a flight sees (de up to 3e-3, harness, element-linear grid); the 1 m RMS bound must hold.
 3. If the residual spectrum confirms second-order terms, the lane stops and reports: starting any second-order work is the SDN-AP
    session's decision.
+
+## Amendment 9 (2026-11-06, second box; registered before any new row is read)
+Read so far: on THEMIS A 2013-02-15, day 3 is 314.1 m on the base and 3,238.9 m on C4 (3,072.3 m on C1); the other 11 windows are within
+5 %. Not yet read: the base-fit-on-candidate-flight row of this window (flight3), every per-window fit statistic of it, the published
+roughness-study rows of this window on other builds.
+Diagnosis, THEMIS A 2013-02-15, arms base and C4 (and C1, C3 rows already stored):
+1. Flight or fit: the stored flight3 row (base fit, candidate flight) and a new cross arm (C4 fit, base flight). The fault is the fit's if
+   the base fit flies well on the candidate and the C4 fit flies badly on the base.
+2. Fit: iteration count and the final residual RMS (FIT_RMS_KM); the final fit's residual record (the fit's `residuals` port, $ODR) per
+   state, base against C4, its RMS per 12 h of the arc and its largest residuals' positions (radius, mean anomaly). The module does not
+   expose residuals per iteration; that is stated, not inferred.
+3. Elements: the fitted mean elements (n, e, i, Omega, omega, M, BTERM, AGOM), base against C4, beside the same differences on the
+   other 11 windows.
+4. History of this window: the roughness study's stored rows (published, d124e695) of THEMIS A 2013-02-15 on 0.4.11 to 0.6.0, day 3; if
+   the base's 314 m is the outlier among builds the candidate is not the cause.
+5. Regime: the window's epoch class (one-day band) and its distance from the band edges and from the class's commensurability
+   (|psi-dot| of the class terms over n), against the other 11 windows; e* is not reached (e 0.82).
+6. Linear range: with C4 every perturbed set has its own exact grid, so the fit's arc has none; the flight's element offsets from the
+   epoch elements at day 3 are read from the drift rate (elements at successive cutoffs) and compared with the other windows'.
+Outcome rule: a defect found is fixed and the 12 windows rerun; else C4 is not acceptable with a 10x regression on one window, and the
+report states the cause found and stops for the coordinator.
