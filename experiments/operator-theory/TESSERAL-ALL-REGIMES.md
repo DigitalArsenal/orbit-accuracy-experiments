@@ -106,6 +106,39 @@ unconditionally (its deep-space terms have no switch), so a reference without th
    convergence figures, which are reported with it; the same for the maximum. A step within that sum is reported as "below the
    reference's resolution".
 
+## Amendment 2 (2026-11-06 11:10Z, SDN-AP ruling through the coordinator; committed before any table and before any primary row)
+Field. SDN-AP's ruling was a coefficient file derived from the pinned EGM96 with C(l, 0) zeroed for l 21 to 31, read by FFM through its
+gravity_field port. That port (plugin-manifest.json, propagator/ffm 2.2.1) accepts an $SHC only for a request that selects a planetary
+field (the Moon's GRGM660PRIM) and is refused otherwise, so an Earth coefficient file cannot enter the shipped module. The fallback the
+ruling allows is taken: the PRIMARY arm is FFM with its embedded EGM96 to degree and order 31 against the module at its shipped caps
+(MAXIMUM_TESSERAL_DEGREE 31, MAXIMUM_DEGREE 20); the zonal tail J21 to J31 the module does not carry is reported within the m = 0 and
+secular shares of the attribution and never charged to the tesseral verdict. The primary arm flies every cell, the e 0.29 / 0.30 pairs
+included (the step is measured on the field the module flies, as SPEC 16.11 describes). The 20x20-both-sides frame of Amendment 1.2 is
+the SECONDARY arm: its rows already flown are kept under that label (results/ap-truth/tesseral-all-regimes/secondary-20x20/rows-*.jsonl,
+their own section of the table), it stands in for no shipped-field result, and the smoke cells stay out of every table.
+
+Sampling. The forward grid is a whole number of seconds (round(P / 64) s): a fractional grid gave sample labels the $OEM rounds to the
+millisecond while the reference samples the exact instant (0.5 ms at 5.7 km/s is 2.8 m; LAGEOS-1 at e 0.01 read a roughness of 5.6 m
+against an RMS of 5.6 m, jitter and not a harmonic). The reference's own label resolution is the double Julian date (47 microseconds:
+0.36 m at 7.6 km/s); it bounds the raw roughness from below in low orbit, so roughness is read on the reconstructed tesseral share
+(below) and the raw figure is reported beside it.
+
+Verdicts split (SDN-AP). The attribution runs on both the in-arc residual (RTN of the module's flight against the reference at the arc's
+30-minute samples) and the forward day. Basis: a constant, linear and quadratic trend per axis (the secular along-track rate, with the
+annual and semi-annual solar and the zonal long-period terms folded in, none resolvable inside 10 days); the lunar monthly and
+semi-monthly frequencies (1 / 27.32 and 2 / 27.32 cycles per day) where the window is 5 days or longer; and the (m, j) grid with
+frequencies merged below the window's resolution (1 / window cycles per day). A merged group is `zonal` when every member has m = 0,
+`tesseral` (or `m-daily`) when every member has m > 0, and `mixed` otherwise (at GEO, IGSO, QZSS and THEMIS D the one-cycle group holds
+(1, 0), (0, 1) and their relatives: resonant, not separable by frequency, reported apart and charged to neither verdict, stated as such).
+1. Tesseral verdict, per cell and regime: the reconstructed series of the `tesseral` and `m-daily` groups (its RMS, maximum and, on the
+   forward day, roughness) against the orbit-scaled bounds, in-arc RMS and maximum against the same bounds; never charged with a secular,
+   lunisolar, zonal or mixed share. The registered full-error line is kept beside it as the raw reading.
+2. Secular and long-period share, per regime: a measured finding with no pass line (none registered): the trend share, the lunisolar share
+   and the zonal share, each an RMS over the window. At GEO the reading of the 42.9 of 43.1 m secular along-track (Amendment 1 smoke of the
+   amended frame) is decided by this attribution: a trend share names the fitted rate against DE440, a lunisolar share names the analytic
+   lunisolar theory; the GEO in-arc 15.1 m falls into whichever share the attribution gives it. If large at high orbits it is product
+   information for its own record, outside this record's verdict.
+
 ## Outputs and check
 Rows: results/ap-truth/tesseral-all-regimes/rows-<shard>.jsonl (one per cell: regime, elements, fitted elements, A, the bounds, RMS,
 maximum, roughness, the convergence figure where measured, families, verdict, the SHA-256 of both dists and of the runner, createdUtc).
