@@ -21,3 +21,8 @@ Rows written at the suspension (scored, failed, unscored):
 Remaining accuracy fits: about 5,060 precise-orbit and 5,900 operator-file (2,015 laser pairs, 1,856 provider pairs, 37 ISS pairs, at the cells' fits; `pair-fits.mjs --dry` counts them).
 
 - 2026-11-05 13:47Z: the stopped run's processes ended (SIGKILL on the lane's own process groups); its 390 accuracy and 326 cost rows moved to `superseded-20261105T1343/` (DSST.md, amendment 2026-11-05 (review 2), 5). The store holds no row; the run resumes from the first window on the coordinator's word.
+- 2026-11-05 21:00Z: run on the grid-check driver (`91a383a`): one accuracy chain and the cost JVM, the governor at 35/30.
+- 2026-11-05 22:18Z to 00:44Z: 4, then up to 7 accuracy chains (one JVM per store); the governor at 48/40 from 22:45Z, with disk (25 GiB) and memory (16 GiB) guards from 22:46Z.
+- 2026-11-06 00:55Z: re-laid so the large stores run on several JVMs: laser pairs 3, truth2 2, regimes then regimes-hx then regimes-wa 1, ISS pairs then provider pairs then truth 1. Chains A to C stopped right after a row; chains D to F, in the autoscaler's process group, stopped mid-window (their windows in flight lost; every rows file parses).
+- 2026-11-06 01:10Z: the cost JVM stopped by exact PID (above the 5-JVM bound since 00:57Z); its 72 rows superseded (DSST.md, amendment 2026-11-06 (memory), 1).
+- Heap bounds (amendment 2026-11-06 (memory), 3): accuracy runners started after its commit run `-Xmx16g`; the laser-pair and truth2 runs started 00:56Z keep the default bound.
