@@ -59,13 +59,19 @@ for (const c of regimes) for (const fit of c.arcs) for (const day of ['1', '2', 
     const state = w.map((x) => burned(x.r, fit, row.lead)), free = w.filter((_, i) => state[i] === false);
     const counts = { burned: state.filter((x) => x === true).length, burnFree: free.length, notCovered: state.filter((x) => x === null).length };
     const freeRatio = free.length ? ratio(free.map((x) => [x.now, x.ap])) : null;
-    row.worseThanAp = { ...counts, burnFreeRatio: freeRatio,
-      verdict: counts.notCovered === w.length ? 'unexplained: no registered burn record covers these windows'
+    // The satellites whose burn-free windows have FFM worse than AP, by count.
+    const objects = Object.fromEntries(Object.entries(free.filter((x) => x.now > x.ap).reduce((m, x) => ({ ...m, [x.name]: (m[x.name] ?? 0) + 1 }), {})).sort((a, b) => b[1] - a[1]));
+    const UNREGISTERED = c.regime === 'Near 700 km'
+      ? 'no registered burn of 8 m or more; the 11-05 Sentinel-1 study found burns under 8 m, below the flag threshold and not yet registered (record experiments-ffm-step-flag-per-rev-20261105)'
+      : 'FFM is worse than AP on the windows with no registered burn';
+    const parity = row.after <= 1.03 ? '; within 0.03 of parity' : '';
+    row.worseThanAp = { ...counts, burnFreeRatio: freeRatio, objects,
+      verdict: counts.notCovered === w.length ? `unexplained: no registered burn record covers these windows${parity}`
         : counts.burned === w.length ? 'explained: every window holds a registered burn in its fit or its forecast to the lead'
-          : freeRatio !== null && freeRatio <= 1 ? 'explained: on the burn-free windows FFM is not worse than AP' : 'unexplained: FFM is worse than AP on the burn-free windows' };
+          : freeRatio !== null && freeRatio <= 1 ? 'explained: on the burn-free windows FFM is not worse than AP' : `unexplained: ${UNREGISTERED}${parity}` };
   }
   out.push(row);
 }
 const doc = { ffm: { before: { version: '2.0.4', sha256: 'c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2' }, after: { version: FFM_220.version, sha256: FFM_220.wasmSha256 } }, ap: 'sdn-ap 0.5.1 (ap/b051)', statistic: 'exp(median by window of ln(FFM / AP)), on the windows where AP and both FFM builds scored', rows: out };
 if (argOf('--out')) fs.writeFileSync(argOf('--out'), `${JSON.stringify(doc, null, 1)}\n`);
-for (const r of out) console.log(`${r.regime.padEnd(40)} fit ${String(r.fit).padStart(3)} lead ${String(r.lead).padStart(3)} h  n ${String(r.windows).padStart(4)}  FFM/AP ${r.before} -> ${r.after}${r.moved ? '  MOVED' : ''}${r.notRun ? `  (${r.notRun} windows not yet on 2.2.0)` : ''}${r.worseThanAp ? `  WORSE: ${r.worseThanAp.verdict} (burned ${r.worseThanAp.burned}, burn-free ${r.worseThanAp.burnFree} at ${r.worseThanAp.burnFreeRatio}, not covered ${r.worseThanAp.notCovered})` : ''}`);
+for (const r of out) console.log(`${r.regime.padEnd(40)} fit ${String(r.fit).padStart(3)} lead ${String(r.lead).padStart(3)} h  n ${String(r.windows).padStart(4)}  FFM/AP ${r.before} -> ${r.after}${r.moved ? '  MOVED' : ''}${r.notRun ? `  (${r.notRun} windows not yet on 2.2.0)` : ''}${r.worseThanAp ? `  WORSE: ${r.worseThanAp.verdict} (burned ${r.worseThanAp.burned}, burn-free ${r.worseThanAp.burnFree} at ${r.worseThanAp.burnFreeRatio}, not covered ${r.worseThanAp.notCovered}; ${JSON.stringify(r.worseThanAp.objects)})` : ''}`);
