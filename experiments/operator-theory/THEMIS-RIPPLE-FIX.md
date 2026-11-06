@@ -393,3 +393,18 @@ Etalon-like, GPS-like, e 0.25 and 0.3 AP seeds, and a fitted AP set): the publis
 sets in the site repository (it holds their flown tracks), so they are not in this check.
 Memory margin: the catalog case peaks at 478 to 488 MB per worker against 512 MB with at most 128 idle grids of 3.10 MB; any later
 growth of a grid (more families, a higher degree, more nodes) re-measures it.
+
+## Amendment 19 (2026-11-06, the Molniya fixture; registered before its rows are read)
+Read: the GTO E2E on the final build gave Molniya with fitted drag 627 m along-track at day 7 (recorded 276.44) and with the drag
+coefficient pinned 214 m against that run's 0.4.14 baseline of 159 m; that run's 0.4.14 baseline also read 461 / 260 m against the
+recorded 149.82 / 175.90 (the environment has moved since the record). A run of the three Molniya fixtures on the 0.6.1 dist and the
+final build was started before this amendment; its output is unread and is superseded by the run below.
+Table (molniya.mjs, test/lib/heo-model-truth.mjs, one environment): the fixtures Molniya with fitted drag, with the coefficient pinned at
+0.044, and without drag, each fitted and flown on 0.4.14 (git 8fdf5b1af's dist), the shipped 0.6.2 (dist 84d50dca, git c82160de7), C7
+(c3f32102) and the final build (a7771b14); day 1, 3 and 7 whole-day RMS along-track and radial, and the fitted coefficient. The grid's
+effect is the final build against 0.6.2 in the same environment; the drift is 0.4.14's reading now against its record.
+Divisors and the cut at Molniya's elements (n 2 rev/day, e 0.74, i 63.4 deg, Omega 300, omega 270, M 10; the half-day class): each
+grid family's smallest |k - nu| (psi-dot over n), the largest family amplitude (lambda x a, m), and the grid against the full-field
+quadrature (verify.cpp: RMS, maximum, roughness of the difference over 7 days at 300 s, bounds 1 m, 5 m, 0.1 m).
+Byte check source: the 56 published example sets at experiments results/ap-truth/compare/examples/<id>.ocm (main aa2a0a7 or later),
+the e <= 0.3 ones flown on the final build and on 0.6.2's dist, ephemerides compared byte for byte.
