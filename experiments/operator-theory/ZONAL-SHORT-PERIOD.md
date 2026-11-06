@@ -185,7 +185,7 @@ cell is flown again under this amendment. No estimator change; V1 changes constr
    amendment.
 3. --check adds: this amendment's commit precedes the first row of the table; the first-pass row stays in its folder.
 
-## Amendment 2 (2026-11-06 14:12Z, this lane; disclosure, written after the table, before landing; no row changes, no rule changes)
+## Amendment 2 (2026-11-06 14:10Z, this lane; disclosure, written after the table (committed ea67368c), before landing; no row changes, no rule changes)
 Read from the table (28 cells flown, 2 below the perigee floor, 0 errors; sdn-ap 0.6.4; every landed 0.6.3 e 0.001 share reproduced to
 0.00 m):
 - V1 validated in all six regimes: S's j >= 2 zonal amplitude falls by 24x (Starlette) to 112x (Jason-3) under +Delta and doubles under
