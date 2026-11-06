@@ -157,6 +157,28 @@ series carry a long-period content the fixed estimator's trend does not hold. No
    revolution blocks); the 6-day leg adds the module-side statement: T's k n group amplitudes beside E_F's.
 4. --check adds: this amendment's commit precedes the first row of the table; the first-pass rows stay in their folder and enter no table.
 
+## Amendment 2 (2026-11-06 13:15Z, this lane; disclosure, committed before the table is written; no row changes)
+The table's rows (23 flown, 5 read; first row 13:08:17Z, after Amendment 1) are kept as flown. Read from them:
+1. The first-day leg does not separate the members either. S's trend over the arc's first 1.5 days is 205 to 865 m (not the tens of
+   meters Amendment 1 expected: the two references differ in their mean elements from the same osculating state, a linear divergence
+   on top of the resonant t^2), and with three revolution blocks the jackknife intervals of m0 and tes run from 0 to 86-3,105 m; the
+   k = 1 groups of M, D and S read 68 to 140 m (the trend's leak). Every cell reads "shared (intervals overlap)" by the registered rule,
+   and that is the record's registered verdict on the m = 0 / tesseral split: not separable by a zonal-only reference in this class,
+   on any window tried (two constructions, both disclosed); no third construction is made here.
+2. What is readable, and read: E_F's even-ladder groups on the 6-day arc (the landed numbers, reproduced to 0.00 m), and T's, the
+   module's own tesseral content at the same frequencies, from the same fitted set (intervals from six blocks). The reading written in
+   the table as a finding, not a verdict, with its assumption stated: where E_F's k n group exceeds T's by several times and the
+   ladder's tesseral members are O(1) terms the module carries (k = 2 at e 0.001 to 0.05 in every regime), a tesseral miss of that size
+   would need the module to misstate its own content at k n by more than 100 % while it states the k = 1 content ((2,2) and (2,0),
+   24 m at GPS and Molniya, 10 m at GLONASS) to within E_F's k = 1 group (0.07 to 0.9 m at e 0.001 to 0.05); the miss at k n is then
+   the m = 0 member (the zonal and lunisolar short-period at k u), as P1 expected. Where T grows toward E_F with e (k = 2 at e 0.1 to
+   0.2 in GPS and Molniya: T 6.5 to 11.8 m against E_F 12.9 to 17.0 m), the tesseral members' share is open and P2's slope is read on
+   T and on E_F; the registered split stays "shared".
+3. The deep families at Galileo and GTO: the registered basis chains the (2,1) line (0.305 and 0.395 cycles per day) with a neighbor
+   below the window's resolution ((7,4) at 0.219 and (5,2) at 0.214 cycles per day) and drops the group, so (2,1) is not in the kept
+   basis anywhere; the (4,2) group is kept and read in E_F and T. P3 is read on (4,2), and (2,1) is reported "chained below the
+   resolution, in the trend" with E_F's secular share as its bound, as for the other four regimes.
+
 ## Outputs and check
 `SDN_MODULES_ROOT=<root> node experiments/operator-theory/half-day-resonance.mjs --run [--shard k/n]` (at most 4) writes
 results/ap-truth/half-day-resonance/rows-<shard>.jsonl: one row per cell with both arms' fitted elements, the four attributions in-arc and
