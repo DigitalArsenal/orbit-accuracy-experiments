@@ -1,0 +1,2990 @@
+{
+ "registered": "experiments/operator-theory/FFM-GEO-70X70.md",
+ "registration": {
+  "commit": "d17d684154514dc25230b8f5565357603118f221",
+  "committed": "2026-11-06T08:10:08-05:00",
+  "firstRowFlownAt": "2026-11-06T13:13:55.498Z",
+  "registrationBeforeFirstRow": true,
+  "amendment": {
+   "commit": "b7843a769f33421f153a5c7f9d6a79eaee1c571c",
+   "committed": "2026-11-06T08:19:00-05:00",
+   "firstProbeRowFlownAt": "2026-11-06T13:19:15.488Z",
+   "amendmentBeforeFirstProbeRow": true
+  }
+ },
+ "reading": "report only; no module change; cells.json untouched; no GEO burn verdict",
+ "task": "modules-ffm-geo-gravity-field-and-degree-at-geo-20261106",
+ "builds": {
+  "ffm70": {
+   "module": "propagator/ffm",
+   "version": "2.2.1",
+   "modulesCommit": "93cb5a0584fa728864e4426cc9ceb368936589f9",
+   "wasmSha256": "a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4",
+   "degree": 70,
+   "order": 70,
+   "store": "ap/ffm221-70x70/regimes",
+   "arm": "F72",
+   "fittedBy": "analysis/estimation 0.7.0 (XM3 pin)",
+   "rowsPresent": 45,
+   "rowsFlown": 35,
+   "failures": [
+    {
+     "key": "GE|C006 BDS-2G|2025-10-04",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C006 BDS-2G|2025-10-06",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C011 BDS-2G|2025-10-08",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C011 BDS-2G|2025-10-10",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C016 BDS-2G|2025-10-06",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C016 BDS-2G|2025-10-08",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C018 BDS-2G|2025-10-12",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C229 BDS-3G|2025-10-10",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C231 BDS-3G|2025-10-04",
+     "error": "coverage"
+    },
+    {
+     "key": "GE|C231 BDS-3G|2025-10-06",
+     "error": "coverage"
+    }
+   ],
+   "buildsSeen": [
+    "2.2.1@a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4@70"
+   ],
+   "foreignKeys": []
+  },
+  "ffm20": {
+   "module": "propagator/ffm",
+   "version": "2.2.0",
+   "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+   "degree": 20,
+   "order": 20,
+   "store": "ap/ffm220/regimes",
+   "arm": "F72"
+  },
+  "ap": {
+   "module": "propagator/sdn-ap",
+   "version": "0.5.1",
+   "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb",
+   "store": "ap/b051/regimes",
+   "arm": "AP72",
+   "identity": "AP 0.6.3 equals 0.5.1 byte for byte at e 0.3 and below (COMPARE.md 2026-11-06, 53 of 56 examples equal, the 3 that move above e 0.3); every GE window is near-circular"
+  },
+  "identity221": "FFM 2.2.1 is 2.2.0 rebuilt on spacedatastandards.org 1.279.0: between modules f1517ef68e and 93cb5a058 only propagator/ffm/src/cpp/generated/sds/*_generated.h, package.json and plugin-manifest.json change",
+  "settings": "all-regimes.mjs ffmHigh() with degree and order 70: SPHERICAL_HARMONICS (embedded EGM2008) 70x70 through PCFForceModel MAXIMUM_DEGREE/MAXIMUM_ORDER of the $PRW execution request (lib/frame.mjs executionFrame), Sun and Moon point masses from DE440s, SRP_AREA_OVER_MASS fitted (seed 0.02, a priori 0.2), conical shadow, no drag, no tides, no Earth radiation, relativity NONE, RK78 1e-8 / 1e-3 to 300 s, IERS finals rows; no space weather (drag off)",
+  "badBuild": []
+ },
+ "statistic": "exp(median over windows of ln(numerator / denominator)); e the 3D RMS RTN position error (km) of the lead day's bin counted from the end of the 72 h fit. windowCluster: 95 % bootstrap with the window as the cluster, 10000 draws, 5 seeds (SHA-256 of FFM-GEO-70X70|<population>|72|<lead>|seed<i>), the first seed's interval printed, every seed's bounds and their spread beside it. objectWeek: the same over satellite x ISO-week clusters, report only.",
+ "windows": [
+  "GE|C006 BDS-2G|2025-10-04",
+  "GE|C006 BDS-2G|2025-10-06",
+  "GE|C006 BDS-2G|2025-10-08",
+  "GE|C006 BDS-2G|2025-10-10",
+  "GE|C006 BDS-2G|2025-10-12",
+  "GE|C011 BDS-2G|2025-10-04",
+  "GE|C011 BDS-2G|2025-10-06",
+  "GE|C011 BDS-2G|2025-10-08",
+  "GE|C011 BDS-2G|2025-10-10",
+  "GE|C011 BDS-2G|2025-10-12",
+  "GE|C016 BDS-2G|2025-10-04",
+  "GE|C016 BDS-2G|2025-10-06",
+  "GE|C016 BDS-2G|2025-10-08",
+  "GE|C016 BDS-2G|2025-10-10",
+  "GE|C016 BDS-2G|2025-10-12",
+  "GE|C018 BDS-2G|2025-10-04",
+  "GE|C018 BDS-2G|2025-10-06",
+  "GE|C018 BDS-2G|2025-10-08",
+  "GE|C018 BDS-2G|2025-10-10",
+  "GE|C018 BDS-2G|2025-10-12",
+  "GE|C020 BDS-2G|2025-10-04",
+  "GE|C020 BDS-2G|2025-10-06",
+  "GE|C020 BDS-2G|2025-10-08",
+  "GE|C020 BDS-2G|2025-10-10",
+  "GE|C020 BDS-2G|2025-10-12",
+  "GE|C217 BDS-3G|2025-10-04",
+  "GE|C217 BDS-3G|2025-10-06",
+  "GE|C217 BDS-3G|2025-10-08",
+  "GE|C217 BDS-3G|2025-10-10",
+  "GE|C217 BDS-3G|2025-10-12",
+  "GE|C229 BDS-3G|2025-10-04",
+  "GE|C229 BDS-3G|2025-10-06",
+  "GE|C229 BDS-3G|2025-10-08",
+  "GE|C229 BDS-3G|2025-10-10",
+  "GE|C229 BDS-3G|2025-10-12",
+  "GE|C231 BDS-3G|2025-10-04",
+  "GE|C231 BDS-3G|2025-10-06",
+  "GE|C231 BDS-3G|2025-10-08",
+  "GE|C231 BDS-3G|2025-10-10",
+  "GE|C231 BDS-3G|2025-10-12",
+  "GE|J003 QZS-2G|2025-10-04",
+  "GE|J003 QZS-2G|2025-10-06",
+  "GE|J003 QZS-2G|2025-10-08",
+  "GE|J003 QZS-2G|2025-10-10",
+  "GE|J003 QZS-2G|2025-10-12"
+ ],
+ "gfz": {
+  "label": "FFM 2.2.1 at 70x70 against AP 0.5.1 as stored",
+  "cells": [
+   {
+    "fit": 72,
+    "lead": 48,
+    "day": 2,
+    "windows": 33,
+    "satellites": 9,
+    "numeratorWorse": 13,
+    "ratio": 0.937,
+    "ratioExact": 0.936905,
+    "largestMove": {
+     "key": "GE|C229 BDS-3G|2025-10-12",
+     "ratio": 0.316569,
+     "deltaM": -4.936
+    },
+    "windowCluster": {
+     "interval": [
+      0.854,
+      1.113
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.854132,
+       "upper": 1.112921,
+       "clusters": 33
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.854132,
+       "upper": 1.112921,
+       "clusters": 33
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.854132,
+       "upper": 1.112921,
+       "clusters": 33
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.854132,
+       "upper": 1.112921,
+       "clusters": 33
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.854132,
+       "upper": 1.112921,
+       "clusters": 33
+      }
+     ],
+     "clusters": 33,
+     "spread": {
+      "lowerMin": 0.854132,
+      "lowerMax": 0.854132,
+      "lowerRange": 0,
+      "upperMin": 1.112921,
+      "upperMax": 1.112921
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      0.824,
+      1.146
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.823708,
+       "upper": 1.146033,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.827727,
+       "upper": 1.146033,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.827727,
+       "upper": 1.146033,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.827727,
+       "upper": 1.146033,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.827727,
+       "upper": 1.161552,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 0.823708,
+      "lowerMax": 0.827727,
+      "lowerRange": 0.004019,
+      "upperMin": 1.146033,
+      "upperMax": 1.161552
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.237
+     },
+     "C011 BDS-2G": {
+      "windows": 2,
+      "ratio": 0.906
+     },
+     "C016 BDS-2G": {
+      "windows": 2,
+      "ratio": 0.862
+     },
+     "C018 BDS-2G": {
+      "windows": 4,
+      "ratio": 0.614
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1.312
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1.349
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 0.679
+     },
+     "C231 BDS-3G": {
+      "windows": 3,
+      "ratio": 0.873
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 0.812
+     }
+    },
+    "medianKm": {
+     "numerator": 0.035,
+     "denominator": 0.032
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 72,
+    "day": 3,
+    "windows": 30,
+    "satellites": 9,
+    "numeratorWorse": 18,
+    "ratio": 1.088,
+    "ratioExact": 1.087987,
+    "largestMove": {
+     "key": "GE|C229 BDS-3G|2025-10-12",
+     "ratio": 0.289295,
+     "deltaM": -11.592
+    },
+    "windowCluster": {
+     "interval": [
+      0.963,
+      1.398
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      }
+     ],
+     "clusters": 30,
+     "spread": {
+      "lowerMin": 0.963236,
+      "lowerMax": 0.963236,
+      "lowerRange": 0,
+      "upperMin": 1.397697,
+      "upperMax": 1.397697
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      0.942,
+      1.527
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.941947,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.942919,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.942919,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.942919,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.935911,
+       "upper": 1.527142,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 0.935911,
+      "lowerMax": 0.942919,
+      "lowerRange": 0.007008,
+      "upperMin": 1.527142,
+      "upperMax": 1.527142
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.381
+     },
+     "C011 BDS-2G": {
+      "windows": 1,
+      "ratio": 1.297
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.017
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 0.64
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1.758
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 2.288
+     },
+     "C229 BDS-3G": {
+      "windows": 3,
+      "ratio": 0.998
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 0.995
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 0.892
+     }
+    },
+    "medianKm": {
+     "numerator": 0.064,
+     "denominator": 0.046
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 168,
+    "day": 7,
+    "windows": 32,
+    "satellites": 9,
+    "numeratorWorse": 22,
+    "ratio": 1.04,
+    "ratioExact": 1.039829,
+    "largestMove": {
+     "key": "GE|C229 BDS-3G|2025-10-12",
+     "ratio": 0.161117,
+     "deltaM": -59.495
+    },
+    "windowCluster": {
+     "interval": [
+      1,
+      1.522
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      },
+      {
+       "seed": "seed2",
+       "lower": 1.000276,
+       "upper": 1.520433,
+       "clusters": 32
+      },
+      {
+       "seed": "seed3",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      },
+      {
+       "seed": "seed4",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      },
+      {
+       "seed": "seed5",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      }
+     ],
+     "clusters": 32,
+     "spread": {
+      "lowerMin": 1.000276,
+      "lowerMax": 1.000276,
+      "lowerRange": 0,
+      "upperMin": 1.520433,
+      "upperMax": 1.521793
+     },
+     "lowerAbove1": 5,
+     "side": "above 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      0.998,
+      1.798
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.998291,
+       "upper": 1.798131,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.998239,
+       "upper": 1.741518,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.998239,
+       "upper": 1.703481,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.998239,
+       "upper": 1.663058,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.998239,
+       "upper": 1.692096,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 0.998239,
+      "lowerMax": 0.998291,
+      "lowerRange": 0.000052,
+      "upperMin": 1.663058,
+      "upperMax": 1.798131
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.452
+     },
+     "C011 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.592
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.117
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.001
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 2.44
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1.463
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 0.993
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 0.997
+     },
+     "J003 QZS-2G": {
+      "windows": 4,
+      "ratio": 0.986
+     }
+    },
+    "medianKm": {
+     "numerator": 0.28,
+     "denominator": 0.209
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10"
+    ]
+   }
+  ]
+ },
+ "gfz20": {
+  "label": "the audit cells, FFM 2.2.0 at 20x20 against AP 0.5.1, read again under the five seeds (information)",
+  "cells": [
+   {
+    "fit": 72,
+    "lead": 48,
+    "day": 2,
+    "windows": 33,
+    "satellites": 9,
+    "numeratorWorse": 13,
+    "ratio": 0.937,
+    "ratioExact": 0.936905,
+    "largestMove": {
+     "key": "GE|C229 BDS-3G|2025-10-12",
+     "ratio": 0.316569,
+     "deltaM": -4.936
+    },
+    "windowCluster": {
+     "interval": [
+      0.854,
+      1.113
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.854132,
+       "upper": 1.112921,
+       "clusters": 33
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.835963,
+       "upper": 1.112921,
+       "clusters": 33
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.854132,
+       "upper": 1.112921,
+       "clusters": 33
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.854132,
+       "upper": 1.117106,
+       "clusters": 33
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.854132,
+       "upper": 1.117106,
+       "clusters": 33
+      }
+     ],
+     "clusters": 33,
+     "spread": {
+      "lowerMin": 0.835963,
+      "lowerMax": 0.854132,
+      "lowerRange": 0.018169,
+      "upperMin": 1.112921,
+      "upperMax": 1.117106
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      0.828,
+      1.162
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.827727,
+       "upper": 1.161552,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.827727,
+       "upper": 1.146033,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.827727,
+       "upper": 1.146033,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.835963,
+       "upper": 1.146033,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.827727,
+       "upper": 1.146033,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 0.827727,
+      "lowerMax": 0.835963,
+      "lowerRange": 0.008236,
+      "upperMin": 1.146033,
+      "upperMax": 1.161552
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.237
+     },
+     "C011 BDS-2G": {
+      "windows": 2,
+      "ratio": 0.906
+     },
+     "C016 BDS-2G": {
+      "windows": 2,
+      "ratio": 0.862
+     },
+     "C018 BDS-2G": {
+      "windows": 4,
+      "ratio": 0.614
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1.312
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1.349
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 0.679
+     },
+     "C231 BDS-3G": {
+      "windows": 3,
+      "ratio": 0.873
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 0.812
+     }
+    },
+    "medianKm": {
+     "numerator": 0.035,
+     "denominator": 0.032
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 72,
+    "day": 3,
+    "windows": 30,
+    "satellites": 9,
+    "numeratorWorse": 18,
+    "ratio": 1.088,
+    "ratioExact": 1.087987,
+    "largestMove": {
+     "key": "GE|C229 BDS-3G|2025-10-12",
+     "ratio": 0.289295,
+     "deltaM": -11.592
+    },
+    "windowCluster": {
+     "interval": [
+      0.963,
+      1.398
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.963236,
+       "upper": 1.397697,
+       "clusters": 30
+      }
+     ],
+     "clusters": 30,
+     "spread": {
+      "lowerMin": 0.963236,
+      "lowerMax": 0.963236,
+      "lowerRange": 0,
+      "upperMin": 1.397697,
+      "upperMax": 1.397697
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      0.943,
+      1.527
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.942919,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.939409,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.939409,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.942919,
+       "upper": 1.527142,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.935911,
+       "upper": 1.527142,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 0.935911,
+      "lowerMax": 0.942919,
+      "lowerRange": 0.007008,
+      "upperMin": 1.527142,
+      "upperMax": 1.527142
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.381
+     },
+     "C011 BDS-2G": {
+      "windows": 1,
+      "ratio": 1.297
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.017
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 0.64
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1.758
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 2.288
+     },
+     "C229 BDS-3G": {
+      "windows": 3,
+      "ratio": 0.998
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 0.995
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 0.892
+     }
+    },
+    "medianKm": {
+     "numerator": 0.064,
+     "denominator": 0.046
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 168,
+    "day": 7,
+    "windows": 32,
+    "satellites": 9,
+    "numeratorWorse": 22,
+    "ratio": 1.04,
+    "ratioExact": 1.039829,
+    "largestMove": {
+     "key": "GE|C229 BDS-3G|2025-10-12",
+     "ratio": 0.161117,
+     "deltaM": -59.495
+    },
+    "windowCluster": {
+     "interval": [
+      1,
+      1.522
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      },
+      {
+       "seed": "seed2",
+       "lower": 1.000276,
+       "upper": 1.520467,
+       "clusters": 32
+      },
+      {
+       "seed": "seed3",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      },
+      {
+       "seed": "seed4",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      },
+      {
+       "seed": "seed5",
+       "lower": 1.000276,
+       "upper": 1.521793,
+       "clusters": 32
+      }
+     ],
+     "clusters": 32,
+     "spread": {
+      "lowerMin": 1.000276,
+      "lowerMax": 1.000276,
+      "lowerRange": 0,
+      "upperMin": 1.520467,
+      "upperMax": 1.521793
+     },
+     "lowerAbove1": 5,
+     "side": "above 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      0.998,
+      1.692
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 0.998239,
+       "upper": 1.692096,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 0.998239,
+       "upper": 1.741518,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 0.998291,
+       "upper": 1.692096,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 0.998239,
+       "upper": 1.771618,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 0.998239,
+       "upper": 1.731283,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 0.998239,
+      "lowerMax": 0.998291,
+      "lowerRange": 0.000052,
+      "upperMin": 1.692096,
+      "upperMax": 1.771618
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.452
+     },
+     "C011 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.592
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.117
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.001
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 2.44
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1.463
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 0.993
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 0.997
+     },
+     "J003 QZS-2G": {
+      "windows": 4,
+      "ratio": 0.986
+     }
+    },
+    "medianKm": {
+     "numerator": 0.28,
+     "denominator": 0.209
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10"
+    ]
+   }
+  ]
+ },
+ "degreeEffect": {
+  "label": "FFM 70x70 against FFM 20x20 on the same windows (information): what the field does to FFM's own GEO error",
+  "cells": [
+   {
+    "fit": 72,
+    "lead": 48,
+    "day": 2,
+    "windows": 33,
+    "satellites": 9,
+    "numeratorWorse": 0,
+    "ratio": 1,
+    "ratioExact": 1,
+    "largestMove": {
+     "key": "GE|C006 BDS-2G|2025-10-08",
+     "ratio": 1,
+     "deltaM": 0
+    },
+    "windowCluster": {
+     "interval": [
+      1,
+      1
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 33
+      },
+      {
+       "seed": "seed2",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 33
+      },
+      {
+       "seed": "seed3",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 33
+      },
+      {
+       "seed": "seed4",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 33
+      },
+      {
+       "seed": "seed5",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 33
+      }
+     ],
+     "clusters": 33,
+     "spread": {
+      "lowerMin": 1,
+      "lowerMax": 1,
+      "lowerRange": 0,
+      "upperMin": 1,
+      "upperMax": 1
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      1,
+      1
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 1,
+      "lowerMax": 1,
+      "lowerRange": 0,
+      "upperMin": 1,
+      "upperMax": 1
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C011 BDS-2G": {
+      "windows": 2,
+      "ratio": 1
+     },
+     "C016 BDS-2G": {
+      "windows": 2,
+      "ratio": 1
+     },
+     "C018 BDS-2G": {
+      "windows": 4,
+      "ratio": 1
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 1
+     },
+     "C231 BDS-3G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 1
+     }
+    },
+    "medianKm": {
+     "numerator": 0.035,
+     "denominator": 0.035
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 72,
+    "day": 3,
+    "windows": 30,
+    "satellites": 9,
+    "numeratorWorse": 0,
+    "ratio": 1,
+    "ratioExact": 1,
+    "largestMove": {
+     "key": "GE|C006 BDS-2G|2025-10-08",
+     "ratio": 1,
+     "deltaM": 0
+    },
+    "windowCluster": {
+     "interval": [
+      1,
+      1
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 30
+      },
+      {
+       "seed": "seed2",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 30
+      },
+      {
+       "seed": "seed3",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 30
+      },
+      {
+       "seed": "seed4",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 30
+      },
+      {
+       "seed": "seed5",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 30
+      }
+     ],
+     "clusters": 30,
+     "spread": {
+      "lowerMin": 1,
+      "lowerMax": 1,
+      "lowerRange": 0,
+      "upperMin": 1,
+      "upperMax": 1
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      1,
+      1
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 1,
+      "lowerMax": 1,
+      "lowerRange": 0,
+      "upperMin": 1,
+      "upperMax": 1
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C011 BDS-2G": {
+      "windows": 1,
+      "ratio": 1
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1
+     },
+     "C229 BDS-3G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 1
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 1
+     }
+    },
+    "medianKm": {
+     "numerator": 0.064,
+     "denominator": 0.064
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 168,
+    "day": 7,
+    "windows": 32,
+    "satellites": 9,
+    "numeratorWorse": 0,
+    "ratio": 1,
+    "ratioExact": 1,
+    "largestMove": {
+     "key": "GE|C006 BDS-2G|2025-10-08",
+     "ratio": 1,
+     "deltaM": 0
+    },
+    "windowCluster": {
+     "interval": [
+      1,
+      1
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 32
+      },
+      {
+       "seed": "seed2",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 32
+      },
+      {
+       "seed": "seed3",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 32
+      },
+      {
+       "seed": "seed4",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 32
+      },
+      {
+       "seed": "seed5",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 32
+      }
+     ],
+     "clusters": 32,
+     "spread": {
+      "lowerMin": 1,
+      "lowerMax": 1,
+      "lowerRange": 0,
+      "upperMin": 1,
+      "upperMax": 1
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "objectWeek": {
+     "interval": [
+      1,
+      1
+     ],
+     "seeds": [
+      {
+       "seed": "seed1",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed2",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed3",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed4",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      },
+      {
+       "seed": "seed5",
+       "lower": 1,
+       "upper": 1,
+       "clusters": 15
+      }
+     ],
+     "clusters": 15,
+     "spread": {
+      "lowerMin": 1,
+      "lowerMax": 1,
+      "lowerRange": 0,
+      "upperMin": 1,
+      "upperMax": 1
+     },
+     "lowerAbove1": 0,
+     "side": "at or below 1 in all seeds"
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C011 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 1
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 1
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 1
+     },
+     "J003 QZS-2G": {
+      "windows": 4,
+      "ratio": 1
+     }
+    },
+    "medianKm": {
+     "numerator": 0.28,
+     "denominator": 0.28
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10"
+    ]
+   }
+  ]
+ },
+ "instrumentCheck": {
+  "label": "Amendment 1: the same windows and settings at a degree below 20, each against the stored 20x20 rows (information): the degree is in force where the figures move",
+  "probes": [
+   {
+    "degree": 8,
+    "store": "ffm221-70x70/probe-8x8",
+    "rowsPresent": 45,
+    "rowsFlown": 35,
+    "badBuild": [],
+    "cells": [
+     {
+      "fit": 72,
+      "lead": 48,
+      "day": 2,
+      "windows": 33,
+      "satellites": 9,
+      "numeratorWorse": 17,
+      "ratio": 1,
+      "ratioExact": 1,
+      "largestMove": {
+       "key": "GE|C229 BDS-3G|2025-10-12",
+       "ratio": 1.000341,
+       "deltaM": 0.001
+      },
+      "windowCluster": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 0.999966,
+         "upper": 1.000002,
+         "clusters": 33
+        },
+        {
+         "seed": "seed2",
+         "lower": 0.999967,
+         "upper": 1.000002,
+         "clusters": 33
+        },
+        {
+         "seed": "seed3",
+         "lower": 0.999967,
+         "upper": 1.000002,
+         "clusters": 33
+        },
+        {
+         "seed": "seed4",
+         "lower": 0.999967,
+         "upper": 1.000002,
+         "clusters": 33
+        },
+        {
+         "seed": "seed5",
+         "lower": 0.999967,
+         "upper": 1.000002,
+         "clusters": 33
+        }
+       ],
+       "clusters": 33,
+       "spread": {
+        "lowerMin": 0.999966,
+        "lowerMax": 0.999967,
+        "lowerRange": 0.000001,
+        "upperMin": 1.000002,
+        "upperMax": 1.000002
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "objectWeek": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 0.999964,
+         "upper": 1.000026,
+         "clusters": 15
+        },
+        {
+         "seed": "seed2",
+         "lower": 0.999964,
+         "upper": 1.000026,
+         "clusters": 15
+        },
+        {
+         "seed": "seed3",
+         "lower": 0.999964,
+         "upper": 1.000026,
+         "clusters": 15
+        },
+        {
+         "seed": "seed4",
+         "lower": 0.999964,
+         "upper": 1.000027,
+         "clusters": 15
+        },
+        {
+         "seed": "seed5",
+         "lower": 0.999964,
+         "upper": 1.000026,
+         "clusters": 15
+        }
+       ],
+       "clusters": 15,
+       "spread": {
+        "lowerMin": 0.999964,
+        "lowerMax": 0.999964,
+        "lowerRange": 0,
+        "upperMin": 1.000026,
+        "upperMax": 1.000027
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "perSatellite": {
+       "C006 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C011 BDS-2G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "C016 BDS-2G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "C018 BDS-2G": {
+        "windows": 4,
+        "ratio": 1
+       },
+       "C020 BDS-2G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C217 BDS-3G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C229 BDS-3G": {
+        "windows": 4,
+        "ratio": 1
+       },
+       "C231 BDS-3G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "J003 QZS-2G": {
+        "windows": 5,
+        "ratio": 1
+       }
+      },
+      "medianKm": {
+       "numerator": 0.035,
+       "denominator": 0.035
+      },
+      "keys": [
+       "GE|C006 BDS-2G|2025-10-08",
+       "GE|C006 BDS-2G|2025-10-10",
+       "GE|C006 BDS-2G|2025-10-12",
+       "GE|C011 BDS-2G|2025-10-04",
+       "GE|C011 BDS-2G|2025-10-12",
+       "GE|C016 BDS-2G|2025-10-10",
+       "GE|C016 BDS-2G|2025-10-12",
+       "GE|C018 BDS-2G|2025-10-04",
+       "GE|C018 BDS-2G|2025-10-06",
+       "GE|C018 BDS-2G|2025-10-08",
+       "GE|C018 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-04",
+       "GE|C020 BDS-2G|2025-10-06",
+       "GE|C020 BDS-2G|2025-10-08",
+       "GE|C020 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-12",
+       "GE|C217 BDS-3G|2025-10-04",
+       "GE|C217 BDS-3G|2025-10-06",
+       "GE|C217 BDS-3G|2025-10-08",
+       "GE|C217 BDS-3G|2025-10-10",
+       "GE|C217 BDS-3G|2025-10-12",
+       "GE|C229 BDS-3G|2025-10-04",
+       "GE|C229 BDS-3G|2025-10-06",
+       "GE|C229 BDS-3G|2025-10-08",
+       "GE|C229 BDS-3G|2025-10-12",
+       "GE|C231 BDS-3G|2025-10-08",
+       "GE|C231 BDS-3G|2025-10-10",
+       "GE|C231 BDS-3G|2025-10-12",
+       "GE|J003 QZS-2G|2025-10-04",
+       "GE|J003 QZS-2G|2025-10-06",
+       "GE|J003 QZS-2G|2025-10-08",
+       "GE|J003 QZS-2G|2025-10-10",
+       "GE|J003 QZS-2G|2025-10-12"
+      ]
+     },
+     {
+      "fit": 72,
+      "lead": 72,
+      "day": 3,
+      "windows": 30,
+      "satellites": 9,
+      "numeratorWorse": 16,
+      "ratio": 1,
+      "ratioExact": 1.000001,
+      "largestMove": {
+       "key": "GE|C229 BDS-3G|2025-10-12",
+       "ratio": 1.000417,
+       "deltaM": 0.002
+      },
+      "windowCluster": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 0.999963,
+         "upper": 1.000014,
+         "clusters": 30
+        },
+        {
+         "seed": "seed2",
+         "lower": 0.999963,
+         "upper": 1.000014,
+         "clusters": 30
+        },
+        {
+         "seed": "seed3",
+         "lower": 0.999963,
+         "upper": 1.000014,
+         "clusters": 30
+        },
+        {
+         "seed": "seed4",
+         "lower": 0.999963,
+         "upper": 1.000014,
+         "clusters": 30
+        },
+        {
+         "seed": "seed5",
+         "lower": 0.999963,
+         "upper": 1.000014,
+         "clusters": 30
+        }
+       ],
+       "clusters": 30,
+       "spread": {
+        "lowerMin": 0.999963,
+        "lowerMax": 0.999963,
+        "lowerRange": 0,
+        "upperMin": 1.000014,
+        "upperMax": 1.000014
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "objectWeek": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 0.999959,
+         "upper": 1.000027,
+         "clusters": 15
+        },
+        {
+         "seed": "seed2",
+         "lower": 0.999959,
+         "upper": 1.000027,
+         "clusters": 15
+        },
+        {
+         "seed": "seed3",
+         "lower": 0.999959,
+         "upper": 1.000027,
+         "clusters": 15
+        },
+        {
+         "seed": "seed4",
+         "lower": 0.999959,
+         "upper": 1.000027,
+         "clusters": 15
+        },
+        {
+         "seed": "seed5",
+         "lower": 0.999959,
+         "upper": 1.000027,
+         "clusters": 15
+        }
+       ],
+       "clusters": 15,
+       "spread": {
+        "lowerMin": 0.999959,
+        "lowerMax": 0.999959,
+        "lowerRange": 0,
+        "upperMin": 1.000027,
+        "upperMax": 1.000027
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "perSatellite": {
+       "C006 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C011 BDS-2G": {
+        "windows": 1,
+        "ratio": 1
+       },
+       "C016 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C018 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C020 BDS-2G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C217 BDS-3G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C229 BDS-3G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C231 BDS-3G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "J003 QZS-2G": {
+        "windows": 5,
+        "ratio": 1
+       }
+      },
+      "medianKm": {
+       "numerator": 0.064,
+       "denominator": 0.064
+      },
+      "keys": [
+       "GE|C006 BDS-2G|2025-10-08",
+       "GE|C006 BDS-2G|2025-10-10",
+       "GE|C006 BDS-2G|2025-10-12",
+       "GE|C011 BDS-2G|2025-10-06",
+       "GE|C016 BDS-2G|2025-10-04",
+       "GE|C016 BDS-2G|2025-10-10",
+       "GE|C016 BDS-2G|2025-10-12",
+       "GE|C018 BDS-2G|2025-10-04",
+       "GE|C018 BDS-2G|2025-10-06",
+       "GE|C018 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-04",
+       "GE|C020 BDS-2G|2025-10-06",
+       "GE|C020 BDS-2G|2025-10-08",
+       "GE|C020 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-12",
+       "GE|C217 BDS-3G|2025-10-04",
+       "GE|C217 BDS-3G|2025-10-06",
+       "GE|C217 BDS-3G|2025-10-08",
+       "GE|C217 BDS-3G|2025-10-10",
+       "GE|C217 BDS-3G|2025-10-12",
+       "GE|C229 BDS-3G|2025-10-04",
+       "GE|C229 BDS-3G|2025-10-08",
+       "GE|C229 BDS-3G|2025-10-12",
+       "GE|C231 BDS-3G|2025-10-08",
+       "GE|C231 BDS-3G|2025-10-10",
+       "GE|J003 QZS-2G|2025-10-04",
+       "GE|J003 QZS-2G|2025-10-06",
+       "GE|J003 QZS-2G|2025-10-08",
+       "GE|J003 QZS-2G|2025-10-10",
+       "GE|J003 QZS-2G|2025-10-12"
+      ]
+     },
+     {
+      "fit": 72,
+      "lead": 168,
+      "day": 7,
+      "windows": 32,
+      "satellites": 9,
+      "numeratorWorse": 14,
+      "ratio": 1,
+      "ratioExact": 1,
+      "largestMove": {
+       "key": "GE|C229 BDS-3G|2025-10-12",
+       "ratio": 1.00068,
+       "deltaM": 0.008
+      },
+      "windowCluster": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 0.999961,
+         "upper": 1.000001,
+         "clusters": 32
+        },
+        {
+         "seed": "seed2",
+         "lower": 0.999961,
+         "upper": 1.000001,
+         "clusters": 32
+        },
+        {
+         "seed": "seed3",
+         "lower": 0.999961,
+         "upper": 1.000001,
+         "clusters": 32
+        },
+        {
+         "seed": "seed4",
+         "lower": 0.999961,
+         "upper": 1.000001,
+         "clusters": 32
+        },
+        {
+         "seed": "seed5",
+         "lower": 0.999961,
+         "upper": 1.000001,
+         "clusters": 32
+        }
+       ],
+       "clusters": 32,
+       "spread": {
+        "lowerMin": 0.999961,
+        "lowerMax": 0.999961,
+        "lowerRange": 0,
+        "upperMin": 1.000001,
+        "upperMax": 1.000001
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "objectWeek": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 0.999956,
+         "upper": 1.000002,
+         "clusters": 15
+        },
+        {
+         "seed": "seed2",
+         "lower": 0.999956,
+         "upper": 1.000002,
+         "clusters": 15
+        },
+        {
+         "seed": "seed3",
+         "lower": 0.999956,
+         "upper": 1.000002,
+         "clusters": 15
+        },
+        {
+         "seed": "seed4",
+         "lower": 0.999955,
+         "upper": 1.000002,
+         "clusters": 15
+        },
+        {
+         "seed": "seed5",
+         "lower": 0.999955,
+         "upper": 1.000002,
+         "clusters": 15
+        }
+       ],
+       "clusters": 15,
+       "spread": {
+        "lowerMin": 0.999955,
+        "lowerMax": 0.999956,
+        "lowerRange": 0.000001,
+        "upperMin": 1.000002,
+        "upperMax": 1.000002
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "perSatellite": {
+       "C006 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C011 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C016 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C018 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C020 BDS-2G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C217 BDS-3G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C229 BDS-3G": {
+        "windows": 4,
+        "ratio": 1
+       },
+       "C231 BDS-3G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "J003 QZS-2G": {
+        "windows": 4,
+        "ratio": 1
+       }
+      },
+      "medianKm": {
+       "numerator": 0.28,
+       "denominator": 0.28
+      },
+      "keys": [
+       "GE|C006 BDS-2G|2025-10-08",
+       "GE|C006 BDS-2G|2025-10-10",
+       "GE|C006 BDS-2G|2025-10-12",
+       "GE|C011 BDS-2G|2025-10-04",
+       "GE|C011 BDS-2G|2025-10-06",
+       "GE|C011 BDS-2G|2025-10-12",
+       "GE|C016 BDS-2G|2025-10-04",
+       "GE|C016 BDS-2G|2025-10-10",
+       "GE|C016 BDS-2G|2025-10-12",
+       "GE|C018 BDS-2G|2025-10-06",
+       "GE|C018 BDS-2G|2025-10-08",
+       "GE|C018 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-04",
+       "GE|C020 BDS-2G|2025-10-06",
+       "GE|C020 BDS-2G|2025-10-08",
+       "GE|C020 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-12",
+       "GE|C217 BDS-3G|2025-10-04",
+       "GE|C217 BDS-3G|2025-10-06",
+       "GE|C217 BDS-3G|2025-10-08",
+       "GE|C217 BDS-3G|2025-10-10",
+       "GE|C217 BDS-3G|2025-10-12",
+       "GE|C229 BDS-3G|2025-10-04",
+       "GE|C229 BDS-3G|2025-10-06",
+       "GE|C229 BDS-3G|2025-10-08",
+       "GE|C229 BDS-3G|2025-10-12",
+       "GE|C231 BDS-3G|2025-10-10",
+       "GE|C231 BDS-3G|2025-10-12",
+       "GE|J003 QZS-2G|2025-10-04",
+       "GE|J003 QZS-2G|2025-10-06",
+       "GE|J003 QZS-2G|2025-10-08",
+       "GE|J003 QZS-2G|2025-10-10"
+      ]
+     }
+    ]
+   },
+   {
+    "degree": 12,
+    "store": "ffm221-70x70/probe-12x12",
+    "rowsPresent": 45,
+    "rowsFlown": 35,
+    "badBuild": [],
+    "cells": [
+     {
+      "fit": 72,
+      "lead": 48,
+      "day": 2,
+      "windows": 33,
+      "satellites": 9,
+      "numeratorWorse": 16,
+      "ratio": 1,
+      "ratioExact": 1,
+      "largestMove": {
+       "key": "GE|C229 BDS-3G|2025-10-12",
+       "ratio": 1.000003,
+       "deltaM": 0
+      },
+      "windowCluster": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 33
+        },
+        {
+         "seed": "seed2",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 33
+        },
+        {
+         "seed": "seed3",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 33
+        },
+        {
+         "seed": "seed4",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 33
+        },
+        {
+         "seed": "seed5",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 33
+        }
+       ],
+       "clusters": 33,
+       "spread": {
+        "lowerMin": 1,
+        "lowerMax": 1,
+        "lowerRange": 0,
+        "upperMin": 1,
+        "upperMax": 1
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "objectWeek": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed2",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed3",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed4",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed5",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        }
+       ],
+       "clusters": 15,
+       "spread": {
+        "lowerMin": 1,
+        "lowerMax": 1,
+        "lowerRange": 0,
+        "upperMin": 1,
+        "upperMax": 1
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "perSatellite": {
+       "C006 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C011 BDS-2G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "C016 BDS-2G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "C018 BDS-2G": {
+        "windows": 4,
+        "ratio": 1
+       },
+       "C020 BDS-2G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C217 BDS-3G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C229 BDS-3G": {
+        "windows": 4,
+        "ratio": 1
+       },
+       "C231 BDS-3G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "J003 QZS-2G": {
+        "windows": 5,
+        "ratio": 1
+       }
+      },
+      "medianKm": {
+       "numerator": 0.035,
+       "denominator": 0.035
+      },
+      "keys": [
+       "GE|C006 BDS-2G|2025-10-08",
+       "GE|C006 BDS-2G|2025-10-10",
+       "GE|C006 BDS-2G|2025-10-12",
+       "GE|C011 BDS-2G|2025-10-04",
+       "GE|C011 BDS-2G|2025-10-12",
+       "GE|C016 BDS-2G|2025-10-10",
+       "GE|C016 BDS-2G|2025-10-12",
+       "GE|C018 BDS-2G|2025-10-04",
+       "GE|C018 BDS-2G|2025-10-06",
+       "GE|C018 BDS-2G|2025-10-08",
+       "GE|C018 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-04",
+       "GE|C020 BDS-2G|2025-10-06",
+       "GE|C020 BDS-2G|2025-10-08",
+       "GE|C020 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-12",
+       "GE|C217 BDS-3G|2025-10-04",
+       "GE|C217 BDS-3G|2025-10-06",
+       "GE|C217 BDS-3G|2025-10-08",
+       "GE|C217 BDS-3G|2025-10-10",
+       "GE|C217 BDS-3G|2025-10-12",
+       "GE|C229 BDS-3G|2025-10-04",
+       "GE|C229 BDS-3G|2025-10-06",
+       "GE|C229 BDS-3G|2025-10-08",
+       "GE|C229 BDS-3G|2025-10-12",
+       "GE|C231 BDS-3G|2025-10-08",
+       "GE|C231 BDS-3G|2025-10-10",
+       "GE|C231 BDS-3G|2025-10-12",
+       "GE|J003 QZS-2G|2025-10-04",
+       "GE|J003 QZS-2G|2025-10-06",
+       "GE|J003 QZS-2G|2025-10-08",
+       "GE|J003 QZS-2G|2025-10-10",
+       "GE|J003 QZS-2G|2025-10-12"
+      ]
+     },
+     {
+      "fit": 72,
+      "lead": 72,
+      "day": 3,
+      "windows": 30,
+      "satellites": 9,
+      "numeratorWorse": 16,
+      "ratio": 1,
+      "ratioExact": 1,
+      "largestMove": {
+       "key": "GE|C229 BDS-3G|2025-10-12",
+       "ratio": 1.000002,
+       "deltaM": 0
+      },
+      "windowCluster": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 30
+        },
+        {
+         "seed": "seed2",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 30
+        },
+        {
+         "seed": "seed3",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 30
+        },
+        {
+         "seed": "seed4",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 30
+        },
+        {
+         "seed": "seed5",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 30
+        }
+       ],
+       "clusters": 30,
+       "spread": {
+        "lowerMin": 1,
+        "lowerMax": 1,
+        "lowerRange": 0,
+        "upperMin": 1,
+        "upperMax": 1
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "objectWeek": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed2",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed3",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed4",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed5",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        }
+       ],
+       "clusters": 15,
+       "spread": {
+        "lowerMin": 1,
+        "lowerMax": 1,
+        "lowerRange": 0,
+        "upperMin": 1,
+        "upperMax": 1
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "perSatellite": {
+       "C006 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C011 BDS-2G": {
+        "windows": 1,
+        "ratio": 1
+       },
+       "C016 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C018 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C020 BDS-2G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C217 BDS-3G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C229 BDS-3G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C231 BDS-3G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "J003 QZS-2G": {
+        "windows": 5,
+        "ratio": 1
+       }
+      },
+      "medianKm": {
+       "numerator": 0.064,
+       "denominator": 0.064
+      },
+      "keys": [
+       "GE|C006 BDS-2G|2025-10-08",
+       "GE|C006 BDS-2G|2025-10-10",
+       "GE|C006 BDS-2G|2025-10-12",
+       "GE|C011 BDS-2G|2025-10-06",
+       "GE|C016 BDS-2G|2025-10-04",
+       "GE|C016 BDS-2G|2025-10-10",
+       "GE|C016 BDS-2G|2025-10-12",
+       "GE|C018 BDS-2G|2025-10-04",
+       "GE|C018 BDS-2G|2025-10-06",
+       "GE|C018 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-04",
+       "GE|C020 BDS-2G|2025-10-06",
+       "GE|C020 BDS-2G|2025-10-08",
+       "GE|C020 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-12",
+       "GE|C217 BDS-3G|2025-10-04",
+       "GE|C217 BDS-3G|2025-10-06",
+       "GE|C217 BDS-3G|2025-10-08",
+       "GE|C217 BDS-3G|2025-10-10",
+       "GE|C217 BDS-3G|2025-10-12",
+       "GE|C229 BDS-3G|2025-10-04",
+       "GE|C229 BDS-3G|2025-10-08",
+       "GE|C229 BDS-3G|2025-10-12",
+       "GE|C231 BDS-3G|2025-10-08",
+       "GE|C231 BDS-3G|2025-10-10",
+       "GE|J003 QZS-2G|2025-10-04",
+       "GE|J003 QZS-2G|2025-10-06",
+       "GE|J003 QZS-2G|2025-10-08",
+       "GE|J003 QZS-2G|2025-10-10",
+       "GE|J003 QZS-2G|2025-10-12"
+      ]
+     },
+     {
+      "fit": 72,
+      "lead": 168,
+      "day": 7,
+      "windows": 32,
+      "satellites": 9,
+      "numeratorWorse": 19,
+      "ratio": 1,
+      "ratioExact": 1,
+      "largestMove": {
+       "key": "GE|C217 BDS-3G|2025-10-08",
+       "ratio": 1,
+       "deltaM": 0
+      },
+      "windowCluster": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 32
+        },
+        {
+         "seed": "seed2",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 32
+        },
+        {
+         "seed": "seed3",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 32
+        },
+        {
+         "seed": "seed4",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 32
+        },
+        {
+         "seed": "seed5",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 32
+        }
+       ],
+       "clusters": 32,
+       "spread": {
+        "lowerMin": 1,
+        "lowerMax": 1,
+        "lowerRange": 0,
+        "upperMin": 1,
+        "upperMax": 1
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "objectWeek": {
+       "interval": [
+        1,
+        1
+       ],
+       "seeds": [
+        {
+         "seed": "seed1",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed2",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed3",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed4",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        },
+        {
+         "seed": "seed5",
+         "lower": 1,
+         "upper": 1,
+         "clusters": 15
+        }
+       ],
+       "clusters": 15,
+       "spread": {
+        "lowerMin": 1,
+        "lowerMax": 1,
+        "lowerRange": 0,
+        "upperMin": 1,
+        "upperMax": 1
+       },
+       "lowerAbove1": 0,
+       "side": "at or below 1 in all seeds"
+      },
+      "perSatellite": {
+       "C006 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C011 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C016 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C018 BDS-2G": {
+        "windows": 3,
+        "ratio": 1
+       },
+       "C020 BDS-2G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C217 BDS-3G": {
+        "windows": 5,
+        "ratio": 1
+       },
+       "C229 BDS-3G": {
+        "windows": 4,
+        "ratio": 1
+       },
+       "C231 BDS-3G": {
+        "windows": 2,
+        "ratio": 1
+       },
+       "J003 QZS-2G": {
+        "windows": 4,
+        "ratio": 1
+       }
+      },
+      "medianKm": {
+       "numerator": 0.28,
+       "denominator": 0.28
+      },
+      "keys": [
+       "GE|C006 BDS-2G|2025-10-08",
+       "GE|C006 BDS-2G|2025-10-10",
+       "GE|C006 BDS-2G|2025-10-12",
+       "GE|C011 BDS-2G|2025-10-04",
+       "GE|C011 BDS-2G|2025-10-06",
+       "GE|C011 BDS-2G|2025-10-12",
+       "GE|C016 BDS-2G|2025-10-04",
+       "GE|C016 BDS-2G|2025-10-10",
+       "GE|C016 BDS-2G|2025-10-12",
+       "GE|C018 BDS-2G|2025-10-06",
+       "GE|C018 BDS-2G|2025-10-08",
+       "GE|C018 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-04",
+       "GE|C020 BDS-2G|2025-10-06",
+       "GE|C020 BDS-2G|2025-10-08",
+       "GE|C020 BDS-2G|2025-10-10",
+       "GE|C020 BDS-2G|2025-10-12",
+       "GE|C217 BDS-3G|2025-10-04",
+       "GE|C217 BDS-3G|2025-10-06",
+       "GE|C217 BDS-3G|2025-10-08",
+       "GE|C217 BDS-3G|2025-10-10",
+       "GE|C217 BDS-3G|2025-10-12",
+       "GE|C229 BDS-3G|2025-10-04",
+       "GE|C229 BDS-3G|2025-10-06",
+       "GE|C229 BDS-3G|2025-10-08",
+       "GE|C229 BDS-3G|2025-10-12",
+       "GE|C231 BDS-3G|2025-10-10",
+       "GE|C231 BDS-3G|2025-10-12",
+       "GE|J003 QZS-2G|2025-10-04",
+       "GE|J003 QZS-2G|2025-10-06",
+       "GE|J003 QZS-2G|2025-10-08",
+       "GE|J003 QZS-2G|2025-10-10"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "verdict": {
+  "reading": "still worse",
+  "statement": "FFM at 70x70 is still worse than AP at 72/168 by the registered rule: gravity is ruled out; the eclipse model, the ephemeris and the frames stay report-only candidates; no record named",
+  "facts": "72/168: FFM 70x70 / AP 1.04 on 32 windows (FFM worse on 22); window-cluster lower bound above 1 in all seeds (1.000276 to 1.000276, range 0); degree effect 70x70 / 20x20 1 (largest window move 1, 0 m, GE|C006 BDS-2G|2025-10-08), interval [1, 1] (upper over seeds 1 to 1); the audit's 20x20 cell under the same five seeds: lower bound 1.000276 to 1.000276 (range 0, above 1 in all seeds; the bootstrap median takes values from the paired ratios themselves, so its percentile is discrete and moves little between seeds)",
+  "record": null
+ }
+}

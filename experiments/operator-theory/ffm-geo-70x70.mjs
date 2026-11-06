@@ -211,8 +211,10 @@ function build() {
       cells: LEADS.map(([lead, day]) => cell(`probe-${degree}x${degree}`, WINDOWS, (k, d) => e(fp.get(k), `F${FIT}`, d), F20, day, lead)) };
   });
   const firstRow = rows70.map((r) => r.flownAt).filter(Boolean).sort()[0] ?? null;
-  const registration = git('log', '-1', '--format=%H %cI', '--', REGISTRATION);
-  const [regCommit, regDate] = registration.split(' ');
+  // The registering commit is the file's first (git log --reverse); the amendments are its later commits, the latest of which registered the probes.
+  const commits = git('log', '--reverse', '--format=%H %cI', '--', REGISTRATION).split('\n').filter(Boolean).map((l) => l.split(' '));
+  const [regCommit, regDate] = commits[0] ?? [], [amendCommit, amendDate] = commits.at(-1) ?? [];
+  const firstProbeRow = probes.flatMap((p) => WINDOWS.map((k) => byKey(storeOf(p.degree)).get(k)?.flownAt)).filter(Boolean).sort()[0] ?? null;
   // The reading rule, as registered, on 72/168.
   const c = cells[2], d = effect[2];
   let verdict;
@@ -229,7 +231,8 @@ function build() {
     else verdict = { reading: 'within the Monte Carlo spread', statement: `the reading at 72/168 is within the bootstrap's own spread or the forecast did not move: ${noneAbove ? 'the bound passed below 1 in every seed' : `the seeds disagree (${wc.side})`}${effectHolds1 ? '; the degree effect interval holds 1' : effectBelow ? '; the degree effect is below 1' : '; the degree effect is above 1'}. The record resolves nothing about the gravity row: gravity is neither ruled out nor confirmed, no record named, and the next step is more windows, not more draws`, facts, record: null };
   }
   return {
-    registered: REGISTRATION, registration: { commit: regCommit, committed: regDate, firstRowFlownAt: firstRow, registrationBeforeFirstRow: !!(firstRow && regDate && Date.parse(regDate) < Date.parse(firstRow)) },
+    registered: REGISTRATION, registration: { commit: regCommit, committed: regDate, firstRowFlownAt: firstRow, registrationBeforeFirstRow: !!(firstRow && regDate && Date.parse(regDate) < Date.parse(firstRow)),
+      amendment: { commit: amendCommit, committed: amendDate, firstProbeRowFlownAt: firstProbeRow, amendmentBeforeFirstProbeRow: !!(firstProbeRow && amendDate && Date.parse(amendDate) < Date.parse(firstProbeRow)) } },
     reading: 'report only; no module change; cells.json untouched; no GEO burn verdict',
     task: TASK,
     builds: {
@@ -258,7 +261,7 @@ function readme(t) {
     for (const c of cells) L.push(c.windows ? `| ${c.fit}/${c.lead} | ${c.windows} | ${c.satellites} | ${c.numeratorWorse} | ${c.ratio} | ${spread(c.windowCluster)} | [${c.objectWeek.interval.join(', ')}] over ${c.objectWeek.clusters}; lower ${c.objectWeek.spread.lowerMin} to ${c.objectWeek.spread.lowerMax} | ${c.medianKm.numerator} | ${c.medianKm.denominator} |` : `| ${c.fit}/${c.lead} | 0 | - | - | - | - | - | - | - |`);
   };
   L.push('# GEO gravity degree: the 45 GE windows flown again with FFM at 70x70, report only', '');
-  L.push(`Registered in \`${t.registered}\` (commit ${t.registration.commit.slice(0, 8)}, ${t.registration.committed}; first row flown ${t.registration.firstRowFlownAt}; registration before the first row: ${t.registration.registrationBeforeFirstRow}). ${t.reading}. Written by \`experiments/operator-theory/ffm-geo-70x70.mjs\`; \`--check\` reproduces this file and \`table.json\` from the stores.`, '');
+  L.push(`Registered in \`${t.registered}\` (commit ${t.registration.commit.slice(0, 8)}, ${t.registration.committed}; first row flown ${t.registration.firstRowFlownAt}; registration before the first row: ${t.registration.registrationBeforeFirstRow}; Amendment 1 commit ${t.registration.amendment.commit.slice(0, 8)}, ${t.registration.amendment.committed}, first probe row ${t.registration.amendment.firstProbeRowFlownAt}, before it: ${t.registration.amendment.amendmentBeforeFirstProbeRow}). ${t.reading}. Written by \`experiments/operator-theory/ffm-geo-70x70.mjs\`; \`--check\` reproduces this file and \`table.json\` from the stores.`, '');
   L.push('## Verdict', '', `**${t.verdict.reading}: ${t.verdict.statement}.**`, '');
   if (t.verdict.facts) L.push(`${t.verdict.facts}.`, '');
   if (t.verdict.record) L.push(`Record named: \`${t.verdict.record.id}\`. What it should set: ${t.verdict.record.shouldSet}.`, '');
@@ -312,6 +315,7 @@ if (FLY) { await fly(); } else {
   if (table.builds.ffm70.foreignKeys.length) problems.push(`rows outside the 45 registered windows: ${table.builds.ffm70.foreignKeys.join(', ')}`);
   if (CHECK) {
     if (!table.registration.registrationBeforeFirstRow) problems.push('the registration does not predate the first row');
+    if (!table.registration.amendment.amendmentBeforeFirstProbeRow) problems.push('Amendment 1 does not predate the first probe row');
     if (table.builds.ffm70.rowsPresent !== WINDOWS.length) problems.push(`${table.builds.ffm70.rowsPresent} of ${WINDOWS.length} windows have a row`);
     for (const p of table.instrumentCheck.probes) { if (p.rowsPresent !== WINDOWS.length) problems.push(`probe ${p.degree}x${p.degree}: ${p.rowsPresent} of ${WINDOWS.length} rows`); if (p.badBuild.length) problems.push(`probe ${p.degree}x${p.degree} rows not on 2.2.1 at ${p.degree}: ${p.badBuild.join(', ')}`); }
     const same = (name, bytes) => fs.existsSync(path.join(OUT, name)) && fs.readFileSync(path.join(OUT, name), 'utf8') === bytes;
