@@ -18,6 +18,8 @@ TIGHT='"tolerance":1e-10,"maxStep":120,"minStep":1e-4'
 LADDER='[{"name":"full","degree":70,"tides":true,"rel":true,'"$TIGHT"'},{"name":"M40","degree":40,"tides":true,"tolerance":1e-8,"maxStep":120},{"name":"M20","degree":20,"tolerance":1e-8,"maxStep":120},{"name":"Hfull","regime":"high","degree":70,"tides":true,"rel":true,'"$TIGHT"'},{"name":"H20","regime":"high","degree":20,"tolerance":1e-8,"maxStep":300}]'
 # The forward and vendor cycles' FFM arms as arms.mjs runs them without a ladder: NRLMSISE-00 on low orbits, no drag above (70x70, tides, relativity, 1e-10, 120 s).
 DEFAULT='[{"name":"NRLMSISE00","atmosphere":"NRLMSISE00","degree":70,"tides":true,"rel":true,'"$TIGHT"'},{"name":"NO-DRAG","regime":"high","degree":70,"tides":true,"rel":true,'"$TIGHT"'}]'
+# The published examples' stored flights, in the order compare-examples-publish.mjs reads them (a later folder's example replacing an earlier one's).
+PUBLISHED="$OT/ap/b0411/compare-examples-full,$OT/ap/b051/compare-examples-burn-free,$OT/ap/b051/compare-examples-regen,$OT/ap/b062/compare-examples-reflight,$OT/ap/b063/compare-examples-reflight"
 mkdir -p "$O"
 load() { sysctl -n vm.loadavg | awk '{print $2}'; }
 cap() { awk -v l="$(load)" -v m="$LOAD" -v lo="$LOW" -v hi="$HIGH" 'BEGIN { print (l < m ? hi : lo) }'; }
@@ -66,10 +68,11 @@ laser() {
   drain; note "laser fitted"
   score "$O/cheaper" --weather-from 2026-02-20
 }
-# The worked examples: each stored example's FFM track flown again on its own window (compare-examples.mjs --ffm-only), every other track as stored; the
-# next-file ones after the laser products; EXAMPLES_IN names the stored examples (default the published ones' store). compare-examples-publish.mjs then writes the site's files.
+# The worked examples: each published example's FFM track flown again on its own window (compare-examples.mjs --ffm-only), every other track, field and $OCM
+# as stored; the next-file ones after the laser products. EXAMPLES_IN names the stored flights (default PUBLISHED). compare-examples-publish.mjs then writes
+# the site's files with ap/ffm220/compare-examples last.
 examples() {
-  local E=$O/compare-examples IN=${EXAMPLES_IN:-$OT/ap/b051/compare-examples-regen} m; PIDS=()
+  local E=$O/compare-examples IN=${EXAMPLES_IN:-$PUBLISHED} m; PIDS=()
   mkdir -p "$E/logs"
   for m in "truth" "truth --pick showcase" "regimes" "regimes --pick showcase" "providers" "providers --only iss" "next"; do
     run "$E/logs/${m// /_}.log" "${NODE[@]}" $CODE/compare-examples.mjs --mode $m --ffm-only "$IN" --out "$E"
@@ -84,5 +87,5 @@ case "${1:-}" in
   laser-score) score "$O/cheaper" --weather-from 2026-02-20 ;;
   examples) examples ;;
   all) note start; truth; providers; laser; truth_done; examples; note finished ;;
-  *) echo "truth, providers, laser or all" >&2; exit 2 ;;
+  *) echo "truth, providers, laser, laser-score, examples or all" >&2; exit 2 ;;
 esac
