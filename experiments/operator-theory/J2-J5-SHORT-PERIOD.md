@@ -223,6 +223,33 @@ gain and the e >= 0.05 identity questions are stated in the table's summary for 
    state_of_elements at u = argp), so the window phase k x 60 degrees is set as RAAN and the initial argument of latitude (argp), not
    the mean anomaly; at e 0.001 the two are the same phase. Nothing else changes.
 
+## Amendment 2 (2026-11-06, this lane; committed before any row of the table; the first-pass rows disclosed)
+The first flight of the runner (Starlette e 0.001, 14:40:44Z, after Amendment 1; its rows are kept apart in
+results/ap-truth/j2-j5-short-period/first-pass/attempt-1/rows-0.jsonl and enter no table) found two things:
+1. Arm Z2 is not J2-only. With the module at caps MAXIMUM_TESSERAL_DEGREE 0, MAXIMUM_DEGREE 2 against the FFM degree-2 reference, the
+   module's forward RTN error is 1,156 m RMS with a (0,1) family of 1,614 m: the module's J2-J5 zonal content (SPEC 2's J2-J5 rates
+   and SGP4's J3 long-period eccentricity-vector terms) sits below the zonal cap and is not removed by MAXIMUM_DEGREE 2, while the
+   reference carries no J3 (the J3 forced eccentricity, (J3 / 2 J2) (R / a) sin i, is kilometers). So E2 holds the module's J3-J5
+   content against a reference without it, not the J2 second-order error, and nothing of item 3's P2 or V1 can be read on it. Arm Z2
+   stays flown and reported as this finding (a $PCF MAXIMUM_DEGREE below 5 does not give a J2-only module); item 4 (c)'s J2-only R0
+   reading is "not available in this harness" and arm Z5's R0 (J2-J5 both sides) is reported in its place.
+2. The sign of the constant normal member in the runner's first attempt: N0_pred is the predicted module-minus-reference offset, so the
+   truth's displacement the correction adds is -N0_pred; attempt 1 added +N0_pred (N0 after P1N -9.2 m against -4.2 before) and was
+   corrected before any row of the table. Attempt 1 also wrote an empty forward leg (a runner defect, fixed); it read nothing of the
+   shares.
+Changes, before any row of the table (no estimator change; no reading-rule change):
+- P2 is identified on arm Z5's forward day after P1 + P1N (the E5 residual at the module's own u: the J2 second-order short-period
+  content and any misstatement of P1; j = 2..4 applied, j = 0 and 1 reported), not on arm Z2. It remains the labeled empirical upper
+  bound of item 2c, identified on a field without tesserals and without J6+ and applied to the cell and the windows.
+- V1 is read on E5 alone: P1 + P1N at the Z5 flight's own angles added (+Delta) and subtracted (-Delta); validated when the amplitude
+  of the odd families (0,3) + (0,5), which only the J3 and J5 first-order terms produce at e 0.001 (the J2 second-order terms are even
+  in u at e -> 0), falls by 3 or more under +Delta and does not fall under -Delta (ratio below 1); the even families (0,2) + (0,4)
+  (J4 first order together with the J2 second-order terms) and E5's m = 0 share and constant normal component are reported before and
+  after each sign, not read for the validation.
+- The first-pass rows of attempt 1 (arms Z2, Z5 and the cell, with the defects above) and of attempt 2 (the corrected runner on the same
+  cell, flown to confirm the fix before the table) stay in first-pass/ and enter no table; --check asserts this amendment's commit
+  precedes the first row of the table.
+
 ## Outputs and check
 `SDN_MODULES_ROOT=<the pinned -covm root> SDNAP_064_WASM=<this lane's copy of the signed 0.6.4 dist> SDN_AP_HEO_CACHE=<this lane's scratch>
 node experiments/operator-theory/j2-j5-short-period.mjs --run [--shard k/n]` (at most 4 shards, cells by position) writes
