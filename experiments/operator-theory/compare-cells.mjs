@@ -9,18 +9,21 @@
 // rows are carried from HELD_FROM's cells.json, less their cells on builds no longer current (AP and whiteroom XP 0.4.11, the Space Force XP 0.1.1).
 // Each FFM cell names the integrator its fits and flights ran: the one algorithm every FFM request of this harness carries (lib/frame.mjs, the request
 // builder lib/fit.mjs and lib/host.mjs go through), read from that source at generation and never retyped; the site labels each FFM cell with its
-// build and integrator ("FFM 2.0.4, RK78"). --check also holds every FFM cell to that integrator and counts them.
+// build and integrator ("FFM 2.2.0, RK78"). Every FFM figure is propagator/ffm 2.2.0's (lib/build.mjs FFM_220): read from the stores cycle-ffm220.sh wrote under
+// ap/ffm220 (the same windows, files and pairs at each arm's settings), never from an earlier build's store; the held SpaceX cells, flown on 2.0.4, are dropped.
+// --check also holds every FFM cell to that integrator and to that build, and counts them.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { binOf, pct, asc } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
-import { BUILD, AP_ARM, COLUMN_BUILDS, BUILD_RECORDS } from './lib/build.mjs';
+import { BUILD, AP_ARM, COLUMN_BUILDS, BUILD_RECORDS, FFM_220 } from './lib/build.mjs';
 import { HELD_ROW } from './lib/pairs.mjs';
+import { windowState } from './lib/steps.mjs';
 
 const argOf = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
-const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD), B051 = path.join(AP, 'b051'), XPARM = path.join(AP, 'xp-arm-0-2-1');
+const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap'), NEW = path.join(AP, BUILD), B051 = path.join(AP, 'b051'), XPARM = path.join(AP, 'xp-arm-0-2-1'), FFM = path.join(AP, 'ffm220');
 const HELD_FROM = '71b27aa50112ec0533359572597eb408491cdb2f';
 // The integrator every FFM fit and flight ran: lib/frame.mjs builds each request's integrator settings with one ALGORITHM, read here from its source.
 const FRAME = fs.readFileSync(path.join(REPO, 'experiments/operator-theory/lib/frame.mjs'), 'utf8');
@@ -37,16 +40,16 @@ const PROOF = {
 };
 const AP_OF = (version) => Object.entries(BUILD_RECORDS).find(([, b]) => b.module === 'propagator/sdn-ap' && b.version === version)?.[0] ?? (() => { throw new Error(`no sdn-ap ${version} build record`); })();
 const XP_MEASURED = AP_OF('0.4.11'), XP_EQUAL = AP_OF('0.5.1');
-// The columns on builds no longer current: next-file AP and whiteroom XP (0.4.11), the held cells' Space Force XP (0.1.1).
-const DROPPED = { next: ['XP', 'AP'], held: ['XP', 'XPU', 'AP'] };
-// The maneuver flag (PER-REV-FLAG.md, results/operator-theory/per-rev-flag): each cell's windows with a drift-free change of 1 m or more in FFM24's flight less
-// the truth, revolution by revolution, in the fit arc and in the forecast span to the lead; a window the flag could not cover counts in neither. null where the
-// flag was not flown on every window of the cell (every next-file row, the held strong-drag rows) or at a fit arc it does not reach.
-const FLAGGED = new Map(JSON.parse(fs.readFileSync(path.join(REPO, 'results/operator-theory/per-rev-flag/table.json'), 'utf8')).perWindow.map((w) => [w.key, w]));
+// The columns on builds no longer current: next-file AP and whiteroom XP (0.4.11), the held cells' Space Force XP (0.1.1) and FFM (2.0.4).
+const DROPPED = { next: ['XP', 'AP'], held: ['XP', 'XPU', 'AP', 'FFM20', 'FFM40', 'FFMfull'] };
+// The maneuver flag (maneuver-flags.mjs): each cell's windows with a step of the truth's mean semimajor axis in the fit arc and in the forecast span to the lead.
+// null where no detector ran: every next-file row, and the precise-orbit regimes other than Sentinel-1 and the altimetry satellites.
+const FLAGGED = new Map(JSON.parse(fs.readFileSync(path.join(REPO, 'results/operator-theory/maneuver-flags/flags.json'), 'utf8')).windows.map((w) => [w.key, w]));
 const NOT_TESTED = { burnsInFit: null, burnsInForecast: null };
 const burns = (list, fit, lead) => {
-  const at = list.map((r) => FLAGGED.get(r.key)?.at?.[`${fit}/${lead}`]);
-  if (!at.length || at.some((x) => !x || x.after === 'not flown')) return NOT_TESTED;
+  const flags = list.map((r) => FLAGGED.get(r.key));
+  if (flags.some((w) => !w)) return NOT_TESTED;
+  const at = flags.map((w) => windowState(w, fit, lead));
   return { burnsInFit: at.filter((x) => x.inFit).length, burnsInForecast: at.filter((x) => x.inForecast).length };
 };
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter((l) => l && !HELD_ROW.test(l)).map((l) => JSON.parse(l));
@@ -76,7 +79,9 @@ const fed = (store, key) => (xpFrom.get(store) ?? xpFrom.set(store, new Set()).g
 
 const rows = rowsIn(path.join(NEW, 'laser', 'forward'));
 const stores = [new Map(rows.map((r) => [key(r), r])), ...[path.join(NEW, 'laser-xp', 'forward'), path.join(ROOT, 'cheaper', 'forward'), path.join(NEW, 'laser-sgp4'), path.join(NEW, 'laser-sgp4-high'), path.join(NEW, 'laser-sgp4-72'), path.join(XPARM, 'ussf-laser')].map((d) => new Map(rowsIn(d).map((r) => [key(r), r])))];
-const km = (r, arm) => { for (const s of stores) { const v = s.get(key(r))?.arms[arm]?.km; if (Number.isFinite(v)) return v; } return undefined; };
+const ffmLaser = new Map(rowsIn(path.join(FFM, 'cheaper', 'forward')).map((r) => [key(r), r]));
+/** An arm's km: FFM's from ffm220 alone, every other arm from the first store that holds it. */
+const km = (r, arm) => { if (arm.startsWith('F-')) { const v = ffmLaser.get(key(r))?.arms[arm]?.km; return Number.isFinite(v) ? v : undefined; } for (const s of stores) { const v = s.get(key(r))?.arms[arm]?.km; if (Number.isFinite(v)) return v; } return undefined; };
 
 /** The stored arm behind each column, by fit; a column with no arm for that fit or regime stays empty. */
 const armsOf = (regime, fit) => (regime === 'Low orbit'
@@ -116,13 +121,14 @@ const windowsIn = (...dirs) => new Map(dirs.flatMap((d) => rowsIn(d)).map((r) =>
 const u1 = windowsIn(path.join(B051, 'ussf-truth')), u2 = windowsIn(path.join(B051, 'ussf-truth2')), uSix = windowsIn(path.join(B051, 'ussf-regimes'), path.join(B051, 'ussf-regimes-hx'));
 const a1 = windowsIn(path.join(B051, 'truth')), a2 = windowsIn(path.join(B051, 'truth2')), aSix = windowsIn(path.join(B051, 'regimes'), path.join(B051, 'regimes-hx'));
 const ap1 = rowsIn(path.join(NEW, 'truth')), ap2 = rowsIn(path.join(NEW, 'truth2')), cmp1 = rowsIn(path.join(NEW, 'compare-truth')), cmp2 = rowsIn(path.join(NEW, 'compare-truth2'));
+const f1 = windowsIn(path.join(FFM, 'compare-truth')), f2 = windowsIn(path.join(FFM, 'compare-truth2'));
 const PROVIDER = (name) => (/^Swarm/.test(name) ? 'ESA' : /^GRACE/.test(name) ? 'Data E' : /^Sentinel/.test(name) ? 'Copernicus' : 'ESA navigation');
 const PUBLIC_NAME = (name) => (/^GRACE-FO/.test(name) ? `Research satellite ${name.at(-1)}` : name);
 const CUTS = [
-  { regime: 'Strong drag, 2025', store: 'compare-truth', ap: ap1, apNew: a1, cmp: cmp1, keep: (r) => !r.error, arcs: [24], ffm: 'FFM40', ussf: u1 },
-  { regime: 'Strong drag, 2026', store: 'compare-truth2', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'P' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2 },
-  { regime: 'Near 700 km', store: 'compare-truth2', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'S1' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2 },
-  { regime: 'Medium Earth orbit', store: 'compare-truth2', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'GN' && !r.error, arcs: [24, 72], ffm: 'FFM20', ussf: u2 },
+  { regime: 'Strong drag, 2025', store: 'compare-truth', ap: ap1, apNew: a1, cmp: cmp1, keep: (r) => !r.error, arcs: [24], ffm: 'FFM40', ussf: u1, ffmRows: f1 },
+  { regime: 'Strong drag, 2026', store: 'compare-truth2', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'P' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2, ffmRows: f2 },
+  { regime: 'Near 700 km', store: 'compare-truth2', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'S1' && !r.error, arcs: [24, 72], ffm: 'FFM40', ussf: u2, ffmRows: f2 },
+  { regime: 'Medium Earth orbit', store: 'compare-truth2', ap: ap2, apNew: a2, cmp: cmp2, keep: (r) => r.group === 'GN' && !r.error, arcs: [24, 72], ffm: 'FFM20', ussf: u2, ffmRows: f2 },
 ];
 // --only 2025: the finished windows alone, while the others still run; a partial part is never published.
 for (const cut of CUTS.filter((x) => !argOf('--only') || x.regime.includes(argOf('--only')))) {
@@ -132,7 +138,7 @@ for (const cut of CUTS.filter((x) => !argOf('--only') || x.regime.includes(argOf
   for (const name of new Set(inCut.map((r) => r.name))) levels.push(['satellite', PROVIDER(name), PUBLIC_NAME(name), inCut.filter((r) => r.name === name)]);
   for (const [level, provider, satellite, list] of levels) for (const fit of cut.arcs) for (const day of ['1', '2', '3', '7']) {
     const arms = {};
-    for (const [column, read] of [['SGP4', (r) => e(byKey.get(r.key), `S${fit}`, day)], ['XP', (r) => { const v = e(byKey.get(r.key), `XP${fit}`, day); if (Number.isFinite(v)) fed(cut.store, r.key); return v; }], ['XPU', (r) => e(cut.ussf.get(r.key), `U${fit}`, day)], ['AP', (r) => e(cut.apNew.get(r.key), `AP${fit}`, day)], [cut.ffm, (r) => e(byKey.get(r.key), `F${fit}`, day)]]) {
+    for (const [column, read] of [['SGP4', (r) => e(byKey.get(r.key), `S${fit}`, day)], ['XP', (r) => { const v = e(byKey.get(r.key), `XP${fit}`, day); if (Number.isFinite(v)) fed(cut.store, r.key); return v; }], ['XPU', (r) => e(cut.ussf.get(r.key), `U${fit}`, day)], ['AP', (r) => e(cut.apNew.get(r.key), `AP${fit}`, day)], [cut.ffm, (r) => e(cut.ffmRows.get(r.key), `F${fit}`, day)]]) {
       const v = list.map(read).filter(Number.isFinite).sort(asc);
       if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
     }
@@ -142,7 +148,7 @@ for (const cut of CUTS.filter((x) => !argOf('--only') || x.regime.includes(argOf
 
 // AP6.md's regimes, the same way.
 if (fs.existsSync(path.join(NEW, 'regimes')) && !argOf('--only')) {
-  const live = rowsIn(path.join(NEW, 'regimes')).filter((r) => !r.error);
+  const live = rowsIn(path.join(NEW, 'regimes')).filter((r) => !r.error), fSix = windowsIn(path.join(FFM, 'regimes'));
   for (const [group, g] of Object.entries(GROUPS)) {
     const inGroup = live.filter((r) => r.group === group);
     const arcs = [...new Set(inGroup.flatMap((r) => Object.keys(r.arms).map((a) => Number(a.replace(/^\D+/, '')))))].sort((a, b) => a - b);
@@ -151,7 +157,7 @@ if (fs.existsSync(path.join(NEW, 'regimes')) && !argOf('--only')) {
     for (const [level, provider, satellite, list] of levels) for (const fit of arcs) for (const day of ['1', '2', '3', '7']) {
       const arms = {};
       for (const [column, code] of [['SGP4', 'S'], ['XP', 'XP'], ['XPU', 'U'], ['AP', 'AP'], [ffm, 'F']]) {
-        const v = list.map((r) => { const x = e(code === 'U' ? uSix.get(r.key) : code === 'AP' ? aSix.get(r.key) : r, `${code}${fit}`, day); if (code === 'XP' && Number.isFinite(x)) fed(group === 'HX' ? 'regimes-hx' : 'regimes', r.key); return x; }).filter(Number.isFinite).sort(asc);
+        const v = list.map((r) => { const x = e(code === 'U' ? uSix.get(r.key) : code === 'AP' ? aSix.get(r.key) : code === 'F' ? fSix.get(r.key) : r, `${code}${fit}`, day); if (code === 'XP' && Number.isFinite(x)) fed(group === 'HX' ? 'regimes-hx' : 'regimes', r.key); return x; }).filter(Number.isFinite).sort(asc);
         if (v.length) arms[column] = [round(pct(v, 0.5)), round(pct(v, 0.95)), v.length];
       }
       out.push(named({ reference: 'truth', level, regime: g.label, provider, satellite, fit, lead: Number(day) * 24, n: list.length, ...burns(list, fit, Number(day) * 24), arms }, 'truth'));
@@ -171,7 +177,9 @@ if (fs.existsSync(path.join(NEW, 'providers')) && !argOf('--only')) {
   // A Planet object with no catalog number: its successive files disagree by thousands of km for every arm, Planet's own forecast included, so it says nothing about a propagator.
   const live = all.filter((r) => r.source !== 'planet' || r.norad);
   providerLeftOut.planetPairsWithoutCatalogNumber = all.length - live.length;
-  const kmOf = (r, arm) => r.arms[arm]?.km ?? stored.get(pairKey(r))?.arms[arm]?.km ?? uProviders.get(pairKey(r))?.arms[arm]?.km;
+  // FFM: the ISS's from ffm220's own run, every other provider's from ffm220's refits of the forward test's and the vendor test's stored files, scored as score.mjs pairs them.
+  const ffmProviders = new Map([...rowsIn(path.join(FFM, 'operator', 'forward')), ...rowsIn(path.join(FFM, 'vendors', 'forward')), ...rowsIn(path.join(FFM, 'providers'), /^rows-iss-\d+\.jsonl$/)].map((r) => [pairKey(r), r]));
+  const kmOf = (r, arm) => (arm.startsWith('F-') ? ffmProviders.get(pairKey(r))?.arms[arm]?.km : r.arms[arm]?.km ?? stored.get(pairKey(r))?.arms[arm]?.km ?? uProviders.get(pairKey(r))?.arms[arm]?.km);
   const cell = (list, fit) => {
     const arms = {};
     for (const [column, names] of [['SGP4', [`S@${fit}`]], ['XP', [`A-XP@${fit}`]], ['XPU', [`U-XP@${fit}`]], ['AP', [`${AP_ARM}@${fit}`]], ['FFM40', [`F-M40@${fit}`]], ['FFMfull', [`F-NRLMSISE00@${fit}`, `F-NO-DRAG@${fit}`]], ['Center', ['operator']]]) {
@@ -200,7 +208,7 @@ if (!argOf('--only')) for (const r of held) { const { example, ...row } = r; out
 // Each row's worked example: its own satellite's if there is one, else its provider's, else its regime's. Never a showcase example: those are chosen to show AP's lead, not to be typical.
 // --examples a,b: the full examples' folders, a later folder's example replacing an earlier one's of the same id, as compare-examples-publish.mjs reads them; a dropped one links nothing.
 // --check reads the examples the committed cells.json was written with.
-const EXAMPLES = argOf('--examples') ?? (process.argv.includes('--check') ? '/opt/data/sdn-archive/operator-theory/ap/b0411/compare-examples-full,/opt/data/sdn-archive/operator-theory/ap/b051/compare-examples-burn-free' : null);
+const EXAMPLES = argOf('--examples') ?? (process.argv.includes('--check') ? '/opt/data/sdn-archive/operator-theory/ap/b0411/compare-examples-full,/opt/data/sdn-archive/operator-theory/ap/b051/compare-examples-burn-free,/opt/data/sdn-archive/operator-theory/ap/b051/compare-examples-regen,/opt/data/sdn-archive/operator-theory/ap/ffm220/compare-examples' : null);
 if (EXAMPLES) {
   const files = new Map();
   for (const dir of EXAMPLES.split(',')) for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.json') && n !== 'index.json' && !/starlink/i.test(n))) files.set(f, path.join(dir, f));
@@ -217,7 +225,7 @@ out.sort((a, b) => a.reference.localeCompare(b.reference) || order[a.level] - or
 const doc = {
   registered: 'experiments/operator-theory/COMPARE.md, AP5.md, XP-ARM-0-2-1.md',
   columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
-  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. integrator: for each FFM column in the row, the integrator algorithm its fits and flights ran, read at generation from the one request builder every FFM call of this harness goes through (experiments/operator-theory/lib/frame.mjs); the tolerances and steps are each writer\'s settings (arms.mjs, truth-compare.mjs, all-regimes.mjs, providers-run.mjs, score.mjs). arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those where FFM24\'s flight less the truth, as mean semimajor axis per revolution with the drift removed, changes by 1 m or more between consecutive revolutions in the fit arc, and in the forecast span to the lead (results/operator-theory/per-rev-flag); a window the flag could not cover counts in neither; null where the flag was not flown on every window of the cell. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
+  fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. integrator: for each FFM column in the row, the integrator algorithm its fits and flights ran, read at generation from the one request builder every FFM call of this harness goes through (experiments/operator-theory/lib/frame.mjs); the tolerances and steps are each writer\'s settings (arms.mjs, truth-compare.mjs, all-regimes.mjs, providers-run.mjs, score.mjs). arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those with a step of the truth\'s mean semimajor axis of 8 m or more in the fit arc, and in the forecast span to the lead (results/operator-theory/maneuver-flags); a window the detector could not cover counts in neither; null where no detector ran. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
   // the builds the rows name, and the build whiteroom XP was measured on (the provenance's measuredOn)
   builds: Object.fromEntries(Object.entries(BUILD_RECORDS).filter(([k]) => k === XP_MEASURED || out.some((r) => Object.values(r.build ?? {}).some((keys) => keys.includes(k))))),
   provenance: {
@@ -230,7 +238,7 @@ const doc = {
       stores: PROOF.stores,
     },
   },
-  dropped: 'Next-file AP and whiteroom XP (sdn-ap 0.4.11, no re-measure) and the held SpaceX cells on sgp4-xp 0.1.1, until their rerun on the current builds.',
+  dropped: 'Next-file AP and whiteroom XP (sdn-ap 0.4.11, no re-measure) and the held SpaceX cells on sgp4-xp 0.1.1 and ffm 2.0.4, until their rerun on the current builds.',
   leftOut: providerLeftOut,
   rows: out,
 };
@@ -259,7 +267,9 @@ function check() {
   if (doc.rows.some((r) => r.reference === 'next' && (r.arms.XP || r.arms.AP))) faults.push('a next-file row carries AP or whiteroom XP');
   const ffmCells = doc.rows.flatMap((r) => Object.keys(r.arms).filter((c) => c.startsWith('FFM')).map((c) => r.integrator?.[c]));
   if (ffmCells.some((x) => x !== INTEGRATOR) || doc.rows.some((r) => Object.keys(r.integrator ?? {}).some((c) => !r.arms[c]))) faults.push(`an FFM cell does not name the integrator lib/frame.mjs carries (${INTEGRATOR})`);
-  console.log(faults.length ? `COMPARE CELLS: FAIL\n${faults.slice(0, 10).join('\n')}` : `COMPARE CELLS: PASS (${doc.rows.length} rows reproduce; whiteroom XP on 0.5.1 in ${relabeled.length} precise-orbit rows, fed by ${[...xpFrom].map(([k, v]) => `${k} ${v.size}`).join(', ')}, each a store the proof covers with no differing window; no cell on sdn-ap 0.4.11 or sgp4-xp 0.1.1; ${ffmCells.length} FFM cells name their integrator, ${INTEGRATOR})`);
+  const ffmBuilds = doc.rows.flatMap((r) => Object.keys(r.arms).filter((c) => c.startsWith('FFM')).map((c) => (r.build[c] ?? []).filter((k) => doc.builds[k]?.module === 'propagator/ffm').map((k) => doc.builds[k])));
+  if (ffmBuilds.some((b) => b.length !== 1 || b[0].version !== FFM_220.version || b[0].sha256 !== FFM_220.wasmSha256)) faults.push(`an FFM cell does not name propagator/ffm ${FFM_220.version} (${FFM_220.wasmSha256.slice(0, 12)})`);
+  console.log(faults.length ? `COMPARE CELLS: FAIL\n${faults.slice(0, 10).join('\n')}` : `COMPARE CELLS: PASS (${doc.rows.length} rows reproduce; whiteroom XP on 0.5.1 in ${relabeled.length} precise-orbit rows, fed by ${[...xpFrom].map(([k, v]) => `${k} ${v.size}`).join(', ')}, each a store the proof covers with no differing window; no cell on sdn-ap 0.4.11 or sgp4-xp 0.1.1; ${ffmCells.length} FFM cells name their integrator, ${INTEGRATOR}, and propagator/ffm ${FFM_220.version} (${FFM_220.wasmSha256.slice(0, 12)}))`);
   process.exit(faults.length ? 1 : 0);
 }
 const counts = {};
