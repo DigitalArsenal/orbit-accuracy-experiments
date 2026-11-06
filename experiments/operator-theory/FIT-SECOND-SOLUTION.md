@@ -183,6 +183,17 @@ fit, 236 by the fit's sets (Amendment 5's count: the THEMIS A fit does not take 
 E2E and fit.e2e.mjs PASS. SDN-AP: a second guard case on the Molniya start-0 fixture, which takes the fall-back, follows when its
 inputs land.
 
+## Amendment 7 (2026-11-06), registered before any row it governs
+
+The guard's second case, the one that takes the finite-difference fall-back: the ripple lane's Molniya start-0 fitted-drag fixture
+(experiments ripple WIP 7b7aea916, results/ap-truth/themis-ripple-fix/fixtures/molniya-start0/: the 72 h fit $OEM, the fit $PCF and
+the $SPW rows, argp 270, fit start day 0, the pinned FFM model truth), copied into propagator/sdn-ap/test/fixtures with each SHA-256
+pinned in test/fit-second-solution.e2e.mjs. One fit call with the three frames. Assertions: BTERM bit-equal to 0.04461633761935712 and
+FIT_RMS_KM to 0.021800715473184688 (the build is deterministic; the share-line build gives 0.04571376917240479 and
+0.021225197279760338); 0 grid lookups outside a fit and more than 0 by the fit's sets; the grid cache the same before and after. With
+it, fit.inc's leftover `const NominalSat nominal(work);` in the fall-back (unused since Amendment 6) is removed; reported: whether the
+THEMIS A and Molniya fit numbers are unchanged by that removal. Guard E2E and fit.e2e.mjs PASS.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
