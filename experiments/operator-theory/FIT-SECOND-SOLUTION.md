@@ -77,3 +77,31 @@ Change: rule A keeps a restart only when its cost is below 0.96 times the policy
 it acts on a second minimum and leaves a converged solution's bytes alone. Added, report only: a diagnostic build of the merged tree with
 the grid sharing tolerances at zero (kShareE, kShareI, kShareA 0: each perturbed set its own grid, C4's arrangement), with and without
 rule A, on THEMIS A 2013-02-15: whether the rule returns C4's second solution to the first.
+
+## Amendment 2 (2026-11-06): what the diagnostics showed; the rule order
+
+THEMIS A 2013-02-15, 72 h vacuum fit (run.mjs; rows /opt/data/sdn-archive/operator-theory/fit-second-solution/measure and diag-c4):
+
+| Build | Fit RMS (m) | BTERM | Iterations | Days 1 / 3 / 7 (m) |
+| --- | --: | --: | --: | --: |
+| 0.6.2 base (84d50dca) | 109.52 | 0.012046 | 28 | 211.7 / 314.1 / 419.9 |
+| grid 6f3b82ef3, no rule | 104.78 | 0.012027 | 27 | 201.1 / 294.3 / 421.8 |
+| grid 6f3b82ef3 with sharing tolerances 0, with and without rule A (Amendment 1's) | 104.78 | 0.012164 | 52 | 201.3 / 294.9 / 422.5 |
+| C4 (ripple 8c66f1fcb rebuilt), no rule | 249.75 | 4.506 | 18 | 517.8 / 3,238.9 / 15,778.6 |
+| C4 with rule A (Amendment 1's) | 249.75 | 4.506 | 18 | 517.8 / 3,238.9 / 15,778.6 |
+
+The probe on C4 (scan build's probe on 8c66f1fcb): A1 249.71 m, BTERM 4.485; A2's held pass (BTERM 0.01 through every stage)
+stalls at 359.2 m, and freed it returns to 249.71 m, BTERM 4.485. In C4's arrangement no fit with BTERM near its prior reaches below
+359 m: the fit stalls on partials that jump when each perturbed set builds its own grid, not on a start. The shipping grid (sharing
+within a set's perturbed copies) converges to 104.78 m without any rule. Rule A costs a second staged pass on every fit (THEMIS A
+21.1 s against 10.7 s).
+
+SDN-AP ruling (2026-11-06): rule B before rule A; rule A only where B does not suffice; the fix's fit-cost rise on the cost benchmark's
+32 windows (experiments/sdn-ap-cost-benchmark) at most 10 %.
+
+Reading: the second solution was the grid's inconsistent finite-difference partials under C4's per-set grids, removed by the
+shipping grid's sharing (6f3b82ef3). Rule A leaves C4 at 249.75 m and doubles every fit; rule B could only hold BTERM near its prior,
+the 359 m stall, above line 1's 120.5 m (not built); rule C does not fire (A2 lands at the same 249.7 m). No rule is taken (coordinator,
+2026-11-06): no fitter change in 0.6.3. test/fit-second-solution.e2e.mjs stays as the THEMIS A regression guard on the grid (line 1's
+bounds; the LEO AP, LEO SGP4XP and synthetic GEO fits byte-identical to 0.6.2) and lands with the 0.6.3 binary. Lines 2 and 3 are not
+measured for a rule, since none is taken.
