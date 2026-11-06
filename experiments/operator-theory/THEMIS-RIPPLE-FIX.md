@@ -328,3 +328,10 @@ record, 333 MB per worker. Budget: 100 ms of wasm init per object or less.
 3. Retention across refreshes: a variant keeping every idle grid (the cache's idle limit raised to the catalog's size per worker)
    against the source's four; the refresh pass's cost and the peak memory per worker both ways, 1,000 records on 8 workers.
 Reported beside C6's: wasm init per object, load and refresh seconds per worker, peak memory per worker; within the budget or the gap.
+Catalog budget (SDN-AP session; registered before any C7 catalog number is read; the C7 1,000-record run started at 03:12 and its
+output is unread): on the C7 dist with whatever lazy-node or retention design is adopted, all three must hold:
+(1) cold: median wasm init at or below 100 ms per object for a one-epoch propagate of a record above e 0.3, one worker, over the 1,000
+    records; (2) warm: one catalog refresh, all 1,000 records to a new epoch on the 8-worker pool, at or below 5 s wall; (3) memory: peak
+    wasm memory at or below 512 MB per worker under the retention policy used, the eviction rule stated. All three: the grid ships in
+    0.6.3 with the fitter fix; any miss: 0.6.3 is the fitter fix alone and the grid waits. The wasm/native gap is profiled before any
+    optimization (wasm libm trig and exp in the build, memory.grow count during init, missing SIMD in the inner loops).
