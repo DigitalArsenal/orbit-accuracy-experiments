@@ -72,9 +72,10 @@ export function rtnOf(d, r, v) {
 }
 
 /** Least squares by normal equations (Gaussian elimination with partial pivoting). */
-function solve(X, y) {
+function solve(X, y, ridge = 0) {
   const n = X[0].length, N = Array.from({ length: n }, () => new Float64Array(n + 1));
   for (let k = 0; k < X.length; k += 1) for (let a = 0; a < n; a += 1) { const xa = X[k][a]; if (!xa) continue; for (let b = 0; b < n; b += 1) N[a][b] += xa * X[k][b]; N[a][n] += xa * y[k]; }
+  for (let a = 0; a < n; a += 1) N[a][a] *= 1 + ridge;
   for (let c = 0; c < n; c += 1) {
     let p = c; for (let r = c + 1; r < n; r += 1) if (Math.abs(N[r][c]) > Math.abs(N[p][c])) p = r;
     [N[c], N[p]] = [N[p], N[c]];
@@ -89,18 +90,24 @@ function solve(X, y) {
  * frequencies merged below 1 / windowDays. Shares: the RMS (and maximum, roughness) of each reconstructed series.
  */
 export function attribute(tau, rtn, nRevDay, windowDays) {
-  const res = 1 / windowDays;
+  // Conditioning (Amendment 3): lines merged below 1.5 / window (the Rayleigh limit), nothing above 0.9 of the sampling's Nyquist
+  // frequency, a quadratic trend only on windows of 5 days or more, and a ridge of 1e-4 on the normal matrix's diagonal.
+  const res = 1.5 / windowDays;
+  const dt = median(tau.slice(1).map((t, k) => t - tau[k]));
+  const nyquist = 0.5 / dt;
   const fams = [];
   for (let j = 0; j <= 16; j += 1) for (let m = 0; m <= 8; m += 1) if (j || m) fams.push({ label: `(${m},${j})`, m, j, f: Math.abs(j * nRevDay - m * EARTH_REV_PER_DAY) });
   fams.sort((a, b) => a.f - b.f);
   const groups = [];
   for (const x of fams) { const g = groups.at(-1); if (g && x.f - g.f < res) { g.labels.push(x.label); g.members.push(x); } else groups.push({ f: x.f, labels: [x.label], members: [x] }); }
-  const kept = groups.filter((g) => g.f >= 0.5 * res && g.f < 32 * nRevDay);
+  const kept = groups.filter((g) => g.f >= res && g.f < 0.9 * nyquist);
+  const dropped = groups.filter((g) => g.f >= 0.9 * nyquist).length;
   const lunar = windowDays >= 5 ? [1 / LUNAR_MONTH_DAYS, 2 / LUNAR_MONTH_DAYS] : [];
-  const trendCols = 3;
-  const row = (t) => [1, t, t * t, ...lunar.flatMap((fr) => [Math.cos(2 * Math.PI * fr * t), Math.sin(2 * Math.PI * fr * t)]), ...kept.flatMap((g) => [Math.cos(2 * Math.PI * g.f * t), Math.sin(2 * Math.PI * g.f * t)])];
+  const quadratic = windowDays >= 5;
+  const trendCols = quadratic ? 3 : 2;
+  const row = (t) => [1, t, ...(quadratic ? [t * t] : []), ...lunar.flatMap((fr) => [Math.cos(2 * Math.PI * fr * t), Math.sin(2 * Math.PI * fr * t)]), ...kept.flatMap((g) => [Math.cos(2 * Math.PI * g.f * t), Math.sin(2 * Math.PI * g.f * t)])];
   const X = tau.map(row);
-  const coef = [0, 1, 2].map((ax) => solve(X, rtn.map((p) => p[ax])));
+  const coef = [0, 1, 2].map((ax) => solve(X, rtn.map((p) => p[ax]), 1e-4));
   const series = (cols) => tau.map((t, k) => [0, 1, 2].map((ax) => cols.reduce((s, c) => s + coef[ax][c] * X[k][c], 0)));
   const kindOf = (g) => (g.members.every((x) => x.m === 0) ? 'zonal' : g.members.every((x) => x.m > 0) ? (g.members.every((x) => x.j === 0) ? 'm-daily' : 'tesseral') : 'mixed');
   const base = trendCols + 2 * lunar.length;
@@ -109,8 +116,14 @@ export function attribute(tau, rtn, nRevDay, windowDays) {
   const colsOf = (kinds) => families.filter((g) => kinds.includes(g.kind)).flatMap((g) => g.cols);
   const share = (cols) => { if (!cols.length) return { rmsM: 0, maxM: 0, roughM: 0 }; const s = series(cols), n = norms(s); return { rmsM: rms(n), maxM: Math.max(...n), roughM: roughness(s) }; };
   const residual = tau.map((t, k) => [0, 1, 2].map((ax) => rtn[k][ax] - coef[ax].reduce((s, c, ci) => s + c * X[k][ci], 0)));
+  const shares = { secular: share(Array.from({ length: trendCols }, (_, c) => c)), lunisolar: share(lunar.flatMap((_, li) => [trendCols + 2 * li, trendCols + 2 * li + 1])), zonal: share(colsOf(['zonal'])), tesseral: share(colsOf(['tesseral', 'm-daily'])), mixed: share(colsOf(['mixed'])), unexplained: { rmsM: rms(norms(residual)) } };
+  const total = rms(norms(rtn));
+  const quadrature = Math.hypot(...Object.values(shares).map((s) => s.rmsM));
   return {
-    shares: { secular: share([0, 1, 2]), lunisolar: share(lunar.length ? [3, 4, 5, 6] : []), zonal: share(colsOf(['zonal'])), tesseral: share(colsOf(['tesseral', 'm-daily'])), mixed: share(colsOf(['mixed'])), unexplained: { rmsM: rms(norms(residual)) } },
+    basis: { groups: kept.length, droppedAboveNyquist: dropped, nyquistCyclesPerDay: +nyquist.toFixed(2), maxJResolved: Math.floor(0.9 * nyquist / nRevDay), lunar: lunar.length > 0, quadratic, ridge: 1e-4 },
+    // the shares in quadrature against the series' own RMS: above 1.5 the fit is ill-conditioned and the shares are not read
+    conditioned: quadrature <= 1.5 * total, sharesInQuadratureM: quadrature, totalRmsM: total,
+    shares,
     families: families.map(({ cols, ...g }) => g),
   };
 }
@@ -174,7 +187,10 @@ if (args.run) {
       Object.assign(row, { flown: true, fitted: r.fitted, initialGcrfKm: r.fixture.initialGcrfKm, A_m: A, bounds: b, forward, inArc,
         // the registered raw line and the tesseral verdict (Amendment 2)
         rawPass: forward.rmsM <= b.rms && forward.maxM <= b.max && forward.roughM <= b.rough,
-        tesseralPass: forward.shares.tesseral.rmsM <= b.rms && forward.shares.tesseral.maxM <= b.max && forward.shares.tesseral.roughM <= b.rough && inArc.shares.tesseral.rmsM <= b.rms && inArc.shares.tesseral.maxM <= b.max,
+        // Amendment 3: the in-arc leg applies where the arc's 30-minute sampling resolves the grid to j 8 (n <= 2.7 rev/day) and the fit is conditioned
+        inArcLeg: inArc.basis.maxJResolved >= 8 && inArc.conditioned,
+        tesseralPass: forward.conditioned && forward.shares.tesseral.rmsM <= b.rms && forward.shares.tesseral.maxM <= b.max && forward.shares.tesseral.roughM <= b.rough
+          && (!(inArc.basis.maxJResolved >= 8 && inArc.conditioned) || (inArc.shares.tesseral.rmsM <= b.rms && inArc.shares.tesseral.maxM <= b.max)),
         reference: `propagator/ffm ${PIN.ffm.version}: EGM96 ${ARM.field[0]}x${ARM.field[1]}, Sun and Moon point masses (DE440), no drag, SRP, tides, relativity or Earth radiation; RK78 rel 1e-12 abs 1e-9, steps 0.01 to 300 s; zero EOP`,
         referenceIntegrator: r.fixture.referenceIntegrator, kernelSha256: r.kernelSha256 });
       if (c.convergence) {
@@ -186,7 +202,7 @@ if (args.run) {
       row.seconds = (Date.now() - t0) / 1000;
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
       const sh = (s) => `${f(s.secular.rmsM)}/${f(s.lunisolar.rmsM)}/${f(s.zonal.rmsM)}/${f(s.tesseral.rmsM)}/${f(s.mixed.rmsM)}`;
-      console.log(c.key, row.tesseralPass ? 'TESSERAL-PASS' : 'TESSERAL-FAIL', row.rawPass ? 'raw-pass' : 'raw-fail', `arc ${c.arcDays} d in-arc ${f(inArc.rmsM)}/${f(inArc.maxM)} [${sh(inArc.shares)}] fwd ${f(forward.rmsM)}/${f(forward.maxM)}/${f(forward.roughM, 3)} [${sh(forward.shares)}] A ${f(A)} b ${f(b.rms)}/${f(b.max)}/${f(b.rough, 3)}`, row.convergenceMaxM !== undefined ? `conv ${row.convergenceMaxM.toExponential(1)}` : '', `${row.seconds.toFixed(0)} s`);
+      console.log(c.key, row.tesseralPass ? 'TESSERAL-PASS' : 'TESSERAL-FAIL', row.rawPass ? 'raw-pass' : 'raw-fail', `arc ${c.arcDays} d in-arc ${f(inArc.rmsM)}/${f(inArc.maxM)} [${sh(inArc.shares)}${inArc.conditioned ? '' : ' ILL'} j<=${inArc.basis.maxJResolved}] fwd${forward.conditioned ? '' : ' ILL'} ${f(forward.rmsM)}/${f(forward.maxM)}/${f(forward.roughM, 3)} [${sh(forward.shares)}] A ${f(A)} b ${f(b.rms)}/${f(b.max)}/${f(b.rough, 3)}`, row.convergenceMaxM !== undefined ? `conv ${row.convergenceMaxM.toExponential(1)}` : '', `${row.seconds.toFixed(0)} s`);
     } catch (error) {
       row.flown = false; row.error = String(error?.message ?? error).slice(0, 300); row.seconds = (Date.now() - t0) / 1000;
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);

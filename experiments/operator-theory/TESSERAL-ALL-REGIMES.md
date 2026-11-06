@@ -139,6 +139,21 @@ frequencies merged below the window's resolution (1 / window cycles per day). A 
    lunisolar theory; the GEO in-arc 15.1 m falls into whichever share the attribution gives it. If large at high orbits it is product
    information for its own record, outside this record's verdict.
 
+## Amendment 3 (2026-11-06 11:15Z, this lane; committed before any primary row and before any table)
+The first primary pass (eight low-orbit cells, discarded, none committed) returned shares of thousands of meters against a 14 m in-arc
+residual: the arc's 30-minute sampling aliases every (m, j) line above its Nyquist frequency (24 cycles per day), and on the one-day
+forward window groups one cycle per day apart sit at the Rayleigh limit, so cancelling coefficients inflate every share. Conditioning,
+stated so the attribution can be read: lines are merged below 1.5 / window cycles per day; no line at or above 0.9 of the sampling's
+Nyquist frequency enters the basis (the arc resolves j up to floor(0.9 x 24 / n): 8 and more only for n <= 2.7 rev/day); the quadratic
+trend term is used on windows of 5 days or more; the normal matrix carries a ridge of 1e-4 on its diagonal. Each attribution reports
+its shares in quadrature against the series' own RMS and is `conditioned` when that ratio is 1.5 or less; an ill-conditioned
+attribution's shares are not read and the cell's tesseral verdict is withheld (reported as such).
+The in-arc leg of the tesseral verdict applies only where the arc's sampling resolves the grid to j 8 and the attribution is conditioned
+(Etalon, GPS, Galileo, GLONASS, Molniya, GTO, IGSO, QZSS, GEO, THEMIS D); in the low regimes and LAGEOS the in-arc residual is reported
+whole (RMS and maximum, not separable at 30-minute sampling) and the tesseral verdict rests on the forward day, sampled 64 times a
+revolution. The resonant one-cycle (`mixed`) group of GEO, IGSO, QZSS and THEMIS D stays charged to neither verdict, and its size is
+reported per regime as its own finding, in-arc and forward (RMS, maximum, roughness), so the resonant theory's accuracy is measured.
+
 ## Outputs and check
 Rows: results/ap-truth/tesseral-all-regimes/rows-<shard>.jsonl (one per cell: regime, elements, fitted elements, A, the bounds, RMS,
 maximum, roughness, the convergence figure where measured, families, verdict, the SHA-256 of both dists and of the runner, createdUtc).
