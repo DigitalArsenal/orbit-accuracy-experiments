@@ -111,7 +111,10 @@ measured for a rule, since none is taken.
 What: the tesseral grid shares one grid among sets within its tolerances (SPEC 16.11), so a fit's finite-difference partials, taken on
 copies a few 1e-7 away from the nominal, read the nominal's grid and miss the grid's own change with the elements; on Molniya the BTERM
 partial is biased by that. The ripple lane adds a per-set exact-grid flag to the propagation context (its name and semantics in SPEC
-16.11 on its WIP ref): a set initialised with it builds and keeps its own grid at its own elements.
+16.11 on its WIP ref): a set initialised with it builds and keeps its own grid at its own elements. Named (ripple cbcbecf7f, merged):
+the scoped switch `xpt::tess::ExactGridScope` (src/tesseral.inc; a process-wide depth counter, `tess::exact_grids_now()` true while
+any scope lives), read by xp_init as `exact_grid || tess::exact_grids_now()`; fit_oem.inc declares one in run_pass after the Jacobian
+fall-back's scope, alive to the end of the pass.
 
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
