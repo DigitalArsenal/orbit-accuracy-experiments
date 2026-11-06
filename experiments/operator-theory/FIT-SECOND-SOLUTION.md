@@ -194,6 +194,11 @@ FIT_RMS_KM to 0.021800715473184688 (the build is deterministic; the share-line b
 it, fit.inc's leftover `const NominalSat nominal(work);` in the fall-back (unused since Amendment 6) is removed; reported: whether the
 THEMIS A and Molniya fit numbers are unchanged by that removal. Guard E2E and fit.e2e.mjs PASS.
 
+Measured (modules c625f8124 on 23e209c9f, scratch build c1f22eea; 23e209c9f's build afde82e8 beside it): Molniya start 0 BTERM
+0.04461633761935712 and FIT_RMS_KM 0.021800715473184688 bit-equal on both builds, ITERATIONS 23; grid lookups 0 outside the fit, 153 by
+its sets (155 with the leftover NominalSat: its two fall-back passes' extra sets); cache 0 / 0 before and after. THEMIS A unchanged at
+the E2E's printed figures (104.8 m, BTERM 0.01215, 41 iterations, 236 lookups). Guard E2E and fit.e2e.mjs PASS.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
