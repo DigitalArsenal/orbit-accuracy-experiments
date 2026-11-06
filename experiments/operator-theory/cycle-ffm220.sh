@@ -2,7 +2,7 @@
 # Every FFM fit and flight behind results/ap-truth/compare/cells.json, again on propagator/ffm 2.2.0 (lib/build.mjs FFM_220, lib/host.mjs's FFM build)
 # at each arm's registered settings, on the same windows, files and pairs, into <archive>/operator-theory/ap/ffm220 beside the stores they replace in the
 # cells (COMPARE.md, 2026-11-05). FFM arms only: no AP, XP or SGP4 arm is run. A rerun adds only what is missing.
-#   cycle-ffm220.sh truth | providers | laser | examples | all
+#   cycle-ffm220.sh truth | providers | laser | laser-score | examples | all     (laser-score: the laser pairs' scoring alone, once every file is refitted)
 # Workers: at most 4 while the 1-minute load average is 40 or more, 8 below it (the coordinator, 2026-11-05: the machine is shared); a running worker is never stopped.
 set -u
 OT=/opt/data/sdn-archive/operator-theory
@@ -81,6 +81,7 @@ case "${1:-}" in
   truth) truth; truth_done ;;
   providers) providers ;;
   laser) laser ;;
+  laser-score) score "$O/cheaper" --weather-from 2026-02-20 ;;
   examples) examples ;;
   all) note start; truth; providers; laser; truth_done; examples; note finished ;;
   *) echo "truth, providers, laser or all" >&2; exit 2 ;;
