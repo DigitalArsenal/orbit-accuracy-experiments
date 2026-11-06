@@ -1,0 +1,135 @@
+{"date":"2000-01-01","year":2000,"type":"PAYLOAD","base_year":2000,"index":1}
+{"date":"2000-01-01","year":2000,"type":"ROCKET BODY","base_year":2000,"index":1}
+{"date":"2000-01-01","year":2000,"type":"DEBRIS","base_year":2000,"index":1}
+{"date":"2000-01-01","year":2000,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2000-01-01","year":2000,"type":"ALL","base_year":2000,"index":1}
+{"date":"2001-01-01","year":2001,"type":"PAYLOAD","base_year":2000,"index":1.0293752585850227}
+{"date":"2001-01-01","year":2001,"type":"ROCKET BODY","base_year":2000,"index":1.0041011619958988}
+{"date":"2001-01-01","year":2001,"type":"DEBRIS","base_year":2000,"index":1.0242541838467136}
+{"date":"2001-01-01","year":2001,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2001-01-01","year":2001,"type":"ALL","base_year":2000,"index":1.0221167062351617}
+{"date":"2002-01-01","year":2002,"type":"PAYLOAD","base_year":2000,"index":1.0413736036408772}
+{"date":"2002-01-01","year":2002,"type":"ROCKET BODY","base_year":2000,"index":0.9911141490088858}
+{"date":"2002-01-01","year":2002,"type":"DEBRIS","base_year":2000,"index":1.0109143827310212}
+{"date":"2002-01-01","year":2002,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2002-01-01","year":2002,"type":"ALL","base_year":2000,"index":1.017243533674872}
+{"date":"2003-01-01","year":2003,"type":"PAYLOAD","base_year":2000,"index":1.0599917252792719}
+{"date":"2003-01-01","year":2003,"type":"ROCKET BODY","base_year":2000,"index":0.9876965140123035}
+{"date":"2003-01-01","year":2003,"type":"DEBRIS","base_year":2000,"index":1.0099442153771525}
+{"date":"2003-01-01","year":2003,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2003-01-01","year":2003,"type":"ALL","base_year":2000,"index":1.0217418468074473}
+{"date":"2004-01-01","year":2004,"type":"PAYLOAD","base_year":2000,"index":1.0690939180802648}
+{"date":"2004-01-01","year":2004,"type":"ROCKET BODY","base_year":2000,"index":0.9952153110047847}
+{"date":"2004-01-01","year":2004,"type":"DEBRIS","base_year":2000,"index":1.0274072277467863}
+{"date":"2004-01-01","year":2004,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2004-01-01","year":2004,"type":"ALL","base_year":2000,"index":1.0341122079220293}
+{"date":"2005-01-01","year":2005,"type":"PAYLOAD","base_year":2000,"index":1.1042614811750104}
+{"date":"2005-01-01","year":2005,"type":"ROCKET BODY","base_year":2000,"index":1.0082023239917977}
+{"date":"2005-01-01","year":2005,"type":"DEBRIS","base_year":2000,"index":1.0582100412321125}
+{"date":"2005-01-01","year":2005,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2005-01-01","year":2005,"type":"ALL","base_year":2000,"index":1.062976383856054}
+{"date":"2006-01-01","year":2006,"type":"PAYLOAD","base_year":2000,"index":1.1203971865949525}
+{"date":"2006-01-01","year":2006,"type":"ROCKET BODY","base_year":2000,"index":1.015721120984279}
+{"date":"2006-01-01","year":2006,"type":"DEBRIS","base_year":2000,"index":1.0739752607324764}
+{"date":"2006-01-01","year":2006,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2006-01-01","year":2006,"type":"ALL","base_year":2000,"index":1.077470948394352}
+{"date":"2007-01-01","year":2007,"type":"PAYLOAD","base_year":2000,"index":1.146462556888705}
+{"date":"2007-01-01","year":2007,"type":"ROCKET BODY","base_year":2000,"index":1.036226930963773}
+{"date":"2007-01-01","year":2007,"type":"DEBRIS","base_year":2000,"index":1.1549842347804997}
+{"date":"2007-01-01","year":2007,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2007-01-01","year":2007,"type":"ALL","base_year":2000,"index":1.1307009871298264}
+{"date":"2008-01-01","year":2008,"type":"PAYLOAD","base_year":2000,"index":1.1779064956557717}
+{"date":"2008-01-01","year":2008,"type":"ROCKET BODY","base_year":2000,"index":1.0553656869446344}
+{"date":"2008-01-01","year":2008,"type":"DEBRIS","base_year":2000,"index":1.6740237691001698}
+{"date":"2008-01-01","year":2008,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2008-01-01","year":2008,"type":"ALL","base_year":2000,"index":1.4110958390603523}
+{"date":"2009-01-01","year":2009,"type":"PAYLOAD","base_year":2000,"index":1.2139015308233347}
+{"date":"2009-01-01","year":2009,"type":"ROCKET BODY","base_year":2000,"index":1.0799726589200274}
+{"date":"2009-01-01","year":2009,"type":"DEBRIS","base_year":2000,"index":1.75697307785593}
+{"date":"2009-01-01","year":2009,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2009-01-01","year":2009,"type":"ALL","base_year":2000,"index":1.4691990503561165}
+{"date":"2010-01-01","year":2010,"type":"PAYLOAD","base_year":2000,"index":1.2507240380637155}
+{"date":"2010-01-01","year":2010,"type":"ROCKET BODY","base_year":2000,"index":1.0991114149008885}
+{"date":"2010-01-01","year":2010,"type":"DEBRIS","base_year":2000,"index":2.2726170264370604}
+{"date":"2010-01-01","year":2010,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2010-01-01","year":2010,"type":"ALL","base_year":2000,"index":1.749468949144071}
+{"date":"2011-01-01","year":2011,"type":"PAYLOAD","base_year":2000,"index":1.2734795200661977}
+{"date":"2011-01-01","year":2011,"type":"ROCKET BODY","base_year":2000,"index":1.1216678058783323}
+{"date":"2011-01-01","year":2011,"type":"DEBRIS","base_year":2000,"index":2.3873393160320155}
+{"date":"2011-01-01","year":2011,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2011-01-01","year":2011,"type":"ALL","base_year":2000,"index":1.8195676621267025}
+{"date":"2012-01-01","year":2012,"type":"PAYLOAD","base_year":2000,"index":1.302027306578403}
+{"date":"2012-01-01","year":2012,"type":"ROCKET BODY","base_year":2000,"index":1.1360218728639782}
+{"date":"2012-01-01","year":2012,"type":"DEBRIS","base_year":2000,"index":2.354111084162018}
+{"date":"2012-01-01","year":2012,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2012-01-01","year":2012,"type":"ALL","base_year":2000,"index":1.8136948644258404}
+{"date":"2013-01-01","year":2013,"type":"PAYLOAD","base_year":2000,"index":1.3326437732726522}
+{"date":"2013-01-01","year":2013,"type":"ROCKET BODY","base_year":2000,"index":1.1551606288448393}
+{"date":"2013-01-01","year":2013,"type":"DEBRIS","base_year":2000,"index":2.427843803056027}
+{"date":"2013-01-01","year":2013,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2013-01-01","year":2013,"type":"ALL","base_year":2000,"index":1.864425840309884}
+{"date":"2014-01-01","year":2014,"type":"PAYLOAD","base_year":2000,"index":1.392221762515515}
+{"date":"2014-01-01","year":2014,"type":"ROCKET BODY","base_year":2000,"index":1.1654135338345866}
+{"date":"2014-01-01","year":2014,"type":"DEBRIS","base_year":2000,"index":2.372059180208586}
+{"date":"2014-01-01","year":2014,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2014-01-01","year":2014,"type":"ALL","base_year":2000,"index":1.8555541671873048}
+{"date":"2015-01-01","year":2015,"type":"PAYLOAD","base_year":2000,"index":1.4542821679768307}
+{"date":"2015-01-01","year":2015,"type":"ROCKET BODY","base_year":2000,"index":1.1790840738209158}
+{"date":"2015-01-01","year":2015,"type":"DEBRIS","base_year":2000,"index":2.390249818093621}
+{"date":"2015-01-01","year":2015,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2015-01-01","year":2015,"type":"ALL","base_year":2000,"index":1.886167687117331}
+{"date":"2016-01-01","year":2016,"type":"PAYLOAD","base_year":2000,"index":1.5184112536201904}
+{"date":"2016-01-01","year":2016,"type":"ROCKET BODY","base_year":2000,"index":1.2071086807928912}
+{"date":"2016-01-01","year":2016,"type":"DEBRIS","base_year":2000,"index":2.414746543778802}
+{"date":"2016-01-01","year":2016,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2016-01-01","year":2016,"type":"ALL","base_year":2000,"index":1.9234037236036485}
+{"date":"2017-01-01","year":2017,"type":"PAYLOAD","base_year":2000,"index":1.5779892428630533}
+{"date":"2017-01-01","year":2017,"type":"ROCKET BODY","base_year":2000,"index":1.2276144907723856}
+{"date":"2017-01-01","year":2017,"type":"DEBRIS","base_year":2000,"index":2.468348290080039}
+{"date":"2017-01-01","year":2017,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2017-01-01","year":2017,"type":"ALL","base_year":2000,"index":1.9727602149194052}
+{"date":"2018-01-01","year":2018,"type":"PAYLOAD","base_year":2000,"index":1.7401737691352916}
+{"date":"2018-01-01","year":2018,"type":"ROCKET BODY","base_year":2000,"index":1.2488038277511961}
+{"date":"2018-01-01","year":2018,"type":"DEBRIS","base_year":2000,"index":2.622604899345137}
+{"date":"2018-01-01","year":2018,"type":"UNKNOWN","base_year":2019,"index":null}
+{"date":"2018-01-01","year":2018,"type":"ALL","base_year":2000,"index":2.1053354991878046}
+{"date":"2019-01-01","year":2019,"type":"PAYLOAD","base_year":2000,"index":1.8547786512205213}
+{"date":"2019-01-01","year":2019,"type":"ROCKET BODY","base_year":2000,"index":1.3000683526999317}
+{"date":"2019-01-01","year":2019,"type":"DEBRIS","base_year":2000,"index":2.628183361629881}
+{"date":"2019-01-01","year":2019,"type":"UNKNOWN","base_year":2019,"index":1}
+{"date":"2019-01-01","year":2019,"type":"ALL","base_year":2000,"index":2.223416218917906}
+{"date":"2020-01-01","year":2020,"type":"PAYLOAD","base_year":2000,"index":2.0384774513860155}
+{"date":"2020-01-01","year":2020,"type":"ROCKET BODY","base_year":2000,"index":1.3889268626110731}
+{"date":"2020-01-01","year":2020,"type":"DEBRIS","base_year":2000,"index":2.6662624302692213}
+{"date":"2020-01-01","year":2020,"type":"UNKNOWN","base_year":2019,"index":0.9458987783595113}
+{"date":"2020-01-01","year":2020,"type":"ALL","base_year":2000,"index":2.3108834187179808}
+{"date":"2021-01-01","year":2021,"type":"PAYLOAD","base_year":2000,"index":2.5122052130740586}
+{"date":"2021-01-01","year":2021,"type":"ROCKET BODY","base_year":2000,"index":1.3998632946001368}
+{"date":"2021-01-01","year":2021,"type":"DEBRIS","base_year":2000,"index":2.832161047780742}
+{"date":"2021-01-01","year":2021,"type":"UNKNOWN","base_year":2019,"index":1.4223385689354275}
+{"date":"2021-01-01","year":2021,"type":"ALL","base_year":2000,"index":2.5755341746844933}
+{"date":"2022-01-01","year":2022,"type":"PAYLOAD","base_year":2000,"index":3.170045510964005}
+{"date":"2022-01-01","year":2022,"type":"ROCKET BODY","base_year":2000,"index":1.4210526315789473}
+{"date":"2022-01-01","year":2022,"type":"DEBRIS","base_year":2000,"index":3.1173902498180937}
+{"date":"2022-01-01","year":2022,"type":"UNKNOWN","base_year":2019,"index":1.4031413612565444}
+{"date":"2022-01-01","year":2022,"type":"ALL","base_year":2000,"index":2.9236536298887916}
+{"date":"2023-01-01","year":2023,"type":"PAYLOAD","base_year":2000,"index":3.958212660322714}
+{"date":"2023-01-01","year":2023,"type":"ROCKET BODY","base_year":2000,"index":1.4524948735475052}
+{"date":"2023-01-01","year":2023,"type":"DEBRIS","base_year":2000,"index":2.880184331797235}
+{"date":"2023-01-01","year":2023,"type":"UNKNOWN","base_year":2019,"index":1.4677137870855148}
+{"date":"2023-01-01","year":2023,"type":"ALL","base_year":2000,"index":3.0498563038860427}
+{"date":"2024-01-01","year":2024,"type":"PAYLOAD","base_year":2000,"index":4.853951179147704}
+{"date":"2024-01-01","year":2024,"type":"ROCKET BODY","base_year":2000,"index":1.47095010252905}
+{"date":"2024-01-01","year":2024,"type":"DEBRIS","base_year":2000,"index":2.672568518069367}
+{"date":"2024-01-01","year":2024,"type":"UNKNOWN","base_year":2019,"index":1.1221640488656195}
+{"date":"2024-01-01","year":2024,"type":"ALL","base_year":2000,"index":3.19205298013245}
+{"date":"2025-01-01","year":2025,"type":"PAYLOAD","base_year":2000,"index":5.5453040959867606}
+{"date":"2025-01-01","year":2025,"type":"ROCKET BODY","base_year":2000,"index":1.4791524265208476}
+{"date":"2025-01-01","year":2025,"type":"DEBRIS","base_year":2000,"index":2.5731263642978415}
+{"date":"2025-01-01","year":2025,"type":"UNKNOWN","base_year":2019,"index":1.3350785340314135}
+{"date":"2025-01-01","year":2025,"type":"ALL","base_year":2000,"index":3.3663626140197427}
+{"date":"2026-01-01","year":2026,"type":"PAYLOAD","base_year":2000,"index":6.94952420355813}
+{"date":"2026-01-01","year":2026,"type":"ROCKET BODY","base_year":2000,"index":1.4955570745044429}
+{"date":"2026-01-01","year":2026,"type":"DEBRIS","base_year":2000,"index":2.436575309240844}
+{"date":"2026-01-01","year":2026,"type":"UNKNOWN","base_year":2019,"index":1.050610820244328}
+{"date":"2026-01-01","year":2026,"type":"ALL","base_year":2000,"index":3.7027364738223167}

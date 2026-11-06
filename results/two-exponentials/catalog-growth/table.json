@@ -1,0 +1,1071 @@
+{
+  "registration": "experiments/two-exponentials/CATALOG-GROWTH.md",
+  "window_days": 30,
+  "eras": [
+    {
+      "name": "2000-2009",
+      "from": 2000,
+      "to": 2009
+    },
+    {
+      "name": "2010-2017",
+      "from": 2010,
+      "to": 2017
+    },
+    {
+      "name": "2018-2026",
+      "from": 2018,
+      "to": 2026
+    },
+    {
+      "name": "2000-2026",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "index_by_year": {
+    "PAYLOAD": [
+      {
+        "year": 2000,
+        "base_year": 2000,
+        "index": 1
+      },
+      {
+        "year": 2001,
+        "base_year": 2000,
+        "index": 1.0293752585850227
+      },
+      {
+        "year": 2002,
+        "base_year": 2000,
+        "index": 1.0413736036408772
+      },
+      {
+        "year": 2003,
+        "base_year": 2000,
+        "index": 1.0599917252792719
+      },
+      {
+        "year": 2004,
+        "base_year": 2000,
+        "index": 1.0690939180802648
+      },
+      {
+        "year": 2005,
+        "base_year": 2000,
+        "index": 1.1042614811750104
+      },
+      {
+        "year": 2006,
+        "base_year": 2000,
+        "index": 1.1203971865949525
+      },
+      {
+        "year": 2007,
+        "base_year": 2000,
+        "index": 1.146462556888705
+      },
+      {
+        "year": 2008,
+        "base_year": 2000,
+        "index": 1.1779064956557717
+      },
+      {
+        "year": 2009,
+        "base_year": 2000,
+        "index": 1.2139015308233347
+      },
+      {
+        "year": 2010,
+        "base_year": 2000,
+        "index": 1.2507240380637155
+      },
+      {
+        "year": 2011,
+        "base_year": 2000,
+        "index": 1.2734795200661977
+      },
+      {
+        "year": 2012,
+        "base_year": 2000,
+        "index": 1.302027306578403
+      },
+      {
+        "year": 2013,
+        "base_year": 2000,
+        "index": 1.3326437732726522
+      },
+      {
+        "year": 2014,
+        "base_year": 2000,
+        "index": 1.392221762515515
+      },
+      {
+        "year": 2015,
+        "base_year": 2000,
+        "index": 1.4542821679768307
+      },
+      {
+        "year": 2016,
+        "base_year": 2000,
+        "index": 1.5184112536201904
+      },
+      {
+        "year": 2017,
+        "base_year": 2000,
+        "index": 1.5779892428630533
+      },
+      {
+        "year": 2018,
+        "base_year": 2000,
+        "index": 1.7401737691352916
+      },
+      {
+        "year": 2019,
+        "base_year": 2000,
+        "index": 1.8547786512205213
+      },
+      {
+        "year": 2020,
+        "base_year": 2000,
+        "index": 2.0384774513860155
+      },
+      {
+        "year": 2021,
+        "base_year": 2000,
+        "index": 2.5122052130740586
+      },
+      {
+        "year": 2022,
+        "base_year": 2000,
+        "index": 3.170045510964005
+      },
+      {
+        "year": 2023,
+        "base_year": 2000,
+        "index": 3.958212660322714
+      },
+      {
+        "year": 2024,
+        "base_year": 2000,
+        "index": 4.853951179147704
+      },
+      {
+        "year": 2025,
+        "base_year": 2000,
+        "index": 5.5453040959867606
+      },
+      {
+        "year": 2026,
+        "base_year": 2000,
+        "index": 6.94952420355813
+      }
+    ],
+    "ROCKET BODY": [
+      {
+        "year": 2000,
+        "base_year": 2000,
+        "index": 1
+      },
+      {
+        "year": 2001,
+        "base_year": 2000,
+        "index": 1.0041011619958988
+      },
+      {
+        "year": 2002,
+        "base_year": 2000,
+        "index": 0.9911141490088858
+      },
+      {
+        "year": 2003,
+        "base_year": 2000,
+        "index": 0.9876965140123035
+      },
+      {
+        "year": 2004,
+        "base_year": 2000,
+        "index": 0.9952153110047847
+      },
+      {
+        "year": 2005,
+        "base_year": 2000,
+        "index": 1.0082023239917977
+      },
+      {
+        "year": 2006,
+        "base_year": 2000,
+        "index": 1.015721120984279
+      },
+      {
+        "year": 2007,
+        "base_year": 2000,
+        "index": 1.036226930963773
+      },
+      {
+        "year": 2008,
+        "base_year": 2000,
+        "index": 1.0553656869446344
+      },
+      {
+        "year": 2009,
+        "base_year": 2000,
+        "index": 1.0799726589200274
+      },
+      {
+        "year": 2010,
+        "base_year": 2000,
+        "index": 1.0991114149008885
+      },
+      {
+        "year": 2011,
+        "base_year": 2000,
+        "index": 1.1216678058783323
+      },
+      {
+        "year": 2012,
+        "base_year": 2000,
+        "index": 1.1360218728639782
+      },
+      {
+        "year": 2013,
+        "base_year": 2000,
+        "index": 1.1551606288448393
+      },
+      {
+        "year": 2014,
+        "base_year": 2000,
+        "index": 1.1654135338345866
+      },
+      {
+        "year": 2015,
+        "base_year": 2000,
+        "index": 1.1790840738209158
+      },
+      {
+        "year": 2016,
+        "base_year": 2000,
+        "index": 1.2071086807928912
+      },
+      {
+        "year": 2017,
+        "base_year": 2000,
+        "index": 1.2276144907723856
+      },
+      {
+        "year": 2018,
+        "base_year": 2000,
+        "index": 1.2488038277511961
+      },
+      {
+        "year": 2019,
+        "base_year": 2000,
+        "index": 1.3000683526999317
+      },
+      {
+        "year": 2020,
+        "base_year": 2000,
+        "index": 1.3889268626110731
+      },
+      {
+        "year": 2021,
+        "base_year": 2000,
+        "index": 1.3998632946001368
+      },
+      {
+        "year": 2022,
+        "base_year": 2000,
+        "index": 1.4210526315789473
+      },
+      {
+        "year": 2023,
+        "base_year": 2000,
+        "index": 1.4524948735475052
+      },
+      {
+        "year": 2024,
+        "base_year": 2000,
+        "index": 1.47095010252905
+      },
+      {
+        "year": 2025,
+        "base_year": 2000,
+        "index": 1.4791524265208476
+      },
+      {
+        "year": 2026,
+        "base_year": 2000,
+        "index": 1.4955570745044429
+      }
+    ],
+    "DEBRIS": [
+      {
+        "year": 2000,
+        "base_year": 2000,
+        "index": 1
+      },
+      {
+        "year": 2001,
+        "base_year": 2000,
+        "index": 1.0242541838467136
+      },
+      {
+        "year": 2002,
+        "base_year": 2000,
+        "index": 1.0109143827310212
+      },
+      {
+        "year": 2003,
+        "base_year": 2000,
+        "index": 1.0099442153771525
+      },
+      {
+        "year": 2004,
+        "base_year": 2000,
+        "index": 1.0274072277467863
+      },
+      {
+        "year": 2005,
+        "base_year": 2000,
+        "index": 1.0582100412321125
+      },
+      {
+        "year": 2006,
+        "base_year": 2000,
+        "index": 1.0739752607324764
+      },
+      {
+        "year": 2007,
+        "base_year": 2000,
+        "index": 1.1549842347804997
+      },
+      {
+        "year": 2008,
+        "base_year": 2000,
+        "index": 1.6740237691001698
+      },
+      {
+        "year": 2009,
+        "base_year": 2000,
+        "index": 1.75697307785593
+      },
+      {
+        "year": 2010,
+        "base_year": 2000,
+        "index": 2.2726170264370604
+      },
+      {
+        "year": 2011,
+        "base_year": 2000,
+        "index": 2.3873393160320155
+      },
+      {
+        "year": 2012,
+        "base_year": 2000,
+        "index": 2.354111084162018
+      },
+      {
+        "year": 2013,
+        "base_year": 2000,
+        "index": 2.427843803056027
+      },
+      {
+        "year": 2014,
+        "base_year": 2000,
+        "index": 2.372059180208586
+      },
+      {
+        "year": 2015,
+        "base_year": 2000,
+        "index": 2.390249818093621
+      },
+      {
+        "year": 2016,
+        "base_year": 2000,
+        "index": 2.414746543778802
+      },
+      {
+        "year": 2017,
+        "base_year": 2000,
+        "index": 2.468348290080039
+      },
+      {
+        "year": 2018,
+        "base_year": 2000,
+        "index": 2.622604899345137
+      },
+      {
+        "year": 2019,
+        "base_year": 2000,
+        "index": 2.628183361629881
+      },
+      {
+        "year": 2020,
+        "base_year": 2000,
+        "index": 2.6662624302692213
+      },
+      {
+        "year": 2021,
+        "base_year": 2000,
+        "index": 2.832161047780742
+      },
+      {
+        "year": 2022,
+        "base_year": 2000,
+        "index": 3.1173902498180937
+      },
+      {
+        "year": 2023,
+        "base_year": 2000,
+        "index": 2.880184331797235
+      },
+      {
+        "year": 2024,
+        "base_year": 2000,
+        "index": 2.672568518069367
+      },
+      {
+        "year": 2025,
+        "base_year": 2000,
+        "index": 2.5731263642978415
+      },
+      {
+        "year": 2026,
+        "base_year": 2000,
+        "index": 2.436575309240844
+      }
+    ],
+    "UNKNOWN": [
+      {
+        "year": 2000,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2001,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2002,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2003,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2004,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2005,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2006,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2007,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2008,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2009,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2010,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2011,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2012,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2013,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2014,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2015,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2016,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2017,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2018,
+        "base_year": 2019,
+        "index": null
+      },
+      {
+        "year": 2019,
+        "base_year": 2019,
+        "index": 1
+      },
+      {
+        "year": 2020,
+        "base_year": 2019,
+        "index": 0.9458987783595113
+      },
+      {
+        "year": 2021,
+        "base_year": 2019,
+        "index": 1.4223385689354275
+      },
+      {
+        "year": 2022,
+        "base_year": 2019,
+        "index": 1.4031413612565444
+      },
+      {
+        "year": 2023,
+        "base_year": 2019,
+        "index": 1.4677137870855148
+      },
+      {
+        "year": 2024,
+        "base_year": 2019,
+        "index": 1.1221640488656195
+      },
+      {
+        "year": 2025,
+        "base_year": 2019,
+        "index": 1.3350785340314135
+      },
+      {
+        "year": 2026,
+        "base_year": 2019,
+        "index": 1.050610820244328
+      }
+    ],
+    "ALL": [
+      {
+        "year": 2000,
+        "base_year": 2000,
+        "index": 1
+      },
+      {
+        "year": 2001,
+        "base_year": 2000,
+        "index": 1.0221167062351617
+      },
+      {
+        "year": 2002,
+        "base_year": 2000,
+        "index": 1.017243533674872
+      },
+      {
+        "year": 2003,
+        "base_year": 2000,
+        "index": 1.0217418468074473
+      },
+      {
+        "year": 2004,
+        "base_year": 2000,
+        "index": 1.0341122079220293
+      },
+      {
+        "year": 2005,
+        "base_year": 2000,
+        "index": 1.062976383856054
+      },
+      {
+        "year": 2006,
+        "base_year": 2000,
+        "index": 1.077470948394352
+      },
+      {
+        "year": 2007,
+        "base_year": 2000,
+        "index": 1.1307009871298264
+      },
+      {
+        "year": 2008,
+        "base_year": 2000,
+        "index": 1.4110958390603523
+      },
+      {
+        "year": 2009,
+        "base_year": 2000,
+        "index": 1.4691990503561165
+      },
+      {
+        "year": 2010,
+        "base_year": 2000,
+        "index": 1.749468949144071
+      },
+      {
+        "year": 2011,
+        "base_year": 2000,
+        "index": 1.8195676621267025
+      },
+      {
+        "year": 2012,
+        "base_year": 2000,
+        "index": 1.8136948644258404
+      },
+      {
+        "year": 2013,
+        "base_year": 2000,
+        "index": 1.864425840309884
+      },
+      {
+        "year": 2014,
+        "base_year": 2000,
+        "index": 1.8555541671873048
+      },
+      {
+        "year": 2015,
+        "base_year": 2000,
+        "index": 1.886167687117331
+      },
+      {
+        "year": 2016,
+        "base_year": 2000,
+        "index": 1.9234037236036485
+      },
+      {
+        "year": 2017,
+        "base_year": 2000,
+        "index": 1.9727602149194052
+      },
+      {
+        "year": 2018,
+        "base_year": 2000,
+        "index": 2.1053354991878046
+      },
+      {
+        "year": 2019,
+        "base_year": 2000,
+        "index": 2.223416218917906
+      },
+      {
+        "year": 2020,
+        "base_year": 2000,
+        "index": 2.3108834187179808
+      },
+      {
+        "year": 2021,
+        "base_year": 2000,
+        "index": 2.5755341746844933
+      },
+      {
+        "year": 2022,
+        "base_year": 2000,
+        "index": 2.9236536298887916
+      },
+      {
+        "year": 2023,
+        "base_year": 2000,
+        "index": 3.0498563038860427
+      },
+      {
+        "year": 2024,
+        "base_year": 2000,
+        "index": 3.19205298013245
+      },
+      {
+        "year": 2025,
+        "base_year": 2000,
+        "index": 3.3663626140197427
+      },
+      {
+        "year": 2026,
+        "base_year": 2000,
+        "index": 3.7027364738223167
+      }
+    ]
+  },
+  "cells": [
+    {
+      "type": "PAYLOAD",
+      "era": "2000-2009",
+      "n": 10,
+      "slope_log": 0.0204084674169368,
+      "time_years": 33.96370567173059,
+      "time_kind": "doubling",
+      "time_lo": 30.92131467731542,
+      "time_hi": 37.67012107886552,
+      "delta_aic": 3.4195788397344273,
+      "pass": {
+        "exp_true_E": 0.188,
+        "exp_true_L": 0.079,
+        "lin_true_L": 0.145,
+        "lin_true_E": 0.053
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "PAYLOAD",
+      "era": "2010-2017",
+      "n": 8,
+      "slope_log": 0.03431030341909531,
+      "time_years": 20.20230401618005,
+      "time_kind": "doubling",
+      "time_lo": 17.50293772925899,
+      "time_hi": 23.886105495561026,
+      "delta_aic": 2.7191634004528993,
+      "pass": {
+        "exp_true_E": 0.18,
+        "exp_true_L": 0.088,
+        "lin_true_L": 0.141,
+        "lin_true_E": 0.071
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "PAYLOAD",
+      "era": "2018-2026",
+      "n": 9,
+      "slope_log": 0.1835687091782677,
+      "time_years": 3.775954974367742,
+      "time_kind": "doubling",
+      "time_lo": 3.404383004895896,
+      "time_hi": 4.238574969505903,
+      "delta_aic": 15.04379455733709,
+      "pass": {
+        "exp_true_E": 0.979,
+        "exp_true_L": 0.004,
+        "lin_true_L": 0.815,
+        "lin_true_E": 0.062
+      },
+      "verdict": "exponential",
+      "direction": "growth"
+    },
+    {
+      "type": "PAYLOAD",
+      "era": "2000-2026",
+      "n": 27,
+      "slope_log": 0.06280040643925544,
+      "time_years": 11.037304053603561,
+      "time_kind": "doubling",
+      "time_lo": 9.12082430431688,
+      "time_hi": 13.9734170537351,
+      "delta_aic": 43.95942703902767,
+      "pass": {
+        "exp_true_E": 0.958,
+        "exp_true_L": 0.014,
+        "lin_true_L": 0.801,
+        "lin_true_E": 0.091
+      },
+      "verdict": "exponential",
+      "direction": "growth"
+    },
+    {
+      "type": "ROCKET BODY",
+      "era": "2000-2009",
+      "n": 10,
+      "slope_log": 0.0082451089335345,
+      "time_years": 84.06768014195393,
+      "time_kind": "doubling",
+      "time_lo": 55.50013898217611,
+      "time_hi": 173.23868876500717,
+      "delta_aic": 0.34768683968572134,
+      "pass": {
+        "exp_true_E": 0,
+        "exp_true_L": 0,
+        "lin_true_L": 0,
+        "lin_true_E": 0
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "ROCKET BODY",
+      "era": "2010-2017",
+      "n": 8,
+      "slope_log": 0.015017912954552418,
+      "time_years": 46.154694241308,
+      "time_kind": "doubling",
+      "time_lo": 41.92232984291551,
+      "time_hi": 51.33759856137522,
+      "delta_aic": 1.0430785635665956,
+      "pass": {
+        "exp_true_E": 0.06,
+        "exp_true_L": 0.03,
+        "lin_true_L": 0.046,
+        "lin_true_E": 0.027
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "ROCKET BODY",
+      "era": "2018-2026",
+      "n": 9,
+      "slope_log": 0.021001165660071555,
+      "time_years": 33.005176559213126,
+      "time_kind": "doubling",
+      "time_lo": 24.927664710643878,
+      "time_hi": 48.82697395793057,
+      "delta_aic": -1.6224760792532464,
+      "pass": {
+        "exp_true_E": 0.004,
+        "exp_true_L": 0.003,
+        "lin_true_L": 0.01,
+        "lin_true_E": 0.004
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "ROCKET BODY",
+      "era": "2000-2026",
+      "n": 27,
+      "slope_log": 0.017841460288747283,
+      "time_years": 38.85036142457002,
+      "time_kind": "doubling",
+      "time_lo": 35.87919009607473,
+      "time_hi": 42.35804995427521,
+      "delta_aic": 11.301362852019082,
+      "pass": {
+        "exp_true_E": 0.653,
+        "exp_true_L": 0.077,
+        "lin_true_L": 0.593,
+        "lin_true_E": 0.08
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "DEBRIS",
+      "era": "2000-2009",
+      "n": 10,
+      "slope_log": 0.05691699269386069,
+      "time_years": 12.178211598215924,
+      "time_kind": "doubling",
+      "time_lo": 7.6184617829094705,
+      "time_hi": 30.33278080050802,
+      "delta_aic": 3.8847848928157234,
+      "pass": {
+        "exp_true_E": 0.199,
+        "exp_true_L": 0.057,
+        "lin_true_L": 0.253,
+        "lin_true_E": 0.073
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "DEBRIS",
+      "era": "2010-2017",
+      "n": 8,
+      "slope_log": 0.007831588102287818,
+      "time_years": 88.50659298047842,
+      "time_kind": "doubling",
+      "time_lo": 49.45515639745962,
+      "time_hi": 420.7252286802502,
+      "delta_aic": -0.1711126032747572,
+      "pass": {
+        "exp_true_E": 0,
+        "exp_true_L": 0,
+        "lin_true_L": 0,
+        "lin_true_E": 0
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "DEBRIS",
+      "era": "2018-2026",
+      "n": 9,
+      "slope_log": -0.005604550035572957,
+      "time_years": 123.6757948738849,
+      "time_kind": "halving",
+      "time_lo": null,
+      "time_hi": 24.201692272770497,
+      "delta_aic": 0.4978395323409579,
+      "pass": {
+        "exp_true_E": 0.001,
+        "exp_true_L": 0,
+        "lin_true_L": 0.001,
+        "lin_true_E": 0
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "DEBRIS",
+      "era": "2000-2026",
+      "n": 27,
+      "slope_log": 0.0468653723154325,
+      "time_years": 14.790177615460783,
+      "time_kind": "doubling",
+      "time_lo": 12.263762010052737,
+      "time_hi": 18.62758197406852,
+      "delta_aic": -8.472679977675007,
+      "pass": {
+        "exp_true_E": 0.875,
+        "exp_true_L": 0.04,
+        "lin_true_L": 0.833,
+        "lin_true_E": 0.062
+      },
+      "verdict": "linear",
+      "direction": null
+    },
+    {
+      "type": "UNKNOWN",
+      "era": "2000-2009",
+      "n": 0,
+      "verdict": "undecided",
+      "reason": "insufficient or non-positive points"
+    },
+    {
+      "type": "UNKNOWN",
+      "era": "2010-2017",
+      "n": 0,
+      "verdict": "undecided",
+      "reason": "insufficient or non-positive points"
+    },
+    {
+      "type": "UNKNOWN",
+      "era": "2018-2026",
+      "n": 8,
+      "slope_log": 0.016696589117586542,
+      "time_years": 41.514298260466404,
+      "time_kind": "doubling",
+      "time_lo": 8.005075585938238,
+      "time_hi": "none",
+      "delta_aic": 0.02720962952069783,
+      "pass": {
+        "exp_true_E": 0.039,
+        "exp_true_L": 0.009,
+        "lin_true_L": 0.035,
+        "lin_true_E": 0.008
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "UNKNOWN",
+      "era": "2000-2026",
+      "n": 8,
+      "slope_log": 0.016696589117586542,
+      "time_years": 41.514298260466404,
+      "time_kind": "doubling",
+      "time_lo": 8.005075585938238,
+      "time_hi": "none",
+      "delta_aic": 0.02720962952069783,
+      "pass": {
+        "exp_true_E": 0.044,
+        "exp_true_L": 0.008,
+        "lin_true_L": 0.041,
+        "lin_true_E": 0.007
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "ALL",
+      "era": "2000-2009",
+      "n": 10,
+      "slope_log": 0.03900273817946545,
+      "time_years": 17.771756879492123,
+      "time_kind": "doubling",
+      "time_lo": 11.700016994467905,
+      "time_hi": 36.943784655294294,
+      "delta_aic": 2.7511977154011404,
+      "pass": {
+        "exp_true_E": 0.071,
+        "exp_true_L": 0.027,
+        "lin_true_L": 0.1,
+        "lin_true_E": 0.028
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "ALL",
+      "era": "2010-2017",
+      "n": 8,
+      "slope_log": 0.014656074810331286,
+      "time_years": 47.29418957873601,
+      "time_kind": "doubling",
+      "time_lo": 37.33044973280668,
+      "time_hi": 64.51317582642326,
+      "delta_aic": -0.03852002821240319,
+      "pass": {
+        "exp_true_E": 0.001,
+        "exp_true_L": 0,
+        "lin_true_L": 0.003,
+        "lin_true_E": 0.001
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "ALL",
+      "era": "2018-2026",
+      "n": 9,
+      "slope_log": 0.0719643232869784,
+      "time_years": 9.631816835070094,
+      "time_kind": "doubling",
+      "time_lo": 8.612632110751075,
+      "time_hi": 10.924589417294401,
+      "delta_aic": 0.14192838516461137,
+      "pass": {
+        "exp_true_E": 0.649,
+        "exp_true_L": 0.105,
+        "lin_true_L": 0.653,
+        "lin_true_E": 0.091
+      },
+      "verdict": "undecided",
+      "direction": null
+    },
+    {
+      "type": "ALL",
+      "era": "2000-2026",
+      "n": 27,
+      "slope_log": 0.05142052630041584,
+      "time_years": 13.479970557095207,
+      "time_kind": "doubling",
+      "time_lo": 12.482423646476493,
+      "time_hi": 14.650806195450647,
+      "delta_aic": 25.547272066603426,
+      "pass": {
+        "exp_true_E": 0.994,
+        "exp_true_L": 0.001,
+        "lin_true_L": 0.971,
+        "lin_true_E": 0.013
+      },
+      "verdict": "exponential",
+      "direction": "growth"
+    }
+  ]
+}
