@@ -88,3 +88,22 @@ Memory: fixed 3.0 MB, element-linear 12.1 MB (grid and three derivative grids) p
 | THEMIS E 2013-02-16 | 3,674 | 279.9 | 20,281 | 2,732.6 |
 | TESS 2026-07-27 | 211 | 51.1 | 1,880 | 324.3 |
 Base: the modules 34b1b2c58 dist (sdn-ap 0.6.1, SHA-256 05dd4a6600fb4c65...); 0.6.2 was not yet on origin/main.
+Separate finding (not fixed here): the base costs about 9 times 0.4.11 per step on THEMIS (2,545 against 276 us on D) and 6.3 times on
+TESS (324 against 51 us), and 10 to 16 times per fit on THEMIS. The wide tesseral table is not it: its sum (sp_six) costs 5.1 / 5.4 us
+per step in the native harness. TESS, at about 38 Earth radii, carries almost no tesseral term above the 0.5 m keep and still shows
+6.3 times, so the cost sits in other parts added from 0.4.15 on; this run did not profile them and names no part.
+
+## Amendment 6: the closed-form init (resum3.cpp; proto-d.json, proto-e.json)
+| Window | NE (E nodes) | Families | Build (ms, native, one core) | Grid against the harmonic-sum grid (max relative) | Cubic N = 128 against the quadrature: RMS / max / roughness of the difference (m) |
+| --- | --: | --: | --: | --: | --: |
+| THEMIS D 2013-02-12 | 256 | 287 | 34.3 | 3.2e-10 | 0.119 / 2.33 / 0.0032 |
+| THEMIS D 2013-02-12 | 1024 | 287 | 144.6 | 3.2e-10 | 0.119 / 2.33 / 0.0032 |
+| THEMIS E 2013-02-16 | 256 | 288 | 34.0 | 2.8e-10 | 0.130 / 2.57 / 0.0034 |
+| THEMIS E 2013-02-16 | 1024 | 288 | 141.2 | 2.8e-10 | 0.130 / 2.57 / 0.0034 |
+The closed form reproduces the grid to 3e-10 at 256 nodes; it subtracts 105 left-out harmonics (42 m-daily, 27 class, 36 slow).
+
+## Report only: the e 0.3 switch (switch-e029.json, switch-e030.json; THEMIS D's n, i and angles at e 0.29 and 0.30)
+Today's narrow set (q in {-1, 0, 1}; 15 terms kept) against the full-field quadrature: e 0.29 20.9 m RMS, 42.6 m max, 0.036 m roughness
+of the difference; e 0.30 21.4 m RMS, 44.0 m max, 0.036 m. Both exceed the RMS and maximum bounds (1 m, 5 m): an object crossing e 0.3
+in flight steps by up to about 44 m between the narrow set and a grid, and the narrow set itself is 21 m RMS from the field at these
+elements. Sent to the coordinator.
