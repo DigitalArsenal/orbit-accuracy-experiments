@@ -28,8 +28,8 @@ import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
-// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-next-build-20261105): sdn-ap 0.6.2, its committed dist by SHA-256.
-const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.2', commit: 'c82160de7b1dd1867b04c105049e2dcfe8ab4d68', sha256: '84d50dca4efdfea87eff7e3b4618d795c26a7d0a6df0e877341e69bc73161f41' };
+// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-0-6-3-20261106): sdn-ap 0.6.3, its committed dist by SHA-256.
+const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.3', commit: '93cb5a0584fa728864e4426cc9ceb368936589f9', sha256: 'aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e' };
 // The examples flown again on it: every one but the highly elliptical (TESS) examples, which the site withholds.
 const FLOWN_AGAIN = (d) => d.regime !== 'Highly elliptical';
 if (args.check) {
