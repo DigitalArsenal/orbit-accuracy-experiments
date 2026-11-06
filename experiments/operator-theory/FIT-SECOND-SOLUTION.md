@@ -105,3 +105,22 @@ the 359 m stall, above line 1's 120.5 m (not built); rule C does not fire (A2 la
 2026-11-06): no fitter change in 0.6.3. test/fit-second-solution.e2e.mjs stays as the THEMIS A regression guard on the grid (line 1's
 bounds; the LEO AP, LEO SGP4XP and synthetic GEO fits byte-identical to 0.6.2) and lands with the 0.6.3 binary. Lines 2 and 3 are not
 measured for a rule, since none is taken.
+
+## Amendment 3 (2026-11-06, SDN-AP ruling: fix (i) for the Molniya fitted-drag regression), registered before any row it governs
+
+What: the tesseral grid shares one grid among sets within its tolerances (SPEC 16.11), so a fit's finite-difference partials, taken on
+copies a few 1e-7 away from the nominal, read the nominal's grid and miss the grid's own change with the elements; on Molniya the BTERM
+partial is biased by that. The ripple lane adds a per-set exact-grid flag to the propagation context (its name and semantics in SPEC
+16.11 on its WIP ref): a set initialised with it builds and keeps its own grid at its own elements.
+
+Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
+fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
+fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
+alike; it is never set on a flight or on covariance propagation outside the fit. No other change.
+
+Expected effect: the BTERM partial no longer biased by shared grids; below e 0.3 no grid is built, so those fits are byte-identical.
+
+Acceptance (the ripple lane's 6-window Molniya set, its paired rule: ratio candidate / 0.6.2 of the 3D RMS per window at days 1, 3 and
+7, median with the 95 % window-cluster bootstrap, upper bound at most 1.05 at each day); fit time per window against 0.6.2's 25.3 s
+median and fit peak wasm memory, reported beside; the guard E2E (test/fit-second-solution.e2e.mjs) and the fit E2Es PASS, byte-identical
+where no grid is used.
