@@ -184,20 +184,20 @@ async function windowsOf() {
 }
 
 // the JVM workers
-// The heap bounds (DSST.md, amendment 2026-11-06 (memory)): a cost JVM runs on a fixed heap, 4x the largest live set of the grid-check
-// windows, with every GC logged, so DSST's peak memory is the largest heap used after a GC during the window's fit and flight; an
-// accuracy JVM runs under a bound well above the live set. The governor's memory guard drains a JVM by naming its PID in DRAIN: the
+// The heap bounds (DSST.md, amendments 2026-11-06 (memory), (cost heap) and (heap calibration)): a cost JVM runs on a fixed 8 GiB heap
+// with every GC logged; each cost row records the largest heap after a full collection during the window and the JVM's resident set,
+// sampled once a second; an accuracy JVM runs under a bound well above the live set. The governor's memory guard drains a JVM by naming its PID in DRAIN: the
 // worker takes no further window, and a run left with windows exits 3 so its chain runs the store again later.
 const COST_HEAP = '8g', ACCURACY_HEAP = '16g';
 if (COST && !COST_HEAP) throw new Error('cost: the fixed heap is not yet registered (DSST.md, amendment 2026-11-06 (memory)); no cost row is written');
 const DRAIN = '/Users/tj/software/terrain-work/body-look/claude-dsst-d9/run2/drain.pids';
 const drained = (pid) => { try { return fs.readFileSync(DRAIN, 'utf8').split(/\s+/).includes(String(pid)); } catch { return false; } };
 const UNIT = { K: 1024, M: 1048576, G: 1073741824 };
-/** The largest heap used after a GC between t0 and t1 (ms), from the JVM's GC log (-Xlog:gc:file=...:utctime); null when none ran. */
-function liveHeapMax(file, t0, t1) {
+/** The largest heap after a full collection between t0 and t1 (ms), from the JVM's GC log (-Xlog:gc:file=...:utctime); null when none ran. */
+function fullGcHeapMax(file, t0, t1) {
   let best = null;
   for (const l of (fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '').split('\n')) {
-    const m = /^\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+)([+-]\d\d)(\d\d)\].*Pause.* (\d+)([KMG])->(\d+)([KMG])\(/.exec(l);
+    const m = /^\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+)([+-]\d\d)(\d\d)\].*Pause Full.* (\d+)([KMG])->(\d+)([KMG])\(/.exec(l);
     if (!m) continue;
     const t = Date.parse(`${m[1]}${m[2]}:${m[3]}`);
     if (t < t0 || t > t1) continue;
@@ -205,6 +205,16 @@ function liveHeapMax(file, t0, t1) {
     if (best === null || after > best) best = after;
   }
   return best;
+}
+/** Samples the cost JVM's resident set once a second (the JVM is the child of /usr/bin/time, which execs nice, which execs java). */
+function rssSampler(wk) {
+  wk.javaPid ??= execFileSync('pgrep', ['-P', String(wk.pid)]).toString().trim().split('\n')[0];
+  const out = { max: null };
+  const sample = () => { try { const kb = Number(execFileSync('ps', ['-o', 'rss=', '-p', wk.javaPid]).toString().trim()); if (kb > 0) out.max = Math.max(out.max ?? 0, kb * 1024); } catch {} };
+  sample();
+  const timer = setInterval(sample, 1000);
+  out.stop = () => { clearInterval(timer); sample(); return out.max; };
+  return out;
 }
 function worker(id) {
   const gcLog = path.join(SCRATCH, `gc-${process.pid}-${id}.log`);
@@ -286,9 +296,9 @@ async function main() {
         row.eopSha256 = sha256(finals); row.eopTableSha256 = EOP_TABLE_SHA;
         const req = path.join(dir, 'request.txt');
         fs.writeFileSync(req, [`key ${w.key}`, `cutoff ${iso(D0)}`, `fit ${hours}`, `dragBelowKm ${DRAG_BELOW_KM}`, `window ${dir}`, `arc ${thin.length}`, ...thin.map((l) => `${l.epoch} ${l.r.join(' ')} ${l.v.join(' ')}`), `out ${epochs.length}`, ...epochs].join('\n') + '\n');
-        const load = os.loadavg()[0], t0w = Date.now();
+        const load = os.loadavg()[0], t0w = Date.now(), rss = COST ? rssSampler(wk) : null;
         const reply = await wk.run(req);
-        const t1w = Date.now();
+        const t1w = Date.now(), rssMaxBytes = rss ? rss.stop() : null;
         const res = readResponse(`${req}.out`);
         if (res.status !== 'ok') throw new Error(`fit: ${res.error ?? reply}`);
         if (res.states.length !== epochs.length) throw new Error(`flight returned ${res.states.length} of ${epochs.length} states`);
@@ -298,7 +308,7 @@ async function main() {
         if (Object.values(leads).some((x) => !Number.isFinite(x.e))) throw new Error('non-finite state at a scored epoch');
         Object.assign(row, { drag: res.drag === 1, perigeeKm: res.perigeeKm, converged: true, iterations: res.iterations, evaluations: res.evaluations, rmsM: res.rms_m, cdAm: res.drag === 1 ? res.cd : null, crAm: res.drag === 1 ? 0.01 : res.cr, epoch: res.epoch, mean: res.mean, arcStates: thin.length, leads,
           ephemerisGapM: String(res.ephemerisGapM ?? '').split(' ').map(Number),
-          cost: { ...res.cost, objectDays: (ms(epochs.at(-1)) - D0) / DAY, stepSeconds: gridMs / 1000, singleThread: COST, load1: [load, os.loadavg()[0]], heapBound: COST ? COST_HEAP : ACCURACY_HEAP, liveHeapMaxBytes: COST ? liveHeapMax(wk.gcLog, t0w, t1w) : null } });
+          cost: { ...res.cost, objectDays: (ms(epochs.at(-1)) - D0) / DAY, stepSeconds: gridMs / 1000, singleThread: COST, load1: [load, os.loadavg()[0]], heapBound: COST ? COST_HEAP : ACCURACY_HEAP, heapAfterFullGcMaxBytes: COST ? fullGcHeapMax(wk.gcLog, t0w, t1w) : null, rssMaxBytes } });
         fs.rmSync(dir, { recursive: true, force: true });
       } catch (error) { const why = String(error?.message ?? error).slice(0, 300); if (UNSCORED.test(why)) row.unscored = why; else { row.failed = true; row.error = why; } }
       return row;
