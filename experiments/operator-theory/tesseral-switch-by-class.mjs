@@ -25,7 +25,7 @@ export const PIN = {
   // The 0.6.4 build: the one build's whole-file SHA-256 before signing (every row was flown on it) and the SDK canonical module hash
   // (sds.* custom sections stripped, what the signature covers and what the signed dist shares with the unsigned build); the bundle
   // (signed whole-file) hash is stated when the dist is signed.
-  next: { version: '0.6.4', preSignSha256: 'e245de29ea050b08244dc9d69fd892ad2473699843b92988fd34a47a466b15f8', canonicalSha256: 'fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5', bundleSha256: null },
+  next: { version: '0.6.4', preSignSha256: 'e245de29ea050b08244dc9d69fd892ad2473699843b92988fd34a47a466b15f8', canonicalSha256: 'fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5', bundleSha256: 'e98b63558d84cfd3b8509f4c4c640502e38f81cc05a0e0277fcffa7da97cf51d', signer: 'module-owner-2026-10-15' },
   ffm: { version: '2.2.1', wasmSha256: 'a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4' },
 };
 export const BUDGET = { coldMedianMs: 100, warmWallMs: 5000, warmMsPerRecordPerWorker: 40, memoryBytes: 512 * 1024 * 1024, workers: 8, records: 1000 };
