@@ -887,7 +887,14 @@ function table(dir) {
 // ---- the end to end
 function check() {
   const fails = [], ok = (c, m) => { if (!c) fails.push(m); };
-  const reg = git(repo, 'log', '--diff-filter=A', '--format=%H %aI', '--', PLAN).toString().trim().split('\n').at(-1).split(' ');
+  // The registration's order is proven on the original chain, tagged before any rewrite (registered/<task>): the commit that added
+  // the registration, and its committer date, on that tag's ancestry. A missing tag fails the check.
+  const REGISTERED_TAG = 'refs/tags/registered/modules-sdn-ap-covariance-noise-model-20261105';
+  let tagged = null;
+  try { tagged = git(repo, 'rev-parse', '--verify', '--quiet', `${REGISTERED_TAG}^{commit}`).toString().trim(); } catch { tagged = null; }
+  if (!tagged) { console.error(`FAIL\nthe tag ${REGISTERED_TAG} is missing (git fetch origin '${REGISTERED_TAG}:${REGISTERED_TAG}')`); process.exit(1); }
+  const reg = git(repo, 'log', '--diff-filter=A', '--format=%H %cI', tagged, '--', PLAN).toString().trim().split('\n').at(-1).split(' ');
+  console.log(`registration ${reg[0].slice(0, 10)} committed ${reg[1]} on the tagged chain ${tagged.slice(0, 10)}`);
   const sel = JSON.parse(fs.readFileSync(path.join(OUT, 'selection.json'), 'utf8'));
   ok(Date.parse(reg[1]) < Date.parse(sel.startedUtc), 'the registration does not precede the selection');
   if (fs.existsSync(path.join(OUT, 'manifest.json'))) {
