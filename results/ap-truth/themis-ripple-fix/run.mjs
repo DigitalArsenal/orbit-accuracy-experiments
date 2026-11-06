@@ -146,8 +146,9 @@ for (const o of OBJECTS) {
         const tf = Date.now();
         const set = await api.fit(oem, pcf);
         row.fitSeconds = (Date.now() - tf) / 1000;
-        const me = S.readFitOcm(set).o.MEAN_ELEMENTS;
-        row.elements = { n: me.MEAN_MOTION, e: me.ECCENTRICITY, i: me.INCLINATION };
+        const fitted = S.readFitOcm(set), me = fitted.o.MEAN_ELEMENTS;
+        row.elements = { n: me.MEAN_MOTION, e: me.ECCENTRICITY, i: me.INCLINATION, raan: me.RA_OF_ASC_NODE, argp: me.ARG_OF_PERICENTER, ma: me.MEAN_ANOMALY, bterm: me.BTERM, agom: me.AGOM, epoch: me.EPOCH };
+        row.fit = { rmsKm: fitted.fitRmsKm, iterations: fitted.iterations, states: fitted.states };
         const tl = Date.now();
         const flown = await api.fly(set, epochs);
         row.flightSeconds = (Date.now() - tl) / 1000;

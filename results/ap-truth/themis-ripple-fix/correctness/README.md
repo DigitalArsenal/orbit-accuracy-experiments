@@ -107,3 +107,17 @@ Today's narrow set (q in {-1, 0, 1}; 15 terms kept) against the full-field quadr
 of the difference; e 0.30 21.4 m RMS, 44.0 m max, 0.036 m. Both exceed the RMS and maximum bounds (1 m, 5 m): an object crossing e 0.3
 in flight steps by up to about 44 m between the narrow set and a grid, and the narrow set itself is 21 m RMS from the field at these
 elements. Sent to the coordinator.
+
+## Module build (modules WIP a1421173e; candidate wasm eca9db70, scratch build)
+Native check of the module's own wide_grid_build and wide_six (verify.cpp) against the quadrature, THEMIS D 2013-02-12: 0.119 m RMS,
+2.33 m maximum, 3 mm roughness of the difference, output roughness 0.0725 m; 288 families; 7,077,888 bytes per object (float: grid and
+three derivative grids, 4 x 6 x 128 complex); build 211 ms native; 15.0 us per step native against the prototype's 7 us. The
+difference is the element-linear correction: each node reads the grid and three derivative grids (four loads and multiply-adds per
+component instead of one) and 288 families against 246 with forcing.
+Memory, one worker flying 100 records above e 0.3 in sequence (THEMIS D 2013-02-12 and E 2013-02-16 sets, alternating, 7 days at
+300 s; memtest.mjs): wasm linear memory 67,108,864 bytes before, 82,116,608 after the first flight, 82,182,144 at the peak and at the
+end (64 KiB once): the grids are freed and their memory reused, one object's grids (7.1 MB) and the build's two scratch sets (7.4 MB)
+at a time. Init per object: a one-epoch propagate 979 and 947 ms (wasm, browser host, under lane load); median 7-day flight 2,685 ms.
+Drift without the in-flight re-grid (resum2.cpp, element-linear grid at the epoch elements against the quadrature at shifted elements,
+cubic N = 128): de 3e-3 2.81 / 2.74 m RMS, 14.3 / 14.8 m maximum (D / E); de -2e-3 with di 1e-4 (THEMIS D's 7-day drift) 1.17 m RMS,
+6.6 m maximum. A constant offset of the 7-day size exceeds the 1 m RMS bound; the dropped re-grid needs a continuous replacement.
