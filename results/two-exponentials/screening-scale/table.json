@@ -1,0 +1,202 @@
+{
+ "correlation": {
+  "lnNvsLoad": 0.24201682448241518,
+  "lnNvsStartOrder": 0.183115974230406,
+  "loadRange": [
+   98.1,
+   147.3
+  ]
+ },
+ "quietCheck": {
+  "run": false
+ },
+ "fits": {
+  "ladder": {
+   "cpu": {
+    "n": 10,
+    "p": 1.377351385162724,
+    "lo": 1.24374678773555,
+    "hi": 1.510955982589898,
+    "se": 0.05793781328151516,
+    "sd": 0.12442828201470735,
+    "call": "U",
+    "P1_at1": 0.9555,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.955,
+    "verdict": "undecided"
+   },
+   "events": {
+    "n": 10,
+    "p": 2.024157907030766,
+    "lo": 1.9976366883288024,
+    "hi": 2.0506791257327293,
+    "se": 0.01150096214308913,
+    "sd": 0.02469967159491221,
+    "call": "2",
+    "P1_at1": 0.953,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.952,
+    "verdict": "p = 2"
+   },
+   "propagation": {
+    "n": 10,
+    "p": 1.0829194136223979,
+    "lo": 1.0265513387949141,
+    "hi": 1.1392874884498816,
+    "se": 0.024444091425621765,
+    "sd": 0.05249656708170837,
+    "call": "U",
+    "P1_at1": 0.9475,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.943,
+    "verdict": "undecided"
+   },
+   "search": {
+    "n": 10,
+    "p": 1.4424765830739992,
+    "lo": 1.345048818083485,
+    "hi": 1.5399043480645134,
+    "se": 0.04224968126214836,
+    "sd": 0.09073616965097536,
+    "call": "U",
+    "P1_at1": 0.9575,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.9515,
+    "verdict": "undecided"
+   },
+   "refine": {
+    "n": 10,
+    "p": 2.0313267345334065,
+    "lo": 1.8206032570424098,
+    "hi": 2.2420502120244032,
+    "se": 0.09138051929358056,
+    "sd": 0.1962504344108497,
+    "call": "2",
+    "P1_at1": 0.9515,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.947,
+    "verdict": "p = 2"
+   }
+  },
+  "dates": {
+   "cpu": {
+    "n": 8,
+    "p": 2.9607797281255586,
+    "lo": 1.8748609874443136,
+    "hi": 4.046698468806803,
+    "se": 0.4437755376711259,
+    "sd": 0.11593741333771392,
+    "call": "2",
+    "P1_at1": 0.442,
+    "P2_at1": 0.024,
+    "P1_at2": 0.0195,
+    "P2_at2": 0.4645,
+    "verdict": "undecided"
+   },
+   "events": {
+    "n": 8,
+    "p": 5.3367402297870665,
+    "lo": 2.67556999860934,
+    "hi": 7.997910460964793,
+    "se": 1.0875235926349516,
+    "sd": 0.2841181218223729,
+    "call": "U",
+    "P1_at1": 0.0905,
+    "P2_at1": 0.0195,
+    "P1_at2": 0.0175,
+    "P2_at2": 0.089,
+    "verdict": "undecided"
+   }
+  }
+ },
+ "theories": [
+  {
+   "theory": "SGP4",
+   "flown": true,
+   "coveredShare": 1,
+   "propagationShare": 0.24371353114469235,
+   "shareRange": [
+    0.24255111918180539,
+    0.5008714857807481
+   ],
+   "maxSpeedup": 1.3222502863413248
+  },
+  {
+   "theory": "SGP4-XP",
+   "flown": false,
+   "coveredShare": 0.383866,
+   "propagationShare": null,
+   "reason": "covered share below one half of the catalog: not flown, not extrapolated"
+  },
+  {
+   "theory": "AP",
+   "flown": false,
+   "coveredShare": 0,
+   "propagationShare": null,
+   "reason": "covered share below one half of the catalog: not flown, not extrapolated"
+  },
+  {
+   "theory": "FFM",
+   "flown": false,
+   "coveredShare": 0.33877,
+   "propagationShare": null,
+   "reason": "covered share below one half of the catalog: not flown, not extrapolated"
+  }
+ ],
+ "conversion": {
+  "ladder": {
+   "doublings": 2.1780934279494497,
+   "doublingsRange": [
+    1.985497946047219,
+    2.4120665312125182
+   ],
+   "payloadYears": 8.276755026207908,
+   "payloadYearsRange": [
+    7.5448921949794325,
+    9.165852818607569
+   ],
+   "allYears": 20.909696908314718,
+   "allYearsRange": [
+    19.0607802820533,
+    23.155838699640174
+   ]
+  },
+  "dates": {
+   "doublings": 1.0132466024074245,
+   "doublingsRange": [
+    0.7413450799769054,
+    1.6001186328429615
+   ],
+   "payloadYears": 3.850337089148213,
+   "payloadYearsRange": [
+    2.8171113039122404,
+    6.080450804803253
+   ],
+   "allYears": 9.727167383111274,
+   "allYearsRange": [
+    7.116912767778291,
+    15.36113887529243
+   ]
+  }
+ },
+ "sentence": "With p = 1.38 (95 percent interval 1.24 to 1.51; undecided) on the thinning ladder, one eighth of the compute buys 3 / p = 2.18 doublings of the object count (1.99 to 2.41): 8.3 years (7.5 to 9.2) at the payload doubling time of 3.8 years (catalog growth 2018-2026, exponential), and 20.9 years (19.1 to 23.2) at the all-objects fit of 9.6 years (2018-2026, undecided between exponential and linear). The real-dates fit gives p = 2.96 (1.87 to 4.05; undecided): 1.01 doublings, 3.9 years at 3.8 and 9.7 years at 9.6.",
+ "verdict": "Ladder p = 1.38 (1.24 to 1.51): undecided. Dates p = 2.96 (1.87 to 4.05): undecided. The two intervals do not overlap. Propagation takes 24.4 percent of the screen CPU at the full catalog (SGP4); a propagator of zero cost cuts the screen CPU at most by a factor 1.32.",
+ "noise": {
+  "totalCpuRelativeRange": 0.003397326027852115
+ },
+ "parity": {
+  "id": "parity-1-8-s1",
+  "phasedEvents": 16091,
+  "fusedEvents": 16091,
+  "phasedDigest": "0262a9f9aa29fed913c86dd74d1b74d99fc68ba3026731b2c044e53ae62b503e",
+  "fusedDigest": "0262a9f9aa29fed913c86dd74d1b74d99fc68ba3026731b2c044e53ae62b503e",
+  "equal": true,
+  "fusedCpuS": 29.446851,
+  "phasedCpuS": 39.168543
+ }
+}
