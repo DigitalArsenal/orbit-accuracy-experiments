@@ -367,3 +367,11 @@ schedule's 48 h nodes bound the a drift; drift check with da / a at the measured
 family sets (the derivative sets differ only through e, i and n in the forcing's coefficients and divisors: built in one pass where
 the math allows); L5 fewer E nodes for the derivative sets (128 against 256). Cold: L4 and L5 (build time); warm: L1 to L3 (held size)
 with an idle limit of 128 grids per worker, eviction oldest first. The measured cold, warm and memory of the chosen combination decide.
+
+## Amendment 17 (2026-11-06, box 3 start 03:28Z; before any lever is built or measured)
+Added lever L6: the value set itself on 128 E nodes (all four sets at NE = 128; the earlier native check at NE = 128 read 0.13 m RMS,
+2.30 m maximum, 0.046 m roughness of the difference on THEMIS D, inside the bounds, and is re-run on the levers' build). L4 is taken in
+the form the math allows: the six rate components are linear in five forcing functions (g, its M, e, i and a derivatives), and the
+M-derivative's integral follows from g's (H[g'] = g / M-dot + i nu H[g]), so a family needs five transforms instead of seven.
+Planned combination, in this order, each quadrature-checked before the next: L6 + L4 (cold), L3 + L1 (held size 1.77 + 2 x 0.88 =
+3.54 MB per grid), idle limit 128 with 256 cache slots. Then the Amendment 15 measurement on the same 1,000 distinct records.
