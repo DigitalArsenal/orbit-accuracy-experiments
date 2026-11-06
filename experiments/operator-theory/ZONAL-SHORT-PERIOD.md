@@ -185,6 +185,28 @@ cell is flown again under this amendment. No estimator change; V1 changes constr
    amendment.
 3. --check adds: this amendment's commit precedes the first row of the table; the first-pass row stays in its folder.
 
+## Amendment 2 (2026-11-06 14:12Z, this lane; disclosure, written after the table, before landing; no row changes, no rule changes)
+Read from the table (28 cells flown, 2 below the perigee floor, 0 errors; sdn-ap 0.6.4; every landed 0.6.3 e 0.001 share reproduced to
+0.00 m):
+- V1 validated in all six regimes: S's j >= 2 zonal amplitude falls by 24x (Starlette) to 112x (Jason-3) under +Delta and doubles under
+  -Delta, so the terms of items 1 and 2 are right in sign, amplitude and phase against the independent integrator. The size of the whole
+  J6-J20 first-order zonal short-period content in these orbits is 0.29 to 1.00 m of amplitude (prototype RMS 0.3 to 0.7 m).
+- The module reading: the prototype moves the forward m = 0 share by -0.44 (Starlette), -0.28 (Ajisai), +0.07 (LARES), +0.03 (Jason-3),
+  +0.18 (Sentinel-3) and +0.02 m (CryoSat-2), every interval including 0; no cell reads reduced; the verdict is the registered third
+  clause, "the gap is not first-order zonal short-period" above J5. The primary arm and the e grid read the same.
+- What the gap is, read from V1's E5 arm (both sides J2 to J5, nothing above): E5's m = 0 share equals the cell's within the intervals in
+  every regime (4.10 against 3.55, 3.57 / 3.36, 3.76 / 4.19, 3.89 / 4.04, 2.73 / 3.13, 5.46 / 5.95 m), with the (0,2) family at 5.7 m in
+  Starlette: the module's 3 to 6 m m = 0 short-period gap is in its J2-J5 short-period theory (SPEC 8 carries J2 first-order
+  short-periodics only: the J3-J5 first-order and the J2 second-order short-periodics are the candidates, in that order of size by the
+  scales of item 4 of the secular record), not in the degrees above 5. That is a finding for a separate record (the J2-J5 short-period
+  terms), not a design this record makes.
+- The constant members do not explain the trend constants: R0_pred -0.20 to +0.23 m against measured R0 -0.66 to 9.50 m, N0_pred -0.19
+  to 0.84 m against measured N0 -7.5 to +5.2 m; the radial bias at fixed mean motion and a constant cross-track offset of 4 to 8 m
+  (LARES, Jason-3, Starlette, Ajisai) are J2-J5-level findings for that same record.
+- Cost, measured: 3 (L - 1) floats per object (228 bytes at L 20, 360 at L 31), table build 0.27 to 0.30 ms, 0.1 us per epoch, a flight of
+  65 epochs 0.3 ms: within. The module record is not warranted on this verdict; its title, terms and e >= 0.05 questions are listed in the
+  table for the coordinator in case the finding is reconsidered.
+
 ## Outputs and check
 `SDN_MODULES_ROOT=<the pinned -covm root> SDNAP_064_WASM=<this lane's copy of the signed 0.6.4 dist> SDN_AP_HEO_CACHE=<this lane's scratch>
 node experiments/operator-theory/zonal-short-period.mjs --run [--shard k/n]` (at most 4 shards, cells by position) writes
