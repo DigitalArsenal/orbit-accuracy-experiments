@@ -159,6 +159,11 @@ fit is a fit set's ([0] 0, [1] > 0) and that sdnap_wide_grid_cache shows no fit 
 Measured and reported: THEMIS A fit time and wasm high-water in MiB (expected about 80.6 MiB, 14.7 s) against 0.6.2 (65.1 MiB);
 the guard E2E and fit.e2e.mjs PASS.
 
+Measured (ripple 3e6a88a44 merged; modules abd04b701, scratch build 226a7a8c; fitcost.mjs two runs each, load 27-30): THEMIS A fit
+15.29 / 14.94 s against 0.6.2's 40.34 / 38.72 s; wasm high-water 84,475,904 bytes (80.56 MiB) against 0.6.2's 68,222,976 (65.06 MiB);
+FIT_RMS 104.78 m, BTERM 0.012145; grid lookups 0 outside a fit, 236 by the fit's sets; grid cache 0 grids, 0 bytes before and after
+the fit. Guard E2E and fit.e2e.mjs PASS.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
