@@ -281,3 +281,12 @@ maneuver or attitude event in the mission's records for the window, confirms H2)
 the quadrature, along the flown track, lines up with the long-period part of the candidate flight's error against truth on that window
 (correlation of the two series after removing harmonics of M above 10 n; a correlation above 0.8 with the table's error of the size of
 the difference between the two flights confirms H1).
+
+## Amendment 11 (2026-11-06, before C5 is flown)
+Read: the scheduled, blended re-grid holds every bound at k = 48 h (0.085 / 0.081 m RMS, 0.66 m maximum, no roughness added); the
+build's speed-up (forcing summed over degree first, the left-out harmonics' G and dG/de by the E-node trapezoid, forward-difference
+derivative grids) keeps the module check at 0.119 m RMS, 2.33 m maximum, 3 mm, and k = 48 h at 0.072 m RMS. Arm C5 (modules WIP
+714291f99, wasm 908d8eb3): C4 with the 48 h schedule (each node's grid at the set's mean elements there, the same nodes for every set of
+a fit, blended over the last fifth) and the faster build. Flown: the 12 THEMIS windows (C5, and the base fit on the C5 flight), the
+paired test of Amendment 8 (margin 1.05) against the base; the catalog-scale case of Amendment 10.3 (1,000 records above e*, one worker
+and 8 workers). THEMIS A 2013-02-15 is expected to keep the fit's second solution (the fitter is the other record's).
