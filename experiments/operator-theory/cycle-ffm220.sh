@@ -74,10 +74,11 @@ laser() {
 examples() {
   local E=$O/compare-examples IN=${EXAMPLES_IN:-$PUBLISHED} m; PIDS=()
   mkdir -p "$E/logs"
-  for m in "truth" "truth --pick showcase" "regimes" "regimes --pick showcase" "providers" "providers --only iss" "next"; do
+  for m in "truth" "truth --pick showcase" "regimes" "regimes --pick showcase" "providers" "next"; do
     run "$E/logs/${m// /_}.log" "${NODE[@]}" $CODE/compare-examples.mjs --mode $m --ffm-only "$IN" --out "$E"
   done
-  for m in "truth2" "truth2 --pick showcase"; do run "$E/logs/${m// /_}.log" env XP2F_CONTROL=1 "${NODE[@]}" $CODE/compare-examples.mjs --mode $m --ffm-only "$IN" --out "$E"; done
+  # truth2 and the ISS read XM's own weather store (XP2F_CONTROL=1), as COMPARE.md's runs do.
+  for m in "truth2" "truth2 --pick showcase" "providers --only iss"; do run "$E/logs/${m// /_}.log" env XP2F_CONTROL=1 "${NODE[@]}" $CODE/compare-examples.mjs --mode $m --ffm-only "$IN" --out "$E"; done
   drain; note "examples: $(ls "$E"/*.json 2>/dev/null | wc -l) flown again"
 }
 case "${1:-}" in
