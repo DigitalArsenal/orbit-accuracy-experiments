@@ -198,8 +198,9 @@ function amendmentAt(name) {
   const [sha, seconds] = line.split(' ');
   return { sha, at: Number(seconds) * 1000 };
 }
-// The registration each kind of row was written under: accuracy rows after the grid-check amendment, cost rows after the cost-heap one.
-const ACCURACY_REGISTRATION = 'Amendment 2026-11-05 (grid check)', COST_REGISTRATION = 'Amendment 2026-11-06 (cost heap)';
+// The registration each kind of row was written under: accuracy rows after the grid-check amendment, cost rows after the heap
+// calibration result, which set the cost heap they run on.
+const ACCURACY_REGISTRATION = 'Amendment 2026-11-05 (grid check)', COST_REGISTRATION = 'Amendment 2026-11-06 (heap calibration result)';
 
 function check() {
   const head = registrationAt('HEAD'), main = registrationAt('origin/main');
