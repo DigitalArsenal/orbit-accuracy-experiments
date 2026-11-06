@@ -62,7 +62,7 @@ for (const S of SETS) {
     const realShare = both.length ? both.filter((w) => w.flagged).length / both.length : null, modelShare = both.length ? both.filter((w) => w.model.flagged).length / both.length : null;
     row.control = { windows: both.length, realFlagged: both.filter((w) => w.flagged).length, modelFlagged: both.filter((w) => w.model.flagged).length, realShare: round(realShare), modelShare: round(modelShare),
       modelLargestMedianM: both.length ? round(median(both.map((w) => Math.abs(w.model.largest?.sizeM ?? 0))), 3) : null,
-      reading: !both.length ? 'no window' : modelShare <= 0.1 && modelShare <= realShare / 3 ? 'the truth product is the cause' : modelShare >= realShare / 2 ? 'a drag-rate change' : 'mixed' };
+      reading: !both.length ? 'no window' : realShare === 0 ? 'no flag on the real truth to explain' : modelShare <= 0.1 && modelShare <= realShare / 3 ? 'the truth product is the cause' : modelShare >= realShare / 2 ? 'a drag-rate change' : 'mixed' };
   }
   out.push(row);
 }
