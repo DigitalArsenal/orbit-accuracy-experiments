@@ -130,6 +130,19 @@ Amendment 3.2 (2026-11-06): exact grids freed by their last holder (ripple 66926
 160 MB budget by 5.2 MB read in decimal megabytes, under it read in MiB. FIT_RMS 104.78 m, BTERM 0.012145; grid lookups 0 shared, 302
 exact; the guard E2E and fit.e2e.mjs PASS.
 
+## Amendment 4 (2026-11-06, SDN-AP amendment 25), registered before any row it governs
+
+The fit without ExactGridScope, on the ripple lane's exact-key grids (ripple e815a0109: a grid is keyed by its set's exact n, e, i,
+class and degree; `xpt::GridShareScope(nominal)`, thread-local RAII: a copy initialized inside it reads the nominal's epoch and
+schedule-node grids linearly within 3e-4 in e, 1e-4 rad in i, 1e-4 in a / a; outside a scope nothing is shared). The record's paths
+now include src/fit.inc. Change: src/fit_oem.inc loses its ExactGridScope; in src/fit.inc, where an iteration's copies are made (the
+drag-rate probe's drag-free set, the AGOM column's copy, the finite-difference fall-back columns), a GridShareScope opens on that
+iteration's nominal set (the probe's own set; for the AGOM and fall-back columns a set initialized from the iteration's elements and
+held while its copies are built). Expected: the copies read the nominal's own exact-key grid, linearly, so the partials carry no other
+set's grid. Measured and reported: THEMIS A fit RMS, BTERM, fit time and wasm high-water (fitcost.mjs) against 0.6.2 and Amendment 3.2;
+the guard E2E (its lookup assertion recast: no exact lookup inside the fit, and at least one keyed lookup, every lookup being by the
+set's own exact key or through its nominal's scope) and fit.e2e.mjs PASS. The Molniya lines stay the ripple lane's.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
