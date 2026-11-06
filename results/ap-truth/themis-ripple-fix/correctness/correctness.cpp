@@ -135,7 +135,7 @@ static void six_to_pos(const Kepler& k, double n, const double* six, double* dr)
   }
 }
 
-struct Comp { int l, m, w, j; cd Z, Ze, Zi; };
+struct Comp { int l, m, w, j; cd Z, Ze, Zi; double mag; };
 
 int main(int argc, char** argv) {
   if (argc < 9) { std::fprintf(stderr, "usage: label n_revday e i_deg raan_deg argp_deg ma_deg d50\n"); return 2; }
@@ -176,7 +176,11 @@ int main(int argc, char** argv) {
           const cd Z = q0.at(w, j);
           if (std::abs(Z) < 1e-14 * lm_max) continue;
           const cd Ze = (qep.at(w, j) - qem.at(w, j)) / (2 * h), Zi = (qip.at(w, j) - qim.at(w, j)) / (2 * h);
-          all.push_back({l, m, w, j, Z, Ze, Zi});
+          {
+            const double psd = w * wdot + j * mdot + m * (node_rate - kOmegaE), apd = std::fabs(psd), na2x = n0 * a0 * a0;
+            const double magc = a0 * A * sv * ((std::abs(Z) / (A * sv)) * (3.0 * std::abs(j) / (a0 * a0 * apd * apd) + 2.0 * (l + 1) / (na2x * apd)) + std::abs(Ze) / (A * sv) / (na2x * apd) + std::abs(Zi) / (A * sv) / (na2x * apd)) * kRe * 1000.0;
+            all.push_back({l, m, w, j, Z, Ze, Zi, magc});
+          }
           auto it = held.find({l, m, w, j});
           table_of_comp.push_back(it == held.end() ? -1 : it->second);
           const double psidot = w * wdot + j * mdot + m * (node_rate - kOmegaE);
@@ -226,6 +230,42 @@ int main(int argc, char** argv) {
   const double na2 = n0 * a0 * a0, si = std::sin(i0);
   const int steps = 7 * 288 + 1;
   std::vector<double> tr1(3 * steps), tr2(3 * steps), tr3(3 * steps), tr4(3 * steps);
+  const int caps[] = {33, 50, 75, 100, 150, 200, 300, 500, 2047};
+  const double keeps[] = {0.5, 0.2, 0.1};
+  constexpr int NC = 9, NK = 3;
+  std::vector<std::vector<double>> trc(NC * NK, std::vector<double>(3 * steps));
+  std::vector<int> ncount(NC * NK, 0);
+  // Amendment 1's rule at the keeps of Amendment 2: per (l, m, w), walk q outward; stop at the first term under the keep beyond the
+  // direction's largest term.
+  std::map<std::tuple<int, int, int, int>, double> magof;
+  for (const Comp& q : all) magof[{q.l, q.m, q.w, q.j - q.w}] = q.mag;
+  const double rkeeps[4] = {0.5, 0.2, 0.1, 0.05};
+  std::map<std::tuple<int, int, int, int>, bool> rules[4];
+  for (int r = 0; r < 4; ++r)
+  for (int l = 2; l <= degree; ++l) for (int m = 1; m <= l; ++m) for (int w = -l; w <= l; w += 2) {
+    rules[r][{l, m, w, 0}] = true;
+    for (int dir = -1; dir <= 1; dir += 2) {
+      int qpk = 0; double pk = -1;
+      for (int q = dir; std::abs(w + q) < NM / 2; q += dir) { auto it = magof.find({l, m, w, q}); const double v = it == magof.end() ? 0.0 : it->second; if (v > pk) { pk = v; qpk = q; } }
+      for (int q = dir; std::abs(w + q) < NM / 2; q += dir) {
+        auto it = magof.find({l, m, w, q}); const double v = it == magof.end() ? 0.0 : it->second;
+        if (v < rkeeps[r] && std::abs(q) > std::abs(qpk)) break;
+        rules[r][{l, m, w, q}] = true;
+      }
+    }
+  }
+  int rcount[5] = {0, 0, 0, 0, 0}, rjmax[5] = {0, 0, 0, 0, 0}, rqmax[5] = {0, 0, 0, 0, 0};
+  std::vector<std::vector<double>> trRs(5, std::vector<double>(3 * steps));
+  int rule_count = 0;
+  std::vector<double> trR(3 * steps);
+  for (const Comp& q : all) {
+    if (q.w == 0 && q.j == 0) continue;
+    const double psidot = q.w * wdot + q.j * mdot + q.m * (node_rate - kOmegaE);
+    bool ct = false;
+    for (int z = 0; z < carried.count; ++z) if (carried.t[z].l == q.l && carried.t[z].m == q.m && carried.t[z].p == (q.l - q.w) / 2 && carried.t[z].q == q.j - q.w) ct = true;
+    if (ct || std::fabs(psidot) < tess::kShallowBand * n0) continue;
+    for (int c = 0; c < NC; ++c) for (int kk = 0; kk < NK; ++kk) if (std::abs(q.j) <= caps[c] && q.mag >= keeps[kk]) ++ncount[c * NK + kk];
+  }
   for (int s = 0; s < steps; ++s) {
     const double t = 5.0 * s;  // minutes
     Kepler k{a0, e0, i0, wrap(O0 + node_rate * t), wrap(w0 + wdot * t), wrap(M0 + mdot * t)};
@@ -243,6 +283,13 @@ int main(int argc, char** argv) {
       const bool in3 = !cls_term && std::fabs(psidot) >= 0.2 * n0;
       const bool in4 = !cls_term && std::fabs(psidot) >= tess::kShallowBand * n0;
       if (!in2 && !in3 && !in4) continue;
+      bool inRs[5];
+      for (int r = 0; r < 4; ++r) inRs[r] = in4 && q.mag >= rkeeps[r] && rules[r].count({q.l, q.m, q.w, q.j - q.w});
+      inRs[4] = in4 && q.mag >= 0.5 && std::abs(q.j - q.w) <= 1 && std::abs(q.j) <= q.l + 1;  // 0.4.11 to 0.4.14's set
+      bool inR = false;
+      for (int r = 0; r < 5; ++r) { inR = inR || inRs[r]; if (inRs[r] && s == 0) { ++rcount[r]; rjmax[r] = std::max(rjmax[r], std::abs(q.j)); rqmax[r] = std::max(rqmax[r], std::abs(q.j - q.w)); } }
+      bool inc[NC * NK];
+      for (int c = 0; c < NC; ++c) for (int kk = 0; kk < NK; ++kk) inc[c * NK + kk] = in4 && std::abs(q.j) <= caps[c] && q.mag >= keeps[kk];
       const double psi = q.w * k.argp + q.j * k.m + q.m * beta;
       const cd E = std::polar(1.0, psi) / cd(0, psidot);  // integral over time of e^{i psi}
       const cd dVM = cd(0, q.j) * q.Z, dVw = cd(0, q.w) * q.Z, dVO = cd(0, q.m) * q.Z, dVa = -(q.l + 1) / a0 * q.Z;
@@ -256,6 +303,11 @@ int main(int argc, char** argv) {
       const double dM = std::real(Md * E) + std::real(-1.5 * n0 / a0 * ad * E / cd(0, psidot));
       const double six[6] = {-1.5 * n0 / a0 * da, de, di, e0 * (dw + dO), si * dO, dM + dw + dO};
       for (int z = 0; z < 6; ++z) { if (in2) six2[z] += six[z]; if (in3) six3[z] += six[z]; if (in4) six4[z] += six[z]; }
+      double dr[3];
+      bool anyc = false;
+      for (int c = 0; c < NC * NK; ++c) anyc = anyc || inc[c];
+      anyc = anyc || inR;
+      if (anyc) { six_to_pos(k, n0, six, dr); for (int r = 0; r < 5; ++r) if (inRs[r]) for (int z = 0; z < 3; ++z) trRs[r][3 * s + z] += dr[z]; for (int c = 0; c < NC * NK; ++c) if (inc[c]) for (int z = 0; z < 3; ++z) trc[c][3 * s + z] += dr[z]; }
     }
     six_to_pos(k, n0, six1, &tr1[3 * s]);
     six_to_pos(k, n0, six2, &tr2[3 * s]);
@@ -291,6 +343,18 @@ int main(int argc, char** argv) {
   std::printf("\"table\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},\"quadTableTerms\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},", r1, m1, g1, r2, m2, g2);
   std::printf("\"quadAll02n\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},\"quadAll0045n\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},", r3, m3, g3, r4, m4, g4);
   std::printf("\"tableMinusQuadTable\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f,\"relRms\":%.3e},", r12, m12, g12, r12 / r2);
+  std::printf("\"caps\":[");
+  for (int c = 0; c < NC; ++c) for (int kk = 0; kk < NK; ++kk) {
+    double rr, mx, rg, r0, m0, g0;
+    diff_stats(tr4, trc[c * NK + kk], rr, mx, rg);
+    diff_stats(trc[c * NK + kk], zero, r0, m0, g0);
+    std::printf("%s{\"jCap\":%d,\"keepM\":%.1f,\"terms\":%d,\"roughM\":%.4f,\"vsAllRmsM\":%.3f,\"vsAllMaxM\":%.3f,\"vsAllRoughM\":%.4f}", c + kk ? "," : "", caps[c], keeps[kk], ncount[c * NK + kk], g0, rr, mx, rg);
+  }
+  std::printf("],");
+  std::printf("\"rule\":[");
+  for (int r = 0; r < 5; ++r) { double rr, mx, rg, r0, m0, g0; diff_stats(tr4, trRs[r], rr, mx, rg); diff_stats(trRs[r], zero, r0, m0, g0);
+    std::printf("%s{\"set\":\"%s\",\"keepM\":%.2f,\"terms\":%d,\"jMax\":%d,\"qMax\":%d,\"roughM\":%.4f,\"vsAllRmsM\":%.3f,\"vsAllMaxM\":%.3f,\"vsAllRoughM\":%.4f}", r ? "," : "", r < 4 ? "rule" : "0.4.11", r < 4 ? rkeeps[r] : 0.5, rcount[r], rjmax[r], rqmax[r], g0, rr, mx, rg); }
+  std::printf("],");
   std::printf("\"quadAll02nMinusTable\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},\"quadAll0045nMinusTable\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f}}\n", r13, m13, g13, r14, m14, g14);
   return 0;
 }

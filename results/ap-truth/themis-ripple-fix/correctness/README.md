@@ -15,3 +15,20 @@ Roughness of the short-period displacement itself: the table 2.983 and 3.184 m; 
 Verdict: every held term passes (amplitude, phase, sign, e and i derivatives; no defect). The ripple and a mean-track displacement of
 about 65 m RMS (250 m at most) are the truncation |q| <= 10, |j| <= 33: the series of a perigee pass at e 0.82 converges slowly in j
 (the (2, 2, w = 2) family alone keeps terms of 12 to 18 m out to j = 40).
+
+## Sizing (Amendments 1 and 2): the extended set against the full-field quadrature
+Bounds (Amendment 2): RMS <= 1 m, maximum <= 5 m, roughness of the difference <= 0.1 m. Output: sizing-themis-d.json, sizing-themis-e.json
+(the harness above; `rule` rows). Difference of each set's displacement from every admissible harmonic, 7 days at 300 s, D / E:
+
+| Set | Terms | Max \|j\| | RMS (m) | Maximum (m) | Roughness of the difference (m) | Roughness of the set's own displacement (m) |
+| --- | --: | --: | --: | --: | --: | --: |
+| 0.6.x table (\|q\| <= 10, \|j\| <= 33) | 1,001 / 986 | 33 | 64.6 / 68.0 | 249.1 / 250.7 | 2.962 / 3.152 | 2.983 / 3.184 |
+| Rule, keep 0.5 m | 2,211 / 2,169 | 131 / 130 | 8.50 / 8.55 | 67.8 / 69.7 | 9.145 / 9.173 | 9.394 / 9.282 |
+| Rule, keep 0.2 m | 4,376 / 4,277 | 154 / 153 | 4.92 / 4.82 | 42.3 / 38.5 | 6.707 / 6.484 | 6.887 / 6.777 |
+| Rule, keep 0.1 m | 6,950 / 6,818 | 184 / 181 | 2.83 / 2.79 | 27.5 / 21.5 | 4.115 / 4.331 | 4.290 / 4.562 |
+| Rule, keep 0.05 m | 10,538 / 10,347 | 217 / 214 | 1.80 / 1.73 | 13.3 / 10.3 | 2.758 / 2.679 | 2.913 / 2.785 |
+| 0.4.11 to 0.4.14 (q in {-1, 0, 1}, \|j\| <= l + 1, 0.5 m) | 210 / 208 | 6 | 136.8 / 137.7 | 563.7 / 610.9 | 0.100 / 0.087 | 0.141 / 0.132 |
+
+No registered step meets the bounds: candidate 2 as a screened series fails. The terms under any per-term screen are the tail of a
+perigee pulse; they add in phase, and at h = 300 s their high harmonics (|j| 100 to 200) dominate the second difference, so a wider
+screened set is rougher, not smoother. 0.4.11's smoothness is the absence of every harmonic above |j| = 6, at 137 m RMS from the field.
