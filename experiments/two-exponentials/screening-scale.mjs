@@ -20,13 +20,13 @@ const SELF = fileURLToPath(import.meta.url);
 const REG_REL = 'experiments/two-exponentials/SCREENING-SCALE.md';
 const OUT = process.env.SCALE_OUT ?? path.join(ROOT, 'results/two-exponentials/screening-scale');
 const SCRATCH = process.env.SCALE_SCRATCH ?? '/Users/tj/software/terrain-work/body-look/scale';
-const MODULES = '/Users/tj/software/private/coordinator-d9/space-data-network-modules-r2';
+const MODULES = '/Users/tj/software/private/coordinator-d9/space-data-network-modules-ca';
 const CA = path.join(MODULES, 'analysis/conjunction-assessment');
 const ARCHIVE = '/opt/data/sdn-archive';
 const GPH = `${ARCHIVE}/spacetrack/gp_history/by-creation`;
 const CURRENT_SNAPSHOT = `${ARCHIVE}/spacetrack/gp/2026/2026-11-05.json.gz`;
 const CURRENT_SHA = 'b63176497acc503080a5243980319e577f3387de6b318426a1766ff6359aa1c1';
-const WASM_SHA = 'a077c6929cd1eb979eb3c39dbe158198f6c94f90a5ad7494345e51596699148f';
+const WASM_SHA = 'fe7533e9168c65f31b5d98ea90bafb76024a5e035df5c7f34d252da44718bfec';
 const PINNED = {
   'gpu/catalogScreen.mjs': '259ec4674b91a321a577d2455b560b89606c135ce734f9eddbdd6694d6ae2cfc',
   'gpu/continuousScreen.mjs': 'e191d9f3a8cc3f3438dcbabe459c99cbbb49f4f730b3a88bbd0462acc70167d2',
@@ -35,7 +35,7 @@ const PINNED = {
   'tests/lib/conjunctionCommandHarness.mjs': 'c96a13d43af9c569677cb46a34c2d578ef77ef1d2bfe16fca1e1392f7c4ec022',
   'tests/lib/cqr.mjs': 'df0e968326a662c041ce3fc7bf465468b68e41d23936b67c2c7f832f6390c9f0',
   'scripts/lib/ommCatalog.mjs': '2a11f493daa87f30ba2ff0398826f192c17580e74b8c0a5c6b2f0b9eb51adf35',
-  'plugin-manifest.json': '2833c53f0fbe8e496c706a9d4989c609676132d710dbd270ee2d300bf18463ec',
+  'plugin-manifest.json': '5285b8dcb05c619c15edf2795b31a0e4b457bfd17594b54e9e208dfbacf86c4f',
   'dist/isomorphic/module.wasm': WASM_SHA,
 };
 const NODE = 'v25.4.0';
@@ -332,7 +332,7 @@ function assemble(reg) {
   const meta = {
     registration_commit: reg.commit, registration_blob: reg.blob, registration_time: reg.time,
     runner_sha256: sha256(fs.readFileSync(SELF)), node: process.version,
-    module: { plugin: 'analysis/conjunction-assessment', version: '0.17.0', wasm_sha256: WASM_SHA, root: path.basename(MODULES), pinned: PINNED },
+    module: { plugin: 'analysis/conjunction-assessment', version: '0.18.4', wasm_sha256: WASM_SHA, root: path.basename(MODULES), pinned: PINNED },
     controls: { ...CONTROLS, horizonDays: HORIZON_DAYS, windowHours: WINDOW_HOURS, path: 'CPU, no GPU; coarse_grid, search_grid, refine_candidates' },
     host: { cpus: os.cpus().length, model: os.cpus()[0]?.model },
     parity: { id: PARITY.id, phasedEvents: phasedParity.events, fusedEvents: parity.events, phasedDigest: phasedParity.digest, fusedDigest: parity.digest,
