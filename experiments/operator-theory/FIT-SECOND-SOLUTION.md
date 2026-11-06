@@ -177,6 +177,12 @@ grid builds are bounded, and under FitGridScope they are freed when dropped. Mea
 high-water in MiB against 0.6.2 and Amendment 5; the guard E2E (0 lookups outside a fit, the cache identical before and after) and
 fit.e2e.mjs PASS.
 
+Measured (modules 23e209c9f, scratch build afde82e8; fitcost.mjs two runs each, load 38-42): THEMIS A fit 15.09 / 15.30 s against
+0.6.2's 40.11 / 39.96 s; high-water 84,475,904 bytes (80.56 MiB), Amendment 5's; FIT_RMS 104.78 m, BTERM 0.012145; lookups 0 outside a
+fit, 236 by the fit's sets (Amendment 5's count: the THEMIS A fit does not take the fall-back); cache 0 / 0 before and after. Guard
+E2E and fit.e2e.mjs PASS. SDN-AP: a second guard case on the Molniya start-0 fixture, which takes the fall-back, follows when its
+inputs land.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
