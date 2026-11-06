@@ -1,0 +1,1328 @@
+{
+ "registered": "experiments/operator-theory/FFM-GEO-168H.md",
+ "reading": "report only; no module change; no GEO burn verdict",
+ "task": "experiments-ffm-geo-168h-candidate-defect-20261106",
+ "builds": {
+  "settingsTable": {
+   "modulesCommit": "93cb5a0584fa728864e4426cc9ceb368936589f9",
+   "ffm": {
+    "module": "propagator/ffm",
+    "version": "2.2.1",
+    "wasmSha256": "a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4"
+   },
+   "ap": {
+    "module": "propagator/sdn-ap",
+    "version": "0.6.3",
+    "wasmSha256": "aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e"
+   }
+  },
+  "rows": {
+   "gfz": {
+    "ap": {
+     "version": "0.5.1",
+     "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb",
+     "store": "ap/b051/regimes",
+     "arm": "AP72"
+    },
+    "ffm": {
+     "version": "2.2.0",
+     "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+     "store": "ap/ffm220/regimes",
+     "arm": "F72",
+     "fittedBy": "analysis/estimation 0.7.0"
+    },
+    "members": "ap/b0411/regimes group GE (45 windows)"
+   },
+   "mt9": {
+    "ap": {
+     "version": "0.5.1",
+     "wasmSha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb",
+     "store": "ap/b051/regimes-wa",
+     "arm": "AP72"
+    },
+    "ffm": {
+     "version": "2.0.4",
+     "wasmSha256": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2",
+     "store": "ap/b0411/regimes-wa",
+     "arm": "F72",
+     "note": "cycle-ffm220.sh did not rerun regimes-wa; the 2.0.4 to 2.2.0 move was 0.000 on every geostationary cell of results/ap-truth/compare/ffm-ap-ratio.json"
+    },
+    "members": "ap/b0411/regimes-wa group WA (84 windows)"
+   }
+  },
+  "identities": [
+   "FFM 2.2.1 is 2.2.0 rebuilt on spacedatastandards.org 1.279.0: between modules f1517ef68e and 93cb5a058 only propagator/ffm/src/cpp/generated/sds/*_generated.h, package.json and plugin-manifest.json change; no file of lib/ or src/cpp/src/ (modules commits e746c4a0d, 9cb02c8e2, 0dfa42a81).",
+   "AP 0.6.3 equals 0.5.1 byte for byte at an eccentricity of 0.3 and below: COMPARE.md, 2026-11-06 reflight of the 56 published examples, 53 equal with a largest position difference of 0 m, the 3 that move being THEMIS and Chandra above e 0.3. Every GE window is near-circular."
+  ]
+ },
+ "settings": [
+  {
+   "setting": "Solar pressure: parameterization and what is fitted",
+   "ffm": {
+    "value": "Cannonball on unit area and mass (INITIAL_MASS_KG 1, AREA_M2 1): REFLECTIVITY_COEFFICIENT carries Cr A/m in m^2/kg. In the GE rows the harness high arm fits SRP_AREA_OVER_MASS (seed 0.02 m^2/kg, a priori sigma 0.2 m^2/kg, domain nonnegative) through analysis/estimation 0.7.0, with no drag. FFM-1's own default, a fixed crAreaOverMass of 0.02, is not what flew.",
+    "sources": [
+     {
+      "file": "experiments/operator-theory/lib/frame.mjs",
+      "sha256": "9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce",
+      "where": "REFLECTIVITY_COEFFICIENT = SRP_AREA_OVER_MASS; INITIAL_MASS_KG 1, AREA_M2 1"
+     },
+     {
+      "file": "experiments/operator-theory/all-regimes.mjs",
+      "sha256": "b09c0d16ddf3831b5d007e355ab29924ce1c9798bd8d2b668bf5c58bd0c286d6",
+      "where": "ffmHigh: parameters SRP_AREA_OVER_MASS 0.02, apriori([0.2]), drag false"
+     },
+     {
+      "file": "propagator/ffm/catalog-configuration.mjs",
+      "sha256": "7d7bc1d4ccc9d8247962478af229a29948251d12fab9094f7d97ff8f39f478f6",
+      "where": "FIT_PARAMETER_DOMAINS.SRP_AREA_OVER_MASS nonnegative"
+     },
+     {
+      "file": "propagator/ffm/src/cpp/src/prw_dynamics.cpp",
+      "sha256": "fd334bbdb05bc37bd1e4969e9e2d3013af0ef2ddee88d6e6dc67a02965925195",
+      "where": "srp.Cr = REFLECTIVITY_COEFFICIENT, area and mass from the request"
+     },
+     {
+      "file": "propagator/ffm/FFM.md",
+      "sha256": "5de4ffbc5f85d0c042fc5d19332118e0ceb4ee2c372220fef2e98c1bce22c212",
+      "where": "srp: cannonball, crAreaOverMass_m2_kg 0.02"
+     }
+    ]
+   },
+   "ap": {
+    "value": "Cannonball: acceleration P AGOM away from the Sun, AGOM = C_R A/m in m^2/kg from the element set. fit solves BTERM and AGOM; AGOM's prior is GAUSSIAN_SIGNED, mean 0, sigma 0.05 m^2/kg on an arc of 36 h or more, so on these 72 h arcs. BTERM is solved too with NRLMSISE-00 stated (PCF_AP), the atmosphere giving no density at GEO.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "1.1 (AGOM = C_R A/m), 4 (P AGOM), 12 (AGOM prior 0 +- 0.05 on arcs of 36 h or more), 17.1 (SRP_AREA_OVER_MASS solved)"
+     },
+     {
+      "file": "propagator/sdn-ap/src/xp_theory.inc",
+      "sha256": "37651fb89c0cce3bb82c402748d908b15755f2dbfade0d7e87a7f4aadacf6967",
+      "where": "the SRP acceleration"
+     },
+     {
+      "file": "experiments/operator-theory/lib/ap.mjs",
+      "sha256": "08ecf5f294c3b42c7ebb618f45f408a8ec3ad981dd4172bdfe0f13bd33165d7b",
+      "where": "apForces: FORCES (31, 20) with NRLMSISE-00; fitPcf fit: null, the module's priors"
+     },
+     {
+      "file": "experiments/operator-theory/all-regimes.mjs",
+      "sha256": "b09c0d16ddf3831b5d007e355ab29924ce1c9798bd8d2b668bf5c58bd0c286d6",
+      "where": "PCF_AP for GE (not vacuum)"
+     }
+    ]
+   },
+   "weaker": "neither",
+   "reading": "Both fit one cannonball coefficient per window on the same 72 h arc. The brief's premise, a fixed Cr on the FFM side, does not hold for the stored rows."
+  },
+  {
+   "setting": "Solar pressure: constant and Sun distance",
+   "ffm": {
+    "value": "Solar constant SOLAR_FLUX_1AU 1361 W/m^2 over c, 4.54e-6 N/m^2 at 1 AU, scaled by (AU_KM / r_sun)^2 with AU_KM 1.496e8 km and the Sun distance from the kernel (computeSolarFlux, computeSRPCannonball).",
+    "sources": [
+     {
+      "file": "propagator/ffm/lib/astrodynamics_types.h",
+      "sha256": "e886209516f5d8376f6d88d3a6d3df25ed09ea640467a2b72fdf6ab6fd7bdff6",
+      "where": "SOLAR_FLUX_1AU = 1361.0"
+     },
+     {
+      "file": "propagator/ffm/lib/astrodynamics.cpp",
+      "sha256": "7741020317dd38f62399a70c9b5611aa8fa1dd861477668fb0d9853139464d93",
+      "where": "AU_KM 1.496e8; computeSolarFlux: (AU_KM / sunDistance)^2; computeSRPCannonball: P = flux / c"
+     },
+     {
+      "file": "propagator/ffm/lib/environment_models.cpp",
+      "sha256": "3547b3ad869e6325d92cfd991e3cc6e8a3b06e79d9c3d5beb7635a8cad2f9689",
+      "where": "SPEED_OF_LIGHT_M 299792458"
+     }
+    ]
+   },
+   "ap": {
+    "value": "kSrpPressure 4.5e-6 N/m^2 at 1 AU, scaled by (AU / r_sun)^2 with the analytic Sun distance (F_s = 4.5e-6 AGOM 3600 / (1000 R_E (r_sun/AU)^2)).",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/src/xp_theory.inc",
+      "sha256": "37651fb89c0cce3bb82c402748d908b15755f2dbfade0d7e87a7f4aadacf6967",
+      "where": "kSrpPressure = 4.5e-6"
+     },
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "4: Force; Averaged rates; probe 4.2"
+     }
+    ]
+   },
+   "weaker": "neither",
+   "reading": "The constants differ by about 0.9 %; each side's fitted coefficient multiplies its constant, so the product is what each fit sets."
+  },
+  {
+   "setting": "Eclipse and penumbra",
+   "ffm": {
+    "value": "Conical shadow with the apparent-disk overlap: umbra, penumbra and the annular antumbra (Montenbruck & Gill), ShadowModelType::Conical in the cannonball path, evaluated at every force evaluation; the acceleration scales with 1 - shadowFraction.",
+    "sources": [
+     {
+      "file": "propagator/ffm/lib/shadow.h",
+      "sha256": "de9b093d3ea66671bb3790de261d3b7bb98c17d2b4f8ebc3c3bd218c48577d30",
+      "where": "the conical model"
+     },
+     {
+      "file": "propagator/ffm/lib/force_models.cpp",
+      "sha256": "e5972241d304d5b16219e5e2fb9912cf89fa45a116fc28c5c63c5d63f00a66b5",
+      "where": "ShadowModelType::Conical for the cannonball"
+     },
+     {
+      "file": "propagator/ffm/lib/astrodynamics.cpp",
+      "sha256": "7741020317dd38f62399a70c9b5611aa8fa1dd861477668fb0d9853139464d93",
+      "where": "computeSRPCannonball: computeShadowGeometry, shadowFactor"
+     },
+     {
+      "file": "propagator/ffm/FFM.md",
+      "sha256": "5de4ffbc5f85d0c042fc5d19332118e0ceb4ee2c372220fef2e98c1bce22c212",
+      "where": "srp shadow: conical (umbra, penumbra, antumbra)"
+     }
+    ]
+   },
+   "ap": {
+    "value": "Cylindrical shadow of radius R_E (Escobal 1965) on the mean orbit for the averaged rates; at GEO the 1e-12 root test usually misses, so the GEO eclipse season is averaged as wholly sunlit; the output-time SRP periodic terms take no shadow. Whether these October windows meet the Earth's shadow is not read here.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "4 Shadow: Escobal cylindrical; \"the GEO eclipse season is averaged as wholly sunlit\"; 4.9; output-time SRP periodic terms, no shadow"
+     }
+    ]
+   },
+   "weaker": "ap",
+   "reading": "FFM carries the richer model; a setting where FFM is the richer cannot explain an FFM loss."
+  },
+  {
+   "setting": "Earth radiation (albedo and infrared)",
+   "ffm": {
+    "value": "Knocke albedo and infrared on Cr A/m is available (EARTH_RADIATION KNOCKE; FFM-1 default, 15 degree grid), but the harness request leaves EARTH_RADIATION unset, NONE: not flown in the GE rows.",
+    "sources": [
+     {
+      "file": "propagator/ffm/src/cpp/src/prw_dynamics.cpp",
+      "sha256": "fd334bbdb05bc37bd1e4969e9e2d3013af0ef2ddee88d6e6dc67a02965925195",
+      "where": "EARTH_RADIATION switch; NONE when unset"
+     },
+     {
+      "file": "propagator/ffm/lib/earth_radiation.h",
+      "sha256": "23f8fe5dc7254009606dc18a3050ffdfe54e6863b14a9713ffaef0314e37d983",
+      "where": "Knocke"
+     },
+     {
+      "file": "experiments/operator-theory/lib/frame.mjs",
+      "sha256": "9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce",
+      "where": "EARTH_RADIATION set only when f.earthRadiation; ffmHigh does not set it"
+     },
+     {
+      "file": "propagator/ffm/FFM.md",
+      "sha256": "5de4ffbc5f85d0c042fc5d19332118e0ceb4ee2c372220fef2e98c1bce22c212",
+      "where": "earthRadiation: Knocke, resolutionDeg 15"
+     }
+    ]
+   },
+   "ap": {
+    "value": "No term: the words albedo, Earth radiation and earthshine do not occur in SPEC.md.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "grep -i \"albedo|earth radiation|earthshine\": 0 lines"
+     }
+    ]
+   },
+   "weaker": "neither",
+   "reading": "Off on both sides in the stored rows."
+  },
+  {
+   "setting": "Sun and Moon: terms",
+   "ffm": {
+    "value": "Point-mass Sun and Moon (THIRD_BODY_IDS 10, 301), the full acceleration at every integrator evaluation; no other body in the harness arm (FFM-1 adds the Venus, Mars and Jupiter barycenters).",
+    "sources": [
+     {
+      "file": "experiments/operator-theory/all-regimes.mjs",
+      "sha256": "b09c0d16ddf3831b5d007e355ab29924ce1c9798bd8d2b668bf5c58bd0c286d6",
+      "where": "ffmHigh thirdBodies [10, 301]"
+     },
+     {
+      "file": "experiments/operator-theory/lib/frame.mjs",
+      "sha256": "9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce",
+      "where": "ENABLE_THIRD_BODY, THIRD_BODY_IDS"
+     },
+     {
+      "file": "propagator/ffm/FFM.md",
+      "sha256": "5de4ffbc5f85d0c042fc5d19332118e0ceb4ee2c372220fef2e98c1bce22c212",
+      "where": "thirdBodies; fieldMaximumDegree 0: point masses"
+     }
+    ]
+   },
+   "ap": {
+    "value": "Point-mass Sun and Moon. At an epoch period of 1100 min or more (GEO: about 1436 min) the long-period regime takes the full point-mass acceleration from the instantaneous geometry in the rates, with no output-time lunar-solar periodic terms; section 5's octupole averaging and 16.8's degree 4 to 10 terms apply below 1100 min only.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "5 (bodies, mass ratios), 7 (the 1100 min division), 16.8 (\"the long-period regime takes the full point-mass acceleration\")"
+     }
+    ]
+   },
+   "weaker": "neither",
+   "reading": "The same force on both sides; AP evaluates it in averaged rates on its own grid."
+  },
+  {
+   "setting": "Sun and Moon: ephemeris",
+   "ffm": {
+    "value": "JPL DE440s SPK (de440s.bsp, sha256 c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2) on the kernel port, checked by hash before every run; EPHEMERIS_SOURCE JPL_SPK.",
+    "sources": [
+     {
+      "file": "experiments/ffm-atmosphere-xm3/config.json",
+      "sha256": "3eea04347d3e270c62f9a2bea9841b35396898c8778258698f839298570e5c85",
+      "where": "environment.kernel"
+     },
+     {
+      "file": "experiments/operator-theory/lib/host.mjs",
+      "sha256": "47373ddbb3503f19c4dd12355388105cbb772794e068874c2444cd96ccc6220d",
+      "where": "the kernel's hash checked; kernelFrame"
+     },
+     {
+      "file": "experiments/operator-theory/lib/frame.mjs",
+      "sha256": "9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce",
+      "where": "EPHEMERIS_SOURCE JPL_SPK"
+     }
+    ]
+   },
+   "ap": {
+    "value": "Analytic: the Sun from mean elements, the Moon from Brown's main terms (reproducing the library's direction and distance to 3e-13); JPL ephemerides only when loaded, which this module does not do.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "5 Bodies; probe 5.3; \"JPL ephemerides are used only when loaded\""
+     }
+    ]
+   },
+   "weaker": "ap",
+   "reading": "FFM carries the richer source; it cannot explain an FFM loss."
+  },
+  {
+   "setting": "Earth tides: solid, ocean, pole",
+   "ffm": {
+    "value": "Solid (IERS 2010), ocean (FES2004 30x30) and pole tides are available; the harness high arm sets solidTides false (SOLID_TIDES NONE), no OCEAN_TIDES, no pole tide: none flown in the GE rows.",
+    "sources": [
+     {
+      "file": "experiments/operator-theory/all-regimes.mjs",
+      "sha256": "b09c0d16ddf3831b5d007e355ab29924ce1c9798bd8d2b668bf5c58bd0c286d6",
+      "where": "ffmHigh solidTides: false"
+     },
+     {
+      "file": "experiments/operator-theory/lib/frame.mjs",
+      "sha256": "9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce",
+      "where": "SOLID_TIDES NONE; OCEAN_TIDES only when f.oceanTides"
+     },
+     {
+      "file": "propagator/ffm/src/cpp/src/prw_dynamics.cpp",
+      "sha256": "fd334bbdb05bc37bd1e4969e9e2d3013af0ef2ddee88d6e6dc67a02965925195",
+      "where": "SOLID_TIDES and OCEAN_TIDES switches"
+     },
+     {
+      "file": "propagator/ffm/FFM.md",
+      "sha256": "5de4ffbc5f85d0c042fc5d19332118e0ceb4ee2c372220fef2e98c1bce22c212",
+      "where": "solidTides, oceanTides, poleTide rows"
+     }
+    ]
+   },
+   "ap": {
+    "value": "None: solid tide and ocean tide do not occur in SPEC.md; 16.8's \"tidal acceleration\" is the third bodies' potential, not an Earth tide.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "grep -i \"solid tide|ocean tide\": 0 lines; 16.8"
+     }
+    ]
+   },
+   "weaker": "neither",
+   "reading": "Off on both sides in the stored rows."
+  },
+  {
+   "setting": "Gravity: field and degree at GEO",
+   "ffm": {
+    "value": "Embedded EGM2008, fully normalized, to degree and order 20 (ffmHigh: SPHERICAL_HARMONICS 20x20, every coefficient), in Earth-fixed axes through IERS EOP; FFM-1's catalog default 70x70 is not what flew.",
+    "sources": [
+     {
+      "file": "experiments/operator-theory/all-regimes.mjs",
+      "sha256": "b09c0d16ddf3831b5d007e355ab29924ce1c9798bd8d2b668bf5c58bd0c286d6",
+      "where": "ffmHigh gravity SPHERICAL_HARMONICS degree 20 order 20"
+     },
+     {
+      "file": "propagator/ffm/src/cpp/src/prw_dynamics.cpp",
+      "sha256": "fd334bbdb05bc37bd1e4969e9e2d3013af0ef2ddee88d6e6dc67a02965925195",
+      "where": "SPHERICAL_HARMONICS: the embedded EGM2008 to the stated degree and order, every coefficient"
+     },
+     {
+      "file": "propagator/ffm/lib/force_models.cpp",
+      "sha256": "e5972241d304d5b16219e5e2fb9912cf89fa45a116fc28c5c63c5d63f00a66b5",
+      "where": "EmbeddedEarthGravityField EGM2008"
+     }
+    ]
+   },
+   "ap": {
+    "value": "EGM-96: the theory's zonals J2 to J5, the zonal tail J6 to J20 (FORCES z = 20), the one-day class's 27 resonant tesseral terms of degrees 2 to 4, the m-daily and first-order tesserals to degree 12 and the near-resonant terms to degree 31 (FORCES d = 31), each first order at the mean elements.",
+    "sources": [
+     {
+      "file": "experiments/operator-theory/lib/ap.mjs",
+      "sha256": "08ecf5f294c3b42c7ebb618f45f408a8ec3ad981dd4172bdfe0f13bd33165d7b",
+      "where": "apForces tesseral 31, zonal 20"
+     },
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "1.3 and 2 (EGM-96 zonals), 6.1 (the one-day class), 16.2 (tesseral families and caps), 16.3 (zonal tail)"
+     },
+     {
+      "file": "propagator/sdn-ap/src/tesseral.inc",
+      "sha256": "f48d086f7445bd4ae07b50ffa4434b57e5dd3ccc9913d3fb6f49e62a11a05884",
+      "where": "the tesseral tables"
+     }
+    ]
+   },
+   "weaker": "ffm",
+   "reading": "Different fields (EGM2008 against EGM-96) and truncations. FFM carries every term to degree 20; the one set AP carries that FFM does not is the near-resonant terms of degree 21 to 31, so by the rule's letter (a term AP carries and FFM does not) this is the row where FFM's choice is the weaker. Whether those terms move a GEO forecast is not read here. Disclosed: before the first ratio was read this row was classed \"neither\" with the note that it would count as FFM the weaker only for a loss; the rule as registered makes it count, so it is classed by the rule."
+  },
+  {
+   "setting": "Integrator and step",
+   "ffm": {
+    "value": "RK78 (Fehlberg 7(8)), relative tolerance 1e-8, absolute tolerances 1e-5 per component, steps 1e-3 to 300 s, initial 60 s; the catalog's 1e-14 and 120 s are not what flew.",
+    "sources": [
+     {
+      "file": "experiments/operator-theory/all-regimes.mjs",
+      "sha256": "b09c0d16ddf3831b5d007e355ab29924ce1c9798bd8d2b668bf5c58bd0c286d6",
+      "where": "ffmHigh integrator tolerance 1e-8, maxStep 300, minStep 1e-3"
+     },
+     {
+      "file": "experiments/operator-theory/lib/frame.mjs",
+      "sha256": "9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce",
+      "where": "RK78; ABSOLUTE_TOLERANCES tolerance x 1000; INITIAL_STEP_SECONDS 60"
+     },
+     {
+      "file": "propagator/ffm/FFM.md",
+      "sha256": "5de4ffbc5f85d0c042fc5d19332118e0ceb4ee2c372220fef2e98c1bce22c212",
+      "where": "integrator: catalog 1e-14, 120 s"
+     }
+    ]
+   },
+   "ap": {
+    "value": "Averaged rates integrated on the theory's own grid; the one-day class steps 38 minutes; output states from the mean elements plus the short-period terms.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "9, 16.4 (\"the one-day class retains its frame correction and 38-minute grid\"), One-day archive windows (the 38-minute step confirmed)"
+     }
+    ]
+   },
+   "weaker": "neither",
+   "reading": "Not a force setting; carried because it differs."
+  },
+  {
+   "setting": "Frame and Earth orientation",
+   "ffm": {
+    "value": "GCRF in and out; the field in ITRF through the IERS finals rows on the earth_orientation port (environment.json sha256 520b825d61e64418d1904a482da49c647cb2f92765c9df736d14d90a6e61dcf6, parsed by data-source/eop-parser).",
+    "sources": [
+     {
+      "file": "experiments/operator-theory/lib/frame.mjs",
+      "sha256": "9d2084b86cb4def6adb8b7fe15f8f45880d92a5142408915303b98c81271b9ce",
+      "where": "GCRF coordinate system"
+     },
+     {
+      "file": "experiments/ffm-atmosphere-xm3/config.json",
+      "sha256": "3eea04347d3e270c62f9a2bea9841b35396898c8778258698f839298570e5c85",
+      "where": "environment.earthOrientation"
+     },
+     {
+      "file": "propagator/ffm/FFM.md",
+      "sha256": "5de4ffbc5f85d0c042fc5d19332118e0ceb4ee2c372220fef2e98c1bce22c212",
+      "where": "frames"
+     }
+    ]
+   },
+   "ap": {
+    "value": "TEME of date; the one-day class carries epoch-axis states to TEME of date by M(t) M(t0)^T, M the GCRF-to-TEME matrix of gcrf.inc, linear between 12-hour nodes; GCRF fit inputs converted at each sample date.",
+    "sources": [
+     {
+      "file": "propagator/sdn-ap/SPEC.md",
+      "sha256": "a098f94890cae81854dd21ae66ddd94034e083135e8b056c28d3a518de63c96a",
+      "where": "10, 16.4"
+     },
+     {
+      "file": "propagator/sdn-ap/src/gcrf.inc",
+      "sha256": "22fb1c9188450b52f12a164096eb4b8c45594f1dcbe16beee336520d34b12896",
+      "where": "the GCRF-to-TEME nodes"
+     }
+    ]
+   },
+   "weaker": "neither",
+   "reading": "Not a force setting; carried because it differs."
+  }
+ ],
+ "statistic": "exp(median over windows of ln(F72.e / AP72.e)); e the 3D RMS position error (km) of the lead day's bin, counted from the end of the 72 h fit (experiments/ffm-atmosphere-xm3/config.json scoring). windowCluster: 95 % bootstrap with the window as the cluster, 10,000 draws, seed SHA-256 of the tag. objectWeek: the same over satellite x ISO-week clusters, report only.",
+ "gfz": {
+  "truth": "GFZ multi-GNSS rapid orbits; BeiDou-2G, BeiDou-3G, QZS-2G; cutoffs 2025-10-04 to 2025-10-12 every 2 days",
+  "windows": [
+   "GE|C006 BDS-2G|2025-10-04",
+   "GE|C006 BDS-2G|2025-10-06",
+   "GE|C006 BDS-2G|2025-10-08",
+   "GE|C006 BDS-2G|2025-10-10",
+   "GE|C006 BDS-2G|2025-10-12",
+   "GE|C011 BDS-2G|2025-10-04",
+   "GE|C011 BDS-2G|2025-10-06",
+   "GE|C011 BDS-2G|2025-10-08",
+   "GE|C011 BDS-2G|2025-10-10",
+   "GE|C011 BDS-2G|2025-10-12",
+   "GE|C016 BDS-2G|2025-10-04",
+   "GE|C016 BDS-2G|2025-10-06",
+   "GE|C016 BDS-2G|2025-10-08",
+   "GE|C016 BDS-2G|2025-10-10",
+   "GE|C016 BDS-2G|2025-10-12",
+   "GE|C018 BDS-2G|2025-10-04",
+   "GE|C018 BDS-2G|2025-10-06",
+   "GE|C018 BDS-2G|2025-10-08",
+   "GE|C018 BDS-2G|2025-10-10",
+   "GE|C018 BDS-2G|2025-10-12",
+   "GE|C020 BDS-2G|2025-10-04",
+   "GE|C020 BDS-2G|2025-10-06",
+   "GE|C020 BDS-2G|2025-10-08",
+   "GE|C020 BDS-2G|2025-10-10",
+   "GE|C020 BDS-2G|2025-10-12",
+   "GE|C217 BDS-3G|2025-10-04",
+   "GE|C217 BDS-3G|2025-10-06",
+   "GE|C217 BDS-3G|2025-10-08",
+   "GE|C217 BDS-3G|2025-10-10",
+   "GE|C217 BDS-3G|2025-10-12",
+   "GE|C229 BDS-3G|2025-10-04",
+   "GE|C229 BDS-3G|2025-10-06",
+   "GE|C229 BDS-3G|2025-10-08",
+   "GE|C229 BDS-3G|2025-10-10",
+   "GE|C229 BDS-3G|2025-10-12",
+   "GE|C231 BDS-3G|2025-10-04",
+   "GE|C231 BDS-3G|2025-10-06",
+   "GE|C231 BDS-3G|2025-10-08",
+   "GE|C231 BDS-3G|2025-10-10",
+   "GE|C231 BDS-3G|2025-10-12",
+   "GE|J003 QZS-2G|2025-10-04",
+   "GE|J003 QZS-2G|2025-10-06",
+   "GE|J003 QZS-2G|2025-10-08",
+   "GE|J003 QZS-2G|2025-10-10",
+   "GE|J003 QZS-2G|2025-10-12"
+  ],
+  "cells": [
+   {
+    "fit": 72,
+    "lead": 48,
+    "day": 2,
+    "windows": 33,
+    "satellites": 9,
+    "ffmWorse": 13,
+    "ratio": 0.937,
+    "windowCluster": {
+     "interval": [
+      0.854,
+      1.113
+     ],
+     "lower": 0.854132,
+     "upper": 1.112921,
+     "clusters": 33
+    },
+    "objectWeek": {
+     "interval": [
+      0.828,
+      1.146
+     ],
+     "lower": 0.827727,
+     "upper": 1.146033,
+     "clusters": 15
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.237
+     },
+     "C011 BDS-2G": {
+      "windows": 2,
+      "ratio": 0.906
+     },
+     "C016 BDS-2G": {
+      "windows": 2,
+      "ratio": 0.862
+     },
+     "C018 BDS-2G": {
+      "windows": 4,
+      "ratio": 0.614
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1.312
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1.349
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 0.679
+     },
+     "C231 BDS-3G": {
+      "windows": 3,
+      "ratio": 0.873
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 0.812
+     }
+    },
+    "medianKm": {
+     "ffm": 0.035,
+     "ap": 0.032
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 72,
+    "day": 3,
+    "windows": 30,
+    "satellites": 9,
+    "ffmWorse": 18,
+    "ratio": 1.088,
+    "windowCluster": {
+     "interval": [
+      0.963,
+      1.398
+     ],
+     "lower": 0.963236,
+     "upper": 1.397697,
+     "clusters": 30
+    },
+    "objectWeek": {
+     "interval": [
+      0.942,
+      1.527
+     ],
+     "lower": 0.941947,
+     "upper": 1.527142,
+     "clusters": 15
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.381
+     },
+     "C011 BDS-2G": {
+      "windows": 1,
+      "ratio": 1.297
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.017
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 0.64
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 1.758
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 2.288
+     },
+     "C229 BDS-3G": {
+      "windows": 3,
+      "ratio": 0.998
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 0.995
+     },
+     "J003 QZS-2G": {
+      "windows": 5,
+      "ratio": 0.892
+     }
+    },
+    "medianKm": {
+     "ffm": 0.064,
+     "ap": 0.046
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-04",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-08",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10",
+     "GE|J003 QZS-2G|2025-10-12"
+    ]
+   },
+   {
+    "fit": 72,
+    "lead": 168,
+    "day": 7,
+    "windows": 32,
+    "satellites": 9,
+    "ffmWorse": 22,
+    "ratio": 1.04,
+    "windowCluster": {
+     "interval": [
+      1,
+      1.52
+     ],
+     "lower": 1.000276,
+     "upper": 1.520433,
+     "clusters": 32
+    },
+    "objectWeek": {
+     "interval": [
+      0.998,
+      1.692
+     ],
+     "lower": 0.998239,
+     "upper": 1.692096,
+     "clusters": 15
+    },
+    "perSatellite": {
+     "C006 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.452
+     },
+     "C011 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.592
+     },
+     "C016 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.117
+     },
+     "C018 BDS-2G": {
+      "windows": 3,
+      "ratio": 1.001
+     },
+     "C020 BDS-2G": {
+      "windows": 5,
+      "ratio": 2.44
+     },
+     "C217 BDS-3G": {
+      "windows": 5,
+      "ratio": 1.463
+     },
+     "C229 BDS-3G": {
+      "windows": 4,
+      "ratio": 0.993
+     },
+     "C231 BDS-3G": {
+      "windows": 2,
+      "ratio": 0.997
+     },
+     "J003 QZS-2G": {
+      "windows": 4,
+      "ratio": 0.986
+     }
+    },
+    "medianKm": {
+     "ffm": 0.28,
+     "ap": 0.209
+    },
+    "keys": [
+     "GE|C006 BDS-2G|2025-10-08",
+     "GE|C006 BDS-2G|2025-10-10",
+     "GE|C006 BDS-2G|2025-10-12",
+     "GE|C011 BDS-2G|2025-10-04",
+     "GE|C011 BDS-2G|2025-10-06",
+     "GE|C011 BDS-2G|2025-10-12",
+     "GE|C016 BDS-2G|2025-10-04",
+     "GE|C016 BDS-2G|2025-10-10",
+     "GE|C016 BDS-2G|2025-10-12",
+     "GE|C018 BDS-2G|2025-10-06",
+     "GE|C018 BDS-2G|2025-10-08",
+     "GE|C018 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-04",
+     "GE|C020 BDS-2G|2025-10-06",
+     "GE|C020 BDS-2G|2025-10-08",
+     "GE|C020 BDS-2G|2025-10-10",
+     "GE|C020 BDS-2G|2025-10-12",
+     "GE|C217 BDS-3G|2025-10-04",
+     "GE|C217 BDS-3G|2025-10-06",
+     "GE|C217 BDS-3G|2025-10-08",
+     "GE|C217 BDS-3G|2025-10-10",
+     "GE|C217 BDS-3G|2025-10-12",
+     "GE|C229 BDS-3G|2025-10-04",
+     "GE|C229 BDS-3G|2025-10-06",
+     "GE|C229 BDS-3G|2025-10-08",
+     "GE|C229 BDS-3G|2025-10-12",
+     "GE|C231 BDS-3G|2025-10-10",
+     "GE|C231 BDS-3G|2025-10-12",
+     "GE|J003 QZS-2G|2025-10-04",
+     "GE|J003 QZS-2G|2025-10-06",
+     "GE|J003 QZS-2G|2025-10-08",
+     "GE|J003 QZS-2G|2025-10-10"
+    ]
+   }
+  ]
+ },
+ "mt9": {
+  "population": "a second population: separate satellites, separate truth. Never read against the GFZ column; agreement or disagreement between the columns is not validation of either.",
+  "truth": "WAAS message type 9 broadcast (URA 2 m): Galaxy 30, SES-15, Eutelsat 117 West B; cutoffs 2026-09-02 to 2026-10-26 every 2 days",
+  "noise": "revolution-to-revolution noise about 45 m: the per-rev record's measurement (experiments-ffm-step-flag-per-rev-20261105) as the SDN-AP session states it; not measured here, and no landed per-rev file at experiments 1d12fb5b prints the figure. Measured bound in this store: FFM fitted to 24 h of Galaxy 30's broadcast predicts it one day ahead to a median of 0.060 km between burns (results/ap-truth/geo/README.md).",
+  "ffmBuild": "FFM 2.0.4 (not 2.2.x); see builds.rows.mt9.ffm.note",
+  "windows": [
+   "WA|EUTELSAT 117 WEST B|2026-09-02",
+   "WA|EUTELSAT 117 WEST B|2026-09-04",
+   "WA|EUTELSAT 117 WEST B|2026-09-06",
+   "WA|EUTELSAT 117 WEST B|2026-09-08",
+   "WA|EUTELSAT 117 WEST B|2026-09-10",
+   "WA|EUTELSAT 117 WEST B|2026-09-12",
+   "WA|EUTELSAT 117 WEST B|2026-09-14",
+   "WA|EUTELSAT 117 WEST B|2026-09-16",
+   "WA|EUTELSAT 117 WEST B|2026-09-18",
+   "WA|EUTELSAT 117 WEST B|2026-09-20",
+   "WA|EUTELSAT 117 WEST B|2026-09-22",
+   "WA|EUTELSAT 117 WEST B|2026-09-24",
+   "WA|EUTELSAT 117 WEST B|2026-09-26",
+   "WA|EUTELSAT 117 WEST B|2026-09-28",
+   "WA|EUTELSAT 117 WEST B|2026-09-30",
+   "WA|EUTELSAT 117 WEST B|2026-10-02",
+   "WA|EUTELSAT 117 WEST B|2026-10-04",
+   "WA|EUTELSAT 117 WEST B|2026-10-06",
+   "WA|EUTELSAT 117 WEST B|2026-10-08",
+   "WA|EUTELSAT 117 WEST B|2026-10-10",
+   "WA|EUTELSAT 117 WEST B|2026-10-12",
+   "WA|EUTELSAT 117 WEST B|2026-10-14",
+   "WA|EUTELSAT 117 WEST B|2026-10-16",
+   "WA|EUTELSAT 117 WEST B|2026-10-18",
+   "WA|EUTELSAT 117 WEST B|2026-10-20",
+   "WA|EUTELSAT 117 WEST B|2026-10-22",
+   "WA|EUTELSAT 117 WEST B|2026-10-24",
+   "WA|EUTELSAT 117 WEST B|2026-10-26",
+   "WA|GALAXY 30 (G-30)|2026-09-02",
+   "WA|GALAXY 30 (G-30)|2026-09-04",
+   "WA|GALAXY 30 (G-30)|2026-09-06",
+   "WA|GALAXY 30 (G-30)|2026-09-08",
+   "WA|GALAXY 30 (G-30)|2026-09-10",
+   "WA|GALAXY 30 (G-30)|2026-09-12",
+   "WA|GALAXY 30 (G-30)|2026-09-14",
+   "WA|GALAXY 30 (G-30)|2026-09-16",
+   "WA|GALAXY 30 (G-30)|2026-09-18",
+   "WA|GALAXY 30 (G-30)|2026-09-20",
+   "WA|GALAXY 30 (G-30)|2026-09-22",
+   "WA|GALAXY 30 (G-30)|2026-09-24",
+   "WA|GALAXY 30 (G-30)|2026-09-26",
+   "WA|GALAXY 30 (G-30)|2026-09-28",
+   "WA|GALAXY 30 (G-30)|2026-09-30",
+   "WA|GALAXY 30 (G-30)|2026-10-02",
+   "WA|GALAXY 30 (G-30)|2026-10-04",
+   "WA|GALAXY 30 (G-30)|2026-10-06",
+   "WA|GALAXY 30 (G-30)|2026-10-08",
+   "WA|GALAXY 30 (G-30)|2026-10-10",
+   "WA|GALAXY 30 (G-30)|2026-10-12",
+   "WA|GALAXY 30 (G-30)|2026-10-14",
+   "WA|GALAXY 30 (G-30)|2026-10-16",
+   "WA|GALAXY 30 (G-30)|2026-10-18",
+   "WA|GALAXY 30 (G-30)|2026-10-20",
+   "WA|GALAXY 30 (G-30)|2026-10-22",
+   "WA|GALAXY 30 (G-30)|2026-10-24",
+   "WA|GALAXY 30 (G-30)|2026-10-26",
+   "WA|SES-15|2026-09-02",
+   "WA|SES-15|2026-09-04",
+   "WA|SES-15|2026-09-06",
+   "WA|SES-15|2026-09-08",
+   "WA|SES-15|2026-09-10",
+   "WA|SES-15|2026-09-12",
+   "WA|SES-15|2026-09-14",
+   "WA|SES-15|2026-09-16",
+   "WA|SES-15|2026-09-18",
+   "WA|SES-15|2026-09-20",
+   "WA|SES-15|2026-09-22",
+   "WA|SES-15|2026-09-24",
+   "WA|SES-15|2026-09-26",
+   "WA|SES-15|2026-09-28",
+   "WA|SES-15|2026-09-30",
+   "WA|SES-15|2026-10-02",
+   "WA|SES-15|2026-10-04",
+   "WA|SES-15|2026-10-06",
+   "WA|SES-15|2026-10-08",
+   "WA|SES-15|2026-10-10",
+   "WA|SES-15|2026-10-12",
+   "WA|SES-15|2026-10-14",
+   "WA|SES-15|2026-10-16",
+   "WA|SES-15|2026-10-18",
+   "WA|SES-15|2026-10-20",
+   "WA|SES-15|2026-10-22",
+   "WA|SES-15|2026-10-24",
+   "WA|SES-15|2026-10-26"
+  ],
+  "cells": [
+   {
+    "fit": 72,
+    "lead": 48,
+    "day": 2,
+    "windows": 73,
+    "satellites": 3,
+    "ffmWorse": 23,
+    "ratio": 1,
+    "windowCluster": {
+     "interval": [
+      0.999,
+      1
+     ],
+     "lower": 0.999183,
+     "upper": 0.999869,
+     "clusters": 73
+    },
+    "objectWeek": {
+     "interval": [
+      0.999,
+      1
+     ],
+     "lower": 0.999203,
+     "upper": 0.999885,
+     "clusters": 26
+    },
+    "perSatellite": {
+     "EUTELSAT 117 WEST B": {
+      "windows": 18,
+      "ratio": 0.999
+     },
+     "GALAXY 30 (G-30)": {
+      "windows": 28,
+      "ratio": 0.999
+     },
+     "SES-15": {
+      "windows": 27,
+      "ratio": 1
+     }
+    },
+    "medianKm": {
+     "ffm": 4.971,
+     "ap": 4.971
+    },
+    "keys": [
+     "WA|EUTELSAT 117 WEST B|2026-09-02",
+     "WA|EUTELSAT 117 WEST B|2026-09-04",
+     "WA|EUTELSAT 117 WEST B|2026-09-12",
+     "WA|EUTELSAT 117 WEST B|2026-09-16",
+     "WA|EUTELSAT 117 WEST B|2026-09-18",
+     "WA|EUTELSAT 117 WEST B|2026-09-20",
+     "WA|EUTELSAT 117 WEST B|2026-09-22",
+     "WA|EUTELSAT 117 WEST B|2026-09-24",
+     "WA|EUTELSAT 117 WEST B|2026-09-26",
+     "WA|EUTELSAT 117 WEST B|2026-09-28",
+     "WA|EUTELSAT 117 WEST B|2026-09-30",
+     "WA|EUTELSAT 117 WEST B|2026-10-02",
+     "WA|EUTELSAT 117 WEST B|2026-10-04",
+     "WA|EUTELSAT 117 WEST B|2026-10-06",
+     "WA|EUTELSAT 117 WEST B|2026-10-08",
+     "WA|EUTELSAT 117 WEST B|2026-10-12",
+     "WA|EUTELSAT 117 WEST B|2026-10-16",
+     "WA|EUTELSAT 117 WEST B|2026-10-26",
+     "WA|GALAXY 30 (G-30)|2026-09-02",
+     "WA|GALAXY 30 (G-30)|2026-09-04",
+     "WA|GALAXY 30 (G-30)|2026-09-06",
+     "WA|GALAXY 30 (G-30)|2026-09-08",
+     "WA|GALAXY 30 (G-30)|2026-09-10",
+     "WA|GALAXY 30 (G-30)|2026-09-12",
+     "WA|GALAXY 30 (G-30)|2026-09-14",
+     "WA|GALAXY 30 (G-30)|2026-09-16",
+     "WA|GALAXY 30 (G-30)|2026-09-18",
+     "WA|GALAXY 30 (G-30)|2026-09-20",
+     "WA|GALAXY 30 (G-30)|2026-09-22",
+     "WA|GALAXY 30 (G-30)|2026-09-24",
+     "WA|GALAXY 30 (G-30)|2026-09-26",
+     "WA|GALAXY 30 (G-30)|2026-09-28",
+     "WA|GALAXY 30 (G-30)|2026-09-30",
+     "WA|GALAXY 30 (G-30)|2026-10-02",
+     "WA|GALAXY 30 (G-30)|2026-10-04",
+     "WA|GALAXY 30 (G-30)|2026-10-06",
+     "WA|GALAXY 30 (G-30)|2026-10-08",
+     "WA|GALAXY 30 (G-30)|2026-10-10",
+     "WA|GALAXY 30 (G-30)|2026-10-12",
+     "WA|GALAXY 30 (G-30)|2026-10-14",
+     "WA|GALAXY 30 (G-30)|2026-10-16",
+     "WA|GALAXY 30 (G-30)|2026-10-18",
+     "WA|GALAXY 30 (G-30)|2026-10-20",
+     "WA|GALAXY 30 (G-30)|2026-10-22",
+     "WA|GALAXY 30 (G-30)|2026-10-24",
+     "WA|GALAXY 30 (G-30)|2026-10-26",
+     "WA|SES-15|2026-09-02",
+     "WA|SES-15|2026-09-04",
+     "WA|SES-15|2026-09-06",
+     "WA|SES-15|2026-09-08",
+     "WA|SES-15|2026-09-10",
+     "WA|SES-15|2026-09-12",
+     "WA|SES-15|2026-09-14",
+     "WA|SES-15|2026-09-16",
+     "WA|SES-15|2026-09-18",
+     "WA|SES-15|2026-09-20",
+     "WA|SES-15|2026-09-22",
+     "WA|SES-15|2026-09-24",
+     "WA|SES-15|2026-09-26",
+     "WA|SES-15|2026-09-28",
+     "WA|SES-15|2026-09-30",
+     "WA|SES-15|2026-10-02",
+     "WA|SES-15|2026-10-04",
+     "WA|SES-15|2026-10-08",
+     "WA|SES-15|2026-10-10",
+     "WA|SES-15|2026-10-12",
+     "WA|SES-15|2026-10-14",
+     "WA|SES-15|2026-10-16",
+     "WA|SES-15|2026-10-18",
+     "WA|SES-15|2026-10-20",
+     "WA|SES-15|2026-10-22",
+     "WA|SES-15|2026-10-24",
+     "WA|SES-15|2026-10-26"
+    ],
+    "registeredBurns": {
+     "inFit": 8,
+     "inForecast": 4,
+     "note": "counted, never selected on; information only"
+    }
+   },
+   {
+    "fit": 72,
+    "lead": 72,
+    "day": 3,
+    "windows": 75,
+    "satellites": 3,
+    "ffmWorse": 27,
+    "ratio": 1,
+    "windowCluster": {
+     "interval": [
+      0.999,
+      1
+     ],
+     "lower": 0.999288,
+     "upper": 0.999883,
+     "clusters": 75
+    },
+    "objectWeek": {
+     "interval": [
+      0.999,
+      1
+     ],
+     "lower": 0.999271,
+     "upper": 1.00004,
+     "clusters": 26
+    },
+    "perSatellite": {
+     "EUTELSAT 117 WEST B": {
+      "windows": 19,
+      "ratio": 1.002
+     },
+     "GALAXY 30 (G-30)": {
+      "windows": 28,
+      "ratio": 0.999
+     },
+     "SES-15": {
+      "windows": 28,
+      "ratio": 1
+     }
+    },
+    "medianKm": {
+     "ffm": 9.588,
+     "ap": 9.592
+    },
+    "keys": [
+     "WA|EUTELSAT 117 WEST B|2026-09-02",
+     "WA|EUTELSAT 117 WEST B|2026-09-04",
+     "WA|EUTELSAT 117 WEST B|2026-09-06",
+     "WA|EUTELSAT 117 WEST B|2026-09-12",
+     "WA|EUTELSAT 117 WEST B|2026-09-14",
+     "WA|EUTELSAT 117 WEST B|2026-09-16",
+     "WA|EUTELSAT 117 WEST B|2026-09-18",
+     "WA|EUTELSAT 117 WEST B|2026-09-20",
+     "WA|EUTELSAT 117 WEST B|2026-09-22",
+     "WA|EUTELSAT 117 WEST B|2026-09-24",
+     "WA|EUTELSAT 117 WEST B|2026-09-26",
+     "WA|EUTELSAT 117 WEST B|2026-09-28",
+     "WA|EUTELSAT 117 WEST B|2026-09-30",
+     "WA|EUTELSAT 117 WEST B|2026-10-02",
+     "WA|EUTELSAT 117 WEST B|2026-10-04",
+     "WA|EUTELSAT 117 WEST B|2026-10-08",
+     "WA|EUTELSAT 117 WEST B|2026-10-12",
+     "WA|EUTELSAT 117 WEST B|2026-10-14",
+     "WA|EUTELSAT 117 WEST B|2026-10-26",
+     "WA|GALAXY 30 (G-30)|2026-09-02",
+     "WA|GALAXY 30 (G-30)|2026-09-04",
+     "WA|GALAXY 30 (G-30)|2026-09-06",
+     "WA|GALAXY 30 (G-30)|2026-09-08",
+     "WA|GALAXY 30 (G-30)|2026-09-10",
+     "WA|GALAXY 30 (G-30)|2026-09-12",
+     "WA|GALAXY 30 (G-30)|2026-09-14",
+     "WA|GALAXY 30 (G-30)|2026-09-16",
+     "WA|GALAXY 30 (G-30)|2026-09-18",
+     "WA|GALAXY 30 (G-30)|2026-09-20",
+     "WA|GALAXY 30 (G-30)|2026-09-22",
+     "WA|GALAXY 30 (G-30)|2026-09-24",
+     "WA|GALAXY 30 (G-30)|2026-09-26",
+     "WA|GALAXY 30 (G-30)|2026-09-28",
+     "WA|GALAXY 30 (G-30)|2026-09-30",
+     "WA|GALAXY 30 (G-30)|2026-10-02",
+     "WA|GALAXY 30 (G-30)|2026-10-04",
+     "WA|GALAXY 30 (G-30)|2026-10-06",
+     "WA|GALAXY 30 (G-30)|2026-10-08",
+     "WA|GALAXY 30 (G-30)|2026-10-10",
+     "WA|GALAXY 30 (G-30)|2026-10-12",
+     "WA|GALAXY 30 (G-30)|2026-10-14",
+     "WA|GALAXY 30 (G-30)|2026-10-16",
+     "WA|GALAXY 30 (G-30)|2026-10-18",
+     "WA|GALAXY 30 (G-30)|2026-10-20",
+     "WA|GALAXY 30 (G-30)|2026-10-22",
+     "WA|GALAXY 30 (G-30)|2026-10-24",
+     "WA|GALAXY 30 (G-30)|2026-10-26",
+     "WA|SES-15|2026-09-02",
+     "WA|SES-15|2026-09-04",
+     "WA|SES-15|2026-09-06",
+     "WA|SES-15|2026-09-08",
+     "WA|SES-15|2026-09-10",
+     "WA|SES-15|2026-09-12",
+     "WA|SES-15|2026-09-14",
+     "WA|SES-15|2026-09-16",
+     "WA|SES-15|2026-09-18",
+     "WA|SES-15|2026-09-20",
+     "WA|SES-15|2026-09-22",
+     "WA|SES-15|2026-09-24",
+     "WA|SES-15|2026-09-26",
+     "WA|SES-15|2026-09-28",
+     "WA|SES-15|2026-09-30",
+     "WA|SES-15|2026-10-02",
+     "WA|SES-15|2026-10-04",
+     "WA|SES-15|2026-10-06",
+     "WA|SES-15|2026-10-08",
+     "WA|SES-15|2026-10-10",
+     "WA|SES-15|2026-10-12",
+     "WA|SES-15|2026-10-14",
+     "WA|SES-15|2026-10-16",
+     "WA|SES-15|2026-10-18",
+     "WA|SES-15|2026-10-20",
+     "WA|SES-15|2026-10-22",
+     "WA|SES-15|2026-10-24",
+     "WA|SES-15|2026-10-26"
+    ],
+    "registeredBurns": {
+     "inFit": 8,
+     "inForecast": 4,
+     "note": "counted, never selected on; information only"
+    }
+   },
+   {
+    "fit": 72,
+    "lead": 168,
+    "day": 7,
+    "windows": 74,
+    "satellites": 3,
+    "ffmWorse": 40,
+    "ratio": 1,
+    "windowCluster": {
+     "interval": [
+      1,
+      1.001
+     ],
+     "lower": 0.999784,
+     "upper": 1.000623,
+     "clusters": 74
+    },
+    "objectWeek": {
+     "interval": [
+      0.999,
+      1.001
+     ],
+     "lower": 0.999334,
+     "upper": 1.000816,
+     "clusters": 26
+    },
+    "perSatellite": {
+     "EUTELSAT 117 WEST B": {
+      "windows": 19,
+      "ratio": 0.998
+     },
+     "GALAXY 30 (G-30)": {
+      "windows": 28,
+      "ratio": 1
+     },
+     "SES-15": {
+      "windows": 27,
+      "ratio": 1.001
+     }
+    },
+    "medianKm": {
+     "ffm": 27.187,
+     "ap": 27.23
+    },
+    "keys": [
+     "WA|EUTELSAT 117 WEST B|2026-09-02",
+     "WA|EUTELSAT 117 WEST B|2026-09-04",
+     "WA|EUTELSAT 117 WEST B|2026-09-06",
+     "WA|EUTELSAT 117 WEST B|2026-09-12",
+     "WA|EUTELSAT 117 WEST B|2026-09-14",
+     "WA|EUTELSAT 117 WEST B|2026-09-16",
+     "WA|EUTELSAT 117 WEST B|2026-09-18",
+     "WA|EUTELSAT 117 WEST B|2026-09-20",
+     "WA|EUTELSAT 117 WEST B|2026-09-22",
+     "WA|EUTELSAT 117 WEST B|2026-09-24",
+     "WA|EUTELSAT 117 WEST B|2026-09-26",
+     "WA|EUTELSAT 117 WEST B|2026-09-28",
+     "WA|EUTELSAT 117 WEST B|2026-09-30",
+     "WA|EUTELSAT 117 WEST B|2026-10-04",
+     "WA|EUTELSAT 117 WEST B|2026-10-06",
+     "WA|EUTELSAT 117 WEST B|2026-10-08",
+     "WA|EUTELSAT 117 WEST B|2026-10-14",
+     "WA|EUTELSAT 117 WEST B|2026-10-16",
+     "WA|EUTELSAT 117 WEST B|2026-10-26",
+     "WA|GALAXY 30 (G-30)|2026-09-02",
+     "WA|GALAXY 30 (G-30)|2026-09-04",
+     "WA|GALAXY 30 (G-30)|2026-09-06",
+     "WA|GALAXY 30 (G-30)|2026-09-08",
+     "WA|GALAXY 30 (G-30)|2026-09-10",
+     "WA|GALAXY 30 (G-30)|2026-09-12",
+     "WA|GALAXY 30 (G-30)|2026-09-14",
+     "WA|GALAXY 30 (G-30)|2026-09-16",
+     "WA|GALAXY 30 (G-30)|2026-09-18",
+     "WA|GALAXY 30 (G-30)|2026-09-20",
+     "WA|GALAXY 30 (G-30)|2026-09-22",
+     "WA|GALAXY 30 (G-30)|2026-09-24",
+     "WA|GALAXY 30 (G-30)|2026-09-26",
+     "WA|GALAXY 30 (G-30)|2026-09-28",
+     "WA|GALAXY 30 (G-30)|2026-09-30",
+     "WA|GALAXY 30 (G-30)|2026-10-02",
+     "WA|GALAXY 30 (G-30)|2026-10-04",
+     "WA|GALAXY 30 (G-30)|2026-10-06",
+     "WA|GALAXY 30 (G-30)|2026-10-08",
+     "WA|GALAXY 30 (G-30)|2026-10-10",
+     "WA|GALAXY 30 (G-30)|2026-10-12",
+     "WA|GALAXY 30 (G-30)|2026-10-14",
+     "WA|GALAXY 30 (G-30)|2026-10-16",
+     "WA|GALAXY 30 (G-30)|2026-10-18",
+     "WA|GALAXY 30 (G-30)|2026-10-20",
+     "WA|GALAXY 30 (G-30)|2026-10-22",
+     "WA|GALAXY 30 (G-30)|2026-10-24",
+     "WA|GALAXY 30 (G-30)|2026-10-26",
+     "WA|SES-15|2026-09-02",
+     "WA|SES-15|2026-09-04",
+     "WA|SES-15|2026-09-06",
+     "WA|SES-15|2026-09-08",
+     "WA|SES-15|2026-09-10",
+     "WA|SES-15|2026-09-12",
+     "WA|SES-15|2026-09-14",
+     "WA|SES-15|2026-09-16",
+     "WA|SES-15|2026-09-18",
+     "WA|SES-15|2026-09-20",
+     "WA|SES-15|2026-09-22",
+     "WA|SES-15|2026-09-24",
+     "WA|SES-15|2026-09-26",
+     "WA|SES-15|2026-09-28",
+     "WA|SES-15|2026-09-30",
+     "WA|SES-15|2026-10-02",
+     "WA|SES-15|2026-10-04",
+     "WA|SES-15|2026-10-06",
+     "WA|SES-15|2026-10-08",
+     "WA|SES-15|2026-10-10",
+     "WA|SES-15|2026-10-12",
+     "WA|SES-15|2026-10-14",
+     "WA|SES-15|2026-10-16",
+     "WA|SES-15|2026-10-18",
+     "WA|SES-15|2026-10-20",
+     "WA|SES-15|2026-10-22",
+     "WA|SES-15|2026-10-26"
+    ],
+    "registeredBurns": {
+     "inFit": 8,
+     "inForecast": 12,
+     "note": "counted, never selected on; information only"
+    }
+   }
+  ]
+ },
+ "verdict": {
+  "losses": [
+   {
+    "cell": "72/168",
+    "ratio": 1.04,
+    "windowClusterLower": 1.000276,
+    "windowClusterUpper": 1.520433,
+    "objectWeek": [
+     0.998,
+     1.692
+    ],
+    "windows": 32,
+    "ffmWorse": 22
+   }
+  ],
+  "records": [
+   {
+    "setting": "Gravity: field and degree at GEO",
+    "record": "modules-ffm-geo-gravity-field-and-degree-at-geo-20261106",
+    "shouldTest": "refly the same GE windows' F72 at FFM-1's catalog degree (70x70, every coefficient, so the field holds every term of degree 21 to 70) and read 72/168 again by this record's statistic; a ratio and interval that do not move clear the row"
+   }
+  ],
+  "margin": "the loss rests on the window-cluster lower bound 1.000276 at 72/168 against 1; the object-week interval of the same cell holds 1 ([0.998, 1.692]), as results/ap-truth/compare/ffm-ap-ratio.json read it; the rule is the window-cluster bound and is applied as registered",
+  "statement": "a loss at 72/168 the settings table reads to FFM's weaker setting: Gravity: field and degree at GEO"
+ }
+}
