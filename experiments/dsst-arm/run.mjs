@@ -159,13 +159,13 @@ function buildTable(rows, registration) {
 /** The cost rows (the registered subsample, one window at a time, single thread): medians per (input, regime) and fit. */
 function buildCost(costRows) {
   const by = new Map();
-  for (const r of costRows.filter((r) => !r.failed && !r.unscored && r.cost)) { const k = `${r.input}|${r.regime}|${r.fit}`; (by.get(k) ?? by.set(k, []).get(k)).push(r); }
+  for (const r of costRows.filter((r) => !r.failed && !r.unscored && r.cost && r.cost.heapBound)) { const k = `${r.input}|${r.regime}|${r.fit}`; (by.get(k) ?? by.set(k, []).get(k)).push(r); }
   const med = (list, f) => Number(median(list.map(f)).toPrecision(4));
   const rows = [...by].sort(([a], [b]) => a.localeCompare(b)).map(([k, list]) => { const [input, regime, fit] = k.split('|'); return { input, regime, fit: Number(fit), n: list.length,
     fitCpuSPerObjectDay: med(list, (r) => (r.cost.fitCpuS / (r.fit / 24))), fitWallSPerObjectDay: med(list, (r) => r.cost.fitWallS / (r.fit / 24)), flightCpuSPerObjectDay: med(list, (r) => r.cost.flightCpuS / r.cost.objectDays), flightWallSPerObjectDay: med(list, (r) => r.cost.flightWallS / r.cost.objectDays),
-    stepSeconds: list[0].cost.stepSeconds, peakHeapBytes: Math.round(median(list.map((r) => r.cost.peakHeapBytes))), arcStates: Math.round(median(list.map((r) => r.arcStates))) }; });
+    stepSeconds: list[0].cost.stepSeconds, liveHeapMaxBytes: Math.round(median(list.map((r) => r.cost.liveHeapMaxBytes).filter(Number.isFinite))), heapBound: list[0].cost.heapBound, arcStates: Math.round(median(list.map((r) => r.arcStates))) }; });
   const summaries = fs.existsSync(STORE) ? fs.readdirSync(STORE).filter((f) => /^cost-.*\.json$/.test(f)).sort().map((f) => JSON.parse(fs.readFileSync(path.join(STORE, f), 'utf8'))) : [];
-  return { measures: 'per window: CPU user plus system (OperatingSystemMXBean.getProcessCpuTime) and wall for the fit, per object-day of the arc, and for the flight, per object-day flown at the step named; peak heap (the heap pools\' peak usage, reset before the call); the JVM\'s maximum resident set size per process (/usr/bin/time -l); jar bytes 8,496,500 (Orekit) + 3,055,806 (Hipparchus); one uncounted window warms the JVM; the 1-minute load average before and after each window is in its row', machine: 'Mac Studio, Apple M3 Ultra, 28 cores', singleThread: true, processes: summaries, rows };
+  return { measures: 'per window: CPU user plus system (OperatingSystemMXBean.getProcessCpuTime) and wall for the fit, per object-day of the arc, and for the flight, per object-day flown at the step named; DSST\'s peak memory, the largest heap used after any GC during the window\'s fit and flight (the JVM\'s GC log), on a fixed heap (-Xms equal to -Xmx, the same for every window); the JVM\'s maximum resident set size per process (/usr/bin/time -l); jar bytes 8,496,500 (Orekit) + 3,055,806 (Hipparchus); one uncounted window warms the JVM; the 1-minute load average before and after each window is in its row', machine: 'Mac Studio, Apple M3 Ultra, 28 cores', singleThread: true, processes: summaries, rows };
 }
 
 const tableBytes = (table) => `${JSON.stringify(table, null, 1)}\n`;
@@ -175,8 +175,8 @@ function readme(table, cost, rows) {
     `Build: Orekit ${table.builds?.orekit?.version} (${table.builds?.orekit?.sha256?.slice(0, 12)}), Hipparchus ${table.builds?.hipparchus?.version}, ${table.builds?.jvm}, DsstArm.java ${table.builds?.driverSha256?.slice(0, 12)}. Cost rows on ${cost.machine}, single thread.`, '',
     '| Reference | Regime | Fit h | Lead h | ' + Object.keys(table.columns).join(' | ') + ' | AP/DSST median ratio [97.5 % interval of ln] |', '|---|---|---:|---:|' + Object.keys(table.columns).map(() => '---:').join('|') + '|---|'];
   for (const r of table.rows) lines.push(`| ${r.reference} | ${r.regime} | ${r.fit} | ${r.lead} | ${Object.keys(table.columns).map((c) => (r.arms[c] ? `${r.arms[c][0]} / ${r.arms[c][1]} (${r.arms[c][2]})` : '')).join(' | ')} | ${r.apOverDsst ? `${r.apOverDsst.medianRatio} [${r.apOverDsst.interval975.join(', ')}] n ${r.apOverDsst.n}` : ''} |`);
-  lines.push('', '## Cost', '', `${cost.measures}.`, '', '| Input | Regime | Fit h | n | Fit CPU s / object-day | Fit wall | Flight CPU s / object-day | Flight wall | Step s | Peak heap MB |', '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|');
-  for (const c of cost.rows) lines.push(`| ${c.input} | ${c.regime} | ${c.fit} | ${c.n} | ${c.fitCpuSPerObjectDay} | ${c.fitWallSPerObjectDay} | ${c.flightCpuSPerObjectDay} | ${c.flightWallSPerObjectDay} | ${c.stepSeconds} | ${(c.peakHeapBytes / 1048576).toFixed(0)} |`);
+  lines.push('', '## Cost', '', `${cost.measures}.`, '', '| Input | Regime | Fit h | n | Fit CPU s / object-day | Fit wall | Flight CPU s / object-day | Flight wall | Step s | Largest heap after GC MB |', '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|');
+  for (const c of cost.rows) lines.push(`| ${c.input} | ${c.regime} | ${c.fit} | ${c.n} | ${c.fitCpuSPerObjectDay} | ${c.fitWallSPerObjectDay} | ${c.flightCpuSPerObjectDay} | ${c.flightWallSPerObjectDay} | ${c.stepSeconds} | ${(c.liveHeapMaxBytes / 1048576).toFixed(0)} |`);
   for (const p of cost.processes) lines.push('', `Process ${p.store}: maximum resident set size ${p.maxRssBytes ? `${(p.maxRssBytes / 1048576).toFixed(0)} MB` : 'not recorded'}, ${p.rows} windows, ${p.jvm}.`);
   return `${lines.join('\n')}\n`;
 }
@@ -190,6 +190,17 @@ function phaseTables(rows, costRows, registration) {
   console.log(`${table.rows.length} cells from ${rows.length} rows (${costRows.length} cost rows) -> results/dsst-arm/table.json`);
 }
 
+/** The commit on origin/main whose subject names a dated amendment, or null: { sha, at }. */
+function amendmentAt(name) {
+  let line;
+  try { line = git('log', '-1', '--fixed-strings', `--grep=${name}`, '--format=%H %ct', 'origin/main', '--', 'experiments/dsst-arm/DSST.md').toString().trim(); } catch { return null; }
+  if (!line) return null;
+  const [sha, seconds] = line.split(' ');
+  return { sha, at: Number(seconds) * 1000 };
+}
+// The registration each kind of row was written under: accuracy rows after the grid-check amendment, cost rows after the cost-heap one.
+const ACCURACY_REGISTRATION = 'Amendment 2026-11-05 (grid check)', COST_REGISTRATION = 'Amendment 2026-11-06 (cost heap)';
+
 function check() {
   const head = registrationAt('HEAD'), main = registrationAt('origin/main');
   if (!head) fail('DSST.md is not committed');
@@ -198,19 +209,22 @@ function check() {
   const rows = readRows(), costRows = readCostRows();
   const where = main?.equal ? `on origin/main at ${main.sha.slice(0, 12)}` : `committed at ${head.sha.slice(0, 12)}, not yet on origin/main`;
   const digest = set ? `window digest ${set.digest.slice(0, 12)} verified` : 'archive absent: window digest not checked';
-  if (!rows.length) { console.log(`PASS: registered (${where}; ${digest}), no rows`); return; }
+  if (!rows.length && !costRows.length) { console.log(`PASS: registered (${where}; ${digest}), no rows`); return; }
   if (!main?.equal) fail('rows exist but the registration is not on origin/main');
-  for (const r of [...rows, ...costRows]) {
+  const accuracyAt = amendmentAt(ACCURACY_REGISTRATION), costAt = amendmentAt(COST_REGISTRATION);
+  if (rows.length && !accuracyAt) fail(`accuracy rows exist but "${ACCURACY_REGISTRATION}" is not on origin/main`);
+  if (costRows.length && !costAt) fail(`cost rows exist but "${COST_REGISTRATION}" is not on origin/main`);
+  for (const [list, reg] of [[rows, accuracyAt], [costRows, costAt]]) for (const r of list) {
     if (!set?.keys.has(r.key)) fail(`row ${r.key} is not a registered window`);
     const why = heldKey(r);
     if (why) fail(`row ${r.key} is held (${why})`);
-    if (!(Date.parse(r.writtenAt) > main.at)) fail(`row ${r.key} written ${r.writtenAt}, not after the registration commit ${new Date(main.at).toISOString()}`);
+    if (!(Date.parse(r.writtenAt) > reg.at)) fail(`row ${r.key} written ${r.writtenAt}, not after its registration ${reg.sha.slice(0, 12)} (${new Date(reg.at).toISOString()})`);
   }
   const table = { ...buildTable(rows, main), cost: buildCost(costRows) }, file = path.join(RESULTS, 'table.json');
   if (!fs.existsSync(file)) fail('results/dsst-arm/table.json is missing');
   if (fs.readFileSync(file, 'utf8') !== tableBytes(table)) fail('results/dsst-arm/table.json does not reproduce from the stored rows');
   if (fs.readFileSync(path.join(RESULTS, 'README.md'), 'utf8') !== readme(table, table.cost, rows)) fail('results/dsst-arm/README.md does not reproduce from the stored rows');
-  console.log(`PASS: registered ${where}; ${rows.length} rows and ${costRows.length} cost rows after it; ${digest}; table.json and README.md reproduce; holds kept`);
+  console.log(`PASS: registered ${where}; ${rows.length} accuracy rows after ${accuracyAt?.sha.slice(0, 12)} and ${costRows.length} cost rows after ${costAt?.sha.slice(0, 12) ?? '(none)'}; ${digest}; table.json and README.md reproduce; holds kept`);
 }
 
 const phase = process.argv[2];
