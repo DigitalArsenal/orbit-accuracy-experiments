@@ -100,6 +100,23 @@ resolution). The record's verdict is P1 and P2 and P3 as stated, with every meas
 written, before this file's commit; the runner's --check asserts that order, that every row carries both dists' SHA-256 and the runner's,
 and that the table reproduces byte for byte.
 
+## Amendment 1 (2026-11-06 12:37Z, this lane; disclosure, written after a first pass's rows were read and before the re-run)
+A first pass (rows written 12:27 to 12:34Z, shards 0 to 3 and the catalog, kept as evidence in the lane's scratch logs) carried the two
+dists' SHA-256 on its identity, example and catalog rows but not on its cell rows: the runner's stamp named the pins `base` and `next`
+and the cell row's flights on the two builds overwrote them. The runner now stamps every row with `pins` {base, next, ffm}; the first
+pass's rows are removed and every item is re-flown by the same method on the same dists (nothing in the frame, the cells, the records or
+the pass lines changes). The first pass's numbers were read: cells 25 flown, 0 fails and 10 passes on 0.6.4 against 8 fails and 2 passes
+on 0.6.3; paired raw forward RMS higher on 0.6.4 in 4 of 20 exercised cells (Ajisai|0.1 +1.4 m and Ajisai|0.15 +11.8 m undecided, Jason-3
+0.07 and 0.1 passing), the secular share higher there and the tesseral share lower in every exercised cell; cold median 33.5 ms, peak 466
+MB, warm refresh slowest worker 5,460 ms on 0.6.4 (6,534 ms on 0.6.3), that worker holding 125 above-e-0.3 records (the registered
+assignment slices the generator's order, band then above then outside, into contiguous blocks of 125; the above-e-0.3 records refresh
+at 66 ms each on both builds, the band records at 3.4 ms on 0.6.4 and 47 ms on 0.6.3); identity 106 of 106 outside equal, 56 of 56
+examples equal, 10 in-band seeded sets different. P1 and P2 therefore do not hold as registered on that pass. The re-run keeps the
+registered assignment as the P2 measurement and adds, beside it and report only, the interleaved assignment (record k to worker k mod 8,
+so every worker holds about 62 band, 31 above and 31 outside records), whose refresh wall is stated but decides nothing in this record.
+The SDN-AP session's word on P1's paired clause (raw forward RMS, moved by the secular share the all-regimes line never charges) and on
+P2's warm line (missed by the above-e-0.3 records' path, unchanged by 0.6.4, on the contiguous assignment) is requested with the numbers.
+
 ## Outputs
 `SDN_MODULES_ROOT=<the -pin clone with the 0.6.4 dist> SDNAP_BASE_WASM=<a copy of the 0.6.3 dist> node
 experiments/operator-theory/tesseral-switch-by-class.mjs --run [--shard k/n]` (at most 4 shards; the catalog measurement runs on shard 0
