@@ -491,3 +491,20 @@ linear-memory high-water mark at or below 160 MB (0.6.2: 68.2 MB), measured on T
 fixture and the Molniya fixture; the fit's wall re-measured beside it (the release may cost rebuilds). E2E: after fit-then-flight
 the allocator's in-use bytes and the shared cache's contents (slots, held grid bytes; sdnap_wide_grid_stats) equal a fresh
 instance's after the same flight, and the high-water bound holds. Linear memory never shrinks, so its size is not the comparison.
+
+## Result: Molniya with drag fitted (the SDN-AP session's ruling (A))
+Not decidable at six fixtures: coefficient scatter, not bias. Candidate (i) (modules f97e8862f, wasm 9310786e) against 0.6.2
+(84d50dca), fitted coefficient (truth 0.044) and day 7 along / radial (m):
+| Fixture | Candidate | 0.6.2 |
+| --- | --- | --- |
+| argument of perigee 270, start 0 | 0.04462; 238 / 174 | 0.04478; 277 / 208 |
+| argument of perigee 270, start 0.125 | 0.04463; 278 / 188 | 0.04467; 295 / 206 |
+| argument of perigee 270, start 0.25 | 0.04274; 249 / 185 | 0.04419; 163 / 111 |
+| argument of perigee 270, start 0.375 | 0.04437; 210 / 141 | 0.04310; 141 / 108 |
+| argument of perigee 240, start 0 | 0.04295; 73 / 45 | 0.04263; 207 / 135 |
+| argument of perigee 300, start 0 | 0.04565; 409 / 236 | 0.04488; 108 / 60 |
+Paired median ratio [95 % bootstrap]: day 1 0.594 [0.487, 0.747] along, 0.579 [0.465, 0.744] radial; day 3 1.015 [0.726, 1.759],
+1.036 [0.562, 1.773]; day 7 1.214 [0.607, 2.655], 1.108 [0.583, 2.817]. Mean |B - 0.044|: candidate 0.93e-3, 0.6.2 0.80e-3, the
+fixtures split both ways; posterior sigma of the coefficient about 11 % on the candidate against 22 % on 0.6.2. The day-7 errors
+follow each fixture's coefficient error; at a day-7 log-spread near 0.7, a 5 % margin would need on the order of a thousand
+windows, so this gate cannot decide; the HEO drag-coefficient observability question goes to a separate fitter record.
