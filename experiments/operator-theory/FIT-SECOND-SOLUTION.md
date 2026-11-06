@@ -116,6 +116,14 @@ the scoped switch `xpt::tess::ExactGridScope` (src/tesseral.inc; a process-wide 
 any scope lives), read by xp_init as `exact_grid || tess::exact_grids_now()`; fit_oem.inc declares one in run_pass after the Jacobian
 fall-back's scope, alive to the end of the pass.
 
+Amendment 3.1 (coordinator ruling, 2026-11-06): with the scope over run_pass alone the THEMIS A fit made 40 shared grid lookups after
+the solve (the fit's covariance partials, held-out and residual-record evaluations: sdnap_wide_grid_stats, ripple 747232b83) against
+262 exact; they carry the same bias, so the scope covers each fit block in fit_blocks instead: every set the fit initializes takes exact
+grids. The guard E2E asserts 0 shared and more than 0 exact lookups over the fit call. Measured (modules 20a09144b, scratch build
+8994cbb4, fitcost.mjs, load 53-54): 0 shared, 302 exact; FIT_RMS 104.78 m, BTERM 0.012145; fit 14.55 / 14.57 s; wasm memory after the
+fit 571.9 MB against 0.6.2's 68.2 MB (39.5 to 40.2 s). The memory is the ripple lane's next item (exact grids released at scope exit);
+the Molniya cost and paired lines are the ripple lane's (it holds the set).
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
