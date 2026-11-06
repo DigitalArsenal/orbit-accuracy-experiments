@@ -362,7 +362,7 @@ async function childFlights(arm) {
   const weather = await weatherTable(isoMs(earliest(ws) - 90 * DAY).slice(0, 10), isoMs(latest(ws) + 40 * DAY).slice(0, 10));
   const A = await openArm(arm, weather);
   const productOf = (f) => { const bytes = new Uint8Array(Buffer.from(f.product, 'base64')); return { bytes, el: f.el, product: arm.startsWith('FFM') ? JSON.parse(Buffer.from(bytes).toString('utf8')) : undefined }; };
-  const flightOf = (w, f) => { const cutoffMs = Date.parse(w.cutoff); return A.fly(productOf(f), flightEpochs(cutoffMs), { ...w, cutoffMs, high: f.high, norad: Number(w.norad) }); };
+  const flightOf = (w, f) => { const cutoffMs = Date.parse(w.cutoff); return A.fly(productOf(f), arm.startsWith('FFM') ? flightEpochs(cutoffMs).slice(0, 10000) : flightEpochs(cutoffMs), { ...w, cutoffMs, high: f.high, norad: Number(w.norad) }); };
   let warmUp = null;
   for (const w of ws) { const f = fits.get(w.key); if (!f?.ok) continue; try { await flightOf(w, f); warmUp = { key: w.key, ok: true }; } catch (error) { warmUp = { key: w.key, ok: false, error: short(error) }; } break; }
   const rows = [];

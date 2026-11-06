@@ -287,7 +287,7 @@ async function run() {
       const g = guards();
       if (g.ok) {
         const c = pending.shift();
-        const child_ = spawn(process.execPath, [SELF, '--child', c.id], { stdio: ['ignore', 'pipe', 'inherit'] });
+        const child_ = spawn(process.execPath, ['--max-old-space-size=24000', SELF, '--child', c.id], { stdio: ['ignore', 'pipe', 'inherit'] });
         const concurrent = running.size + 1;
         let out = '';
         child_.stdout.on('data', (d) => { out += d; });
@@ -374,7 +374,7 @@ function timingRows() {
     if (!fs.existsSync(f)) continue;
     const ok = fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => r.ok && !r.refused);
     const by = new Map();
-    for (const r of ok) { const us = (r.flightCpuSeconds / 10080) * 1e6; for (const k of ['pooled', r.regime]) (by.get(k) ?? by.set(k, []).get(k)).push(us); }
+    for (const r of ok) { const us = (r.flightCpuSeconds / (r.states ?? 10080)) * 1e6; for (const k of ['pooled', r.regime]) (by.get(k) ?? by.set(k, []).get(k)).push(us); }
     for (const [regime, v] of by) out.push({ arm, run, build: FLIGHT_BUILD[arm], regime, n: v.length, cpuUsPerState: med(v), min: Math.min(...v), max: Math.max(...v) });
   }
   return out;
@@ -390,7 +390,7 @@ function flightRowsOf(dir, only) {
     if (!fs.existsSync(f)) continue;
     for (const r of fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))) {
       if (!r.ok || r.refused || (only && !only.includes(r.key))) continue;
-      out.push({ arm, run, key: r.key, regime: r.regime, cpuUsPerState: (r.flightCpuSeconds / 10080) * 1e6, wallS: r.flightWallSeconds, loadBefore: r.loadBefore, loadAfter: r.loadAfter });
+      out.push({ arm, run, key: r.key, regime: r.regime, cpuUsPerState: (r.flightCpuSeconds / (r.states ?? 10080)) * 1e6, wallS: r.flightWallSeconds, loadBefore: r.loadBefore, loadAfter: r.loadAfter });
     }
   }
   return out;
@@ -408,7 +408,7 @@ async function quiet() {
   }
   const quietStartedUtc = nowUtc();
   for (const id of QUIET_CASES) {
-    await new Promise((resolve) => spawn(process.execPath, [SELF, '--child', id], { stdio: ['ignore', 'inherit', 'inherit'], env: { ...process.env, SCALE_QUIET: '1' } }).on('close', resolve));
+    await new Promise((resolve) => spawn(process.execPath, ['--max-old-space-size=24000', SELF, '--child', id], { stdio: ['ignore', 'inherit', 'inherit'], env: { ...process.env, SCALE_QUIET: '1' } }).on('close', resolve));
   }
   const dir = path.join(SCRATCH, 'quiet-flight-rows');
   const env = { ...process.env, SDN_MODULES_ROOT: '/Users/tj/software/private/coordinator-d9/space-data-network-modules-bench2', SDN_MODULES_GIT: MODULES, SCALE_FLIGHT_ROWS: dir };
