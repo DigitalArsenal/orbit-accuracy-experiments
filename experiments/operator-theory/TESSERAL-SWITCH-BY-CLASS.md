@@ -117,7 +117,7 @@ so every worker holds about 62 band, 31 above and 31 outside records), whose ref
 The SDN-AP session's word on P1's paired clause (raw forward RMS, moved by the secular share the all-regimes line never charges) and on
 P2's warm line (missed by the above-e-0.3 records' path, unchanged by 0.6.4, on the contiguous assignment) is requested with the numbers.
 
-## Amendment 2 (2026-11-06 12:58Z, the SDN-AP session's ruling through the coordinator, after the re-run's table was read)
+## Amendment 2 (2026-11-06 12:48Z, the SDN-AP session's ruling through the coordinator, after the re-run's table was read)
 Version go for 0.6.4 with the two clause misses disclosed exactly as measured:
 - P1: the registered paired-raw-RMS clause misses in 2 of 20 cells (Ajisai 0.1 and 0.15): the fit's forward-day secular drift rose while
   the tesseral share fell and the fit RMS improved (Ajisai 0.15: secular 42.7 -> 70.6 m, tesseral 27.5 -> 9.7 m, fit RMS 51 -> 42 m;
