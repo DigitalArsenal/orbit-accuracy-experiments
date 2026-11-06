@@ -21,7 +21,7 @@ export const CATALOG = {
   'trS1-39634.json': 'f21d25b9bf42381a12c415d71a6992aa389e957eb56f4000b6a003b0520d4eb1',
   'trS1-62261.json': 'd058dad7759febce8b6ad6794f0116f05ec79efddc85edf9e2bfa39ff26a8f05',
 };
-export const RULE = { shiftMs: 2 * HOUR, gapMs: 2 * HOUR, draws: 10000, minWindows: 10, s1CutoffBefore: '2026-06-01' };
+export const RULE = { shiftMs: 2 * HOUR, gapMs: 2 * HOUR, draws: 10000, minWindows: 10, explainedUpper: 1.1, s1CutoffBefore: '2026-06-01' };
 const FITS = [24, 72], DAYS = ['1', '2', '3', '7'];
 
 const catalog = new Map();
@@ -62,7 +62,10 @@ const interval = (tag, w) => {
   return [round(Math.exp(pct(meds, 0.025))), round(Math.exp(pct(meds, 0.975)))];
 };
 /** The registered reading of a cell's burn-free part. */
-const reading = (n, ci) => (n < RULE.minWindows ? `no reading: ${n} burn-free windows, under ${RULE.minWindows}` : ci[0] <= 1 ? 'explained by burns: FFM at or below parity on the burn-free windows' : 'candidate FFM defect: FFM worse than AP on the burn-free windows');
+const reading = (n, ci) => (n < RULE.minWindows ? `no reading: ${n} burn-free windows, under ${RULE.minWindows}`
+  : ci[1] <= RULE.explainedUpper ? `explained by burns: ${n} burn-free windows, interval upper bound ${ci[1]} at or below ${RULE.explainedUpper}`
+    : ci[0] > 1 ? `candidate FFM defect, its own record: ${n} burn-free windows, interval lower bound ${ci[0]} above 1`
+      : `undecided: ${n} burn-free windows, interval [${ci.join(', ')}]`);
 
 const cells = [];
 for (const fit of FITS) for (const day of DAYS) {
