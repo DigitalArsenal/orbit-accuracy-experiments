@@ -143,6 +143,11 @@ set's grid. Measured and reported: THEMIS A fit RMS, BTERM, fit time and wasm hi
 the guard E2E (its lookup assertion recast: no exact lookup inside the fit, and at least one keyed lookup, every lookup being by the
 set's own exact key or through its nominal's scope) and fit.e2e.mjs PASS. The Molniya lines stay the ripple lane's.
 
+Measured (modules 7a0459bad, scratch build 8ddc78d3, fitcost.mjs two runs each, load 60-61): THEMIS A FIT_RMS 104.78 m, BTERM
+0.012145 (Amendment 3.2: 104.78 m, 0.012145); grid lookups 268 by own key, 0 exact; fit 14.47 / 14.36 s against 0.6.2's 39.99 / 40.18
+s; wasm high-water 571,867,136 bytes (571.9 MB) against 0.6.2's 68.2 MB and Amendment 3.2's 165.2 MB: over the 160 MB budget (not
+diagnosed; the likely cause, not measured: the keyed grids of the fit's distinct element sets are kept idle, up to kGridIdle). Guard E2E and fit.e2e.mjs PASS.
+
 Where (src/fit_oem.inc only): fit.inc builds every set the solve evaluates (the nominal, each trial step, each perturbed copy) through
 fit::residuals, outside this record's paths, so the flag is set by a scope in fit_oem.inc around the fit's solve (each run_pass, as the
 fit's Jacobian fall-back is scoped today): every set initialised inside it takes an exact grid, the nominal and the perturbed copies
