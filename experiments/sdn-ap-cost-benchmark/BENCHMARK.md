@@ -152,3 +152,46 @@ and `README.md`. Every state comes from a module; the host moves bytes, thins th
 6. The thread bound: propagator/sdn-ap is opened with `maxThreads: 1` and `wasiThreadPoolSize: 1` (the SDK caps live guest
    threads on Node through the second); after the warm-up the trial read AP's fit at 0.126 s CPU against 0.125 s wall, the
    sequential path. Every other module here is a sequential artifact.
+
+## Amendment 2026-11-06: the shipped builds, two sdn-ap columns by hash (registered before any measurement)
+
+Task experiments-cost-benchmark-remeasure-shipped-build-20261105 (SDN-AP session ruling of 2026-11-06: both builds in one
+lane, one amendment, two columns named by hash, a quiet box in fact). The same 32 windows (the arcs the registered run
+prepared, `arcs.json` under the row directory, read as they are), the same measures, the same arm definitions, the same
+step, the same statistics and the same machine rule as the registered run above (a13cb468). What changes is the build of
+the arms whose module shipped since, each a run of its own:
+
+| Run | Module | Version | SHA-256 of dist/isomorphic/module.wasm | Bytes | Commit | Arms rerun | Rows |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| sdn-ap-0.6.2 | propagator/sdn-ap | 0.6.2 | `84d50dca4efdfea87eff7e3b4618d795c26a7d0a6df0e877341e69bc73161f41` | 951,183 | e1e4fad87ae810dd71e9acb568e9f083df1cc9b8 | XP, AP | `builds/sdn-ap-0.6.2-84d50dca` |
+| sdn-ap-0.6.3 | propagator/sdn-ap | 0.6.3 | `aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e` | 966,222 | 93cb5a0584fa728864e4426cc9ceb368936589f9 | XP, AP | `builds/sdn-ap-0.6.3-aa3ed22a` |
+| ffm-2.2.1 | propagator/ffm | 2.2.1 | `a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4` | 2,754,046 | 9cb02c8e22f5a738a9984992e8af2246cd11e090 | FFM20, FFM40 | `builds/ffm-2.2.1-a9133120` |
+
+Every other module stays at its registered build (sgp4-xp 0.2.2, sgp4 1.4.1, estimation 0.7.0, gp-error-model 0.11.0).
+SGP4 and XPU are not rerun: their builds did not change, and their rows above stand. Each wasm by `git show` at its
+commit from a read-only modules clone that holds it (`SDN_MODULES_GIT`), SHA-256 checked before it is loaded, as above.
+
+Columns. Every rerun is a column of its own, named by arm and dist hash. The table's `arms` (the six columns the
+comparison page and the paper read) carry the shipped build of each arm: SGP4 and Space Force XP from the registered run,
+XP and AP from sdn-ap 0.6.3, FFM 20x20 and FFM 40x40 from FFM 2.2.1; `builds` names those six modules, one build each.
+The other columns (XP and AP on sdn-ap 0.5.2 and on 0.6.2; FFM 20x20 and FFM 40x40 on FFM 2.2.0) stand beside them under
+`comparison`, by hash, with the same statistics and the same per-regime medians. Nothing is dropped.
+
+The low-orbit ratio. AP's flight CPU seconds per object-day over FFM 40x40's, on the windows below 8,400 km both arms
+completed: per window (median, 10th and 90th percentile, nearest rank, n) and per regime (the median over the low-orbit
+regimes of each regime's median ratio: the site's rule; its rounded reciprocal is the front page's fraction). Stated for
+the shipped pair (AP on 0.6.3, FFM 2.2.1), and for comparison the 0.6.2 pair and the registered pair.
+
+Machine rule, held in fact. The registered rule stands (one process at a time; sdn-ap's thread pool bounded to one; the
+1-minute load recorded before and after each arm process and in `phases.jsonl`). For this rerun the coordinator pauses the
+DSST run's JVMs (SIGSTOP by exact PID, logged with start and end times) for the benchmark's duration only, and nothing of
+this lane's runs on the box beside the benchmark. Each row records the 1-minute load before and after its call
+(`loadBefore`, `loadAfter`). A ceiling for the rerun's rows: 22.83, the registered run's highest recorded load. Before
+each row the child waits in 15 s cycles (at most 10 minutes) until the load is at or under it; a row whose load after
+its call is above it is refused (`refused`), left out of the statistics and named in the table. The rerun's wall time,
+start to end, is in the table (`runs`).
+
+Procedure. `run.mjs fits --run <run>`, `flights --run <run>` and `memory --run <run>` for sdn-ap-0.6.2, sdn-ap-0.6.3 and
+ffm-2.2.1 in that order, one child process per arm, arms and windows in the registered order; then `tables` reads every
+run's rows; `--check` reproduces both files byte for byte. Rows under the registered row directory, `builds/<run>`.
+One warm-up call per arm and phase as amendment 2.
