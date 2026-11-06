@@ -66,7 +66,7 @@ if (!STORES[MODE]) throw new Error('--mode hx|wa|regimes|truth|truth2');
 if ((MODE === 'truth2') !== (process.env.XP2F_CONTROL === '1')) throw new Error('truth2 runs with XP2F_CONTROL=1, the others without');
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const inShard = (key) => parseInt(sha(key).slice(0, 8), 16) % SHARDS === SHARD;
-const WANT = new Map([...published(MODE)].filter(([k]) => inShard(k)));
+const WANT = new Map([...published(MODE)].filter(([k]) => inShard(k) && (!args.key || k === args.key)));
 const { config, root, store, HOUR, DAY, iso, ms, XM, windows } = await import(`${OT}/lib/xp2.mjs`);
 const { apForces, fitPcf, fitWeather, horizonOf, readOcm } = await import(`${OT}/lib/ap.mjs`);
 const S = await import(path.join(root, config.xm.dir, 'lib/sds.mjs'));
