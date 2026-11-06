@@ -328,6 +328,8 @@ function assemble(reg) {
   crows.push({ id: 'coverage', ...cov });
   fs.mkdirSync(OUT, { recursive: true });
   fs.writeFileSync(path.join(OUT, 'rows.jsonl'), rows.map((x) => JSON.stringify(x)).join('\n') + '\n');
+  const tim = ['sgp4', 'xp', 'ap', 'ffm'].filter((t) => fs.existsSync(path.join(resDir, `timing-${t}.json`))).map((t) => { const x = JSON.parse(fs.readFileSync(path.join(resDir, `timing-${t}.json`), 'utf8')); return { theory: x.theory, objects: x.objects, states: x.states, stepSeconds: x.stepSeconds, wasmSha256: x.wasmSha256, startedUtc: x.startedUtc, cpuUsPerState: x.cpuUsPerState, range: x.range, reps: x.reps }; });
+  fs.writeFileSync(path.join(OUT, 'timing.jsonl'), tim.map((x) => JSON.stringify(x)).join('\n') + '\n');
   fs.writeFileSync(path.join(OUT, 'counts.jsonl'), crows.map((x) => JSON.stringify(x)).join('\n') + '\n');
   const meta = {
     registration_commit: reg.commit, registration_blob: reg.blob, registration_time: reg.time,
@@ -384,7 +386,7 @@ function fit(points, pick, key) {
 }
 const median = (v) => { const s = [...v].sort((a, b) => a - b); return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2; };
 
-function build(rows, meta, cov) {
+function build(rows, meta, cov, extra) {
   const full = rows.filter((r) => r.kind === 'full');
   const ref = { total: median(full.map((r) => r.cpuS.total)), propagation: median(full.map((r) => r.cpuS.propagation)), search: median(full.map((r) => r.cpuS.search)),
     refine: median(full.map((r) => r.cpuS.refine)), events: median(full.map((r) => r.events)) };
@@ -417,6 +419,21 @@ function build(rows, meta, cov) {
   const f2 = (v) => v.toFixed(2), f1 = (v) => v.toFixed(1);
   const c = conversion.ladder, d = conversion.dates;
   const sentence = `With p = ${f2(L.p)} (95 percent interval ${f2(L.lo)} to ${f2(L.hi)}; ${L.verdict}) on the thinning ladder, one eighth of the compute buys 3 / p = ${f2(c.doublings)} doublings of the object count (${f2(c.doublingsRange[0])} to ${f2(c.doublingsRange[1])}): ${f1(c.payloadYears)} years (${f1(c.payloadYearsRange[0])} to ${f1(c.payloadYearsRange[1])}) at the payload doubling time of ${B1.payloadDoublingYears} years (catalog growth 2018-2026, exponential), and ${f1(c.allYears)} years (${f1(c.allYearsRange[0])} to ${f1(c.allYearsRange[1])}) at the all-objects fit of ${B1.allObjectsDoublingYears} years (2018-2026, undecided between exponential and linear). The real-dates fit gives p = ${f2(D.p)} (${f2(D.lo)} to ${f2(D.hi)}; ${D.verdict}): ${f2(d.doublings)} doublings, ${f1(d.payloadYears)} years at ${B1.payloadDoublingYears} and ${f1(d.allYears)} years at ${B1.allObjectsDoublingYears}.`;
+  // Amendment 2: Amdahl conversion and the derived series (timing arm); a propagation 1/8 as costly changes the total by f = (1 - s) + s / 8
+  const tm = Object.fromEntries((extra.timing ?? []).map((x) => [x.theory, x]));
+  const cS = tm.sgp4?.cpuUsPerState ?? null;
+  const amdahl = (s, f) => { const fac = (1 - s) + s / 8; const dbl = Math.log2(1 / fac) / f.p, dblLo = Math.log2(1 / fac) / f.hi, dblHi = Math.log2(1 / fac) / f.lo; return { s, factor: fac, doublings: dbl, doublingsRange: [dblLo, dblHi], payloadYears: dbl * B1.payloadDoublingYears, allYears: dbl * B1.allObjectsDoublingYears }; };
+  const derivedBase = (r) => ({ index: r.index, base: r.cpuS.search + r.cpuS.index + r.cpuS.host, refine: r.cpuS.refine, N: r.index * extra.n0 });
+  const derivedPoints = [...rows.filter((r) => r.kind !== 'full').map(derivedBase), { index: 1, base: ref.search + median(full.map((r) => r.cpuS.index + r.cpuS.host)), refine: ref.refine, N: extra.n0 }];
+  const derived = {};
+  for (const th of ['xp', 'ap', 'ffm']) {
+    if (!tm[th] || !cS) continue;
+    const c = tm[th].cpuUsPerState;
+    const pts = derivedPoints.map((d) => { const prop = c * 1e-6 * d.N * 10080; const lower = d.base + d.refine + prop, upper = d.base + d.refine * (c / cS) + prop; return { index: d.index, lower, upper, sLo: prop / upper, sHi: prop / lower }; }).sort((a, b) => a.index - b.index);
+    const fullPt = pts.find((x) => x.index === 1);
+    derived[th] = { cpuUsPerState: c, range: tm[th].range, points: pts, amdahl: { sLoCase: amdahl(fullPt.sLo, L), sHiCase: amdahl(fullPt.sHi, L) } };
+  }
+  const sgp4Amdahl = amdahl(fullShare, L);
   const overlap = !(L.hi < D.lo || D.hi < L.lo);
   const verdict = `Ladder p = ${f2(L.p)} (${f2(L.lo)} to ${f2(L.hi)}): ${L.verdict}. Dates p = ${f2(D.p)} (${f2(D.lo)} to ${f2(D.hi)}): ${D.verdict}. The two intervals ${overlap ? 'overlap' : 'do not overlap'}. Propagation takes ${(100 * fullShare).toFixed(1)} percent of the screen CPU at the full catalog (SGP4); a propagator of zero cost cuts the screen CPU at most by a factor ${f2(1 / (1 - fullShare))}.`;
   const chartPoint = (p, ref_) => ({ index: p.index, cpu: p.total / ref_.total, propagation: p.propagation / ref_.total, search: p.search / ref_.total, refine: p.refine / ref_.total, events: p.events / ref_.events });
@@ -424,13 +441,14 @@ function build(rows, meta, cov) {
     note: 'values normalized to the current catalog = 1; no object count',
     ladder: { points: ladder.map((p) => chartPoint(p, ref)), fits: fits.ladder },
     dates: { points: rows.filter((r) => r.kind === 'date').map(pointOf).concat([mergedFull]).map((p) => chartPoint(p, ref)), fits: fits.dates },
-    propagationShare: fullShare, conversion,
+    propagationShare: fullShare, conversion, amdahlSgp4: sgp4Amdahl,
+    derived: { label: 'derived from measured parts; only SGP4 flew the whole screen', assumption: 'candidate and event counts held at SGP4\'s', series: Object.fromEntries(Object.entries(derived).map(([k, v]) => [k, v.points.map((x) => ({ index: x.index, lower: x.lower / ref.total, upper: x.upper / ref.total }))])) },
   };
-  return { fits, shares, noise, theories, conversion, sentence, verdict, overlap, parity: meta.parity, chart, ladderN: ladder.length, datesN: dates.length };
+  return { derived, sgp4Amdahl, timing: tm, fits, shares, noise, theories, conversion, sentence, verdict, overlap, parity: meta.parity, chart, ladderN: ladder.length, datesN: dates.length };
 }
 
-function render(rows, meta, cov) {
-  const t = build(rows, meta, cov);
+function render(rows, meta, cov, extra) {
+  const t = build(rows, meta, cov, extra);
   const fmt = (v, n = 3) => (v === null || v === undefined ? '-' : Number(v).toFixed(n));
   const lines = [];
   lines.push('# Screening scale: CPU and events against the number of objects (report-only)', '');
@@ -443,6 +461,14 @@ function render(rows, meta, cov) {
   lines.push('', `Run-to-run range of the total CPU over the three full-catalog repeats: ${(100 * t.noise.totalCpuRelativeRange).toFixed(1)} percent of the median.`, '');
   lines.push('## Propagation share by theory', '', '| Theory | Flown | Covered share of the catalog | Propagation share of the screen CPU | Note |', '|---|---|---|---|---|');
   for (const th of t.theories) lines.push(`| ${th.theory} | ${th.flown ? 'yes' : 'no'} | ${fmt(th.coveredShare, 4)} | ${th.propagationShare === null ? '-' : fmt(th.propagationShare, 3)} | ${th.reason ?? `range over cases ${fmt(th.shareRange[0], 3)} to ${fmt(th.shareRange[1], 3)}; zero-cost propagator bound ${fmt(th.maxSpeedup, 2)}x`} |`);
+  lines.push('', '## Timing arm: propagation CPU per state at 7 days x 60 s (own module flights, timing only)', '', '| Theory | Timing objects | CPU us per state | Range | Module SHA-256 (first 12) |', '|---|---|---|---|---|');
+  for (const x of Object.values(t.timing)) lines.push(`| ${x.theory} | ${x.objects} | ${fmt(x.cpuUsPerState, 3)} | ${fmt(x.range[0], 3)} to ${fmt(x.range[1], 3)} | ${(x.wasmSha256 ?? '-').slice(0, 12)} |`);
+  if (!t.timing.ffm) lines.push('', 'FFM: not measured (no driver was built inside the time box); it has no derived series.');
+  lines.push('', '## Amdahl conversion (a propagation 1/8 as costly; doublings = log2(1 / f) / p, f = (1 - s) + s / 8)', '', '| Theory | s | f | Doublings | Interval from p | Years at 3.8 | Years at 9.6 (undecided fit) |', '|---|---|---|---|---|---|---|');
+  const am = (name, a) => lines.push(`| ${name} | ${fmt(a.s, 3)} | ${fmt(a.factor, 3)} | ${fmt(a.doublings, 2)} | ${fmt(a.doublingsRange[0], 2)} to ${fmt(a.doublingsRange[1], 2)} | ${fmt(a.payloadYears, 1)} | ${fmt(a.allYears, 1)} |`);
+  am('SGP4 (measured in the screen)', t.sgp4Amdahl);
+  for (const [k, v] of Object.entries(t.derived)) { am(`${k} (derived, s low)`, v.amdahl.sLoCase); am(`${k} (derived, s high)`, v.amdahl.sHiCase); }
+  lines.push('', 'Derived series: derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the theory\'s measured CPU per state times N times 10,080; refine is a band (lower: as measured with SGP4; upper: scaled by the ratio of the theory\'s CPU per state to SGP4\'s). Hidden assumption: candidate and event counts are held at SGP4\'s; whether better accuracy allows a smaller threshold is another study. The whole-screen bound 3 / p applies only to a speedup of the whole screen.');
   lines.push('', '## Conversion', '', t.sentence, '', '## Parity guard', '', `Phased path and fused path on ${meta.parity.id}: events ${meta.parity.phasedEvents} and ${meta.parity.fusedEvents}, event-set digests ${meta.parity.equal ? 'equal' : 'DIFFER'}.`, '', '## Verdict', '', t.verdict, '');
   return { 'table.json': JSON.stringify({ fits: t.fits, theories: t.theories, conversion: t.conversion, sentence: t.sentence, verdict: t.verdict, noise: t.noise, parity: meta.parity }, null, 1) + '\n', 'README.md': lines.join('\n'), 'chart.json': JSON.stringify(t.chart, null, 1) + '\n', _t: t };
 }
@@ -451,17 +477,19 @@ function readAll() {
   const rows = fs.readFileSync(path.join(OUT, 'rows.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
   const meta = JSON.parse(fs.readFileSync(path.join(OUT, 'meta.json'), 'utf8'));
   const counts = fs.readFileSync(path.join(OUT, 'counts.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
-  return { rows, meta, cov: counts.find((x) => x.id === 'coverage') };
+  const tf = path.join(OUT, 'timing.jsonl');
+  const timing = fs.existsSync(tf) ? fs.readFileSync(tf, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
+  return { rows, meta, cov: counts.find((x) => x.id === 'coverage'), extra: { timing, n0: counts.find((x) => x.id === 'current-full-r1').objects } };
 }
 function table() {
-  const { rows, meta, cov } = readAll();
-  const files = render(rows, meta, cov);
+  const { rows, meta, cov, extra } = readAll();
+  const files = render(rows, meta, cov, extra);
   for (const [n, c] of Object.entries(files)) if (!n.startsWith('_')) fs.writeFileSync(path.join(OUT, n), c);
   console.log('table written');
 }
 function check() {
   const fails = [];
-  const { rows, meta, cov } = readAll();
+  const { rows, meta, cov, extra } = readAll();
   try {
     const reg = registration();
     if (reg.blob !== meta.registration_blob) fails.push('registration changed after the rows');
@@ -472,7 +500,7 @@ function check() {
     const added = git(['log', '--diff-filter=A', '--format=%H', '--', 'results/two-exponentials/screening-scale/rows.jsonl']).split('\n').filter(Boolean);
     if (added.length && added.at(-1) === meta.registration_commit) fails.push('rows committed in the registration commit');
   } catch (e) { fails.push(`registration order: ${e.message.split('\n')[0]}`); }
-  const files = render(rows, meta, cov);
+  const files = render(rows, meta, cov, extra);
   for (const [n, c] of Object.entries(files)) {
     if (n.startsWith('_')) continue;
     const have = fs.existsSync(path.join(OUT, n)) ? fs.readFileSync(path.join(OUT, n), 'utf8') : null;
@@ -498,8 +526,84 @@ function check() {
   process.exit(fails.length ? 1 : 0);
 }
 
+// ---------- timing arm (Amendment 2): propagation CPU per state at 7 days x 60 s, timing only ----------
+const TIMING_K = { sgp4: 200, xp: 100, ap: 100, ffm: 10 };
+const STEPS = HORIZON_DAYS * 1440;   // 10,080 states per object at 60 s
+const ROOTS = { sgp4: path.join(MODULES.replace(/-ca$/, '-r2'), 'propagator/sgp4'), xp: path.join(MODULES.replace(/-ca$/, '-r2'), 'propagator/sgp4-xp'),
+  ap: path.join(MODULES, 'propagator/sdn-ap'), ffm: path.join(MODULES.replace(/-ca$/, '-r2'), 'propagator/ffm') };
+async function timing(theory) {
+  const smokeK = Number(process.env.SCALE_TIMING_SMOKE ?? 0), K = smokeK || TIMING_K[theory];
+  if (!K) throw new Error(`no theory ${theory}`);
+  const pop = loadPopulation('current');
+  const cs = await lib('gpu/catalogScreen.mjs');
+  const frames = cs.splitCatalog(pop.bytes);
+  const ranked = pop.norad.map((n, i) => [sha256(`${SEED}:timing:${n}`), i]).sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(0, K).map((r) => r[1]).sort((a, b) => a - b);
+  const { OMM } = await import(pathToFileURL(path.join(CA, 'node_modules/spacedatastandards.org/lib/js/CQR/main.js')).href);
+  const fb = await import(pathToFileURL(path.join(CA, 'node_modules/flatbuffers/mjs/flatbuffers.js')).href);
+  const omms = ranked.map((i) => OMM.getRootAsOMM(new fb.ByteBuffer(frames[i])).unpack());
+  const cpuUs = () => { const u = process.cpuUsage(); return u.user + u.system; };
+  const startMs = Date.parse('2026-11-06T00:00:00Z');
+  let flight, wasmFile;
+  if (theory === 'sgp4') {
+    // the sgp4 module's propagate_ephemeris: 60 s lines over 7 days for each object
+    const sdk = await import(pathToFileURL(path.join(CA, 'node_modules/space-data-module-sdk/src/host/browserModuleHarness.js')).href);
+    const codec = await import(pathToFileURL(path.join(CA, 'node_modules/space-data-module-sdk/src/invoke/codec.js')).href);
+    const enc = await import(pathToFileURL(path.join(ROOTS.sgp4, 'tests/lib/payloadEncoders.mjs')).href);
+    wasmFile = path.join(ROOTS.sgp4, 'dist/isomorphic/module.wasm');
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOTS.sgp4, 'plugin-manifest.json'), 'utf8'));
+    const raw = await sdk.createBrowserModuleHarness({ wasmSource: fs.readFileSync(wasmFile), manifest, surface: 'direct' });
+    const invoke = async (request) => { const a = await raw.invokeRaw(codec.encodePluginInvokeRequest(request)); return a; };
+    const sized = (fs_) => { const out = new Uint8Array(fs_.reduce((n, f) => n + 4 + f.length, 0)), v = new DataView(out.buffer); let at = 0; for (const f of fs_) { v.setUint32(at, f.length, true); out.set(f, at + 4); at += 4 + f.length; } return out; };
+    await invoke({ methodId: 'ingest_omm', inputs: [{ portId: 'omm', payload: sized(ranked.map((i) => frames[i])), typeRef: { schemaName: 'orbpro.sds.omm', fileIdentifier: '$OMM', rootTypeName: 'OMM' } }] });
+    const numbers = omms.map((o) => Number(o.NORAD_CAT_ID));
+    const epoch = startMs / 86400000 + 2440587.5;
+    flight = async () => { const r = await invoke({ methodId: 'propagate_ephemeris', inputs: [{ portId: 'request', typeRef: { schemaName: 'orbpro.propagator.PropagatorBatchRequest', fileIdentifier: 'PROP', rootTypeName: 'PropagatorBatchRequest' },
+      payload: enc.encodePropagatorBatchRequest({ outputFrame: enc.ReferenceFrame.TEME, epoch, stopEpoch: epoch + (STEPS - 1) / 1440, stepSeconds: 60, catalogNumbers: numbers }) }] }); if (r.length < K * STEPS * 40) throw new Error(`short answer: ${r.length} bytes`); };
+  } else if (theory === 'ap' || theory === 'xp') {
+    const { tleLines, elementsOf } = await import(pathToFileURL(path.join(MODULES, 'propagator/sdn-ap/test/lib/tle.mjs')).href);
+    const sets = omms.map((o, i) => {
+      const epochMs = Date.parse(`${o.EPOCH}Z`), d = new Date(epochMs);
+      const day = 1 + (epochMs - Date.UTC(d.getUTCFullYear(), 0, 1)) / 86400000;
+      const bterm = Math.min(0.1, Math.max(1e-5, Math.abs(Number(o.BSTAR)) * 12.741621));
+      return { lines: tleLines({ satnum: (1 + i) % 100000, year: d.getUTCFullYear() % 100, day, type: 4, agom: 0.01, bterm, inc: o.INCLINATION, raan: o.RA_OF_ASC_NODE, ecc: o.ECCENTRICITY, argp: o.ARG_OF_PERICENTER, ma: o.MEAN_ANOMALY, mm: o.MEAN_MOTION, rev: 0 }) };
+    });
+    if (theory === 'ap') {
+      const { openModule, wasmPath } = await import(pathToFileURL(path.join(MODULES, 'propagator/sdn-ap/test/lib/module.mjs')).href);
+      wasmFile = wasmPath;
+      const m = await openModule({ threads: 0 });
+      m.init(sets.map((s) => elementsOf(s.lines)));
+      const minutes = new Float64Array(sets.length);
+      flight = () => { for (let t = 0; t < STEPS; t++) m.atMinutes(minutes.fill(t), { raw: true }); };
+    } else {
+      const { createRequire } = await import('node:module');
+      wasmFile = path.join(ROOTS.xp, 'third_party/ussf-sgp4/Sgp4Prop.xp.wasm');
+      const M = createRequire(import.meta.url)(path.join(ROOTS.xp, 'third_party/ussf-sgp4/Sgp4Prop.xp.js'));
+      M.print = () => {}; M.printErr = () => {};
+      if (!M.calledRun) await new Promise((resolve) => { M.onRuntimeInitialized = resolve; });
+      const n = sets.length, keys = M._malloc(8 * n), errors = M._malloc(8 * n), out = M._malloc(64 * n);
+      const str = (s) => { const b = new TextEncoder().encode(s), p = M._malloc(b.length + 1); M.HEAPU8.set(b, p); M.HEAPU8[p + b.length] = 0; return p; };
+      sets.forEach((s, i) => { const p = str(s.lines[0]), q = str(s.lines[1]), key = M._TleAddSatFrLines_wasm(p, q); M._free(p); M._free(q); if (key < 0n) throw new Error('USSF refused an input'); M.HEAP64[(keys >> 3) + i] = BigInt(key); });
+      if (M._Sgp4InitSats_wasm(keys, n, errors) !== 0) throw new Error('USSF initialization failed');
+      flight = () => { for (let t = 0; t < STEPS; t++) if (M._Sgp4PropPosVel_wasm(keys, n, t, 1, 1, out) !== 0) throw new Error('USSF propagation failed'); };
+    }
+  } else {
+    throw new Error('ffm: driver not built in this runner version');
+  }
+  const wasmSha = fs.existsSync(wasmFile) ? sha256(fs.readFileSync(wasmFile)) : null;
+  await flight();   // warm-up flight
+  const reps = [];
+  for (let r = 0; r < 3; r++) { const l0 = os.loadavg()[0], c0 = cpuUs(), t0 = performance.now(); await flight(); reps.push({ cpuUsPerState: (cpuUs() - c0) / (K * STEPS), wallS: (performance.now() - t0) / 1000, load1: +l0.toFixed(1) }); }
+  const row = { theory, objects: K, states: K * STEPS, steps: STEPS, stepSeconds: 60, wasmSha256: wasmSha, startedUtc: nowUtc(), reps,
+    cpuUsPerState: median(reps.map((x) => x.cpuUsPerState)), range: [Math.min(...reps.map((x) => x.cpuUsPerState)), Math.max(...reps.map((x) => x.cpuUsPerState))] };
+  fs.mkdirSync(path.join(SCRATCH, 'results'), { recursive: true });
+  fs.writeFileSync(path.join(SCRATCH, 'results', `${smokeK ? 'smoke-' : ''}timing-${theory}.json`), JSON.stringify(row) + '\n');
+  console.log(`TIMING ${JSON.stringify(row)}`);
+  process.exit(0);
+}
+
 const mode = process.argv[2];
-if (mode === '--populations') await populations();
+if (mode === '--timing') await timing(process.argv[3]);
+else if (mode === '--populations') await populations();
 else if (mode === '--coverage') coverage();
 else if (mode === '--run') await run();
 else if (mode === '--child') await child(process.argv[3]);
