@@ -7,9 +7,12 @@
 // steps). A window counts as burned when a registered burn falls in its fit arc or its forecast to the lead, burn-free when a record covers it and none does. The
 // cell is explained when the ratio on its burn-free windows is 1 or below, or when every window is burned; unexplained otherwise, and where no record covers the regime.
 //   node experiments/operator-theory/ffm220-ratio.mjs --out results/ap-truth/compare/ffm-ap-ratio.json
+// Each cell where FFM 2.2.0 is worse than AP carries a 95 % interval of its ratio: 10,000 draws of object-week clusters with replacement (the satellite and the ISO
+// week of the cutoff, as AP5.md and AP6.md cluster by week), the seed from SHA-256 of the cell; a cell whose interval holds 1 is parity, not a loss.
 import fs from 'node:fs';
 import path from 'node:path';
-import { median } from './lib/compare.mjs';
+import crypto from 'node:crypto';
+import { median, pct, asc, rand } from './lib/compare.mjs';
 import { GROUPS } from './lib/regimes.mjs';
 import { HELD_ROW } from './lib/pairs.mjs';
 import { FFM_220 } from './lib/build.mjs';
@@ -46,6 +49,16 @@ const burned = (r, fit, lead) => {
   const D0 = Date.parse(r.cutoff);
   return times.some((t) => t >= D0 - fit * HOUR && t <= D0 + lead * HOUR);
 };
+const isoWeek = (d) => { const t = new Date(`${d}T00:00:00Z`); const day = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - day + 3); const first = new Date(Date.UTC(t.getUTCFullYear(), 0, 4)); return `${t.getUTCFullYear()}-W${1 + Math.round((t - first) / (7 * 86400000))}`; };
+/** The ratio's 95 % interval over object-week clusters: [lower, upper] and the cluster count. */
+const interval = (tag, w) => {
+  const by = new Map();
+  for (const x of w) { const c = `${x.name}|${isoWeek(x.r.cutoff.slice(0, 10))}`; (by.get(c) ?? by.set(c, []).get(c)).push(Math.log(x.now / x.ap)); }
+  const clusters = [...by.values()], random = rand(parseInt(crypto.createHash('sha256').update(`FFM220|${tag}`).digest('hex').slice(0, 8), 16)), meds = [];
+  for (let t = 0; t < 10000; t += 1) { const draw = []; for (let i = 0; i < clusters.length; i += 1) draw.push(...clusters[Math.floor(random() * clusters.length)]); meds.push(median(draw)); }
+  meds.sort(asc);
+  return { interval: [Number(Math.exp(pct(meds, 0.025)).toFixed(3)), Number(Math.exp(pct(meds, 0.975)).toFixed(3))], clusters: clusters.length };
+};
 const ratio = (pairs) => Number(Math.exp(median(pairs.map(([f, a]) => Math.log(f / a)))).toFixed(3));
 const out = [];
 for (const c of regimes) for (const fit of c.arcs) for (const day of ['1', '2', '3', '7']) {
@@ -63,15 +76,17 @@ for (const c of regimes) for (const fit of c.arcs) for (const day of ['1', '2', 
     const objects = Object.fromEntries(Object.entries(free.filter((x) => x.now > x.ap).reduce((m, x) => ({ ...m, [x.name]: (m[x.name] ?? 0) + 1 }), {})).sort((a, b) => b[1] - a[1]));
     const UNREGISTERED = c.regime === 'Near 700 km'
       ? 'no registered burn of 8 m or more; the 11-05 Sentinel-1 study found burns under 8 m, below the flag threshold and not yet registered (record experiments-ffm-step-flag-per-rev-20261105)'
-      : 'FFM is worse than AP on the windows with no registered burn';
-    const parity = row.after <= 1.03 ? '; within 0.03 of parity' : '';
-    row.worseThanAp = { ...counts, burnFreeRatio: freeRatio, objects,
-      verdict: counts.notCovered === w.length ? `unexplained: no registered burn record covers these windows${parity}`
-        : counts.burned === w.length ? 'explained: every window holds a registered burn in its fit or its forecast to the lead'
-          : freeRatio !== null && freeRatio <= 1 ? 'explained: on the burn-free windows FFM is not worse than AP' : `unexplained: ${UNREGISTERED}${parity}` };
+      : c.regime === 'Geostationary' ? 'station-keeping burns the 8 m flag does not register (record experiments-ffm-step-flag-per-rev-20261105, its scope taking in geostationary orbit)'
+        : 'FFM is worse than AP on the windows with no registered burn';
+    const ci = interval(`${c.regime}|${fit}|${day}`, w);
+    row.worseThanAp = { ...counts, burnFreeRatio: freeRatio, objects, ...ci,
+      verdict: ci.interval[0] <= 1 ? `parity: the interval holds 1${counts.burned === w.length ? '; every window also holds a registered burn' : ''}`
+        : counts.notCovered === w.length ? 'unexplained: no registered burn record covers these windows'
+          : counts.burned === w.length ? 'explained: every window holds a registered burn in its fit or its forecast to the lead'
+            : freeRatio !== null && freeRatio <= 1 ? 'explained: on the burn-free windows FFM is not worse than AP' : `unexplained: ${UNREGISTERED}` };
   }
   out.push(row);
 }
 const doc = { ffm: { before: { version: '2.0.4', sha256: 'c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2' }, after: { version: FFM_220.version, sha256: FFM_220.wasmSha256 } }, ap: 'sdn-ap 0.5.1 (ap/b051)', statistic: 'exp(median by window of ln(FFM / AP)), on the windows where AP and both FFM builds scored', rows: out };
 if (argOf('--out')) fs.writeFileSync(argOf('--out'), `${JSON.stringify(doc, null, 1)}\n`);
-for (const r of out) console.log(`${r.regime.padEnd(40)} fit ${String(r.fit).padStart(3)} lead ${String(r.lead).padStart(3)} h  n ${String(r.windows).padStart(4)}  FFM/AP ${r.before} -> ${r.after}${r.moved ? '  MOVED' : ''}${r.notRun ? `  (${r.notRun} windows not yet on 2.2.0)` : ''}${r.worseThanAp ? `  WORSE: ${r.worseThanAp.verdict} (burned ${r.worseThanAp.burned}, burn-free ${r.worseThanAp.burnFree} at ${r.worseThanAp.burnFreeRatio}, not covered ${r.worseThanAp.notCovered}; ${JSON.stringify(r.worseThanAp.objects)})` : ''}`);
+for (const r of out) console.log(`${r.regime.padEnd(40)} fit ${String(r.fit).padStart(3)} lead ${String(r.lead).padStart(3)} h  n ${String(r.windows).padStart(4)}  FFM/AP ${r.before} -> ${r.after}${r.moved ? '  MOVED' : ''}${r.notRun ? `  (${r.notRun} windows not yet on 2.2.0)` : ''}${r.worseThanAp ? `  WORSE [${r.worseThanAp.interval.join(', ')}] over ${r.worseThanAp.clusters} object-weeks: ${r.worseThanAp.verdict} (burned ${r.worseThanAp.burned}, burn-free ${r.worseThanAp.burnFree} at ${r.worseThanAp.burnFreeRatio}, not covered ${r.worseThanAp.notCovered}; ${JSON.stringify(r.worseThanAp.objects)})` : ''}`);
