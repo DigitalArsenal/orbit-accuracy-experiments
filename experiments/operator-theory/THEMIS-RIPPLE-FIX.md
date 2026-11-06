@@ -477,3 +477,8 @@ the median ratio with a window-cluster bootstrap (10,000 draws, seed 20261106, 9
 for each of the six (day, component) cells. Beside it: the fit's wall (median over the six) against 0.6.2's, and the fit's peak wasm
 memory. If (i) passes: 0.6.3 = the grid + (i) + the fitter's guard E2E. If day 3 fails systematically: step (2) observability and the
 fix go to the SDN-AP session first.
+Correction (written after the first rows were read): the model truth starts every fixture from the same osculating state whatever
+the mean anomaly given (the four mean-anomaly fixtures returned identical rows on every build), so perigee phase is varied instead by
+the fit arc's start after the truth's start (fitStartDays 0.125, 0.25 and 0.375 days: a quarter, a half and three quarters of a
+12-hour revolution) at argument of perigee 270; the six fixtures are argument of perigee 270 with fitStartDays 0, 0.125, 0.25 and
+0.375, and argument of perigee 240 and 300.
