@@ -133,7 +133,33 @@ Pearson correlation of ln(N index) with the 1-minute load (mean of start and end
 
 ## Quiet-window check
 
-Not run: every absolute CPU figure in this file reads "under load, not quiet-checked" and is not for the page. The ratios and p stand with that caveat.
+Quiet window: load at or below 28 for 30 minutes, then the re-runs (started 2026-11-06T23:25:23Z, ended 2026-11-06T23:28:42Z, load at end 13.7). Agreement line 10 percent. Worst relative difference: 31.8 percent: they DISAGREE beyond the line; the absolute figures and s are read from the quiet rows.
+
+| Case | Phase | Quiet CPU s | Loaded CPU s | Quiet / loaded - 1 |
+|---|---|---|---|---|
+| ladder-1-8-s1 | propagation | 16.64 | 19.55 | -14.9 % |
+| ladder-1-8-s1 | search | 13.47 | 16.23 | -17.0 % |
+| ladder-1-8-s1 | refine | 1.55 | 1.62 | -4.2 % |
+| ladder-1-8-s1 | total | 33.17 | 39.17 | -15.3 % |
+| ladder-1-2-s1 | propagation | 73.88 | 82.72 | -10.7 % |
+| ladder-1-2-s1 | search | 95.38 | 107.70 | -11.4 % |
+| ladder-1-2-s1 | refine | 19.68 | 21.27 | -7.4 % |
+| ladder-1-2-s1 | total | 203.46 | 226.29 | -10.1 % |
+| current-full-r1 | propagation | 173.64 | 202.43 | -14.2 % |
+| current-full-r1 | search | 322.39 | 374.45 | -13.9 % |
+| current-full-r1 | refine | 140.47 | 158.98 | -11.6 % |
+| current-full-r1 | total | 729.32 | 834.60 | -12.6 % |
+
+| Timing arm (two windows) | Quiet us | Loaded us | Difference |
+|---|---|---|---|
+| SGP4 | 5.70 | 3.98 | 43.0 % |
+| AP | 348.03 | 356.86 | -2.5 % |
+| FFM40 | 930.27 | 1055.24 | -11.8 % |
+
+| Ratio | Quiet | Loaded | Difference |
+|---|---|---|---|
+| AP/FFM40 | 0.3741 | 0.3382 | 10.6 % |
+| AP/SGP4 | 61.0748 | 89.5625 | -31.8 % |
 
 ## Reading
 
