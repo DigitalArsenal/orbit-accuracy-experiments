@@ -37,6 +37,8 @@ A near-700 km or geostationary cell whose burn-free ratio interval holds 1 or li
 
 ## Counts, 2026-11-06, after the run
 
+Superseded as verdicts: the flag failed its false-alarm check (below), rules (b) and (c) failed as registered, and the flag is parked; the verdict column here and in `results/operator-theory/per-rev-flag` is the 1 m rule's reading only and decides nothing.
+
 Written after every re-flag row was read (1,522 windows, `results/operator-theory/per-rev-flag`). Windows flagged before (the 8 m step, the geosynchronous burn record) and after, at the longest lead (168 h):
 
 | Regime | Fit, h | Windows | Flagged before | Flagged after | Burn-free after | Burn-free FFM/AP [95 %] | Verdict |
