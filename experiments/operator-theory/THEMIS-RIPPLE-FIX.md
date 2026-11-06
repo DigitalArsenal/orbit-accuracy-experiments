@@ -383,5 +383,5 @@ for the module's life; (3) schedule nodes on t's side of the epoch (a flight at 
 record, so a refresh found none held); (4) the wide zonal tail's G and dG/de (above e 0.3 only) by the 256-node trapezoid instead of
 the 512-point quadrature with a finite-difference derivative: 2.6 ms native for its 210 terms, the largest non-grid init cost. Item (4)
 changes the zonal tail's numbers above e 0.3 (two spectral quadratures of the same integrals), so the 12 THEMIS windows are re-flown
-on the final build (arm L, modules 6f60710fe's successor) with the paired test before the result is stated, and themis-ripple.e2e.mjs
+on the final build (arm L, modules 6b60710fe, wasm a7771b14) with the paired test before the result is stated, and themis-ripple.e2e.mjs
 reruns on it.
