@@ -447,3 +447,16 @@ Truth 0.044; 0.6.2 fits 0.04478 (+1.8 %), the fixed build 0.04571 (+3.9 %). With
 flight matches or beats 0.6.2; the loss is the fitted coefficient's error, growing quadratically along-track (SPEC 12.8: a 72 h arc
 does not separate the coefficient at e 0.74). The coordinator's reading: 0.6.3 waits for a registered drag-coefficient robustness fix
 for short HEO arcs in the same binary.
+
+## Amendment 21 (2026-11-06, the SDN-AP ruling: 0.6.3 held; the Molniya fitted-drag investigation, before any of its numbers)
+(1) Partials first: the pinned-coefficient fixture is fine, so the flight is; the biased coefficient points at its partial, whose
+perturbed copies drift differently in a and e but share one grid (Amendment 13's sharing, read linearly). Measured: (a) the Molniya
+fitted-drag fixture fitted and flown on a build identical to the fixed one except kShareE = kShareI = kShareA = 0 (each set its own
+exact grid, as C4/C6): its fitted coefficient and day 1 / 3 / 7 errors against the fixed build and 0.6.2; (b) the coefficient's
+column of the partials: a Molniya set (the fixture's fitted 0.6.2 set) flown over the 72 h arc with its coefficient at B and
+B (1 + 1e-3) on the fixed build and on the exact-grid variant, the position difference over the arc divided by the step, compared
+between the two builds (RMS of the difference relative to the column's RMS).
+(2) Then observability: the coefficient's formal sigma against its value on the 72 h arc from the fitted record, and the prior's weight
+(SPEC 12.8), on 0.6.2 and on the fixed build.
+(3) The fix lands in the same binary; acceptance: Molniya with drag fitted at or below 0.6.2's day 1 / 3 / 7 plus noise (taken as 5 %),
+every other fixture and the THEMIS fixture not worse than 0.6.2 by more than 5 %, and the end-to-end check against the pinned FFM truth.
