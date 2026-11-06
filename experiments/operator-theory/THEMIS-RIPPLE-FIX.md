@@ -315,3 +315,16 @@ C3's sharing: a set within the grid's linear range of a cached grid (|de| <= 3e-
 element-linear. Flown on the 12 THEMIS windows with the paired test of Amendment 8 (margin 1.05) against the base; beside it, C6 (C4's
 exact grid per set with the same schedule) on the same windows, and for both: peak wasm memory and the one-epoch propagate's wall
 (memtest.mjs) and the 1,000-record catalog case on 8 workers.
+
+## Amendment 14 (2026-11-06, the catalog line; before any of it is measured)
+Read: C7 clears the paired margin (0.948 / 0.990 / 0.999, upper bounds 0.962 / 1.014 / 1.031) with THEMIS A 2013-02-15 on its good
+solution; C7 memtest 137 MB per worker, 0.77 to 0.80 s for a one-epoch propagate; C6's 1,000-record 8-worker run 397 s, 3.15 s per
+record, 333 MB per worker. Budget: 100 ms of wasm init per object or less.
+1. Init profile, one object in wasm (a scratch build of 6f3b82ef3 with timers and an export, outside the shipped source): the one-epoch
+   propagate's wall against the base build's on the same record, and inside the grid build the shares of the per-family forcing,
+   the left-out harmonics, the FFT integrals, the derivative grids (three more family builds) and allocation; native 53 ms against it.
+2. Lazy schedule nodes: the source builds node 0 at init and node j only when a call falls in its span (verified by counting builds in
+   the timed build for a one-epoch propagate and for a 7-day flight); measured as is.
+3. Retention across refreshes: a variant keeping every idle grid (the cache's idle limit raised to the catalog's size per worker)
+   against the source's four; the refresh pass's cost and the peak memory per worker both ways, 1,000 records on 8 workers.
+Reported beside C6's: wasm init per object, load and refresh seconds per worker, peak memory per worker; within the budget or the gap.
