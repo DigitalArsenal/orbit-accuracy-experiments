@@ -165,3 +165,17 @@ grid and its first derivatives in e, i and a (central differences of the grid at
 grid + sum of derivative x the elements' current offset; its RMS against the quadrature on the Amendment 4 steps, same 0.25 m test;
 memory four times the grid's. (3) The mean-element drift a 7-day flight sees, from the AP (31, 20) fits of THEMIS D at cutoffs 2013-02-14
 and 2013-02-16 against 2013-02-12 (non-scored cutoffs; elements only, no forecast error), to state the re-grids per flight.
+
+## Amendment 6 (2026-11-06, before any init time is measured)
+Init: the module builds each (m, w) family's grid from the family's forcing in closed form (sum over l of A F (Cbar - i Sbar)
+(a/r)^(l+1) e^{iwf} and its M, e, i, a derivatives on uniform eccentric anomalies, Lagrange's equations, then
+H = e^{-i nu e sin E} IFFT(FFT(R (1 - e cos E) e^{i nu e sin E}) / (i (k - nu))) / mdot, the left-out harmonics subtracted in rate
+form); the harness first shows it reproduces the harmonic-sum grid (cubic N = 128 against the quadrature within the bounds).
+Choice rule: element-linear grids at N = 128 (12.1 MB per object above e 0.3, about 6 re-grids per 7-day flight) are the default; the
+fixed grid (3.0 MB, about 180 re-grids per week at de* = 1e-5) is taken only if, in the module, its total 7-day flight cost (init x
+re-grids + steps) is lower and its per-step cost including re-grids stays within 1.5 times the element-linear's per step. Memory budget
+the rule allows: one object's grids at a time per worker (12.1 MB element-linear, 3.0 MB fixed), freed after each flight; measured by one
+worker flying 100 records above e 0.3 in sequence (the HEO example records, repeated): peak wasm memory must stay at one object's grids.
+Init time per object and per fit iteration reported beside it.
+Report only: the old series' residual against the quadrature at e 0.29 and 0.30 (the step an object takes when its eccentricity crosses
+the switch in flight); it changes nothing unless it exceeds the bounds, and then goes to the coordinator.
