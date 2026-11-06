@@ -32,3 +32,16 @@ Bounds (Amendment 2): RMS <= 1 m, maximum <= 5 m, roughness of the difference <=
 No registered step meets the bounds: candidate 2 as a screened series fails. The terms under any per-term screen are the tail of a
 perigee pulse; they add in phase, and at h = 300 s their high harmonics (|j| 100 to 200) dominate the second difference, so a wider
 screened set is rougher, not smoother. 0.4.11's smoothness is the absence of every harmonic above |j| = 6, at 137 m RMS from the field.
+
+## A1 sizing (Amendment 3): Fourier in the eccentric anomaly, N points, against the full-field quadrature
+Output: resum-themis-d.json, resum-themis-e.json (`resum`). 246 (m, w) families. D / E:
+
+| N | Grid bytes (families x 6 x N complex doubles) | RMS (m) | Maximum (m) | Roughness of the difference (m) | Roughness of the output (m) | Harness wall per step (us) |
+| --: | --: | --: | --: | --: | --: | --: |
+| 64 | 1,511,424 | 4.398 / 4.514 | 19.05 / 19.69 | 0.812 / 0.828 | 0.860 / 0.901 | 82 / 84 |
+| 128 | 3,022,848 | 0.0067 / 0.0062 | 0.020 / 0.019 | 0.0054 / 0.0050 | 0.073 / 0.078 | 162 / 162 |
+| 256 | 6,045,696 | < 0.0001 | < 0.0001 | < 0.0001 | 0.072 / 0.077 | 314 / 320 |
+| 512 | 12,091,392 | < 0.0001 | < 0.0001 | < 0.0001 | 0.072 / 0.077 | 621 / 627 |
+
+N = 128 meets every bound on both windows. Today's table through sp_six in the same harness: 5.1 / 5.4 us per step. The global Fourier
+evaluation (6 x N complex terms per family per step) is the cost; a local interpolant on the same grid is the next sizing step.

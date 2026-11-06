@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <limits>
+#include <chrono>
 #include <map>
 #include <memory>
 #include <string>
@@ -229,7 +230,26 @@ int main(int argc, char** argv) {
   const double theta_g0 = gsto_afspc(d50);
   const double na2 = n0 * a0 * a0, si = std::sin(i0);
   const int steps = 7 * 288 + 1;
+  double spsixUs = 0;
   std::vector<double> tr1(3 * steps), tr2(3 * steps), tr3(3 * steps), tr4(3 * steps);
+  auto diff_stats = [&](const std::vector<double>& x, const std::vector<double>& y, double& rmsd, double& maxd, double& rough) {
+    double s2 = 0; maxd = 0;
+    std::vector<double> d2;
+    for (int s = 0; s < steps; ++s) {
+      double q = 0;
+      for (int c = 0; c < 3; ++c) q += std::pow(x[3 * s + c] - y[3 * s + c], 2);
+      s2 += q; maxd = std::max(maxd, std::sqrt(q));
+      if (s >= 1 && s + 1 < steps) {
+        double v = 0;
+        for (int c = 0; c < 3; ++c) { const double dd = (x[3 * (s + 1) + c] - y[3 * (s + 1) + c]) - 2 * (x[3 * s + c] - y[3 * s + c]) + (x[3 * (s - 1) + c] - y[3 * (s - 1) + c]); v += dd * dd; }
+        d2.push_back(std::sqrt(v));
+      }
+    }
+    rmsd = std::sqrt(s2 / steps);
+    std::nth_element(d2.begin(), d2.begin() + d2.size() / 2, d2.end());
+    rough = d2[d2.size() / 2];
+  };
+  std::vector<double> zero(3 * steps, 0.0);
   const int caps[] = {33, 50, 75, 100, 150, 200, 300, 500, 2047};
   const double keeps[] = {0.5, 0.2, 0.1};
   constexpr int NC = 9, NK = 3;
@@ -270,6 +290,7 @@ int main(int argc, char** argv) {
     const double t = 5.0 * s;  // minutes
     Kepler k{a0, e0, i0, wrap(O0 + node_rate * t), wrap(w0 + wdot * t), wrap(M0 + mdot * t)};
     double six1[6] = {0, 0, 0, 0, 0, 0};
+    { const auto a_ = std::chrono::steady_clock::now(); for (int rep = 0; rep < 20; ++rep) { double tmp[6] = {0, 0, 0, 0, 0, 0}; tess::sp_six(T.data(), count, t, k, n0, eta, si, c0, theta_g0, tmp); } spsixUs += 1e6 * std::chrono::duration<double>(std::chrono::steady_clock::now() - a_).count() / 20; }
     tess::sp_six(T.data(), count, t, k, n0, eta, si, c0, theta_g0, six1);
     double six2[6] = {0, 0, 0, 0, 0, 0}, six3[6] = {0, 0, 0, 0, 0, 0}, six4[6] = {0, 0, 0, 0, 0, 0};
     const double beta = k.node - (theta_g0 + kOmegaE * t);
@@ -314,24 +335,6 @@ int main(int argc, char** argv) {
     six_to_pos(k, n0, six3, &tr3[3 * s]);
     six_to_pos(k, n0, six4, &tr4[3 * s]);
   }
-  auto diff_stats = [&](const std::vector<double>& x, const std::vector<double>& y, double& rmsd, double& maxd, double& rough) {
-    double s2 = 0; maxd = 0;
-    std::vector<double> d2;
-    for (int s = 0; s < steps; ++s) {
-      double q = 0;
-      for (int c = 0; c < 3; ++c) q += std::pow(x[3 * s + c] - y[3 * s + c], 2);
-      s2 += q; maxd = std::max(maxd, std::sqrt(q));
-      if (s >= 1 && s + 1 < steps) {
-        double v = 0;
-        for (int c = 0; c < 3; ++c) { const double dd = (x[3 * (s + 1) + c] - y[3 * (s + 1) + c]) - 2 * (x[3 * s + c] - y[3 * s + c]) + (x[3 * (s - 1) + c] - y[3 * (s - 1) + c]); v += dd * dd; }
-        d2.push_back(std::sqrt(v));
-      }
-    }
-    rmsd = std::sqrt(s2 / steps);
-    std::nth_element(d2.begin(), d2.begin() + d2.size() / 2, d2.end());
-    rough = d2[d2.size() / 2];
-  };
-  std::vector<double> zero(3 * steps, 0.0);
   double r1, m1, g1, r2, m2, g2, r12, m12, g12, r13, m13, g13, r14, m14, g14, r3, m3, g3, r4, m4, g4;
   diff_stats(tr1, zero, r1, m1, g1);
   diff_stats(tr2, zero, r2, m2, g2);
@@ -343,6 +346,73 @@ int main(int argc, char** argv) {
   std::printf("\"table\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},\"quadTableTerms\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},", r1, m1, g1, r2, m2, g2);
   std::printf("\"quadAll02n\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},\"quadAll0045n\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f},", r3, m3, g3, r4, m4, g4);
   std::printf("\"tableMinusQuadTable\":{\"rmsM\":%.4f,\"maxM\":%.4f,\"roughM\":%.4f,\"relRms\":%.3e},", r12, m12, g12, r12 / r2);
+
+  // Option A (closed-form re-sum, sized): each (m, w) family's six-component displacement, every admissible harmonic, sampled on a
+  // uniform grid of N eccentric anomalies and trigonometrically interpolated in E at output time.
+  {
+    constexpr int NS = 512;
+    const auto tInit0 = std::chrono::steady_clock::now();
+    std::map<std::pair<int, int>, std::vector<cd>> fam;  // (m, w) -> 6 x NS samples
+    std::vector<double> Eg(NS), Mg(NS);
+    for (int n = 0; n < NS; ++n) { Eg[n] = kTwoPi * n / NS; Mg[n] = Eg[n] - e0 * std::sin(Eg[n]); }
+    for (const Comp& q : all) {
+      if (q.w == 0 && q.j == 0) continue;
+      const double psidot = q.w * wdot + q.j * mdot + q.m * (node_rate - kOmegaE);
+      bool ct = false;
+      for (int z = 0; z < carried.count; ++z) if (carried.t[z].l == q.l && carried.t[z].m == q.m && carried.t[z].p == (q.l - q.w) / 2 && carried.t[z].q == q.j - q.w) ct = true;
+      if (ct || std::fabs(psidot) < tess::kShallowBand * n0) continue;
+      const cd ip(0, psidot);
+      const cd dVM = cd(0, q.j) * q.Z, dVw = cd(0, q.w) * q.Z, dVO = cd(0, q.m) * q.Z, dVa = -(q.l + 1) / a0 * q.Z;
+      const cd ad = 2.0 / (n0 * a0) * dVM;
+      const cd ed = eta * eta / (na2 * e0) * dVM - eta / (na2 * e0) * dVw;
+      const cd id = c0 / (na2 * eta * si) * dVw - 1.0 / (na2 * eta * si) * dVO;
+      const cd Od = 1.0 / (na2 * eta * si) * q.Zi;
+      const cd wd = eta / (na2 * e0) * q.Ze - c0 / (na2 * eta * si) * q.Zi;
+      const cd Md = -2.0 / (n0 * a0) * dVa - eta * eta / (na2 * e0) * q.Ze;
+      const cd ca = ad / ip, ce = ed / ip, ci_ = id / ip, cO = Od / ip, cw = wd / ip, cM = Md / ip - 1.5 * n0 / a0 * ad / (ip * ip);
+      const cd C6[6] = {-1.5 * n0 / a0 * ca, ce, ci_, e0 * (cw + cO), si * cO, cM + cw + cO};
+      auto& v = fam[{q.m, q.w}];
+      if (v.empty()) v.assign(6 * NS, cd(0));
+      for (int n = 0; n < NS; ++n) { const cd ph = std::polar(1.0, q.j * Mg[n]); for (int k = 0; k < 6; ++k) v[k * NS + n] += C6[k] * ph; }
+    }
+    const double initS = std::chrono::duration<double>(std::chrono::steady_clock::now() - tInit0).count();
+    std::printf("\"resum\":{\"families\":%zu,\"harnessSampleSeconds\":%.2f,\"grid\":[", fam.size(), initS);
+    const int Ns[4] = {64, 128, 256, 512};
+    for (int gi = 0; gi < 4; ++gi) {
+      const int N = Ns[gi], stride = NS / N;
+      // trig interpolation coefficients per family and component
+      std::map<std::pair<int, int>, std::vector<cd>> co;
+      for (auto& [key, v] : fam) {
+        std::vector<cd> c(6 * N);
+        for (int k = 0; k < 6; ++k) { std::vector<cd> row(N); for (int n = 0; n < N; ++n) row[n] = v[k * NS + n * stride]; fft(row); for (int s2 = 0; s2 < N; ++s2) c[k * N + s2] = row[s2] / double(N); }
+        co[key] = std::move(c);
+      }
+      std::vector<double> trA(3 * steps);
+      const auto tEv0 = std::chrono::steady_clock::now();
+      for (int s = 0; s < steps; ++s) {
+        const double t = 5.0 * s;
+        Kepler k{a0, e0, i0, wrap(O0 + node_rate * t), wrap(w0 + wdot * t), wrap(M0 + mdot * t)};
+        double E = k.m;
+        for (int it = 0; it < 60; ++it) { const double d = (E - e0 * std::sin(E) - k.m) / (1 - e0 * std::cos(E)); E -= d; if (std::fabs(d) < 1e-15) break; }
+        const double beta = k.node - (theta_g0 + kOmegaE * t);
+        std::vector<cd> eE(N);
+        for (int s2 = 0; s2 < N; ++s2) { const int f = s2 < N / 2 ? s2 : s2 - N; eE[s2] = std::polar(1.0, f * E); }
+        double six[6] = {0, 0, 0, 0, 0, 0};
+        for (auto& [key, c] : co) {
+          const cd ph = std::polar(1.0, key.second * k.argp + key.first * beta);
+          for (int kk = 0; kk < 6; ++kk) { cd sum = 0; for (int s2 = 0; s2 < N; ++s2) sum += c[kk * N + s2] * eE[s2]; six[kk] += std::real(ph * sum); }
+        }
+        six_to_pos(k, n0, six, &trA[3 * s]);
+      }
+      const double evUs = 1e6 * std::chrono::duration<double>(std::chrono::steady_clock::now() - tEv0).count() / steps;
+      double rr, mx, rg, r0, m0, g0;
+      diff_stats(tr4, trA, rr, mx, rg);
+      diff_stats(trA, zero, r0, m0, g0);
+      std::printf("%s{\"N\":%d,\"memoryBytes\":%zu,\"harnessUsPerStep\":%.1f,\"roughM\":%.4f,\"vsAllRmsM\":%.4f,\"vsAllMaxM\":%.4f,\"vsAllRoughM\":%.5f}", gi ? "," : "", N, co.size() * 6 * N * sizeof(cd), evUs, g0, rr, mx, rg);
+    }
+    std::printf("]},");
+  }
+  std::printf("\"tableSpSixUsPerStep\":%.2f,", spsixUs / steps);
   std::printf("\"caps\":[");
   for (int c = 0; c < NC; ++c) for (int kk = 0; kk < NK; ++kk) {
     double rr, mx, rg, r0, m0, g0;
