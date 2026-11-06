@@ -167,7 +167,7 @@ for (const o of OBJECTS) {
       } catch (error) { row.error = String(error?.message ?? error).slice(0, 200); }
       row.seconds = (Date.now() - t0) / 1000;
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
-      console.error(`${key} ${a.arm}: ${row.ok ? `rough ${row.rough.toFixed(3)} m, day 1 ${row.days[1]?.e.toFixed(1)} day 3 ${row.days[3]?.e.toFixed(1)} day 7 ${row.days[7]?.e.toFixed(1)} m` : row.error} (${row.seconds.toFixed(1)} s)`);
+      console.error(`${key} ${a.arm}: ${row.ok ? `rough ${row.rough?.toFixed(3)} m, day 1 ${row.days[1]?.e.toFixed(1)} day 3 ${row.days[3]?.e.toFixed(1)} day 7 ${row.days[7]?.e.toFixed(1)} m` : row.error} (${row.seconds.toFixed(1)} s)`);
     }
   }
 }
