@@ -345,3 +345,25 @@ per object (one worker, 1,000 records) and a warm refresh of 1,000 records on 8 
 with covariance: not worse than the shipped build on the same path (614 against 4,133 ms per record); (c) memory at or below 512 MB per
 worker. The covariance path's re-initialization (1 + 2 x 8 sets, each initialized) is a design defect with its own record, which
 inherits the original budget; it is not changed here.
+
+## Amendment 16 (2026-11-06, the levers box; registered before any of its numbers exists)
+Read: under Amendment 15 C7 holds (b) 618 against 4,133 ms and (c) 130 MB, and misses (a): cold median 183.1 ms per record (one
+worker), warm refresh 26.1 s (8 workers); a refresh with every grid held would cost 32.6 to 35.1 ms per record but 125 held grids per
+worker at 7.08 MB are 885 MB, over 512 MB. The grid ships as 0.6.4 if, after the levers below, it clears (a) cold and warm and (c)
+memory on the same measurement (catalog.mjs, 1,000 distinct records above e 0.3, no covariance, one worker for the cold median and
+8 workers for the refresh); else it parks with the numbers. 0.6.3 is the fitter fix alone.
+Targets: cold median at or below 100 ms per object; warm refresh at or below 5 s on 8 workers (40 ms per record per worker at 125
+records); peak at or below 512 MB per worker.
+Memory arithmetic for holding every grid of a worker's share (125 records above e 0.3; 288 families x 6 components x N nodes x 2
+floats = 1.77 MB per family set at N = 128): value only 1.77 MB; value with e and i derivatives 5.31 MB; with e, i and a 7.08 MB (now);
+derivatives at N = 64: 1.77 + 3 x 0.88 = 4.42 MB; derivatives stored in half precision: 1.77 + 3 x 0.88 = 4.42 MB; both: 1.77 + 3 x 0.44
+= 3.10 MB. Held for 125 records plus the 64 MB base heap: at most (512 - 64) / 125 = 3.58 MB per record; so the held-grid route needs
+at most 3.58 MB per grid (derivatives at N = 64 in half precision, or the a / a derivative dropped with e and i at N = 64).
+Levers, each sized against the full-field quadrature first (themis-ripple.e2e.mjs's verify on THEMIS D and E and the GTO fixture, and
+sched.cpp's drift check at 3e-3 per week with the 48 h schedule), kept only if the bounds hold (1 m RMS, 5 m maximum, 0.1 m roughness
+of the difference; drift 0.25 m RMS) and C7's paired result is not re-flown unless the math of the value grid changes:
+L1 derivative grids at N = 64 (the value grid at 128); L2 derivative grids in half precision; L3 the a / a derivative dropped (the
+schedule's 48 h nodes bound the a drift; drift check with da / a at the measured rate); L4 one forcing evaluation shared by the four
+family sets (the derivative sets differ only through e, i and n in the forcing's coefficients and divisors: built in one pass where
+the math allows); L5 fewer E nodes for the derivative sets (128 against 256). Cold: L4 and L5 (build time); warm: L1 to L3 (held size)
+with an idle limit of 128 grids per worker, eviction oldest first. The measured cold, warm and memory of the chosen combination decide.
