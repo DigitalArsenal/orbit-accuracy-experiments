@@ -261,3 +261,17 @@ rows give this window 173.8 / 260.7 / 910.1 m on 0.4.11 to 0.4.14 and 211.7 / 31
 3. Init in wasm: target 100 ms per object or less (report-only until met). Measured: 1,000 records above e* flown to one epoch, wall time
    and peak wasm memory, on one worker and on a pool of the console's size (8 workers); the choice of N and of C3 against C4 weighs this
    beside the fit cost.
+
+## Open item (2026-11-06, the coordinator's decision (a); not run in this box)
+Decision: C3 is not accepted (day-7 paired upper bound 1.051 against the 1.05 margin); the fit's second solution (BTERM 4.3 to 4.5, 2.3
+times the attainable residual) goes to a separate fit-robustness record for fit_oem.inc, with THEMIS A 2013-02-15 and C4's grid as its
+test; the E2E and the moved GTO E2E are written on the C4 source.
+Open: on THEMIS A 2013-02-15 alone the base fit flown on the candidate is worse against truth (day 3 440.6 against 314.1 m, day 7 857.1
+against 419.9 m) although the grid agrees with the quadrature there (0.119 m RMS). Hypotheses: (H1) the truncated table's 65 m RMS error
+happened to compensate this window's other model error (for example its drag at the 820 km perigee); (H2) the window's truth is at
+fault (a kernel segment boundary or a maneuver inside the arc or the flight). Test that separates them: H2 predicts a discontinuity or a
+residual jump in the reference itself, seen by the base and the candidate alike: the fit residual record per state on both builds,
+the reference's own second difference at 300 s across the window (a jump in the truth shows as an isolated spike on every build), and
+the kernel's segment boundaries; H1 predicts no spike and a smooth day-by-day divergence between the two flights of the same set,
+largest where the truncated table's displacement against the quadrature (65 m RMS) is largest, and the same compensation on the
+neighboring cutoffs 2013-02-14 and 2013-02-16 of THEMIS A.
