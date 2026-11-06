@@ -818,6 +818,18 @@ function heldout() {
 
 // =====================================================================================================================================
 // table and README, from the rows and the fits alone
+// The gate's size: the chance a calibrated Gaussian covariance passes a cell of n independent window-arms (normal approximation:
+// the sample median of |z| has standard error 1 / (2 f(m) sqrt(n)), f the half-normal density at its median m; the 2-sigma share a binomial).
+const erf = (x) => { const t = 1 / (1 + 0.3275911 * Math.abs(x)); const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return x >= 0 ? y : -y; };
+const Phi = (x) => 0.5 * (1 + erf(x / Math.SQRT2));
+const HALF_NORMAL_DENSITY_AT_MEDIAN = 2 * Math.exp(-0.5 * HALF_NORMAL_MEDIAN ** 2) / Math.sqrt(2 * Math.PI);
+const medianSE = (n) => 1 / (2 * HALF_NORMAL_DENSITY_AT_MEDIAN * Math.sqrt(n));
+const TWO_SIGMA_P = 0.9544997361036416;
+function passChance(n) {
+  const se = medianSE(n), pm = Phi((BAND[1] - HALF_NORMAL_MEDIAN) / se) - Phi((BAND[0] - HALF_NORMAL_MEDIAN) / se);
+  const ps = Phi((TWO_SIGMA_P - TWO_SIGMA_MIN) / Math.sqrt(TWO_SIGMA_P * (1 - TWO_SIGMA_P) / n));
+  return pm * ps;
+}
 function table(dir) {
   const sel = JSON.parse(fs.readFileSync(path.join(OUT, 'selection.json'), 'utf8'));
   const fits = fs.readdirSync(path.join(OUT, 'fits')).filter((f) => f.endsWith('.json')).sort().map((f) => JSON.parse(fs.readFileSync(path.join(OUT, 'fits', f), 'utf8')));
@@ -841,10 +853,19 @@ function table(dir) {
   const persist = {};
   for (const f of sel.forms) for (const b of blockIds) for (const c of foldOf(f.form, b)?.cells ?? []) if (c.pass === false) (persist[`${b} ${c.axis} ${c.h} h`] ??= []).push(c);
   const every = Object.entries(persist).filter(([, v]) => v.length === sel.forms.length);
-  L.push('', `## Cells failing under every form (${every.length})`, '', '| Left-out block, axis, lead | Median \\|z\\| over the forms | Share within 2 sigma over the forms |', '|---|---|---|');
-  for (const [k, v] of every) { const m = v.map((c) => c.medianAbsZ), w = v.map((c) => c.within2); L.push(`| ${k} | ${Math.min(...m).toFixed(3)} to ${Math.max(...m).toFixed(3)} | ${Math.min(...w).toFixed(3)} to ${Math.max(...w).toFixed(3)} |`); }
+  L.push('', `## Cells failing under every form (${every.length})`, '', 'n: window-arms in the cell; SE: the standard error of a calibrated covariance\'s median |z| at that n (independent window-arms); pass chance: a calibrated Gaussian covariance\'s chance to pass the cell (median band and 2-sigma share).', '',
+    '| Left-out block, axis, lead | n | Median \\|z\\| over the forms | SE | Share within 2 sigma over the forms | Pass chance, calibrated |', '|---|---:|---|---:|---|---:|');
+  for (const [k, v] of every) { const m = v.map((c) => c.medianAbsZ), w = v.map((c) => c.within2), n = v[0].n; L.push(`| ${k} | ${n} | ${Math.min(...m).toFixed(3)} to ${Math.max(...m).toFixed(3)} | ${medianSE(n).toFixed(3)} | ${Math.min(...w).toFixed(3)} to ${Math.max(...w).toFixed(3)} | ${passChance(n).toFixed(2)} |`); }
+  L.push('', '## The gate\'s size', '', 'The chance that a perfectly calibrated Gaussian covariance passes each fold, from each decidable cell\'s n (normal approximation; independent window-arms, which is optimistic: overlapping windows and the two arms of one window lower the effective n). A fold passes with the product of its cells\' chances if they are independent and with the smallest if they are fully correlated.', '',
+    '| Block | Decidable cells | n per cell | Pass chance per cell | Fold, cells independent | Fold, cells fully correlated |', '|---|---:|---|---|---:|---:|');
+  for (const b of blockIds) {
+    const q = foldOf(sel.forms[0].form, b); if (!q) continue;
+    const cells = q.cells.filter((c) => c.decidable), ps = cells.map((c) => passChance(c.n));
+    L.push(`| ${b} | ${cells.length} | ${[...new Set(cells.map((c) => c.n))].join(', ')} | ${[...new Set(ps.map((p) => p.toFixed(2)))].join(', ')} | ${ps.reduce((x, y) => x * y, 1).toFixed(3)} | ${Math.min(...ps).toFixed(2)} |`);
+  }
   L.push('', '## Fitted on all training rows', '', '| Form | Loss | Parameters |', '|---|---:|---|');
-  for (const f of fits.filter((q) => q.block === 'all')) L.push(`| ${f.form} | ${f.loss.toPrecision(4)} | ${Object.entries(f.x).map(([k, v]) => `${k} ${Number(v).toPrecision(6)}`).join(', ')} |`);
+  const formNumber = (id) => Number(id.slice(1));
+  for (const f of fits.filter((q) => q.block === 'all').sort((a, b) => formNumber(a.form) - formNumber(b.form))) L.push(`| ${f.form} | ${f.loss.toPrecision(4)} | ${Object.entries(f.x).map(([k, v]) => `${k} ${Number(v).toPrecision(6)}`).join(', ')} |`);
   if (held) {
     L.push('', '## Held-out windows', '', `Window-arms: ${Object.entries(held.windows).map(([r, n]) => `${REGIME[r]} ${n}`).join('; ')}.`, '');
     const show = (title, cells, base) => {
@@ -866,7 +887,7 @@ function table(dir) {
 // ---- the end to end
 function check() {
   const fails = [], ok = (c, m) => { if (!c) fails.push(m); };
-  const reg = git(repo, 'log', '--diff-filter=A', '--format=%H %cI', '--', PLAN).toString().trim().split('\n').at(-1).split(' ');
+  const reg = git(repo, 'log', '--diff-filter=A', '--format=%H %aI', '--', PLAN).toString().trim().split('\n').at(-1).split(' ');
   const sel = JSON.parse(fs.readFileSync(path.join(OUT, 'selection.json'), 'utf8'));
   ok(Date.parse(reg[1]) < Date.parse(sel.startedUtc), 'the registration does not precede the selection');
   if (fs.existsSync(path.join(OUT, 'manifest.json'))) {
