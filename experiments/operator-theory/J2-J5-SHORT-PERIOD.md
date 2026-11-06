@@ -250,6 +250,52 @@ Changes, before any row of the table (no estimator change; no reading-rule chang
   cell, flown to confirm the fix before the table) stay in first-pass/ and enter no table; --check asserts this amendment's commit
   precedes the first row of the table.
 
+## Amendment 3 (2026-11-06, this lane; written after the cells and the first flight of the windows, before the table; disclosure)
+1. The end-to-end measure. Item 5's "3D error at the sample nearest to 24, 72 and 168 h" is one sample of a series whose short-period
+   content is the very thing under test, and the first flight of the 36 windows (rows kept in first-pass/windows-attempt-1/, entering
+   no table; the console lines were read, for instance LARES window 1: 24 h 3.12 -> 4.02 m, 168 h 7.24 -> 12.87 m, and LARES window 5:
+   24 h 13.25 -> 5.89 m) shows it moving either way by the phase of the sample. The accuracy table's own figure is the RMS of the 3D
+   error over the day's bin (all-regimes.mjs score: the states with t in ((k - 1) days, k days] past the fit's end). The windows are
+   flown again with both: the day-bin RMS at days 1, 3 and 7 is the measure item 5's medians, paired differences, sign tests and item
+   8's end-to-end clauses read; the single-sample figure stays in the rows and the table as registered, reported, not read. The rows of
+   the first flight are kept and disclosed; nothing of the cells changes.
+2. The best case. Item 8's "best case" step P1F + P1N + P2 presumed P2 removes content; the cells show P2 (the E5 residual table)
+   adding share in every regime (Starlette 1.88 -> 3.09 m), so the best case per cell is the better of P1F + P1N and P1F + P1N + P2
+   (the smaller after share), and "reduced on the best case" reads that step. P2's own column stays as measured: the empirical J2
+   second-order bound is void in this construction and the record says so; the J2 second-order term needs the Kozai transcription.
+3. The arm rows (Z2, Z5) are written by every shard that needs them (a memo per process), so a regime's arm row appears up to four
+   times with identical content; the table reads one row per id.
+
+## Amendment 4 (2026-11-06, this lane, on the SDN-AP rulings through the coordinator after the progress notice; committed before any real-window row and before the table)
+1. Post-read amendments are labeled post-read. Amendment 3 was written after the synthetic cells and the first flight of the windows
+   had been read (the console lines quoted there); it is allowed as a disclosed second reading only: the registered single-sample
+   figure of item 5 stays the record's end-to-end measure by the letter (item 8's end-to-end clauses, the sign tests and the
+   multiplicity count read it), and the RMS-over-day-bin reading sits beside it in every table, marked "chosen after the first
+   reading". Amendment 2 was likewise written after the first-pass rows of attempt 1 had been read (arms Z2 and Z5 and the Starlette
+   cell): "before any row of the table" means before the table's rows, not before anything was seen; the first-pass rows stay apart
+   in first-pass/attempt-1, first-pass/attempt-2 and first-pass/windows-attempt-1 and are named in the table.
+2. V1 stands as registered: the cells below the 3x ratio (Starlette 2.4x, Ajisai 2.6x, Jason-3 2.9x on the first rows) read "not
+   validated" and are not counted; P1's (0,3) term is NOT tuned in this record to remove the overshoot of about 30 per cent seen
+   there; the overshoot gets its own named line in the verdict (per regime: E5's (0,3) + (0,5) amplitude before, after +Delta and
+   after -Delta) for a module record to explain. The counted reductions are stated by validated cells (on the first rows: LARES and
+   Sentinel-3 reduced, CryoSat-2 not), never as "reduced in five" alone; the not-counted cells' readings are reported beside, labeled.
+3. N0 is written as five decisive matches plus CryoSat-2, whose measured interval also contains zero so its match cannot discriminate.
+   R0 is not explained by the J4 constant member and the record says so plainly; the polar radial bias of 7 to 9 m (Sentinel-3,
+   CryoSat-2) stays open (arm Z5's R0 says whether it persists with J2 to J5 alone).
+4. 5b's measure, registered here before any real-window row: on sdn-ap 0.6.3 (aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e
+   at modules 93cb5a0584fa728864e4426cc9ceb368936589f9, the accuracy table's build, through lib/ap.mjs standalone at that build), the
+   accuracy table's own measure: the RMS of the 3D error over the day bin ((k - 1, k] days past the fit's end, all-regimes.mjs score)
+   at days 1, 3 and 7, paired per window; two arms, P1F alone and P1F + P1N (the displacement, built at the window's own a, n and i
+   from the arc's first state, subtracted from the thinned 72 h arc before the fit and added back to the flight at its own angles), no
+   P2; the same windows, truth, grid, coverage rule, weather and fit configuration as all-regimes.mjs (LS group laser files for LARES,
+   Starlette and Ajisai, the DO group's Jason-3 file, cutoffs every 5 days 2025-10-10 to 2025-12-21, 72 h arc). Since P1 is not
+   validated for Starlette, Ajisai or Jason-3 (item 2 above), their windows are flown and FLAGGED "P1 not validated in this regime";
+   LARES is the counted regime. Per regime and lead: the medians before and after each arm, the paired difference's median and
+   [min, max], the share of windows improved, the two-sided sign test's p and its power at that count (Amendment 1.2), and the expected
+   size beside the result (item 1's linear bound and quadrature expectation for that regime and lead). 5b decides nothing in item 8;
+   it is the report line a module record would cite. The $PCF zonal-cap finding of Amendment 2 is filed as its own record; nothing
+   about caps changes here.
+
 ## Outputs and check
 `SDN_MODULES_ROOT=<the pinned -covm root> SDNAP_064_WASM=<this lane's copy of the signed 0.6.4 dist> SDN_AP_HEO_CACHE=<this lane's scratch>
 node experiments/operator-theory/j2-j5-short-period.mjs --run [--shard k/n]` (at most 4 shards, cells by position) writes
