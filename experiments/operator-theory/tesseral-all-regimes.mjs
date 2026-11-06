@@ -102,7 +102,8 @@ export function attribute(tau, rtn, nRevDay, windowDays) {
   for (const x of fams) { const g = groups.at(-1); if (g && x.f - g.f < res) { g.labels.push(x.label); g.members.push(x); } else groups.push({ f: x.f, labels: [x.label], members: [x] }); }
   const kept = groups.filter((g) => g.f >= res && g.f < 0.9 * nyquist);
   const dropped = groups.filter((g) => g.f >= 0.9 * nyquist).length;
-  const lunar = windowDays >= 5 ? [1 / LUNAR_MONTH_DAYS, 2 / LUNAR_MONTH_DAYS] : [];
+  // Amendment 4: the lunar lines enter only on a window of a lunar month or more (none here); the trend carries the long-period share.
+  const lunar = windowDays >= LUNAR_MONTH_DAYS ? [1 / LUNAR_MONTH_DAYS, 2 / LUNAR_MONTH_DAYS] : [];
   const quadratic = windowDays >= 5;
   const trendCols = quadratic ? 3 : 2;
   const row = (t) => [1, t, ...(quadratic ? [t * t] : []), ...lunar.flatMap((fr) => [Math.cos(2 * Math.PI * fr * t), Math.sin(2 * Math.PI * fr * t)]), ...kept.flatMap((g) => [Math.cos(2 * Math.PI * g.f * t), Math.sin(2 * Math.PI * g.f * t)])];

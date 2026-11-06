@@ -154,6 +154,15 @@ whole (RMS and maximum, not separable at 30-minute sampling) and the tesseral ve
 revolution. The resonant one-cycle (`mixed`) group of GEO, IGSO, QZSS and THEMIS D stays charged to neither verdict, and its size is
 reported per regime as its own finding, in-arc and forward (RMS, maximum, roughness), so the resonant theory's accuracy is measured.
 
+## Amendment 4 (2026-11-06 11:14Z, this lane; committed before any primary row and before any table)
+On the 10-day GEO arc the lunar monthly line (27.3-day period) is collinear with the quadratic trend: the in-arc attribution returned a
+trend share of 37 m against a lunisolar share of 38 m for a 15 m residual (ill-conditioned by the Amendment 3 flag; the trial row was
+discarded). No window in this record reaches a lunar month, so the lunisolar lines are not resolvable from the trend anywhere here: they
+enter the basis only on a window of 27.32 days or more (none), and the trend share (constant, linear, quadratic) carries the secular
+rate together with the lunisolar and zonal long-period terms, reported as "secular and long-period". Amendment 2's GEO question (the
+fitted rate against DE440, or the analytic lunisolar theory) is therefore not decidable in this record; the trend share's size is the
+finding, and the decision needs an arc of a lunar month or more, its own record.
+
 ## Outputs and check
 Rows: results/ap-truth/tesseral-all-regimes/rows-<shard>.jsonl (one per cell: regime, elements, fitted elements, A, the bounds, RMS,
 maximum, roughness, the convergence figure where measured, families, verdict, the SHA-256 of both dists and of the runner, createdUtc).
