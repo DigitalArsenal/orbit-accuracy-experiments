@@ -70,9 +70,12 @@ const startJdOf = (population) => {
 function registration() {
   const dirty = git(['status', '--porcelain', '--', REG_REL]);
   if (dirty) throw new Error(`registration dirty or uncommitted: ${dirty}`);
-  const commit = git(['log', '-1', '--format=%H', '--', REG_REL]);
-  if (!commit) throw new Error('registration not committed');
-  return { commit, blob: git(['hash-object', REG_REL]), time: git(['log', '-1', '--format=%cI', commit]) };
+  const adds = git(['log', '--diff-filter=A', '--format=%H', '--', REG_REL]).split('\n').filter(Boolean);
+  if (!adds.length) throw new Error('registration not committed');
+  const commit = adds.at(-1);
+  const original = execFileSync('git', ['show', `${commit}:${REG_REL}`], { cwd: ROOT, encoding: 'utf8' });
+  const amendments = git(['log', '--reverse', '--format=%H %cI', `${commit}..HEAD`, '--', REG_REL]).split('\n').filter(Boolean);
+  return { commit, blob: git(['rev-parse', `${commit}:${REG_REL}`]), time: git(['log', '-1', '--format=%cI', commit]), original, amendments };
 }
 
 // ---------- guards ----------
@@ -348,7 +351,7 @@ function assemble(reg) {
   fs.writeFileSync(path.join(OUT, 'timing.jsonl'), tim.map((x) => JSON.stringify(x)).join('\n') + '\n');
   fs.writeFileSync(path.join(OUT, 'counts.jsonl'), crows.map((x) => JSON.stringify(x)).join('\n') + '\n');
   const meta = {
-    registration_commit: reg.commit, registration_blob: reg.blob, registration_time: reg.time,
+    registration_commit: reg.commit, registration_blob: reg.blob, registration_time: reg.time, amendments: reg.amendments,
     runner_sha256: sha256(fs.readFileSync(SELF)), node: process.version,
     module: { plugin: 'analysis/conjunction-assessment', version: '0.18.4', wasm_sha256: WASM_SHA, root: path.basename(MODULES), pinned: PINNED },
     controls: { ...CONTROLS, horizonDays: HORIZON_DAYS, windowHours: WINDOW_HOURS, path: 'CPU, no GPU; coarse_grid, search_grid, refine_candidates' },
@@ -602,7 +605,8 @@ function check() {
   const { rows, meta, cov, extra } = readAll();
   try {
     const reg = registration();
-    if (reg.blob !== meta.registration_blob) fails.push('registration changed after the rows');
+    if (!fs.readFileSync(path.join(ROOT, REG_REL), 'utf8').startsWith(reg.original)) fails.push('registration text changed (only appended amendments are allowed)');
+    if (reg.blob !== meta.registration_blob) fails.push('registration blob differs from the rows');
     if (reg.commit !== meta.registration_commit) fails.push('registration commit differs from the rows');
     execFileSync('git', ['merge-base', '--is-ancestor', meta.registration_commit, 'HEAD'], { cwd: ROOT });
     const regMs = Date.parse(git(['log', '-1', '--format=%cI', meta.registration_commit]));
