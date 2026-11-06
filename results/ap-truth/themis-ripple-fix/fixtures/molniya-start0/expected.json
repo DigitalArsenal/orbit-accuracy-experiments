@@ -1,0 +1,28 @@
+{
+  "fixture": "Molniya, argp 270, fit arc start 0 (fitted drag); THEMIS-RIPPLE-FIX amendments 22, 25, 26",
+  "truth": "the pinned FFM model truth of propagator/sdn-ap/test/lib/heo-model-truth.mjs: n 2 rev/day, e 0.74, i 63.4, RAAN 300, argp 270, M 10, drag, hourly; fitStartDays 0, fitDays 3",
+  "inputs": {
+    "molniya-start0-fit-72h.oem": { "portId": "ephemeris", "fileIdentifier": "$OEM", "bytes": 13792, "sha256": "608697e99920e5a699d330a457f4ef74444a8301d186213696cb040b4b235ae2" },
+    "molniya-start0-fit.pcf": { "portId": "configuration", "fileIdentifier": "$PCF", "bytes": 304, "sha256": "21ca6686ac0f24f2e8bd7e7bd5e86f055392099e562b62a95fabf8eb3ad176ea" },
+    "molniya-start0-fit.spw": { "portId": "space_weather", "fileIdentifier": "$SPW", "bytes": 9828, "sha256": "647760dfb43168f4b0c9e98cf9b86e91a108f725edfd918f6be2b870a5919ebb" }
+  },
+  "expected": {
+    "bterm": 0.04461633761935712,
+    "fitRmsKm": 0.021800715473184688,
+    "iterations": 23,
+    "wholeDayRmsM": { "1": { "alongTrack": 15.54, "radial": 20.12 }, "3": { "alongTrack": 54.92, "radial": 31.02 }, "7": { "alongTrack": 238.03, "radial": 173.92 } },
+    "measuredOn": [
+      { "build": "exact-grid (ExactGridScope) 7a055cfc7", "wasmSha256Prefix": "5e09554f33a6ad8a", "bterm": 0.04461633761935712 },
+      { "build": "fb9c8eb4c without fit.inc's finite-difference-fallback GridShareScope line", "wasmSha256": "e5f1ce0f2245b2f9120a06e68e540f0f7a8898e14236cfb989b053a15dccf82f", "bterm": 0.04461633761935712, "fitRmsKm": 0.021800715473184688 },
+      { "build": "fb9c8eb4c without any fit.inc GridShareScope", "bterm": 0.04461633761935712 }
+    ]
+  },
+  "defect": {
+    "build": "fb9c8eb4c (the fallback's copies read the iteration's nominal grid)",
+    "wasmSha256": "3ae6e9a6974683434b09372958494f2864683023390950788adadab1e87f5b9b",
+    "bterm": 0.04571376917240479,
+    "fitRmsKm": 0.021225197279760338,
+    "wholeDayRmsM": { "1": { "alongTrack": 27.94, "radial": 23.74 }, "3": { "alongTrack": 133.48, "radial": 76.61 }, "7": { "alongTrack": 521.35, "radial": 394.52 } }
+  },
+  "fallback": "the fit of this arc runs the finite-difference fallback: removing only the fallback GridShareScope line changes its coefficient"
+}
