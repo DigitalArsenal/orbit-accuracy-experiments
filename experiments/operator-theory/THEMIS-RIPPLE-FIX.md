@@ -508,3 +508,16 @@ Paired median ratio [95 % bootstrap]: day 1 0.594 [0.487, 0.747] along, 0.579 [0
 fixtures split both ways; posterior sigma of the coefficient about 11 % on the candidate against 22 % on 0.6.2. The day-7 errors
 follow each fixture's coefficient error; at a day-7 log-spread near 0.7, a 5 % margin would need on the order of a thousand
 windows, so this gate cannot decide; the HEO drag-coefficient observability question goes to a separate fitter record.
+
+## Amendment 24 (2026-11-06, the SDN-AP ruling (b): exact-key sharing; registered before it is built or measured)
+Found: approximate sharing made a flight's bytes depend on call history (E2E part 4: a flight after a fit and a refused fit,
+2b9a5f4c against a fresh instance's 355f8cfb). Rule: a grid is keyed by its set's exact elements (bitwise n, e, i, the class and the
+degree) and the schedule node; a lookup matches only that key, never approximately, across records or calls; retention across calls
+stays, by exact key (a grid is a pure function of its key, so a hit or a rebuild gives identical bytes). A set's own perturbed copies
+(the covariance's sigma sets) read their nominal set's grids linearly: the covariance code opens xpt::GridShareScope(nominal) around
+the copies' initialization, and a copy within the share range of the nominal's grid takes it, and the nominal's schedule-node grids,
+instead of building; outside such a scope nothing is shared. The build is bitwise reproducible for a key (one thread, a fixed order of
+sums, no thread-order reductions). Re-checks on the final build: the history E2E (fit, refused fit, flight byte-identical to a fresh
+instance, and a second call order); quadrature for nominal flights; the covariance path's cost; the catalog budget (cold, warm,
+memory); the THEMIS and Molniya pairs; the fit high-water (160 MB) on THEMIS A, GTO and Molniya with the fitter's 20a09144b merged.
+The covariance code (src/covariance.inc) is outside this record's paths: the scope's call there is requested of the coordinator.
