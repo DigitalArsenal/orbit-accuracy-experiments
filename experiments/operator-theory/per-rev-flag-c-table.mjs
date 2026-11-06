@@ -50,11 +50,15 @@ const quiet = windowsOf('quiet').map((w) => {
   const r = quietRows.get(w.key);
   if (!r?.ok) return { key: w.key, family: w.group === 'DO' ? 'altimetry' : 'spheres', flown: false, why: r?.error ?? 'not flown' };
   const c = ruleOf(r), s = c.state(24, 168);
-  return { key: w.key, family: family(r), flown: true, noVerdict: s.noVerdict, flagged: s.flagged, tauM: round(c.tauM) };
+  const C0 = Date.parse(r.cutoff), inSpan = c.steps.filter((x) => x.t >= C0 - 24 * HOUR && x.t <= C0 + 168 * HOUR);
+  return { key: w.key, family: family(r), flown: true, noVerdict: s.noVerdict, flagged: s.flagged, tauM: round(c.tauM), epochs: inSpan.map((x) => ({ t: new Date(x.t).toISOString().slice(0, 16), sizeM: round(x.sizeM, 2) })) };
 });
 const eligible = quiet.filter((x) => x.flown && !x.noVerdict), flagged = eligible.filter((x) => x.flagged);
-const quietPart = { windows: quiet.length, flown: quiet.filter((x) => x.flown).length, noVerdict: quiet.filter((x) => x.noVerdict).length, eligible: eligible.length, flagged: flagged.length,
-  rate: eligible.length ? round(flagged.length / eligible.length) : null, pass: eligible.length > 0 && flagged.length / eligible.length <= 0.05, flaggedKeys: flagged.map((x) => x.key), notFlown: quiet.filter((x) => !x.flown) };
+// At least 60 windows with a verdict; at most floor(5 % of them) flagged. Every flag is listed with its epoch for report-only review against operator records.
+const allowed = Math.floor(0.05 * eligible.length);
+const quietPart = { windows: quiet.length, flown: quiet.filter((x) => x.flown).length, noVerdict: quiet.filter((x) => x.noVerdict).length, eligible: eligible.length, allowed, flagged: flagged.length,
+  rate: eligible.length ? round(flagged.length / eligible.length) : null, decided: eligible.length >= 60, pass: eligible.length >= 60 && flagged.length <= allowed,
+  flags: flagged.map((x) => ({ key: x.key, epochs: x.epochs })), notFlown: quiet.filter((x) => !x.flown) };
 
 const pass = knownPart.pass && injectPart.pass && quietPart.pass;
 const doc = { registered: 'PER-REV-FLAG.md, amendment of 2026-11-06 (c)', rule: RULE_C, toleranceHours: TOLERANCE_H, known: knownPart, injected: injectPart, quiet: quietPart, pass };
@@ -65,7 +69,8 @@ const md = ['# Rule (c): validation near 700 km', '', `Registered in \`experimen
   '| Part | Measured | Pass line | Result |', '| --- | --- | --- | --- |',
   `| Known burns | ${knownDetected} of ${known.length} (Sentinel-1 ${knownPart.byFamily['Sentinel-1'].detected} of ${knownPart.byFamily['Sentinel-1'].windows}, altimetry ${knownPart.byFamily.altimetry.detected} of ${knownPart.byFamily.altimetry.windows}) | 95 % | ${P(knownPart.pass)} |`,
   ...SIZES_M.map((s) => `| Injected ${s} m | ${bySize[s].detected} of ${bySize[s].windows} (${bySize[s].rate ?? '-'}; Sentinel-1 ${bySize[s].sentinel1.detected} of ${bySize[s].sentinel1.windows}, altimetry ${bySize[s].altimetry.detected} of ${bySize[s].altimetry.windows}), no verdict ${bySize[s].noVerdict} | ${s >= 3 ? '95 %' : 'reported'} | ${s >= 3 ? P(bySize[s].windows > 0 && bySize[s].rate >= 0.95) : '-'} |`),
-  `| False alarms | ${flagged.length} of ${eligible.length} with a verdict (${quietPart.rate ?? '-'}); no verdict ${quietPart.noVerdict} of ${quietPart.flown} flown | 5 % | ${P(quietPart.pass)} |`, '',
+  `| False alarms | ${flagged.length} of ${eligible.length} with a verdict (${quietPart.rate ?? '-'}); no verdict ${quietPart.noVerdict} of ${quietPart.flown} flown | at most ${allowed} (5 %) of 60 or more | ${quietPart.decided ? P(quietPart.pass) : 'undecided: under 60 windows with a verdict'} |`, '',
+  `False-alarm flags, for report-only review against operator records (the count stands as read): ${quietPart.flags.map((f) => `${f.key} at ${f.epochs.map((e) => `${e.t} (${e.sizeM} m)`).join(', ')}`).join('; ') || 'none'}.`, '',
   `Injection windows used: ${used.length} of ${registered.length} (not used: ${JSON.stringify(notUsed)}).`, '',
   `Known burns missed: ${knownPart.missed.map((m) => `${m.key} (${m.why}${m.nearestHours !== null && m.nearestHours !== undefined ? `; nearest step ${m.nearestHours} h, ${m.nearestM} m` : ''})`).join('; ') || 'none'}.`, ''];
 fs.writeFileSync(path.join(OUT, 'README.md'), `${md.join('\n')}\n`);

@@ -12,7 +12,7 @@ import { driverRows } from './lib/xm3.mjs';
 import { openFfmHost, apriori } from './lib/host.mjs';
 import { FFM_220, ORBITS_010 } from './lib/build.mjs';
 import { HELD_NORADS } from './lib/pairs.mjs';
-import { STATIC } from './lib/regimes.mjs';
+import { STATIC, DO9 } from './lib/regimes.mjs';
 import { GM, openElements, revolutions, revDifferences, periodOf, revFlagC } from './lib/steps.mjs';
 import { EXCLUDE, SPAN } from './per-rev-flag.mjs';
 import { windowsOf as validateWindows, catalogSteps } from './per-rev-flag-validate.mjs';
@@ -58,17 +58,40 @@ export function windowsOf(set) {
   const injS1 = pool('S1', S1.map((norad) => ({ norad }))).sort(byHash('PERREV-C-INJ')).slice(0, 40);
   const injDo = pool('DO', ALTIMETRY.map((a) => ({ norad: a.norad, static: a.name }))).sort(byHash('PERREV-C-INJ')).slice(0, 20);
   if (set === 'inject') return [...injS1, ...injDo];
-  for (const w of [...injS1, ...injDo]) taken.add(w.key);
-  const quietDo = pool('DO', ALTIMETRY.map((a) => ({ norad: a.norad, static: a.name }))).filter((w) => !taken.has(w.key) && !catalogSteps('dols', w.norad).some((t) => t >= w.cutoff - SPAN.backHours * HOUR && t <= w.cutoff + SPAN.leadHours * HOUR)).sort(byHash('PERREV-C-QUIET')).slice(0, 40);
-  const quietLs = pool('LS', SPHERES.map((s) => ({ norad: null, static: s }))).sort(byHash('PERREV-C-QUIET')).slice(0, 15);
-  if (set === 'quiet') return [...quietDo, ...quietLs];
+  if (set === 'quiet') return [...quietWindows(known), ...pool('LS', SPHERES.map((s) => ({ norad: null, static: s }))).sort(byHash('PERREV-C-QUIET')).slice(0, 15)];
   throw new Error(`set ${set}`);
+}
+
+/** A catalog: { steps (ms), checked [[from, to]] (ms) } of the 2025 `dols` files or the spring 2026 files of per-rev-flag-c-catalog.mjs. */
+export const catalogOf = (period, norad) => {
+  const file = period === '2026' ? path.join(REPO, 'results/operator-theory/per-rev-flag/c/catalog', `spring2026-${norad}.json`) : path.join('/opt/data/sdn-archive/operator-theory/covariance-model/steps', `dols-${norad}.json`);
+  const j = JSON.parse(fs.readFileSync(file, 'utf8'));
+  return { steps: j.steps.map((s) => Date.parse(s.t)), checked: j.checked.map(([a, b]) => [Date.parse(a), Date.parse(b)]) };
+};
+export const QUIET = { beforeH: 37, afterH: 181, cutoffs2025: ['2025-10-04', '2025-12-23'], cutoffs2026: ['2026-01-22', '2026-04-23'] };
+/**
+ * The quiet altimetry windows near 700 km: every fresh cutoff (2025-10-04 to 12-23 off 10-10 + 5k and 10-12 + 5k; 2026-01-22 to 04-23 off 02-02 + 5k) whose catalog
+ * holds no step in [C - 37 h, C + 181 h] (the flagged span widened by the 13 h tolerance) and covers it; not a known-burn window; injection windows may be among them.
+ */
+export function quietWindows(known = windowsOf('known')) {
+  const U = usedCutoffs(), used2026 = new Set(every('2026-02-02', '2026-04-13', 5).map(day)), kk = new Set(known.map((w) => `${w.group}|${w.static}|${day(w.cutoff)}`)), out = [];
+  for (const [period, [a, b], fresh] of [['2025', QUIET.cutoffs2025, (c) => !U.other(c)], ['2026', QUIET.cutoffs2026, (c) => !used2026.has(day(c))]]) {
+    for (const o of ALTIMETRY) {
+      const cat = catalogOf(period, o.norad);
+      for (const c of every(a, b, 1)) {
+        const key = `DO|${o.name}|${day(c)}`, lo = c - QUIET.beforeH * HOUR, hi = c + QUIET.afterH * HOUR;
+        if (!fresh(c) || kk.has(key) || cat.steps.some((t) => t >= lo && t <= hi) || !cat.checked.some(([p, q]) => p <= lo && q >= hi)) continue;
+        out.push({ key, group: 'DO', norad: o.norad, static: o.name, period, cutoff: c });
+      }
+    }
+  }
+  return out;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
   const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number), SET = args.set;
-  if (process.env.XP2F_CONTROL === '1') throw new Error('rule (c) windows are in 2025: run without XP2F_CONTROL');
+  if (process.env.XP2F_CONTROL === '1') throw new Error('rule (c) windows read through the AP6 and 2025 readers: run without XP2F_CONTROL');
   const runner = hash(fs.readFileSync(new URL(import.meta.url)));
   const T = await import(path.join(root, config.xm.dir, 'lib/truth.mjs'));
   const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
@@ -80,12 +103,14 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(im
   const outFile = path.join(dir, `rows-${SHARD}.jsonl`);
   const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
   const list = windowsOf(SET).filter((w) => inShard(w.key) && !done.has(w.key));
-  const series = new Map();
-  for (const name of new Set(list.filter((w) => w.static).map((w) => w.static))) {
-    const o = STATIC.find((x) => x.name === name);
+  // AP9.md's addition: the as-issued 2026 reports for the spring 2026 quiet windows (same files, same parser).
+  XM.config.spaceWeather.rsgaDirs = [...XM.config.spaceWeather.rsgaDirs, '/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA', '/opt/data/sdn-archive/hac/noaa-swpc/2026'];
+  const series = new Map(), idOf = (w) => `${w.static}|${w.period ?? '2025'}`;
+  for (const id of new Set(list.filter((w) => w.static).map(idOf))) {
+    const [name, period] = id.split('|'), o = (period === '2026' ? DO9 : STATIC).find((x) => x.name === name);
     const s = SRC.chain(o.files());
     if (HELD_NORADS.has(Number(s.norad)) || EXCLUDE.norads.has(Number(s.norad)) || EXCLUDE.names.test(s.name ?? '')) throw new Error(`${name}: held`);
-    series.set(name, s);
+    series.set(id, s);
   }
   const F = await openFfmHost({ ffm: FFM_220 }), el = await openElements({ build: ORBITS_010 });
   const settings = { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: true, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined },
@@ -100,7 +125,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(im
   };
   for (const w of list) {
     const D0 = w.cutoff, from = D0 - SPAN.backHours * HOUR, to = D0 + SPAN.leadHours * HOUR;
-    const row = { key: w.key, set: SET, group: w.group, norad: w.norad ?? series.get(w.static)?.norad, cutoff: iso(D0), ...(w.burn ? { burn: iso(w.burn) } : {}), createdUtc: new Date().toISOString(), runner, ffm: F.provenance.ffm, ok: false };
+    const row = { key: w.key, set: SET, group: w.group, norad: w.norad ?? series.get(idOf(w))?.norad, ...(w.period ? { period: w.period } : {}), cutoff: iso(D0), ...(w.burn ? { burn: iso(w.burn) } : {}), createdUtc: new Date().toISOString(), runner, ffm: F.provenance.ffm, ok: false };
     try {
       let span, arcRaw;
       if (w.group === 'S1') {
@@ -109,7 +134,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(im
         const read = (a, b) => { const out = []; for (let t = a; t < b; t += DAY) out.push(...T.series(o, t, Math.min(t + DAY, b) - 1).lines); return out; };
         span = read(from, to + 1); arcRaw = T.series(o, D0 - SPAN.fitHours * HOUR, D0).lines;
       } else {
-        const s = series.get(w.static);
+        const s = series.get(idOf(w));
         row.name = s.name;
         span = s.lines.filter((l) => { const t = ms(l.epoch); return t >= from && t <= to; });
         arcRaw = s.lines.filter((l) => { const t = ms(l.epoch); return t >= D0 - SPAN.fitHours * HOUR && t <= D0; });
