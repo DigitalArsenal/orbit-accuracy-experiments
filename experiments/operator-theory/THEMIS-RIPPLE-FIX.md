@@ -430,3 +430,20 @@ D's fitted elements, no drag), GTO and Molniya: the four builds' day 1, 3 and 7 
 record: estar.cpp, the e* sweep's harness, carried the half-day rule; verify.cpp did not.) The e* sweep (Amendment 12) is marked
 suspect in its results and re-run in the all-regimes record with an independent reference; it stays unpublished. The e 0.3 step is
 re-measured with the corrected reference before it is used as a known limit.
+
+## Finding (2026-11-06): Molniya with its drag coefficient fitted (for the fitter record's registered case)
+Fixture: the GTO E2E's Molniya (n 2 rev/day, e 0.74, i 63.4 deg, Omega 300, omega 270, M 10; drag in the truth, coefficient 0.044
+m^2/kg), 72 h fit, 7 days hourly, FFM model truth d635a3d5 with $SPW rows d7018d1d (results/ap-truth/themis-ripple-fix/fixtures).
+Whole-day RMS along-track / radial (m):
+| Build | Fitted coefficient | Day 1 | Day 3 | Day 7 |
+| --- | --: | --: | --: | --: |
+| 0.6.2 (84d50dca) | 0.04478 | 33.1 / 36.6 | 52.3 / 25.2 | 276.5 / 208.4 |
+| fixed (c257b5cc) | 0.04571 | 27.9 / 23.8 | 133.5 / 76.6 | 521.4 / 394.6 |
+| fixed, coefficient pinned at 0.044 | 0.044 | 13.2 / 22.2 | 22.3 / 19.1 | 80.8 / 50.6 |
+| 0.6.2, coefficient pinned at 0.044 | 0.044 | 27.3 / 35.0 | 34.6 / 27.7 | 78.7 / 55.2 |
+| fixed, no drag in truth or fit | - | 13.5 / 22.9 | 22.1 / 20.7 | 52.7 / 28.0 |
+| 0.6.2, no drag in truth or fit | - | 27.2 / 35.3 | 39.3 / 32.0 | 51.7 / 35.9 |
+Truth 0.044; 0.6.2 fits 0.04478 (+1.8 %), the fixed build 0.04571 (+3.9 %). With the coefficient pinned or absent the fixed build's
+flight matches or beats 0.6.2; the loss is the fitted coefficient's error, growing quadratically along-track (SPEC 12.8: a 72 h arc
+does not separate the coefficient at e 0.74). The coordinator's reading: 0.6.3 waits for a registered drag-coefficient robustness fix
+for short HEO arcs in the same binary.
