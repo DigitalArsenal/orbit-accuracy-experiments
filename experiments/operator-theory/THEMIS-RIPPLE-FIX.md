@@ -290,3 +290,17 @@ derivative grids) keeps the module check at 0.119 m RMS, 2.33 m maximum, 3 mm, a
 a fit, blended over the last fifth) and the faster build. Flown: the 12 THEMIS windows (C5, and the base fit on the C5 flight), the
 paired test of Amendment 8 (margin 1.05) against the base; the catalog-scale case of Amendment 10.3 (1,000 records above e*, one worker
 and 8 workers). THEMIS A 2013-02-15 is expected to keep the fit's second solution (the fitter is the other record's).
+
+## Amendment 12 (2026-11-06, the e*(n, i) sweep of Amendment 7; registered before any case runs)
+Harness estar.cpp: the module's narrow set (sp_terms at e <= 0.3, degree 2 to 12; the near-resonant terms above 12 excluded from the
+comparison) through sp_six against the full-field quadrature (l 2 to 12, 1,024 mean anomalies, |j| <= 511) under the table's own
+admission rules (low orbits: |psi-dot| < 1e-3 n and the shallow band's q = 0, w = 1, j = 1 terms out; others |psi-dot| < 0.045 n out;
+class terms and the half-day tail out), 7 days at 300 s; check: it reproduces the e 0.30 THEMIS-like case (21.42 m RMS, 44.05 m).
+Regimes (n rev/day, i deg): Starlette 13.82 / 49.8; Ajisai 12.44 / 50.0; LARES 12.55 / 69.5; Jason-3 12.81 / 66.0; Sentinel-3 14.27 / 98.6;
+CryoSat-2 14.52 / 92.0; LAGEOS-1 6.39 / 109.8; LAGEOS-2 6.47 / 52.6; Etalon 2.13 / 64.9; GPS 2.005 / 55.0; Galileo 1.70 / 56.0; GLONASS
+2.13 / 64.8; inclined geosynchronous 1.0027 / 55.0; quasi-zenith 1.0027 / 40.0; geostationary 1.0027 / 0.1; Molniya 2.006 / 63.4; GTO
+2.40 / 27.0. e in {0.001, 0.003, 0.01, 0.03, 0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.3}. Angles: Omega 40, omega 30, M 10 deg; epoch
+2013-02-09 (the THEMIS D fit's). e*(n, i) for a regime: the smallest e on the grid at which the narrow set fails any bound (1 m RMS,
+5 m maximum, 0.1 m roughness of the difference); no failure up to 0.3: e* = 0.3. Where the narrow set fails, the grid is checked
+against the quadrature at the same case (verify.cpp) and must hold the bounds; a regime where neither holds is reported, not
+switched. The module's e*(n, i) is the table of regimes, each object taking the regime nearest in (n, i).
