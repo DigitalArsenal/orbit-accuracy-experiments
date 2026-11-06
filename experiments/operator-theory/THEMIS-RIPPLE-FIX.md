@@ -543,3 +543,25 @@ holder drops it and never kept idle; matching is by exact key everywhere, so a f
 same bytes. Measured on the fixed build with the fitter's scope call: the high-water of THEMIS A, GTO and Molniya fits (at or below
 160 MB, 0.6.2 68.2 MB) and their fit time against 0.6.2; then the six Molniya fixtures (coefficient against the exact-grid 0.04462),
 the history E2E in two call orders, quadrature, the covariance cost, the catalog budget and the THEMIS pair.
+The fit budget is 160 MiB, read as the wasm memory size (SDN-AP, 2026-11-06); every memory figure from here on is in MiB.
+
+### Findings, amendments 25 and 26 (2026-11-06)
+- Retention confirmed: on 3e6a88a44 (7a0459bad merged, no fit scope) the fits reach 468.4 MiB (THEMIS A), 472.9 (GTO), 463.5
+  (Molniya). With tess::FitGridScope (e5c10592d; the fitter's abd04b70 line; head fb9c8eb4c) they reach 80.6, 85.0, 85.0 MiB.
+- Amendment 25's rule fails on Molniya start 0: with the fit's copies reading the iteration's nominal grid (head fb9c8eb4c), B is
+  0.04571 against the exact-grid 0.04462 (threshold 0.00045), days 1/3/7 along/radial 27.9/23.7, 133.5/76.6, 521.4/394.5 m against
+  15.5/20.1, 54.9/31.0, 238.0/173.9 m. Separating builds: without only the finite-difference fallback's GridShareScope in fit.inc
+  the coefficient is 0.04461633761935712, bit-equal to the exact-grid build, and the same without all three of fit.inc's scopes:
+  the fallback's columns, reading the nominal's grid, miss the grid's derivative in the elements. The other five Molniya fixtures move
+  at most 4.1e-5 under the share; without the fallback's share all six coefficients are bit-equal to the exact-grid build's. The fitter removes that line (amendment 6); the fixture that catches it is
+  results/ap-truth/themis-ripple-fix/fixtures/molniya-start0/ (the arc, its $PCF and $SPW, the expected values).
+- Fit cost and memory against 0.6.2, each fit in a fresh instance, on the build without the fallback's share (results/ap-truth/
+  themis-ripple-fix/fit-cost/attribution.json): THEMIS A 14.7 s and 80.6 MiB (0.6.2 38.4 s, 65.1 MiB); GTO 27.2 s and 88.1 MiB
+  (13.2 s, 72.5 MiB); Molniya 18.3 s and 85.0 MiB (20.4 s, 72.6 MiB). Memory margin to 160 MiB: 71.9 MiB. Fits above e 0.3 may
+  take up to about 2x the shipped time.
+- GTO attribution: 19 iterations against 0.6.2's 17; 254 grids built at 44.9 to 48.6 ms each in wasm, 11.4 to 12.3 s of the 27.2 s;
+  the rest, 0.78 to 0.83 s per iteration, matches 0.6.2's 0.78 s. The slowdown is the grid builds (about 13 per iteration).
+- Molniya: the six-fixture paired result is not decidable (amendment 22's reading: day 1 0.59/0.58, day 3 1.015/1.036 with upper
+  bounds 1.76/1.77, day 7 1.21/1.11); 0.6.3 states it as not decidable.
+- The e 0.3 step (the wide grid starts above e 0.3; the truncated series below it) is a known limit, pending the independent
+  re-measurement of its size.
