@@ -1,0 +1,6 @@
+{"fixture":"Molniya","build":"exact","day":{"1":{"alongTrack":15.54,"radial":20.12},"3":{"alongTrack":54.92,"radial":31.02},"7":{"alongTrack":238.03,"radial":173.92}},"bterm":0.04461633761935712}
+{"fixture":"Molniya","build":"fixed","day":{"1":{"alongTrack":27.95,"radial":23.75},"3":{"alongTrack":133.5,"radial":76.63},"7":{"alongTrack":521.41,"radial":394.57}},"bterm":0.045713939530005854}
+{"fixture":"Molniya-pinned","build":"exact","day":{"1":{"alongTrack":13.25,"radial":22.2},"3":{"alongTrack":22.28,"radial":19.05},"7":{"alongTrack":80.79,"radial":50.6}},"bterm":0.04400000000004613}
+{"fixture":"Molniya-pinned","build":"fixed","day":{"1":{"alongTrack":13.25,"radial":22.21},"3":{"alongTrack":22.28,"radial":19.05},"7":{"alongTrack":80.79,"radial":50.6}},"bterm":0.04400000000004711}
+{"fixture":"Molniya, no drag","build":"exact","day":{"1":{"alongTrack":13.54,"radial":22.93},"3":{"alongTrack":22.1,"radial":20.74},"7":{"alongTrack":52.7,"radial":27.96}},"bterm":3.831209977100886e-20}
+{"fixture":"Molniya, no drag","build":"fixed","day":{"1":{"alongTrack":13.54,"radial":22.93},"3":{"alongTrack":22.1,"radial":20.74},"7":{"alongTrack":52.7,"radial":27.96}},"bterm":5.681987284887104e-20}
