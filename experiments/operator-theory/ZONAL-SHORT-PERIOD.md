@@ -163,6 +163,28 @@ RMS floor needs the after share's point below 1 - 2 SE: 0.30, 0.66, 0.20, 0.46, 
 verdict's first clause then cannot meet; it is stated as the reason when that is what blocks it. The after share's SE is not known
 before the rows; it is measured and the realized thresholds are stated in the table.
 
+## Amendment 1 (2026-11-06 14:08Z, this lane; committed before any row of the table)
+The first flight (Starlette secondary e 0.001 at 14:02:55Z, after the registration; its row is kept apart in
+results/ap-truth/zonal-short-period/first-pass/rows-0.jsonl and enters no table) showed the registered V1 unreadable, the same failure
+the half-day record's arm Z met (HALF-DAY-RESONANCE.md Amendment 1): D = Ref[20, 0] - Ref[5, 0] from one osculating state diverges
+(forward-day RMS 987 m, secular share 906 m, unexplained 389 m, every (m, j) group 14 to 26 m from the leak), so nothing at the
+prototype's size (its correction RMS 0.71 m in that cell) is readable in D. The module items of that flight read as registered (m = 0
+forward 3.55 [2.85, 4.25] -> 3.99 [3.21, 4.77] m, the landed share reproduced to 0.00 m) and are stated here as the disclosure; the
+cell is flown again under this amendment. No estimator change; V1 changes construction:
+1. V1 is read in the fit frame, on two more fitted arms per e 0.001 cell, both drift-free by the fit: arm Z5 (reference FFM EGM96
+   degree 5 order 0 with the Sun and Moon; the module at caps MAXIMUM_TESSERAL_DEGREE 0, MAXIMUM_DEGREE 5: both sides J2 to J5 and
+   nothing above) and arm Z20 (reference degree 20 order 0; caps 0 / 20). E5 and E20 are the forward RTN errors of the two fitted
+   flights at the same epochs (same n, same grid). S = E20 - E5 carries the J6-J20 zonal short-period content the module lacks (the two
+   fits' mean elements differ at second order, so the J2-J5 parts cancel to that order). The prototype at L = 20, at the Z20 flight's own
+   angles, is added to S (+Delta) and, as a sign diagnostic, subtracted (-Delta); the j >= 2 zonal amplitude of S before and after each
+   is reported. Validated: the +Delta ratio (before / after) is 3 or more and the -Delta ratio is below 1. E5's own m = 0 share (the
+   module's zonal short-period error with nothing above J5 in play: the J2 second-order and J3-J5 first-order short-periodics the module
+   does not carry, SPEC 8 being J2 only) is reported beside the cell's m = 0 share: if the two agree within their intervals the gap is
+   below J6, whatever the prototype does above it.
+2. The V1 arms' own fitted sets, forward shares and intervals are rows of their own (type `arm`), on the pinned dists, after this
+   amendment.
+3. --check adds: this amendment's commit precedes the first row of the table; the first-pass row stays in its folder.
+
 ## Outputs and check
 `SDN_MODULES_ROOT=<the pinned -covm root> SDNAP_064_WASM=<this lane's copy of the signed 0.6.4 dist> SDN_AP_HEO_CACHE=<this lane's scratch>
 node experiments/operator-theory/zonal-short-period.mjs --run [--shard k/n]` (at most 4 shards, cells by position) writes
