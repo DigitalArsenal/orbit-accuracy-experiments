@@ -423,3 +423,10 @@ Pre-fix state, reported as such: the four-build Molniya table run already starte
 After the fix: the quadrature at the GTO fixture (omega 270 and 300) and at Molniya's elements (verify.cpp and the E2E); the paired
 four-build table (0.4.14 / 0.6.2 / C7 / the fixed build) on every GTO and Molniya fixture in one environment with build hashes; the 12
 THEMIS windows re-flown (class 1: expected unchanged); the e <= 0.3 byte identity re-run; the GTO E2E's truth pinned.
+Added (SDN-AP session): the quadrature references share the grid's exclusion rules by construction, so they are not independent of
+them; a regime's acceptance therefore includes an end-to-end comparison against full-force integration with the same field in vacuum
+(the pinned FFM model truth of test/lib/heo-model-truth.mjs) beside the grid-against-quadrature numbers, for THEMIS (a fixture at THEMIS
+D's fitted elements, no drag), GTO and Molniya: the four builds' day 1, 3 and 7 along-track and radial RMS, one environment. (For the
+record: estar.cpp, the e* sweep's harness, carried the half-day rule; verify.cpp did not.) The e* sweep (Amendment 12) is marked
+suspect in its results and re-run in the all-regimes record with an independent reference; it stays unpublished. The e 0.3 step is
+re-measured with the corrected reference before it is used as a known limit.

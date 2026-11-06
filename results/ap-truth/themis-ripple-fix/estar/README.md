@@ -1,5 +1,9 @@
 # e*(n, i) sweep (THEMIS-RIPPLE-FIX.md Amendments 7 and 12)
 
+SUSPECT (Amendment 20): the reference shares the narrow set's admission rules by construction and was not checked against an
+independent integration; the narrow set may be charged here for terms it rightly leaves to the rates. These figures are not used and
+not published; the sweep is re-run with an independent reference in the all-regimes record.
+
 estar.cpp: the module's narrow set (sp_terms at e <= 0.3, degree 2 to 12) through sp_six against the full-field quadrature under the
 table's own admission rules, 7 days at 300 s; rows.jsonl (187 cases: 17 regimes x 11 eccentricities). Check: the THEMIS-like case at
 e 0.30 reproduces 21.42 m RMS, 44.05 m maximum.
