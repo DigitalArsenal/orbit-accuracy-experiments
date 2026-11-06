@@ -1,11 +1,11 @@
 # Second-solution scan on 0.6.2 (FIT-SECOND-SOLUTION.md part 1, report only)
 
-Window-arms published 6312; scanned 3873; fitted 3816. On a second solution (probe fit RMS below 0.98 times the policy's, BTERM outside 0.5 to 2 times): 0. Lower RMS within the band: 2. Control, the scan build's $OCM against the shipped dist's: 584 of 584 byte-identical. The scan's fit RMS equal to the stored 0.5.1 row's (within 1e-9 km): 3802 of 3816.
+Window-arms published 6312; scanned 6312; fitted 6208. On a second solution (probe fit RMS below 0.98 times the policy's, BTERM outside 0.5 to 2 times): 0. Lower RMS within the band: 2. Control, the scan build's $OCM against the shipped dist's: 810 of 810 byte-identical. The scan's fit RMS equal to the stored 0.5.1 row's (within 1e-9 km): 6194 of 6208.
 
 | Store | Published | Scanned | Fitted | Second solution |
 | --- | --: | --: | --: | --: |
 | truth | 1888 | 1888 | 1888 | 0 |
-| truth2 | 3600 | 1161 | 1161 | 0 |
+| truth2 | 3600 | 3600 | 3553 | 0 |
 | regimes | 630 | 630 | 585 | 0 |
 | hx | 26 | 26 | 26 | 0 |
 | wa | 168 | 168 | 156 | 0 |

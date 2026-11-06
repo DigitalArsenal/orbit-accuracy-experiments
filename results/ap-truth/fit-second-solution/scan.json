@@ -1,8 +1,8 @@
 {
  "registration": "experiments/operator-theory/FIT-SECOND-SOLUTION.md",
  "published": 6312,
- "scanned": 3873,
- "fitted": 3816,
+ "scanned": 6312,
+ "fitted": 6208,
  "secondSolutions": 0,
  "lowerSameBand": [
   {
@@ -39,12 +39,12 @@
   }
  ],
  "samePublishedFit": {
-  "compared": 3816,
-  "equal": 3802
+  "compared": 6208,
+  "equal": 6194
  },
  "control": {
-  "compared": 584,
-  "equal": 584
+  "compared": 810,
+  "equal": 810
  },
  "byMode": {
   "truth": {
@@ -55,8 +55,8 @@
   },
   "truth2": {
    "published": 3600,
-   "scanned": 1161,
-   "fitted": 1161,
+   "scanned": 3600,
+   "fitted": 3553,
    "second": 0
   },
   "regimes": {
@@ -348,6 +348,288 @@
    "mode": "regimes",
    "key": "GE|C016 BDS-2G|2025-10-06",
    "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-02-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-02-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-04-06",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-05-20",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-05-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-01-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-02-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-03-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-03-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-03-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-02-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-02-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-02-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-04-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "GN|37869|2026-01-21",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-01-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-03-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-05-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-03-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-03-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-03-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-04-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-04-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-04-29",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-05-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "GN|37869|2026-01-20",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "GN|37869|2026-01-20",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "GN|37869|2026-01-22",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-02-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-04-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-05-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-01-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-02-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-04-03",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-05-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-05-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-01-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-01-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-04-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-04-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-05-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-05-02",
+   "arm": "AP24",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-01-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-03-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|39634|2026-04-04",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-01-02",
+   "arm": "AP72",
+   "error": "coverage"
+  },
+  {
+   "mode": "truth2",
+   "key": "S1|62261|2026-01-02",
+   "arm": "AP24",
    "error": "coverage"
   },
   {
