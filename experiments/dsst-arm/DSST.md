@@ -173,3 +173,7 @@ The calibration of amendment 2026-11-06 (heap calibration), run 2026-11-06 01:59
 | 8 GiB | 8 (7 / 1) | 1,441 (2) | 48 | 1,613 | 3.0 | 843 | 8,321 |
 
 The heap DSST needs: 4 GiB (3.8 % of CPU in collection; 36.3 % at 3 GiB). The live set is 2.8 GiB (the largest heap after a full collection at 3, 4 and 6 GiB; at 8 GiB the two full collections came early), above the 1.86 GiB amendment 2026-11-06 (cost heap) took from a run stopped on its first window. The SDN-AP session's rule: keep the 8 GiB cost heap only if the 8 GiB run spends 2 % or less of its CPU in collection, else 4 times the live set; at 3.0 % each cost JVM runs on a fixed 12 GiB heap (`-Xms12g -Xmx12g`), replacing 8 GiB. The accuracy bound of 16 GiB is 5.7 times the live set and stands. The runners' SHA-256 changes for runners started after this commit (the cost heap value only).
+
+## Note 2026-11-06 (collection time)
+
+The SDN-AP session corrects its 2 % rule so it cannot loop: past the live set the collection share levels off near 3 % (3.1 % at 6 GiB, 3.0 % at 8 GiB), set by the serial collector's young collections and the allocation rate, so the fixed cost heap stays 12 GiB with no further increase whatever the share reads in the cost rows. Each cost row records its collection time (`gcSeconds`, the sum of the logged pauses during the window's fit and flight), and the cost table states that DSST's CPU includes about 3 % spent in collection, part of the JVM's real cost, with the median share per cell. No new measurement.

@@ -192,6 +192,17 @@ function fullGcHeapMax(file, t0, t1) {
   }
   return best;
 }
+/** The collection time (s) between t0 and t1 (ms): the sum of the logged pause times; the serial collector runs on the one processor. */
+function gcSeconds(file, t0, t1) {
+  let ms = 0;
+  for (const l of (fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '').split('\n')) {
+    const m = /^\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+)([+-]\d\d)(\d\d)\].*Pause.* ([\d.]+)ms$/.exec(l);
+    if (!m) continue;
+    const t = Date.parse(`${m[1]}${m[2]}:${m[3]}`);
+    if (t >= t0 && t <= t1) ms += Number(m[4]);
+  }
+  return ms / 1000;
+}
 /** Samples the cost JVM's resident set once a second (the JVM is the child of /usr/bin/time, which execs nice, which execs java). */
 function rssSampler(wk) {
   wk.javaPid ??= execFileSync('pgrep', ['-P', String(wk.pid)]).toString().trim().split('\n')[0];
@@ -294,7 +305,7 @@ async function main() {
       Object.assign(row, { drag: res.drag === 1, perigeeKm: res.perigeeKm, converged: true, iterations: res.iterations, evaluations: res.evaluations, rmsM: res.rms_m, cdAm: res.drag === 1 ? res.cd : null, crAm: res.drag === 1 ? 0.01 : res.cr, epoch: res.epoch, mean: res.mean, arcStates: seg.length,
         leads: { [lead]: { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2], states: truth.length } },
         ephemerisGapM: String(res.ephemerisGapM ?? '').split(' ').map(Number),
-        cost: { ...res.cost, objectDays: (Date.parse(epochs.at(-1)) - end) / DAY, stepSeconds: (Date.parse(seg[1].epoch) - Date.parse(seg[0].epoch)) / 1000, singleThread: COST, load1: [load, os.loadavg()[0]], heapBound: COST ? COST_HEAP : ACCURACY_HEAP, heapAfterFullGcMaxBytes: COST ? fullGcHeapMax(wk.gcLog, t0w, t1w) : null, rssMaxBytes } });
+        cost: { ...res.cost, objectDays: (Date.parse(epochs.at(-1)) - end) / DAY, stepSeconds: (Date.parse(seg[1].epoch) - Date.parse(seg[0].epoch)) / 1000, singleThread: COST, load1: [load, os.loadavg()[0]], heapBound: COST ? COST_HEAP : ACCURACY_HEAP, heapAfterFullGcMaxBytes: COST ? fullGcHeapMax(wk.gcLog, t0w, t1w) : null, rssMaxBytes, gcSeconds: COST ? gcSeconds(wk.gcLog, t0w, t1w) : null } });
       fs.rmSync(dir, { recursive: true, force: true });
     } catch (error) { const why = String(error?.message ?? error).slice(0, 300); if (UNSCORED.test(why)) row.unscored = why; else { row.failed = true; row.error = why; } }
     return row;
