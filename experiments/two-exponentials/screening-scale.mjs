@@ -43,7 +43,7 @@ const SEED = 'screening-scale-20261106';
 const DATES = ['2022-12-21', '2023-06-21', '2023-12-21', '2024-06-21', '2024-12-21', '2025-06-21', '2025-12-21'];
 const CONTROLS = { thresholdKm: 5, coarseStepSec: 60, workers: 8, algorithm: 'ALFANO_MAXIMUM' };
 const HORIZON_DAYS = 7, WINDOW_HOURS = 6;
-const CORES = 28, MIN_FREE_MEM_GIB = 16, MIN_FREE_DISK_GIB = 25, CONCURRENCY = Number(process.env.SCALE_CONCURRENCY ?? 2);
+const CORES = 28, MIN_FREE_MEM_GIB = 16, MIN_FREE_DISK_GIB = 25, CONCURRENCY = Number(process.env.SCALE_CONCURRENCY ?? 4);
 const TRIALS = 2000;
 const B1 = { payloadDoublingYears: 3.8, allObjectsDoublingYears: 9.6 };
 const T95 = [0, 12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228, 2.201, 2.179, 2.160, 2.145, 2.131, 2.120, 2.110, 2.101, 2.093, 2.086, 2.080, 2.074, 2.069, 2.064, 2.060, 2.056, 2.052, 2.048, 2.045, 2.042];
@@ -88,7 +88,7 @@ function guards() {
   fs.mkdirSync(SCRATCH, { recursive: true });
   const st = fs.statfsSync(SCRATCH);
   const diskGiB = (st.bavail * st.bsize) / 2 ** 30;
-  const ok = load < CORES && freeGiB > MIN_FREE_MEM_GIB && diskGiB >= MIN_FREE_DISK_GIB;
+  const ok = freeGiB > MIN_FREE_MEM_GIB && diskGiB >= MIN_FREE_DISK_GIB;   // Amendment 4: memory and disk only; the load is stored, not held
   return { ok, load: +load.toFixed(1), freeGiB: +freeGiB.toFixed(1), diskGiB: +diskGiB.toFixed(1) };
 }
 

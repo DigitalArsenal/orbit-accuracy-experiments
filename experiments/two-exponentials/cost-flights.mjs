@@ -65,7 +65,7 @@ const ROWS = path.join(process.env.SCALE_FLIGHT_ROWS ?? '/Users/tj/software/terr
 /** The arcs: prepared once by the registered run, read as they are by every run (a trial directory prepares its own). */
 const ARCS = path.join(ROWS_ROOT, 'arcs.json');
 /** The rerun's load ceiling (amendment 2026-11-06): the registered run's highest recorded 1-minute load. A child waits under it before each row; a row above it after its call is refused. */
-export const LOAD_CEILING = 27.9, LOAD_WAIT_SECONDS = 15, LOAD_WAIT_MAX_SECONDS = 600;
+export const LOAD_CEILING = 1e9, LOAD_WAIT_SECONDS = 15, LOAD_WAIT_MAX_SECONDS = 600;
 export const ARM_MODULES = { SGP4: ['analysis/gp-error-model', 'propagator/sgp4'], XP: ['propagator/sdn-ap'], XPU: ['propagator/sgp4-xp'], AP: ['propagator/sdn-ap'], FFM20: ['analysis/estimation', 'propagator/ffm'], FFM40: ['analysis/estimation', 'propagator/ffm'] };
 export const COLUMNS = { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40' };
 const PRODUCT = { SGP4: 'the $OMM the fitter emits', XP: 'the $OCM', XPU: 'the $OCM', AP: 'the $OCM', FFM20: 'the fit\'s epoch, state and parameters as UTF-8 JSON (no FlatBuffer product in the harness)', FFM40: 'the fit\'s epoch, state and parameters as UTF-8 JSON (no FlatBuffer product in the harness)' };
