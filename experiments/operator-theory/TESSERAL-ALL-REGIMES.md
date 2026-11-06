@@ -80,6 +80,32 @@ or a model error this record cannot separate; in that case the line is reported 
 is claimed stronger than "within the bound by the measured margin". A one-day window holds 14 to 15 revolutions in the low regimes and a
 single revolution at GEO, IGSO and QZSS: their rows are one-cycle readings of the m-daily terms and are marked so.
 
+## Amendment 1 (2026-11-06 11:05Z, SDN-AP session and this lane; committed before any registered row)
+Four smoke cells (GEO, GPS, IGSO, Starlette at e 0.001) were flown under the frame above before this amendment; their rows are kept
+apart in results/ap-truth/tesseral-all-regimes/smoke-no-third-body.jsonl and enter no table. They failed by kilometers with a once-per-day
+cross-track signature (GEO 4.4 km cross-track RMS, fit RMS 2.27 km on a noise-free arc): the AP theory models the Sun and the Moon
+unconditionally (its deep-space terms have no switch), so a reference without them charges the theory for real physics.
+1. The reference carries the Sun and the Moon as point masses from the DE440 kernel the model-truth harness ships (files/orbit-products
+   fixture de440-2026.bsp, SHA-256 in every row). Drag, SRP, tides, relativity and Earth radiation stay off (the fitted set carries
+   BTERM 0 and AGOM 0 by priors of width 1e-10, so the module flies no drag and no SRP). The theory's own lunar and solar positions are
+   analytic; the difference from DE440 is a theory error of the long-period kind and shows in the secular share and the
+   one-cycle-per-day family, never charged to the tesseral model.
+2. Field consistency: the model-truth harness's FFM codec exposes a degree and an order, not a separate tesseral cap, so the reference is
+   EGM96 to degree and order 20 and the fit's caps are MAXIMUM_TESSERAL_DEGREE 20 and MAXIMUM_DEGREE 20: both sides model the same
+   field and there is no zonal tail to apportion. The short-period families keep their own lower caps (degree 12), unchanged.
+3. Fit absorption: the fit arc holds at least 10 revolutions: 3 days for n >= 6 rev/day (low orbit, LAGEOS), 6 days for 1.5 <= n < 6
+   (Etalon, GPS, Galileo, GLONASS, Molniya, GTO), 10 days for n < 1.5 (GEO, IGSO, QZSS, THEMIS D). The in-arc residual (the fitted set
+   flown by the module on the arc's own 30-minute samples against the reference there, 3D RMS and maximum, m) is reported beside the
+   forward error as the primary short-period accuracy figure; the registered pass line stays on the forward day (forward error only),
+   and the table shows both. Where a cell was also flown under a 3-day arc, both columns appear.
+4. Convergence arm: at the 300 s maximum step the RK78 controller never leaves the maximum step in the high orbits and the 1e-13 arm
+   reproduces the 1e-12 reference bit for bit (measured: 0.0000 m at GEO, GPS, IGSO), so the arm is relative tolerance 1e-13 AND
+   maximum step 150 s; the rule (below a tenth of b_rms over the forward day) is unchanged.
+5. Step definition: the one-day lead stands for the e 0.29 / 0.30 pairs. The step is the change of the forward-day error across the pair
+   beyond the reference's own change: step_rms = (rms_0.30 - rms_0.29), claimed only where |step| exceeds the sum of the two flights'
+   convergence figures, which are reported with it; the same for the maximum. A step within that sum is reported as "below the
+   reference's resolution".
+
 ## Outputs and check
 Rows: results/ap-truth/tesseral-all-regimes/rows-<shard>.jsonl (one per cell: regime, elements, fitted elements, A, the bounds, RMS,
 maximum, roughness, the convergence figure where measured, families, verdict, the SHA-256 of both dists and of the runner, createdUtc).
