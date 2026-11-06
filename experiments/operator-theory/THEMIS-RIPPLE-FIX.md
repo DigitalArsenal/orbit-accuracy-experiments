@@ -375,3 +375,13 @@ the form the math allows: the six rate components are linear in five forcing fun
 M-derivative's integral follows from g's (H[g'] = g / M-dot + i nu H[g]), so a family needs five transforms instead of seven.
 Planned combination, in this order, each quadrature-checked before the next: L6 + L4 (cold), L3 + L1 (held size 1.77 + 2 x 0.88 =
 3.54 MB per grid), idle limit 128 with 256 cache slots. Then the Amendment 15 measurement on the same 1,000 distinct records.
+
+## Amendment 18 (2026-11-06, box 3; written AFTER the levers' catalog numbers were read: disclosure)
+Changes made beyond Amendment 17's list, each found while measuring: (1) L2 was taken with L1 (derivative grids on 64 nodes in half
+precision, 3.10 MB per grid instead of the planned 3.54); (2) a grid is one allocation and the build's double-precision sets are kept
+for the module's life; (3) schedule nodes on t's side of the epoch (a flight at the epoch had built a node behind it, two grids per
+record, so a refresh found none held); (4) the wide zonal tail's G and dG/de (above e 0.3 only) by the 256-node trapezoid instead of
+the 512-point quadrature with a finite-difference derivative: 2.6 ms native for its 210 terms, the largest non-grid init cost. Item (4)
+changes the zonal tail's numbers above e 0.3 (two spectral quadratures of the same integrals), so the 12 THEMIS windows are re-flown
+on the final build (arm L, modules 6f60710fe's successor) with the paired test before the result is stated, and themis-ripple.e2e.mjs
+reruns on it.
