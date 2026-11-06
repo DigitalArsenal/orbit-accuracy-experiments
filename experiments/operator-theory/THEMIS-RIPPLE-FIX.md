@@ -147,3 +147,12 @@ Additions (SDN-AP session, before any A1 sizing output is read):
    interpolated output at the 300 s epochs (the harness evaluates at each output epoch's E), not to the grid points.
 4. Memory and cost: grid bytes in wasm linear memory (families x N x 6 complex doubles), init time and wall per step, before (the base's
    table) and after, on THEMIS D, THEMIS E and TESS; these enter the cost re-measure if 0.6.3 ships.
+
+## Amendment 4 (2026-11-06, after A1's Fourier sizing, before the steps below are run)
+A1 in Fourier at N = 128 meets the bounds at 162 us per step in the harness, about 30 times today's sp_six. A local interpolant on the same
+uniform E grid is sized as an alternative: the four-point periodic Lagrange cubic, N in {128, 256, 512, 1024}, values stored per family
+and component (memory families x 6 x N complex doubles). It replaces Fourier when it meets the same three bounds on both windows at a lower
+wall per step; the smallest such N is taken; otherwise Fourier at N = 128 stands.
+Re-grid thresholds (Addition 2): the grid built at the window's elements against the full-field quadrature at shifted elements, one
+element at a time: de in {1e-4, 3e-4, 1e-3, 3e-3}, da / a in {1e-5, 1e-4, 1e-3}, di in {1e-4, 1e-3} rad; each threshold is the largest
+step whose RMS stays at or under 0.25 m on both windows.
