@@ -121,3 +121,23 @@ at a time. Init per object: a one-epoch propagate 979 and 947 ms (wasm, browser 
 Drift without the in-flight re-grid (resum2.cpp, element-linear grid at the epoch elements against the quadrature at shifted elements,
 cubic N = 128): de 3e-3 2.81 / 2.74 m RMS, 14.3 / 14.8 m maximum (D / E); de -2e-3 with di 1e-4 (THEMIS D's 7-day drift) 1.17 m RMS,
 6.6 m maximum. A constant offset of the 7-day size exceeds the 1 m RMS bound; the dropped re-grid needs a continuous replacement.
+
+## Amendment 10.2: the scheduled, blended re-grid (sched.cpp; schedule-themis-d.json, schedule-themis-e.json)
+e drifting linearly 3e-3 per week (D) and -3e-3 (E); grids built at the elements of every k hours from the epoch, read element-linear,
+blended linearly over the last fifth of each interval; against a grid built at each sampled step's exact elements (every 4th step), the
+closed form that equals the quadrature to 3e-10. RMS / maximum (m), output roughness (m), D / E:
+
+| k (h) | Grids per 7 days | RMS | Maximum | Output roughness |
+| --: | --: | --: | --: | --: |
+| none (one grid at the epoch) | 1 | 1.465 / 0.844 | 8.84 / 4.11 | 0.0755 / 0.0743 |
+| 6 | 30 | 0.001 / 0.001 | 0.006 / 0.006 | 0.0757 / 0.0743 |
+| 12 | 16 | 0.004 / 0.003 | 0.019 / 0.007 | 0.0757 / 0.0743 |
+| 24 | 9 | 0.022 / 0.019 | 0.111 / 0.103 | 0.0756 / 0.0743 |
+| 48 | 6 | 0.085 / 0.081 | 0.663 / 0.657 | 0.0757 / 0.0743 |
+
+k = 48 h holds every bound (the registered rule takes the largest): 0.085 m RMS, 0.66 m maximum, no roughness added at the blends.
+
+## Amendment 10.3: catalog-scale init, smoke run (catalog.mjs, C4 build d1c0c907)
+16 distinct records above e 0.3 flown to one epoch on one worker: 77 s, 4,752 ms per record, peak wasm memory 166,920,192 bytes. A
+propagate of a fitted $OCM also propagates its covariance (each perturbed set its own grid under C4: seven builds each), so a record
+costs many grid builds. Against the 100 ms target this is 48 times over; the 1,000-record runs wait for the build's speed-up.
