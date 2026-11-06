@@ -192,3 +192,20 @@ No harm: byte-identical output wherever the narrow set is kept. Scope: every pub
 applying e*(n, i) to each published object's fitted elements before any re-measurement (expected: the quasi-zenith cells, e about 0.075
 with a one-day period, and any stored window with 0.05 < e < 0.3); each is re-measured on 0.6.3 and moved in the one site push; TESS
 stays withheld.
+
+## Amendment 8 (2026-11-06, the coordinator's ruling; before any row of it is read)
+Ruling: the candidate (eca9db70) does not pass: THEMIS day 3 405.1 -> 647.5 m is worse, whatever the bootstrap bound; the flight is
+proven (base fit flown on the candidate: 0.072 m, 153.1 / 422.6 / 997.0 m), so the regression is in the fit. Investigation, on the 12
+THEMIS windows, fit only plus the same 7-day flight:
+Arms (each a scratch build of the same source, SHA-256 recorded): base (0.6.1 dist); C1 each set its own exact grid with in-flight
+re-grid (eca9db70's ancestor 43692be6); C2 shared grids with re-grid; C3 shared grids, no re-grid (eca9db70); C4 each set its own exact
+grid, no re-grid (the cache's sharing tolerance zero).
+Per window and arm: the fit's residual RMS (FIT_RMS_KM), iteration count and convergence, the fitted mean elements' differences from
+the base's (n, e, i, Omega, omega, M, BTERM, AGOM), day 1 / 3 / 7 errors. Per arm the medians.
+Readings: partials' consistency is read from C3 against C4 (shared element-linear grid against an exact grid per perturbed set) and C2
+against C3 (re-grid on against off).
+Hypothesis: at e 0.82 the first-order displacement is about 450 m RMS; second-order short-period terms (products of first-order
+terms) of tens of meters are absent from both models; the old truncated table's 65 m RMS error happened to cancel part of them in the
+fit. Test that would confirm it (next box): the fit residuals' spectrum on the candidate against the base's, power at harmonics of M
+above 10 n larger on the candidate, and a second-order displacement estimate from the quadrature (the first-order displacement fed
+back into the potential's gradient) of the size of the day-3 change.
