@@ -385,3 +385,11 @@ the 512-point quadrature with a finite-difference derivative: 2.6 ms native for 
 changes the zonal tail's numbers above e 0.3 (two spectral quadratures of the same integrals), so the 12 THEMIS windows are re-flown
 on the final build (arm L, modules 6b60710fe, wasm a7771b14) with the paired test before the result is stated, and themis-ripple.e2e.mjs
 reruns on it.
+Checks the SDN-AP session added (after the re-fly was registered above): (a) the zonal change's accuracy: G and dG/de of the 210 terms
+against the previous evaluation, the largest difference relative to the degree's largest term, at THEMIS D's and E's e, 0.72 and 0.31;
+and THEMIS D and E flown from the same set on C7 (c3f32102) and on the final build, the RMS and largest position difference over 7
+days at 300 s; (b) the e <= 0.3 byte identity re-shown on the final build against 0.6.2's dist (LEO AP, LEO SGP4XP, geostationary AP,
+Etalon-like, GPS-like, e 0.25 and 0.3 AP seeds, and a fitted AP set): the published examples' low-eccentricity records are not stored as
+sets in the site repository (it holds their flown tracks), so they are not in this check.
+Memory margin: the catalog case peaks at 478 to 488 MB per worker against 512 MB with at most 128 idle grids of 3.10 MB; any later
+growth of a grid (more families, a higher degree, more nodes) re-measures it.

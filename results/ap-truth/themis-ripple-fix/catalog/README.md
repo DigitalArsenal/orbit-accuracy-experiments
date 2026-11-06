@@ -34,6 +34,23 @@ below 5 s: 26.1 s, missed (with every grid held a refresh would cost 32.6 to 35.
 (c) memory at or below 512 MB per worker: 130 MB, held. The gap: a cold grid costs about 150 ms in wasm under one worker (183 - 35 ms),
 against 100 ms for the whole object; a refresh within 5 s needs either a build under about 30 ms or held grids under 4 MB each.
 
+## Box 3: the levers build (modules 6b60710fe, wasm a7771b14; Amendments 16 to 18)
+| Run | Load median, ms per record | Load, s per worker | Refresh, s per worker | Grid held, ms per record | Peak wasm memory per worker |
+| --- | --: | --: | --: | --: | --: |
+| no covariance, 1 worker, 1,000 records | 45.5 | 46.9 | 58.4 (1,000 records > 128 held) | 8.6 | 487,522,304 |
+| no covariance, 8 workers, 1,000 records | 57.0 | 7.6 | 1.4 | 9.2 | 477,888,512 |
+| with covariance, 8 workers, 1,000 records | 222.4 | 30.1 | 23.6 | 171.4 | 477,954,048 |
+
+Against Amendment 15: (a) cold median 45.5 ms (at or below 100) and warm refresh 1.4 s on 8 workers (at or below 5 s): held; (b) with
+covariance 222 ms per record against the shipped 4,133 ms: held; (c) 478 to 488 MB per worker (at or below 512 MB; eviction: at most
+128 idle grids, oldest first, 256 slots): held, with a 24 MB margin.
+Init, native (initbench.cpp): xp_init of a THEMIS-like AP (31, 20) set 31.9 ms, of which the grid 26.0 ms and the wide zonal tail 2.6 ms.
+
+Zonal change (correctness/zonalcheck.cpp): G and dG/de of the 210 wide zonal terms by the 256-node trapezoid against the previous
+512-point quadrature, the largest difference relative to the degree's largest term: G 3.1e-15 / 2.3e-15 / 2.0e-13 / 2.0e-15, dG/de
+7.6e-10 / 7.5e-10 / 1.2e-10 / 2.8e-12 at e 0.8222 (THEMIS D), 0.8215 (THEMIS E), 0.72 and 0.31. The same THEMIS D and E sets flown on
+C7 (c3f32102) and on the final build (correctness/flightdiff.mjs): 0.091 / 0.038 m RMS, 0.45 / 0.26 m at most over 7 days at 300 s.
+
 Against the budget as first registered: (1) cold, median at or below 100 ms per object: 618 ms (8 workers; the one-worker run follows), missed;
 (2) warm, one refresh of 1,000 records on 8 workers at or below 5 s: 77.7 s, missed; (3) memory at or below 512 MB per worker:
 108 MB, held (eviction: the four most recently dropped grids kept, the oldest freed first). The misses are the covariance's
