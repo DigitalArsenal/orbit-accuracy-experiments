@@ -106,6 +106,15 @@ normalized. The runner reads C_l0 for l 2 to 31 from that file after checking it
 (C20 -4.84165371736e-4, C40 5.39873863789e-7: J2 1.0826267e-3, J4 -1.6196216e-6, the values item 4 states). The set's zonal cap field is
 the $OCM PERTURBATIONS.MAXIMUM_ZONAL_DEGREE (ocm.mjs seedOcm); the cost item repacks that field and reports both values as flown.
 
+## Amendment 2 (2026-11-06 12:40Z, this lane; disclosure, written after the first eight rows of shard 0 and before the table)
+Item 2's reading rule stands word for word. Its key, seen on the first rows: Sentinel-3 (primary) reads R0 6.98 m with T1 2.37 m/day, so
+T_a is -943 m/day and T_r 943 m/day, "secular rate mismatch of 943 m/day". A semi-major-axis error of 7 m would drift at T_a; a 7 m
+radial offset with no drift is a radial bias at fixed mean motion (the theory's mean-to-osculating radius, not its rate). So the table
+carries beside item 2's label the derived reading "radial bias R0 at fixed mean motion" whenever |T1| < |T_a| / 3 (the along-track slope
+is small against the drift the offset would imply), and item 4(b)'s term naming is read on T1 (the measured along-track slope) in that case,
+not on T_r, with both figures shown. No row changes; no re-flight. The earliest row of the record (reflight:primary:Starlette) follows
+the runner's commit 657223cc.
+
 ## Parked
 The GEO lunisolar question (the fitted rate against DE440 or the analytic lunisolar theory) needs an arc of a lunar month or more
 (TESSERAL-ALL-REGIMES.md Amendment 4) and is not read here; the one-day orbits' trend items are reported as measured with no term reading
