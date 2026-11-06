@@ -33,7 +33,7 @@ check(unflagged.length === 5 && unflagged.every((w) => w.flag.burnFree && !w.los
   `S1-24H-DAY7: ${unflagged.length} windows unflagged, ${unflagged.filter((w) => w.flag.burnFree).length} burn-free, FFM worse on ${unflagged.filter((w) => w.loss).length} (largest change ${Math.max(...unflagged.map((w) => Math.abs(w.flag.largest.sizeM))).toFixed(2)} m; smallest flagged ${Math.min(...classed.filter((w) => w.flag.flagged).map((w) => Math.abs(w.flag.largest.sizeM))).toFixed(2)} m)`);
 
 // 2. The amendment precedes every re-flag row (author dates hold through a merge).
-const rows = read(STORE);
+const rows = fs.readdirSync(STORE).flatMap((g) => read(path.join(STORE, g)));
 const plan = git('log', '--format=%H %aI', '--', PLAN).trim().split('\n').map((l) => { const [sha, at] = l.split(' '); return { sha, at }; });
 const firstRow = rows.map((r) => r.createdUtc).sort()[0];
 check(rows.length > 0 && Date.parse(plan.at(-1).at) < Date.parse(firstRow), `PER-REV-FLAG.md (${plan.at(-1).sha.slice(0, 10)} at ${plan.at(-1).at}) precedes the first of ${rows.length} re-flag rows (${firstRow})`);
