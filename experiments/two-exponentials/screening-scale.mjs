@@ -489,14 +489,8 @@ function build(rows, meta, cov, extra) {
     { theory: 'SGP4', flown: true, coveredShare: 1, propagationShare: fullShare, shareRange: [Math.min(...shares.map((s) => s.share)), Math.max(...shares.map((s) => s.share))], maxSpeedup: 1 / (1 - fullShare) },
     ...['xp', 'ap', 'ffm'].map((t) => ({ theory: t === 'xp' ? 'SGP4-XP' : t.toUpperCase(), flown: false, coveredShare: cov[t].share, propagationShare: null, reason: cov[t].share < 0.5 ? 'covered share below one half of the catalog: not flown, not extrapolated' : 'no integration of these states into this screen is built in this study: not flown' })),
   ];
-  const years = (p, d) => (3 / p) * d;
-  const L = fits.ladder.cpu, D = fits.dates.cpu;
-  const convert = (f) => ({ doublings: 3 / f.p, doublingsRange: [3 / f.hi, 3 / f.lo], payloadYears: years(f.p, B1.payloadDoublingYears), payloadYearsRange: [years(f.hi, B1.payloadDoublingYears), years(f.lo, B1.payloadDoublingYears)],
-    allYears: years(f.p, B1.allObjectsDoublingYears), allYearsRange: [years(f.hi, B1.allObjectsDoublingYears), years(f.lo, B1.allObjectsDoublingYears)] });
-  const conversion = { ladder: convert(L), dates: convert(D) };
+  const L = fits.ladder.cpu, D = fits.dates.cpu, P = fits.ladder.propagation;
   const f2 = (v) => v.toFixed(2), f1 = (v) => v.toFixed(1);
-  const c = conversion.ladder, d = conversion.dates;
-  const sentence = `With p = ${f2(L.p)} (95 percent interval ${f2(L.lo)} to ${f2(L.hi)}; ${L.verdict}) on the thinning ladder, one eighth of the compute buys 3 / p = ${f2(c.doublings)} doublings of the object count (${f2(c.doublingsRange[0])} to ${f2(c.doublingsRange[1])}): ${f1(c.payloadYears)} years (${f1(c.payloadYearsRange[0])} to ${f1(c.payloadYearsRange[1])}) at the payload doubling time of ${B1.payloadDoublingYears} years (catalog growth 2018-2026, exponential), and ${f1(c.allYears)} years (${f1(c.allYearsRange[0])} to ${f1(c.allYearsRange[1])}) at the all-objects fit of ${B1.allObjectsDoublingYears} years (2018-2026, undecided between exponential and linear). The real-dates fit gives p = ${f2(D.p)} (${f2(D.lo)} to ${f2(D.hi)}; ${D.verdict}): ${f2(d.doublings)} doublings, ${f1(d.payloadYears)} years at ${B1.payloadDoublingYears} and ${f1(d.allYears)} years at ${B1.allObjectsDoublingYears}.`;
   // Amendments 2 and 3: Amdahl conversion and the derived series per arm and per regime; a propagation 1/8 as costly changes the total by f = (1 - s) + s / 8
   const tm = Object.fromEntries((extra.timing ?? []).map((x) => [`${x.arm}|${x.regime}`, x]));
   const regimes = [...new Set((extra.timing ?? []).map((x) => x.regime))];
@@ -517,6 +511,23 @@ function build(rows, meta, cov, extra) {
     }
   }
   const sgp4Amdahl = amdahl(fullShare, L);
+  // Amendment 6: AP against FFM and against SGP4 at the screen's 60 s step, per regime; f from the derived totals, doublings with the propagation-phase p
+  const HEADLINE = 'With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower.';
+  const COMPARATOR = { 'Low orbit, laser spheres': 'FFM40', 'Low orbit, altimetry': 'FFM40', 'Strong drag, 2026': 'FFM40', 'Near 700 km': 'FFM40', 'Laser geodetic': 'FFM20', 'Medium Earth orbit': 'FFM20', 'Geostationary': 'FFM20', 'Inclined geosynchronous': 'FFM20' };
+  const apVsFfm = [];
+  for (const [regime, cmp] of Object.entries(COMPARATOR)) {
+    const a = tm[`AP|${regime}`], fm = tm[`${cmp}|${regime}`], sg = tm[`SGP4|${regime}`], dA = derived.AP?.[regime], dF = derived[cmp]?.[regime];
+    if (!a || !fm || !sg || !dA || !dF) continue;
+    const at = (d, k) => d.points.find((x) => x.index === 1)[k];
+    const fLo = at(dA, 'lower') / at(dF, 'lower'), fHi = at(dA, 'upper') / at(dF, 'upper');
+    const dbl = (f, pp) => Math.log2(1 / f) / pp;
+    const fs_ = [fLo, fHi].sort((x, y) => x - y);
+    apVsFfm.push({ regime, comparator: cmp, apUs: a.cpuUsPerState, ffmUs: fm.cpuUsPerState, sgp4Us: sg.cpuUsPerState, apOverFfm: a.cpuUsPerState / fm.cpuUsPerState, apOverSgp4: a.cpuUsPerState / sg.cpuUsPerState,
+      f: fs_, doublings: fs_.map((f) => dbl(f, P.p)), doublingsRange: [dbl(fs_[1], P.hi), dbl(fs_[0], P.lo)], payloadYears: fs_.map((f) => dbl(f, P.p) * B1.payloadDoublingYears), allYears: fs_.map((f) => dbl(f, P.p) * B1.allObjectsDoublingYears) });
+  }
+  const conversion = { propagationP: { p: P.p, lo: P.lo, hi: P.hi }, apVsFfm };
+  const ratioText = apVsFfm.map((r) => `${r.regime} ${r.apOverFfm < 1 ? `${f2(r.apOverFfm)}` : `${f2(r.apOverFfm)}x`} (${r.comparator})`).join('; ');
+  const sentence = `${HEADLINE} AP over FFM, CPU per state at the 60 s step of a screen: ${ratioText}. With p = ${f2(P.p)} (${f2(P.lo)} to ${f2(P.hi)}, the propagation-phase fit), the screen cost with AP against the same screen with FFM is a factor f of ${apVsFfm.map((r) => `${f2(r.f[0])} to ${f2(r.f[1])} (${r.regime})`).join('; ')}; a factor below 1 buys log2(1 / f) / p doublings of the object count, years at ${B1.payloadDoublingYears} (payload) and ${B1.allObjectsDoublingYears} (all objects, undecided) in the table.`;
   const pearson = (x, y) => { const n = x.length, mx = x.reduce((a, b) => a + b, 0) / n, my = y.reduce((a, b) => a + b, 0) / n; let sxy = 0, sxx = 0, syy = 0; for (let i = 0; i < n; i++) { sxy += (x[i] - mx) * (y[i] - my); sxx += (x[i] - mx) ** 2; syy += (y[i] - my) ** 2; } return sxy / Math.sqrt(sxx * syy); };
   const lnN = rows.map((r) => Math.log(r.index)), loadMean = rows.map((r) => (r.load1Start + r.load1End) / 2), startOrder = rows.map((r) => Date.parse(r.startedUtc));
   const correlation = { lnNvsLoad: pearson(lnN, loadMean), lnNvsStartOrder: pearson(lnN, startOrder), loadRange: [Math.min(...loadMean), Math.max(...loadMean)] };
@@ -534,18 +545,25 @@ function build(rows, meta, cov, extra) {
     quietCheck = { run: true, window: win, screen, ratios, arms, worstRelativeDifference: worst, agree: worst <= 0.10 };
   }
   const overlap = !(L.hi < D.lo || D.hi < L.lo);
-  const verdict = `Ladder p = ${f2(L.p)} (${f2(L.lo)} to ${f2(L.hi)}): ${L.verdict}. Dates p = ${f2(D.p)} (${f2(D.lo)} to ${f2(D.hi)}): ${D.verdict}. The two intervals ${overlap ? 'overlap' : 'do not overlap'}. Propagation takes ${(100 * fullShare).toFixed(1)} percent of the screen CPU at the full catalog (SGP4); a propagator of zero cost cuts the screen CPU at most by a factor ${f2(1 / (1 - fullShare))}.`;
+  const verdict = `${HEADLINE} Ladder p = ${f2(L.p)} (${f2(L.lo)} to ${f2(L.hi)}) on CPU: ${L.verdict}; events p = ${f2(fits.ladder.events.p)} (${f2(fits.ladder.events.lo)} to ${f2(fits.ladder.events.hi)}): ${fits.ladder.events.verdict}; propagation p = ${f2(P.p)}. The real-dates series is not drawn and not a scaling statement (diagnosis below). SGP4 propagation takes ${(100 * fullShare).toFixed(1)} percent of its screen CPU at the full catalog.`;
   const chartPoint = (p, ref_) => ({ index: p.index, cpu: p.total / ref_.total, propagation: p.propagation / ref_.total, search: p.search / ref_.total, refine: p.refine / ref_.total, events: p.events / ref_.events });
   const chart = {
-    note: 'values normalized to the current catalog = 1; no object count',
+    headline: HEADLINE,
+    note: 'values normalized to the current catalog = 1; no object count; the real-dates series is not drawn (diagnosis)',
     ladder: { points: ladder.map((p) => chartPoint(p, ref)), fits: fits.ladder },
-    dates: { points: rows.filter((r) => r.kind === 'date').map(pointOf).concat([mergedFull]).map((p) => chartPoint(p, ref)), fits: fits.dates },
-    propagationShare: fullShare, conversion, amdahlSgp4: sgp4Amdahl,
+    propagationShare: fullShare, headline: HEADLINE, apVsFfm: apVsFfm.map((r) => ({ regime: r.regime, comparator: r.comparator, apOverFfm: r.apOverFfm, apOverSgp4: r.apOverSgp4, step: '60 s', f: r.f, doublings: r.doublings, doublingsRange: r.doublingsRange })), propagationP: conversion.propagationP,
     derived: { label: 'derived from measured parts; only SGP4 flew the whole screen', assumption: 'candidate and event counts held at SGP4\'s', series: Object.fromEntries(Object.entries(derived).map(([k, byRegime]) => [k, Object.fromEntries(Object.entries(byRegime).map(([rg, v]) => [rg, v.points.map((x) => ({ index: x.index, lower: x.lower / ref.total, upper: x.upper / ref.total }))]))])) },
   };
-  return { correlation, quietCheck, derived, sgp4Amdahl, timing: tm, fits, shares, noise, theories, conversion, sentence, verdict, overlap, parity: meta.parity, chart, ladderN: ladder.length, datesN: dates.length };
+  return { HEADLINE, apVsFfm, correlation, quietCheck, derived, sgp4Amdahl, timing: tm, fits, shares, noise, theories, conversion, sentence, verdict, overlap, parity: meta.parity, chart, ladderN: ladder.length, datesN: dates.length };
 }
 
+function diagnosisText() {
+  const f = path.join(OUT, 'diagnosis.json');
+  const base = 'The real-dates series (seven past dates at N 0.74 to 0.90 of the current catalog, and the current catalog) is not drawn and carries no exponent: from 195 thousand events at the past dates, 324 thousand at 2025-12, to 1.07 million at the current catalog (3.3x for 11 percent more objects, where the ladder predicts about 1.2x). The statement is the ladder\'s: events grow as N^2.';
+  if (!fs.existsSync(f)) return `${base} Diagnosis pending.`;
+  const d = JSON.parse(fs.readFileSync(f, 'utf8'));
+  return `${base} ${d.text}`;
+}
 const regimes0 = (t) => [...new Set(Object.keys(t.timing).map((k) => k.split('|')[1]))].filter((r) => r !== 'pooled');
 function render(rows, meta, cov, extra) {
   const t = build(rows, meta, cov, extra);
@@ -564,11 +582,12 @@ function render(rows, meta, cov, extra) {
   lines.push('', '## Timing arm: propagation CPU per state at 7 days x 60 s, the cost benchmark\'s own flights (median over a regime\'s windows, microseconds)', '', `| Arm | Build | ${['pooled', ...regimes0(t)].join(' | ')} |`, `|---|---|${['pooled', ...regimes0(t)].map(() => '---').join('|')}|`);
   for (const arm of ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40']) { const x = t.timing[`${arm}|pooled`]; if (!x) { lines.push(`| ${arm} | - | not measured |`); continue; } lines.push(`| ${arm} | ${x.build} | ${['pooled', ...regimes0(t)].map((rg) => { const y = t.timing[`${arm}|${rg}`]; return y ? `${fmt(y.cpuUsPerState, 2)} (n ${y.n})` : '-'; }).join(' | ')} |`); }
   lines.push('', 'Four windows per regime (the benchmark\'s), 32 pooled: the pooled figure is not the catalog\'s regime mix. FFM 40x40 flies below 8,400 km only. A window an arm refused or failed is absent from n.');
-  lines.push('', '## Amdahl conversion (a propagation 1/8 as costly; doublings = log2(1 / f) / p, f = (1 - s) + s / 8)', '', '| Theory | Regime | s | f | Doublings | Interval from p | Years at 3.8 | Years at 9.6 (undecided fit) |', '|---|---|---|---|---|---|---|---|');
-  const am = (name, rg, a) => lines.push(`| ${name} | ${rg} | ${fmt(a.s, 3)} | ${fmt(a.factor, 3)} | ${fmt(a.doublings, 2)} | ${fmt(a.doublingsRange[0], 2)} to ${fmt(a.doublingsRange[1], 2)} | ${fmt(a.payloadYears, 1)} | ${fmt(a.allYears, 1)} |`);
-  am('SGP4 (measured in the screen)', 'all', t.sgp4Amdahl);
-  for (const [k, byRegime] of Object.entries(t.derived)) for (const [rg, v] of Object.entries(byRegime)) { am(`${k} (derived, s low)`, rg, v.amdahl.sLoCase); am(`${k} (derived, s high)`, rg, v.amdahl.sHiCase); }
-  lines.push('', 'Derived series: derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the arm\'s measured CPU per state in that regime times N times 10,080; refine is a band (lower: as measured with SGP4; upper: scaled by the ratio of the arm\'s CPU per state to SGP4\'s in the same regime). Hidden assumption: candidate and event counts are held at SGP4\'s; whether better accuracy allows a smaller threshold is another study. The whole-screen bound 3 / p applies only to a speedup of the whole screen.');
+  lines.push('', '## AP against FFM and against SGP4, per regime, at the 60 s step of a screen', '', '| Regime | Comparator | AP us/state | FFM us/state | AP / FFM | SGP4 us/state | AP / SGP4 | f (screen with AP over screen with FFM) | Doublings | Years at 3.8 | Years at 9.6 (undecided) |', '|---|---|---|---|---|---|---|---|---|---|---|');
+  for (const r of t.apVsFfm) lines.push(`| ${r.regime} | ${r.comparator} | ${fmt(r.apUs, 1)} | ${fmt(r.ffmUs, 1)} | ${fmt(r.apOverFfm, 2)} | ${fmt(r.sgp4Us, 2)} | ${fmt(r.apOverSgp4, 0)} | ${fmt(r.f[0], 2)} to ${fmt(r.f[1], 2)} | ${fmt(r.doublings[0], 2)} to ${fmt(r.doublings[1], 2)} | ${fmt(r.payloadYears[0], 1)} to ${fmt(r.payloadYears[1], 1)} | ${fmt(r.allYears[0], 1)} to ${fmt(r.allYears[1], 1)} |`);
+  lines.push('', `Every ratio is at the 60 s step of a screen. At 300 s per object-day the benchmark has AP at about 1/8 of FFM; at 60 s it is about 1/3 in low orbit, because AP's cost follows the number of output states and FFM's mostly follows its integration steps. AP is far costlier than SGP4 (the AP / SGP4 column) and cheaper than the FFM it nearly matches in low orbit; against FFM 20x20 in MEO and for laser geodetic satellites AP costs more. Doublings use the propagation-phase p of the ladder, ${fmt(t.conversion.propagationP.p, 2)} (${fmt(t.conversion.propagationP.lo, 2)} to ${fmt(t.conversion.propagationP.hi, 2)}); a negative number means AP costs more than the comparator. AP is propagator/sdn-ap 0.6.3, FFM is propagator/ffm 2.2.1.`);
+  lines.push('', '## Derived totals: share of propagation s with each theory', '', '| Theory | Regime | s (band) |', '|---|---|---|');
+  for (const [k, byRegime] of Object.entries(t.derived)) for (const [rg, v] of Object.entries(byRegime)) lines.push(`| ${k} | ${rg} | ${fmt(v.amdahl.sLoCase.s, 3)} to ${fmt(v.amdahl.sHiCase.s, 3)} |`);
+  lines.push('', 'Derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the arm\'s measured CPU per state in that regime times N times 10,080 (FFM: its 10,000-state flight per state); refine is a band (lower: as measured with SGP4; upper: scaled by the arm\'s CPU per state over SGP4\'s in the regime). Hidden assumption: candidate and event counts are held at SGP4\'s; whether better accuracy allows a smaller threshold is another study.');
   lines.push('', '## Case order', '', `Pearson correlation of ln(N index) with the 1-minute load (mean of start and end) across the ${rows.length} screen rows: ${fmt(t.correlation.lnNvsLoad, 3)}; with the start time: ${fmt(t.correlation.lnNvsStartOrder, 3)}. Load across the rows: ${fmt(t.correlation.loadRange[0], 1)} to ${fmt(t.correlation.loadRange[1], 1)}.`);
   lines.push('', '## Quiet-window check', '');
   if (!t.quietCheck.run) lines.push('Not run: every absolute CPU figure in this file reads "under load, not quiet-checked" and is not for the page. The ratios and p stand with that caveat.');
@@ -580,8 +599,8 @@ function render(rows, meta, cov, extra) {
     lines.push('', '| Ratio | Quiet | Loaded | Difference |', '|---|---|---|---|');
     for (const r of t.quietCheck.ratios) lines.push(`| ${r.name} | ${fmt(r.quiet, 4)} | ${fmt(r.loaded, 4)} | ${fmt(100 * r.rel, 1)} % |`);
   }
-  lines.push('', '## Conversion', '', t.sentence, '', '## Parity guard', '', `Phased path and fused path on ${meta.parity.id}: events ${meta.parity.phasedEvents} and ${meta.parity.fusedEvents}, event-set digests ${meta.parity.equal ? 'equal' : 'DIFFER'}.`, '', '## Verdict', '', t.verdict, '');
-  return { 'table.json': JSON.stringify({ correlation: t.correlation, quietCheck: t.quietCheck, fits: t.fits, theories: t.theories, conversion: t.conversion, sentence: t.sentence, verdict: t.verdict, noise: t.noise, parity: meta.parity }, null, 1) + '\n', 'README.md': lines.join('\n'), 'chart.json': JSON.stringify(t.chart, null, 1) + '\n', _t: t };
+  lines.push('', '## Reading', '', t.sentence, '', '## Real dates: not drawn', '', diagnosisText(), '', '## Parity guard', '', `Phased path and fused path on ${meta.parity.id}: events ${meta.parity.phasedEvents} and ${meta.parity.fusedEvents}, event-set digests ${meta.parity.equal ? 'equal' : 'DIFFER'}.`, '', '## Verdict', '', t.verdict, '');
+  return { 'table.json': JSON.stringify({ headline: t.HEADLINE, correlation: t.correlation, quietCheck: t.quietCheck, fits: t.fits, theories: t.theories, conversion: t.conversion, sentence: t.sentence, verdict: t.verdict, noise: t.noise, parity: meta.parity }, null, 1) + '\n', 'README.md': lines.join('\n'), 'chart.json': JSON.stringify(t.chart, null, 1) + '\n', _t: t };
 }
 
 function readAll() {

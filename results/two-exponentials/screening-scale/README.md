@@ -64,95 +64,68 @@ Run-to-run range of the total CPU over the three full-catalog repeats: 0.3 perce
 
 Four windows per regime (the benchmark's), 32 pooled: the pooled figure is not the catalog's regime mix. FFM 40x40 flies below 8,400 km only. A window an arm refused or failed is absent from n.
 
-## Amdahl conversion (a propagation 1/8 as costly; doublings = log2(1 / f) / p, f = (1 - s) + s / 8)
+## AP against FFM and against SGP4, per regime, at the 60 s step of a screen
 
-| Theory | Regime | s | f | Doublings | Interval from p | Years at 3.8 | Years at 9.6 (undecided fit) |
-|---|---|---|---|---|---|---|---|
-| SGP4 (measured in the screen) | all | 0.244 | 0.787 | 0.25 | 0.23 to 0.28 | 1.0 | 2.4 |
-| XP (derived, s low) | pooled | 0.766 | 0.330 | 1.16 | 1.06 to 1.29 | 4.4 | 11.1 |
-| XP (derived, s high) | pooled | 0.919 | 0.196 | 1.71 | 1.55 to 1.89 | 6.5 | 16.4 |
-| XP (derived, s low) | Low orbit, laser spheres | 0.843 | 0.262 | 1.40 | 1.28 to 1.55 | 5.3 | 13.5 |
-| XP (derived, s high) | Low orbit, laser spheres | 0.926 | 0.189 | 1.74 | 1.59 to 1.93 | 6.6 | 16.7 |
-| XP (derived, s low) | Low orbit, altimetry | 0.762 | 0.333 | 1.15 | 1.05 to 1.28 | 4.4 | 11.1 |
-| XP (derived, s high) | Low orbit, altimetry | 0.921 | 0.194 | 1.72 | 1.56 to 1.90 | 6.5 | 16.5 |
-| XP (derived, s low) | Laser geodetic | 0.768 | 0.328 | 1.17 | 1.07 to 1.29 | 4.4 | 11.2 |
-| XP (derived, s high) | Laser geodetic | 0.914 | 0.200 | 1.68 | 1.54 to 1.86 | 6.4 | 16.2 |
-| XP (derived, s low) | Geostationary | 0.804 | 0.296 | 1.27 | 1.16 to 1.41 | 4.8 | 12.2 |
-| XP (derived, s high) | Geostationary | 0.914 | 0.200 | 1.69 | 1.54 to 1.87 | 6.4 | 16.2 |
-| XP (derived, s low) | Inclined geosynchronous | 0.797 | 0.302 | 1.25 | 1.14 to 1.39 | 4.8 | 12.0 |
-| XP (derived, s high) | Inclined geosynchronous | 0.913 | 0.201 | 1.68 | 1.53 to 1.86 | 6.4 | 16.1 |
-| XP (derived, s low) | Strong drag, 2026 | 0.754 | 0.340 | 1.13 | 1.03 to 1.25 | 4.3 | 10.8 |
-| XP (derived, s high) | Strong drag, 2026 | 0.916 | 0.198 | 1.69 | 1.54 to 1.88 | 6.4 | 16.3 |
-| XP (derived, s low) | Near 700 km | 0.760 | 0.335 | 1.15 | 1.04 to 1.27 | 4.4 | 11.0 |
-| XP (derived, s high) | Near 700 km | 0.931 | 0.186 | 1.76 | 1.61 to 1.95 | 6.7 | 16.9 |
-| XP (derived, s low) | Medium Earth orbit | 0.762 | 0.333 | 1.15 | 1.05 to 1.28 | 4.4 | 11.1 |
-| XP (derived, s high) | Medium Earth orbit | 0.917 | 0.198 | 1.70 | 1.55 to 1.88 | 6.5 | 16.3 |
-| XPU (derived, s low) | pooled | 0.772 | 0.325 | 1.18 | 1.07 to 1.30 | 4.5 | 11.3 |
-| XPU (derived, s high) | pooled | 0.930 | 0.186 | 1.76 | 1.60 to 1.95 | 6.7 | 16.9 |
-| XPU (derived, s low) | Low orbit, laser spheres | 0.860 | 0.247 | 1.46 | 1.33 to 1.62 | 5.6 | 14.0 |
-| XPU (derived, s high) | Low orbit, laser spheres | 0.954 | 0.165 | 1.89 | 1.72 to 2.09 | 7.2 | 18.1 |
-| XPU (derived, s low) | Low orbit, altimetry | 0.781 | 0.317 | 1.20 | 1.10 to 1.33 | 4.6 | 11.6 |
-| XPU (derived, s high) | Low orbit, altimetry | 0.957 | 0.162 | 1.90 | 1.74 to 2.11 | 7.2 | 18.3 |
-| XPU (derived, s low) | Laser geodetic | 0.760 | 0.335 | 1.14 | 1.04 to 1.27 | 4.3 | 11.0 |
-| XPU (derived, s high) | Laser geodetic | 0.897 | 0.215 | 1.61 | 1.47 to 1.78 | 6.1 | 15.5 |
-| XPU (derived, s low) | Geostationary | 0.807 | 0.294 | 1.28 | 1.17 to 1.42 | 4.9 | 12.3 |
-| XPU (derived, s high) | Geostationary | 0.919 | 0.196 | 1.71 | 1.56 to 1.89 | 6.5 | 16.4 |
-| XPU (derived, s low) | Inclined geosynchronous | 0.807 | 0.294 | 1.28 | 1.17 to 1.42 | 4.9 | 12.3 |
-| XPU (derived, s high) | Inclined geosynchronous | 0.930 | 0.187 | 1.76 | 1.60 to 1.95 | 6.7 | 16.9 |
-| XPU (derived, s low) | Strong drag, 2026 | 0.773 | 0.324 | 1.18 | 1.08 to 1.31 | 4.5 | 11.3 |
-| XPU (derived, s high) | Strong drag, 2026 | 0.954 | 0.165 | 1.89 | 1.72 to 2.09 | 7.2 | 18.1 |
-| XPU (derived, s low) | Near 700 km | 0.758 | 0.336 | 1.14 | 1.04 to 1.26 | 4.3 | 11.0 |
-| XPU (derived, s high) | Near 700 km | 0.928 | 0.188 | 1.75 | 1.59 to 1.94 | 6.6 | 16.8 |
-| XPU (derived, s low) | Medium Earth orbit | 0.756 | 0.338 | 1.13 | 1.03 to 1.26 | 4.3 | 10.9 |
-| XPU (derived, s high) | Medium Earth orbit | 0.905 | 0.208 | 1.65 | 1.50 to 1.82 | 6.3 | 15.8 |
-| AP (derived, s low) | pooled | 0.804 | 0.296 | 1.27 | 1.16 to 1.41 | 4.8 | 12.2 |
-| AP (derived, s high) | pooled | 0.994 | 0.130 | 2.14 | 1.95 to 2.37 | 8.1 | 20.5 |
-| AP (derived, s low) | Low orbit, laser spheres | 0.885 | 0.226 | 1.56 | 1.42 to 1.73 | 5.9 | 15.0 |
-| AP (derived, s high) | Low orbit, laser spheres | 0.995 | 0.130 | 2.14 | 1.95 to 2.37 | 8.1 | 20.5 |
-| AP (derived, s low) | Low orbit, altimetry | 0.799 | 0.301 | 1.26 | 1.15 to 1.39 | 4.8 | 12.1 |
-| AP (derived, s high) | Low orbit, altimetry | 0.995 | 0.130 | 2.14 | 1.95 to 2.37 | 8.1 | 20.5 |
-| AP (derived, s low) | Laser geodetic | 0.810 | 0.292 | 1.29 | 1.18 to 1.43 | 4.9 | 12.4 |
-| AP (derived, s high) | Laser geodetic | 0.993 | 0.131 | 2.13 | 1.94 to 2.36 | 8.1 | 20.5 |
-| AP (derived, s low) | Geostationary | 0.824 | 0.279 | 1.34 | 1.22 to 1.48 | 5.1 | 12.9 |
-| AP (derived, s high) | Geostationary | 0.949 | 0.169 | 1.86 | 1.70 to 2.06 | 7.1 | 17.9 |
-| AP (derived, s low) | Inclined geosynchronous | 0.819 | 0.283 | 1.32 | 1.20 to 1.46 | 5.0 | 12.7 |
-| AP (derived, s high) | Inclined geosynchronous | 0.952 | 0.167 | 1.87 | 1.71 to 2.07 | 7.1 | 18.0 |
-| AP (derived, s low) | Strong drag, 2026 | 0.793 | 0.306 | 1.24 | 1.13 to 1.37 | 4.7 | 11.9 |
-| AP (derived, s high) | Strong drag, 2026 | 0.995 | 0.129 | 2.14 | 1.95 to 2.37 | 8.1 | 20.6 |
-| AP (derived, s low) | Near 700 km | 0.791 | 0.307 | 1.24 | 1.13 to 1.37 | 4.7 | 11.9 |
-| AP (derived, s high) | Near 700 km | 0.995 | 0.130 | 2.14 | 1.95 to 2.37 | 8.1 | 20.5 |
-| AP (derived, s low) | Medium Earth orbit | 0.801 | 0.299 | 1.27 | 1.15 to 1.40 | 4.8 | 12.1 |
-| AP (derived, s high) | Medium Earth orbit | 0.994 | 0.130 | 2.14 | 1.95 to 2.37 | 8.1 | 20.5 |
-| FFM20 (derived, s low) | pooled | 0.803 | 0.297 | 1.27 | 1.16 to 1.41 | 4.8 | 12.2 |
-| FFM20 (derived, s high) | pooled | 0.992 | 0.132 | 2.12 | 1.93 to 2.35 | 8.1 | 20.4 |
-| FFM20 (derived, s low) | Low orbit, laser spheres | 0.886 | 0.225 | 1.56 | 1.43 to 1.73 | 5.9 | 15.0 |
-| FFM20 (derived, s high) | Low orbit, laser spheres | 0.997 | 0.128 | 2.16 | 1.96 to 2.39 | 8.2 | 20.7 |
-| FFM20 (derived, s low) | Low orbit, altimetry | 0.800 | 0.300 | 1.26 | 1.15 to 1.40 | 4.8 | 12.1 |
-| FFM20 (derived, s high) | Low orbit, altimetry | 0.997 | 0.128 | 2.15 | 1.96 to 2.39 | 8.2 | 20.7 |
-| FFM20 (derived, s low) | Laser geodetic | 0.809 | 0.292 | 1.29 | 1.17 to 1.43 | 4.9 | 12.4 |
-| FFM20 (derived, s high) | Laser geodetic | 0.992 | 0.132 | 2.12 | 1.93 to 2.35 | 8.1 | 20.3 |
-| FFM20 (derived, s low) | Geostationary | 0.847 | 0.258 | 1.42 | 1.29 to 1.57 | 5.4 | 13.6 |
-| FFM20 (derived, s high) | Geostationary | 0.990 | 0.133 | 2.11 | 1.92 to 2.34 | 8.0 | 20.3 |
-| FFM20 (derived, s low) | Inclined geosynchronous | 0.841 | 0.264 | 1.39 | 1.27 to 1.54 | 5.3 | 13.4 |
-| FFM20 (derived, s high) | Inclined geosynchronous | 0.990 | 0.133 | 2.11 | 1.92 to 2.34 | 8.0 | 20.3 |
-| FFM20 (derived, s low) | Strong drag, 2026 | 0.794 | 0.305 | 1.24 | 1.13 to 1.38 | 4.7 | 11.9 |
-| FFM20 (derived, s high) | Strong drag, 2026 | 0.997 | 0.128 | 2.15 | 1.96 to 2.38 | 8.2 | 20.7 |
-| FFM20 (derived, s low) | Near 700 km | 0.792 | 0.307 | 1.24 | 1.13 to 1.37 | 4.7 | 11.9 |
-| FFM20 (derived, s high) | Near 700 km | 0.996 | 0.129 | 2.15 | 1.96 to 2.38 | 8.2 | 20.6 |
-| FFM20 (derived, s low) | Medium Earth orbit | 0.799 | 0.300 | 1.26 | 1.15 to 1.39 | 4.8 | 12.1 |
-| FFM20 (derived, s high) | Medium Earth orbit | 0.990 | 0.133 | 2.11 | 1.92 to 2.34 | 8.0 | 20.3 |
-| FFM40 (derived, s low) | pooled | 0.806 | 0.295 | 1.28 | 1.17 to 1.42 | 4.9 | 12.3 |
-| FFM40 (derived, s high) | pooled | 0.998 | 0.127 | 2.16 | 1.97 to 2.40 | 8.2 | 20.8 |
-| FFM40 (derived, s low) | Low orbit, laser spheres | 0.887 | 0.224 | 1.57 | 1.43 to 1.74 | 6.0 | 15.0 |
-| FFM40 (derived, s high) | Low orbit, laser spheres | 0.998 | 0.126 | 2.17 | 1.97 to 2.40 | 8.2 | 20.8 |
-| FFM40 (derived, s low) | Low orbit, altimetry | 0.801 | 0.299 | 1.26 | 1.15 to 1.40 | 4.8 | 12.1 |
-| FFM40 (derived, s high) | Low orbit, altimetry | 0.998 | 0.127 | 2.16 | 1.97 to 2.40 | 8.2 | 20.8 |
-| FFM40 (derived, s low) | Strong drag, 2026 | 0.795 | 0.305 | 1.24 | 1.13 to 1.38 | 4.7 | 11.9 |
-| FFM40 (derived, s high) | Strong drag, 2026 | 0.998 | 0.127 | 2.17 | 1.97 to 2.40 | 8.2 | 20.8 |
-| FFM40 (derived, s low) | Near 700 km | 0.793 | 0.306 | 1.24 | 1.13 to 1.37 | 4.7 | 11.9 |
-| FFM40 (derived, s high) | Near 700 km | 0.998 | 0.127 | 2.16 | 1.97 to 2.40 | 8.2 | 20.8 |
+| Regime | Comparator | AP us/state | FFM us/state | AP / FFM | SGP4 us/state | AP / SGP4 | f (screen with AP over screen with FFM) | Doublings | Years at 3.8 | Years at 9.6 (undecided) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Low orbit, laser spheres | FFM40 | 356.1 | 1111.5 | 0.32 | 3.69 | 96 | 0.32 to 0.32 | 1.51 to 1.51 | 5.8 to 5.7 | 14.5 to 14.5 |
+| Low orbit, altimetry | FFM40 | 354.9 | 1049.4 | 0.34 | 1.88 | 188 | 0.34 to 0.34 | 1.44 to 1.44 | 5.5 to 5.5 | 13.8 to 13.8 |
+| Strong drag, 2026 | FFM40 | 376.2 | 1068.9 | 0.35 | 1.81 | 208 | 0.35 to 0.35 | 1.39 to 1.39 | 5.3 to 5.3 | 13.3 to 13.3 |
+| Near 700 km | FFM40 | 360.8 | 899.0 | 0.40 | 1.80 | 201 | 0.40 to 0.40 | 1.21 to 1.21 | 4.6 to 4.6 | 11.7 to 11.6 |
+| Laser geodetic | FFM20 | 289.2 | 229.6 | 1.26 | 2.02 | 143 | 1.26 to 1.26 | -0.31 to -0.31 | -1.2 to -1.2 | -2.9 to -2.9 |
+| Medium Earth orbit | FFM20 | 340.0 | 195.6 | 1.74 | 1.91 | 178 | 1.73 to 1.73 | -0.73 to -0.73 | -2.8 to -2.8 | -7.0 to -7.0 |
+| Geostationary | FFM20 | 35.7 | 196.8 | 0.18 | 2.70 | 13 | 0.19 to 0.19 | 2.24 to 2.22 | 8.5 to 8.4 | 21.5 to 21.3 |
+| Inclined geosynchronous | FFM20 | 37.5 | 196.2 | 0.19 | 2.56 | 15 | 0.20 to 0.20 | 2.17 to 2.15 | 8.2 to 8.2 | 20.8 to 20.7 |
 
-Derived series: derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the arm's measured CPU per state in that regime times N times 10,080; refine is a band (lower: as measured with SGP4; upper: scaled by the ratio of the arm's CPU per state to SGP4's in the same regime). Hidden assumption: candidate and event counts are held at SGP4's; whether better accuracy allows a smaller threshold is another study. The whole-screen bound 3 / p applies only to a speedup of the whole screen.
+Every ratio is at the 60 s step of a screen. At 300 s per object-day the benchmark has AP at about 1/8 of FFM; at 60 s it is about 1/3 in low orbit, because AP's cost follows the number of output states and FFM's mostly follows its integration steps. AP is far costlier than SGP4 (the AP / SGP4 column) and cheaper than the FFM it nearly matches in low orbit; against FFM 20x20 in MEO and for laser geodetic satellites AP costs more. Doublings use the propagation-phase p of the ladder, 1.08 (1.03 to 1.14); a negative number means AP costs more than the comparator. AP is propagator/sdn-ap 0.6.3, FFM is propagator/ffm 2.2.1.
+
+## Derived totals: share of propagation s with each theory
+
+| Theory | Regime | s (band) |
+|---|---|---|
+| XP | pooled | 0.766 to 0.919 |
+| XP | Low orbit, laser spheres | 0.843 to 0.926 |
+| XP | Low orbit, altimetry | 0.762 to 0.921 |
+| XP | Laser geodetic | 0.768 to 0.914 |
+| XP | Geostationary | 0.804 to 0.914 |
+| XP | Inclined geosynchronous | 0.797 to 0.913 |
+| XP | Strong drag, 2026 | 0.754 to 0.916 |
+| XP | Near 700 km | 0.760 to 0.931 |
+| XP | Medium Earth orbit | 0.762 to 0.917 |
+| XPU | pooled | 0.772 to 0.930 |
+| XPU | Low orbit, laser spheres | 0.860 to 0.954 |
+| XPU | Low orbit, altimetry | 0.781 to 0.957 |
+| XPU | Laser geodetic | 0.760 to 0.897 |
+| XPU | Geostationary | 0.807 to 0.919 |
+| XPU | Inclined geosynchronous | 0.807 to 0.930 |
+| XPU | Strong drag, 2026 | 0.773 to 0.954 |
+| XPU | Near 700 km | 0.758 to 0.928 |
+| XPU | Medium Earth orbit | 0.756 to 0.905 |
+| AP | pooled | 0.804 to 0.994 |
+| AP | Low orbit, laser spheres | 0.885 to 0.995 |
+| AP | Low orbit, altimetry | 0.799 to 0.995 |
+| AP | Laser geodetic | 0.810 to 0.993 |
+| AP | Geostationary | 0.824 to 0.949 |
+| AP | Inclined geosynchronous | 0.819 to 0.952 |
+| AP | Strong drag, 2026 | 0.793 to 0.995 |
+| AP | Near 700 km | 0.791 to 0.995 |
+| AP | Medium Earth orbit | 0.801 to 0.994 |
+| FFM20 | pooled | 0.803 to 0.992 |
+| FFM20 | Low orbit, laser spheres | 0.886 to 0.997 |
+| FFM20 | Low orbit, altimetry | 0.800 to 0.997 |
+| FFM20 | Laser geodetic | 0.809 to 0.992 |
+| FFM20 | Geostationary | 0.847 to 0.990 |
+| FFM20 | Inclined geosynchronous | 0.841 to 0.990 |
+| FFM20 | Strong drag, 2026 | 0.794 to 0.997 |
+| FFM20 | Near 700 km | 0.792 to 0.996 |
+| FFM20 | Medium Earth orbit | 0.799 to 0.990 |
+| FFM40 | pooled | 0.806 to 0.998 |
+| FFM40 | Low orbit, laser spheres | 0.887 to 0.998 |
+| FFM40 | Low orbit, altimetry | 0.801 to 0.998 |
+| FFM40 | Strong drag, 2026 | 0.795 to 0.998 |
+| FFM40 | Near 700 km | 0.793 to 0.998 |
+
+Derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the arm's measured CPU per state in that regime times N times 10,080 (FFM: its 10,000-state flight per state); refine is a band (lower: as measured with SGP4; upper: scaled by the arm's CPU per state over SGP4's in the regime). Hidden assumption: candidate and event counts are held at SGP4's; whether better accuracy allows a smaller threshold is another study.
 
 ## Case order
 
@@ -162,9 +135,13 @@ Pearson correlation of ln(N index) with the 1-minute load (mean of start and end
 
 Not run: every absolute CPU figure in this file reads "under load, not quiet-checked" and is not for the page. The ratios and p stand with that caveat.
 
-## Conversion
+## Reading
 
-With p = 1.38 (95 percent interval 1.24 to 1.51; undecided) on the thinning ladder, one eighth of the compute buys 3 / p = 2.18 doublings of the object count (1.99 to 2.41): 8.3 years (7.5 to 9.2) at the payload doubling time of 3.8 years (catalog growth 2018-2026, exponential), and 20.9 years (19.1 to 23.2) at the all-objects fit of 9.6 years (2018-2026, undecided between exponential and linear). The real-dates fit gives p = 2.96 (1.87 to 4.05; undecided): 1.01 doublings, 3.9 years at 3.8 and 9.7 years at 9.6.
+With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower. AP over FFM, CPU per state at the 60 s step of a screen: Low orbit, laser spheres 0.32 (FFM40); Low orbit, altimetry 0.34 (FFM40); Strong drag, 2026 0.35 (FFM40); Near 700 km 0.40 (FFM40); Laser geodetic 1.26x (FFM20); Medium Earth orbit 1.74x (FFM20); Geostationary 0.18 (FFM20); Inclined geosynchronous 0.19 (FFM20). With p = 1.08 (1.03 to 1.14, the propagation-phase fit), the screen cost with AP against the same screen with FFM is a factor f of 0.32 to 0.32 (Low orbit, laser spheres); 0.34 to 0.34 (Low orbit, altimetry); 0.35 to 0.35 (Strong drag, 2026); 0.40 to 0.40 (Near 700 km); 1.26 to 1.26 (Laser geodetic); 1.73 to 1.73 (Medium Earth orbit); 0.19 to 0.19 (Geostationary); 0.20 to 0.20 (Inclined geosynchronous); a factor below 1 buys log2(1 / f) / p doublings of the object count, years at 3.8 (payload) and 9.6 (all objects, undecided) in the table.
+
+## Real dates: not drawn
+
+The real-dates series (seven past dates at N 0.74 to 0.90 of the current catalog, and the current catalog) is not drawn and carries no exponent: from 195 thousand events at the past dates, 324 thousand at 2025-12, to 1.07 million at the current catalog (3.3x for 11 percent more objects, where the ladder predicts about 1.2x). The statement is the ladder's: events grow as N^2. Diagnosis (two archive queries, no screen re-run; raw numbers in diagnosis-counts.json, which the site never reads). (1) Construction: the current catalog rebuilt by the date construction (newest set per object from the by-creation files of the 30 days before the window start, epoch in the last 30 days) holds the same objects as the snapshot-based one: 32,862 shared, 86 only in the rebuild, 1 only in the snapshot (0.3 percent). The date construction and the snapshot do not differ, and the population filter, the set ages (median 0.6 days at 2025-12, 1.3 days now; 90th percentile 2.3 and 2.2 days) and the by-creation coverage are not the cause. (2) Composition: the objects between 400 and 500 km (mean-motion altitude) are 2.16 times as many in the current catalog as at 2025-12-21, those between 500 and 560 km are 0.27 times as many, and the rest of the altitude bands move by under 1.1 times except 600 to 800 km (1.11) and below 400 km (1.05). The catalog's growth in a year was a concentration of objects into a lower and narrower shell, which raises the pair count in that shell far above the all-pairs N^2 of a uniform catalog. So the jump is a property of the archive's catalogs, not a defect of the construction. It is not a scaling exponent: the dates differ in composition as well as in size, so no fit of events on N across them measures how screening work grows with N. Events by altitude band were not measured (it needs screen runs, held). Until they are, the dates series is not drawn.
 
 ## Parity guard
 
@@ -172,4 +149,4 @@ Phased path and fused path on parity-1-8-s1: events 16091 and 16091, event-set d
 
 ## Verdict
 
-Ladder p = 1.38 (1.24 to 1.51): undecided. Dates p = 2.96 (1.87 to 4.05): undecided. The two intervals do not overlap. Propagation takes 24.4 percent of the screen CPU at the full catalog (SGP4); a propagator of zero cost cuts the screen CPU at most by a factor 1.32.
+With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower. Ladder p = 1.38 (1.24 to 1.51) on CPU: undecided; events p = 2.02 (2.00 to 2.05): p = 2; propagation p = 1.08. The real-dates series is not drawn and not a scaling statement (diagnosis below). SGP4 propagation takes 24.4 percent of its screen CPU at the full catalog.
