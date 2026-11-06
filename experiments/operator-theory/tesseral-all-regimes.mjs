@@ -71,25 +71,33 @@ export function rtnOf(d, r, v) {
   return [dot(d, R) * 1000, dot(d, T) * 1000, dot(d, h) * 1000];
 }
 
-/** Least squares by normal equations (Gaussian elimination with partial pivoting). */
-function solve(X, y, ridge = 0) {
-  const n = X[0].length, N = Array.from({ length: n }, () => new Float64Array(n + 1));
-  for (let k = 0; k < X.length; k += 1) for (let a = 0; a < n; a += 1) { const xa = X[k][a]; if (!xa) continue; for (let b = 0; b < n; b += 1) N[a][b] += xa * X[k][b]; N[a][n] += xa * y[k]; }
-  for (let a = 0; a < n; a += 1) N[a][a] *= 1 + ridge;
+/** Gauss-Jordan on [M | B]: returns M^-1 B (B with q columns). */
+function gaussJordan(M, B) {
+  const n = M.length, q = B[0].length, A = M.map((row, r) => Float64Array.from([...row, ...B[r]]));
   for (let c = 0; c < n; c += 1) {
-    let p = c; for (let r = c + 1; r < n; r += 1) if (Math.abs(N[r][c]) > Math.abs(N[p][c])) p = r;
-    [N[c], N[p]] = [N[p], N[c]];
-    if (Math.abs(N[c][c]) < 1e-18) continue;
-    for (let r = 0; r < n; r += 1) { if (r === c) continue; const m = N[r][c] / N[c][c]; if (!m) continue; for (let b = c; b <= n; b += 1) N[r][b] -= m * N[c][b]; }
+    let p = c; for (let r = c + 1; r < n; r += 1) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+    [A[c], A[p]] = [A[p], A[c]];
+    if (Math.abs(A[c][c]) < 1e-18) continue;
+    const d = A[c][c]; for (let b = 0; b < n + q; b += 1) A[c][b] /= d;
+    for (let r = 0; r < n; r += 1) { if (r === c) continue; const m = A[r][c]; if (!m) continue; for (let b = 0; b < n + q; b += 1) A[r][b] -= m * A[c][b]; }
   }
-  return Array.from({ length: n }, (_, c) => (Math.abs(N[c][c]) < 1e-18 ? 0 : N[c][n] / N[c][c]));
+  return A.map((row) => Array.from(row.subarray(n)));
+}
+/** Least squares by normal equations with a relative ridge on the diagonal: the coefficients for each right-hand side and the inverse normal matrix. */
+function solve(X, ys, ridge = 0) {
+  const n = X[0].length, N = Array.from({ length: n }, () => new Float64Array(n)), R = Array.from({ length: n }, () => new Float64Array(ys.length));
+  for (let k = 0; k < X.length; k += 1) for (let a = 0; a < n; a += 1) { const xa = X[k][a]; if (!xa) continue; for (let b = 0; b < n; b += 1) N[a][b] += xa * X[k][b]; for (let y = 0; y < ys.length; y += 1) R[a][y] += xa * ys[y][k]; }
+  for (let a = 0; a < n; a += 1) N[a][a] *= 1 + ridge;
+  const I = Array.from({ length: n }, (_, r) => Array.from({ length: n }, (_, c) => (r === c ? 1 : 0)));
+  const sol = gaussJordan(N, N.map((_, r) => [...R[r], ...I[r]]));
+  return { coef: ys.map((_, y) => sol.map((row) => row[y])), inverse: sol.map((row) => row.slice(ys.length)) };
 }
 /**
  * Attribution (Amendment 2): the RTN error series at times tau (days from the window's start) over a window of `windowDays` against a
  * trend (constant, linear, quadratic), the lunar monthly and semi-monthly lines (windows of 5 days or more), and the (m, j) grid with
  * frequencies merged below 1 / windowDays. Shares: the RMS (and maximum, roughness) of each reconstructed series.
  */
-export function attribute(tau, rtn, nRevDay, windowDays) {
+export function attribute(tau, rtn, nRevDay, windowDays, blockDays) {
   // Conditioning (Amendment 3): lines merged below 1.5 / window (the Rayleigh limit), nothing above 0.9 of the sampling's Nyquist
   // frequency, a quadratic trend only on windows of 5 days or more, and a ridge of 1e-4 on the normal matrix's diagonal.
   const res = 1.5 / windowDays;
@@ -108,27 +116,76 @@ export function attribute(tau, rtn, nRevDay, windowDays) {
   const trendCols = quadratic ? 3 : 2;
   const row = (t) => [1, t, ...(quadratic ? [t * t] : []), ...lunar.flatMap((fr) => [Math.cos(2 * Math.PI * fr * t), Math.sin(2 * Math.PI * fr * t)]), ...kept.flatMap((g) => [Math.cos(2 * Math.PI * g.f * t), Math.sin(2 * Math.PI * g.f * t)])];
   const X = tau.map(row);
-  const coef = [0, 1, 2].map((ax) => solve(X, rtn.map((p) => p[ax]), 1e-4));
-  const series = (cols) => tau.map((t, k) => [0, 1, 2].map((ax) => cols.reduce((s, c) => s + coef[ax][c] * X[k][c], 0)));
+  const p = X[0].length, Nn = X.length;
+  const ys = [0, 1, 2].map((ax) => rtn.map((q) => q[ax]));
+  const { coef } = solve(X, ys, 1e-4);
+  const residual = tau.map((t, k) => [0, 1, 2].map((ax) => rtn[k][ax] - coef[ax].reduce((s, c, ci) => s + c * X[k][ci], 0)));
   const kindOf = (g) => (g.members.every((x) => x.m === 0) ? 'zonal' : g.members.every((x) => x.m > 0) ? (g.members.every((x) => x.j === 0) ? 'm-daily' : 'tesseral') : 'mixed');
   const base = trendCols + 2 * lunar.length;
-  const families = kept.map((g, gi) => ({ labels: g.labels, cyclesPerDay: +g.f.toFixed(3), kind: kindOf(g), cols: [base + 2 * gi, base + 2 * gi + 1],
-    amplitudeM: Math.hypot(...[0, 1, 2].flatMap((ax) => [coef[ax][base + 2 * gi], coef[ax][base + 2 * gi + 1]])) })).sort((a, b) => b.amplitudeM - a.amplitudeM);
-  const colsOf = (kinds) => families.filter((g) => kinds.includes(g.kind)).flatMap((g) => g.cols);
-  const share = (cols) => { if (!cols.length) return { rmsM: 0, maxM: 0, roughM: 0 }; const s = series(cols), n = norms(s); return { rmsM: rms(n), maxM: Math.max(...n), roughM: roughness(s) }; };
-  const residual = tau.map((t, k) => [0, 1, 2].map((ax) => rtn[k][ax] - coef[ax].reduce((s, c, ci) => s + c * X[k][ci], 0)));
-  const shares = { secular: share(Array.from({ length: trendCols }, (_, c) => c)), lunisolar: share(lunar.flatMap((_, li) => [trendCols + 2 * li, trendCols + 2 * li + 1])), zonal: share(colsOf(['zonal'])), tesseral: share(colsOf(['tesseral', 'm-daily'])), mixed: share(colsOf(['mixed'])), unexplained: { rmsM: rms(norms(residual)) } };
+  const trendCols_ = Array.from({ length: trendCols }, (_, c) => c), lunarCols = lunar.flatMap((_, li) => [trendCols + 2 * li, trendCols + 2 * li + 1]);
+  const famCols = kept.map((g, gi) => ({ g, cols: [base + 2 * gi, base + 2 * gi + 1], kind: kindOf(g) }));
+  const colsOf = (kinds) => famCols.filter((x) => kinds.includes(x.kind)).flatMap((x) => x.cols);
+  const SHARE_COLS = { secular: trendCols_, lunisolar: lunarCols, zonal: colsOf(['zonal']), tesseral: colsOf(['tesseral', 'm-daily']), mixed: colsOf(['mixed']) };
+  const stat = (s) => { const n = norms(s); return { rmsM: rms(n), maxM: Math.max(...n), roughM: roughness(s) }; };
+  const statsOf = (cf) => Object.fromEntries(Object.entries(SHARE_COLS).map(([name, cols]) => [name, cols.length ? stat(tau.map((t, k) => [0, 1, 2].map((ax) => cols.reduce((s, c) => s + cf[ax][c] * X[k][c], 0)))) : { rmsM: 0, maxM: 0, roughM: 0 }]));
+  const point = statsOf(coef);
+  // Amendment 6: delete-one-block jackknife over blocks of `blockDays` (one revolution forward, one day in-arc); interval = point +- 2 SE, lower clipped at 0.
+  const blockIds = tau.map((t) => Math.min(Math.floor(t / blockDays), Math.ceil(windowDays / blockDays) - 1));
+  const blocks = [...new Set(blockIds)];
+  const K = blocks.length;
+  let lo = {}, hi = {}, se = {};
+  if (K >= 3) {
+    const reps = blocks.map((bId) => { const keep = tau.map((_, k) => blockIds[k] !== bId); const Xs = X.filter((_, k) => keep[k]); return statsOf(solve(Xs, ys.map((y) => y.filter((_, k) => keep[k])), 1e-4).coef); });
+    for (const name of Object.keys(SHARE_COLS)) {
+      se[name] = {}; lo[name] = {}; hi[name] = {};
+      for (const s of ['rmsM', 'maxM', 'roughM']) {
+        const v = reps.map((r) => r[name][s]), mean = v.reduce((a, b) => a + b, 0) / K;
+        const sd = Math.sqrt(((K - 1) / K) * v.reduce((a, b) => a + (b - mean) ** 2, 0));
+        se[name][s] = sd; lo[name][s] = Math.max(0, point[name][s] - 2 * sd); hi[name][s] = point[name][s] + 2 * sd;
+      }
+    }
+  }
+  const shares = Object.fromEntries(Object.keys(SHARE_COLS).map((name) => [name, { ...point[name], lo: lo[name] ?? null, hi: hi[name] ?? null, se: se[name] ?? null }]));
+  shares.unexplained = { rmsM: rms(norms(residual)) };
+  const families = famCols.map(({ g, cols, kind }) => ({ labels: g.labels, cyclesPerDay: +g.f.toFixed(3), kind, amplitudeM: Math.hypot(...[0, 1, 2].flatMap((ax) => cols.map((c) => coef[ax][c]))) })).sort((a, b) => b.amplitudeM - a.amplitudeM);
   const total = rms(norms(rtn));
   const quadrature = Math.hypot(...Object.values(shares).map((s) => s.rmsM));
   return {
     basis: { groups: kept.length, droppedAboveNyquist: dropped, nyquistCyclesPerDay: +nyquist.toFixed(2), maxJResolved: Math.floor(0.9 * nyquist / nRevDay), lunar: lunar.length > 0, quadratic, ridge: 1e-4 },
     // the shares in quadrature against the series' own RMS: above 1.5 the fit is ill-conditioned and the shares are not read
     conditioned: quadrature <= 1.5 * total, sharesInQuadratureM: quadrature, totalRmsM: total,
+    jackknife: { blocks: K, blockDays, parameters: p, samples: Nn, interval: K >= 3 },
     shares,
-    families: families.map(({ cols, ...g }) => g),
+    families,
   };
 }
+/** Amendment 5.3 / 6: the three-way reading of a share against the bounds; with no interval (fewer than three blocks) the leg is undecided (no interval). */
+const statName = { rms: 'rmsM', max: 'maxM', rough: 'roughM' };
+export function threeWay(share, b, stats) {
+  if (!share.lo || !share.hi) return 'undecided (no interval)';
+  if (stats.every((s) => share.hi[statName[s]] <= b[s])) return 'pass';
+  if (stats.some((s) => share.lo[statName[s]] > b[s])) return 'fail';
+  return 'undecided';
+}
+const WORSE = { fail: 3, undecided: 2, 'undecided (no interval)': 2, pass: 1 };
 
+/**
+ * Amendments 2, 3 and 5: the raw registered line, the attributed legs (forward always; in-arc where the arc resolves j 8), each three-way,
+ * and the cell's verdict: "pass (raw)" when the raw line passes; "withheld" when the shares are not conditioned; else the worse leg, "(attributed)".
+ */
+export function verdictOf(forward, inArc, b) {
+  const rawPass = forward.rmsM <= b.rms && forward.maxM <= b.max && forward.roughM <= b.rough;
+  const inArcLeg = inArc.basis.maxJResolved >= 8;
+  const legs = { forward: forward.conditioned ? threeWay(forward.shares.tesseral, b, ['rms', 'max', 'rough']) : 'withheld', inArc: inArcLeg ? (inArc.conditioned ? threeWay(inArc.shares.tesseral, b, ['rms', 'max']) : 'withheld') : 'not applicable' };
+  let verdict;
+  const resonant = forward.shares.tesseral.rmsM === 0 && inArc.shares.tesseral.rmsM === 0 && forward.shares.mixed.rmsM > 0;
+  const decided = [legs.forward, legs.inArc].filter((x) => x === 'pass' || x === 'fail' || x === 'undecided');
+  if (rawPass) verdict = 'pass (raw)';
+  else if (legs.forward === 'withheld' || legs.inArc === 'withheld') verdict = 'withheld';
+  else if (!decided.length) verdict = 'undecided (no interval)';
+  else { const worst = decided.sort((x, y) => WORSE[y] - WORSE[x])[0]; verdict = worst === 'pass' && resonant ? 'pass (attributed, resonant: see mixed share)' : `${worst} (attributed)`; }
+  return { rawPass, inArcLeg, legs, verdict, rules: { raw: 'forward RMS, maximum and roughness within max(1, 0.02 A) / max(5, 0.10 A) / max(0.1, 0.005 A)', attributed: 'the m > 0 periodic share: upper bound under the bound = pass, lower bound over = fail, else undecided; in-arc leg where the arc resolves j 8' } };
+}
 if (args.run) {
   const ARM = ARMS[args.arm ?? 'primary'];
   if (!ARM) throw new Error(`--arm ${args.arm}: primary or secondary`);
@@ -177,21 +234,18 @@ if (args.run) {
       const zonalOnly = await fly(O.repackOcm(set, (t) => { t.PERTURBATIONS.MAXIMUM_TESSERAL_DEGREE = 0; }), epochs);
       const A = rms(withCaps.map((p, k) => Math.hypot(...p.map((x, ax) => (x - zonalOnly[k][ax]) * 1000))));
       const b = bounds(A);
-      const forward = { samples: profile.length, gridSeconds: gridSeconds(c.n), rmsM: rms(err3), maxM: Math.max(...err3), roughM: roughness(rtn), rtnRmsM: [0, 1, 2].map((ax) => rms(rtn.map((p) => p[ax]))), ...attribute(tau, rtn, r.fitted.n, 1) };
+      const forward = { samples: profile.length, gridSeconds: gridSeconds(c.n), rmsM: rms(err3), maxM: Math.max(...err3), roughM: roughness(rtn), rtnRmsM: [0, 1, 2].map((ax) => rms(rtn.map((p) => p[ax]))), ...attribute(tau, rtn, r.fitted.n, 1, 1 / r.fitted.n) };
       // In-arc (Amendment 1.3, 2): the fitted set on the arc's 30-minute samples against the reference there, RTN at the reference state.
       const arcOem = OEM.getRootAsOEM(new fb.ByteBuffer((await runModelTruth({ ...fixture, fitInput: true })).ephemeris.payload)).unpack().EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES;
       const arcFlown = await fly(set, arcOem.map((l) => l.EPOCH));
       const arcRtn = arcOem.map((l, k) => rtnOf([arcFlown[k][0] - l.X, arcFlown[k][1] - l.Y, arcFlown[k][2] - l.Z], [l.X, l.Y, l.Z], [l.X_DOT, l.Y_DOT, l.Z_DOT]));
       const arcTau = arcOem.map((l) => (Date.parse(`${l.EPOCH}Z`) - Date.parse(`${arcOem[0].EPOCH}Z`)) / DAY);
       const arcNorm = norms(arcRtn);
-      const inArc = { samples: arcRtn.length, rmsM: rms(arcNorm), maxM: Math.max(...arcNorm), fitRmsKm: r.fitted.wrms, rtnRmsM: [0, 1, 2].map((ax) => rms(arcRtn.map((p) => p[ax]))), ...attribute(arcTau, arcRtn, r.fitted.n, c.arcDays) };
+      const inArc = { samples: arcRtn.length, rmsM: rms(arcNorm), maxM: Math.max(...arcNorm), fitRmsKm: r.fitted.wrms, rtnRmsM: [0, 1, 2].map((ax) => rms(arcRtn.map((p) => p[ax]))), ...attribute(arcTau, arcRtn, r.fitted.n, c.arcDays, 1) };
       Object.assign(row, { flown: true, fitted: r.fitted, initialGcrfKm: r.fixture.initialGcrfKm, A_m: A, bounds: b, forward, inArc,
         // the registered raw line and the tesseral verdict (Amendment 2)
         rawPass: forward.rmsM <= b.rms && forward.maxM <= b.max && forward.roughM <= b.rough,
-        // Amendment 3: the in-arc leg applies where the arc's 30-minute sampling resolves the grid to j 8 (n <= 2.7 rev/day) and the fit is conditioned
-        inArcLeg: inArc.basis.maxJResolved >= 8 && inArc.conditioned,
-        tesseralPass: forward.conditioned && forward.shares.tesseral.rmsM <= b.rms && forward.shares.tesseral.maxM <= b.max && forward.shares.tesseral.roughM <= b.rough
-          && (!(inArc.basis.maxJResolved >= 8 && inArc.conditioned) || (inArc.shares.tesseral.rmsM <= b.rms && inArc.shares.tesseral.maxM <= b.max)),
+        ...verdictOf(forward, inArc, b),
         reference: `propagator/ffm ${PIN.ffm.version}: EGM96 ${ARM.field[0]}x${ARM.field[1]}, Sun and Moon point masses (DE440), no drag, SRP, tides, relativity or Earth radiation; RK78 rel 1e-12 abs 1e-9, steps 0.01 to 300 s; zero EOP`,
         referenceIntegrator: r.fixture.referenceIntegrator, kernelSha256: r.kernelSha256 });
       if (c.convergence) {
@@ -203,7 +257,7 @@ if (args.run) {
       row.seconds = (Date.now() - t0) / 1000;
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
       const sh = (s) => `${f(s.secular.rmsM)}/${f(s.lunisolar.rmsM)}/${f(s.zonal.rmsM)}/${f(s.tesseral.rmsM)}/${f(s.mixed.rmsM)}`;
-      console.log(c.key, row.tesseralPass ? 'TESSERAL-PASS' : 'TESSERAL-FAIL', row.rawPass ? 'raw-pass' : 'raw-fail', `arc ${c.arcDays} d in-arc ${f(inArc.rmsM)}/${f(inArc.maxM)} [${sh(inArc.shares)}${inArc.conditioned ? '' : ' ILL'} j<=${inArc.basis.maxJResolved}] fwd${forward.conditioned ? '' : ' ILL'} ${f(forward.rmsM)}/${f(forward.maxM)}/${f(forward.roughM, 3)} [${sh(forward.shares)}] A ${f(A)} b ${f(b.rms)}/${f(b.max)}/${f(b.rough, 3)}`, row.convergenceMaxM !== undefined ? `conv ${row.convergenceMaxM.toExponential(1)}` : '', `${row.seconds.toFixed(0)} s`);
+      console.log(c.key, row.verdict, `legs ${row.legs.forward}/${row.legs.inArc}`, `tess fwd ${f(forward.shares.tesseral.lo?.rmsM)}..${f(forward.shares.tesseral.rmsM)}..${f(forward.shares.tesseral.hi?.rmsM)} in-arc ${f(inArc.shares.tesseral.lo?.rmsM)}..${f(inArc.shares.tesseral.rmsM)}..${f(inArc.shares.tesseral.hi?.rmsM)}`, `arc ${c.arcDays} d in-arc ${f(inArc.rmsM)}/${f(inArc.maxM)} [${sh(inArc.shares)}${inArc.conditioned ? '' : ' ILL'} j<=${inArc.basis.maxJResolved}] fwd${forward.conditioned ? '' : ' ILL'} ${f(forward.rmsM)}/${f(forward.maxM)}/${f(forward.roughM, 3)} [${sh(forward.shares)}] A ${f(A)} b ${f(b.rms)}/${f(b.max)}/${f(b.rough, 3)}`, row.convergenceMaxM !== undefined ? `conv ${row.convergenceMaxM.toExponential(1)}` : '', `${row.seconds.toFixed(0)} s`);
     } catch (error) {
       row.flown = false; row.error = String(error?.message ?? error).slice(0, 300); row.seconds = (Date.now() - t0) / 1000;
       fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
@@ -220,32 +274,36 @@ export function table(outDir = RESULTS) {
   const section = (arm) => {
     const rows = readRows(path.join(RESULTS, ARMS[arm].dir)).filter((r) => (r.arm ?? 'secondary') === arm || arm === 'secondary');
     const byKey = new Map(rows.map((r) => [r.key, r]));
-    const cellOf = (c) => { const r = byKey.get(c.key); if (!r) return { key: c.key, state: 'unmeasured' }; if (!r.flown) return { key: c.key, state: r.reason ?? 'error', error: r.error }; return { key: c.key, state: r.tesseralPass ? 'pass' : 'fail', ...r }; };
+    const cellOf = (c) => { const r = byKey.get(c.key); if (!r) return { key: c.key, state: 'unmeasured' }; if (!r.flown) return { key: c.key, state: r.reason ?? 'error', error: r.error }; return { key: c.key, state: r.verdict, ...r }; };
     const cells = all.map(cellOf);
-    const flown = cells.filter((x) => x.state === 'pass' || x.state === 'fail');
+    const flown = cells.filter((x) => x.flown);
+    const isPass = (x) => x.state.startsWith('pass'), isFail = (x) => x.state.startsWith('fail');
     const top = (x) => x.forward.families.filter((g) => g.amplitudeM >= 0.1 * x.forward.rmsM).slice(0, 8).map(({ labels, cyclesPerDay, kind, amplitudeM }) => ({ labels: labels.slice(0, 3), cyclesPerDay, kind, amplitudeM }));
     const regimes = [THEMIS_D, ...REGIMES].map((r) => ({ regime: r.name, arcDays: arcDays(r.n), cells: cells.filter((x) => x.key.startsWith(`${r.name}|`)).map((x) => ({ e: Number(x.key.split('|')[1]), state: x.state, error: x.error, arcDays: x.arcDays, A_m: x.A_m, bounds: x.bounds, fittedE: x.fitted?.e, gridExercised: x.gridExercised, convergenceMaxM: x.convergenceMaxM, convergencePass: x.convergencePass,
-      rawPass: x.rawPass, tesseralPass: x.tesseralPass, inArc: x.inArc && { rmsM: x.inArc.rmsM, maxM: x.inArc.maxM, shares: x.inArc.shares }, forward: x.forward && { rmsM: x.forward.rmsM, maxM: x.forward.maxM, roughM: x.forward.roughM, shares: x.forward.shares, families: top(x) } })) }));
+      rawPass: x.rawPass, verdict: x.verdict, legs: x.legs, inArc: x.inArc && { rmsM: x.inArc.rmsM, maxM: x.inArc.maxM, conditioned: x.inArc.conditioned, maxJResolved: x.inArc.basis.maxJResolved, shares: x.inArc.shares }, forward: x.forward && { rmsM: x.forward.rmsM, maxM: x.forward.maxM, roughM: x.forward.roughM, conditioned: x.forward.conditioned, shares: x.forward.shares, families: top(x) } })) }));
     const stepOf = (name) => { const lo = byKey.get(`${name}|0.29`), hi = byKey.get(`${name}|0.3`); if (!lo?.flown || !hi?.flown) return { regime: name, measured: false }; const resolution = (lo.convergenceMaxM ?? 0) + (hi.convergenceMaxM ?? 0); const s = { regime: name, measured: true, e029: { rmsM: lo.forward.rmsM, maxM: lo.forward.maxM, tesseralRmsM: lo.forward.shares.tesseral.rmsM, inArcRmsM: lo.inArc.rmsM, fittedE: lo.fitted.e }, e030: { rmsM: hi.forward.rmsM, maxM: hi.forward.maxM, tesseralRmsM: hi.forward.shares.tesseral.rmsM, inArcRmsM: hi.inArc.rmsM, fittedE: hi.fitted.e, gridExercised: hi.gridExercised }, stepRmsM: hi.forward.rmsM - lo.forward.rmsM, stepMaxM: hi.forward.maxM - lo.forward.maxM, stepTesseralRmsM: hi.forward.shares.tesseral.rmsM - lo.forward.shares.tesseral.rmsM, stepInArcRmsM: hi.inArc.rmsM - lo.inArc.rmsM, resolutionM: resolution }; s.claimed = Math.abs(s.stepRmsM) > resolution && Math.abs(s.stepMaxM) > resolution; return s; };
     const e001 = regimes.filter((r) => r.regime !== 'THEMIS D').map((r) => ({ regime: r.regime, ...r.cells.find((c) => c.e === 0.001) }));
-    return { arm, field: ARMS[arm].field, caps: ARMS[arm].caps, rows: rows.length, flown: flown.length, pass: flown.filter((x) => x.state === 'pass').length, fail: flown.filter((x) => x.state === 'fail').length, rawPass: flown.filter((x) => x.rawPass).length, unmeasured: cells.filter((x) => x.state === 'unmeasured').length,
-      e001: { pass: e001.filter((x) => x.state === 'pass').map((x) => x.regime), fail: e001.filter((x) => x.state === 'fail').map((x) => x.regime), unmeasured: e001.filter((x) => x.state === 'unmeasured').map((x) => x.regime) }, steps: ['THEMIS D', 'Molniya', 'GTO'].map(stepOf), regimes };
+    const verdicts = Object.fromEntries(['pass (raw)', 'pass (attributed)', 'pass (attributed, resonant: see mixed share)', 'undecided (attributed)', 'undecided (no interval)', 'fail (attributed)', 'withheld'].map((v) => [v, flown.filter((x) => x.state === v).length]));
+    return { arm, field: ARMS[arm].field, caps: ARMS[arm].caps, rows: rows.length, flown: flown.length, verdicts, pass: flown.filter(isPass).length, fail: flown.filter(isFail).length, rawPass: flown.filter((x) => x.rawPass).length, unmeasured: cells.filter((x) => x.state === 'unmeasured').length,
+      e001: { pass: e001.filter((x) => x.state && isPass(x)).map((x) => `${x.regime} [${x.state}]`), fail: e001.filter((x) => x.state && isFail(x)).map((x) => `${x.regime} [${x.state}]`), undecided: e001.filter((x) => x.state && x.state.startsWith('undecided')).map((x) => `${x.regime} [${x.state}]`), withheld: e001.filter((x) => x.state === 'withheld').map((x) => x.regime), unmeasured: e001.filter((x) => x.state === 'unmeasured').map((x) => x.regime) }, steps: ['THEMIS D', 'Molniya', 'GTO'].map(stepOf), regimes };
   };
   const out = { registration: REGISTRATION, pins: PIN, primary: section('primary'), secondary: section('secondary') };
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'table.json'), `${JSON.stringify(out, null, 1)}\n`);
-  const sh = (s) => (s ? `${f(s.secular.rmsM)} / ${f(s.lunisolar.rmsM)} / ${f(s.zonal.rmsM)} / ${f(s.tesseral.rmsM)} / ${f(s.mixed.rmsM)}` : '-');
+  const iv = (s, k) => (s ? (s.lo ? `${f(s[k])} [${f(s.lo[k])}, ${f(s.hi[k])}]` : `${f(s[k])} [no interval]`) : '-');
+  const sh = (s) => (s ? `${iv(s.secular, 'rmsM')} / ${iv(s.zonal, 'rmsM')} / ${iv(s.tesseral, 'rmsM')} / ${iv(s.mixed, 'rmsM')}` : '-');
   const fam = (c) => (c.forward?.families?.length ? c.forward.families.slice(0, 4).map((g) => `${g.labels.slice(0, 2).join('=')} ${g.kind} ${f(g.amplitudeM, 1)}`).join('; ') : '-');
-  const line = (r, c) => `| ${r.regime} | ${c.e} | ${c.state} | ${c.rawPass === undefined ? '-' : c.rawPass ? 'pass' : 'fail'} | ${c.arcDays ?? '-'} | ${c.inArc ? `${f(c.inArc.rmsM)} / ${f(c.inArc.maxM)}` : '-'} | ${sh(c.inArc?.shares)} | ${f(c.A_m, 1)} | ${c.forward ? `${f(c.forward.rmsM)} / ${f(c.forward.maxM)} / ${f(c.forward.roughM, 3)}` : '-'} | ${sh(c.forward?.shares)} | ${c.forward ? `${f(c.forward.shares.tesseral.rmsM)} / ${f(c.forward.shares.tesseral.maxM)} / ${f(c.forward.shares.tesseral.roughM, 3)}` : '-'} | ${c.bounds ? `${f(c.bounds.rms)} / ${f(c.bounds.max)} / ${f(c.bounds.rough, 3)}` : '-'} | ${c.convergenceMaxM !== undefined ? `${c.convergenceMaxM.toExponential(1)} ${c.convergencePass ? 'ok' : 'FAIL'}` : '-'} | ${fam(c)} |`;
+  const cond = (x) => (x ? (x.conditioned ? 'conditioned' : 'ILL') : '-');
+  const line = (r, c) => `| ${r.regime} | ${c.e} | ${c.state} | ${c.rawPass === undefined ? '-' : c.rawPass ? 'pass (raw)' : 'fail (raw)'} | ${c.legs ? `${c.legs.forward} / ${c.legs.inArc}` : '-'} | ${c.arcDays ?? '-'} | ${c.inArc ? `${f(c.inArc.rmsM)} / ${f(c.inArc.maxM)} (${cond(c.inArc)}, j<=${c.inArc.maxJResolved})` : '-'} | ${sh(c.inArc?.shares)} | ${f(c.A_m, 1)} | ${c.forward ? `${f(c.forward.rmsM)} / ${f(c.forward.maxM)} / ${f(c.forward.roughM, 3)} (${cond(c.forward)})` : '-'} | ${sh(c.forward?.shares)} | ${c.forward ? `${iv(c.forward.shares.tesseral, 'rmsM')} / ${iv(c.forward.shares.tesseral, 'maxM')} / ${iv(c.forward.shares.tesseral, 'roughM')}` : '-'} | ${c.bounds ? `${f(c.bounds.rms)} / ${f(c.bounds.max)} / ${f(c.bounds.rough, 3)}` : '-'} | ${c.convergenceMaxM !== undefined ? `${c.convergenceMaxM.toExponential(1)} ${c.convergencePass ? 'ok' : 'FAIL'}` : '-'} | ${fam(c)} |`;
   const sectionMd = (s, title) => [`## ${title}: FFM EGM96 ${s.field[0]}x${s.field[1]} against the module at caps ${s.caps[0]} / ${s.caps[1]}`, '',
-    `Rows ${s.rows}; cells flown ${s.flown}: tesseral verdict pass ${s.pass}, fail ${s.fail}; raw registered line pass ${s.rawPass}; unmeasured ${s.unmeasured}.`, '',
-    `### e 0.001, every regime (tesseral verdict)`, `Pass: ${s.e001.pass.join(', ') || 'none'}. Fail: ${s.e001.fail.join(', ') || 'none'}. Unmeasured: ${s.e001.unmeasured.join(', ') || 'none'}.`, '',
+    `Rows ${s.rows}; cells flown ${s.flown}: ${Object.entries(s.verdicts).map(([k, v]) => `${k} ${v}`).join(', ')}; raw registered line pass ${s.rawPass}; unmeasured ${s.unmeasured}.`, '',
+    `### e 0.001, every regime (verdict; Amendment 5 three-way reading)`, `Pass: ${s.e001.pass.join(', ') || 'none'}. Fail: ${s.e001.fail.join(', ') || 'none'}. Undecided: ${s.e001.undecided.join(', ') || 'none'}. Withheld: ${s.e001.withheld.join(', ') || 'none'}. Unmeasured: ${s.e001.unmeasured.join(', ') || 'none'}.`, '',
     `### The e 0.3 step (forward-day error, e 0.30 flight minus e 0.29 flight; claimed only beyond the sum of the two convergence figures)`,
     `| Orbit | e 0.29 RMS / max (m) | e 0.30 RMS / max (m) | Step RMS / max (m) | Tesseral share 0.29 -> 0.30 (m) | In-arc RMS 0.29 -> 0.30 (m) | Reference resolution (m) | Claimed | Fitted e 0.29 / 0.30 | Grid exercised |`, `| --- | --: | --: | --: | --: | --: | --: | --- | --: | --- |`,
     ...s.steps.map((x) => (x.measured ? `| ${x.regime} | ${f(x.e029.rmsM)} / ${f(x.e029.maxM)} | ${f(x.e030.rmsM)} / ${f(x.e030.maxM)} | ${f(x.stepRmsM)} / ${f(x.stepMaxM)} | ${f(x.e029.tesseralRmsM)} -> ${f(x.e030.tesseralRmsM)} | ${f(x.e029.inArcRmsM)} -> ${f(x.e030.inArcRmsM)} | ${x.resolutionM.toExponential(1)} | ${x.claimed ? 'yes' : 'below the reference resolution'} | ${f(x.e029.fittedE, 4)} / ${f(x.e030.fittedE, 4)} | ${x.e030.gridExercised ? 'yes' : 'NO'} |` : `| ${x.regime} | unmeasured | unmeasured | unmeasured | - | - | - | - | - | - |`)), '',
-    `### Every cell (shares: secular / lunisolar / zonal / tesseral / mixed, RMS m)`,
-    `| Regime | e | Tesseral verdict | Raw line | Arc (d) | In-arc RMS / max (m) | In-arc shares | A (m) | Forward RMS / max / roughness (m) | Forward shares | Tesseral share RMS / max / roughness (m) | Bounds (m) | Convergence (m) | Largest forward families |`,
-    `| --- | --: | --- | --- | --: | --: | --- | --: | --: | --- | --: | --: | --: | --- |`,
+    `### Every cell (shares: secular-and-long-period / zonal / tesseral / mixed, RMS m with [lower, upper] by Amendment 5.2; the raw line and the attributed share side by side)`,
+    `| Regime | e | Verdict | Raw registered line | Attributed legs forward / in-arc | Arc (d) | In-arc RMS / max (m) | In-arc shares | A (m) | Forward RMS / max / roughness (m) | Forward shares | Tesseral share RMS / max / roughness (m) [lower, upper] | Bounds (m) | Convergence (m) | Largest forward families (amplitude, m) |`,
+    `| --- | --: | --- | --- | --- | --: | --: | --- | --: | --: | --- | --: | --: | --: | --- |`,
     ...s.regimes.flatMap((r) => r.cells.map((c) => line(r, c))), ''];
   const md = [`# propagator/sdn-ap 0.6.3 in every regime against an independent full-force reference`, '',
     `Registration: ${REGISTRATION} (Amendments 1 and 2). Reference: propagator/ffm ${PIN.ffm.version}, EGM96 to the arm's degree and order, Sun and Moon point masses from DE440, no drag, SRP, tides, relativity or Earth radiation; RK78 rel 1e-12, steps to 300 s; convergence: the 1e-13 / 150 s reference, maximum position difference over the forward day. Module: propagator/sdn-ap ${PIN.sdnAp.version} fitted to the reference's arc (3 / 6 / 10 days by regime, 30-minute samples, no atmosphere, BTERM and AGOM held at 0), flown one day forward on a whole-second grid of 64 samples a revolution. In-arc: the fitted set on the arc's samples against the reference there, RTN. A: the model's own tesseral displacement (its caps against tesseral cap 0). Bounds: max(1 m, 0.02 A) RMS, max(5 m, 0.10 A) maximum, max(0.1 m, 0.005 A) roughness. Tesseral verdict: the reconstructed m > 0 periodic share (in-arc RMS and maximum, forward RMS, maximum and roughness) within the bounds; the raw line is the registered full-error reading. Shares are RMS of the reconstructed series: secular (trend), lunisolar (lunar monthly and semi-monthly, arcs of 5 days or more), zonal (m = 0 groups, the J21-J31 tail included on the primary arm), tesseral (m > 0 groups), mixed (groups holding both; the resonant one-cycle group of the one-day orbits). Families: (m, j), j the multiple of the mean anomaly, m the order; the largest four on the forward day with amplitude (m). The four smoke cells of the vacuum frame (smoke-no-third-body.jsonl) enter no table.`, '',
@@ -254,7 +312,7 @@ export function table(outDir = RESULTS) {
   return out;
 }
 
-if (args.table) { const out = table(args.out ?? RESULTS); for (const arm of ['primary', 'secondary']) { const s = out[arm]; console.log(arm, JSON.stringify({ rows: s.rows, flown: s.flown, pass: s.pass, fail: s.fail, rawPass: s.rawPass, unmeasured: s.unmeasured, e001: s.e001, steps: s.steps.map((x) => (x.measured ? { regime: x.regime, stepRmsM: x.stepRmsM, stepMaxM: x.stepMaxM, claimed: x.claimed, gridExercised: x.e030.gridExercised } : x)) })); } process.exit(0); }
+if (args.table) { const out = table(args.out ?? RESULTS); for (const arm of ['primary', 'secondary']) { const s = out[arm]; console.log(arm, JSON.stringify({ rows: s.rows, flown: s.flown, verdicts: s.verdicts, rawPass: s.rawPass, unmeasured: s.unmeasured, e001: s.e001, steps: s.steps.map((x) => (x.measured ? { regime: x.regime, stepRmsM: x.stepRmsM, stepMaxM: x.stepMaxM, claimed: x.claimed, gridExercised: x.e030.gridExercised } : x)) })); } process.exit(0); }
 
 if (args.check) {
   let failures = 0;
@@ -271,15 +329,15 @@ if (args.check) {
   check(rows.every((r) => r.sdnAp?.wasmSha256 === PIN.sdnAp.wasmSha256 && r.ffm?.wasmSha256 === PIN.ffm.wasmSha256), `every row on sdn-ap ${PIN.sdnAp.version} (${PIN.sdnAp.wasmSha256.slice(0, 12)}) and ffm ${PIN.ffm.version} (${PIN.ffm.wasmSha256.slice(0, 12)})`);
   check(primary.every((r) => r.arm === 'primary' && r.field?.[0] === 31 && r.caps?.[0] === 31 && r.caps?.[1] === 20), `every primary row is FFM 31x31 against the module at 31 / 20`);
   const flown = primary.filter((r) => r.flown);
-  check(flown.length > 0 && flown.every((r) => r.bounds && Number.isFinite(r.A_m) && typeof r.tesseralPass === 'boolean' && typeof r.rawPass === 'boolean' && r.inArc?.shares && r.forward?.shares), `${flown.length} flown primary cells each scored against its orbit-scaled bounds (A, max(1, 0.02 A) / max(5, 0.10 A) / max(0.1, 0.005 A)) with both shares`);
-  check(flown.filter((r) => !r.tesseralPass).every((r) => r.forward.families?.length > 0), `every failing primary cell (${flown.filter((r) => !r.tesseralPass).length}) names its families`);
+  check(flown.length > 0 && flown.every((r) => r.bounds && Number.isFinite(r.A_m) && typeof r.verdict === 'string' && typeof r.rawPass === 'boolean' && r.inArc?.shares?.tesseral && r.forward?.shares?.tesseral && 'lo' in r.forward.shares.tesseral), `${flown.length} flown primary cells each scored against its orbit-scaled bounds (A, max(1, 0.02 A) / max(5, 0.10 A) / max(0.1, 0.005 A)) with both shares and their jackknife intervals (or "no interval" stated)`);
+  check(flown.filter((r) => !r.verdict.startsWith('pass')).every((r) => r.forward.families?.length > 0), `every primary cell not passing (${flown.filter((r) => !r.verdict.startsWith('pass')).length}) names its families`);
   check(flown.filter((r) => r.convergence).every((r) => Number.isFinite(r.convergenceMaxM)), `every convergence cell carries its 1e-13 / 150 s figure`);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tesseral-all-regimes-'));
   table(tmp);
   check(['table.json', 'README.md'].every((n) => fs.existsSync(path.join(RESULTS, n)) && fs.readFileSync(path.join(tmp, n)).equals(fs.readFileSync(path.join(RESULTS, n)))), `results/ap-truth/tesseral-all-regimes/table.json and README.md reproduce from the rows`);
   fs.rmSync(tmp, { recursive: true, force: true });
   const t = JSON.parse(fs.readFileSync(path.join(RESULTS, 'table.json'), 'utf8')).primary;
-  check(t.e001.pass.length + t.e001.fail.length + t.e001.unmeasured.length === 17, `17 regimes at e 0.001 on the primary arm: tesseral pass ${t.e001.pass.length}, fail ${t.e001.fail.length}, unmeasured ${t.e001.unmeasured.length}`);
+  check(t.e001.pass.length + t.e001.fail.length + t.e001.undecided.length + t.e001.withheld.length + t.e001.unmeasured.length === 17, `17 regimes at e 0.001 on the primary arm: pass ${t.e001.pass.length}, fail ${t.e001.fail.length}, undecided ${t.e001.undecided.length}, withheld ${t.e001.withheld.length}, unmeasured ${t.e001.unmeasured.length}`);
   console.log(failures ? `FAIL (${failures})` : 'PASS');
   process.exit(failures ? 1 : 0);
 }

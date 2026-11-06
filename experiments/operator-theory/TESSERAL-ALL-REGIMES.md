@@ -163,6 +163,43 @@ rate together with the lunisolar and zonal long-period terms, reported as "secul
 fitted rate against DE440, or the analytic lunisolar theory) is therefore not decidable in this record; the trend share's size is the
 finding, and the decision needs an arc of a lunar month or more, its own record.
 
+## Amendment 5 (2026-11-06 11:20Z, SDN-AP through the coordinator; committed before the table is written)
+Amendments 3 and 4 stand as registered (mathematical failures, verdicts unread); the discarded first pass's disclosure stands word for
+word, its shares having been seen ("thousands of meters against a 14 m residual"), and GEO's lunisolar question stands as not decidable
+here, needing a monthly arc.
+1. Every regime's row shows both lines side by side: the raw registered forward line (RMS, maximum, roughness against the bounds) and
+   the attributed tesseral share, each verdict naming the rule it rests on and carrying the `conditioned` flag.
+2. A share is an estimate and carries an uncertainty, chosen here: the regression's formal error inflated for autocorrelation. Per axis
+   the residual variance s^2 = RSS / (N_eff - p) with N_eff = N (1 - rho) / (1 + rho), rho the residual's lag-one autocorrelation; the
+   coefficient covariance is s^2 times the inverse of the (ridged) normal matrix. For each basis group (and for the trend as a group) the
+   amplitude a_k is the norm of its coefficients over the three axes and sigma_k the square root of the sum of their variances; a
+   share's interval is the statistic (RMS, maximum, roughness) of its reconstructed series with every member group's series scaled by
+   (1 - 2 sigma_k / a_k), clipped at zero, for the lower bound and (1 + 2 sigma_k / a_k) for the upper bound. The point estimate is
+   the unscaled series.
+3. The attributed verdict is three-way per leg: "pass (attributed)" when the share's upper bound on every statistic is under the
+   regime's bound; "fail (attributed)" when its lower bound on any statistic is over the bound; "undecided (attributed)" otherwise.
+   Where the raw line passes the verdict is "pass (raw)" with no attribution needed; where the shares are not conditioned, "withheld".
+   The in-arc leg (Amendment 3) uses the same three-way reading where it applies; a cell's verdict is the worse of its legs (fail over
+   undecided over pass).
+4. Starlette's label (raw fail; forward tesseral share 6.4 m against 8.7 m in the validation read) waits on the share's interval.
+
+## Amendment 6 (2026-11-06 11:25Z, this lane; committed before the table is written)
+Amendment 5.2's chosen interval, the regression's formal error inflated for autocorrelation, was implemented and read on two trial
+cells (discarded): the forward residual is smooth (lag-one autocorrelation about 0.99), N_eff fell to about 5 against about 300
+parameters, and Starlette's forward tesseral share read 0 to 254 m around 6.4 m; GPS's read 0 to 0. The interval is degenerate and
+cannot carry a three-way reading. The other option Amendment 5.2 offered is taken in its block form: a delete-one-block jackknife over
+the series (blocks of one revolution on the forward day, one day on the arc), the regression re-solved without each block and the
+share statistics (RMS, maximum, roughness) recomputed on the full window; standard error sqrt((K - 1) / K sum (theta_i - mean)^2);
+interval point +- 2 SE, lower bound clipped at zero. With fewer than three blocks (the one-day orbits' forward day: one revolution)
+there is no interval and the leg reads "undecided (no interval)". A leg without an interval does not decide the cell: the cell's
+attributed verdict is the worse of the legs that carry an interval (the in-arc leg for the half-day and one-day orbits, whose forward day
+holds one or two revolutions); with no leg carrying one, "undecided (no interval)". At GEO, IGSO, QZSS and THEMIS D every (m, j) group
+merges with an m = 0 relative (j - m cycles per day) and is `mixed` by construction, so the tesseral share there is empty, the attributed
+leg reads pass on an empty share, and the finding of those regimes is the size of the mixed (resonant one-cycle and its harmonics) share,
+reported in-arc and forward as Amendment 3 states; their verdict is labeled "pass (attributed, resonant: see mixed share)". Trial reads
+(discarded): Starlette forward tesseral 6.42 m [1.57, 11.27] against 8.68 m, undecided; GPS in-arc 1.06 m [0.70, 1.42] against 1.00 m,
+undecided. Amendment 5's three-way rule is otherwise unchanged.
+
 ## Outputs and check
 Rows: results/ap-truth/tesseral-all-regimes/rows-<shard>.jsonl (one per cell: regime, elements, fitted elements, A, the bounds, RMS,
 maximum, roughness, the convergence figure where measured, families, verdict, the SHA-256 of both dists and of the runner, createdUtc).
