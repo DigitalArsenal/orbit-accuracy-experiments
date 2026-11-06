@@ -275,3 +275,9 @@ the reference's own second difference at 300 s across the window (a jump in the 
 the kernel's segment boundaries; H1 predicts no spike and a smooth day-by-day divergence between the two flights of the same set,
 largest where the truncated table's displacement against the quadrature (65 m RMS) is largest, and the same compensation on the
 neighboring cutoffs 2013-02-14 and 2013-02-16 of THEMIS A.
+Named separating tests (from the coordinator's candidates, before either runs): for H2, the agreement of the THEMIS A truth file with a
+second independent ephemeris over the arc and the 7-day flight (a disagreement above the candidate's day-3 change, about 125 m, or a
+maneuver or attitude event in the mission's records for the window, confirms H2); for H1, whether the truncated table's error against
+the quadrature, along the flown track, lines up with the long-period part of the candidate flight's error against truth on that window
+(correlation of the two series after removing harmonics of M above 10 n; a correlation above 0.8 with the table's error of the size of
+the difference between the two flights confirms H1).
