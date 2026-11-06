@@ -151,3 +151,13 @@ The probe arm, registered before its rows:
 The reading rule gains the measured clause: a cell is a candidate for a registered switch change elsewhere when its failing family is on
 the `set` path, the probe's verdict in that cell is pass (grid passes), the identity above the switch is kept, and the grid's differential
 cost is within the cold target; the module change itself, if any, stays a separate registered module record decided on these numbers.
+
+## Amendment 2 (2026-11-06 12:03Z, this lane; disclosure, written while the probe rows were being flown and before the table)
+The first pass's cell and pair rows (no module: derived from the landed rows) read a family group's path from the span of the whole
+group, but a landed forward group chains members within 1.5 cycles per day, so a group can span more than the arc resolves and a
+degenerate ladder with a far neighbor read "window-merged" (Molniya|0.31's (8,5)=(6,4)=(4,3) group). The path is read instead on the
+member clusters at the arc's resolution (1 / arcDays cycles per day): a cluster holding a zonal and a tesseral member is "degenerate
+(class)"; a zonal member alone in its cluster is "window-merged"; the slope of log amplitude against log e is taken on the leg the failing
+family was named from. The cell and pair rows are re-derived from the same landed rows under that rule (the first-pass rows removed; the
+cost, identity and probe rows untouched, no flight repeated); the first-pass readings that change are the path labels only. The earliest
+row of the record after this re-derivation is a cost row of the first pass, after the registration's commit.
