@@ -482,3 +482,12 @@ the mean anomaly given (the four mean-anomaly fixtures returned identical rows o
 the fit arc's start after the truth's start (fitStartDays 0.125, 0.25 and 0.375 days: a quarter, a half and three quarters of a
 12-hour revolution) at argument of perigee 270; the six fixtures are argument of perigee 270 with fitStartDays 0, 0.125, 0.25 and
 0.375, and argument of perigee 240 and 300.
+
+## Amendment 23 (2026-11-06, a fit's memory; registered before the release is measured)
+Read: with the fitter's ExactGridScope a THEMIS A fit's wasm memory is 491 MB against 0.6.2's 68 MB (the exact grids it built stayed
+idle in the cache). Rule: each exact grid is released when its last holder (its set) drops it; exact grids never enter the idle
+pool and are never lent to a shared lookup, so a fit's peak is the grids alive at once, not up to 128 retained. Budget: a fit's wasm
+linear-memory high-water mark at or below 160 MB (0.6.2: 68.2 MB), measured on THEMIS A 2013-02-15 (the fitter's fixture), the GTO
+fixture and the Molniya fixture; the fit's wall re-measured beside it (the release may cost rebuilds). E2E: after fit-then-flight
+the allocator's in-use bytes and the shared cache's contents (slots, held grid bytes; sdnap_wide_grid_stats) equal a fresh
+instance's after the same flight, and the high-water bound holds. Linear memory never shrinks, so its size is not the comparison.
