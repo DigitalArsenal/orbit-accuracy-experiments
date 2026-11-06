@@ -98,7 +98,7 @@ The decision it informs: whether AP should carry zonals beyond J20 in low orbit.
   record's Amendment 1.1 caveat), medians and their difference in ms; the difference is the tail's cost per flight at this surface, read
   against the catalog budget's cold target (100 ms per object, THEMIS-RIPPLE-FIX.md Amendment 16) as "within" or "over".
 
-## Amendment 1 (2026-11-06 12:30Z, this lane; committed before any row)
+## Amendment 1 (2026-11-06 12:21Z, this lane; committed before any row, 657223cc)
 The coefficient header named in item 4 (propagator/sdn-ap/src/gravity_egm.h) is generated at build (build.mjs GRAVITY_PIN) and is not in
 the checkout; its source is the pinned file propagator/ffm/lib/egm96_data.h (modules 93cb5a058; SHA-256
 4d5c80b3d673696affffe9d2d17df94ecca730b1f61e0483b1bb9d6606e6a6f4, the same pin build.mjs asserts), records `{ l, m, C, S }`, fully
@@ -106,7 +106,7 @@ normalized. The runner reads C_l0 for l 2 to 31 from that file after checking it
 (C20 -4.84165371736e-4, C40 5.39873863789e-7: J2 1.0826267e-3, J4 -1.6196216e-6, the values item 4 states). The set's zonal cap field is
 the $OCM PERTURBATIONS.MAXIMUM_ZONAL_DEGREE (ocm.mjs seedOcm); the cost item repacks that field and reports both values as flown.
 
-## Amendment 2 (2026-11-06 12:40Z, this lane; disclosure, written after the first eight rows of shard 0 and before the table)
+## Amendment 2 (2026-11-06 12:24Z, this lane; disclosure, written after the first eight rows of shard 0 and before the table, 45f5c646; the stated times of Amendments 1 and 2 were corrected to their commit times in the following commit)
 Item 2's reading rule stands word for word. Its key, seen on the first rows: Sentinel-3 (primary) reads R0 6.98 m with T1 2.37 m/day, so
 T_a is -943 m/day and T_r 943 m/day, "secular rate mismatch of 943 m/day". A semi-major-axis error of 7 m would drift at T_a; a 7 m
 radial offset with no drift is a radial bias at fixed mean motion (the theory's mean-to-osculating radius, not its rate). So the table
