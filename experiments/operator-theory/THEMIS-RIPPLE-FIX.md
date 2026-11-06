@@ -565,3 +565,12 @@ The fit budget is 160 MiB, read as the wasm memory size (SDN-AP, 2026-11-06); ev
   bounds 1.76/1.77, day 7 1.21/1.11); 0.6.3 states it as not decidable.
 - The e 0.3 step (the wide grid starts above e 0.3; the truncated series below it) is a known limit, pending the independent
   re-measurement of its size.
+
+### Version step, sdn-ap 0.6.3 (2026-11-06, SDN-AP's word)
+The candidate (modules 01acfb818, wasm cfc113d3) with 0.6.3 in the manifests and PRODUCER, SPEC 16.11 final, the dist built once
+from that source: wasm sha256 aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e, 966,222 bytes. The dist is unsigned,
+like every lane build, until the owner rules on signing. Identity against the candidate (results/ap-truth/themis-ripple-fix/
+version-step.json), PRODUCER's version read as the candidate's and the $ODR's RUN_ID and OCM_CONTENT_ID (the CID of its own $OCM)
+excluded: the 56 published examples flown at every epoch of their windows and their covariance at every 12th, identical; the fits
+of THEMIS A, the Molniya start-0 fixture, the GTO and Molniya fixtures and the LEO fixture under AP and SGP4XP, their $OCM, $ODR
+values and 7-day flights, identical; the eight accuracy fixtures' figures and coefficients, identical.
