@@ -98,6 +98,14 @@ The decision it informs: whether AP should carry zonals beyond J20 in low orbit.
   record's Amendment 1.1 caveat), medians and their difference in ms; the difference is the tail's cost per flight at this surface, read
   against the catalog budget's cold target (100 ms per object, THEMIS-RIPPLE-FIX.md Amendment 16) as "within" or "over".
 
+## Amendment 1 (2026-11-06 12:30Z, this lane; committed before any row)
+The coefficient header named in item 4 (propagator/sdn-ap/src/gravity_egm.h) is generated at build (build.mjs GRAVITY_PIN) and is not in
+the checkout; its source is the pinned file propagator/ffm/lib/egm96_data.h (modules 93cb5a058; SHA-256
+4d5c80b3d673696affffe9d2d17df94ecca730b1f61e0483b1bb9d6606e6a6f4, the same pin build.mjs asserts), records `{ l, m, C, S }`, fully
+normalized. The runner reads C_l0 for l 2 to 31 from that file after checking its SHA-256; J2 and J4 of item 4 are taken from it as well
+(C20 -4.84165371736e-4, C40 5.39873863789e-7: J2 1.0826267e-3, J4 -1.6196216e-6, the values item 4 states). The set's zonal cap field is
+the $OCM PERTURBATIONS.MAXIMUM_ZONAL_DEGREE (ocm.mjs seedOcm); the cost item repacks that field and reports both values as flown.
+
 ## Parked
 The GEO lunisolar question (the fitted rate against DE440 or the analytic lunisolar theory) needs an arc of a lunar month or more
 (TESSERAL-ALL-REGIMES.md Amendment 4) and is not read here; the one-day orbits' trend items are reported as measured with no term reading
