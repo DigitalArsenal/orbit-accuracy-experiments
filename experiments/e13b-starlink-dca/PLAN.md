@@ -211,3 +211,4 @@ installed WASM do not change; artifacts carry forward by hash.
 Storage: about 0.77 GB a day, about 66 GB more to 2027-02-01. The 25 GiB floor still pauses the collector, so older cycles have to move off this volume
 before then.
 
+Same day: the floor now pauses a running cycle as it already paused one about to start, as this plan's "free-disk floor 25 GiB" and A4's "pauses the collector" say. The 15:53Z cycle of 2026-11-07 was lost after 115 of 11,202 files to a short dip. A restart also schedules from the cycle's slot rather than its late start. Neither changes what a cycle records.
