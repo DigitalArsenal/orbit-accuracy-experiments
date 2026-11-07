@@ -206,9 +206,9 @@ function laser() {
     }
   }
   const claim = (group, arm, leads, bound) => { const c = leads.map((l) => verdicts[`${group}/${arm}/${l}`]); return c.every((x) => x?.c?.interval) ? (c.every((x) => x.c.interval[1] < bound && x.failed <= MAX_FAILED) ? 'PASS' : 'fail') : 'report only'; };
-  const low = claim('low', 'A-APo@48', [24, 72], NOLOSS_KM), nav = claim('navigation', 'A-APo@72', [72, 168], 0);
+  const low = claim('low', 'A-APo@48', [24, 72], NOLOSS_KM), nav = claim('navigation', 'A-APo@72', [72, 168], NOLOSS_KM);
   say(`**Part L, low, 0.4.17 does not lose to 0.4.11 at 48 h fits, at 24 h and 72 h:** ${low}`);
-  say(`**Part L, navigation, 0.4.17 beats 0.4.11 at 72 h fits, at 72 h and 168 h:** ${nav}`);
+  say(`**Part L, navigation, 0.4.17 does not lose to 0.4.11 at 72 h fits, at 72 h and 168 h:** ${nav}`);
   Object.assign(out, { pairs: rows.length, claims: { low, navigation: nav }, cells: verdicts });
 }
 

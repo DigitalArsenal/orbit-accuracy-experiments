@@ -1,0 +1,6524 @@
+{
+ "experiment": "ap-observations-2",
+ "task": "experiments-ap-observations-laser-2-20261104",
+ "modulesCommit": "5da8d709375ba410aa75cfcb0c89fa006f7ff82c",
+ "versions": {
+  "data-source/ilrs-crd-source": "0.2.0",
+  "data-source/ilrs-station-coordinates": "0.1.0",
+  "data-source/eop-parser": "0.2.0",
+  "flows/observation-od": "0.3.0",
+  "analysis/estimation": "0.7.0",
+  "propagator/ffm": "2.1.0",
+  "propagator/sdn-ap": "0.5.1",
+  "propagator/sgp4": "1.4.1",
+  "analysis/reference-states": "0.4.0",
+  "flows/observation-ap": "0.1.0"
+ },
+ "cutoffs": 206,
+ "statistic": "per cutoff and lead day: RMS of the 3D position error (compare_to_reference against NSGF, B2 thinning and coverage); across cutoffs: median, 95th percentile (linear), n",
+ "arms": {
+  "ap": {
+   "scored": 200,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.021967626488947394,
+     "p95Km": 0.08116950642100684,
+     "n": 178
+    },
+    "2": {
+     "medianKm": 0.049392400438378226,
+     "p95Km": 0.24202713818485985,
+     "n": 176
+    },
+    "3": {
+     "medianKm": 0.10251695535382019,
+     "p95Km": 0.5391192574514073,
+     "n": 174
+    }
+   },
+   "failures": [
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-18T00:00:00.000Z",
+     "refused": "arc-too-short:20.70: the normal points span 20.70 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-21T00:00:00.000Z",
+     "refused": "no NSGF state at 2026-07-19T00:00:00.000000Z"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "arc-too-short:23.73: the normal points span 23.73 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-07T00:00:00.000Z",
+     "refused": "arc-too-short:23.66: the normal points span 23.66 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-17T00:00:00.000Z",
+     "refused": "arc-too-short:5.85: the normal points span 5.85 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-22T00:00:00.000Z",
+     "refused": "arc-too-short:20.59: the normal points span 20.59 h, less than 24 h"
+    }
+   ]
+  },
+  "apNsgf": {
+   "scored": 204,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.02337980714596971,
+     "p95Km": 0.07503572574652544,
+     "n": 181
+    },
+    "2": {
+     "medianKm": 0.05132181475463164,
+     "p95Km": 0.2280306403523637,
+     "n": 178
+    },
+    "3": {
+     "medianKm": 0.10911716675521296,
+     "p95Km": 0.468956876225987,
+     "n": 177
+    }
+   },
+   "failures": [
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-20T00:00:00.000Z",
+     "refused": "1 NSGF states in the 24 h before T"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-17T00:00:00.000Z",
+     "refused": "1 NSGF states in the 24 h before T"
+    }
+   ]
+  },
+  "ffm": {
+   "scored": 200,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.0011809904200662247,
+     "p95Km": 0.008032079532479492,
+     "n": 178
+    },
+    "2": {
+     "medianKm": 0.0031055525347040702,
+     "p95Km": 0.029048806334917264,
+     "n": 176
+    },
+    "3": {
+     "medianKm": 0.0060566625718192655,
+     "p95Km": 0.056182958231441,
+     "n": 174
+    }
+   },
+   "failures": [
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-18T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-21T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-07T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-17T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-22T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    }
+   ]
+  },
+  "sgp4": {
+   "scored": 206,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.5774731233113719,
+     "p95Km": 0.632894514100507,
+     "n": 183
+    },
+    "2": {
+     "medianKm": 0.5904374120602868,
+     "p95Km": 0.6549830699767099,
+     "n": 180
+    },
+    "3": {
+     "medianKm": 0.6083383553076512,
+     "p95Km": 0.6761483833214232,
+     "n": 179
+    }
+   },
+   "failures": []
+  }
+ },
+ "b2MedianKm": {
+  "sdnap": [
+   0.093,
+   0.229,
+   0.444
+  ],
+  "ffm": [
+   0.008,
+   0.011,
+   0.015
+  ],
+  "sgp4": [
+   0.577,
+   0.59,
+   0.609
+  ],
+  "sdnapTruth": [
+   0.102,
+   0.249,
+   0.466
+  ]
+ },
+ "b2N": {
+  "sdnap": [
+   183,
+   180,
+   179
+  ]
+ },
+ "first": {
+  "task": "experiments-ap-observations-laser-20261104",
+  "modulesCommit": "c2f476f6193c2355cef778a0abe081ff6e06f29d",
+  "table": {
+   "path": "results/ap-observations/table.json",
+   "sha256": "779a9c5ac8b118792fbeb5ebfd9c1907e63e453d789b1294c8ac0aae29ecfa38"
+  },
+  "arms": {
+   "ap": {
+    "scored": 175,
+    "attempted": 206,
+    "days": {
+     "1": {
+      "medianKm": 0.02102643718802638,
+      "p95Km": 0.07934859094885686,
+      "n": 158
+     },
+     "2": {
+      "medianKm": 0.046722966431976126,
+      "p95Km": 0.23709372518072008,
+      "n": 157
+     },
+     "3": {
+      "medianKm": 0.09672699271170147,
+      "p95Km": 0.5415001947080648,
+      "n": 152
+     }
+    }
+   },
+   "apNsgf": {
+    "scored": 204,
+    "attempted": 206,
+    "days": {
+     "1": {
+      "medianKm": 0.02337980714596971,
+      "p95Km": 0.07503572574652544,
+      "n": 181
+     },
+     "2": {
+      "medianKm": 0.05132181475463164,
+      "p95Km": 0.2280306403523637,
+      "n": 178
+     },
+     "3": {
+      "medianKm": 0.10911716675521296,
+      "p95Km": 0.468956876225987,
+      "n": 177
+     }
+    }
+   },
+   "ffm": {
+    "scored": 175,
+    "attempted": 206,
+    "days": {
+     "1": {
+      "medianKm": 0.0011551560661703913,
+      "p95Km": 0.007597939377493888,
+      "n": 158
+     },
+     "2": {
+      "medianKm": 0.003041991153482808,
+      "p95Km": 0.02902102662367249,
+      "n": 157
+     },
+     "3": {
+      "medianKm": 0.005643101620869095,
+      "p95Km": 0.05211824129916687,
+      "n": 152
+     }
+    }
+   },
+   "sgp4": {
+    "scored": 206,
+    "attempted": 206,
+    "days": {
+     "1": {
+      "medianKm": 0.5774731233113719,
+      "p95Km": 0.632894514100507,
+      "n": 183
+     },
+     "2": {
+      "medianKm": 0.5904374120602868,
+      "p95Km": 0.6549830699767099,
+      "n": 180
+     },
+     "3": {
+      "medianKm": 0.6083383553076512,
+      "p95Km": 0.6761483833214232,
+      "n": 179
+     }
+    }
+   }
+  }
+ },
+ "unchangedArms": [
+  "apNsgf",
+  "sgp4"
+ ],
+ "outcomesChanged": [
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-19T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "first": "no-convergence",
+   "second": "ok"
+  }
+ ],
+ "expectation": [
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "refused": "no NSGF state at 2026-07-19T00:00:00.000000Z",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-07T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-17T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "met": true
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-22T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "met": true
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "no-convergence",
+   "met": true
+  }
+ ],
+ "movedWhereBothScored": {
+  "ap": {
+   "n": 467,
+   "maxKm": 0.00008282007711102324,
+   "medianKm": 1.5219488338005793e-8
+  },
+  "ffm": {
+   "n": 467,
+   "maxKm": 0.0000012300204414381066,
+   "medianKm": 2.1639889664372934e-8
+  }
+ },
+ "fits": {
+  "cutoffs": 200,
+  "twoFits": 200,
+  "firstFitIterations": {
+   "min": 3,
+   "median": 4,
+   "max": 8
+  },
+  "secondFitIterations": {
+   "min": 2,
+   "median": 2,
+   "max": 6
+  },
+  "weightedRms": {
+   "min": 0.10331022280933513,
+   "median": 3.629855216430686,
+   "max": 8.68199176317435
+  }
+ },
+ "perCutoff": [
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.40409310318242
+    },
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.40410831631343
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.40410831631343,
+    "normalPointsUsed": 253,
+    "rangeRmsKm": 0.0003702054158156715
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.663129730704713
+    },
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.663038248980156
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.663038248980156,
+    "normalPointsUsed": 159,
+    "rangeRmsKm": 0.00038315191244900777
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.1078787940228554
+    },
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.107870233959449
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.107870233959449,
+    "normalPointsUsed": 97,
+    "rangeRmsKm": 0.00015539351169797244
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.8162822631879982
+    },
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.8161691412487007
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.8161691412487007,
+    "normalPointsUsed": 164,
+    "rangeRmsKm": 0.00019080845706243504
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.60898365344419
+    },
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.608972174585602
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.608972174585602,
+    "normalPointsUsed": 263,
+    "rangeRmsKm": 0.00028044860872928007
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.267223226569464
+    },
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.267138177644532
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.267138177644532,
+    "normalPointsUsed": 275,
+    "rangeRmsKm": 0.00031335690888222663
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.346209135593839
+    },
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.346046003075867
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.346046003075867,
+    "normalPointsUsed": 323,
+    "rangeRmsKm": 0.0003173023001537936
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.473497155678239
+    },
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.473490777734254
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.473490777734254,
+    "normalPointsUsed": 325,
+    "rangeRmsKm": 0.0002236745388867125
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 8,
+     "weightedRms": 2.087448580290941
+    },
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 6,
+     "weightedRms": 2.0875032812377383
+    }
+   ],
+   "estimate": {
+    "iterations": 6,
+    "weightedRms": 2.0875032812377383,
+    "normalPointsUsed": 285,
+    "rangeRmsKm": 0.00010437516406188691
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.5309077060633034
+    },
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.530812140932182
+    }
+   ],
+   "estimate": {
+    "iterations": 4,
+    "weightedRms": 1.530812140932182,
+    "normalPointsUsed": 179,
+    "rangeRmsKm": 0.00007654060704660912
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.7292077564676247
+    },
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.729172380387112
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.729172380387112,
+    "normalPointsUsed": 153,
+    "rangeRmsKm": 0.0001364586190193556
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.268554792132065
+    },
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.2687010315210556
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.2687010315210556,
+    "normalPointsUsed": 220,
+    "rangeRmsKm": 0.0001634350515760528
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-30T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.178296578401114
+    },
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.178288690174189
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.178288690174189,
+    "normalPointsUsed": 327,
+    "rangeRmsKm": 0.00020891443450870943
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-31T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 4.299470370132901
+    },
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.29946421904187
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.29946421904187,
+    "normalPointsUsed": 465,
+    "rangeRmsKm": 0.00021497321095209347
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.7834807454429202
+    },
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.783510292673769
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.783510292673769,
+    "normalPointsUsed": 456,
+    "rangeRmsKm": 0.00018917551463368861
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-02T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.2681399699670415
+    },
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.2677770465888796
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.2677770465888796,
+    "normalPointsUsed": 299,
+    "rangeRmsKm": 0.000163388852329444
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-03T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.0769891954892383
+    },
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.0768450476542606
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.0768450476542606,
+    "normalPointsUsed": 228,
+    "rangeRmsKm": 0.00015384225238271302
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.4828829271553854
+    },
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.4829060683878534
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.4829060683878534,
+    "normalPointsUsed": 339,
+    "rangeRmsKm": 0.0001741453034193928
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-05T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.2050133912918515
+    },
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.2047670416712295
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.2047670416712295,
+    "normalPointsUsed": 360,
+    "rangeRmsKm": 0.0002102383520835616
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-06T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.003189577223359
+    },
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.003113779597855
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.003113779597855,
+    "normalPointsUsed": 392,
+    "rangeRmsKm": 0.00020015568897989273
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-07T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.963222849238391
+    },
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.963392621996668
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.963392621996668,
+    "normalPointsUsed": 390,
+    "rangeRmsKm": 0.00024816963109983343
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.265630731397646
+    },
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.265538679583923
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.265538679583923,
+    "normalPointsUsed": 444,
+    "rangeRmsKm": 0.00021327693397919624
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-09T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.014428746035479
+    },
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 4.014019659000509
+    }
+   ],
+   "estimate": {
+    "iterations": 3,
+    "weightedRms": 4.014019659000509,
+    "normalPointsUsed": 412,
+    "rangeRmsKm": 0.00020070098295002527
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.143791767489536
+    },
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.1437434111033036
+    }
+   ],
+   "estimate": {
+    "iterations": 4,
+    "weightedRms": 3.1437434111033036,
+    "normalPointsUsed": 398,
+    "rangeRmsKm": 0.00015718717055516522
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-11T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.6345316059240433
+    },
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.63429850665851
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.63429850665851,
+    "normalPointsUsed": 408,
+    "rangeRmsKm": 0.00018171492533292555
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-12T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.0897748997049805
+    },
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.0898470592170595
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.0898470592170595,
+    "normalPointsUsed": 426,
+    "rangeRmsKm": 0.00015449235296085303
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.6393589559095654
+    },
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.639392581521426
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.639392581521426,
+    "normalPointsUsed": 457,
+    "rangeRmsKm": 0.00013196962907607136
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-14T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.6929964258858
+    },
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.6927695634624955
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.6927695634624955,
+    "normalPointsUsed": 576,
+    "rangeRmsKm": 0.0001346384781731249
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.392715229345716
+    },
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.392717325004475
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.392717325004475,
+    "normalPointsUsed": 742,
+    "rangeRmsKm": 0.00036963586625022356
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-16T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.913963799573792
+    },
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.914038135837439
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.914038135837439,
+    "normalPointsUsed": 487,
+    "rangeRmsKm": 0.0003457019067918719
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-17T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.97625158151091
+    },
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.976169383183199
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.976169383183199,
+    "normalPointsUsed": 341,
+    "rangeRmsKm": 0.00029880846915915994
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 6.888471394671875
+    },
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.888630567318512
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.888630567318512,
+    "normalPointsUsed": 185,
+    "rangeRmsKm": 0.00034443152836592563
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 8.61005610349233
+    },
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 8.609941094143654
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 8.609941094143654,
+    "normalPointsUsed": 338,
+    "rangeRmsKm": 0.00043049705470718264
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 8.681828407552818
+    },
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 8.68199176317435
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 8.68199176317435,
+    "normalPointsUsed": 404,
+    "rangeRmsKm": 0.000434099588158718
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 8.410853083962541
+    },
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 8.410870575714364
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 8.410870575714364,
+    "normalPointsUsed": 382,
+    "rangeRmsKm": 0.0004205435287857182
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.883157898040723
+    },
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.883317252967234
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.883317252967234,
+    "normalPointsUsed": 330,
+    "rangeRmsKm": 0.00024416586264836167
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.803558266487797
+    },
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.8041633722132473
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.8041633722132473,
+    "normalPointsUsed": 188,
+    "rangeRmsKm": 0.00014020816861066233
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 2.745857698730007
+    },
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.7457692556428337
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.7457692556428337,
+    "normalPointsUsed": 362,
+    "rangeRmsKm": 0.00013728846278214171
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 5,
+     "weightedRms": 3.0251916236922956
+    },
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.025245983775164
+    }
+   ],
+   "estimate": {
+    "iterations": 3,
+    "weightedRms": 3.025245983775164,
+    "normalPointsUsed": 431,
+    "rangeRmsKm": 0.00015126229918875823
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.767475559620475
+    },
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.767557651250846
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.767557651250846,
+    "normalPointsUsed": 391,
+    "rangeRmsKm": 0.00023837788256254246
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.279273440511107
+    },
+    {
+     "epoch": "2026-08-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.279292866894665
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.279292866894665,
+    "normalPointsUsed": 489,
+    "rangeRmsKm": 0.00021396464334473333
+   }
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-08-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.8005524035426363
+    },
+    {
+     "epoch": "2026-08-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.801269808177452
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.801269808177452,
+    "normalPointsUsed": 310,
+    "rangeRmsKm": 0.00019006349040887258
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.1505479362877695
+    },
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.151214817374616
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.151214817374616,
+    "normalPointsUsed": 196,
+    "rangeRmsKm": 0.0002575607408687309
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.5227910672404117
+    },
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.5232110452275096
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.5232110452275096,
+    "normalPointsUsed": 96,
+    "rangeRmsKm": 0.00017616055226137549
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.7315963462916586
+    },
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.7319773438853803
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.7319773438853803,
+    "normalPointsUsed": 67,
+    "rangeRmsKm": 0.00013659886719426904
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.9288510966276498
+    },
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.928846111276306
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.928846111276306,
+    "normalPointsUsed": 115,
+    "rangeRmsKm": 0.00019644230556381526
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.704407420955249
+    },
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.704497321683221
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.704497321683221,
+    "normalPointsUsed": 216,
+    "rangeRmsKm": 0.0003352248660841609
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.635247808950549
+    },
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.635385972852489
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.635385972852489,
+    "normalPointsUsed": 199,
+    "rangeRmsKm": 0.0002817692986426246
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.383828749856012
+    },
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.3837996510130504
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.3837996510130504,
+    "normalPointsUsed": 164,
+    "rangeRmsKm": 0.00016918998255065245
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.2535828994355365
+    },
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.252980858846973
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.252980858846973,
+    "normalPointsUsed": 258,
+    "rangeRmsKm": 0.00036264904294234845
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 6.1415010117721405
+    },
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.1420696025699275
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.1420696025699275,
+    "normalPointsUsed": 212,
+    "rangeRmsKm": 0.00030710348012849634
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.661610892201164
+    },
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.662373724570323
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.662373724570323,
+    "normalPointsUsed": 82,
+    "rangeRmsKm": 0.0002331186862285162
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.7460170413296074
+    },
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.745823416919125
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.745823416919125,
+    "normalPointsUsed": 110,
+    "rangeRmsKm": 0.00033729117084595634
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.025118088005228
+    },
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.025433014723063
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.025433014723063,
+    "normalPointsUsed": 251,
+    "rangeRmsKm": 0.00035127165073615306
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-30T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.025676704298409
+    },
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.025644766703593
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.025644766703593,
+    "normalPointsUsed": 296,
+    "rangeRmsKm": 0.0003512822383351798
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-07-31T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.0956805620334285
+    },
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.0957267311307195
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.0957267311307195,
+    "normalPointsUsed": 295,
+    "rangeRmsKm": 0.0003547863365565359
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 2.5628179199539733
+    },
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.5628733616734607
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.5628733616734607,
+    "normalPointsUsed": 219,
+    "rangeRmsKm": 0.00012814366808367304
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-02T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.4855334464885734
+    },
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.4854701235172514
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.4854701235172514,
+    "normalPointsUsed": 160,
+    "rangeRmsKm": 0.0001742735061758626
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-03T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.2944118627511925
+    },
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.2942266340798896
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.2942266340798896,
+    "normalPointsUsed": 163,
+    "rangeRmsKm": 0.00011471133170399456
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.6814920529292574
+    },
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.681478510975065
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.681478510975065,
+    "normalPointsUsed": 220,
+    "rangeRmsKm": 0.00013407392554875332
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-05T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.6065784629724713
+    },
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.606544353726884
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.606544353726884,
+    "normalPointsUsed": 192,
+    "rangeRmsKm": 0.00013032721768634423
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-06T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.703669647150234
+    },
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.7036831094582485
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.7036831094582485,
+    "normalPointsUsed": 236,
+    "rangeRmsKm": 0.00013518415547291246
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-07T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 2.8499498576851474
+    },
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.850187870854469
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.850187870854469,
+    "normalPointsUsed": 319,
+    "rangeRmsKm": 0.00014250939354272353
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.4326891279719183
+    },
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.432708192358194
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.432708192358194,
+    "normalPointsUsed": 245,
+    "rangeRmsKm": 0.00012163540961790972
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-09T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.5691895037551293
+    },
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.5687222201248314
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.5687222201248314,
+    "normalPointsUsed": 177,
+    "rangeRmsKm": 0.00017843611100624152
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 2.431806544563836
+    },
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.431826045888754
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.431826045888754,
+    "normalPointsUsed": 198,
+    "rangeRmsKm": 0.0001215913022944378
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-11T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.086362430322537
+    },
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.086400322643789
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.086400322643789,
+    "normalPointsUsed": 202,
+    "rangeRmsKm": 0.0001543200161321894
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-12T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.9654680268580416
+    },
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.9651943414292288
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.9651943414292288,
+    "normalPointsUsed": 215,
+    "rangeRmsKm": 0.00014825971707146149
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.960754486466499
+    },
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.960409180183089
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.960409180183089,
+    "normalPointsUsed": 239,
+    "rangeRmsKm": 0.00014802045900915445
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-14T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 5,
+     "weightedRms": 2.5547719019177477
+    },
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.554825640537301
+    }
+   ],
+   "estimate": {
+    "iterations": 4,
+    "weightedRms": 2.554825640537301,
+    "normalPointsUsed": 319,
+    "rangeRmsKm": 0.00012774128202686514
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.102939763771316
+    },
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.103137899829912
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.103137899829912,
+    "normalPointsUsed": 398,
+    "rangeRmsKm": 0.0003551568949914958
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-16T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 7.60004559057618
+    },
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.6003302501290815
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.6003302501290815,
+    "normalPointsUsed": 206,
+    "rangeRmsKm": 0.00038001651250645405
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-17T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 8.102526596359153
+    },
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 8.102284462615893
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 8.102284462615893,
+    "normalPointsUsed": 164,
+    "rangeRmsKm": 0.0004051142231307948
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.757270939050124
+    },
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.756786973071518
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.756786973071518,
+    "normalPointsUsed": 96,
+    "rangeRmsKm": 0.00023783934865357603
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 5,
+     "weightedRms": 6.023474353918033
+    },
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.0235150873447445
+    }
+   ],
+   "estimate": {
+    "iterations": 4,
+    "weightedRms": 6.0235150873447445,
+    "normalPointsUsed": 92,
+    "rangeRmsKm": 0.0003011757543672373
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.2354091992622465
+    },
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 7.2349969255544195
+    }
+   ],
+   "estimate": {
+    "iterations": 3,
+    "weightedRms": 7.2349969255544195,
+    "normalPointsUsed": 133,
+    "rangeRmsKm": 0.00036174984627772105
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.619797951820167
+    },
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.619838063312752
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.619838063312752,
+    "normalPointsUsed": 183,
+    "rangeRmsKm": 0.00033099190316563775
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.2942215318561483
+    },
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.2942909817991146
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.2942909817991146,
+    "normalPointsUsed": 127,
+    "rangeRmsKm": 0.00016471454908995582
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.446420013393711
+    },
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.445787060525422
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.445787060525422,
+    "normalPointsUsed": 77,
+    "rangeRmsKm": 0.0002222893530262712
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.1930281853705464
+    },
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.1936201335273213
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.1936201335273213,
+    "normalPointsUsed": 131,
+    "rangeRmsKm": 0.0001596810066763661
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 4.055932746498003
+    },
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.055637537505161
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.055637537505161,
+    "normalPointsUsed": 180,
+    "rangeRmsKm": 0.00020278187687525806
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.79991598365098
+    },
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.80006834328635
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.80006834328635,
+    "normalPointsUsed": 184,
+    "rangeRmsKm": 0.0001900034171643174
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.6768152059165886
+    },
+    {
+     "epoch": "2026-08-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.676881188004289
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.676881188004289,
+    "normalPointsUsed": 180,
+    "rangeRmsKm": 0.00018384405940021436
+   }
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.9677605647025476
+    },
+    {
+     "epoch": "2026-08-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.967404654630325
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.967404654630325,
+    "normalPointsUsed": 155,
+    "rangeRmsKm": 0.0001983702327315163
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "ap": "arc-too-short",
+   "fits": [],
+   "estimate": null
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.35321230159265077
+    },
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.3532327348483356
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.3532327348483356,
+    "normalPointsUsed": 31,
+    "rangeRmsKm": 0.00001766163674241678
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.1932853002057158
+    },
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.1931161605391303
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.1931161605391303,
+    "normalPointsUsed": 50,
+    "rangeRmsKm": 0.00010965580802695651
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "ap": "no NSGF state at 2026-07-19T00:00:00.000000Z",
+   "fits": [],
+   "estimate": null
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.612008520957261
+    },
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.6119939988565846
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.6119939988565846,
+    "normalPointsUsed": 44,
+    "rangeRmsKm": 0.00008059969994282925
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.570916771263745
+    },
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.570953903619068
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.570953903619068,
+    "normalPointsUsed": 39,
+    "rangeRmsKm": 0.0002785476951809534
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.9693303031666827
+    },
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.9692228078862675
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.9692228078862675,
+    "normalPointsUsed": 26,
+    "rangeRmsKm": 0.00019846114039431337
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.0482803347635468
+    },
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.048238585942494
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.048238585942494,
+    "normalPointsUsed": 49,
+    "rangeRmsKm": 0.00010241192929712475
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "ap": "arc-too-short",
+   "fits": [],
+   "estimate": null
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.18169586397048001
+    },
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.1816932886696041
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.1816932886696041,
+    "normalPointsUsed": 36,
+    "rangeRmsKm": 0.000009084664433480206
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.5940972158996461
+    },
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.5941744788421527
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.5941744788421527,
+    "normalPointsUsed": 35,
+    "rangeRmsKm": 0.00002970872394210764
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.815662358845591
+    },
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.815689020756208
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.815689020756208,
+    "normalPointsUsed": 79,
+    "rangeRmsKm": 0.00029078445103781044
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-30T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.625753009306017
+    },
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.6254119262028617
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.6254119262028617,
+    "normalPointsUsed": 84,
+    "rangeRmsKm": 0.0001812705963101431
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-31T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.787577937956687
+    },
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.787373813360781
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.787373813360781,
+    "normalPointsUsed": 41,
+    "rangeRmsKm": 0.00018936869066803904
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.8436980027245755
+    },
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.8436880635891741
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.8436880635891741,
+    "normalPointsUsed": 33,
+    "rangeRmsKm": 0.00004218440317945871
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-02T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 5,
+     "weightedRms": 0.8273695587958312
+    },
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.8274969705307944
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.8274969705307944,
+    "normalPointsUsed": 42,
+    "rangeRmsKm": 0.000041374848526539716
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-03T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.6142245770847736
+    },
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.6143694939123536
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.6143694939123536,
+    "normalPointsUsed": 68,
+    "rangeRmsKm": 0.00008071847469561768
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.53259050143356
+    },
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.5326344584796545
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.5326344584796545,
+    "normalPointsUsed": 37,
+    "rangeRmsKm": 0.00002663172292398273
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-05T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 0.4862249602265348
+    },
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.48624394689933453
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.48624394689933453,
+    "normalPointsUsed": 23,
+    "rangeRmsKm": 0.00002431219734496673
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-06T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.6475135810187647
+    },
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.6480811212427666
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.6480811212427666,
+    "normalPointsUsed": 43,
+    "rangeRmsKm": 0.00008240405606213834
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-07T00:00:00.000Z",
+   "ap": "arc-too-short",
+   "fits": [],
+   "estimate": null
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 0.2756328783551884
+    },
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.2756578252625675
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.2756578252625675,
+    "normalPointsUsed": 19,
+    "rangeRmsKm": 0.000013782891263128375
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-09T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.5303483088725823
+    },
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.530465481496721
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.530465481496721,
+    "normalPointsUsed": 39,
+    "rangeRmsKm": 0.000026523274074836055
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 0.6399331397473965
+    },
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.6398601095922254
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.6398601095922254,
+    "normalPointsUsed": 39,
+    "rangeRmsKm": 0.00003199300547961128
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-11T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 0.39617612377637773
+    },
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.39620793368929613
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.39620793368929613,
+    "normalPointsUsed": 23,
+    "rangeRmsKm": 0.000019810396684464812
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-12T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.25906260682110915
+    },
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.25905914627637633
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.25905914627637633,
+    "normalPointsUsed": 28,
+    "rangeRmsKm": 0.000012952957313818817
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.8389167780647449
+    },
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.8389015081835608
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.8389015081835608,
+    "normalPointsUsed": 62,
+    "rangeRmsKm": 0.000041945075409178046
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-14T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.4239143132358107
+    },
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.4238636202921389
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.4238636202921389,
+    "normalPointsUsed": 65,
+    "rangeRmsKm": 0.00007119318101460697
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.229712263061696
+    },
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.2296136170483525
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.2296136170483525,
+    "normalPointsUsed": 77,
+    "rangeRmsKm": 0.00026148068085241765
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-16T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.1768030458310745
+    },
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.177229022932709
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.177229022932709,
+    "normalPointsUsed": 49,
+    "rangeRmsKm": 0.00020886145114663545
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-17T00:00:00.000Z",
+   "ap": "arc-too-short",
+   "fits": [],
+   "estimate": null
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 0.4300214155785286
+    },
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.4300972169170038
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.4300972169170038,
+    "normalPointsUsed": 32,
+    "rangeRmsKm": 0.000021504860845850193
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.7772450791013337
+    },
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.7777411553739815
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.7777411553739815,
+    "normalPointsUsed": 33,
+    "rangeRmsKm": 0.00008888705776869908
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-22T00:00:00.000Z",
+   "ap": "arc-too-short",
+   "fits": [],
+   "estimate": null
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 0.10330948741764265
+    },
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 0.10331022280933513
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 0.10331022280933513,
+    "normalPointsUsed": 15,
+    "rangeRmsKm": 0.000005165511140466757
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.040992859855851
+    },
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.0408043866802763
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.0408043866802763,
+    "normalPointsUsed": 50,
+    "rangeRmsKm": 0.000052040219334013804
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 5,
+     "weightedRms": 1.0898201815825903
+    },
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.0896830576654228
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.0896830576654228,
+    "normalPointsUsed": 69,
+    "rangeRmsKm": 0.00005448415288327114
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.441383314095151
+    },
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.4413957350364093
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.4413957350364093,
+    "normalPointsUsed": 69,
+    "rangeRmsKm": 0.00007206978675182047
+   }
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 4.16843489657502
+    },
+    {
+     "epoch": "2026-08-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.168389468735954
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.168389468735954,
+    "normalPointsUsed": 47,
+    "rangeRmsKm": 0.0002084194734367977
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.2364775238021175
+    },
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.236234829342968
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.236234829342968,
+    "normalPointsUsed": 53,
+    "rangeRmsKm": 0.0001118117414671484
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.2967968192391415
+    },
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.296784115390739
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.296784115390739,
+    "normalPointsUsed": 50,
+    "rangeRmsKm": 0.00016483920576953692
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 1.951466465589249
+    },
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.9520503379386143
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.9520503379386143,
+    "normalPointsUsed": 48,
+    "rangeRmsKm": 0.0000976025168969307
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.828124858241018
+    },
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.828119672699049
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.828119672699049,
+    "normalPointsUsed": 84,
+    "rangeRmsKm": 0.00024140598363495244
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.618895145373097
+    },
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.619161487214072
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.619161487214072,
+    "normalPointsUsed": 113,
+    "rangeRmsKm": 0.00023095807436070354
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.3279235175785775
+    },
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.327957180723502
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.327957180723502,
+    "normalPointsUsed": 124,
+    "rangeRmsKm": 0.0001663978590361751
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.173558343710873
+    },
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.173931028682775
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.173931028682775,
+    "normalPointsUsed": 149,
+    "rangeRmsKm": 0.0002586965514341388
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.7351123057602535
+    },
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.7351127998018665
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.7351127998018665,
+    "normalPointsUsed": 129,
+    "rangeRmsKm": 0.0003367556399900934
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.492943274600289
+    },
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.4931898775015524
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.4931898775015524,
+    "normalPointsUsed": 113,
+    "rangeRmsKm": 0.00017465949387507763
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.9867595492338763
+    },
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.9871573486187217
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.9871573486187217,
+    "normalPointsUsed": 54,
+    "rangeRmsKm": 0.0001993578674309361
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.6830041077704045
+    },
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.6829500480697908
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.6829500480697908,
+    "normalPointsUsed": 47,
+    "rangeRmsKm": 0.0001841475024034895
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.25431005462704
+    },
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.253850593740575
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.253850593740575,
+    "normalPointsUsed": 69,
+    "rangeRmsKm": 0.0003126925296870288
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-30T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.513202212579029
+    },
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.512823177468847
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.512823177468847,
+    "normalPointsUsed": 102,
+    "rangeRmsKm": 0.0002256411588734423
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-31T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.759915821283322
+    },
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.760342626419429
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.760342626419429,
+    "normalPointsUsed": 124,
+    "rangeRmsKm": 0.0002880171313209714
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.1573122570075216
+    },
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.1572219534712462
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.1572219534712462,
+    "normalPointsUsed": 89,
+    "rangeRmsKm": 0.00015786109767356235
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-02T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.9654384271408665
+    },
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.965924046185466
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.965924046185466,
+    "normalPointsUsed": 70,
+    "rangeRmsKm": 0.0001482962023092733
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-03T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.560557048684232
+    },
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.5600977943127323
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.5600977943127323,
+    "normalPointsUsed": 65,
+    "rangeRmsKm": 0.00012800488971563664
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.188404709399626
+    },
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.1886145756878186
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.1886145756878186,
+    "normalPointsUsed": 48,
+    "rangeRmsKm": 0.00010943072878439092
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-05T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.268885072058464
+    },
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.268828496122597
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.268828496122597,
+    "normalPointsUsed": 67,
+    "rangeRmsKm": 0.0002134414248061299
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-06T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.035338274818759
+    },
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.035432478016576
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.035432478016576,
+    "normalPointsUsed": 78,
+    "rangeRmsKm": 0.00025177162390082887
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-07T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.6381604447694196
+    },
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.638147190864381
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.638147190864381,
+    "normalPointsUsed": 76,
+    "rangeRmsKm": 0.00013190735954321907
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.194484199363296
+    },
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.19473458223457
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.19473458223457,
+    "normalPointsUsed": 74,
+    "rangeRmsKm": 0.00010973672911172855
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-09T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.6147592194763984
+    },
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.6147243970585425
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.6147243970585425,
+    "normalPointsUsed": 100,
+    "rangeRmsKm": 0.00008073621985292713
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.4447883067248615
+    },
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.444681796352508
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.444681796352508,
+    "normalPointsUsed": 103,
+    "rangeRmsKm": 0.00012223408981762538
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-11T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.1850395000970657
+    },
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.1852089571558793
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.1852089571558793,
+    "normalPointsUsed": 81,
+    "rangeRmsKm": 0.00015926044785779394
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-12T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.0342967670635788
+    },
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.033492901406658
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.033492901406658,
+    "normalPointsUsed": 72,
+    "rangeRmsKm": 0.0001016746450703329
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 1.8374017610691906
+    },
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.837436507135111
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.837436507135111,
+    "normalPointsUsed": 94,
+    "rangeRmsKm": 0.00009187182535675554
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-14T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.0689107220452825
+    },
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.068343828769179
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.068343828769179,
+    "normalPointsUsed": 111,
+    "rangeRmsKm": 0.00010341719143845897
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.185142153961976
+    },
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.185144240027759
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.185144240027759,
+    "normalPointsUsed": 121,
+    "rangeRmsKm": 0.00025925721200138795
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-16T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.680874446619678
+    },
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.680871912253112
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.680871912253112,
+    "normalPointsUsed": 96,
+    "rangeRmsKm": 0.00028404359561265565
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-17T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 1.9895136378839668
+    },
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.9894587003492532
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.9894587003492532,
+    "normalPointsUsed": 70,
+    "rangeRmsKm": 0.00009947293501746264
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.639401078630856
+    },
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.6393273740474914
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.6393273740474914,
+    "normalPointsUsed": 30,
+    "rangeRmsKm": 0.00013196636870237458
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.2289413207340747
+    },
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.2296384500414472
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.2296384500414472,
+    "normalPointsUsed": 51,
+    "rangeRmsKm": 0.00011148192250207237
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 4.670003022770065
+    },
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.670341571900944
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.670341571900944,
+    "normalPointsUsed": 88,
+    "rangeRmsKm": 0.00023351707859504723
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.125912332383348
+    },
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.126134569735632
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.126134569735632,
+    "normalPointsUsed": 96,
+    "rangeRmsKm": 0.0003063067284867816
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.3953987653046624
+    },
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.395601402571354
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.395601402571354,
+    "normalPointsUsed": 97,
+    "rangeRmsKm": 0.00016978007012856768
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.5404567947466496
+    },
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.5407087557883195
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.5407087557883195,
+    "normalPointsUsed": 69,
+    "rangeRmsKm": 0.000177035437789416
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.1121209991498606
+    },
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.1119623735248108
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.1119623735248108,
+    "normalPointsUsed": 87,
+    "rangeRmsKm": 0.00015559811867624053
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.6997361260592054
+    },
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.6997629259190403
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.6997629259190403,
+    "normalPointsUsed": 118,
+    "rangeRmsKm": 0.000184988146295952
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 2.674993707935439
+    },
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.6747063403579836
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.6747063403579836,
+    "normalPointsUsed": 117,
+    "rangeRmsKm": 0.00013373531701789916
+   }
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.352090066317011
+    },
+    {
+     "epoch": "2026-08-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.3520255947018494
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.3520255947018494,
+    "normalPointsUsed": 99,
+    "rangeRmsKm": 0.00016760127973509243
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.851812013502302
+    },
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.851949355038802
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.851949355038802,
+    "normalPointsUsed": 171,
+    "rangeRmsKm": 0.0002925974677519402
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.584896833051525
+    },
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.5852251186813815
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.5852251186813815,
+    "normalPointsUsed": 165,
+    "rangeRmsKm": 0.000229261255934069
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.202087427681298
+    },
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.201717557918829
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.201717557918829,
+    "normalPointsUsed": 124,
+    "rangeRmsKm": 0.00021008587789594145
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.624294603434785
+    },
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.624178095064202
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.624178095064202,
+    "normalPointsUsed": 210,
+    "rangeRmsKm": 0.00028120890475321004
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.112612747466988
+    },
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.112631544015867
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.112631544015867,
+    "normalPointsUsed": 327,
+    "rangeRmsKm": 0.0002556315772007934
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 6.1763722827371454
+    },
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.176374013028914
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.176374013028914,
+    "normalPointsUsed": 404,
+    "rangeRmsKm": 0.0003088187006514459
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 6.6504179365165195
+    },
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.650341024876075
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.650341024876075,
+    "normalPointsUsed": 384,
+    "rangeRmsKm": 0.0003325170512438038
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 4.2803177563032975
+    },
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.280270592793674
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.280270592793674,
+    "normalPointsUsed": 427,
+    "rangeRmsKm": 0.0002140135296396839
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 5,
+     "weightedRms": 4.024530802948554
+    },
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.024456684806638
+    }
+   ],
+   "estimate": {
+    "iterations": 4,
+    "weightedRms": 4.024456684806638,
+    "normalPointsUsed": 434,
+    "rangeRmsKm": 0.00020122283424033196
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 6,
+     "weightedRms": 2.3407473688239087
+    },
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.3406269704914546
+    }
+   ],
+   "estimate": {
+    "iterations": 4,
+    "weightedRms": 2.3406269704914546,
+    "normalPointsUsed": 209,
+    "rangeRmsKm": 0.00011703134852457275
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 1.8460517750850773
+    },
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.8459950931023912
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.8459950931023912,
+    "normalPointsUsed": 191,
+    "rangeRmsKm": 0.0000922997546551196
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.270340533443081
+    },
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.2704918681400694
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.2704918681400694,
+    "normalPointsUsed": 308,
+    "rangeRmsKm": 0.00016352459340700346
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-30T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.1197710272353483
+    },
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.119462541089116
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.119462541089116,
+    "normalPointsUsed": 375,
+    "rangeRmsKm": 0.0001559731270544558
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-31T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-29T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.8244299732675517
+    },
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.8245952067175835
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.8245952067175835,
+    "normalPointsUsed": 320,
+    "rangeRmsKm": 0.0001912297603358792
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-30T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.7585338160759263
+    },
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.758705125463644
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.758705125463644,
+    "normalPointsUsed": 336,
+    "rangeRmsKm": 0.00018793525627318228
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-02T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-07-31T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.2113671836557107
+    },
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.211395284335244
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.211395284335244,
+    "normalPointsUsed": 222,
+    "rangeRmsKm": 0.0001605697642167622
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-03T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-01T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.9422494124666887
+    },
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.942275637589295
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.942275637589295,
+    "normalPointsUsed": 187,
+    "rangeRmsKm": 0.00019711378187946472
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-02T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.042773522782649
+    },
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.0428206749572215
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.0428206749572215,
+    "normalPointsUsed": 198,
+    "rangeRmsKm": 0.0001521410337478611
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-05T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-03T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.692599992562307
+    },
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.6925633042367685
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.6925633042367685,
+    "normalPointsUsed": 229,
+    "rangeRmsKm": 0.00018462816521183848
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-06T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-04T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 4.213366305010652
+    },
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.213670681354848
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.213670681354848,
+    "normalPointsUsed": 242,
+    "rangeRmsKm": 0.00021068353406774245
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-07T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-05T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.190091245741383
+    },
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.189806987644356
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.189806987644356,
+    "normalPointsUsed": 209,
+    "rangeRmsKm": 0.00025949034938221784
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-06T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.310975788611887
+    },
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.310882550077859
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.310882550077859,
+    "normalPointsUsed": 251,
+    "rangeRmsKm": 0.00021554412750389307
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-09T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-07T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.467433922915892
+    },
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.468015778393626
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.468015778393626,
+    "normalPointsUsed": 318,
+    "rangeRmsKm": 0.00017340078891968125
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-08T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.453147991673795
+    },
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.453031955214626
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.453031955214626,
+    "normalPointsUsed": 263,
+    "rangeRmsKm": 0.00017265159776073136
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-11T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-09T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.279465755210507
+    },
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.2790083054318786
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.2790083054318786,
+    "normalPointsUsed": 256,
+    "rangeRmsKm": 0.00016395041527159402
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-12T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-10T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.8922974751841
+    },
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.892383744614918
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.892383744614918,
+    "normalPointsUsed": 319,
+    "rangeRmsKm": 0.0001446191872307458
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-11T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 2.7261633206076463
+    },
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.7263792278322705
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.7263792278322705,
+    "normalPointsUsed": 294,
+    "rangeRmsKm": 0.00013631896139161364
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-14T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-12T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 3.406334559537893
+    },
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.406303671884229
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.406303671884229,
+    "normalPointsUsed": 457,
+    "rangeRmsKm": 0.00017031518359421146
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-13T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 7.0054696725552565
+    },
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.005740941416696
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.005740941416696,
+    "normalPointsUsed": 404,
+    "rangeRmsKm": 0.0003502870470708349
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-16T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-14T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.837985489650732
+    },
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.838015454277682
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.838015454277682,
+    "normalPointsUsed": 312,
+    "rangeRmsKm": 0.0002919007727138841
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-17T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-15T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 6.618024847453118
+    },
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 6.618147934698123
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 6.618147934698123,
+    "normalPointsUsed": 262,
+    "rangeRmsKm": 0.00033090739673490623
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-18T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-16T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 7.737425913414848
+    },
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.737489067153869
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.737489067153869,
+    "normalPointsUsed": 160,
+    "rangeRmsKm": 0.00038687445335769345
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-19T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-17T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 8.040451531745003
+    },
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 8.040032856817072
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 8.040032856817072,
+    "normalPointsUsed": 213,
+    "rangeRmsKm": 0.00040200164284085366
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-20T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-18T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 7.4599787182351
+    },
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 7.4602718168703674
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 7.4602718168703674,
+    "normalPointsUsed": 307,
+    "rangeRmsKm": 0.0003730135908435183
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-19T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 8.555387589518698
+    },
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 8.555119111256637
+    }
+   ],
+   "estimate": {
+    "iterations": 3,
+    "weightedRms": 8.555119111256637,
+    "normalPointsUsed": 357,
+    "rangeRmsKm": 0.00042775595556283214
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-22T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-20T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.216354255705984
+    },
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.216492658608545
+    }
+   ],
+   "estimate": {
+    "iterations": 3,
+    "weightedRms": 5.216492658608545,
+    "normalPointsUsed": 319,
+    "rangeRmsKm": 0.00026082463293042714
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-23T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-21T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 2.9489824750891924
+    },
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 2.948674083025013
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 2.948674083025013,
+    "normalPointsUsed": 121,
+    "rangeRmsKm": 0.00014743370415125072
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-24T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-22T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 1.578009440242693
+    },
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 1.578063067867225
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 1.578063067867225,
+    "normalPointsUsed": 143,
+    "rangeRmsKm": 0.00007890315339336126
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-25T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-23T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 3.37117499500194
+    },
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 3.3711252243974923
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 3.3711252243974923,
+    "normalPointsUsed": 257,
+    "rangeRmsKm": 0.00016855626121987466
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-26T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-24T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 5.012793987013254
+    },
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.012571901982965
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.012571901982965,
+    "normalPointsUsed": 215,
+    "rangeRmsKm": 0.00025062859509914826
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-27T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-25T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 4,
+     "weightedRms": 4.842705537088715
+    },
+    {
+     "epoch": "2026-08-27T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 4.842776721699698
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 4.842776721699698,
+    "normalPointsUsed": 212,
+    "rangeRmsKm": 0.00024213883608498494
+   }
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-08-28T00:00:00.000Z",
+   "ap": "ok",
+   "fits": [
+    {
+     "epoch": "2026-08-26T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 3,
+     "weightedRms": 5.2835455140571606
+    },
+    {
+     "epoch": "2026-08-28T00:00:00.000000000Z",
+     "status": "OK",
+     "termination": "CONVERGED",
+     "converged": true,
+     "iterations": 2,
+     "weightedRms": 5.283931447447383
+    }
+   ],
+   "estimate": {
+    "iterations": 2,
+    "weightedRms": 5.283931447447383,
+    "normalPointsUsed": 154,
+    "rangeRmsKm": 0.000264196572372369
+   }
+  }
+ ]
+}

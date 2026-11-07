@@ -1,4 +1,4 @@
-// The modules XA runs, opened once at build.json's commit: propagator/sdn-ap (fit, propagate and the Part D diagnostic
+// The modules XA runs, opened once at build.json's commit: propagator/sdn-ap (fit, ingest_omm, propagate and the Part D diagnostic
 // exports, one direct harness), analysis/gp-error-model (G1's scorer: pair_statistics in the truth's RTN axes),
 // foundation/frames (TEME to the truth's axes, as B1 and B2) and analysis/density-calibration (the open-DCA $DCL).
 // JavaScript moves bytes; every number comes out of a module.
@@ -7,7 +7,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { g1Dir, modulesRoot, sha256 } from '../common.mjs';
-import { TYPE, oemLines } from './sds.mjs';
+import { TYPE, oemLines, flightPcfBytes } from './sds.mjs';
 
 const modules = modulesRoot();
 const g1 = (name) => import(path.join(g1Dir, name));
@@ -28,13 +28,15 @@ export async function openModules() {
   const dcDir = path.join(modules, 'analysis/density-calibration');
   const dc = await createBrowserModuleHarness({ wasmSource: fs.readFileSync(path.join(dcDir, 'dist/isomorphic/module.wasm')), manifest: JSON.parse(fs.readFileSync(path.join(dcDir, 'plugin-manifest.json'), 'utf8')), surface: 'direct' });
   const b = { erm, gem, frames };
+  // The fit is where the rows and the $DCL enter: it writes them into the $OCM it emits, and that one record is the
+  // whole input of a flight.
   const extraFrames = (extra) => { const { rows, dcl } = extra ?? {}; return [
     ...(rows ? [{ portId: 'space_weather', typeRef: TYPE('SPW'), payload: rows }] : []),
     ...(dcl ? [{ portId: 'density_correction', typeRef: TYPE('DCL'), payload: dcl }] : []),
   ]; };
   return {
     provenance: { modulesCommit: null, sdnapWasmSha256: sha256(fs.readFileSync(apWasm)) },
-    /** propagator/sdn-ap `fit` of one block: { ok, omm (Uint8Array), ms } or { ok: false, error }. */
+    /** propagator/sdn-ap `fit` of one block: { ok, ocm (Uint8Array), ms } or { ok: false, error }. */
     async fit(oem, pcf, extra) {
       const t0 = performance.now();
       let r;
@@ -43,12 +45,17 @@ export async function openModules() {
       } catch (error) { return { ok: false, error: short(error) }; }
       const fitMs = performance.now() - t0;
       if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`, fitMs };
-      return { ok: true, omm: new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload), fitMs };
+      return { ok: true, ocm: new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload), fitMs };
     },
-    /** propagator/sdn-ap `propagate` of one set at explicit epochs (ISO UTC), TEME: [{epoch, r, v}] (km, km/s). */
-    async propagate(omm, epochs, pcf, extra, grid) {
-      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'omm', typeRef: TYPE('OMM'), payload: omm }, { portId: 'grid', typeRef: TYPE('OEM'), payload: grid },
-        { portId: 'configuration', typeRef: TYPE('PCF'), payload: pcf }, ...extraFrames(extra)] });
+    /** propagator/sdn-ap `ingest_omm`: a foreign $OMM (the public SGP4 set) as the $OCM a flight takes. */
+    async ingest(omm) {
+      const r = await h.invoke({ methodId: 'ingest_omm', inputs: [{ portId: 'omm', typeRef: TYPE('OMM'), payload: omm }] });
+      if (r.statusCode !== 0) throw new Error(`ingest_omm: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
+      return new Uint8Array(r.outputs.find((o) => o.portId === 'ocm').payload);
+    },
+    /** propagator/sdn-ap `propagate` of one $OCM at explicit epochs (ISO UTC; the $PCF's OUTPUT.EPOCHS), TEME: [{epoch, r, v}]. */
+    async propagate(ocm, epochs) {
+      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: TYPE('PCF'), payload: flightPcfBytes(epochs) }] });
       if (r.statusCode !== 0) throw new Error(`propagate: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
       const lines = oemLines(r.outputs.find((o) => o.portId === 'ephemeris').payload);
       if (lines.length !== epochs.length) throw new Error(`propagate returned ${lines.length} of ${epochs.length} states`);

@@ -1,0 +1,133 @@
+{
+ "recorded": "2026-11-03",
+ "note": "Read-only checks V1 to V12 of PLAN.md section 8. Identifiers and aggregates only.",
+ "V1": {
+  "result": "ELEMENT SETS PER OBJECT-DAY MEASURED",
+  "perObjectDay": {
+   "Swarm A/B/C": 3.12,
+   "GRACE-FO 1/2": 3.24,
+   "Sentinel-1A/C": 3.88,
+   "CryoSat-2, SARAL": 3.22,
+   "Sentinel-3A/B, SWOT": 3.22,
+   "HY-2C/D": 4.01,
+   "Jason-3, Sentinel-6A/B": 2.72,
+   "LAGEOS-2, Etalon-1/2": 1.14,
+   "GNSS and GEO (94 objects)": 0.92
+  },
+  "against": "PLAN-v2 assumed 2.0 / 1.5 / 1.0 / 0.7 / 0.5: LEO is 1.4 to 4 times higher, GNSS 1.3 times."
+ },
+ "V2": {
+  "result": "PLACEMENT CHANGED",
+  "detail": "Regime comes from each set's mean altitude (un-Kozai'd, WGS-72) and eccentricity, as CA does. Swarm A/B/C and GRACE-FO are LEO-L (Swarm B 480 km). CryoSat-2, SARAL, Sentinel-1A/C and Sentinel-3A/B are LEO-M (Sentinel-3 mean altitude is below 800 km). Jason-3, Sentinel-6A/B, HY-2C/D and SWOT are LEO-H. LAGEOS-2, Etalon-1/2 and the GNSS MEO satellites are MEO. BeiDou GEO/IGSO satellites and QZS-3 (and one more ESA GNSS satellite) fall in GEO by altitude (8 objects). One ESA GNSS set lands in HEO (5 rows): HEO has no usable dev truth."
+ },
+ "V3": {
+  "result": "MEASURED FROM THE SEAL",
+  "seal": {
+   "file": "reference-states/seal/2026-11-04T034634Z.json",
+   "sha256": "e92767243264aa478602f60b8dfce8ef84638f6663fbbafaaac6e5fad7014bb0",
+   "read": "names, dates and SHA-256 only"
+  },
+  "latencyDays": {
+   "ESA finals": {
+    "used": 4.2,
+    "interval": [
+     3.16,
+     4.16
+    ],
+    "basis": "day 2026-10-30 (doy 303) present, doy 304 absent at the 2026-11-04T03:44Z run"
+   },
+   "ILRS combined (ilrsa)": {
+    "used": 17.2,
+    "interval": [
+     10.2,
+     17.2
+    ],
+    "basis": "arc ending 2026-10-17 present, 2026-10-24 absent at 03:43Z"
+   },
+   "Sentinel-1 POEORB": {
+    "used": 19.3,
+    "interval": [
+     19.25,
+     19.26
+    ],
+    "basis": "creation time minus validity end over 1817 files (median 19.26; reprocessed files up to 224 d excluded from the figure); Sentinel-1A truth ends 2026-07"
+   },
+   "DORIS upper bounds per satellite": {
+    "CryoSat-2": 24.2,
+    "SARAL": 29.2,
+    "Sentinel-3A": 17.2,
+    "Sentinel-3B": 16.2,
+    "SWOT": 25.2,
+    "HY-2C": 22.2,
+    "HY-2D": 24.2,
+    "Jason-3": 32.2,
+    "Sentinel-6A": 25.2,
+    "Sentinel-6B": 25.2,
+    "basis": "newest arc end per satellite against the 2026-11-04T03:41Z fetch; the regime takes the maximum: LEO-M 29.2, LEO-H 32.2"
+   },
+   "GFZ Kp (nowcast snapshot)": {
+    "used": 1.0,
+    "interval": [
+     0,
+     0.6
+    ],
+    "basis": "snapshot 2026-11-02T13:47Z holds every 3-hour value of 2026-11-01"
+   },
+   "WAAS MT9 (CDDIS daily file)": {
+    "used": 1.0,
+    "interval": [
+     0,
+     0.7
+    ],
+    "basis": "doy 306 file retrieved 2026-11-03T16:01Z"
+   },
+   "COSMIC-2": {
+    "used": 3.0,
+    "assumed": true,
+    "basis": "not measurable (feed ended 2026-10-10 before the seal); near-real-time product; not binding against DORIS 29.2 d"
+   }
+  },
+  "detail": "PLAN-v2 assumed ESA 14 d, ilrsa 11 d, DORIS at least 17 d, S1 about 20 d. Measured: ESA is 3 to 4 d, ilrsa up to 17 d, DORIS 16 to 32 d by satellite, S1 19.3 d. Open dates use the used column (PLAN.md section 11)."
+ },
+ "V4": {
+  "result": "CLUSTERS FIXED IN lib/clusters.mjs",
+  "detail": "Fixed families: Swarm A+C, Swarm B, GRACE-FO 1+2, Sentinel-1A+C, CryoSat-2, SARAL, Sentinel-3A+B, HY-2C, HY-2D, SWOT, Jason-3+Sentinel-6A+B, LAGEOS-2, Etalon-1+2. GNSS planes from the ascending node and inclination of one set per satellite (gap rule, 20 degrees). Cluster counts per stratum are in dev-rows-summary.json.",
+  "cosmic2": "COSMIC-2 (44349, 44351, 44353, 44358): four planes by the 20-degree ascending-node gap rule (41, 156, 273, 338 degrees; inclination 24.0): 4 clusters"
+ },
+ "V5": {
+  "result": "NOT NEEDED FOR LABELS",
+  "detail": "WAAS records in AR/hac/cddis-sbas are broadcast navigation messages (gpsMs, ECEF r and v, URA, health). P_truth is zero in every label row, so URA is a sensitivity row only. A WAAS-to-reference-state conversion is not built here: no module converts a geostationary broadcast message to GCRF states, and no physics is written in JavaScript. GEO dev truth is the ESA finals (BeiDou GEO/IGSO, QZS-3); WAAS dev rows are PENDING."
+ },
+ "V6": {
+  "result": "CONFIRMED",
+  "detail": "AR/hac/gfz-kp/20261009 Kp_ap_Ap_SN_F107_since_1932.txt ends with day 2026-10-08. Storm marking of dev rows to 2026-09-22 is covered; fresh days need O5."
+ },
+ "V7": {
+  "result": "TDRS DROPS",
+  "detail": "TDRSS.bsp comment area is an SPKMERGE log of ten TDRS source kernels (-124 to -221) ending 2026-02-09/11. It does not state definitive or predicted. TDRS has no dev rows."
+ },
+ "V8": {
+  "result": "MEASURED",
+  "detail": "Dev rows: 2.3 million rows (68 thousand sets, 114 objects) in about 2 minutes on 8 workers; set extraction 25 monthly workers in about 3 minutes."
+ },
+ "V9": {
+  "result": "READ",
+  "detail": "C2 PLAN.md dates table: calibration 2025-10-03 to 2026-03-31, validation 2026-04-01 to 2026-05-31, held out by time 2026-06-01 to the end of each product, scored once. C2's own score date for the S1C and COSMIC-2 days is not stated in that table; the O3 default (open them only after C2 scores) therefore has no computable open date and S1C/COSMIC-2 fresh strata read PENDING on that interlock."
+ },
+ "V10": {
+  "result": "UNVERIFIABLE",
+  "detail": "Debris error against payload error: a stated limit."
+ },
+ "V11": {
+  "result": "CONFIRMED",
+  "detail": "object_covariance population fallback: linear in age between usable bin centers (center = midpoint of the bin), held beyond the first and last (gp-error-model README and covariance_realism.cpp). empiricalPc (conjunction-assessment bridge, blob in pins.json): regime from the set's mean altitude (un-Kozai'd, WGS-72) and eccentricity, the age bin containing TCA minus epoch (the last bin closed at 8 d), the stratum's covariance used unchanged (a step in age, no interpolation); a stratum without 21 values or without a usable position block is skipped."
+ },
+ "V12": {
+  "result": "LOCATED, NOT RUN",
+  "detail": "AR/hac/.fetch-stamps holds per-host stamps (cddis.nasa.gov, isdc-data.gfz.de, ssd.jpl.nasa.gov and others, the newest 2026-11-03 for CDDIS). The DORIS, S1 POEORB, ESA and ILRS files were retrieved 2026-10-09 by hac-data-sources-inventory-20261009 (provenance files). No rerunnable collector for them was found in this lane's reach; nothing was fetched."
+ },
+ "conversions": {
+  "DORIS": "CryoSat-2, SARAL, Sentinel-3A/B, SWOT by the module reference-states script; HY-2C, HY-2D, Jason-3, Sentinel-6A and Sentinel-6B added to its satellite map (their arcs have no overlapping neighbor, so the module's stated sigma is a placeholder 0.1 m, flagged in the product basis and never read: P_truth is zero). Output outside the repository, EOP from the archived C04 file. The script reads only local archive copies.",
+  "moduleDependenciesNote": "The modules checkout's installed SDK (0.8.25) cannot load the EOP parser harness; the script was run from a scratch copy against this repository's SDK 0.9.7, wasm from the modules checkout."
+ }
+}

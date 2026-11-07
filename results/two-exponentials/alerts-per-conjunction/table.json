@@ -1,0 +1,2581 @@
+{
+ "label": "Real geometry and real forecast errors, simulated pairing. No covariance anywhere; this is not a collision-probability result.",
+ "primary": "99 percent, 3 days ahead, one radius per regime pair",
+ "afterFirstReading": {
+  "statement": "Chosen after the first reading. The registered primary reading and its verdicts stand as above.",
+  "singleRadiusApOver": {
+   "1": {
+    "SGP4": {
+     "ratio": 0.183,
+     "interval": [
+      0.136,
+      0.2625
+     ]
+    },
+    "XP": {
+     "ratio": 0.2052,
+     "interval": [
+      0.1652,
+      0.2883
+     ]
+    },
+    "XPU": {
+     "ratio": 0.1869,
+     "interval": [
+      0.1436,
+      0.2623
+     ]
+    },
+    "FFM": {
+     "ratio": 1.056,
+     "interval": [
+      0.9363,
+      1.12
+     ]
+    }
+   },
+   "3": {
+    "SGP4": {
+     "ratio": 0.2531,
+     "interval": [
+      0.1348,
+      0.4311
+     ]
+    },
+    "XP": {
+     "ratio": 0.28,
+     "interval": [
+      0.1597,
+      0.4579
+     ]
+    },
+    "XPU": {
+     "ratio": 0.2499,
+     "interval": [
+      0.138,
+      0.4357
+     ]
+    },
+    "FFM": {
+     "ratio": 1.023,
+     "interval": [
+      0.9063,
+      1.129
+     ]
+    }
+   },
+   "5": {
+    "XP": {
+     "ratio": 0.2937,
+     "interval": [
+      0.1879,
+      0.4158
+     ]
+    }
+   }
+  },
+  "publicSingleRadiusLaserSpheresBelow600": {
+   "95": {
+    "value": 14.783,
+    "interval": [
+     2.198,
+     25.12
+    ]
+   },
+   "99": {
+    "value": 30.898,
+    "interval": [
+     2.835,
+     36.48
+    ]
+   },
+   "99.9": {
+    "value": 40.247,
+    "interval": [
+     3.417,
+     44.21
+    ]
+   }
+  },
+  "tail": {
+   "windows": 121,
+   "largest": [
+    {
+     "satellite": "SENTINEL-6B",
+     "cutoff": "2025-12-09",
+     "burnFlagged": true,
+     "km": {
+      "SGP4": 2624.7,
+      "XP": 2625.7,
+      "XPU": 2625.8,
+      "AP": 2626.2,
+      "FFM": 2626.2
+     }
+    },
+    {
+     "satellite": "SENTINEL-6B",
+     "cutoff": "2025-12-04",
+     "burnFlagged": true,
+     "km": {
+      "SGP4": 973.9,
+      "XP": 973,
+      "XPU": 973.8,
+      "AP": 972.8,
+      "FFM": 972.9
+     }
+    },
+    {
+     "satellite": "SENTINEL-6B",
+     "cutoff": "2025-12-14",
+     "burnFlagged": true,
+     "km": {
+      "SGP4": 355.1,
+      "XP": 192.2,
+      "XPU": 200,
+      "AP": 192.2,
+      "FFM": 192.1
+     }
+    }
+   ]
+  }
+ },
+ "perfectForecast": {
+  "cell": "a1|ZERO|0|all|base",
+  "ae": {
+   "95": {
+    "value": 0.95003,
+    "interval": [
+     null,
+     null
+    ]
+   },
+   "99": {
+    "value": 0.99004,
+    "interval": [
+     null,
+     null
+    ]
+   },
+   "99.9": {
+    "value": 0.99903,
+    "interval": [
+     null,
+     null
+    ]
+   }
+  },
+  "singleRadius": {
+   "95": {
+    "value": 0.95,
+    "interval": [
+     null,
+     null
+    ]
+   },
+   "99": {
+    "value": 0.99001,
+    "interval": [
+     null,
+     null
+    ]
+   },
+   "99.9": {
+    "value": 0.999,
+    "interval": [
+     null,
+     null
+    ]
+   }
+  },
+  "withoutSlowEncounters": {
+   "95": {
+    "value": 0.95002,
+    "interval": [
+     null,
+     null
+    ]
+   },
+   "99": {
+    "value": 0.99004,
+    "interval": [
+     null,
+     null
+    ]
+   },
+   "99.9": {
+    "value": 0.99902,
+    "interval": [
+     null,
+     null
+    ]
+   }
+  },
+  "caught": [
+   0.95,
+   0.99,
+   0.999
+  ],
+  "droppedTrueEventShare": 0,
+  "beyondTiers": false,
+  "singleRadiusKm99": 0.99473
+ },
+ "arm1": {
+  "input": "precise orbits",
+  "leads": {
+   "1": {
+    "SGP4": {
+     "cell": "a1|SGP4|1|all|base",
+     "ae": {
+      "95": {
+       "value": 22.53,
+       "interval": [
+        12.72,
+        280
+       ]
+      },
+      "99": {
+       "value": 147.93,
+       "interval": [
+        21.69,
+        3087
+       ]
+      },
+      "99.9": {
+       "value": 2354.1,
+       "interval": [
+        29.78,
+        4531
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 12.277,
+       "interval": [
+        11,
+        13.43
+       ]
+      },
+      "99": {
+       "value": 19.275,
+       "interval": [
+        16.62,
+        22.82
+       ]
+      },
+      "99.9": {
+       "value": 372.21,
+       "interval": [
+        41.44,
+        11150
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 22.579,
+       "interval": [
+        12.63,
+        272.7
+       ]
+      },
+      "99": {
+       "value": 148.66,
+       "interval": [
+        21.04,
+        3083
+       ]
+      },
+      "99.9": {
+       "value": 2369.6,
+       "interval": [
+        28.58,
+        4560
+       ]
+      }
+     },
+     "caught": [
+      0.9497,
+      0.9901,
+      0.999
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": false,
+     "singleRadiusKm99": 5.5845
+    },
+    "XP": {
+     "cell": "a1|XP|1|all|base",
+     "ae": {
+      "95": {
+       "value": 10.627,
+       "interval": [
+        9.097,
+        375.2
+       ]
+      },
+      "99": {
+       "value": 759.1,
+       "interval": [
+        13.24,
+        3203
+       ]
+      },
+      "99.9": {
+       "value": 3198.5,
+       "interval": [
+        18.72,
+        4585
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 11.215,
+       "interval": [
+        9.548,
+        12.72
+       ]
+      },
+      "99": {
+       "value": 17.192,
+       "interval": [
+        13.6,
+        20.89
+       ]
+      },
+      "99.9": {
+       "value": 136.7,
+       "interval": [
+        19.12,
+        11180
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 10.66,
+       "interval": [
+        9.11,
+        372.7
+       ]
+      },
+      "99": {
+       "value": 691.02,
+       "interval": [
+        13.27,
+        3211
+       ]
+      },
+      "99.9": {
+       "value": 3179.8,
+       "interval": [
+        18.8,
+        4616
+       ]
+      }
+     },
+     "caught": [
+      0.95,
+      0.9899,
+      0.9987
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": false,
+     "singleRadiusKm99": 5.2623
+    },
+    "XPU": {
+     "cell": "a1|XPU|1|all|base",
+     "ae": {
+      "95": {
+       "value": 11.687,
+       "interval": [
+        10.32,
+        275.2
+       ]
+      },
+      "99": {
+       "value": 134.06,
+       "interval": [
+        15.18,
+        2961
+       ]
+      },
+      "99.9": {
+       "value": 1637.2,
+       "interval": [
+        21.27,
+        4429
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 12.402,
+       "interval": [
+        10.88,
+        13.85
+       ]
+      },
+      "99": {
+       "value": 18.875,
+       "interval": [
+        15.8,
+        22.85
+       ]
+      },
+      "99.9": {
+       "value": 39.161,
+       "interval": [
+        21.85,
+        11150
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 11.708,
+       "interval": [
+        10.34,
+        275.1
+       ]
+      },
+      "99": {
+       "value": 134.7,
+       "interval": [
+        15.2,
+        2980
+       ]
+      },
+      "99.9": {
+       "value": 1647.8,
+       "interval": [
+        21.33,
+        4459
+       ]
+      }
+     },
+     "caught": [
+      0.9501,
+      0.9885,
+      0.9984
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": false,
+     "singleRadiusKm99": 5.5252
+    },
+    "AP": {
+     "cell": "a1|AP|1|all|base",
+     "ae": {
+      "95": {
+       "value": 1.8567,
+       "interval": [
+        1.397,
+        272.4
+       ]
+      },
+      "99": {
+       "value": 208.09,
+       "interval": [
+        2.635,
+        3100
+       ]
+      },
+      "99.9": {
+       "value": 3386,
+       "interval": [
+        6.089,
+        4694
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 1.7463,
+       "interval": [
+        1.319,
+        2.092
+       ]
+      },
+      "99": {
+       "value": 3.5274,
+       "interval": [
+        2.338,
+        5.804
+       ]
+      },
+      "99.9": {
+       "value": 28.842,
+       "interval": [
+        6.408,
+        11280
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 1.8477,
+       "interval": [
+        1.379,
+        274
+       ]
+      },
+      "99": {
+       "value": 209.14,
+       "interval": [
+        2.609,
+        3120
+       ]
+      },
+      "99.9": {
+       "value": 3408.6,
+       "interval": [
+        6.088,
+        4726
+       ]
+      }
+     },
+     "caught": [
+      0.9511,
+      0.9898,
+      0.9988
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": false,
+     "singleRadiusKm99": 2.0545
+    },
+    "FFM": {
+     "cell": "a1|FFM|1|all|base",
+     "ae": {
+      "95": {
+       "value": 1.7158,
+       "interval": [
+        1.315,
+        326.4
+       ]
+      },
+      "99": {
+       "value": 567.35,
+       "interval": [
+        2.504,
+        3330
+       ]
+      },
+      "99.9": {
+       "value": 3484.3,
+       "interval": [
+        5.861,
+        4563
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 1.5823,
+       "interval": [
+        1.228,
+        1.926
+       ]
+      },
+      "99": {
+       "value": 3.3413,
+       "interval": [
+        2.343,
+        5.267
+       ]
+      },
+      "99.9": {
+       "value": 71.765,
+       "interval": [
+        6.302,
+        11650
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 1.7073,
+       "interval": [
+        1.31,
+        326.9
+       ]
+      },
+      "99": {
+       "value": 570.71,
+       "interval": [
+        2.477,
+        3353
+       ]
+      },
+      "99.9": {
+       "value": 3507.4,
+       "interval": [
+        5.849,
+        4593
+       ]
+      }
+     },
+     "caught": [
+      0.9483,
+      0.9899,
+      0.9991
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": false,
+     "singleRadiusKm99": 1.9789
+    }
+   },
+   "3": {
+    "SGP4": {
+     "cell": "a1|SGP4|3|all|base",
+     "ae": {
+      "95": {
+       "value": 477.98,
+       "interval": [
+        336.2,
+        11600
+       ]
+      },
+      "99": {
+       "value": 11142,
+       "interval": [
+        522.5,
+        50710
+       ]
+      },
+      "99.9": {
+       "value": 18202,
+       "interval": [
+        743.5,
+        52960
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 398.81,
+       "interval": [
+        352.3,
+        444.3
+       ]
+      },
+      "99": {
+       "value": 616.62,
+       "interval": [
+        520,
+        766.9
+       ]
+      },
+      "99.9": {
+       "value": 18470,
+       "interval": [
+        777.1,
+        91210
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 474.42,
+       "interval": [
+        337,
+        11680
+       ]
+      },
+      "99": {
+       "value": 11217,
+       "interval": [
+        524.8,
+        51060
+       ]
+      },
+      "99.9": {
+       "value": 18324,
+       "interval": [
+        746.9,
+        53310
+       ]
+      }
+     },
+     "caught": [
+      0.9491,
+      0.9905,
+      0.999
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": false,
+     "singleRadiusKm99": 43.077
+    },
+    "XP": {
+     "cell": "a1|XP|3|all|base",
+     "ae": {
+      "95": {
+       "value": 318.27,
+       "interval": [
+        278.2,
+        13150
+       ]
+      },
+      "99": {
+       "value": 9240.9,
+       "interval": [
+        405.1,
+        51580
+       ]
+      },
+      "99.9": {
+       "value": 43231,
+       "interval": [
+        584.5,
+        53010
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 364.25,
+       "interval": [
+        294.9,
+        425.3
+       ]
+      },
+      "99": {
+       "value": 557.27,
+       "interval": [
+        429.8,
+        716.5
+       ]
+      },
+      "99.9": {
+       "value": 5440,
+       "interval": [
+        687.1,
+        91150
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 319.69,
+       "interval": [
+        279.4,
+        13190
+       ]
+      },
+      "99": {
+       "value": 9303.9,
+       "interval": [
+        405.9,
+        51940
+       ]
+      },
+      "99.9": {
+       "value": 43524,
+       "interval": [
+        583.9,
+        53370
+       ]
+      }
+     },
+     "caught": [
+      0.9509,
+      0.9898,
+      0.9986
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": false,
+     "singleRadiusKm99": 40.293
+    },
+    "XPU": {
+     "cell": "a1|XPU|3|all|base",
+     "ae": {
+      "95": {
+       "value": 371.57,
+       "interval": [
+        314.4,
+        15820
+       ]
+      },
+      "99": {
+       "value": 12424,
+       "interval": [
+        449.7,
+        50910
+       ]
+      },
+      "99.9": {
+       "value": 20295,
+       "interval": [
+        634.5,
+        53010
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 411.29,
+       "interval": [
+        343.9,
+        463.8
+       ]
+      },
+      "99": {
+       "value": 624.34,
+       "interval": [
+        491.1,
+        767.2
+       ]
+      },
+      "99.9": {
+       "value": 25219,
+       "interval": [
+        738.7,
+        91120
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 373.42,
+       "interval": [
+        316,
+        15900
+       ]
+      },
+      "99": {
+       "value": 12508,
+       "interval": [
+        451.8,
+        51260
+       ]
+      },
+      "99.9": {
+       "value": 20430,
+       "interval": [
+        633.2,
+        53380
+       ]
+      }
+     },
+     "caught": [
+      0.951,
+      0.9902,
+      0.9989
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": true,
+     "singleRadiusKm99": 43.401
+    },
+    "AP": {
+     "cell": "a1|AP|3|all|base",
+     "ae": {
+      "95": {
+       "value": 49.796,
+       "interval": [
+        31.66,
+        12430
+       ]
+      },
+      "99": {
+       "value": 39202,
+       "interval": [
+        82.54,
+        51360
+       ]
+      },
+      "99.9": {
+       "value": 43203,
+       "interval": [
+        229.6,
+        52650
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 50.657,
+       "interval": [
+        23.64,
+        70.67
+       ]
+      },
+      "99": {
+       "value": 156.04,
+       "interval": [
+        68.59,
+        329
+       ]
+      },
+      "99.9": {
+       "value": 8211.7,
+       "interval": [
+        242.6,
+        90980
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 49.71,
+       "interval": [
+        31.76,
+        12510
+       ]
+      },
+      "99": {
+       "value": 39474,
+       "interval": [
+        82.52,
+        51720
+       ]
+      },
+      "99.9": {
+       "value": 43501,
+       "interval": [
+        228.2,
+        53020
+       ]
+      }
+     },
+     "caught": [
+      0.9513,
+      0.9907,
+      0.9991
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": true,
+     "singleRadiusKm99": 18.822
+    },
+    "FFM": {
+     "cell": "a1|FFM|3|all|base",
+     "ae": {
+      "95": {
+       "value": 46.489,
+       "interval": [
+        29.49,
+        15170
+       ]
+      },
+      "99": {
+       "value": 14225,
+       "interval": [
+        78.61,
+        51300
+       ]
+      },
+      "99.9": {
+       "value": 35147,
+       "interval": [
+        220.3,
+        52590
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 46.946,
+       "interval": [
+        22.18,
+        65.76
+       ]
+      },
+      "99": {
+       "value": 152.58,
+       "interval": [
+        68.12,
+        320.2
+       ]
+      },
+      "99.9": {
+       "value": 26492,
+       "interval": [
+        235.3,
+        91150
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 46.505,
+       "interval": [
+        29.56,
+        15160
+       ]
+      },
+      "99": {
+       "value": 14322,
+       "interval": [
+        78.42,
+        51660
+       ]
+      },
+      "99.9": {
+       "value": 35390,
+       "interval": [
+        218.9,
+        52950
+       ]
+      }
+     },
+     "caught": [
+      0.9505,
+      0.9907,
+      0.9993
+     ],
+     "droppedTrueEventShare": 0,
+     "beyondTiers": true,
+     "singleRadiusKm99": 18.616
+    }
+   },
+   "5": {
+    "SGP4": null,
+    "XP": {
+     "cell": "a1|XP|5|all|base",
+     "ae": {
+      "95": {
+       "value": 1339,
+       "interval": [
+        1112,
+        16140
+       ]
+      },
+      "99": {
+       "value": 19235,
+       "interval": [
+        1661,
+        53550
+       ]
+      },
+      "99.9": {
+       "value": 23596,
+       "interval": [
+        2569,
+        55940
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 1696,
+       "interval": [
+        1346,
+        1960
+       ]
+      },
+      "99": {
+       "value": 2677,
+       "interval": [
+        1913,
+        3262
+       ]
+      },
+      "99.9": {
+       "value": 16070,
+       "interval": [
+        3244,
+        91360
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 1346.3,
+       "interval": [
+        1107,
+        16250
+       ]
+      },
+      "99": {
+       "value": 19363,
+       "interval": [
+        1654,
+        53910
+       ]
+      },
+      "99.9": {
+       "value": 23726,
+       "interval": [
+        2582,
+        56320
+       ]
+      }
+     },
+     "caught": [
+      0.9505,
+      0.9899,
+      0.9993
+     ],
+     "droppedTrueEventShare": 0.001263,
+     "beyondTiers": true,
+     "singleRadiusKm99": 113.73
+    },
+    "XPU": null,
+    "AP": {
+     "cell": "a1|AP|5|all|base",
+     "ae": {
+      "95": {
+       "value": 316.83,
+       "interval": [
+        148.3,
+        24880
+       ]
+      },
+      "99": {
+       "value": 18241,
+       "interval": [
+        469.4,
+        52410
+       ]
+      },
+      "99.9": {
+       "value": 44497,
+       "interval": [
+        879.1,
+        54240
+       ]
+      }
+     },
+     "singleRadius": {
+      "95": {
+       "value": 346.98,
+       "interval": [
+        143.1,
+        464.5
+       ]
+      },
+      "99": {
+       "value": 786.36,
+       "interval": [
+        366.7,
+        1245
+       ]
+      },
+      "99.9": {
+       "value": 27679,
+       "interval": [
+        984.5,
+        91330
+       ]
+      }
+     },
+     "withoutSlowEncounters": {
+      "95": {
+       "value": 317.47,
+       "interval": [
+        148.6,
+        25050
+       ]
+      },
+      "99": {
+       "value": 18357,
+       "interval": [
+        471.7,
+        52780
+       ]
+      },
+      "99.9": {
+       "value": 44793,
+       "interval": [
+        882.3,
+        54590
+       ]
+      }
+     },
+     "caught": [
+      0.9511,
+      0.9903,
+      0.9987
+     ],
+     "droppedTrueEventShare": 0.001263,
+     "beyondTiers": true,
+     "singleRadiusKm99": 50.724
+    },
+    "FFM": null
+   }
+  },
+  "verdicts": {
+   "SGP4": {
+    "ratio": 3.518,
+    "interval": [
+     0.1395,
+     2.502
+    ],
+    "verdict": "undecided"
+   },
+   "XP": {
+    "ratio": 4.242,
+    "interval": [
+     0.1921,
+     2.478
+    ],
+    "verdict": "undecided"
+   },
+   "XPU": {
+    "ratio": 3.155,
+    "interval": [
+     0.1795,
+     2.493
+    ],
+    "verdict": "undecided"
+   },
+   "FFM": {
+    "ratio": 2.756,
+    "interval": [
+     0.3528,
+     2.517
+    ],
+    "verdict": "undecided"
+   }
+  },
+  "comparison": "same windows where a window key holds every theory; see errors.json windowsAllFive"
+ },
+ "arm2": {
+  "input": "public element sets, SGP4 only",
+  "leads": {
+   "1": {
+    "cell": "a2|PUB|1|all|base",
+    "ae": {
+     "95": {
+      "value": 5218.9,
+      "interval": [
+       2895,
+       7146
+      ]
+     },
+     "99": {
+      "value": 7854,
+      "interval": [
+       4465,
+       9752
+      ]
+     },
+     "99.9": {
+      "value": 9767.7,
+      "interval": [
+       5768,
+       11180
+      ]
+     }
+    },
+    "singleRadius": {
+     "95": {
+      "value": 7590.1,
+      "interval": [
+       3877,
+       11340
+      ]
+     },
+     "99": {
+      "value": 12737,
+      "interval": [
+       6546,
+       17530
+      ]
+     },
+     "99.9": {
+      "value": 17840,
+      "interval": [
+       9271,
+       20730
+      ]
+     }
+    },
+    "withoutSlowEncounters": {
+     "95": {
+      "value": 5245.9,
+      "interval": [
+       2910,
+       7188
+      ]
+     },
+     "99": {
+      "value": 7899.6,
+      "interval": [
+       4487,
+       9799
+      ]
+     },
+     "99.9": {
+      "value": 9825.4,
+      "interval": [
+       5802,
+       11240
+      ]
+     }
+    },
+    "caught": [
+     0.9522,
+     0.9905,
+     0.9989
+    ],
+    "droppedTrueEventShare": 0.001263,
+    "beyondTiers": false,
+    "singleRadiusKm99": 284.74
+   },
+   "3": {
+    "cell": "a2|PUB|3|all|base",
+    "ae": {
+     "95": {
+      "value": 5623.6,
+      "interval": [
+       3205,
+       7559
+      ]
+     },
+     "99": {
+      "value": 8008.9,
+      "interval": [
+       4491,
+       9584
+      ]
+     },
+     "99.9": {
+      "value": 9775.9,
+      "interval": [
+       5181,
+       10840
+      ]
+     }
+    },
+    "singleRadius": {
+     "95": {
+      "value": 8405.8,
+      "interval": [
+       4354,
+       12840
+      ]
+     },
+     "99": {
+      "value": 13456,
+      "interval": [
+       6635,
+       17590
+      ]
+     },
+     "99.9": {
+      "value": 17827,
+      "interval": [
+       8122,
+       20250
+      ]
+     }
+    },
+    "withoutSlowEncounters": {
+     "95": {
+      "value": 5656.4,
+      "interval": [
+       3221,
+       7598
+      ]
+     },
+     "99": {
+      "value": 8060.5,
+      "interval": [
+       4516,
+       9639
+      ]
+     },
+     "99.9": {
+      "value": 9841.4,
+      "interval": [
+       5214,
+       10910
+      ]
+     }
+    },
+    "caught": [
+     0.9501,
+     0.9897,
+     0.9988
+    ],
+    "droppedTrueEventShare": 0.001263,
+    "beyondTiers": false,
+    "singleRadiusKm99": 294.26
+   }
+  },
+  "pairedWithArm1": false
+ },
+ "sensitivities": {
+  "commonWindows": {
+   "theories": {
+    "SGP4": {
+     "95": {
+      "value": 395.4,
+      "interval": [
+       341.6,
+       18720
+      ]
+     },
+     "99": {
+      "value": 15965,
+      "interval": [
+       509.1,
+       51390
+      ]
+     },
+     "99.9": {
+      "value": 29320,
+      "interval": [
+       716.6,
+       52960
+      ]
+     }
+    },
+    "XP": {
+     "95": {
+      "value": 324.62,
+      "interval": [
+       262,
+       20480
+      ]
+     },
+     "99": {
+      "value": 37147,
+      "interval": [
+       376.5,
+       51570
+      ]
+     },
+     "99.9": {
+      "value": 43635,
+      "interval": [
+       519.3,
+       52930
+      ]
+     }
+    },
+    "XPU": {
+     "95": {
+      "value": 358.31,
+      "interval": [
+       303.2,
+       20220
+      ]
+     },
+     "99": {
+      "value": 12717,
+      "interval": [
+       429.6,
+       50160
+      ]
+     },
+     "99.9": {
+      "value": 23327,
+      "interval": [
+       581.5,
+       52960
+      ]
+     }
+    },
+    "AP": {
+     "95": {
+      "value": 46.834,
+      "interval": [
+       24.62,
+       19080
+      ]
+     },
+     "99": {
+      "value": 12787,
+      "interval": [
+       76.02,
+       51700
+      ]
+     },
+     "99.9": {
+      "value": 17954,
+      "interval": [
+       200.2,
+       52730
+      ]
+     }
+    },
+    "FFM": {
+     "95": {
+      "value": 46.715,
+      "interval": [
+       24.57,
+       19720
+      ]
+     },
+     "99": {
+      "value": 12325,
+      "interval": [
+       71.89,
+       50190
+      ]
+     },
+     "99.9": {
+      "value": 17922,
+      "interval": [
+       198.8,
+       52730
+      ]
+     }
+    }
+   },
+   "apOver": {
+    "SGP4": {
+     "ratio": 0.8009,
+     "interval": [
+      0.1166,
+      2.461
+     ]
+    },
+    "XP": {
+     "ratio": 0.3442,
+     "interval": [
+      0.1717,
+      2.386
+     ]
+    },
+    "XPU": {
+     "ratio": 1.006,
+     "interval": [
+      0.1572,
+      2.438
+     ]
+    },
+    "FFM": {
+     "ratio": 1.037,
+     "interval": [
+      0.3464,
+      2.948
+     ]
+    }
+   }
+  },
+  "laserSpheresIn750to2000": {
+   "theories": {
+    "SGP4": {
+     "95": {
+      "value": 407.65,
+      "interval": [
+       327.6,
+       523.6
+      ]
+     },
+     "99": {
+      "value": 611.33,
+      "interval": [
+       476.1,
+       722.8
+      ]
+     },
+     "99.9": {
+      "value": 842.32,
+      "interval": [
+       629.1,
+       1002
+      ]
+     }
+    },
+    "XP": {
+     "95": {
+      "value": 317.36,
+      "interval": [
+       254.2,
+       365
+      ]
+     },
+     "99": {
+      "value": 462.67,
+      "interval": [
+       357.7,
+       540.6
+      ]
+     },
+     "99.9": {
+      "value": 722.42,
+      "interval": [
+       477.1,
+       871.8
+      ]
+     }
+    },
+    "XPU": {
+     "95": {
+      "value": 352.89,
+      "interval": [
+       293.6,
+       394.5
+      ]
+     },
+     "99": {
+      "value": 504.25,
+      "interval": [
+       408.1,
+       581.9
+      ]
+     },
+     "99.9": {
+      "value": 739.57,
+      "interval": [
+       535.2,
+       889.4
+      ]
+     }
+    },
+    "AP": {
+     "95": {
+      "value": 44.354,
+      "interval": [
+       21.61,
+       62.9
+      ]
+     },
+     "99": {
+      "value": 123.36,
+      "interval": [
+       56.25,
+       204.9
+      ]
+     },
+     "99.9": {
+      "value": 595.54,
+      "interval": [
+       184.4,
+       701.5
+      ]
+     }
+    },
+    "FFM": {
+     "95": {
+      "value": 43.063,
+      "interval": [
+       19.94,
+       58.45
+      ]
+     },
+     "99": {
+      "value": 118.89,
+      "interval": [
+       56.58,
+       204.1
+      ]
+     },
+     "99.9": {
+      "value": 597.93,
+      "interval": [
+       183.7,
+       710.5
+      ]
+     }
+    }
+   },
+   "apOver": {
+    "SGP4": {
+     "ratio": 0.2018,
+     "interval": [
+      0.1055,
+      0.3146
+     ]
+    },
+    "XP": {
+     "ratio": 0.2666,
+     "interval": [
+      0.1539,
+      0.39
+     ]
+    },
+    "XPU": {
+     "ratio": 0.2446,
+     "interval": [
+      0.1362,
+      0.3667
+     ]
+    },
+    "FFM": {
+     "ratio": 1.038,
+     "interval": [
+      0.9318,
+      1.116
+     ]
+    }
+   }
+  },
+  "burnFreeNear700AndAltimetry": {
+   "theories": {
+    "SGP4": {
+     "95": {
+      "value": 448.14,
+      "interval": [
+       323.1,
+       525.8
+      ]
+     },
+     "99": {
+      "value": 629.62,
+      "interval": [
+       478.8,
+       732.1
+      ]
+     },
+     "99.9": {
+      "value": 873.24,
+      "interval": [
+       626.1,
+       1026
+      ]
+     }
+    },
+    "XP": {
+     "95": {
+      "value": 315.67,
+      "interval": [
+       256.7,
+       362.2
+      ]
+     },
+     "99": {
+      "value": 467.8,
+      "interval": [
+       357.9,
+       537.1
+      ]
+     },
+     "99.9": {
+      "value": 724.47,
+      "interval": [
+       469.7,
+       874.4
+      ]
+     }
+    },
+    "XPU": {
+     "95": {
+      "value": 351.73,
+      "interval": [
+       297.6,
+       391.2
+      ]
+     },
+     "99": {
+      "value": 512.67,
+      "interval": [
+       406,
+       570.2
+      ]
+     },
+     "99.9": {
+      "value": 751.86,
+      "interval": [
+       527.5,
+       889.7
+      ]
+     }
+    },
+    "AP": {
+     "95": {
+      "value": 45.231,
+      "interval": [
+       21.33,
+       63.4
+      ]
+     },
+     "99": {
+      "value": 124.96,
+      "interval": [
+       56.02,
+       195.2
+      ]
+     },
+     "99.9": {
+      "value": 608.16,
+      "interval": [
+       180,
+       706
+      ]
+     }
+    },
+    "FFM": {
+     "95": {
+      "value": 42.841,
+      "interval": [
+       20.63,
+       58.95
+      ]
+     },
+     "99": {
+      "value": 121.33,
+      "interval": [
+       55.7,
+       193.7
+      ]
+     },
+     "99.9": {
+      "value": 588.02,
+      "interval": [
+       176,
+       706.3
+      ]
+     }
+    }
+   },
+   "apOver": {
+    "SGP4": {
+     "ratio": 0.1985,
+     "interval": [
+      0.1026,
+      0.3087
+     ]
+    },
+    "XP": {
+     "ratio": 0.2671,
+     "interval": [
+      0.1524,
+      0.377
+     ]
+    },
+    "XPU": {
+     "ratio": 0.2437,
+     "interval": [
+      0.1331,
+      0.3481
+     ]
+    },
+    "FFM": {
+     "ratio": 1.03,
+     "interval": [
+      0.9355,
+      1.137
+     ]
+    }
+   }
+  },
+  "publicLaserSpheresBelow600": {
+   "95": {
+    "value": 14.62,
+    "interval": [
+     2.185,
+     24.51
+    ]
+   },
+   "99": {
+    "value": 30.15,
+    "interval": [
+     2.827,
+     36.07
+    ]
+   },
+   "99.9": {
+    "value": 39.43,
+    "interval": [
+     3.401,
+     43.74
+    ]
+   }
+  },
+  "publicIsotropicDirection": {
+   "95": {
+    "value": 4292.3,
+    "interval": [
+     2652,
+     6476
+    ]
+   },
+   "99": {
+    "value": 6303.2,
+    "interval": [
+     3896,
+     8472
+    ]
+   },
+   "99.9": {
+    "value": 8540.8,
+    "interval": [
+     4830,
+     10230
+    ]
+   }
+  }
+ },
+ "perPair": {
+  "SGP4": [
+   {
+    "pair": "SD-SD",
+    "radiusKm": 41.901,
+    "radiusInterval": [
+     37.58,
+     46.08
+    ],
+    "alertsPerTrueEvent": 522.69,
+    "interval": [
+     444.8,
+     596.1
+    ],
+    "trueEventShare": 0.932
+   },
+   {
+    "pair": "DO-DO",
+    "radiusKm": 958.99,
+    "radiusInterval": [
+     5.842,
+     2463
+    ],
+    "alertsPerTrueEvent": 269960,
+    "interval": [
+     33.35,
+     399300
+    ],
+    "trueEventShare": 0.0327
+   },
+   {
+    "pair": "S1-S1",
+    "radiusKm": 14.772,
+    "radiusInterval": [
+     10.09,
+     24.35
+    ],
+    "alertsPerTrueEvent": 154.88,
+    "interval": [
+     76.51,
+     417.2
+    ],
+    "trueEventShare": 0.0183
+   },
+   {
+    "pair": "S1-DO",
+    "radiusKm": 355.49,
+    "radiusInterval": [
+     8.014,
+     1881
+    ],
+    "alertsPerTrueEvent": 161470,
+    "interval": [
+     63.35,
+     861100
+    ],
+    "trueEventShare": 0.0104
+   },
+   {
+    "pair": "SD-S1",
+    "radiusKm": 23.356,
+    "radiusInterval": [
+     20.68,
+     32.14
+    ],
+    "alertsPerTrueEvent": 655.56,
+    "interval": [
+     464,
+     1358
+    ],
+    "trueEventShare": 0.00395
+   },
+   {
+    "pair": "SD-DO",
+    "radiusKm": 23.377,
+    "radiusInterval": [
+     18.32,
+     2275
+    ],
+    "alertsPerTrueEvent": 511.37,
+    "interval": [
+     312.1,
+     19030000
+    ],
+    "trueEventShare": 0.00156
+   },
+   {
+    "pair": "sparse",
+    "radiusKm": 453.7,
+    "radiusInterval": [
+     148.6,
+     2402
+    ],
+    "alertsPerTrueEvent": 108020,
+    "interval": [
+     16280,
+     316900
+    ],
+    "trueEventShare": 0.00126
+   }
+  ],
+  "XP": [
+   {
+    "pair": "SD-SD",
+    "radiusKm": 39.909,
+    "radiusInterval": [
+     33.36,
+     44.79
+    ],
+    "alertsPerTrueEvent": 487.87,
+    "interval": [
+     371.2,
+     569.6
+    ],
+    "trueEventShare": 0.932
+   },
+   {
+    "pair": "DO-DO",
+    "radiusKm": 910.87,
+    "radiusInterval": [
+     6.661,
+     2463
+    ],
+    "alertsPerTrueEvent": 253160,
+    "interval": [
+     42.39,
+     399500
+    ],
+    "trueEventShare": 0.0327
+   },
+   {
+    "pair": "S1-S1",
+    "radiusKm": 12.153,
+    "radiusInterval": [
+     7.846,
+     24.73
+    ],
+    "alertsPerTrueEvent": 105.94,
+    "interval": [
+     43.37,
+     416.8
+    ],
+    "trueEventShare": 0.0183
+   },
+   {
+    "pair": "S1-DO",
+    "radiusKm": 190.81,
+    "radiusInterval": [
+     6.688,
+     2153
+    ],
+    "alertsPerTrueEvent": 47092,
+    "interval": [
+     43.07,
+     873400
+    ],
+    "trueEventShare": 0.0104
+   },
+   {
+    "pair": "SD-S1",
+    "radiusKm": 29.54,
+    "radiusInterval": [
+     18.94,
+     30.66
+    ],
+    "alertsPerTrueEvent": 1089.7,
+    "interval": [
+     390,
+     1220
+    ],
+    "trueEventShare": 0.00395
+   },
+   {
+    "pair": "SD-DO",
+    "radiusKm": 66.03,
+    "radiusInterval": [
+     17.53,
+     2286
+    ],
+    "alertsPerTrueEvent": 4103.1,
+    "interval": [
+     284.2,
+     19060000
+    ],
+    "trueEventShare": 0.00156
+   },
+   {
+    "pair": "sparse",
+    "radiusKm": 25.559,
+    "radiusInterval": [
+     18.17,
+     2426
+    ],
+    "alertsPerTrueEvent": 606.84,
+    "interval": [
+     304.3,
+     314700
+    ],
+    "trueEventShare": 0.00126
+   }
+  ],
+  "XPU": [
+   {
+    "pair": "SD-SD",
+    "radiusKm": 42.692,
+    "radiusInterval": [
+     36.51,
+     47.08
+    ],
+    "alertsPerTrueEvent": 537.5,
+    "interval": [
+     422.9,
+     612.1
+    ],
+    "trueEventShare": 0.932
+   },
+   {
+    "pair": "DO-DO",
+    "radiusKm": 913.79,
+    "radiusInterval": [
+     6.633,
+     2466
+    ],
+    "alertsPerTrueEvent": 253860,
+    "interval": [
+     42.05,
+     399300
+    ],
+    "trueEventShare": 0.0327
+   },
+   {
+    "pair": "S1-S1",
+    "radiusKm": 10.092,
+    "radiusInterval": [
+     7.688,
+     23.63
+    ],
+    "alertsPerTrueEvent": 73.027,
+    "interval": [
+     41.99,
+     400.1
+    ],
+    "trueEventShare": 0.0183
+   },
+   {
+    "pair": "S1-DO",
+    "radiusKm": 544.43,
+    "radiusInterval": [
+     7.021,
+     1987
+    ],
+    "alertsPerTrueEvent": 316430,
+    "interval": [
+     47.77,
+     871700
+    ],
+    "trueEventShare": 0.0104
+   },
+   {
+    "pair": "SD-S1",
+    "radiusKm": 25.343,
+    "radiusInterval": [
+     19.84,
+     32.73
+    ],
+    "alertsPerTrueEvent": 780.54,
+    "interval": [
+     434.7,
+     1316
+    ],
+    "trueEventShare": 0.00395
+   },
+   {
+    "pair": "SD-DO",
+    "radiusKm": 42.315,
+    "radiusInterval": [
+     18.13,
+     2162
+    ],
+    "alertsPerTrueEvent": 1779.8,
+    "interval": [
+     311.5,
+     18950000
+    ],
+    "trueEventShare": 0.00156
+   },
+   {
+    "pair": "sparse",
+    "radiusKm": 2224.5,
+    "radiusInterval": [
+     19.61,
+     2401
+    ],
+    "alertsPerTrueEvent": 252260,
+    "interval": [
+     337.8,
+     316200
+    ],
+    "trueEventShare": 0.00126
+   }
+  ],
+  "AP": [
+   {
+    "pair": "SD-SD",
+    "radiusKm": 17.995,
+    "radiusInterval": [
+     11.02,
+     23.72
+    ],
+    "alertsPerTrueEvent": 132.94,
+    "interval": [
+     58.15,
+     220.9
+    ],
+    "trueEventShare": 0.932
+   },
+   {
+    "pair": "DO-DO",
+    "radiusKm": 911.34,
+    "radiusInterval": [
+     6.334,
+     2465
+    ],
+    "alertsPerTrueEvent": 252720,
+    "interval": [
+     39.18,
+     399600
+    ],
+    "trueEventShare": 0.0327
+   },
+   {
+    "pair": "S1-S1",
+    "radiusKm": 10.069,
+    "radiusInterval": [
+     6.6,
+     21.74
+    ],
+    "alertsPerTrueEvent": 72.771,
+    "interval": [
+     31.72,
+     325.9
+    ],
+    "trueEventShare": 0.0183
+   },
+   {
+    "pair": "S1-DO",
+    "radiusKm": 782.11,
+    "radiusInterval": [
+     6.351,
+     2011
+    ],
+    "alertsPerTrueEvent": 533460,
+    "interval": [
+     37.18,
+     873900
+    ],
+    "trueEventShare": 0.0104
+   },
+   {
+    "pair": "SD-S1",
+    "radiusKm": 17.544,
+    "radiusInterval": [
+     7.16,
+     21.41
+    ],
+    "alertsPerTrueEvent": 355.76,
+    "interval": [
+     55.57,
+     519.8
+    ],
+    "trueEventShare": 0.00395
+   },
+   {
+    "pair": "SD-DO",
+    "radiusKm": 1587.2,
+    "radiusInterval": [
+     6.48,
+     2214
+    ],
+    "alertsPerTrueEvent": 16219000,
+    "interval": [
+     40.24,
+     19020000
+    ],
+    "trueEventShare": 0.00156
+   },
+   {
+    "pair": "sparse",
+    "radiusKm": 9.7025,
+    "radiusInterval": [
+     5.913,
+     2381
+    ],
+    "alertsPerTrueEvent": 82.008,
+    "interval": [
+     35.3,
+     314700
+    ],
+    "trueEventShare": 0.00126
+   }
+  ],
+  "FFM": [
+   {
+    "pair": "SD-SD",
+    "radiusKm": 17.713,
+    "radiusInterval": [
+     11.1,
+     23.1
+    ],
+    "alertsPerTrueEvent": 129.02,
+    "interval": [
+     58.63,
+     212
+    ],
+    "trueEventShare": 0.932
+   },
+   {
+    "pair": "DO-DO",
+    "radiusKm": 1191.7,
+    "radiusInterval": [
+     6.474,
+     2465
+    ],
+    "alertsPerTrueEvent": 285820,
+    "interval": [
+     39.95,
+     399200
+    ],
+    "trueEventShare": 0.0327
+   },
+   {
+    "pair": "S1-S1",
+    "radiusKm": 14.101,
+    "radiusInterval": [
+     6.749,
+     21.32
+    ],
+    "alertsPerTrueEvent": 141.65,
+    "interval": [
+     32,
+     357.8
+    ],
+    "trueEventShare": 0.0183
+   },
+   {
+    "pair": "S1-DO",
+    "radiusKm": 696.3,
+    "radiusInterval": [
+     6.225,
+     2007
+    ],
+    "alertsPerTrueEvent": 451720,
+    "interval": [
+     36.63,
+     873900
+    ],
+    "trueEventShare": 0.0104
+   },
+   {
+    "pair": "SD-S1",
+    "radiusKm": 9.401,
+    "radiusInterval": [
+     7.145,
+     20.7
+    ],
+    "alertsPerTrueEvent": 103.33,
+    "interval": [
+     55.17,
+     507.3
+    ],
+    "trueEventShare": 0.00395
+   },
+   {
+    "pair": "SD-DO",
+    "radiusKm": 172.74,
+    "radiusInterval": [
+     6.322,
+     2224
+    ],
+    "alertsPerTrueEvent": 32746,
+    "interval": [
+     37.26,
+     18980000
+    ],
+    "trueEventShare": 0.00156
+   },
+   {
+    "pair": "sparse",
+    "radiusKm": 9.324,
+    "radiusInterval": [
+     6.221,
+     2427
+    ],
+    "alertsPerTrueEvent": 81.268,
+    "interval": [
+     37.13,
+     278000
+    ],
+    "trueEventShare": 0.00126
+   }
+  ],
+  "PUB": [
+   {
+    "pair": "SD-SD",
+    "radiusKm": 295.62,
+    "radiusInterval": [
+     192,
+     346.2
+    ],
+    "alertsPerTrueEvent": 8082.2,
+    "interval": [
+     4720,
+     9691
+    ],
+    "trueEventShare": 0.933
+   },
+   {
+    "pair": "DO-DO",
+    "radiusKm": 6.3889,
+    "radiusInterval": [
+     1.679,
+     7.428
+    ],
+    "alertsPerTrueEvent": 38.514,
+    "interval": [
+     2.686,
+     52.95
+    ],
+    "trueEventShare": 0.0328
+   },
+   {
+    "pair": "S1-S1",
+    "radiusKm": 6.4744,
+    "radiusInterval": [
+     1.731,
+     7.942
+    ],
+    "alertsPerTrueEvent": 31.149,
+    "interval": [
+     2.721,
+     47.55
+    ],
+    "trueEventShare": 0.0183
+   },
+   {
+    "pair": "S1-DO",
+    "radiusKm": 4.9854,
+    "radiusInterval": [
+     1.603,
+     7.426
+    ],
+    "alertsPerTrueEvent": 23.606,
+    "interval": [
+     2.492,
+     52.26
+    ],
+    "trueEventShare": 0.0104
+   },
+   {
+    "pair": "SD-S1",
+    "radiusKm": 173.52,
+    "radiusInterval": [
+     104.9,
+     185.6
+    ],
+    "alertsPerTrueEvent": 107620,
+    "interval": [
+     21250,
+     142100
+    ],
+    "trueEventShare": 0.00396
+   },
+   {
+    "pair": "SD-DO",
+    "radiusKm": 164.15,
+    "radiusInterval": [
+     96.3,
+     184.8
+    ],
+    "alertsPerTrueEvent": 25826,
+    "interval": [
+     7011,
+     41110
+    ],
+    "trueEventShare": 0.00156
+   },
+   {
+    "pair": "sparse",
+    "radiusKm": null,
+    "radiusInterval": [
+     null,
+     null
+    ],
+    "alertsPerTrueEvent": null,
+    "interval": [
+     null,
+     null
+    ],
+    "trueEventShare": 0
+   }
+  ]
+ },
+ "closure": {
+  "t0Digest": {
+   "value": "ef114fe59487d57ffc7c92be81fe22d01f443c564e3fce362897837ebb8f4eb7",
+   "b2": "ef114fe59487d57ffc7c92be81fe22d01f443c564e3fce362897837ebb8f4eb7",
+   "equal": true
+  },
+  "ladderUnder5km": {
+   "t1s1": 16091,
+   "b2": 16091,
+   "rel": 0
+  },
+  "weightedAgainstFull": {
+   "t1-s1": -0.037,
+   "t1-s2": -0.0837,
+   "t1-s3": -0.0141,
+   "t2-s1": -0.243,
+   "t2-s2": -0.185,
+   "t2-s3": 0.0456,
+   "t3-s1": 0.118,
+   "t3-s2": -0.814,
+   "t3-s3": 0.18
+  },
+  "sharedBand": {
+   "t1 under 5 km against t0": [
+    -0.037,
+    -0.0837,
+    -0.0141
+   ],
+   "t2 5 to 50 km against t1": [
+    -0.0483,
+    -0.0557,
+    0.109
+   ],
+   "t3 5 to 300 km against t2": [
+    -0.0651,
+    -0.0746,
+    0.115
+   ]
+  }
+ },
+ "geometry": {
+  "slowTrueShare": 0.00693,
+  "under500mShare": 0.265,
+  "ringShares0to5km": [
+   0.0636,
+   0.152,
+   0.199,
+   0.252,
+   0.333
+  ],
+  "uniformPlane": [
+   0.04,
+   0.12,
+   0.2,
+   0.28,
+   0.36
+  ]
+ },
+ "sizing": {
+  "registration_commit": "4fd82c4ffba89c148323e34d380d1b51a7314497",
+  "trials": 200,
+  "bootstrapReplicates": 100,
+  "subsample": 16,
+  "kForRatio05": 1.493,
+  "law": "lognormal 3D error per regime through AP median and p95 at day 3 of cells.json; axes 0.1 : 1 : 0.1; windows per regime as landed; synthetic, no real error row",
+  "P(fewer|1)": 0.005,
+  "P(notFewer|1)": 0.065,
+  "P(undecided|1)": 0.93,
+  "P(fewer|0.5)": 0.45,
+  "P(notFewer|0.5)": 0,
+  "P(undecided|0.5)": 0.55
+ },
+ "builds": {
+  "SGP4": "analysis/gp-error-model 0.11.0, propagator/sgp4 1.4.1, refit to the same truth",
+  "XP": "whiteroom XP, flown on sdn-ap 0.4.11; equal on 0.5.1, 0.6.3 and 0.6.4 by the cells.json provenance",
+  "XPU": "Space Force XP through propagator/sgp4-xp 0.2.1",
+  "AP": "sdn-ap: flown on 0.5.1, named 0.6.4 by the identities in cells.json provenance; THEMIS and Chandra flown on 0.6.3; day 5 flown on 0.5.1",
+  "FFM": "propagator/ffm 2.2.0, RK78, analysis/estimation 0.7.0; 40x40 below 2000 km perigee, 20x20 elsewhere",
+  "PUB": "SGP4 on the latest public element set, sdn-ap-gp-history-od baseline, no fit",
+  "screen": "analysis/conjunction-assessment 0.18.4"
+ },
+ "holds": "No Starlink group, held Galileo satellite, operator capture or C2 row was parsed. Swarm and GRACE-FO truth never after 2026-10-31.",
+ "registration": {
+  "commit": "4fd82c4ffba89c148323e34d380d1b51a7314497",
+  "time": "2026-11-06T22:08:14-05:00",
+  "sizing_commit": "9827e2686e8d9e899fdefdfd319295f0632a48e3"
+ }
+}

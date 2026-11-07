@@ -82,3 +82,29 @@ Install the staged U replay under that rule. For synthetic covariance only,
 use AP 0.4.1's shipped best-minimax table if landed on modules main before
 execution, otherwise AP 0.4.0's table; label either UNVERIFIED. Forecast
 states retain the original AP 0.4.0 build so the old leads remain comparable.
+
+## Amendment 2026-11-04: one $OCM (experiments-ocm-readers-2-20261104)
+
+Written and committed before any row of this re-measure. AP 0.4.0 and the
+Space Force XP 0.1.1 emit `$OMM` with a free-form parameter list, which no
+reader reads any more (zero backward compatibility). AP, XP and S are
+re-fitted and re-flown on the archived inputs at operator-theory's pinned
+build (lib/build.mjs PIN: modules ea824356, sdn-ap 0.5.1 d29acd2b5d92,
+sgp4-xp 0.2.1 816fd137d761; git show, SHA-256 checked): fit emits one `$OCM`
+carrying its weather rows through the record's horizon, and the flight takes
+that `$OCM` and OUTPUT.EPOCHS alone. U is re-fitted on sgp4-xp 0.2.1 in its
+own pass, [1,2,3,7] and [4,5] requested separately as before. Groups, truth,
+cutoffs, arcs, weather, leads, exclusions, holds, statistics, CA reach and
+encounters are unchanged; F, the GP products and the regime mapping are the
+registered rows, unchanged. Rows go under
+/opt/data/sdn-archive/operator-theory/five-day-ca/b051.
+
+Old leads [1,2,3,7] must equal that build's AP5 and AP6 rows
+(/opt/data/sdn-archive/operator-theory/ap/b051, operator-theory's re-measure
+of 2026-11-04) exactly for AP, XP and S, and within 1 m per scalar for U.
+Carried covariance flies each fitted `$OCM` as fitted: sdn-ap 0.5.1 ships
+the registered AP 0.4.1 table (covariance-config.json) unchanged, so the
+registered replacement of the four noise coefficients is the identity; the
+AP set's COV_PROPAGATION is checked against the row of its COV_REALISM
+regime. The registered gp-error-model and conjunction-assessment wasm are
+read at modules 16f1ef67 and d8b8fbf4, SHA-256 checked.

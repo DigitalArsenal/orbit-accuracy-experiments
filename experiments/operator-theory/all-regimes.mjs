@@ -1,16 +1,20 @@
 // AP6.md: AP, XP, SGP4 and FFM on the regimes AP5 did not reach, its truth, grid, coverage rule and as-issued weather. Module calls only.
-//   node experiments/operator-theory/all-regimes.mjs --wasm <AP 0.4.0> --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
+//   node experiments/operator-theory/all-regimes.mjs --out <dir> --groups LS,DO,GD,IG,GE,HE --shard k/n
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
-import { config, root, HOUR, DAY, iso, ms, rms, XM } from '../xp2-fit-design/common.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
-import { driverRows } from '../ffm-atmosphere-xm3/lib/ffm.mjs';
-import { apForces, openAp } from './lib/ap.mjs';
-import { openUssfXp } from './lib/ussf-xp.mjs';
+import { config, root, HOUR, DAY, iso, ms, rms, XM } from './lib/xp2.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
+import { driverRows } from './lib/xm3.mjs';
+import { apForces, openAp, standalone, fitPcf, fitWeather, horizonOf, readOcm } from './lib/ap.mjs';
+import { openUssfXp, openUssfXp011, typedOmm } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
-import { HX, STATIC, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
+import { HX, STATIC, DO9, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
+// AP9.md (DO9): its cutoffs fall in 2026, and the XP2 store's normalized RSGA set that xp2-fit-design/common.mjs pins ends 2025-12-31, so
+// the as-issued 2026 reports are read from the archive's NOAA warehouse copy (fetched 2026-10-09) and the daily collector. Added 2026-11-04
+// after the first DO9 run excluded every window for want of an RSGA; no fit had run. Same files, same parser; 2025 cutoffs are unchanged.
+XM.config.spaceWeather.rsgaDirs = [...XM.config.spaceWeather.rsgaDirs, '/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA', '/opt/data/sdn-archive/hac/noaa-swpc/2026'];
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
@@ -21,14 +25,42 @@ const W = await import(path.join(root, config.xm.dir, 'lib/weather.mjs'));
 const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
 const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules.mjs'));
 // --arms U: the Space Force's SGP4-XP alone, in its own store. --arms AP,XP (any of AP, XP, S, F): only those, in their own store, as for a
-// later AP build (AP7.md). Without it, this file's registered arms, unchanged.
-const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.includes('U'), has = (a) => !ONLY_U && ARMS.includes(a);
-const m = await openModules(), A = has('AP') || has('XP') ? await openAp(args.wasm) : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null, U = ONLY_U ? await openUssfXp() : null;
+// later AP build (AP7.md). Without it, this file's registered arms, unchanged. XP-ARM-0-2-1.md's attribution, with U or alone: U11 sgp4-xp 0.1.1's set
+// flown on 0.2.1 (ingest_omm), U11F the same set on 0.1.1, UW 0.2.1's set flown on the whiteroom propagator. --arcs: those fit arcs alone.
+const USSF_ARMS = ['U', 'U11', 'U11F', 'UW'];
+const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.some((a) => USSF_ARMS.includes(a)), has = (a) => !ONLY_U && ARMS.includes(a), hasU = (a) => ONLY_U && ARMS.includes(a);
+const ARCS = args.arcs ? args.arcs.split(',').map(Number) : null;
+// --ap-build <version>@<modulesCommit>@<wasmSha256>: propagator/sdn-ap at that build in place of lib/build.mjs PIN's, through lib/ap.mjs standalone()
+// (git show at the commit from SDN_MODULES_GIT or the modules root, SHA-256 checked), the same two calls as openAp(); the AP and XP arms alone change.
+// Without it, openAp(), unchanged. COMPARE.md's 0.6.3 cells: --arms AP --groups HX --ap-build 0.6.3@93cb5a0584fa728864e4426cc9ceb368936589f9@aa3ed22a...
+const AP_BUILD = args['ap-build'] ? (([version, modulesCommit, wasmSha256]) => { if (!/^\d+\.\d+\.\d+$/.test(version ?? '') || !/^[0-9a-f]{40}$/.test(modulesCommit ?? '') || !/^[0-9a-f]{64}$/.test(wasmSha256 ?? '')) throw new Error('--ap-build is <version>@<modulesCommit>@<wasmSha256>'); return { version, modulesCommit, wasmSha256 }; })(args['ap-build'].split('@')) : null;
+async function openApAt(b) {
+  const h = await standalone('propagator/sdn-ap', { modulesCommit: b.modulesCommit, wasmSha256: b.wasmSha256 });
+  return {
+    build: { ...b },
+    async fit(oem, pcf, extra) {
+      const inputs = [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(extra?.spw ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: extra.spw }] : [])];
+      let r;
+      try { r = await h.invoke({ methodId: 'fit', inputs }); } catch (error) { return { ok: false, error: String(error?.message ?? error).slice(0, 200) }; }
+      if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}` };
+      return { ok: true, ocm: new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload) };
+    },
+    async propagate(ocm, epochs, count) {
+      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: S.flightPcfBytes(epochs) }] });
+      if (r.statusCode !== 0) throw new Error(`propagate: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
+      const lines = S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload));
+      if (lines.length !== count) throw new Error(`propagate returned ${lines.length} of ${count} states`);
+      return lines;
+    },
+    close: async () => h.destroy?.(),
+  };
+}
+const m = await openModules(), A = has('AP') || has('XP') || hasU('UW') ? await (AP_BUILD ? openApAt(AP_BUILD) : openAp()) : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null;
+const U = ONLY_U ? await openUssfXp() : null, U11 = hasU('U11') || hasU('U11F') ? await openUssfXp011() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
-const ATM = XM.config.arms.X2.forces;
-const PCF_AP = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20 }), fit: null });
-const PCF_AP_VACUUM = S.pcfBytes({ forces: apForces(ATM, { tesseral: 31, zonal: 20, atmosphere: false }), fit: null });
-const PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null });
+const PCF_AP_VACUUM = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null });
+const PCF_XP = fitPcf({ forces: {}, fit: null });
 const ffmLow = () => ({
   forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: true, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined },
   integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01,
@@ -55,7 +87,7 @@ async function spkOnGrid(lines, axes) {
 
 async function objects() {
   const out = [];
-  for (const o of STATIC.filter((x) => GROUPS.includes(x.group))) {
+  for (const o of [...STATIC.filter((x) => GROUPS.includes(x.group)), ...(GROUPS.includes('DO9') ? DO9 : [])]) {
     const files = o.files();
     if (!files.length) { console.error(`${o.group} ${o.name}: no product`); continue; }
     const series = SRC.chain(files);
@@ -119,15 +151,14 @@ for (const o of await objects()) {
       if (!o.vacuum) {
         const R = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
         if (R.excluded) throw new Error(R.excluded);
-        ex = { rows: S.spwBytes(R.rows) };
+        ex = { spw: fitWeather(R.rows, horizonOf(D0)) };
         spw = driverRows(R.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
       }
-      const gridB = S.gridBytes(epochs);
       const score = (e) => { const days = {}; let i = 0; entered.forEach((k, j) => { const s = e.slice(i, i + sizes[j]); i += sizes[j]; const ric = [0, 1, 2].map((c) => rms(s.map((q) => q[c]))); days[k] = { e: Math.hypot(...ric), r: ric[0], t: ric[1], n: ric[2] }; }); return days; };
       const arc = (hours) => { const raw = between(D0 - hours * HOUR, D0); const coverage = raw.length > 1 ? raw.length / ((hours * 3600) / ((ms(raw[1].epoch) - ms(raw[0].epoch)) / 1000)) : 0; return coverage >= MIN_COV ? T.thinned(raw).chosen : null; };
       const high = Math.hypot(...scored[0].r) >= 8400;
       const pcfAp = o.vacuum ? PCF_AP_VACUUM : PCF_AP;
-      for (const hours of o.arcs) {
+      for (const hours of o.arcs.filter((h) => !ARCS || ARCS.includes(h))) {
         const thin = arc(hours);
         const run = async (name, fn) => {
           if (!ONLY_U && !has(name)) return;
@@ -137,24 +168,27 @@ for (const o of await objects()) {
         };
         const oem = thin ? S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }) : null;
         if (ONLY_U) {
-          await run('U', async () => {
-            const f = await U.fit(oem);
-            if (!f.ok) throw new Error(f.error);
-            return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(await U.propagate(f.omm, gridB, epochs.length), epochs, 'GCRF'), truth)) };
-          });
+          const flown = async (states) => score(await m.rtn(await m.toAxes(states, epochs, 'GCRF'), truth));
+          let f21, f11;
+          const fit21 = async () => { f21 ??= await U.fit(oem); if (!f21.ok) throw new Error(f21.error); return f21; };
+          const fit11 = async () => { f11 ??= await U11.fit(oem); if (!f11.ok) throw new Error(f11.error); return f11; };
+          if (hasU('U')) await run('U', async () => { const f = await fit21(); return { rms: readOcm(f.ocm).fitRmsKm, days: await flown(await U.propagate(f.ocm, epochs, epochs.length)) }; });
+          if (hasU('UW')) await run('UW', async () => ({ days: await flown(await A.propagate((await fit21()).ocm, epochs, epochs.length)) }));
+          if (hasU('U11')) await run('U11', async () => ({ days: await flown(await U.propagate(await U.ingest(typedOmm((await fit11()).omm)), epochs, epochs.length)) }));
+          if (hasU('U11F')) await run('U11F', async () => ({ days: await flown(await U11.propagate((await fit11()).omm, epochs, epochs.length)) }));
           continue;
         }
         await run('AP', async () => {
           const f = await A.fit(oem, pcfAp, ex);
           if (!f.ok) throw new Error(f.error);
-          const st = await A.propagate(f.omm, gridB, pcfAp, ex, epochs.length);
-          return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+          const st = await A.propagate(f.ocm, epochs, epochs.length);
+          return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
         });
         await run('XP', async () => {
           const f = await A.fit(oem, PCF_XP, undefined);
           if (!f.ok) throw new Error(f.error);
-          const st = await A.propagate(f.omm, gridB, PCF_XP, undefined, epochs.length);
-          return { rms: S.readFitOmm(f.omm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+          const st = await A.propagate(f.ocm, epochs, epochs.length);
+          return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
         });
         await run('S', async () => {
           const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name: o.name, objectId: o.objectId });
@@ -172,7 +206,7 @@ for (const o of await objects()) {
         });
       }
     } catch (error) { row.error = String(error?.message ?? error).slice(0, 180); }
-    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    fs.appendFileSync(outFile, `${JSON.stringify(F ? { ...row, ffm: F.provenance.ffm } : row)}\n`);
   }
 }
 console.error(`shard ${SHARD}/${SHARDS}: done`);

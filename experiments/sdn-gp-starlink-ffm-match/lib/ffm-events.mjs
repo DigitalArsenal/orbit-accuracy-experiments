@@ -98,7 +98,7 @@ export async function atmosphere(modules, context, points) {
     const out = [];
     for (const p of points) {
       const request = table('PRWAtmosphereRequest', {
-        EPOCH: c.instant(iso(p.epochMs)), ATMOSPHERE_MODEL: P.prwAtmosphereFamily.NRLMSISE00, ALTITUDE_M: p.altKm * 1000, LATITUDE_RAD: ((p.latDeg ?? 0) * Math.PI) / 180, LONGITUDE_RAD: ((p.lonDeg ?? 0) * Math.PI) / 180,
+        EPOCH: c.instant(iso(p.epochMs)), ATMOSPHERE_MODEL: P.pcfAtmosphereFamily.NRLMSISE00, ALTITUDE_M: p.altKm * 1000, LATITUDE_RAD: ((p.latDeg ?? 0) * Math.PI) / 180, LONGITUDE_RAD: ((p.lonDeg ?? 0) * Math.PI) / 180,
         LOCAL_SOLAR_TIME_HOURS: p.lstHours ?? 14, HAS_LOCAL_SOLAR_TIME_HOURS: true, F107: p.f107, F107_AVERAGE: p.f107Avg ?? p.f107, AP_INDEX: p.ap, INCLUDE_ANOMALOUS_OXYGEN: true,
       });
       const response = await harness.invoke({ methodId: 'invoke', inputs: [{ portId: 'request', typeRef: c.TYPE, payload: c.encode('ATMOSPHERE_REQUEST', request) }] });

@@ -1,0 +1,87 @@
+{
+ "report": "NOT WRITTEN: the subagent harness refused to create /Users/tj/software/terrain-work/body-look/ffm-losses/high-orbit/REPORT.md, so the findings are in the mechanisms, fixes and unsettled fields of this output. Tables are in /Users/tj/software/terrain-work/body-look/ffm-losses/high-orbit/tables.md (every GD/GE/IG loss row, and GN/WA per satellite, arc and lead) and /Users/tj/software/terrain-work/body-look/ffm-losses/high-orbit/reruns.md (all 57 rerun rows). Raw rows are in rows-*.jsonl, diverge-lageos1-1122.json, diverge2-lageos1-1122.json and burns-waas-hourly.json in the same directory. Scripts are in /Users/tj/software/terrain-work/body-look/ffm-losses/high-orbit/scripts/ (host2.mjs, fit2.mjs, rerun.mjs, diverge.mjs, diverge2.mjs, burn-times.mjs, build.py).",
+ "rows": "/Users/tj/software/terrain-work/body-look/ffm-losses/high-orbit/rows.json",
+ "losses": 939,
+ "reruns": 60,
+ "classes": {
+  "force": 0.623,
+  "maneuver": 0.294,
+  "settings": 0.063,
+  "estimator": 0.02,
+  "weather": 0,
+  "scoring": 0,
+  "unexplained": 0
+ },
+ "mechanisms": [
+  {
+   "claim": "GD (LAGEOS 1, LAGEOS 2, LARES-2) losses come from the integrator setting: steps capped at 300 s on an orbit with a 3.8 h period. The physics is not the cause. Etalon (11.3 h period) never loses (0 of 22 at day 7).",
+   "evidence": "One fitted LAGEOS 1 state (2025-11-22) was flown as pure two-body at (300 s, 1e-8). Against (30 s, 1e-10) it drifts 6.3 / 13.0 / 32.0 m along-track at days 1 / 3 / 7. The drift is the same with J2 only, 20x20, third bodies or SRP (diverge2-lageos1-1122.json). Tolerance 1e-10 at 300 s still gives 20.8 m at day 7 (rows-test.jsonl tol10). Steps of 120 s bring day-7 FFM error below AP on 7 of 8 windows (e.g. LAGEOS 1 2025-11-22: 23.9 to 3.7 m, AP 5.3; LAGEOS 2 2025-10-11: 33.7 to 8.2 m, AP 10.0; LARES-2 2025-11-08: 46.0 to 22.1 m, AP 24.4). With tides and 30 s steps, 4 of 5 windows beat AP at day 7 (LAGEOS 2 2025-11-08: 44.0 to 1.0 m, AP 13.8); the one that doesn't, LAGEOS 1 2025-11-22, is 6.5 m against AP 5.3. Where the setting comes from: ffmHigh, all-regimes.mjs:37-41 and truth-compare.mjs:34-38, applied to every orbit with r >= 8400 km (all-regimes.mjs:128). AP6.md:26 cites CHEAPER.md, but CHEAPER claimed this setting for navigation only. Its geodetic report showed full FFM 0.003 km against 0.018 km at 168 h. Shadow is not the cause: LAGEOS's first shadow is at forecast hour 114.7, and the drift is already 14 m by hour 81 in a flight with no shadow (diverge-lageos1-1122.json).",
+   "strength": "shown"
+  },
+  {
+   "claim": "GD second-order: solid tides are off in the high-orbit setting. This leaves FFM's normal error near 3 m at every lead.",
+   "evidence": "Turning solidTides on takes normal error from about 3.1 m to 0.2-0.4 m at all leads (LAGEOS 1 2025-11-22; tides and tides30 runs). AP has no tides either; its normal error is 3-4 m. Tides with the 300 s step alone makes day-7 along-track worse (31.9 m), so the step error dominates. Other forces, tested on one window only (LAGEOS 1 2025-11-22): IERS 2010 relativity changes nothing (23.92 against 23.94 m), Knocke albedo/IR changes nothing (24.04 m), and 70x70 gravity is no better than 20x20 at a 30 s step (6.55 m both).",
+   "strength": "shown"
+  },
+  {
+   "claim": "GE and IG (BeiDou and QZSS GEO and IGSO) losses come from the force model. Cannonball SRP has no once-per-revolution terms, and these orbit-normal or fixed-yaw buses need them. FFM's full-state fit absorbs the missing signal into its semimajor axis and eccentricity, so the along-track error grows quadratically. AP's mean-element fit does not do that, so AP's error grows linearly.",
+   "evidence": "On C020 2025-10-08, the cannonball fit leaves about 2.9 m per axis (reduced chi-square 0.086 at 10 m). A 168 h arc is worse: chi-square 0.94 and day 7 at 0.38 km. Fitting cannonball plus ECOM2 Y0, B0, B1c and B1s (ecom5) gives chi-square 0.0037 and errors of 3.2 / 7.4 / 11.4 / 62.0 m at days 1 / 2 / 3 / 7, against AP's 19.8 / 26.8 / 36.8 / 92.3 m. ecom5 beats AP at every lead on all 9 GE and IG windows tested: C020 10-04 (day 7 8.5 against 106.7 m), C217 10-10 (8.1 against 33.2), C006 10-08 (87.4 against 148.1), C011 10-06 (44.1 against 141.3), C221, C009, C220, and J004 QZS-2I 10-12 (day 1 1.3 against 15.7 m). Fitted B1 terms are 4-6.6e-9 m/s^2 on BDS-2 GEO. Things that do not fix it, at day 7 on C020 10-08: Y0 alone 183 m, constant in-track 169 m, B0 alone 262 m, D2c alone 265 m, and full settings (70x70, tides, relativity, 1e-10, 120 s) 261.5 m against the stored 262.1 m. AP's AGOM (0.0246) equals FFM's fitted SRP (0.0245), so AP's AGOM does not soak up a force FFM lacks. The shadow is ruled out as the cause: AP treats the GEO eclipse season as wholly sunlit (sdn-ap SPEC.md:574-575) and still wins. FFM's conical shadow is hard-coded (propagator/ffm/lib/force_models.cpp:471-472), and ECOM2 fixes the losses without changing it. The truth for these groups is GFZ's multi-GNSS rapid orbit (GFZ0MGXRAP, sources.mjs:139-144), not ESA finals.",
+   "strength": "shown"
+  },
+  {
+   "claim": "GN: the losses on Galileo FOC E218 (43058), 334 of the 498 GN loss rows, come from the settled FOC Y-bias. Cannonball SRP has no force along the Y axis.",
+   "evidence": "Holding Y0 at +6.85e-10 m/s^2 (results/ffm-galileo-y-bias) or fitting ecom5 removes the loss at every lead on 3 of 3 windows. Day-7 errors, held Y0 / ecom5 / stored FFM / AP: 72 h arc 2026-04-16: 7.2 / 2.2 / 135.0 / 40.0 m; 72 h arc 2026-04-14: 8.7 / 7.4 / 165.0 / 48.9 m; 24 h arc 2026-04-16: 6.4 / 5.4 / 98.1 / 40.1 m. The freely fitted Y0 comes out at 6.9-7.6e-10, matching the published FOC value.",
+   "strength": "shown"
+  },
+  {
+   "claim": "GN: the GPS and GLONASS losses (164 rows, mostly day 7 on 72 h arcs) have the same cause: cannonball SRP.",
+   "evidence": "ecom5 beats AP at every lead on the two windows tested. GPS IIR-M 28874 2026-01-03: day 7 1.9 m against AP 15.6 m (stored FFM 35.7). GLONASS-M 37869 2026-05-28: 13.7 m against 33.4 m (stored 61.2). The other GPS and GLONASS windows are classed by group, not tested one by one.",
+   "strength": "likely"
+  },
+  {
+   "claim": "WA ties at ratio 1.00 because both arms are dominated by thrust that neither one models. The two arms differ by meters; the errors are kilometers.",
+   "evidence": "Median |FFM - AP| at days 1 / 3 / 7, against the median AP error: SES-15 5.1 / 7.9 / 21.4 m against 6.0 / 12.0 / 30.2 km; Eutelsat 117 West B 8.2 / 18.1 / 54.5 m against 2.1 / 6.2 / 20.8 km; Galaxy 30 6.6 / 9.4 / 33 m against 2.5 / 9.3 / 21.5 km. The relative difference is 0.06-0.34 %. From hourly WAAS burn peaks (scripts/burn-times.mjs, burns-waas-hourly.json): SES-15's semimajor axis moves a median 452 m per sidereal day, and Eutelsat 117 West B's moves 112 m with 1.9 mdeg of plane change per day. Both thrust almost continuously. Galaxy 30 burns north-south about weekly (09-02, 09-08, 09-16, 09-23, 09-30, 10-07, 10-14, 10-21, 10-28) and east-west near 09-05, 09-13, 09-26 and 10-11. The registered day rule (burns-waas.json) misses half of the north-south burns.",
+   "strength": "shown"
+  },
+  {
+   "claim": "WA Galaxy 30, burn-free leads (19 rows): FFM loses by tens of meters because it fits the SRP coefficient on 24 h of noisy broadcast truth.",
+   "evidence": "On the 2026-10-02 24 h window, the FFM fit leaves 11.5 m per axis (chi-square 1.32), and the fitted SRP is 0.0345 against AP's 0.0322. Holding SRP at 0.0322 gives 24.7 / 34.0 / 42.6 m at days 1 / 2 / 3, against AP 28.0 / 34.6 / 29.7 and the stored 43.4 / 84.8 / 112.8. Days 1 and 2 are removed; day 3 still loses. ECOM2 and in-track terms are ill-conditioned on this arc: ecom5 stalled at 128 m on day 1, in-track gave 711 m. One window only.",
+   "strength": "weak"
+  },
+  {
+   "claim": "No loss in GD, GE, IG or GN is a maneuver. Storms cannot act on either arm in these regimes.",
+   "evidence": "LAGEOS and LARES-2 are passive spheres. On the GE satellites C006, C016, C020 and C217, the registered burn rule finds no burns (burns-beidou.json); only 7 GE loss rows overlap a registered burn. FFM flies no drag above 8,400 km, and AP's BTERM is held at 0.0005. Removing a GE, IG or GN loss needed only an SRP change, never a maneuver.",
+   "strength": "shown"
+  }
+ ],
+ "fixes": [
+  {
+   "module": "experiments/operator-theory (ffmHigh in all-regimes.mjs:37-41 and truth-compare.mjs:34-38)",
+   "change": "Cap maxStep by orbital period instead of the 8,400 km split, for example min(300 s, period/100), which is 120 s at LAGEOS. Turn solidTides on for orbits above 8,400 km.",
+   "expected": "GD day-7 FFM median falls from 19 m to about 4-7 m, at or below AP's 12 m. Normal error falls about 10x. Navigation and GEO do not move: 300 s is under 1/144 of their periods. A registration must show, on new GD dates, a paired FFM-minus-AP day-7 interval below zero, Etalon unchanged, and no navigation cell moving beyond CHEAPER's 0.005 / 0.020 km margins. The production catalog already runs 120 s steps, tolerance 1e-14 and tides (propagator/ffm/catalog-configuration.mjs:30, 72-80).",
+   "cells": "AP6/AP7 regimes 72 h, group GD, days 1-7 (the 54 % worse cell at day 7)"
+  },
+  {
+   "module": "experiments harness lib/fit.mjs:21 and lib/frame.mjs:20-46 (analysis/estimation callers); propagator/ffm already accepts the kinds (catalog-configuration.mjs:120-127, force_models.cpp:536-550)",
+   "change": "Fit ECOM2 Y0, B0, B1c and B1s beside the cannonball for every GNSS and GEO/IGSO bus, with priors of about 1e-8 m/s^2. The harness today knows only 4 parameter kinds and has no ECOM2 field. A working path is in scratch: scripts/fit2.mjs (ecomFrame) and scripts/host2.mjs. A smaller alternative for Galileo FOC alone is the fixed Y0 = +6.85e-10 already designed in results/ffm-galileo-y-bias.",
+   "expected": "E218 day 7 falls from 0.1-0.3 km to 2-9 m. GPS and GLONASS day-7 losses go. GE and IG cells that are 60-69 % worse at days 3-7 turn into wins (C020 day 7 from 0.26 km to 0.01-0.06 km). Fit chi-square falls 10-20x. A registration must show, on new GN, GE and IG dates, ECOM2 FFM beating both AP and cannonball FFM at days 1-7 with paired intervals below zero, and no harm on Etalon or LAGEOS. Do not apply this to 24 h arcs of WAAS broadcast truth; it is ill-conditioned there.",
+   "cells": "AP7 truth2 GN 24 h and 72 h (all leads; E218 carries 334 of 498 loss rows); AP6 regimes GE and IG 72 h, days 2-7; GEO-TRUTH BeiDou lines"
+  },
+  {
+   "module": "experiments/operator-theory WA reporting (geo-burns.mjs and the WA tables)",
+   "change": "Use hourly burn peaks (the method in scratch burn-times.mjs) to split WA windows into burn and burn-free. Report burn-free leads separately. On burn-free Galaxy 30 24 h arcs, test an SRP prior or a held SRP value. No model change: the ties are thrust.",
+   "expected": "The WA 50-69 % 'worse' cells at ratio 1.00 are reclassified as maneuver ties. Day-1 and day-2 losses on burn-free Galaxy 30 leads likely go once SRP is held. A registration must show a paired gain on burn-free leads only.",
+   "cells": "regimes-wa 24 h and 72 h, all leads"
+  }
+ ],
+ "unsettled": [
+  "Why FFM drifts at a 300 s step even at tolerance 1e-10. It may be ordinary RK78 truncation at 0.14 rad per step that the per-step tolerance does not bound, or something in FFM's fast integration path (INTEGRATION_POLICY, catalog-configuration.mjs:110) bypassing the tolerance. Settling it needs a module-level test against an analytic Kepler orbit. The step-cap fix works either way.",
+  "Most rows are classed by their group, not tested one by one: 892 of 939. Rerun coverage: GD 8 windows, GE and IG 9, GN 5, WA 1. For GPS and GLONASS the SRP class rests on one window each.",
+  "Ocean tides could not be tested. The request with FES2004 at degree 20 was refused with 'OCEAN_TIDE_MAXIMUM_DEGREE must lie in [2, 50]' (prw_dynamics.cpp:376-378, modules 9a05d899b9), even though 20 is in range. I suspect a mismatch between the clone's PRW JS bindings and FFM 2.0.4's schema; frame.mjs:44 writes the degree but not the order. Not shown.",
+  "Shadow and penumbra in the GEO eclipse season were not isolated. FFM's cannonball shadow is hard-coded conical (force_models.cpp:471-472), so no rerun can switch it off. ECOM2 removes the GE losses without touching it.",
+  "IGSO maneuvers: no burn test exists for the IG group. QZS-2I J002 was not rerun.",
+  "WA Galaxy 30 burn-free leads: one window was tested, and day 3 still loses with SRP held. Broadcast noise of about 11.5 m per axis (the stated URA is 2 m) limits what any 24 h arc can show.",
+  "Box-wing attitude was not tested. FFM's GNSS box-wing covers GPS IIR, IIR-M and IIF only (gnss_srp.h:68-70), and the harness has no path to it.",
+  "Run accounting: 60 FFM fits. 57 are rows in rows-*.jsonl (one, fullx, was refused). 3 are fits in the diverge diagnostics, which flew one fitted product under up to 12 settings; those extra flights are not counted separately. AP refits were used for diagnostics only and reproduce the stored AP numbers exactly. Runs were under nice -n 10 at 1-minute load 7.9-16.6, with network fetch disabled for WAAS and dates capped to the cached days 242-306."
+ ]
+}

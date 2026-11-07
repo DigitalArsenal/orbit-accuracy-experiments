@@ -46,3 +46,30 @@ Report only: `IG`, `GE` and `HE`, which are few satellites over a short span; ev
 - No figure here covers maneuvering fleets, debris or a whole catalog.
 
 No arm, window, margin or rule changes after this registration.
+
+## Re-measured 2026-11-04 on one $OCM in, report only
+
+Build: modules ea824356, `propagator/sdn-ap` 0.5.1 (wasm d29acd2b5d92) and `propagator/sgp4-xp` 0.2.1 (816fd137d761), replacing this registration's AP 0.4.0 (715ef2fee512) and the Space Force XP's sgp4-xp 0.1.1. `all-regimes.mjs` fitted `AP`, `XP` and the Space Force XP as one `$OCM` each and flew it alone, on these windows, truth, grid and as-issued weather, into `ap/b051` (`lib/remeasure.mjs`, `results/remeasure-0-5-1.md`); `HX` and the WAAS geostationary group with them.
+
+- `AP`: every row stored at AP 0.4.18 (`ap/b0418`, AP9.md) is equal byte for byte (548 arm rows); against AP7.md's 0.4.11 rows 255 of 824 arm rows differ, the windows where 0.4.18 departs from 0.4.11. This registration's 0.4.0 rows stand as registered.
+- `XP`: every row equals AP7.md's 0.4.11 rerun (`ap/b0411`) byte for byte (824 arm rows).
+- `S` and `F` are not rerun: neither flies `sdn-ap` or `sgp4-xp`.
+- The Space Force XP moved with sgp4-xp 0.2.1, which flies whole integrator steps. Median km, 0.1.1 / 0.2.1:
+
+| Group | Fit | Windows | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---|---:|---:|---:|---:|---:|
+| LS | 24 h | 90 | 0.832 / 0.834 | 1.57 / 1.55 | 2.50 / 2.50 | 8.98 / 10.8 |
+| LS | 72 h | 90 | 0.483 / 0.483 | 0.566 / 0.566 | 0.619 / 0.626 | 1.24 / 1.25 |
+| DO | 24 h | 138 | 0.923 / 0.923 | 1.87 / 1.88 | 3.15 / 3.07 | 14.9 / 15.0 |
+| DO | 72 h | 138 | 0.590 / 0.591 | 0.712 / 0.714 | 1.00 / 1.01 | 3.87 / 3.83 |
+| GD | 72 h | 55 | 0.104 / 0.104 | 0.109 / 0.109 | 0.109 / 0.109 | 0.153 / 0.147 |
+| IG | 72 h | 60 | 0.166 / 0.045 | 0.183 / 0.064 | 0.180 / 0.088 | 0.232 / 0.186 |
+| GE | 72 h | 45 | 0.213 / 0.039 | 0.210 / 0.061 | 0.188 / 0.089 | 0.293 / 0.269 |
+| HE | 72 h | 7 | 1.81 / 1.73 | 3.96 / 3.97 | 7.12 / 7.14 | 42.4 / 42.9 |
+| HE | 336 h | 7 | 2.35 / 1.97 | 4.95 / 4.58 | 7.35 / 7.74 | 25.9 / 25.7 |
+| HX | 72 h | 19 | 0.639 / 0.619 | 1.46 / 1.90 | 2.63 / 2.99 | 9.17 / 9.62 |
+| HX | 168 h | 7 | 2.28 / 2.13 | 6.64 / 6.81 | 3.63 / 3.63 | 17.8 / 17.9 |
+| WA | 24 h | 84 | 2.17 / 2.10 | 6.57 / 6.50 | 9.36 / 9.38 | 22.4 / 22.2 |
+| WA | 72 h | 84 | 5.26 / 5.23 | 4.91 / 4.96 | 9.59 / 9.59 | 27.0 / 27.1 |
+
+The statements (`LS`, `DO`, `GD`) read AP and XP only; the Space Force XP is report only here.

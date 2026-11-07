@@ -1,0 +1,14 @@
+{
+ "registration_commit": "4fd82c4ffba89c148323e34d380d1b51a7314497",
+ "trials": 200,
+ "bootstrapReplicates": 100,
+ "subsample": 16,
+ "kForRatio05": 1.493,
+ "law": "lognormal 3D error per regime through AP median and p95 at day 3 of cells.json; axes 0.1 : 1 : 0.1; windows per regime as landed; synthetic, no real error row",
+ "P(fewer|1)": 0.005,
+ "P(notFewer|1)": 0.065,
+ "P(undecided|1)": 0.93,
+ "P(fewer|0.5)": 0.45,
+ "P(notFewer|0.5)": 0,
+ "P(undecided|0.5)": 0.55
+}

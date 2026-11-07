@@ -14,19 +14,28 @@ const kpOf = (ap) => { let best = 0; for (let i = 0; i < AP.length; i += 1) if (
 const iso = (t) => new Date(t).toISOString().slice(0, 10);
 const DAY = 86400000;
 
-/** { rows: [SPW fields], through: { observed, forecast }, sources }: every day from `from` to `to`, ISO dates. */
-export function weatherRows(archiveDay, from, to) {
-  const days = new Map();
-  const put = (date, patch) => days.set(date, { ...(days.get(date) ?? {}), ...patch });
+/** GFZ's daily history from `since` on: [{ date, ap, kp (x 10), ap8, f107 }], a value GFZ has not given left out (ap and kp together, f107 alone). */
+export function gfzDays(since) {
+  const out = [];
   for (const line of fs.readFileSync(GFZ, 'latin1').split('\n')) {
     if (!line || line.startsWith('#')) continue;
     const t = line.trim().split(/\s+/);
     if (t.length < 28) continue;
     const date = `${t[0]}-${t[1].padStart(2, '0')}-${t[2].padStart(2, '0')}`;
-    if (date < '2026-01-01') continue;
+    if (date < since) continue;
     const kp = t.slice(7, 15).map((k) => Math.round(Number(k) * 10)), ap8 = t.slice(15, 23).map(Number), ap = Number(t[23]), f = Number(t[25]);
-    if (ap >= 0 && kp.every((k) => k >= 0)) put(date, { ap, kp, ap8, src: 'gfz' });
-    if (f > 0) put(date, { f107: f, f107Source: 'gfz' });
+    out.push({ date, ...(ap >= 0 && kp.every((k) => k >= 0) ? { ap, kp, ap8 } : {}), ...(f > 0 ? { f107: f } : {}) });
+  }
+  return out;
+}
+
+/** { rows: [SPW fields], through: { observed, forecast }, sources }: every day from `from` to `to`, ISO dates. */
+export function weatherRows(archiveDay, from, to) {
+  const days = new Map();
+  const put = (date, patch) => days.set(date, { ...(days.get(date) ?? {}), ...patch });
+  for (const { date, ap, kp, ap8, f107 } of gfzDays('2026-01-01')) {
+    if (ap !== undefined) put(date, { ap, kp, ap8, src: 'gfz' });
+    if (f107 !== undefined) put(date, { f107, f107Source: 'gfz' });
   }
   const folder = path.join(NOAA, archiveDay);
   for (const line of fs.readFileSync(path.join(folder, 'daily-solar-indices.txt'), 'latin1').split('\n')) {

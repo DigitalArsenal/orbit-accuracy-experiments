@@ -1,0 +1,286 @@
+{
+ "rows": 2347425,
+ "builder": {
+  "objects": 118,
+  "sets": 70153,
+  "targets": 2347854,
+  "rows": 2347460,
+  "missing": 394,
+  "noSpan": 975302,
+  "held": 391009,
+  "ageOutsideBinDropped": 35
+ },
+ "s4": {
+  "setRecordsDroppedByName": {
+   "starlink": 18873698,
+   "galileoGsat": 117360
+  },
+  "truthObjectBlocksDropped": {
+   "sp3PrnE": 21278,
+   "c2HeldObject": 50
+  },
+  "truthTargetsDroppedByTime": {
+   "c2Calibration20260601": 391009,
+   "swarmGracefo20261031": 0,
+   "iss2025": 0
+  },
+  "heldRowsRetained": 0,
+  "truthFilesRead": 60522,
+  "gpFilesRead": 829,
+  "inputPathsUnderHolds": 0
+ },
+ "strata": {
+  "MEO|6": {
+   "rows": 205191,
+   "objects": 89,
+   "clusters": 21,
+   "days": 615
+  },
+  "MEO|5": {
+   "rows": 205052,
+   "objects": 89,
+   "clusters": 21,
+   "days": 614
+  },
+  "MEO|4": {
+   "rows": 204967,
+   "objects": 89,
+   "clusters": 21,
+   "days": 615
+  },
+  "MEO|2": {
+   "rows": 204999,
+   "objects": 89,
+   "clusters": 21,
+   "days": 615
+  },
+  "MEO|3": {
+   "rows": 204958,
+   "objects": 89,
+   "clusters": 21,
+   "days": 614
+  },
+  "MEO|0": {
+   "rows": 204946,
+   "objects": 89,
+   "clusters": 21,
+   "days": 616
+  },
+  "MEO|1": {
+   "rows": 205074,
+   "objects": 89,
+   "clusters": 21,
+   "days": 615
+  },
+  "GEO|6": {
+   "rows": 20696,
+   "objects": 8,
+   "clusters": 8,
+   "days": 491
+  },
+  "GEO|5": {
+   "rows": 20636,
+   "objects": 8,
+   "clusters": 8,
+   "days": 491
+  },
+  "GEO|4": {
+   "rows": 20690,
+   "objects": 8,
+   "clusters": 8,
+   "days": 491
+  },
+  "GEO|2": {
+   "rows": 20777,
+   "objects": 8,
+   "clusters": 8,
+   "days": 492
+  },
+  "GEO|3": {
+   "rows": 20720,
+   "objects": 8,
+   "clusters": 8,
+   "days": 491
+  },
+  "GEO|0": {
+   "rows": 20933,
+   "objects": 8,
+   "clusters": 8,
+   "days": 492
+  },
+  "GEO|1": {
+   "rows": 20854,
+   "objects": 8,
+   "clusters": 8,
+   "days": 491
+  },
+  "HEO|0": {
+   "rows": 5,
+   "objects": 1,
+   "clusters": 1,
+   "days": 1
+  },
+  "HEO|1": {
+   "rows": 5,
+   "objects": 1,
+   "clusters": 1,
+   "days": 2
+  },
+  "HEO|2": {
+   "rows": 5,
+   "objects": 1,
+   "clusters": 1,
+   "days": 1
+  },
+  "HEO|3": {
+   "rows": 5,
+   "objects": 1,
+   "clusters": 1,
+   "days": 2
+  },
+  "HEO|4": {
+   "rows": 5,
+   "objects": 1,
+   "clusters": 1,
+   "days": 3
+  },
+  "HEO|5": {
+   "rows": 5,
+   "objects": 1,
+   "clusters": 1,
+   "days": 3
+  },
+  "HEO|6": {
+   "rows": 5,
+   "objects": 1,
+   "clusters": 1,
+   "days": 3
+  },
+  "LEO-H|6": {
+   "rows": 33723,
+   "objects": 6,
+   "clusters": 4,
+   "days": 345
+  },
+  "LEO-H|5": {
+   "rows": 33801,
+   "objects": 6,
+   "clusters": 4,
+   "days": 345
+  },
+  "LEO-H|4": {
+   "rows": 33852,
+   "objects": 6,
+   "clusters": 4,
+   "days": 345
+  },
+  "LEO-H|3": {
+   "rows": 33894,
+   "objects": 6,
+   "clusters": 4,
+   "days": 345
+  },
+  "LEO-H|2": {
+   "rows": 33946,
+   "objects": 6,
+   "clusters": 4,
+   "days": 345
+  },
+  "LEO-H|1": {
+   "rows": 33981,
+   "objects": 6,
+   "clusters": 4,
+   "days": 344
+  },
+  "LEO-H|0": {
+   "rows": 34020,
+   "objects": 6,
+   "clusters": 4,
+   "days": 345
+  },
+  "LEO-M|6": {
+   "rows": 41409,
+   "objects": 10,
+   "clusters": 8,
+   "days": 340
+  },
+  "LEO-M|5": {
+   "rows": 41416,
+   "objects": 10,
+   "clusters": 8,
+   "days": 341
+  },
+  "LEO-M|4": {
+   "rows": 41848,
+   "objects": 10,
+   "clusters": 8,
+   "days": 341
+  },
+  "LEO-M|3": {
+   "rows": 41945,
+   "objects": 10,
+   "clusters": 8,
+   "days": 341
+  },
+  "LEO-M|2": {
+   "rows": 42155,
+   "objects": 10,
+   "clusters": 8,
+   "days": 340
+  },
+  "LEO-M|1": {
+   "rows": 42192,
+   "objects": 10,
+   "clusters": 8,
+   "days": 339
+  },
+  "LEO-M|0": {
+   "rows": 42009,
+   "objects": 10,
+   "clusters": 8,
+   "days": 341
+  },
+  "LEO-L|6": {
+   "rows": 33648,
+   "objects": 5,
+   "clusters": 3,
+   "days": 520
+  },
+  "LEO-L|5": {
+   "rows": 33699,
+   "objects": 5,
+   "clusters": 3,
+   "days": 520
+  },
+  "LEO-L|4": {
+   "rows": 33804,
+   "objects": 5,
+   "clusters": 3,
+   "days": 520
+  },
+  "LEO-L|3": {
+   "rows": 33849,
+   "objects": 5,
+   "clusters": 3,
+   "days": 520
+  },
+  "LEO-L|2": {
+   "rows": 33889,
+   "objects": 5,
+   "clusters": 3,
+   "days": 518
+  },
+  "LEO-L|1": {
+   "rows": 33907,
+   "objects": 5,
+   "clusters": 3,
+   "days": 517
+  },
+  "LEO-L|0": {
+   "rows": 33910,
+   "objects": 5,
+   "clusters": 3,
+   "days": 518
+  }
+ }
+}

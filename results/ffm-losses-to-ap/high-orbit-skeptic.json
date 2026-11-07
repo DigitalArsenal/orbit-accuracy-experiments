@@ -1,0 +1,66 @@
+{
+ "report": "/Users/tj/software/terrain-work/body-look/ffm-losses/high-orbit/SKEPTIC.md",
+ "verdicts": [
+  {
+   "claim": "GD (59 rows): settings, maxStep 300 s; steps of 120 s or less remove the day-7 loss",
+   "verdict": "refuted",
+   "why": "Two windows still lose with the step fixed. GD|LAGEOS 2|2025-11-08: step120 gives 16.7 (rows-gd.jsonl) and my rk60 16.6, against AP 13.8. GD|LAGEOS 2|2025-12-06: rk60 gives 17.1 against AP 16.5. Solid tides, which the registered forces leave off, are the larger term: tidesrk60 gives 1.0-1.9 m at day 7 and cuts chi2 by 8-110x. The 'removed' mark on LAGEOS 2 11-08 came from tides30 (tides plus step), not from the step."
+  },
+  {
+   "claim": "diverge2: a two-body flight with the 300 s step drifts 32 m along-track over 10 days against 30 s",
+   "verdict": "stands",
+   "why": "rk60, step120 and step30 all give 3.8 m on LAGEOS 1 11-22. But tolerance 1e-10 at a 300 s max step still gives 20.8 m, so the RK78 error control does not bound the error. That makes it a propagator/ffm defect, not just a setting."
+  },
+  {
+   "claim": "GD by-group extension to the day-1 to day-3 losses",
+   "verdict": "weakened",
+   "why": "LAGEOS 1 11-01 with rk60 beats AP by only 1-30 % at d1-d3 (12.6 against 12.8 at d3). 46 of the 59 GD rows were never rerun."
+  },
+  {
+   "claim": "GE (46 rows): force, cannonball SRP without ECOM2 B1",
+   "verdict": "weakened",
+   "why": "ECOM2 beats AP on the 5 GE windows tested, including my C020 10-12 (29.9 against 143.5). It does not explain why FFM's cannonball loses to AP's cannonball when both fit the same AGOM (0.02448 against 0.02458) and FFM fits the arc more tightly. rk60, full and base are identical, so numerics are excluded. ECOM2 also regresses a window FFM wins: GE|C229 BDS-3G|2025-10-12 goes from 11.4 to 42.5 m at day 7."
+  },
+  {
+   "claim": "IG (41 rows): force, ECOM2 removes the loss",
+   "verdict": "weakened",
+   "why": "ECOM2 removes the loss on 5 windows (including my J002 10-08: 25.1 against 180.3) and improves an FFM win (C224 10-06). But no IG row was tested for a maneuver."
+  },
+  {
+   "claim": "GE maneuver (7 rows, burns-beidou rule)",
+   "verdict": "weakened",
+   "why": "It stands for C011 10-12 and C018, where both arms are off by 40-210 km. GE|C231 BDS-3G|2025-10-08 d3 has normal errors (16.1/17.6 m), and its burn (10-04T23:43) falls before the arc. It reaches the window only through the ±1 day label slack."
+  },
+  {
+   "claim": "GN E218 (334 rows): force, Galileo FOC Y-bias",
+   "verdict": "stands",
+   "why": "It cites the settled result in results/ffm-galileo-y-bias. My base, rk60 and tidesrk60 runs give 135.0, 135.0 and 132.5 m, which rules out numerics and tides."
+  },
+  {
+   "claim": "GN GPS/GLONASS (164 rows): force, cannonball SRP",
+   "verdict": "weakened",
+   "why": "ECOM2 was run on one window each for 28874 and 37869, and never for 41019 or 44850. All 498 GN rows have maneuver.tested false, yet tables.md prints 0 maneuvers."
+  },
+  {
+   "claim": "WA maneuver (269 rows; continuous electric station keeping for SES-15 and Eutelsat 117 West B)",
+   "verdict": "stands",
+   "why": "Burns explain the km-level errors. But 260 of the 269 rows have a ratio under 1.02, so they are ties, not FFM losses. SES-15 has no detected peak; its class rests on the median daily swing of the semimajor axis alone."
+  },
+  {
+   "claim": "WA estimator, burn-free Galaxy 30 (19 rows): the SRP coefficient is poorly fitted on a 24 h arc",
+   "verdict": "refuted",
+   "why": "WA|GALAXY 30 (G-30)|2026-10-24, 24 h arc, day 3: both arms are off by 3.2 km. A +218 m step of the semimajor axis at 2026-10-25T12:56 (burns-waas-hourly.json) slipped under the 272 m peak threshold. Fixing SRP on 10-02 left day 3 at 42.6 against AP 29.7, and ECOM2 made 10-16 worse."
+  }
+ ],
+ "missed": [
+  "Solid Earth tides are off in the registered high-orbit forces, and that is the main GD term.",
+  "The RK78 tolerance does not control the error at a 300 s max step (tol 1e-10 still gives 20.8 m), which is a module defect.",
+  "No mechanism for why AP's cannonball beats FFM's cannonball on GEO with the same fitted AGOM; aliasing of the once-per-revolution SRP into the osculating state is untested.",
+  "The fixes were never checked on windows FFM already wins; ECOM2 regresses GE C229 2025-10-12.",
+  "FFM swaps the requested RK78 for GJ8 PEC on a fixed grid (ffm_run.h:93-103, ffm_gj_forces.h:18-23; 600 s for GEO). Excluded for GE by rk60 = base, untested for WA and LAGEOS.",
+  "The GEO/IGSO windows fall in the autumn eclipse season; shadow and attitude modes were not examined.",
+  "The WA burn detector misses east-west burns of about 200 m, so 'burn-free' is unproven.",
+  "No maneuver test was run for GN or IG, and GN untested is printed as 0.",
+  "Rerun 'removed' marks mix variants: tides30 was counted as evidence for the step."
+ ]
+}

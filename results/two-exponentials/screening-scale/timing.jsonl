@@ -1,0 +1,50 @@
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"pooled","n":25,"cpuUsPerState":1.9490079365079367,"min":1.7543650793650791,"max":5.685416666666667}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Low orbit, laser spheres","n":3,"cpuUsPerState":3.690674603174603,"min":2.719444444444444,"max":5.685416666666667}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Low orbit, altimetry","n":4,"cpuUsPerState":1.884920634920635,"min":1.8555555555555554,"max":3.9845238095238096}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Laser geodetic","n":4,"cpuUsPerState":2.0247023809523808,"min":1.8876984126984127,"max":2.877083333333333}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Geostationary","n":4,"cpuUsPerState":2.69875992063492,"min":2.5346230158730156,"max":2.7461309523809527}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Inclined geosynchronous","n":1,"cpuUsPerState":2.5561507936507937,"min":2.5561507936507937,"max":2.5561507936507937}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Strong drag, 2026","n":4,"cpuUsPerState":1.812152777777778,"min":1.7543650793650791,"max":2.057539682539683}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Near 700 km","n":2,"cpuUsPerState":1.7953373015873018,"min":1.7902777777777779,"max":1.8003968253968257}
+{"arm":"SGP4","run":"a13cb468","build":"sgp4 1.4.1","regime":"Medium Earth orbit","n":3,"cpuUsPerState":1.9135912698412698,"min":1.8560515873015873,"max":1.9177579365079365}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"pooled","n":28,"cpuUsPerState":25.26860119047619,"min":9.705257936507937,"max":46.91269841269842}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Low orbit, laser spheres","n":3,"cpuUsPerState":39.606051587301586,"min":39.29087301587302,"max":46.91269841269842}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Low orbit, altimetry","n":4,"cpuUsPerState":42.83293650793651,"min":41.89732142857143,"max":46.46349206349206}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Laser geodetic","n":4,"cpuUsPerState":16.66423611111111,"min":10.413888888888888,"max":21.47222222222222}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Geostationary","n":4,"cpuUsPerState":21.51656746031746,"min":18.09126984126984,"max":26.783630952380953}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Inclined geosynchronous","n":4,"cpuUsPerState":25.151488095238093,"min":19.31438492063492,"max":25.332738095238096}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Strong drag, 2026","n":4,"cpuUsPerState":39.59578373015873,"min":36.06091269841269,"max":42.883630952380955}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Near 700 km","n":2,"cpuUsPerState":24.385664682539684,"min":9.705257936507937,"max":39.06607142857143}
+{"arm":"XPU","run":"a13cb468","build":"sgp4-xp 0.2.2","regime":"Medium Earth orbit","n":3,"cpuUsPerState":18.18720238095238,"min":17.800198412698414,"max":19.856944444444444}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"pooled","n":28,"cpuUsPerState":21.46646825396825,"min":18.331944444444446,"max":29.385218253968254}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Low orbit, laser spheres","n":3,"cpuUsPerState":23.98392857142857,"min":22.019642857142856,"max":25.94960317460318}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Low orbit, altimetry","n":4,"cpuUsPerState":22.172222222222224,"min":21.6796626984127,"max":24.35595238095238}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Laser geodetic","n":4,"cpuUsPerState":20.206845238095237,"min":18.432738095238097,"max":21.423809523809524}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Geostationary","n":4,"cpuUsPerState":20.316815476190477,"min":18.331944444444446,"max":25.812499999999996}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Inclined geosynchronous","n":4,"cpuUsPerState":19.956398809523808,"min":18.900992063492065,"max":22.15059523809524}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Strong drag, 2026","n":4,"cpuUsPerState":20.771428571428572,"min":19.32916666666667,"max":22.02609126984127}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Near 700 km","n":2,"cpuUsPerState":25.514136904761905,"min":21.643055555555552,"max":29.385218253968254}
+{"arm":"XP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Medium Earth orbit","n":3,"cpuUsPerState":21.05218253968254,"min":21.041666666666668,"max":21.509126984126983}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"pooled","n":28,"cpuUsPerState":334.58998015873016,"min":35.45109126984127,"max":379.7454365079365}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Low orbit, laser spheres","n":3,"cpuUsPerState":356.05962301587306,"min":334.0446428571429,"max":361.2119047619048}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Low orbit, altimetry","n":4,"cpuUsPerState":354.9453373015873,"min":335.1353174603174,"max":356.8640873015873}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Laser geodetic","n":4,"cpuUsPerState":289.165873015873,"min":287.68839285714284,"max":290.9401785714286}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Geostationary","n":4,"cpuUsPerState":35.722172619047626,"min":35.45109126984127,"max":36.193551587301585}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Inclined geosynchronous","n":4,"cpuUsPerState":37.51329365079365,"min":36.21438492063492,"max":42.59563492063492}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Strong drag, 2026","n":4,"cpuUsPerState":376.24618055555555,"min":372.05327380952383,"max":379.7454365079365}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Near 700 km","n":2,"cpuUsPerState":360.796378968254,"min":359.3798611111111,"max":362.2128968253968}
+{"arm":"AP","run":"sdn-ap-0.6.3","build":"sdn-ap 0.6.3","regime":"Medium Earth orbit","n":3,"cpuUsPerState":340.0151785714286,"min":325.21994047619046,"max":373.2036706349206}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"pooled","n":28,"cpuUsPerState":233.52745,"min":192.9569,"max":632.894}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Low orbit, laser spheres","n":3,"cpuUsPerState":598.1767,"min":590.4863,"max":632.894}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Low orbit, altimetry","n":4,"cpuUsPerState":573.5468000000001,"min":512.9893000000001,"max":577.1460999999999}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Laser geodetic","n":4,"cpuUsPerState":229.57125000000002,"min":220.4864,"max":235.74779999999998}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Geostationary","n":4,"cpuUsPerState":196.7617,"min":193.9113,"max":201.9005}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Inclined geosynchronous","n":4,"cpuUsPerState":196.21135,"min":193.8931,"max":204.19969999999998}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Strong drag, 2026","n":4,"cpuUsPerState":546.748,"min":532.8168000000001,"max":553.5776000000001}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Near 700 km","n":2,"cpuUsPerState":460.62315,"min":460.60040000000004,"max":460.64590000000004}
+{"arm":"FFM20","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Medium Earth orbit","n":3,"cpuUsPerState":195.6278,"min":192.9569,"max":198.552}
+{"arm":"FFM40","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"pooled","n":13,"cpuUsPerState":1055.2404,"min":893.4618,"max":1192.5710000000001}
+{"arm":"FFM40","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Low orbit, laser spheres","n":3,"cpuUsPerState":1111.4901,"min":1076.7236,"max":1192.5710000000001}
+{"arm":"FFM40","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Low orbit, altimetry","n":4,"cpuUsPerState":1049.39725,"min":906.4935,"max":1055.2404}
+{"arm":"FFM40","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Strong drag, 2026","n":4,"cpuUsPerState":1068.8921,"min":1046.3364000000001,"max":1096.4595}
+{"arm":"FFM40","run":"ffm-2.2.1","build":"ffm 2.2.1","regime":"Near 700 km","n":2,"cpuUsPerState":898.96135,"min":893.4618,"max":904.4608999999999}

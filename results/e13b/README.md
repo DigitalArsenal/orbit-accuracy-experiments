@@ -12,3 +12,13 @@ Scoring cannot begin before 2026-12-01T00:00:00Z, and needs registered coverage 
 Transport amendments A1–A3 are documented in the plan. Operator heads retain forecast/OD-model assumptions; absolute density and B are not independently identified, continuous thrust is confounded without coasts, and SRP work is a diagnostic limitation. A Starlink-only correction can be published without the Planet NonCommercial tag under the owner's ruling; Planet rows remain local.
 
 Skipped: hypothesis tests, Dove head-to-head and propagation scoring (future scoring run); Docker (owner waiver); node AOT (this experiment uses its pinned SDK WASM harness). No production node was accessed or deployed.
+
+## Collector gap, 2026-11-03 to 2026-11-04
+
+Cause: external. The 2026-11-03T13:01:35Z cycle's first space-weather request (kp.gfz.de, `Kp_ap_Ap_SN_F107_since_1932.txt`) failed at the network level twice, 30 seconds apart (`source unavailable twice: fetch failed`, 2 requests, 0 files). The collector halted by its registered rule (one retry, then halt) and exited at 13:02:20Z (08:02 EST). The archive's separate space-weather collector also got `fetch failed` from kp.gfz.de at 13:47Z that day and 200 again on 2026-11-04 13:47Z. No collector code changed.
+
+Missed cycles: 2026-11-03T13:01Z (failed before any file), 2026-11-03T21:01Z, 2026-11-04T05:01Z and 2026-11-04T13:01Z (not run). No cycle started between 2026-11-03T05:01:35Z and the restart, 34.9 hours.
+
+Restart: release 532bd3d4 by its installed command under the launchd agent `io.spacedatanetwork.operator-capture`, 2026-11-04T15:52:58Z. The last recorded slot had passed, so the first cycle started at once (2026-11-04T15:53:00Z); later cycles keep eight-hour spacing from it. That cycle (2026-11-04T15-53-00-472Z) ended at 16:38:14Z partial: 11205 of 11206 listed files with a record, 1 failure, 11204 sidecars, 1 sidecar failure, fallback-all as every window cycle.
+
+Coverage: held-out days are 2026-10-31 through 2026-11-27 UTC (28). Two hold one cycle instead of three (11-03 and 11-04); none holds none. Earlier, the 2026-10-31T05:01Z cycle was interrupted below the disk floor (5896 of 11186 files); that day holds two complete cycles. The registered support needs valid coast arcs on 21 of 28 held-out days per shell; that count is a scoring-time measurement, but even with both thinned days lost 26 remain, so the gap does not break coverage. The registration is not amended.

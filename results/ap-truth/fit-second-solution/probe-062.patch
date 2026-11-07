@@ -1,0 +1,72 @@
+diff --git a/propagator/sdn-ap/src/fit_oem.inc b/propagator/sdn-ap/src/fit_oem.inc
+index 24278d9c6..3acc0701f 100644
+--- a/propagator/sdn-ap/src/fit_oem.inc
++++ b/propagator/sdn-ap/src/fit_oem.inc
+@@ -125,6 +125,15 @@ inline int& jacobian_always() {
+   static int j = 0;
+   return j;
+ }
++/// SCAN PROBE (report only, off by default): after the policy's solution, two more starts on its arc; the last block's figures.
++inline int& probe_on() {
++  static int p = 0;
++  return p;
++}
++inline double* probe_out() {
++  static double o[16];
++  return o;
++}
+ 
+ }  // namespace fitoem
+ }  // namespace sdnap
+@@ -815,6 +824,35 @@ static int fit_blocks() {
+           chosen = std::move(stage2);
+         }
+       }
++      if (fitoem::probe_on() != 0) {
++        double* pr = fitoem::probe_out();
++        for (int k = 0; k < 16; ++k) pr[k] = __builtin_nan("");
++        const int nfit = static_cast<int>(chosen.t_fit.size());
++        const double start_b = used_drag.mean;
++        pr[0] = chosen.res.rms_km; pr[1] = chosen.row.bterm; pr[2] = start_b; pr[3] = chosen.opt.fit_drag;
++        pr[4] = chosen.opt.drag_sigma; pr[5] = nfit; pr[6] = span_used;
++        if (chosen.opt.fit_drag != 0) {
++          // A1: the solution's elements, BTERM back at the start
++          ElementRow r1 = chosen.row;
++          r1.bterm = start_b;
++          const fit::Result a1 = fit::run(r1, chosen.t_fit.data(), chosen.r_fit.data(), nfit, chosen.opt);
++          pr[7] = a1.status; pr[8] = a1.rms_km; pr[9] = r1.bterm;
++          // A2: the policy's pass with BTERM held at the start through every stage, then freed on the solution's arc
++          const bool saved_before = atm::active() != nullptr && atm::active()->before_rows;
++          const pcf::Prior pin = {start_b, used_drag.form == pcfPriorForm_LOG_NORMAL ? 1e-6 : std::fmax(std::fabs(start_b) * 1e-6, 1e-10), used_drag.form};
++          Pass p2;
++          if (run_pass(span_used > 0.0 ? span_used : default_span, p2, last_useable, -1, &pin) == 0) {
++            const bool same = p2.t_fit.size() == chosen.t_fit.size() && p2.e0.whole == chosen.e0.whole && p2.e0.frac == chosen.e0.frac;
++            pr[10] = same ? 1.0 : 0.0;
++            if (same) {
++              ElementRow r2 = p2.row;
++              const fit::Result a2 = fit::run(r2, chosen.t_fit.data(), chosen.r_fit.data(), nfit, chosen.opt);
++              pr[11] = a2.status; pr[12] = a2.rms_km; pr[13] = r2.bterm; pr[14] = p2.res.rms_km;
++            }
++          }
++          if (atm::active() != nullptr) atm::active()->before_rows = saved_before;
++        }
++      }
+       std::vector<double>& t_fit = chosen.t_fit;
+       std::vector<double>& r_fit = chosen.r_fit;
+       std::vector<double>& t_out = chosen.t_out;
+@@ -1177,6 +1215,15 @@ int32_t sdnap_fit_jacobian_diagnostic(int32_t always) {
+   return previous;
+ }
+ 
++// SCAN PROBE (report only): 1 on, 0 off, < 0 leaves it; `out` (16 doubles) receives the last block's figures. Returns the previous.
++SDNAP_EXPORT("sdnap_fit_probe")
++int32_t sdnap_fit_probe(int32_t on, double* out) {
++  const int32_t previous = sdnap::fitoem::probe_on();
++  if (on == 0 || on == 1) sdnap::fitoem::probe_on() = on;
++  if (out != nullptr) for (int k = 0; k < 16; ++k) out[k] = sdnap::fitoem::probe_out()[k];
++  return previous;
++}
++
+ // Diagnostic: the span rule's validation tail (minutes; <= 0 leaves it); returns the previous.
+ SDNAP_EXPORT("sdnap_span_tail_minutes")
+ double sdnap_span_tail_minutes(double minutes) {

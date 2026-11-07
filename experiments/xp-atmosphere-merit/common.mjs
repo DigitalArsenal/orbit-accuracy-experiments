@@ -9,7 +9,7 @@ export const dir = path.dirname(new URL(import.meta.url).pathname);
 export const root = path.resolve(dir, '../..');
 export const config = JSON.parse(fs.readFileSync(path.join(dir, 'config.json')));
 export const build = JSON.parse(fs.readFileSync(path.join(root, config.build.file)));
-export const store = process.env.XM_STORE ?? config.store;
+export const store = process.env.XM_STORE ?? build.store ?? config.store;
 export const results = path.join(root, 'results/xp-atmosphere-merit');
 export const g1Dir = path.join(root, 'experiments/sdn-gp-starlink-ffm-match');
 export const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');

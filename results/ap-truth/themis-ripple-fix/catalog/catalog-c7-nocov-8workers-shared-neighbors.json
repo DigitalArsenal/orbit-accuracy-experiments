@@ -1,0 +1,1 @@
+{"records":1000,"workers":8,"wallSecondsAllPasses":14.8,"loadSecondsPerWorker":6.7,"refreshSecondsPerWorker":6,"msPerRecordLoad":52.8,"msPerRecordRefresh":47.6,"msPerRecordHeldGrid":43.5,"medianMsPerRecordLoad":46.1,"withoutCovariance":true,"peakBytesPerWorker":107675648,"refused":0}

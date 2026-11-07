@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
-import {config,registration,analysisProvenance,hash} from './guard.mjs';
+import {config,registration,analysisProvenance,hash,store} from './guard.mjs';
 import {mergedRows,disclosure,inputHashes} from './statistics.mjs';
 import {openPc,wasmSha256} from './lib/ca-reach.mjs';
 import {quantile} from './lib/statistics.mjs';
@@ -13,7 +13,7 @@ const band={S1:2,GN:6,IG:7,GE:7,HE:9,HX:9};
 const mapping=JSON.parse(fs.readFileSync(`${config.store}/gp-regimes.json`));
 const inputSnapshot=inputHashes();
 const rows=mergedRows(),pc=await openPc(),cells=new Map(),cache=new Map();
-const out=`${config.store}/ca`;fs.mkdirSync(out,{recursive:true});
+const out=`${store}/ca`;fs.mkdirSync(out,{recursive:true});
 const raw=fs.openSync(`${out}/rows-${Date.now()}.jsonl`,'w');
 const cacheFile=`${out}/foster-${wasmSha256}.jsonl`;
 if(fs.existsSync(cacheFile))for(const line of fs.readFileSync(cacheFile,'utf8').split('\n').filter(Boolean)){const [key,value]=JSON.parse(line);if(!Number.isFinite(value)||value<0||value>1)throw Error('invalid cached Pc');cache.set(key,value);}

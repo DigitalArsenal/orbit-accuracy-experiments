@@ -1,0 +1,551 @@
+{
+ "headline": "With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower.",
+ "correlation": {
+  "lnNvsLoad": 0.24201682448241518,
+  "lnNvsStartOrder": 0.183115974230406,
+  "loadRange": [
+   98.1,
+   147.3
+  ]
+ },
+ "quietCheck": {
+  "run": true,
+  "window": {
+   "kind": "window",
+   "quietStartedUtc": "2026-11-06T23:25:23Z",
+   "endedUtc": "2026-11-06T23:28:42Z",
+   "loadAtEnd": 13.7
+  },
+  "screen": [
+   {
+    "id": "ladder-1-8-s1",
+    "phases": [
+     {
+      "phase": "propagation",
+      "quiet": 16.641136999999997,
+      "loaded": 19.55268099999999,
+      "rel": -0.1489076613074184
+     },
+     {
+      "phase": "search",
+      "quiet": 13.471594000000005,
+      "loaded": 16.233975000000004,
+      "rel": -0.17016048133620998
+     },
+     {
+      "phase": "refine",
+      "quiet": 1.5501000000000003,
+      "loaded": 1.6188790000000002,
+      "rel": -0.04248557180616952
+     },
+     {
+      "phase": "total",
+      "quiet": 33.174518,
+      "loaded": 39.168543,
+      "rel": -0.15303160497953683
+     }
+    ],
+    "events": [
+     16091,
+     16091
+    ]
+   },
+   {
+    "id": "ladder-1-2-s1",
+    "phases": [
+     {
+      "phase": "propagation",
+      "quiet": 73.87569900000001,
+      "loaded": 82.72207000000003,
+      "rel": -0.10694088046877959
+     },
+     {
+      "phase": "search",
+      "quiet": 95.378135,
+      "loaded": 107.69639400000004,
+      "rel": -0.11437949352324683
+     },
+     {
+      "phase": "refine",
+      "quiet": 19.683032000000004,
+      "loaded": 21.265843000000025,
+      "rel": -0.07442973222364235
+     },
+     {
+      "phase": "total",
+      "quiet": 203.460341,
+      "loaded": 226.291074,
+      "rel": -0.10089100111832072
+     }
+    ],
+    "events": [
+     263796,
+     263796
+    ]
+   },
+   {
+    "id": "current-full-r1",
+    "phases": [
+     {
+      "phase": "propagation",
+      "quiet": 173.63852599999996,
+      "loaded": 202.4337849999999,
+      "rel": -0.1422453223408333
+     },
+     {
+      "phase": "search",
+      "quiet": 322.3871199999999,
+      "loaded": 374.44654599999996,
+      "rel": -0.13903032770931223
+     },
+     {
+      "phase": "refine",
+      "quiet": 140.47438199999985,
+      "loaded": 158.975153,
+      "rel": -0.11637523632388114
+     },
+     {
+      "phase": "total",
+      "quiet": 729.317619,
+      "loaded": 834.60256,
+      "rel": -0.1261497939809818
+     }
+    ],
+    "events": [
+     1069553,
+     1069553
+    ]
+   }
+  ],
+  "ratios": [
+   {
+    "name": "AP/FFM40",
+    "quiet": 0.37411658970264877,
+    "loaded": 0.3381827376032867,
+    "rel": 0.10625572539280559
+   },
+   {
+    "name": "AP/SGP4",
+    "quiet": 61.074791086350984,
+    "loaded": 89.56254357135742,
+    "rel": -0.31807663504229655
+   }
+  ],
+  "arms": [
+   {
+    "arm": "SGP4",
+    "quiet": 5.698412698412698,
+    "loaded": 3.9845238095238096,
+    "rel": 0.43013644059356615
+   },
+   {
+    "arm": "AP",
+    "quiet": 348.0293650793651,
+    "loaded": 356.8640873015873,
+    "rel": -0.024756546081802666
+   },
+   {
+    "arm": "FFM40",
+    "quiet": 930.2697999999999,
+    "loaded": 1055.2404,
+    "rel": -0.11842855902787652
+   }
+  ],
+  "worstRelativeDifference": 0.31807663504229655,
+  "agree": false
+ },
+ "fits": {
+  "ladder": {
+   "cpu": {
+    "n": 10,
+    "p": 1.377351385162724,
+    "lo": 1.24374678773555,
+    "hi": 1.510955982589898,
+    "se": 0.05793781328151516,
+    "sd": 0.12442828201470735,
+    "call": "U",
+    "P1_at1": 0.9555,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.955,
+    "verdict": "undecided"
+   },
+   "events": {
+    "n": 10,
+    "p": 2.024157907030766,
+    "lo": 1.9976366883288024,
+    "hi": 2.0506791257327293,
+    "se": 0.01150096214308913,
+    "sd": 0.02469967159491221,
+    "call": "2",
+    "P1_at1": 0.953,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.952,
+    "verdict": "p = 2"
+   },
+   "propagation": {
+    "n": 10,
+    "p": 1.0829194136223979,
+    "lo": 1.0265513387949141,
+    "hi": 1.1392874884498816,
+    "se": 0.024444091425621765,
+    "sd": 0.05249656708170837,
+    "call": "U",
+    "P1_at1": 0.9475,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.943,
+    "verdict": "undecided"
+   },
+   "search": {
+    "n": 10,
+    "p": 1.4424765830739992,
+    "lo": 1.345048818083485,
+    "hi": 1.5399043480645134,
+    "se": 0.04224968126214836,
+    "sd": 0.09073616965097536,
+    "call": "U",
+    "P1_at1": 0.9575,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.9515,
+    "verdict": "undecided"
+   },
+   "refine": {
+    "n": 10,
+    "p": 2.0313267345334065,
+    "lo": 1.8206032570424098,
+    "hi": 2.2420502120244032,
+    "se": 0.09138051929358056,
+    "sd": 0.1962504344108497,
+    "call": "2",
+    "P1_at1": 0.9515,
+    "P2_at1": 0,
+    "P1_at2": 0,
+    "P2_at2": 0.947,
+    "verdict": "p = 2"
+   }
+  },
+  "dates": {
+   "cpu": {
+    "n": 8,
+    "p": 2.9607797281255586,
+    "lo": 1.8748609874443136,
+    "hi": 4.046698468806803,
+    "se": 0.4437755376711259,
+    "sd": 0.11593741333771392,
+    "call": "2",
+    "P1_at1": 0.442,
+    "P2_at1": 0.024,
+    "P1_at2": 0.0195,
+    "P2_at2": 0.4645,
+    "verdict": "undecided"
+   },
+   "events": {
+    "n": 8,
+    "p": 5.3367402297870665,
+    "lo": 2.67556999860934,
+    "hi": 7.997910460964793,
+    "se": 1.0875235926349516,
+    "sd": 0.2841181218223729,
+    "call": "U",
+    "P1_at1": 0.0905,
+    "P2_at1": 0.0195,
+    "P1_at2": 0.0175,
+    "P2_at2": 0.089,
+    "verdict": "undecided"
+   }
+  }
+ },
+ "theories": [
+  {
+   "theory": "SGP4",
+   "flown": true,
+   "coveredShare": 1,
+   "propagationShare": 0.24371353114469235,
+   "shareRange": [
+    0.24255111918180539,
+    0.5008714857807481
+   ],
+   "maxSpeedup": 1.3222502863413248
+  },
+  {
+   "theory": "SGP4-XP",
+   "flown": false,
+   "coveredShare": 0.383866,
+   "propagationShare": null,
+   "reason": "covered share below one half of the catalog: not flown, not extrapolated"
+  },
+  {
+   "theory": "AP",
+   "flown": false,
+   "coveredShare": 0,
+   "propagationShare": null,
+   "reason": "covered share below one half of the catalog: not flown, not extrapolated"
+  },
+  {
+   "theory": "FFM",
+   "flown": false,
+   "coveredShare": 0.33877,
+   "propagationShare": null,
+   "reason": "covered share below one half of the catalog: not flown, not extrapolated"
+  }
+ ],
+ "conversion": {
+  "propagationP": {
+   "p": 1.0829194136223979,
+   "lo": 1.0265513387949141,
+   "hi": 1.1392874884498816
+  },
+  "apVsFfm": [
+   {
+    "regime": "Low orbit, laser spheres",
+    "comparator": "FFM40",
+    "apUs": 356.05962301587306,
+    "ffmUs": 1111.4901,
+    "sgp4Us": 3.690674603174603,
+    "apOverFfm": 0.3203443944447846,
+    "apOverSgp4": 96.47548518896835,
+    "f": [
+     0.3211241812081061,
+     0.3215065865006876
+    ],
+    "doublings": [
+     1.5133137033818649,
+     1.5117281866623693
+    ],
+    "doublingsRange": [
+     1.4369330112492327,
+     1.5964099664190585
+    ],
+    "payloadYears": [
+     5.750592072851086,
+     5.744567109317003
+    ],
+    "allYears": [
+     14.527811552465902,
+     14.512590591958745
+    ]
+   },
+   {
+    "regime": "Low orbit, altimetry",
+    "comparator": "FFM40",
+    "apUs": 354.9453373015873,
+    "ffmUs": 1049.39725,
+    "sgp4Us": 1.884920634920635,
+    "apOverFfm": 0.33823734272372763,
+    "apOverSgp4": 188.30784210526315,
+    "f": [
+     0.33896357263830657,
+     0.339435773611366
+    ],
+    "doublings": [
+     1.4412871682915054,
+     1.4394325697142523
+    ],
+    "doublingsRange": [
+     1.3682143358432153,
+     1.5204284444068528
+    ],
+    "payloadYears": [
+     5.4768912395077205,
+     5.469843764914159
+    ],
+    "allYears": [
+     13.836356815598451,
+     13.818552669256821
+    ]
+   },
+   {
+    "regime": "Strong drag, 2026",
+    "comparator": "FFM40",
+    "apUs": 376.24618055555555,
+    "ffmUs": 1068.8921,
+    "sgp4Us": 1.812152777777778,
+    "apOverFfm": 0.3519964087633874,
+    "apOverSgp4": 207.62387430542248,
+    "f": [
+     0.3526890761737631,
+     0.3531485575026195
+    ],
+    "doublings": [
+     1.3884054381702684,
+     1.386670949310952
+    ],
+    "doublingsRange": [
+     1.3180631811889585,
+     1.464642971230758
+    ],
+    "payloadYears": [
+     5.2759406650470195,
+     5.269349607381617
+    ],
+    "allYears": [
+     13.328692206434576,
+     13.312041113385138
+    ]
+   },
+   {
+    "regime": "Near 700 km",
+    "comparator": "FFM40",
+    "apUs": 360.796378968254,
+    "ffmUs": 898.96135,
+    "sgp4Us": 1.7953373015873018,
+    "apOverFfm": 0.401348043459548,
+    "apOverSgp4": 200.9630049179422,
+    "f": [
+     0.402107314243346,
+     0.4026132238440775
+    ],
+    "doublings": [
+     1.213707594186839,
+     1.2120325113529646
+    ],
+    "doublingsRange": [
+     1.1520652599033387,
+     1.2803524446705195
+    ],
+    "payloadYears": [
+     4.6120888579099875,
+     4.6057235431412655
+    ],
+    "allYears": [
+     11.651592904193654,
+     11.63551210898846
+    ]
+   },
+   {
+    "regime": "Laser geodetic",
+    "comparator": "FFM20",
+    "apUs": 289.165873015873,
+    "ffmUs": 229.57125000000002,
+    "sgp4Us": 2.0247023809523808,
+    "apOverFfm": 1.2595909680148232,
+    "apOverSgp4": 142.81895242295067,
+    "f": [
+     1.257455843925189,
+     1.2582759276889495
+    ],
+    "doublings": [
+     -0.3052006787743783,
+     -0.30606924370397404
+    ],
+    "doublingsRange": [
+     -0.29092597722698427,
+     -0.32195928991091294
+    ],
+    "payloadYears": [
+     -1.1597625793426374,
+     -1.1630631260751012
+    ],
+    "allYears": [
+     -2.9299265162340316,
+     -2.9382647395581505
+    ]
+   },
+   {
+    "regime": "Medium Earth orbit",
+    "comparator": "FFM20",
+    "apUs": 340.0151785714286,
+    "ffmUs": 195.6278,
+    "sgp4Us": 1.9135912698412698,
+    "apOverFfm": 1.738071882275569,
+    "apOverSgp4": 177.6843278552543,
+    "f": [
+     1.730958112843285,
+     1.7337348873438017
+    ],
+    "doublings": [
+     -0.7309600360295992,
+     -0.7330954611240106
+    ],
+    "doublingsRange": [
+     -0.6968243879951804,
+     -0.7710971518753448
+    ],
+    "payloadYears": [
+     -2.777648136912477,
+     -2.78576275227124
+    ],
+    "allYears": [
+     -7.017216345884153,
+     -7.037716426790501
+    ]
+   },
+   {
+    "regime": "Geostationary",
+    "comparator": "FFM20",
+    "apUs": 35.722172619047626,
+    "ffmUs": 196.7617,
+    "sgp4Us": 2.69875992063492,
+    "apOverFfm": 0.18155043699585655,
+    "apOverSgp4": 13.236513683900974,
+    "f": [
+     0.18661928261914185,
+     0.18939388773376642
+    ],
+    "doublings": [
+     2.2363898944469978,
+     2.216728496049075
+    ],
+    "doublingsRange": [
+     2.1070523001772843,
+     2.3591903703214943
+    ],
+    "payloadYears": [
+     8.498281598898592,
+     8.423568284986484
+    ],
+    "allYears": [
+     21.469342986691178,
+     21.280593562071118
+    ]
+   },
+   {
+    "regime": "Inclined geosynchronous",
+    "comparator": "FFM20",
+    "apUs": 37.51329365079365,
+    "ffmUs": 196.21135,
+    "sgp4Us": 2.5561507936507937,
+    "apOverFfm": 0.19118819401015102,
+    "apOverSgp4": 14.675696654505938,
+    "f": [
+     0.19617063921564024,
+     0.19896081517002848
+    ],
+    "doublings": [
+     2.1698927318389725,
+     2.1510776720626414
+    ],
+    "doublingsRange": [
+     2.044649655949226,
+     2.2890418393931036
+    ],
+    "payloadYears": [
+     8.245592380988095,
+     8.174095153838037
+    ],
+    "allYears": [
+     20.830970225654134,
+     20.650345651801356
+    ]
+   }
+  ]
+ },
+ "sentence": "With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower. AP over FFM, CPU per state at the 60 s step of a screen: Low orbit, laser spheres 0.32 (FFM40); Low orbit, altimetry 0.34 (FFM40); Strong drag, 2026 0.35 (FFM40); Near 700 km 0.40 (FFM40); Laser geodetic 1.26x (FFM20); Medium Earth orbit 1.74x (FFM20); Geostationary 0.18 (FFM20); Inclined geosynchronous 0.19 (FFM20). With p = 1.08 (1.03 to 1.14, the propagation-phase fit), the screen cost with AP against the same screen with FFM is a factor f of 0.32 to 0.32 (Low orbit, laser spheres); 0.34 to 0.34 (Low orbit, altimetry); 0.35 to 0.35 (Strong drag, 2026); 0.40 to 0.40 (Near 700 km); 1.26 to 1.26 (Laser geodetic); 1.73 to 1.73 (Medium Earth orbit); 0.19 to 0.19 (Geostationary); 0.20 to 0.20 (Inclined geosynchronous); a factor below 1 buys log2(1 / f) / p doublings of the object count (a factor above 1 is no gain), years at 3.8 (payload) and 9.6 (all objects, undecided) in the table.",
+ "verdict": "With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower. Ladder p = 1.38 (1.24 to 1.51) on CPU: undecided; events p = 2.02 (2.00 to 2.05): p = 2; propagation p = 1.08. The real-dates series is not drawn and not a scaling statement (diagnosis below). SGP4 propagation takes 24.4 percent of its screen CPU at the full catalog.",
+ "noise": {
+  "totalCpuRelativeRange": 0.003397326027852115
+ },
+ "parity": {
+  "id": "parity-1-8-s1",
+  "phasedEvents": 16091,
+  "fusedEvents": 16091,
+  "phasedDigest": "0262a9f9aa29fed913c86dd74d1b74d99fc68ba3026731b2c044e53ae62b503e",
+  "fusedDigest": "0262a9f9aa29fed913c86dd74d1b74d99fc68ba3026731b2c044e53ae62b503e",
+  "equal": true,
+  "fusedCpuS": 29.446851,
+  "phasedCpuS": 39.168543
+ }
+}

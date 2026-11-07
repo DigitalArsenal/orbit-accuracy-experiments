@@ -1,21 +1,22 @@
 // GEO-TRUTH.md part F, report only: every arm fitted to the first 24 h and 48 h of each stored Intelsat file of Galaxy 30 and SES file of SES-15, and the operator's own file, scored
 // against the WAAS broadcast on each day after the end of the fit. Module calls only; interpolation of the operator's 300 s table is a data step, as in providers-run.mjs.
-//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/geo-truth-files.mjs --wasm <AP 0.4.0> --out <dir>
+//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/geo-truth-files.mjs --out <dir> [--arms AP,XP] [--only <row key>,...]
 import fs from 'node:fs';
 import path from 'node:path';
 import { isoMs, openFfmHost, apriori } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
-import { apForces, openAp } from './lib/ap.mjs';
+import { apForces, openAp, fitPcf, fitWeather, rowsOfSpw, horizonOf } from './lib/ap.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
 import { series } from './lib/sbas.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
-import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const OUT = args.out, HOUR = 3600000, DAY = 86400000, ARCS = [24, 48], PRN = { 46114: 135, 42709: 133 }, MIN_DAY = 168;
-if (!OUT || !args.wasm) throw new Error('--out and --wasm');
+if (!OUT) throw new Error('--out');
+// --only: those row keys alone (<norad>|<file start>|<fit hours>).
+const ONLY = args.only ? new Set(args.only.split(',')) : null;
 const STORE = '/opt/data/sdn-archive/operator-theory/vendors';
 const rmsOf = (e) => Math.sqrt(e.reduce((s, x) => s + x * x, 0) / e.length);
 const lines = (b64) => S.oemLines(Buffer.from(b64, 'base64')).map((l) => ({ ...l, epoch: isoMs(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`)) }));
@@ -46,8 +47,8 @@ for (const c of fs.readdirSync(STORE).filter((d) => /^c\d{8}T\d{4}$/.test(d)).so
 }
 // --arms AP,XP (any of AP, XP, U, S, F, operator): only those, in their own store, as for a later AP build (AP7.md). Without it, every arm.
 const ARMS = (args.arms ?? 'AP,XP,U,S,F,operator').split(','), has = (a) => ARMS.includes(a);
-const M = await openModules(), A = has('AP') || has('XP') ? await openAp(args.wasm) : null, G = has('S') ? await openSgp4Fit() : null, U = has('U') ? await openUssfXp() : null, F = has('F') ? await openFfmHost() : null;
-const PCF_AP = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, { tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = S.pcfBytes({ forces: {}, fit: null });
+const M = await openModules(), A = has('AP') || has('XP') ? await openAp() : null, G = has('S') ? await openSgp4Fit() : null, U = has('U') ? await openUssfXp() : null, F = has('F') ? await openFfmHost() : null;
+const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null }), PCF_XP = fitPcf({ forces: {}, fit: null });
 fs.mkdirSync(OUT, { recursive: true });
 const outFile = path.join(OUT, 'rows.jsonl');
 const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
@@ -55,7 +56,7 @@ for (const [key, p] of files) {
   const all = lines(p.forecastOem), t0 = Date.parse(all[0].epoch);
   for (const arc of ARCS) {
     const rowKey = `${key}|${arc}`, fitEnd = t0 + arc * HOUR;
-    if (done.has(rowKey)) continue;
+    if (done.has(rowKey) || (ONLY && !ONLY.has(rowKey))) continue;
     const truthAll = await series(PRN[p.norad], fitEnd + 1, fitEnd + 7 * DAY);
     const days = [1, 2, 3, 4, 5, 6, 7].map((k) => truthAll.filter((l) => { const t = Date.parse(l.epoch); return t > fitEnd + (k - 1) * DAY && t <= fitEnd + k * DAY; })).map((s, i) => [i + 1, s]).filter(([, s]) => s.length >= MIN_DAY);
     const row = { key: rowKey, source: p.source, norad: p.norad, object: p.object, start: p.start, fitHours: arc, fileEnd: all.at(-1).epoch, days: days.map(([k]) => k), arms: {} };
@@ -71,12 +72,11 @@ for (const [key, p] of files) {
     const seg = all.filter((l) => Date.parse(l.epoch) <= fitEnd);
     const oem = S.oemBytes({ frame: 'GCRF', object: { name: p.object, id: '', norad: p.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
     const w = weatherRows(p.weatherDay, '2026-07-15', '2026-12-14');
-    const extra = { rows: S.spwBytes(w.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG }))) };
-    const grid = S.gridBytes(epochs);
+    const extra = { spw: fitWeather(rowsOfSpw(w.rows), horizonOf(fitEnd)) };
     const run = async (name, fn) => { if (!has(name)) return; try { row.arms[name] = { days: await score(await fn()) }; } catch (error) { row.arms[name] = { error: String(error?.message ?? error).slice(0, 160) }; } };
-    await run('AP', async () => { const f = await A.fit(oem, PCF_AP, extra); if (!f.ok) throw new Error(f.error); return M.toAxes(await A.propagate(f.omm, grid, PCF_AP, extra, epochs.length), epochs, 'GCRF'); });
-    await run('XP', async () => { const f = await A.fit(oem, PCF_XP, undefined); if (!f.ok) throw new Error(f.error); return M.toAxes(await A.propagate(f.omm, grid, PCF_XP, undefined, epochs.length), epochs, 'GCRF'); });
-    await run('U', async () => { const f = await U.fit(oem); if (!f.ok) throw new Error(f.error); return M.toAxes(await U.propagate(f.omm, grid, epochs.length), epochs, 'GCRF'); });
+    await run('AP', async () => { const f = await A.fit(oem, PCF_AP, extra); if (!f.ok) throw new Error(f.error); return M.toAxes(await A.propagate(f.ocm, epochs, epochs.length), epochs, 'GCRF'); });
+    await run('XP', async () => { const f = await A.fit(oem, PCF_XP, undefined); if (!f.ok) throw new Error(f.error); return M.toAxes(await A.propagate(f.ocm, epochs, epochs.length), epochs, 'GCRF'); });
+    await run('U', async () => { const f = await U.fit(oem); if (!f.ok) throw new Error(f.error); return M.toAxes(await U.propagate(f.ocm, epochs, epochs.length), epochs, 'GCRF'); });
     await run('S', async () => {
       const { el } = await G.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: p.object, objectId: '' });
       const flown = await M.propagateSgp4(el, p.norad, epochsMs, 256);

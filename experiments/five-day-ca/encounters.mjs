@@ -2,27 +2,28 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-import {config,registration,analysisProvenance,hash} from './guard.mjs';
+import {config,registration,analysisProvenance,hash,dir,store} from './guard.mjs';
 import {readRows,disclosure} from './statistics.mjs';
 import {rand} from '../operator-theory/lib/compare.mjs';
 import {openPc,wasmSha256} from './lib/ca-reach.mjs';
 import {pairedScores} from './lib/paired-scores.mjs';
 import {arcs as expectedArcs} from './coverage.mjs';
+import {inRegisteredOrder} from './lib/reference.mjs';
 registration();
 for(const [name,commit]of [['ENCOUNTERS.md','03491e6c679e91d33e66aed5959d325a8b97efe4'],['COVARIANCE.md','2748823']])if(execFileSync('git',['show',`${commit}:experiments/five-day-ca/${name}`],{encoding:'utf8'}).trim()!==fs.readFileSync(`experiments/five-day-ca/${name}`,'utf8').trim())throw Error('encounter registration changed');
 const partArg=process.argv[process.argv.indexOf('--part')+1];
 if(!process.argv.includes('--part')){const {runEncounterPool}=await import('./lib/encounter-pool.mjs');await runEncounterPool();process.exit(0);}
 const [partIndex,partCount]=partArg.split('/').map(Number),runId=process.argv[process.argv.indexOf('--run-id')+1];
 if(!Number.isInteger(partIndex)||partIndex<0||partIndex>=partCount||partCount!==12||!/^\d+$/.test(runId))throw Error('invalid encounter worker arguments');
-const inputs={},covFile=`${config.store}/adapted-covariance.jsonl`,cov=new Map(fs.readFileSync(covFile,'utf8').split('\n').filter(Boolean).map(JSON.parse).map(r=>[`${r.labelSource}|${r.key}`,r]));inputs[covFile]=hash(fs.readFileSync(covFile));inputs["results/five-day-ca/covariance.json"]=hash(fs.readFileSync("results/five-day-ca/covariance.json"));
+const inputs={},covFile=`${store}/adapted-covariance.jsonl`,cov=new Map(fs.readFileSync(covFile,'utf8').split('\n').filter(Boolean).map(JSON.parse).map(r=>[`${r.labelSource}|${r.key}`,r]));inputs[covFile]=hash(fs.readFileSync(covFile));inputs["results/five-day-ca/covariance.json"]=hash(fs.readFileSync("results/five-day-ca/covariance.json"));
 const all=[],arms=['AP','XP','F','S','GP'];let expectedProducts=0,covarianceProducts=0,gpProducts=0;
 for(const label of ['regimes','truth2','truth']){
- const gp=new Map(readRows(`${config.store}/gp-products/${label}`).map(r=>[r.key,r]));
- for(const phase of ['cheap','gp-products']){const dir=`${config.store}/${phase}/${label}`;if(fs.existsSync(dir))for(const f of fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${dir}/${f}`]=hash(fs.readFileSync(`${dir}/${f}`));}
- for(const r of readRows(`${config.store}/cheap/${label}`)){const c=cov.get(`${label}|${r.key}`),g=gp.get(r.key);expectedProducts++;covarianceProducts+=!!c;gpProducts+=!!g;const arcs=expectedArcs({...r,group:label==='truth'?'T':r.group});for(const arc of arcs)all.push({key:r.key,object:r.norad,group:label==='truth'?'T':r.group,arc,cutoff:r.cutoff,cov:c,gp:g});}
+ const gp=new Map(readRows(dir('gp-products',label)).map(r=>[r.key,r]));
+ for(const phase of ['fits','gp-products']){const d=dir(phase,label);if(fs.existsSync(d))for(const f of fs.readdirSync(d).filter(f=>/^rows-\d+\.jsonl$/.test(f)))inputs[`${d}/${f}`]=hash(fs.readFileSync(`${d}/${f}`));}
+ for(const r of inRegisteredOrder(readRows(dir('fits',label)),'cheap',label,readRows)){const c=cov.get(`${label}|${r.key}`),g=gp.get(r.key);expectedProducts++;covarianceProducts+=!!c;gpProducts+=!!g;const arcs=expectedArcs({...r,group:label==='truth'?'T':r.group});for(const arc of arcs)all.push({key:r.key,object:r.norad,group:label==='truth'?'T':r.group,arc,cutoff:r.cutoff,cov:c,gp:g});}
 }
 const unresolved=new Map();const unresolvedError=(group,arm,error)=>{const key=JSON.stringify([group,arm,error]);if(!unresolved.has(key))unresolved.set(key,{group,arm,error,count:0});unresolved.get(key).count++;};for(const r of cov.values()){if(/not run|Cannot read properties|is not a function|is not defined/.test(r.error??''))unresolvedError(r.group,null,r.error);for(const [arm,a]of Object.entries(r.arms))if(/not run|Cannot read properties|is not a function|is not defined/.test(a.error??''))unresolvedError(r.group,arm,a.error);}for(const r of cov.values())for(const [arm,a]of Object.entries(r.arms))for(const v of Object.values(a.days??{}))if(/not run|Cannot read properties|is not a function|is not defined/.test(v.error??''))unresolvedError(r.group,arm,v.error);const unresolvedProductErrors=[...unresolved.values()];
-const pc=await openPc(),groups=Map.groupBy(all,r=>`${r.group}|${r.arc}`),cells=[],paired=[],out=`${config.store}/encounters`;
+const pc=await openPc(),groups=Map.groupBy(all,r=>`${r.group}|${r.arc}`),cells=[],paired=[],out=`${store}/encounters`;
 fs.mkdirSync(out,{recursive:true});const rawFile=`${out}/${runId}-part-${partIndex}.jsonl`,raw=fs.openSync(rawFile,'w');
 const gpDay=(r,day)=>r?.days[day]??(r?{error:r.error??'lead grid below 90%'}:undefined);
 const valid=v=>v&&!v.error&&v.errorM?.length===3&&v.covarianceM2?.length===6&&v.errorM.every(Number.isFinite)&&v.covarianceM2.every(Number.isFinite);

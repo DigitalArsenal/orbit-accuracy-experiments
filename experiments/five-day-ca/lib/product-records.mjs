@@ -10,4 +10,5 @@ export function saveEndpoints(out,shard,row,entered,bins,files){
  const ends=entered.map(day=>{const l=bins[day].at(-1);return {day,...l,availableAt:availability(files,Date.parse(l.epoch))};});
  fs.appendFileSync(`${out}/endpoints-${shard}.jsonl`,JSON.stringify({key:row.key,group:row.group,norad:row.norad,name:row.name,cutoff:row.cutoff,fitAvailableAt:availability(files,Date.parse(row.cutoff)),ends})+'\n');
 }
-export function saveOmm(out,shard,key,arm,omm,pcf,extra){fs.appendFileSync(`${out}/omm-products-${shard}.jsonl`,JSON.stringify({key,arm,omm:Buffer.from(omm).toString('base64'),pcf:Buffer.from(pcf).toString('base64'),weather:extra?.rows?Buffer.from(extra.rows).toString('base64'):null})+'\n');}
+/** The fitted $OCM of an arm, base64: the record carries the weather rows it flies on, so the flight needs no other message. */
+export function saveOcm(out,shard,key,arm,ocm){fs.appendFileSync(`${out}/ocm-products-${shard}.jsonl`,JSON.stringify({key,arm,ocm:Buffer.from(ocm).toString('base64')})+'\n');}

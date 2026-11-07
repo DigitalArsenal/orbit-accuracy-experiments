@@ -1,0 +1,832 @@
+{
+ "build": "modules ea824356: sdn-ap 0.5.1 (d29acd2b5d92), sgp4-xp 0.2.1 (816fd137d761)",
+ "store": "/opt/data/sdn-archive/operator-theory/ap/b051",
+ "pairs": [
+  {
+   "store": "truth",
+   "against": "b0418/truth",
+   "windows": 944,
+   "arms": {
+    "AP24": {
+     "equal": 944,
+     "different": 0,
+     "notStored": 0
+    },
+    "APRa12": {
+     "equal": 944,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "truth2",
+   "against": "b0418/truth2",
+   "windows": 1812,
+   "arms": {
+    "AP72": {
+     "equal": 1800,
+     "different": 0,
+     "notStored": 0
+    },
+    "AP24": {
+     "equal": 1800,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "regimes",
+   "against": "b0418/regimes-apxp",
+   "windows": 407,
+   "arms": {
+    "AP24": {
+     "equal": 90,
+     "different": 0,
+     "notStored": 138
+    },
+    "XP24": {
+     "equal": 90,
+     "different": 0,
+     "notStored": 138
+    },
+    "AP72": {
+     "equal": 257,
+     "different": 0,
+     "notStored": 138
+    },
+    "XP72": {
+     "equal": 257,
+     "different": 0,
+     "notStored": 138
+    },
+    "AP336": {
+     "equal": 7,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP336": {
+     "equal": 7,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "truth",
+   "against": "b0411/truth",
+   "windows": 944,
+   "arms": {
+    "AP24": {
+     "equal": 944,
+     "different": 0,
+     "notStored": 0
+    },
+    "APRa12": {
+     "equal": 944,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "truth2",
+   "against": "b0411/truth2",
+   "windows": 1812,
+   "arms": {
+    "AP72": {
+     "equal": 1353,
+     "different": 447,
+     "notStored": 0
+    },
+    "AP24": {
+     "equal": 1351,
+     "different": 449,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "regimes",
+   "against": "b0411/regimes",
+   "windows": 407,
+   "arms": {
+    "AP24": {
+     "equal": 107,
+     "different": 121,
+     "notStored": 0
+    },
+    "XP24": {
+     "equal": 228,
+     "different": 0,
+     "notStored": 0
+    },
+    "AP72": {
+     "equal": 294,
+     "different": 101,
+     "notStored": 0
+    },
+    "XP72": {
+     "equal": 395,
+     "different": 0,
+     "notStored": 0
+    },
+    "AP336": {
+     "equal": 0,
+     "different": 7,
+     "notStored": 0
+    },
+    "XP336": {
+     "equal": 7,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "compare-truth",
+   "against": "b0411/compare-truth",
+   "windows": 944,
+   "arms": {
+    "XP24": {
+     "equal": 944,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "compare-truth2",
+   "against": "b0411/compare-truth2",
+   "windows": 1812,
+   "arms": {
+    "XP24": {
+     "equal": 1800,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP72": {
+     "equal": 1800,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "regimes-hx",
+   "against": "b0418/regimes-hx-apxp",
+   "windows": 19,
+   "arms": {
+    "AP72": {
+     "equal": 19,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP72": {
+     "equal": 19,
+     "different": 0,
+     "notStored": 0
+    },
+    "AP168": {
+     "equal": 7,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP168": {
+     "equal": 7,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "regimes-wa",
+   "against": "b0418/regimes-wa-apxp",
+   "windows": 84,
+   "arms": {
+    "AP24": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP24": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    },
+    "AP72": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP72": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "regimes-hx",
+   "against": "b0411/regimes-hx",
+   "windows": 19,
+   "arms": {
+    "AP72": {
+     "equal": 0,
+     "different": 19,
+     "notStored": 0
+    },
+    "XP72": {
+     "equal": 19,
+     "different": 0,
+     "notStored": 0
+    },
+    "AP168": {
+     "equal": 0,
+     "different": 7,
+     "notStored": 0
+    },
+    "XP168": {
+     "equal": 7,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "regimes-wa",
+   "against": "b0411/regimes-wa",
+   "windows": 84,
+   "arms": {
+    "AP24": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP24": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    },
+    "AP72": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    },
+    "XP72": {
+     "equal": 84,
+     "different": 0,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "ussf-truth",
+   "against": "b0411/ussf-truth",
+   "windows": 944,
+   "arms": {
+    "U24": {
+     "equal": 0,
+     "different": 944,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "ussf-truth2",
+   "against": "b0411/ussf-truth2",
+   "windows": 1812,
+   "arms": {
+    "U24": {
+     "equal": 14,
+     "different": 1786,
+     "notStored": 0
+    },
+    "U72": {
+     "equal": 33,
+     "different": 1767,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "ussf-regimes",
+   "against": "b0411/ussf-regimes",
+   "windows": 407,
+   "arms": {
+    "U24": {
+     "equal": 20,
+     "different": 208,
+     "notStored": 0
+    },
+    "U72": {
+     "equal": 25,
+     "different": 370,
+     "notStored": 0
+    },
+    "U336": {
+     "equal": 0,
+     "different": 7,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "ussf-regimes-hx",
+   "against": "b0411/ussf-regimes-hx",
+   "windows": 19,
+   "arms": {
+    "U72": {
+     "equal": 0,
+     "different": 19,
+     "notStored": 0
+    },
+    "U168": {
+     "equal": 0,
+     "different": 7,
+     "notStored": 0
+    }
+   }
+  },
+  {
+   "store": "ussf-regimes-wa",
+   "against": "b0411/ussf-regimes-wa",
+   "windows": 84,
+   "arms": {
+    "U24": {
+     "equal": 5,
+     "different": 79,
+     "notStored": 0
+    },
+    "U72": {
+     "equal": 7,
+     "different": 77,
+     "notStored": 0
+    }
+   }
+  }
+ ],
+ "ussf": [
+  {
+   "group": "T",
+   "arm": "U24",
+   "windows": 944,
+   "medianKm": {
+    "1": {
+     "old": 1.7248,
+     "new": 1.7222
+    },
+    "2": {
+     "old": 5.5816,
+     "new": 5.5651
+    },
+    "3": {
+     "old": 12.4317,
+     "new": 12.4262
+    },
+    "7": {
+     "old": 63.8736,
+     "new": 63.8736
+    }
+   }
+  },
+  {
+   "group": "P",
+   "arm": "U24",
+   "windows": 750,
+   "medianKm": {
+    "1": {
+     "old": 1.7361,
+     "new": 1.744
+    },
+    "2": {
+     "old": 5.8394,
+     "new": 5.8338
+    },
+    "3": {
+     "old": 12.4264,
+     "new": 12.4344
+    },
+    "7": {
+     "old": 65.3193,
+     "new": 65.3243
+    }
+   }
+  },
+  {
+   "group": "P",
+   "arm": "U72",
+   "windows": 750,
+   "medianKm": {
+    "1": {
+     "old": 0.8735,
+     "new": 0.8762
+    },
+    "2": {
+     "old": 1.7927,
+     "new": 1.7928
+    },
+    "3": {
+     "old": 3.5265,
+     "new": 3.5267
+    },
+    "7": {
+     "old": 20.4088,
+     "new": 20.1835
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "arm": "U24",
+   "windows": 300,
+   "medianKm": {
+    "1": {
+     "old": 2.6338,
+     "new": 2.6275
+    },
+    "2": {
+     "old": 8.9007,
+     "new": 8.9056
+    },
+    "3": {
+     "old": 19.3285,
+     "new": 19.3174
+    },
+    "7": {
+     "old": 98.5347,
+     "new": 99.3952
+    }
+   }
+  },
+  {
+   "group": "S1",
+   "arm": "U72",
+   "windows": 300,
+   "medianKm": {
+    "1": {
+     "old": 0.6895,
+     "new": 0.6885
+    },
+    "2": {
+     "old": 0.9339,
+     "new": 0.935
+    },
+    "3": {
+     "old": 1.3614,
+     "new": 1.3516
+    },
+    "7": {
+     "old": 4.3396,
+     "new": 4.3512
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "arm": "U24",
+   "windows": 750,
+   "medianKm": {
+    "1": {
+     "old": 0.0535,
+     "new": 0.0535
+    },
+    "2": {
+     "old": 0.0996,
+     "new": 0.0997
+    },
+    "3": {
+     "old": 0.1494,
+     "new": 0.1477
+    },
+    "7": {
+     "old": 0.3627,
+     "new": 0.3517
+    }
+   }
+  },
+  {
+   "group": "GN",
+   "arm": "U72",
+   "windows": 750,
+   "medianKm": {
+    "1": {
+     "old": 0.0414,
+     "new": 0.041
+    },
+    "2": {
+     "old": 0.0582,
+     "new": 0.0568
+    },
+    "3": {
+     "old": 0.0757,
+     "new": 0.0745
+    },
+    "7": {
+     "old": 0.1664,
+     "new": 0.1522
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "arm": "U24",
+   "windows": 90,
+   "medianKm": {
+    "1": {
+     "old": 0.832,
+     "new": 0.834
+    },
+    "2": {
+     "old": 1.5733,
+     "new": 1.5532
+    },
+    "3": {
+     "old": 2.5038,
+     "new": 2.504
+    },
+    "7": {
+     "old": 8.9839,
+     "new": 10.7834
+    }
+   }
+  },
+  {
+   "group": "LS",
+   "arm": "U72",
+   "windows": 90,
+   "medianKm": {
+    "1": {
+     "old": 0.4826,
+     "new": 0.4826
+    },
+    "2": {
+     "old": 0.5655,
+     "new": 0.5656
+    },
+    "3": {
+     "old": 0.6188,
+     "new": 0.6256
+    },
+    "7": {
+     "old": 1.2432,
+     "new": 1.2491
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "arm": "U24",
+   "windows": 138,
+   "medianKm": {
+    "1": {
+     "old": 0.9234,
+     "new": 0.9233
+    },
+    "2": {
+     "old": 1.8746,
+     "new": 1.8799
+    },
+    "3": {
+     "old": 3.1485,
+     "new": 3.0694
+    },
+    "7": {
+     "old": 14.9066,
+     "new": 15.0215
+    }
+   }
+  },
+  {
+   "group": "DO",
+   "arm": "U72",
+   "windows": 138,
+   "medianKm": {
+    "1": {
+     "old": 0.5903,
+     "new": 0.5908
+    },
+    "2": {
+     "old": 0.7121,
+     "new": 0.7139
+    },
+    "3": {
+     "old": 1.0013,
+     "new": 1.0087
+    },
+    "7": {
+     "old": 3.8736,
+     "new": 3.831
+    }
+   }
+  },
+  {
+   "group": "GD",
+   "arm": "U72",
+   "windows": 55,
+   "medianKm": {
+    "1": {
+     "old": 0.1039,
+     "new": 0.1039
+    },
+    "2": {
+     "old": 0.1089,
+     "new": 0.109
+    },
+    "3": {
+     "old": 0.1087,
+     "new": 0.1087
+    },
+    "7": {
+     "old": 0.1535,
+     "new": 0.1471
+    }
+   }
+  },
+  {
+   "group": "IG",
+   "arm": "U72",
+   "windows": 60,
+   "medianKm": {
+    "1": {
+     "old": 0.1659,
+     "new": 0.0454
+    },
+    "2": {
+     "old": 0.1828,
+     "new": 0.0644
+    },
+    "3": {
+     "old": 0.1804,
+     "new": 0.0883
+    },
+    "7": {
+     "old": 0.2322,
+     "new": 0.1864
+    }
+   }
+  },
+  {
+   "group": "GE",
+   "arm": "U72",
+   "windows": 45,
+   "medianKm": {
+    "1": {
+     "old": 0.213,
+     "new": 0.0387
+    },
+    "2": {
+     "old": 0.2098,
+     "new": 0.0606
+    },
+    "3": {
+     "old": 0.1878,
+     "new": 0.089
+    },
+    "7": {
+     "old": 0.2935,
+     "new": 0.2686
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "arm": "U72",
+   "windows": 7,
+   "medianKm": {
+    "1": {
+     "old": 1.806,
+     "new": 1.7316
+    },
+    "2": {
+     "old": 3.9647,
+     "new": 3.9734
+    },
+    "3": {
+     "old": 7.1238,
+     "new": 7.139
+    },
+    "7": {
+     "old": 42.4194,
+     "new": 42.8504
+    }
+   }
+  },
+  {
+   "group": "HE",
+   "arm": "U336",
+   "windows": 7,
+   "medianKm": {
+    "1": {
+     "old": 2.3493,
+     "new": 1.9742
+    },
+    "2": {
+     "old": 4.945,
+     "new": 4.5838
+    },
+    "3": {
+     "old": 7.3453,
+     "new": 7.7373
+    },
+    "7": {
+     "old": 25.8658,
+     "new": 25.7474
+    }
+   }
+  },
+  {
+   "group": "HX",
+   "arm": "U72",
+   "windows": 19,
+   "medianKm": {
+    "1": {
+     "old": 0.6389,
+     "new": 0.6185
+    },
+    "2": {
+     "old": 1.4583,
+     "new": 1.9026
+    },
+    "3": {
+     "old": 2.6261,
+     "new": 2.9918
+    },
+    "7": {
+     "old": 9.1664,
+     "new": 9.6232
+    }
+   }
+  },
+  {
+   "group": "HX",
+   "arm": "U168",
+   "windows": 7,
+   "medianKm": {
+    "1": {
+     "old": 2.2805,
+     "new": 2.1297
+    },
+    "2": {
+     "old": 6.6412,
+     "new": 6.8103
+    },
+    "3": {
+     "old": 3.6252,
+     "new": 3.6325
+    },
+    "7": {
+     "old": 17.7733,
+     "new": 17.8848
+    }
+   }
+  },
+  {
+   "group": "WA",
+   "arm": "U24",
+   "windows": 84,
+   "medianKm": {
+    "1": {
+     "old": 2.1691,
+     "new": 2.0992
+    },
+    "2": {
+     "old": 6.5651,
+     "new": 6.5022
+    },
+    "3": {
+     "old": 9.3641,
+     "new": 9.3759
+    },
+    "7": {
+     "old": 22.3839,
+     "new": 22.1965
+    }
+   }
+  },
+  {
+   "group": "WA",
+   "arm": "U72",
+   "windows": 84,
+   "medianKm": {
+    "1": {
+     "old": 5.2587,
+     "new": 5.2277
+    },
+    "2": {
+     "old": 4.9125,
+     "new": 4.9563
+    },
+    "3": {
+     "old": 9.5869,
+     "new": 9.5916
+    },
+    "7": {
+     "old": 27.0391,
+     "new": 27.0585
+    }
+   }
+  }
+ ]
+}

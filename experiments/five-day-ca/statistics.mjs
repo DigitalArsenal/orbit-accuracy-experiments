@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {config,registration,analysisProvenance,allowed,hash} from './guard.mjs';
+import {config,registration,analysisProvenance,allowed,hash,dir,store,FORECAST_PHASES} from './guard.mjs';
 import {describe,contrast} from './lib/statistics.mjs';
+import {inRegisteredOrder} from './lib/reference.mjs';
 registration();
 export function readRows(dir){return fs.existsSync(dir)?fs.readdirSync(dir).filter(f=>/^rows-\d+\.jsonl$/.test(f)).sort().flatMap(f=>fs.readFileSync(path.join(dir,f),'utf8').split('\n').filter(Boolean).map(JSON.parse)).filter(r=>allowed(r.norad,r.name,Date.parse(r.cutoff))):[];}
-export function inputHashes(){const out={};for(const phase of ['cheap','ffm'])for(const label of ['regimes','truth2','truth']){const d=`${config.store}/${phase}/${label}`;if(fs.existsSync(d))for(const f of fs.readdirSync(d).filter(f=>/^rows-\d+\.jsonl$/.test(f)))out[`${d}/${f}`]=hash(fs.readFileSync(`${d}/${f}`));}return out;}
-export function mergedRows(){const rows=new Map();for(const phase of ['cheap','ffm'])for(const label of ['regimes','truth2','truth'])for(const r of readRows(`${config.store}/${phase}/${label}`)){const key=label+'|'+r.key;if(!rows.has(key))rows.set(key,{...r,group:label==='truth'?'T':r.group,arms:{}});Object.assign(rows.get(key).arms,r.arms);}return [...rows.values()];}
+export function inputHashes(){const out={};for(const phase of FORECAST_PHASES)for(const label of ['regimes','truth2','truth']){const d=dir(phase,label);if(fs.existsSync(d))for(const f of fs.readdirSync(d).filter(f=>/^rows-\d+\.jsonl$/.test(f)))out[`${d}/${f}`]=hash(fs.readFileSync(`${d}/${f}`));}return out;}
+export function mergedRows(){return ['regimes','truth2','truth'].flatMap(label=>{const rows=new Map();for(const phase of FORECAST_PHASES)for(const r of readRows(dir(phase,label))){if(!rows.has(r.key))rows.set(r.key,{...r,group:label==='truth'?'T':r.group,arms:{}});Object.assign(rows.get(r.key).arms,r.arms);}return inRegisteredOrder(rows.values(),'cheap',label,readRows);});}
 export function disclosure(group,day){return [4,5].includes(day)&&['LS','DO'].includes(group)?'read before the statements were registered':null;}
-const cacheFile=`${config.store}/statistics-cache-${hash(fs.readFileSync(new URL('./lib/statistics.mjs',import.meta.url)))}.json`;
+const cacheFile=`${store}/statistics-cache-${hash(fs.readFileSync(new URL('./lib/statistics.mjs',import.meta.url)))}.json`;
 const cache=fs.existsSync(cacheFile)?JSON.parse(fs.readFileSync(cacheFile),(_,v)=>v==='Infinity'?Infinity:v==='-Infinity'?-Infinity:v):{};
 const memo=(kind,rows,label,calculate)=>{const key=hash(JSON.stringify([kind,label,rows]));return cache[key]??(cache[key]=calculate());};
 export function statistics(){

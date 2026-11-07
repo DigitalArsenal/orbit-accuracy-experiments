@@ -18,7 +18,7 @@ import * as O from 'spacedatastandards.org/lib/js/OCM/main.js';
 import { openFfmHost, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
-import { apForces, openAp } from './lib/ap.mjs';
+import { apForces, openAp, fitPcf, fitWeather, rowsOfSpw, horizonOf, readOcm, MSIS } from './lib/ap.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
@@ -29,7 +29,7 @@ const HOUR = 3600000, DAY = 86400000, TRUTH_H = 3;
 const FIRST = '2026-10-30T05-01-35-297Z';
 const CONFIRM = args.confirm === 'true';
 const LADDER = args.ladder === 'true';   // exploratory: how cheap FFM can go before its accuracy falls
-// --ap-arms '[{name, tesseral, zonal, atmosphere, fit, stitched}]' --ap-wasm <file>: AP's fits only, from a build not yet pinned.
+// --ap-arms '[{name, tesseral, zonal, atmosphere, fit, stitched}]': AP's fits only, at the pinned build (lib/build.mjs).
 const AP_ARMS = args['ap-arms'] ? JSON.parse(args['ap-arms']) : null;
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex');
 const short = (e) => String(e?.message ?? e).slice(0, 160);
@@ -54,9 +54,10 @@ function readHead(cycle, norad) {
 }
 const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
 const SIGNED = { form: 'GAUSSIAN_SIGNED', mean: 0, sigma: 0.05 };
-const PCF = { X0: S.pcfBytes({ forces: XMC.arms.X0.forces, fit: FIT }), X2: S.pcfBytes({ forces: XMC.arms.X2.forces, fit: FIT }), X0s: S.pcfBytes({ forces: XMC.arms.X0.forces, fit: { dragPrior: SIGNED, srpPrior: FIT.srpPrior } }), X2s: S.pcfBytes({ forces: XMC.arms.X2.forces, fit: { dragPrior: SIGNED, srpPrior: FIT.srpPrior } }) };
-const pinned = (b) => S.pcfBytes({ forces: XMC.arms.X2.forces, fit: { dragPrior: { form: 'LOG_NORMAL', mean: b, sigma: 1e-6 }, srpPrior: FIT.srpPrior } });
-const spwOf = (rows) => S.spwBytes(rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG })));
+const PCF = { X0: fitPcf({ forces: {}, fit: FIT }), X2: fitPcf({ forces: MSIS, fit: FIT }), X0s: fitPcf({ forces: {}, fit: { dragPrior: SIGNED, srpPrior: FIT.srpPrior } }), X2s: fitPcf({ forces: MSIS, fit: { dragPrior: SIGNED, srpPrior: FIT.srpPrior } }) };
+const pinned = (b) => fitPcf({ forces: MSIS, fit: { dragPrior: { form: 'LOG_NORMAL', mean: b, sigma: 1e-6 }, srpPrior: FIT.srpPrior } });
+// The fit's $SPW: rows through 2026-12-14, past every record's horizon here.
+const spwOf = (rows) => fitWeather(rowsOfSpw(rows), horizonOf(Date.parse(`${rows.at(-1).DATE}T00:00:00Z`) - 31 * DAY));
 const cache = new Map();
 function weather(day) {
   if (!cache.has(day)) {
@@ -79,7 +80,7 @@ const ladderArms = (norad, rows) => [
   ['L12-1e6', 12, true, 'NRLMSISE00', 1e-6], ['L8-1e6', 8, true, 'NRLMSISE00', 1e-6], ['L12-no-bodies', 12, false, 'NRLMSISE00', 1e-8], ['L12-exponential', 12, true, 'EXPONENTIAL', 1e-8],
 ].map(([name, degree, bodies, atmosphere, tolerance]) => [name, { ...base, forces: { gravity: 'SPHERICAL_HARMONICS', degree, order: degree, thirdBodies: bodies ? [10, 301] : [], srp: true, drag: true, atmosphere }, integrator: { tolerance, maxStep: 300, minStep: 1e-3 }, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 0.03 }], fixed: { agom: agomOf(norad) }, apriori: apriori([0.3]) }, rows]);
 const M = await openModules();
-const A = AP_ARMS ? await openAp(args['ap-wasm']) : null;
+const A = await openAp();
 const F = await openFfmHost();
 const rmsOf = (e) => Math.sqrt(e.reduce((s, x) => s + x * x, 0) / e.length);
 fs.mkdirSync(OUT, { recursive: true });
@@ -104,21 +105,21 @@ for (const norad of mine) {
     const xp = async (name, arc, pcf, spw) => {
       const t = performance.now();
       try {
-        const f = await M.fit(oem(arc), pcf, spw ? { rows: spw } : undefined);
+        const f = await A.fit(oem(arc), pcf, spw ? { spw } : undefined);
         if (!f.ok) throw new Error(f.error);
-        arms[name] = { omm: f.omm, pcf, extra: spw ? { rows: spw } : undefined };
-        cost[name] = { fitMs: Math.round(performance.now() - t), bterm: S.readFitOmm(f.omm).bterm };
+        arms[name] = { ocm: f.ocm };
+        cost[name] = { fitMs: Math.round(performance.now() - t), bterm: readOcm(f.ocm).bterm };
       } catch (error) { arms[name] = { error: short(error) }; }
     };
     for (const spec of AP_ARMS ?? []) {
       const arc = spec.stitched ? stitched : lines;
       if (!arc) continue;
       const name = `A-${spec.name}`, t = performance.now();
-      const pcf = S.pcfBytes({ forces: apForces(XMC.arms.X2.forces, spec), fit: spec.fit === 'module' ? null : spec.fit ?? FIT }), extra = spec.atmosphere === false ? undefined : { rows: w.spw };
+      const pcf = fitPcf({ forces: apForces(spec), fit: spec.fit === 'module' ? null : spec.fit ?? FIT }), extra = spec.atmosphere === false ? undefined : { spw: w.spw };
       const f = await A.fit(oem(arc), pcf, extra);
       if (!f.ok) { arms[name] = { error: f.error }; continue; }
-      arms[name] = { omm: f.omm, pcf, extra, host: A };
-      cost[name] = { fitMs: Math.round(performance.now() - t), bterm: S.readFitOmm(f.omm).bterm, rms: S.readFitOmm(f.omm).fitRmsKm };
+      arms[name] = { ocm: f.ocm };
+      cost[name] = { fitMs: Math.round(performance.now() - t), bterm: readOcm(f.ocm).bterm, rms: readOcm(f.ocm).fitRmsKm };
     }
     if (!LADDER && !AP_ARMS) await xp('X2flat', lines, PCF.X2, w.flatSpw);
     if (LADDER || AP_ARMS) { /* FFM or AP only */ } else if (CONFIRM) { await xp('X0@16', lines, PCF.X0); await xp('X2@16', lines, PCF.X2, w.spw); }
@@ -163,7 +164,7 @@ for (const norad of mine) {
       const score = async (states) => { const e = await M.rtn(states, ref.states); return { km: Math.hypot(rmsOf(e.map((x) => x[0])), rmsOf(e.map((x) => x[1])), rmsOf(e.map((x) => x[2]))), r: rmsOf(e.map((x) => x[0])), t: rmsOf(e.map((x) => x[1])), n: rmsOf(e.map((x) => x[2])) }; };
       for (const [name, a] of Object.entries(arms)) {
         if (a.error) { row.arms[name] = { error: a.error }; continue; }
-        try { row.arms[name] = await score(await M.toAxes(await (a.host ?? M).propagate(a.omm, S.gridBytes(ref.epochs), a.pcf, a.extra, ref.epochs.length), ref.epochs, 'GCRF')); } catch (error) { row.arms[name] = { error: short(error) }; }
+        try { row.arms[name] = await score(await M.toAxes(await A.propagate(a.ocm, ref.epochs, ref.epochs.length), ref.epochs, 'GCRF')); } catch (error) { row.arms[name] = { error: short(error) }; }
       }
       for (const [name, map] of Object.entries(flights)) {
         if (map.error) { row.arms[name] = { error: map.error }; continue; }

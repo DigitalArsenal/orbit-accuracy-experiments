@@ -1,6 +1,7 @@
 // The SDS records XA sends to propagator/sdn-ap and analysis/density-calibration, encoded with the bindings of the SDS
-// release the module is built with (1.271.0, propagator/sdn-ap's own dependency): $OEM blocks and grids, $OMM, $PCF,
-// $SPW rows, $DCL. Bytes only; every orbit computation is a module's.
+// release the module is built with (1.276.0, propagator/sdn-ap 0.5.0's own dependency): $OEM blocks, the public set's $OMM
+// (ingest_omm's input), $PCF, $SPW rows, $DCL; the fitted $OCM read by its typed fields. Bytes only; every orbit
+// computation is a module's.
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -11,7 +12,7 @@ const req = createRequire(path.join(modules, 'propagator/sdn-ap/package.json'));
 const standards = path.dirname(req.resolve('spacedatastandards.org/package.json'));
 const load = (code) => import(pathToFileURL(path.join(standards, `lib/js/${code}/main.js`)).href);
 export const flatbuffers = await import(pathToFileURL(req.resolve('flatbuffers')).href);
-export const [OEM, OMM, PCF, SPW, DCL, RFM] = await Promise.all(['OEM', 'OMM', 'PCF', 'SPW', 'DCL', 'RFM'].map(load));
+export const [OEM, OMM, OCM, PCF, SPW, DCL, RFM] = await Promise.all(['OEM', 'OMM', 'OCM', 'PCF', 'SPW', 'DCL', 'RFM'].map(load));
 export const sdsVersion = (await import(pathToFileURL(path.join(standards, 'package.json')).href, { with: { type: 'json' } })).default.version;
 export const TYPE = (name) => ({ schemaName: `${name}.fbs`, fileIdentifier: `$${name}`, rootTypeName: name, wireFormat: 'flatbuffer' });
 
@@ -40,8 +41,16 @@ export function oemBytes({ frame, object, lines, useableStart, useableStop, orig
   return builder.asUint8Array().slice();
 }
 
-/** A grid template: explicit epochs (ISO UTC), TEME. */
-export const gridBytes = (epochs) => oemBytes({ frame: 'TEME', lines: epochs.map((epoch) => ({ epoch, r: [0, 0, 0] })) });
+/** A flight's $PCF: THEORY (UNSPECIFIED: the set's own) and OUTPUT at explicit epochs (ISO UTC), TEME; no FORCES (the record
+ *  is the one authority for its forces). */
+export function flightPcfBytes(epochs, theory = 'UNSPECIFIED') {
+  const t = new PCF.PCFT();
+  t.THEORY = PCF.pcfTheory[theory];
+  t.OUTPUT = Object.assign(new PCF.PCFOutputT(), { FRAME: PCF.pcfOutputFrame.TEME, EPOCHS: epochs });
+  const b = new flatbuffers.Builder(1 << 12);
+  PCF.PCF.finishPCFBuffer(b, t.pack(b));
+  return b.asUint8Array().slice();
+}
 
 /** The states of a propagate answer: [{epoch, r, v}] of its first block. */
 export function oemLines(bytes) {
@@ -51,7 +60,7 @@ export function oemLines(bytes) {
   return o.EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES.map((l) => ({ epoch: l.EPOCH, r: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] }));
 }
 
-/** A plain type-0 (SGP4) $OMM of a public element set. */
+/** A plain type-0 (SGP4) $OMM of a public element set: the foreign record ingest_omm takes. */
 export function sgp4OmmBytes({ epoch, elements, norad }) {
   const t = Object.assign(new OMM.OMMT(), {
     CCSDS_OMM_VERS: 3.0, ORIGINATOR: 'Space-Track (local archive)', CENTER_NAME: 'EARTH', TIME_SYSTEM: OMM.timingStandard.UTC, MEAN_ELEMENT_THEORY: OMM.meanElementSource.SGP4,
@@ -63,25 +72,33 @@ export function sgp4OmmBytes({ epoch, elements, norad }) {
   return b.asUint8Array().slice();
 }
 
-/** A fitted $OMM, decoded: the record, its COMMENT statistics and its covariance rows. */
-export function readFitOmm(bytes) {
-  const u = OMM.OMM.getRootAsOMM(new flatbuffers.ByteBuffer(new Uint8Array(bytes))).unpack();
-  const comment = u.COMMENT ?? '';
-  const num = (re) => { const m = re.exec(comment); return m ? Number(m[1]) : null; };
-  const params = Object.fromEntries((u.USER_DEFINED_PARAMETERS ?? []).map((p) => [p.PARAM_NAME, p.PARAM_VALUE]));
-  return { u, epoch: u.EPOCH, bterm: u.BSTAR, agom: u.MEAN_MOTION_DDOT, fitRmsKm: num(/fit RMS ([\d.]+) km/), iterations: num(/(\d+) iterations/), states: num(/(\d+) states fitted/), covariance: u.COVARIANCE ?? [], params };
+/** A fitted $OCM, decoded by its typed fields: MEAN_ELEMENTS (EPOCH, BTERM, AGOM), ORBIT_DETERMINATION.FIT_STATISTICS (RMS,
+ *  iterations, states) and the COVARIANCE_DATA lower triangle with its COV_PARAMETER_KINDS (prwDynamicParameter). */
+export function readFitOcm(bytes) {
+  const o = OCM.OCM.getRootAsOCM(new flatbuffers.ByteBuffer(new Uint8Array(bytes))).unpack();
+  const me = o.MEAN_ELEMENTS, st = o.ORBIT_DETERMINATION?.FIT_STATISTICS;
+  return { o, epoch: me.EPOCH, bterm: me.BTERM, agom: me.AGOM, fitRmsKm: st?.FIT_RMS_KM ?? null, iterations: st?.ITERATIONS ?? null, states: st?.FIT_STATES ?? null,
+    covariance: { size: o.COV_SIZE, kinds: o.COV_PARAMETER_KINDS ?? [], ltm: o.COVARIANCE_DATA ?? [] } };
 }
+export const DRAG_KIND = OCM.prwDynamicParameter.DRAG_AREA_OVER_MASS, AGOM_KIND = OCM.prwDynamicParameter.SRP_AREA_OVER_MASS;
 
-/** A $PCF: THEORY SGP4XP (or `theory`), the arm's FORCES fields (with the required empty EPHEMERIS_SOURCE), the FIT priors. */
-export function pcfBytes({ theory = 'SGP4XP', forces = null, fit = null } = {}) {
+/** A fit's $PCF: THEORY, FORCES (ATMOSPHERE_MODEL stated, with the required empty EPHEMERIS_SOURCE) and the FIT priors. */
+export function pcfBytes({ theory = 'SGP4XP', forces, fit = null }) {
   const t = new PCF.PCFT();
   t.THEORY = PCF.pcfTheory[theory];
-  if (forces) {
-    const enumOf = { WEATHER_SOURCE: PCF.pcfWeatherSource, WEATHER_EXTENSION: PCF.pcfWeatherExtension, ATMOSPHERE_MODEL: PCF.pcfAtmosphereFamily, DENSITY_CORRECTION: PCF.pcfDensityCorrection };
-    const f = Object.assign(new PCF.PCFForceModelT(), { EPHEMERIS_SOURCE: '' });
-    for (const [k, v] of Object.entries(forces)) f[k] = enumOf[k] ? enumOf[k][v] : v;
-    t.FORCES = f;
-  }
+  const enumOf = { WEATHER_SOURCE: PCF.pcfWeatherSource, ATMOSPHERE_MODEL: PCF.pcfAtmosphereFamily, DENSITY_CORRECTION: PCF.pcfDensityCorrection };
+  const f = Object.assign(new PCF.PCFForceModelT(), { EPHEMERIS_SOURCE: '' });
+  for (const [k, v] of Object.entries(forces)) f[k] = enumOf[k] ? enumOf[k][v] : v;
+  // every FORCES scalar on the wire (the module reads ATMOSPHERE_MODEL by presence; NRLMSISE00 is the schema default),
+  // absent strings and tables left off it
+  const pack = f.pack.bind(f);
+  f.pack = (b) => {
+    const offset = b.addFieldOffset;
+    b.addFieldOffset = function (slot, value, d) { if (value !== d) offset.call(this, slot, value, d); };
+    b.forceDefaults(true);
+    try { return pack(b); } finally { b.forceDefaults(false); b.addFieldOffset = offset; }
+  };
+  t.FORCES = f;
   if (fit) {
     const prior = (p) => (p ? Object.assign(new PCF.PCFGaussianPriorT(), { MEAN: p.mean, SIGMA: p.sigma, HAS_SIGMA: true }) : null);
     t.FIT = Object.assign(new PCF.PCFFitPolicyT(), { DRAG_PRIOR: prior(fit.dragPrior), SRP_PRIOR: prior(fit.srpPrior) });
@@ -91,11 +108,11 @@ export function pcfBytes({ theory = 'SGP4XP', forces = null, fit = null } = {}) 
   return b.asUint8Array().slice();
 }
 
-/** $SPW rows [{date, f107, c81, ap}] as size-prefixed records end to end. */
+/** $SPW rows [{date, f107, c81, ap, held}] as size-prefixed records end to end: F107_DATA_TYPE OBS, PRD on a held row. */
 export function spwBytes(rows) {
   const parts = rows.map((r) => {
     const b = new flatbuffers.Builder(256);
-    SPW.SPW.finishSizePrefixedSPWBuffer(b, Object.assign(new SPW.SPWT(), { DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap, F107_DATA_TYPE: SPW.F107DataType.OBS }).pack(b));
+    SPW.SPW.finishSizePrefixedSPWBuffer(b, Object.assign(new SPW.SPWT(), { DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap, F107_DATA_TYPE: r.held ? SPW.F107DataType.PRD : SPW.F107DataType.OBS }).pack(b));
     return b.asUint8Array().slice();
   });
   const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));

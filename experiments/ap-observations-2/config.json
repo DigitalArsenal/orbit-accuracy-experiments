@@ -1,0 +1,1492 @@
+{
+ "experiment": "ap-observations-2",
+ "task": "experiments-ap-observations-laser-2-20261104",
+ "frozen": true,
+ "store": "/opt/data/sdn-archive/operator-theory/ap/ap-observations-2",
+ "modules": {
+  "repository": "space-data-network-modules",
+  "commit": "5da8d709375ba410aa75cfcb0c89fa006f7ff82c",
+  "root": "/Users/tj/software/private/coordinator-d9/space-data-network-modules-obsod",
+  "versions": {
+   "data-source/ilrs-crd-source": "0.2.0",
+   "data-source/ilrs-station-coordinates": "0.1.0",
+   "data-source/eop-parser": "0.2.0",
+   "flows/observation-od": "0.3.0",
+   "analysis/estimation": "0.7.0",
+   "propagator/ffm": "2.1.0",
+   "propagator/sdn-ap": "0.5.1",
+   "propagator/sgp4": "1.4.1",
+   "analysis/reference-states": "0.4.0",
+   "flows/observation-ap": "0.1.0"
+  },
+  "build": {
+   "flow": {
+    "path": "flows/observation-ap/flow.mjs",
+    "sha256": "0daa6d4f041d0b7644cd59af2795bc5325588692ca18f7f75f88efa81a67ceeb"
+   },
+   "ilrsCrdSource": {
+    "path": "data-source/ilrs-crd-source/dist/isomorphic/module.wasm",
+    "sha256": "1671b59287d5e3dc6d732bb43c57e8cf2f48cf350d9cd590a0eb5cbeb009f7da"
+   },
+   "ilrsStationCoordinates": {
+    "path": "data-source/ilrs-station-coordinates/dist/isomorphic/module.wasm",
+    "sha256": "d775a12572114dc33d69a528ca23a3561e089444a0f562bb7542d4f2c36f69a3"
+   },
+   "eopParser": {
+    "path": "data-source/eop-parser/dist/isomorphic/module.wasm",
+    "sha256": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1"
+   },
+   "observationOd": {
+    "path": "flows/observation-od/dist/isomorphic/module.wasm",
+    "sha256": "d5cc1246c597b92d94cc58814c580f75bb27f2107675bf43ff157483f05f9c70"
+   },
+   "estimation": {
+    "path": "analysis/estimation/dist/isomorphic/module.wasm",
+    "sha256": "7a555ca5b3ed0b021dd5b7986bd73dd8f8dc5125a2aa7943e3b3e983320d6bcd"
+   },
+   "ffm": {
+    "path": "propagator/ffm/dist/isomorphic/module.wasm",
+    "sha256": "318db198d611da632a461de0c5aa6e280ffaa913cc2a1324034d1844e06c4fd6"
+   },
+   "sdnAp": {
+    "path": "propagator/sdn-ap/dist/isomorphic/module.wasm",
+    "sha256": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb"
+   },
+   "sgp4": {
+    "path": "propagator/sgp4/dist/isomorphic/module.wasm",
+    "sha256": "2fe246b716c78a4b947cd95e70e126b7a738cbbb9775e5196f07b1fe551f4643"
+   },
+   "referenceStates": {
+    "path": "analysis/reference-states/dist/isomorphic/module.wasm",
+    "sha256": "51477903cb13d877d30342ac5a10a12c5e6fec8a8622ddfe203a73e7dc790c65"
+   },
+   "kernel": {
+    "path": "files/orbit-products/tests/fixtures/de440/de440-2026.bsp",
+    "sha256": "e612a95953ca8211c629bdb632d4c7483cc339f0e963592bd8cae4a7d24ad7ef"
+   },
+   "sgp4Encoders": {
+    "path": "propagator/sgp4/tests/lib/payloadEncoders.mjs",
+    "sha256": "73716100576358b57b3607b0c3423a4ebf988117fb934b81511660c09f5bbb99"
+   },
+   "estimationCodec": {
+    "path": "analysis/estimation/tests/wire.mjs",
+    "sha256": "455c5b32b433abb9eddb47518fd137e27ab57554cd58766dade5bda226ac1a4b"
+   },
+   "estimationSchema": {
+    "path": "analysis/estimation/schemas/Estimation.fbs",
+    "sha256": "38c771916ffe63b1c404bc4d1826d7a85ddf50979d16a5f986f06b002b273aba"
+   }
+  },
+  "changedFromFirst": [
+   "observationOd"
+  ]
+ },
+ "firstRegistration": {
+  "task": "experiments-ap-observations-laser-20261104",
+  "modulesCommit": "c2f476f6193c2355cef778a0abe081ff6e06f29d",
+  "commits": {
+   "plan": "4bb17c00d5357ef7f0ab5a9192429e4c35e2cf68",
+   "results": "68e92da3e56ae78a003c63b8c3d0119383d5fa0b",
+   "check": "b07571778ec2457f42e18de42ac6b811678b7ff7"
+  },
+  "plan": {
+   "path": "experiments/ap-observations/PLAN.md",
+   "sha256": "7e763c13dc8735fad11d921165c6b02de49223ccf5bb19817e1755d352556a97"
+  },
+  "config": {
+   "path": "experiments/ap-observations/config.json",
+   "sha256": "3604dc2908e19dd649b6fd9471e4997b8e1d16eb7d483c9a84cec5d0d87342e0"
+  },
+  "table": {
+   "path": "results/ap-observations/table.json",
+   "sha256": "779a9c5ac8b118792fbeb5ebfd9c1907e63e453d789b1294c8ac0aae29ecfa38"
+  },
+  "readme": {
+   "path": "results/ap-observations/README.md",
+   "sha256": "b0e62bd6d812356a1f1baa8f890675f313229babd593f7430916a620914925d2"
+  },
+  "store": "/opt/data/sdn-archive/operator-theory/ap/ap-observations",
+  "apScored": 175,
+  "apN": [
+   158,
+   157,
+   152
+  ]
+ },
+ "expectedToChange": [
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-20T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-24T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "starlette",
+   "cutoff": "2026-07-29T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "stella",
+   "cutoff": "2026-08-08T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-18T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "expected": "refused again (a rule 0.3.0 does not touch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-21T00:00:00.000Z",
+   "refused": "no NSGF state at 2026-07-19T00:00:00.000000Z",
+   "expected": "refused again (a rule 0.3.0 does not touch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-22T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-25T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "expected": "refused again (a rule 0.3.0 does not touch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-07-27T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-04T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-07T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "expected": "refused again (a rule 0.3.0 does not touch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-13T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-17T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "expected": "refused again (a rule 0.3.0 does not touch)"
+  },
+  {
+   "target": "westpac",
+   "cutoff": "2026-08-22T00:00:00.000Z",
+   "refused": "arc-too-short",
+   "expected": "refused again (a rule 0.3.0 does not touch)"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-01T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-10T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-15T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-19T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "larets",
+   "cutoff": "2026-08-21T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  },
+  {
+   "target": "lares",
+   "cutoff": "2026-07-26T00:00:00.000Z",
+   "refused": "no-convergence",
+   "expected": "an AP $OCM (flows/observation-od 0.3.0 fits first at the first guess epoch)"
+  }
+ ],
+ "likeForLike": {
+  "b2": {
+   "attempted": 206,
+   "n": [
+    183,
+    180,
+    179
+   ]
+  },
+  "first": {
+   "attempted": 206,
+   "scored": 175,
+   "n": [
+    158,
+    157,
+    152
+   ]
+  },
+  "ifTheConvergenceCellsConverge": {
+   "scored": 200,
+   "n": [
+    178,
+    176,
+    174
+   ]
+  }
+ },
+ "inputs": {
+  "hac/ilrs-edc/npt_crd_v2/lares/lares_202606.np2": "6415f689e782c5bec8ceee56e9c3e068a883f6946fa03bcbe3c99959f9e8cc35",
+  "hac/ilrs-edc/npt_crd_v2/lares/lares_202607.np2": "40b6fcfe78fa00c0131ddf715cf47120d2f4152cd5cffe14d15bc8d725a4d092",
+  "hac/ilrs-edc/npt_crd_v2/lares/lares_202608.np2": "63c925a72f28e2b842574c8532473b2adb2958bdbe900217819184dcd56eedcd",
+  "hac/ilrs-edc/npt_crd_v2/larets/larets_202606.np2": "62fd3cd114c87bfe3f1054ec2b4ff6f9dc6af855662b66f0bb16375f0bcab40a",
+  "hac/ilrs-edc/npt_crd_v2/larets/larets_202607.np2": "53fcf38db1e536b14a8d91af1fbfc75de877ee453bf434259706934140c851de",
+  "hac/ilrs-edc/npt_crd_v2/larets/larets_202608.np2": "75c705b2f1366ce5cd4f9e88a7b92c057aaff009d8cb5fb6d99b73c5140925b9",
+  "hac/ilrs-edc/npt_crd_v2/starlette/starlette_202606.np2": "372858d8b630992e760ac0752f884bd182e1d3345f6b87d9714ccec70d2d162f",
+  "hac/ilrs-edc/npt_crd_v2/starlette/starlette_202607.np2": "6ae609e395ebcc8d2ae9451c8fe1f431fc4d1a6bc4e62a30eb9cd8d67b3dc5bd",
+  "hac/ilrs-edc/npt_crd_v2/starlette/starlette_202608.np2": "67d09e4277e67c6b27f52f1585c1dd109f76c74c83561b55c1f412a0398ee7fd",
+  "hac/ilrs-edc/npt_crd_v2/stella/stella_202606.np2": "2c40eaaee4d02286571c00f09b9ed3906894a255f8b272200e3d93e9bfed6e4d",
+  "hac/ilrs-edc/npt_crd_v2/stella/stella_202607.np2": "db76955d626c9f16e9bd3855494e5e39cfec26737983712e08ab1c26621902b6",
+  "hac/ilrs-edc/npt_crd_v2/stella/stella_202608.np2": "5ea2a1ba99aab459b2a0a608f1d65f049279f279422da83545decd479f41f5b9",
+  "hac/ilrs-edc/npt_crd_v2/westpac/westpac_202606.np2": "148dd20530c3f0cba37648e7c58ecb6a2ecad0ac609651af9f934166446ad0e3",
+  "hac/ilrs-edc/npt_crd_v2/westpac/westpac_202607.np2": "54fe6a170bac624724b9f8812e32432bb7db84b3e74c652c0ad49ac70f946791",
+  "hac/ilrs-edc/npt_crd_v2/westpac/westpac_202608.np2": "ecd54044d546de67eb6e78e453d44d677138fbee9401b4d30c63c3fc110fab7f",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260627.v90.snx.gz": "24124e696a489dc05253f422099960e23c41ae6a223005ea87e15c7ba0f3fd0c",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260704.v90.snx.gz": "c5fcd5ca191507bc9c3ab7cc19252b8933eb9976e2ab58348152685c1791f3be",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260711.v90.snx.gz": "f0865d756377b0f20618166e33b33bf0fb88cc7736628ce114f451d5c1ac2ff7",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260718.v90.snx.gz": "406450586c2201f6e13cde95dca6834c0feac2e972c6e4f3f7d3fb3444a812c8",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260725.v90.snx.gz": "811c757b9bcb9f049d2eb5725803e2255d92ae577c726ec003180cf8ca05c69a",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260801.v90.snx.gz": "021e48b437a2cb3b7549eddeac11bc79b41bc97e1abff13042349972e90e1c29",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260808.v90.snx.gz": "f70e143f466a5bc169a7bae875688bb528cd8d64eb8d137376e662eba5eff8c5",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260815.v90.snx.gz": "4e49073a4ecab90f32ce483a7ad70fc6db404713302a176acf068f23bc6f9c6d",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260822.v90.snx.gz": "f47240fb769b5c2b57df5cf9fce770a2f1312e9ff65d085dac47a59c39cbdb7d",
+  "hac/ilrs-edc/pos+eop/ilrsa.pos+eop.260829.v90.snx.gz": "c346668d926fed86667a7bb37f45c3044a999bcf0632ab04c487159bdeb94128",
+  "reference-states/products/eopc04.1962-now": "a14854ff3fa974a6783b31ed0d6642c9d477647547949e2794308cb46dfeb2b3"
+ },
+ "window": [
+  "2026-07-16T00:00:00Z",
+  "2026-08-30T00:00:00Z"
+ ],
+ "targets": {
+  "starlette": {
+   "norad": 7646,
+   "objectId": "1975-010A",
+   "crAm": 0.00108
+  },
+  "stella": {
+   "norad": 22824,
+   "objectId": "1993-061B",
+   "crAm": 0.00108
+  },
+  "larets": {
+   "norad": 27944,
+   "objectId": "2003-042F",
+   "crAm": 0.0022
+  },
+  "westpac": {
+   "norad": 25398,
+   "objectId": "1998-043E",
+   "crAm": 0.0021
+  },
+  "lares": {
+   "norad": 38077,
+   "objectId": "2012-006A",
+   "crAm": 0.00032
+  }
+ },
+ "arcHours": 48,
+ "carryHours": 24,
+ "carryStepSeconds": 60,
+ "leadDays": [
+  1,
+  2,
+  3
+ ],
+ "thinSeconds": 300,
+ "minimumCoverage": 0.9,
+ "guessRounding": {
+  "positionM": 100,
+  "velocityMS": 0.1
+ },
+ "b2": {
+  "task": "B2 part 2",
+  "rows": "/opt/data/sdn-archive/sdn-ap-mixed-screening/rows/laser.s*.jsonl",
+  "result": "results/sdn-ap-mixed-screening/README.md",
+  "medianKm": {
+   "sdnap": [
+    0.093,
+    0.229,
+    0.444
+   ],
+   "ffm": [
+    0.008,
+    0.011,
+    0.015
+   ],
+   "sgp4": [
+    0.577,
+    0.59,
+    0.609
+   ],
+   "sdnapTruth": [
+    0.102,
+    0.249,
+    0.466
+   ]
+  },
+  "n": {
+   "sdnap": [
+    183,
+    180,
+    179
+   ]
+  }
+ },
+ "EXCLUDE_NORADS": [
+  43567,
+  37847,
+  41862,
+  41174,
+  43055,
+  41175,
+  39451,
+  39452,
+  39453,
+  43476,
+  43477
+ ],
+ "EXCLUDE_NAME_PATTERN": "STARLINK",
+ "EXCLUDE_PATHS": [
+  "/opt/data/sdn-archive/.secrets",
+  "operator-capture",
+  "forward-capture",
+  "e13b",
+  "starlink",
+  "udl"
+ ],
+ "cutoffs": [
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-18T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-19T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-20T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-21T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-22T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-23T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-24T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-25T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-26T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-27T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-28T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-29T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-30T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-07-31T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-01T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-02T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-03T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-04T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-05T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-06T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-07T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-08T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-09T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-10T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-11T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-12T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-13T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-14T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-15T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-16T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-17T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-18T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-19T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-20T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-21T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-22T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-23T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-24T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-25T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-26T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-27T00:00:00.000Z"
+  },
+  {
+   "norad": 7646,
+   "target": "starlette",
+   "cutoff": "2026-08-28T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-18T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-19T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-20T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-21T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-22T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-23T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-24T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-25T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-26T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-27T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-28T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-29T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-30T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-07-31T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-01T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-02T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-03T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-04T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-05T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-06T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-07T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-08T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-09T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-10T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-11T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-12T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-13T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-14T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-15T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-16T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-17T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-18T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-19T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-20T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-21T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-22T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-23T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-24T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-25T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-26T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-27T00:00:00.000Z"
+  },
+  {
+   "norad": 22824,
+   "target": "stella",
+   "cutoff": "2026-08-28T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-18T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-19T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-20T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-21T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-22T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-23T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-24T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-25T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-26T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-27T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-28T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-29T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-30T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-07-31T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-01T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-02T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-03T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-04T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-05T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-06T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-07T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-08T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-09T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-10T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-11T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-12T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-13T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-14T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-15T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-16T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-17T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-20T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-21T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-22T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-23T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-24T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-25T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-26T00:00:00.000Z"
+  },
+  {
+   "norad": 25398,
+   "target": "westpac",
+   "cutoff": "2026-08-27T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-18T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-19T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-20T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-21T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-22T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-23T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-24T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-25T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-26T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-27T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-28T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-29T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-30T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-07-31T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-01T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-02T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-03T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-04T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-05T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-06T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-07T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-08T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-09T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-10T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-11T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-12T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-13T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-14T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-15T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-16T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-17T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-18T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-19T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-20T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-21T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-22T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-23T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-24T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-25T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-26T00:00:00.000Z"
+  },
+  {
+   "norad": 27944,
+   "target": "larets",
+   "cutoff": "2026-08-27T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-18T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-19T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-20T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-21T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-22T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-23T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-24T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-25T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-26T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-27T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-28T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-29T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-30T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-07-31T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-01T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-02T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-03T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-04T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-05T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-06T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-07T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-08T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-09T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-10T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-11T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-12T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-13T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-14T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-15T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-16T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-17T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-18T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-19T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-20T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-21T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-22T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-23T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-24T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-25T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-26T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-27T00:00:00.000Z"
+  },
+  {
+   "norad": 38077,
+   "target": "lares",
+   "cutoff": "2026-08-28T00:00:00.000Z"
+  }
+ ]
+}

@@ -24,11 +24,11 @@ export async function openWasm(modulesRoot,fetcher) {
     const env=await environment(modules,modulesRoot,fetcher);
     const table=(name,values)=>Object.assign(new c.prw[`${name}T`](),values);
     const forceOverrides=f=>({MAXIMUM_DEGREE:f.degree,MAXIMUM_ORDER:f.order,THIRD_BODY_IDS:f.thirdBodies,
-      SOLID_TIDES:f.solidTides?c.prw.prwSolidTideModel.IERS_2010:c.prw.prwSolidTideModel.NONE,
-      RELATIVITY:f.relativity?c.prw.prwRelativityTerms[f.relativity]:c.prw.prwRelativityTerms.NONE,
-      OCEAN_TIDES:f.oceanTides?c.prw.prwOceanTideModel.FES2004:c.prw.prwOceanTideModel.NONE,
+      SOLID_TIDES:f.solidTides?c.prw.pcfSolidTideModel.IERS_2010:c.prw.pcfSolidTideModel.NONE,
+      RELATIVITY:f.relativity?c.prw.pcfRelativityTerms[f.relativity]:c.prw.pcfRelativityTerms.NONE,
+      OCEAN_TIDES:f.oceanTides?c.prw.pcfOceanTideModel.FES2004:c.prw.pcfOceanTideModel.NONE,
       OCEAN_TIDE_MAXIMUM_DEGREE:f.oceanTides?.degree??0,OCEAN_TIDE_MAXIMUM_ORDER:f.oceanTides?.order??0,
-      EARTH_RADIATION:f.earthRadiation?c.prw.prwEarthRadiationModel.KNOCKE:c.prw.prwEarthRadiationModel.NONE,
+      EARTH_RADIATION:f.earthRadiation?c.prw.pcfEarthRadiationModel.KNOCKE:c.prw.pcfEarthRadiationModel.NONE,
       EARTH_RADIATION_RESOLUTION_DEG:f.earthRadiation?.resolutionDeg??15});
     async function execute(product,epochs,{forces=config.forceModel,dca=null,stm=false,covariance=null}={}) {
       assert(epochs.length&&epochs.every(t=>t>=Date.parse(product.epoch)));

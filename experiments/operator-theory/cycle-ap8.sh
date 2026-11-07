@@ -44,15 +44,16 @@ case "${1:-}" in
     for k in 0 1 2 3 4 5 6 7; do nice -n 10 node --max-old-space-size=3072 experiments/operator-theory/explore.mjs --confirm --ap-wasm "$W" --ap-arms "$ARMS" --out "$O" --shard "$k/8" >> "$O/logs/shard-$k.log" 2>&1 & PIDS+=($!); done
     ;;
   regimes)
+    RF=0
     # Part R: AP and XP on AP6.md's windows, as cycle-ap7-site.sh flew them for 0.4.11.
     for g in default HX WA; do
       case $g in default) O=$ROOT/regimes-apxp; G=();; HX) O=$ROOT/regimes-hx-apxp; G=(--groups HX);; WA) O=$ROOT/regimes-wa-apxp; G=(--groups WA);; esac
       mkdir -p "$O/logs"; P=()
-      for k in 0 1 2 3 4 5 6 7; do nice -n 10 node --max-old-space-size=3072 experiments/operator-theory/all-regimes.mjs --arms AP,XP "${G[@]}" --wasm "$W" --out "$O" --shard "$k/8" >> "$O/logs/shard-$k.log" 2>&1 & P+=($!); done
-      for p in "${P[@]}"; do wait "$p" || PIDS+=(fail); done
+      for k in 0 1 2 3 4 5 6 7; do nice -n 10 node --max-old-space-size=3072 experiments/operator-theory/all-regimes.mjs --arms AP,XP ${G[@]+"${G[@]}"} --wasm "$W" --out "$O" --shard "$k/8" >> "$O/logs/shard-$k.log" 2>&1 & P+=($!); done
+      for p in "${P[@]}"; do wait "$p" || RF=$((RF + 1)); done
     done
     ;;
-  *) echo "truth, truth2, laser or starlink" >&2; exit 2 ;;
+  *) echo "truth, truth2, laser, regimes or starlink" >&2; exit 2 ;;
 esac
-F=0; for p in "${PIDS[@]}"; do wait "$p" || F=$((F + 1)); done
+F=${RF:-0}; for p in ${PIDS[@]+"${PIDS[@]}"}; do wait "$p" || F=$((F + 1)); done
 echo "AP8 $1 finished $(date -u +%FT%TZ): $F workers failed"
