@@ -1,0 +1,126 @@
+{
+ "label": "Real geometry and real forecast errors, simulated pairing. No covariance anywhere; this is not a collision-probability result.",
+ "title": "Alerts per real conjunction",
+ "y": "Alerts per true event, 99 percent caught",
+ "arms": {
+  "precise orbits": {
+   "SGP4": {
+    "1": {
+     "value": 147.93,
+     "interval": [
+      21.69,
+      3087
+     ]
+    },
+    "3": {
+     "value": 11142,
+     "interval": [
+      522.5,
+      50710
+     ]
+    },
+    "5": null
+   },
+   "XP, whiteroom": {
+    "1": {
+     "value": 759.1,
+     "interval": [
+      13.24,
+      3203
+     ]
+    },
+    "3": {
+     "value": 9240.9,
+     "interval": [
+      405.1,
+      51580
+     ]
+    },
+    "5": {
+     "value": 19235,
+     "interval": [
+      1661,
+      53550
+     ]
+    }
+   },
+   "XP, Space Force": {
+    "1": {
+     "value": 134.06,
+     "interval": [
+      15.18,
+      2961
+     ]
+    },
+    "3": {
+     "value": 12424,
+     "interval": [
+      449.7,
+      50910
+     ]
+    },
+    "5": null
+   },
+   "AP": {
+    "1": {
+     "value": 208.09,
+     "interval": [
+      2.635,
+      3100
+     ]
+    },
+    "3": {
+     "value": 39202,
+     "interval": [
+      82.54,
+      51360
+     ]
+    },
+    "5": {
+     "value": 18241,
+     "interval": [
+      469.4,
+      52410
+     ]
+    }
+   },
+   "FFM": {
+    "1": {
+     "value": 567.35,
+     "interval": [
+      2.504,
+      3330
+     ]
+    },
+    "3": {
+     "value": 14225,
+     "interval": [
+      78.61,
+      51300
+     ]
+    },
+    "5": null
+   }
+  },
+  "public element sets": {
+   "SGP4 on public sets": {
+    "1": {
+     "value": 7854,
+     "interval": [
+      4465,
+      9752
+     ]
+    },
+    "3": {
+     "value": 8008.9,
+     "interval": [
+      4491,
+      9584
+     ]
+    }
+   }
+  }
+ },
+ "perfectForecast": 0.99004,
+ "armsPaired": false
+}

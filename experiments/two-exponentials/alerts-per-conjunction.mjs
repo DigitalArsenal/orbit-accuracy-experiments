@@ -377,7 +377,12 @@ function errorSummary(errs) {
     }
   }
   const pub = Object.fromEntries(Object.entries(errs.pub).map(([k, v]) => [k, Object.fromEntries([1, 3].map((d) => { const x = v[d].map((a) => a[1]).sort(asc); return [d, { n: x.length, objects: new Set(v[d].map((a) => v.keys[a[0]].sat)).size, median: round(pct(x, 0.5)), p95: round(pct(x, 0.95)) }]; }))]));
-  return { rows, pub, mismatches };
+  // After the first reading: the windows that set the altimetry band's tail, the same for every theory.
+  const largest = (errs.a1.DO[3].AP ?? []).slice().sort((a, b) => b[4] - a[4]).slice(0, 3).map((x) => {
+    const k = errs.keys.DO[x[0]];
+    return { satellite: k.sat, cutoff: k.key.slice(-10), burnFlagged: Boolean(errs.flags[k.key]?.[3]), km: Object.fromEntries(THEORIES.map((t) => [t, round(errs.a1.DO[3][t]?.find((y) => y[0] === x[0])?.[4])])) };
+  });
+  return { rows, pub, largestAltimetryDay3: { windows: (errs.a1.DO[3].AP ?? []).length, largest }, mismatches };
 }
 function errorsMode() {
   const errs = loadErrors();
@@ -762,8 +767,29 @@ function buildTable() {
     t0Digest: { value: counts[0].digest, b2: B2_DIGEST, equal: counts[0].digest === B2_DIGEST && counts[0].events === B2_EVENTS },
     ladderUnder5km: { t1s1: t('t1-s1').under5km, b2: B2_LADDER, rel: sig(t('t1-s1').under5km / B2_LADDER - 1, 3) },
     weightedAgainstFull: Object.fromEntries(TIERS.filter((x) => x.tier).map((x) => [x.id, sig((t(x.id).under5km * weightOf(t(x.id))) / counts[0].events - 1, 3)])),
+    // The band a tier shares with the tier below it, weighted, each seed against the mean of the lower tier's three seeds.
+    sharedBand: (() => {
+      const seeds = (tier) => TIERS.filter((x) => x.tier === tier).map((x) => t(x.id));
+      const mean = (v) => v.reduce((s, x) => s + x, 0) / v.length;
+      const t1 = mean(seeds(1).map((c) => c.kept * weightOf(c))), t2Upper = mean(seeds(2).map((c) => (c.events - c.under5km) * weightOf(c)));
+      return { 't1 under 5 km against t0': seeds(1).map((c) => sig((c.under5km * weightOf(c)) / counts[0].events - 1, 3)),
+        't2 5 to 50 km against t1': seeds(2).map((c) => sig(((c.events - c.kept - c.under5km) * weightOf(c)) / t1 - 1, 3)),
+        't3 5 to 300 km against t2': seeds(3).map((c) => sig(((c.events - c.kept - c.under5km) * weightOf(c)) / t2Upper - 1, 3)) };
+    })(),
   };
-  const doc = { label: LABEL, primary: '99 percent, 3 days ahead, one radius per regime pair', perfectForecast: floor, arm1: { input: 'precise orbits', leads: arm1, verdicts, comparison: 'same windows where a window key holds every theory; see errors.json windowsAllFive' }, arm2: { input: 'public element sets, SGP4 only', leads: arm2, pairedWithArm1: false }, sensitivities, perPair: pairs, closure, geometry: classesRow.shape, sizing, builds: BUILD_NAMES, holds: 'No Starlink group, held Galileo satellite, operator capture or C2 row was parsed. Swarm and GRACE-FO truth never after 2026-10-31.', registration: { commit: meta.registration_commit, time: meta.registration_time, sizing_commit: meta.sizing_commit } };
+  // Chosen after the first reading: the ratio on the one radius for all, a reading registered beside the primary.
+  const singleRatios = (lead) => Object.fromEntries(['SGP4', 'XP', 'XPU', 'FFM'].filter((c) => byCell.has(cellId(1, c, lead))).map((c) => {
+    const a = byCell.get(cellId(1, 'AP', lead)), b = new Map(byCell.get(cellId(1, c, lead)).map((r) => [r.rep, r]));
+    const ratio = (r) => r.single[1] / b.get(r.rep).single[1];
+    return [c, { ratio: sig(ratio(a.find((r) => r.rep === 0)), 4), interval: interval(a.filter((r) => r.rep > 0).map(ratio)) }];
+  }));
+  const afterFirstReading = {
+    statement: 'Chosen after the first reading. The registered primary reading and its verdicts stand as above.',
+    singleRadiusApOver: { 1: singleRatios(1), 3: singleRatios(3), 5: singleRatios(5) },
+    publicSingleRadiusLaserSpheresBelow600: read(cellId(2, 'PUB', 3, 'all', 'slr'), 'single'),
+    tail: errors.largestAltimetryDay3,
+  };
+  const doc = { label: LABEL, primary: '99 percent, 3 days ahead, one radius per regime pair', afterFirstReading, perfectForecast: floor, arm1: { input: 'precise orbits', leads: arm1, verdicts, comparison: 'same windows where a window key holds every theory; see errors.json windowsAllFive' }, arm2: { input: 'public element sets, SGP4 only', leads: arm2, pairedWithArm1: false }, sensitivities, perPair: pairs, closure, geometry: classesRow.shape, sizing, builds: BUILD_NAMES, holds: 'No Starlink group, held Galileo satellite, operator capture or C2 row was parsed. Swarm and GRACE-FO truth never after 2026-10-31.', registration: { commit: meta.registration_commit, time: meta.registration_time, sizing_commit: meta.sizing_commit } };
   return { doc, errors, counts };
 }
 const BUILD_NAMES = {
@@ -786,8 +812,18 @@ function tableFiles() {
   L.push(`| Public element sets | ${THEORY_LABEL.PUB} | ${cell(doc.arm2.leads[1])} | ${cell(doc.arm2.leads[3])} | not measured |`);
   L.push(`| None | ${THEORY_LABEL.ZERO} | ${fmt(q99(doc.perfectForecast).value)} | | |`, '');
   L.push('A perfect forecast gives about 1. Intervals: percentile bootstrap, 400 replicates; they cover the error rows, the draws and the thinning, not the one week of catalog or the few satellites behind each regime.', '');
-  L.push('## Sensitivity to the share caught, 3 days ahead', '', '| Input | Theory | 95 percent | 99 percent | 99.9 percent | 99 percent, one radius for all | 99 percent, without encounters under 100 m/s |', '|---|---|---:|---:|---:|---:|---:|');
+  const a = doc.afterFirstReading, tail = a.tail.largest, ivr = (o) => `${fmt(o.ratio)} (${fmt(o.interval[0])} to ${fmt(o.interval[1])})`;
   const iv = (o) => (o ? `${fmt(o.value)} (${fmt(o.interval[0])} to ${fmt(o.interval[1])})` : 'n/a');
+  L.push('**Do not print the table above.** Its 99 percent falls on a jump, not on a stable tail. ' + `${tail.length} of the ${a.tail.windows} altimetry windows at 3 days, all ${tail[0].satellite} and all flagged with a burn, err by ${fmt(tail[2].km.AP)} to ${fmt(tail[0].km.AP)} km on AP, and by about as much on every other theory. Drawn for either object, they reach about 5 percent of the encounters in that band, so the band's radius lands on or beside them almost by chance. That is why each primary interval is so wide, and why the primary point ratios fall outside their own intervals.`, '');
+  L.push('## Chosen after the first reading: one radius for all, 99 percent', '', 'The one radius for all was registered beside the primary reading; its ratio to AP was added after the first reading. The rare tail stays under 1 percent of true events, so this figure is stable.', '', '| Input | Theory | 1 day | 3 days | 5 days |', '|---|---|---:|---:|---:|');
+  const single = (x) => (x ? iv(x.singleRadius['99']) : 'not measured');
+  for (const t of THEORIES) L.push(`| Precise orbits | ${THEORY_LABEL[t]} | ${single(doc.arm1.leads[1][t])} | ${single(doc.arm1.leads[3][t])} | ${single(doc.arm1.leads[5][t])} |`);
+  L.push(`| Public element sets, the ISS below 600 km | ${THEORY_LABEL.PUB} | ${single(doc.arm2.leads[1])} | ${single(doc.arm2.leads[3])} | not measured |`);
+  L.push(`| Public element sets, laser spheres below 600 km | ${THEORY_LABEL.PUB} | | ${iv(a.publicSingleRadiusLaserSpheresBelow600['99'])} | not measured |`, '');
+  L.push('| AP alerts over | 1 day | 3 days | 5 days |', '|---|---:|---:|---:|');
+  for (const c of ['SGP4', 'XP', 'XPU', 'FFM']) L.push(`| ${THEORY_LABEL[c]} | ${ivr(a.singleRadiusApOver[1][c])} | ${ivr(a.singleRadiusApOver[3][c])} | ${a.singleRadiusApOver[5][c] ? ivr(a.singleRadiusApOver[5][c]) : 'not measured'} |`);
+  L.push('', 'The public figure below 600 km depends on the analogue, by a large factor: neither the ISS, with its reboosts, nor the laser spheres, which fly above 690 km, is a typical object in that band, and that band holds most true events. The public arm therefore gives no single figure.', '');
+  L.push('## Sensitivity to the share caught, 3 days ahead', '', '| Input | Theory | 95 percent | 99 percent | 99.9 percent | 99 percent, one radius for all | 99 percent, without encounters under 100 m/s |', '|---|---|---:|---:|---:|---:|---:|');
   const sens = (input, name, x) => L.push(`| ${input} | ${name} | ${iv(x.ae['95'])} | ${iv(x.ae['99'])} | ${iv(x.ae['99.9'])} | ${iv(x.singleRadius['99'])} | ${iv(x.withoutSlowEncounters['99'])} |`);
   for (const t of THEORIES) sens('Precise orbits', THEORY_LABEL[t], doc.arm1.leads[3][t]);
   sens('Public element sets', THEORY_LABEL.PUB, doc.arm2.leads[3]);
@@ -807,7 +843,7 @@ function tableFiles() {
   for (const r of errors.rows.filter((x) => x.windowsAny !== undefined)) L.push(`| ${r.cell} | ${r.lead} | ${r.windowsAny} | ${r.windowsAllFive} |`);
   L.push('', '## Builds', '');
   for (const [k, v] of Object.entries(doc.builds)) L.push(`- ${THEORY_LABEL[k] ?? k}: ${v}.`);
-  L.push('', '## Closure and geometry', '', `- t0 equals B2's landed event set: ${doc.closure.t0Digest.equal} (digest \`${doc.closure.t0Digest.value}\`).`, `- t1 seed 1's events under 5 km against B2's \`ladder-1-8-s1\`: ${doc.closure.ladderUnder5km.rel}.`, `- Each thinned tier's weighted count under 5 km against the full catalog's, relative: ${Object.entries(doc.closure.weightedAgainstFull).map(([k, v]) => `${k} ${v}`).join(', ')}.`, `- True events under 100 m/s relative speed: ${doc.geometry.slowTrueShare}. True events by miss, share under 0.5 km: ${doc.geometry.under500mShare} (0.25 for a miss uniform over the plane).`, `- Realized catch at 99 percent, 3 days: ${THEORIES.map((t) => `${THEORY_LABEL[t]} ${doc.arm1.leads[3][t].caught[1]}`).join(', ')}, ${THEORY_LABEL.PUB} ${doc.arm2.leads[3].caught[1]}.`, `- True events left out for want of error rows: 5 days ${doc.arm1.leads[5].AP.droppedTrueEventShare}; public sets ${doc.arm2.leads[3].droppedTrueEventShare} (highly elliptical).`, '');
+  L.push('', '## Closure and geometry', '', `- t0 equals B2's landed event set: ${doc.closure.t0Digest.equal} (digest \`${doc.closure.t0Digest.value}\`).`, `- t1 seed 1's events under 5 km against B2's \`ladder-1-8-s1\`: ${doc.closure.ladderUnder5km.rel}.`, `- Each tier's weighted count in the band it shares with the tier below, relative, per seed: ${Object.entries(doc.closure.sharedBand).map(([k, v]) => `${k} ${v.join(', ')}`).join('; ')}.`, `- True events under 100 m/s relative speed: ${doc.geometry.slowTrueShare}. True events by miss, share under 0.5 km: ${doc.geometry.under500mShare} (0.25 for a miss uniform over the plane).`, `- Realized catch at 99 percent, 3 days: ${THEORIES.map((t) => `${THEORY_LABEL[t]} ${doc.arm1.leads[3][t].caught[1]}`).join(', ')}, ${THEORY_LABEL.PUB} ${doc.arm2.leads[3].caught[1]}.`, `- True events left out for want of error rows: 5 days ${doc.arm1.leads[5].AP.droppedTrueEventShare}; public sets ${doc.arm2.leads[3].droppedTrueEventShare} (highly elliptical).`, '');
   L.push('## What this does not say', '', '- The errors of the two objects are drawn independently. The rows come from the few satellites with precise orbits and are carried by regime to the whole catalog: most of the low catalog flies the errors of Swarm and GRACE-FO.', '- "True" is SGP4\'s geometry from one week of the catalog, not what happened in orbit.', '- This is no collision probability and uses no covariance. It derives no compute ratio, and uses none of B2\'s fits or timing rows.', '- Arm 1 assumes precise orbits, which exist for a small share of the catalog. Arm 2 is what the public sets give; it holds SGP4 alone, because fitting another theory to SGP4-generated states is barred.', '');
   const chart = { label: LABEL, title: 'Alerts per real conjunction', y: 'Alerts per true event, 99 percent caught', arms: { 'precise orbits': Object.fromEntries(THEORIES.map((t) => [THEORY_LABEL[t], Object.fromEntries([1, 3, 5].map((d) => [d, doc.arm1.leads[d][t] ? { value: q99(doc.arm1.leads[d][t]).value, interval: q99(doc.arm1.leads[d][t]).interval } : null]))])), 'public element sets': { [THEORY_LABEL.PUB]: Object.fromEntries([1, 3].map((d) => [d, { value: q99(doc.arm2.leads[d]).value, interval: q99(doc.arm2.leads[d]).interval }])) } }, perfectForecast: q99(doc.perfectForecast).value, armsPaired: false };
   return { 'table.json': JSON.stringify(doc, null, 1) + '\n', 'README.md': L.join('\n'), 'chart.json': JSON.stringify(chart, null, 1) + '\n' };
@@ -862,6 +898,7 @@ function check() {
   if (!doc.closure.t0Digest.equal) fails.push('closure: t0 is not B2');
   if (Math.abs(doc.closure.ladderUnder5km.rel) > 0.01) fails.push(`closure: ladder ${doc.closure.ladderUnder5km.rel}`);
   if (doc.label !== LABEL) fails.push('label');
+  if (!doc.afterFirstReading.tail.largest.every((w) => w.satellite === doc.afterFirstReading.tail.largest[0].satellite && w.burnFlagged)) fails.push('the sentence on the three tail windows no longer holds');
   if (!Object.values(doc.arm1.verdicts).every((v) => ['fewer', 'notFewer', 'undecided'].includes(v.verdict))) fails.push('verdicts');
   if (fails.length) { console.log('FAIL'); for (const f of fails) console.log(`  ${f}`); process.exit(1); }
   const v = (t) => { const x = doc.arm1.leads[3][t].ae['99']; return `${t} ${x.value} [${x.interval[0]}, ${x.interval[1]}]`; };

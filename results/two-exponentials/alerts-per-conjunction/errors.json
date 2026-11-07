@@ -2021,5 +2021,46 @@
    }
   }
  },
+ "largestAltimetryDay3": {
+  "windows": 121,
+  "largest": [
+   {
+    "satellite": "SENTINEL-6B",
+    "cutoff": "2025-12-09",
+    "burnFlagged": true,
+    "km": {
+     "SGP4": 2624.7,
+     "XP": 2625.7,
+     "XPU": 2625.8,
+     "AP": 2626.2,
+     "FFM": 2626.2
+    }
+   },
+   {
+    "satellite": "SENTINEL-6B",
+    "cutoff": "2025-12-04",
+    "burnFlagged": true,
+    "km": {
+     "SGP4": 973.9,
+     "XP": 973,
+     "XPU": 973.8,
+     "AP": 972.8,
+     "FFM": 972.9
+    }
+   },
+   {
+    "satellite": "SENTINEL-6B",
+    "cutoff": "2025-12-14",
+    "burnFlagged": true,
+    "km": {
+     "SGP4": 355.1,
+     "XP": 192.2,
+     "XPU": 200,
+     "AP": 192.2,
+     "FFM": 192.1
+    }
+   }
+  ]
+ },
  "mismatches": []
 }
