@@ -16,7 +16,9 @@ export function firstSlot(captureRoot,now=Date.now()){
   const ledger=path.join(captureRoot,'cycles.jsonl');
   if(!fs.existsSync(ledger))return now;
   const last=fs.readFileSync(ledger,'utf8').trim().split('\n').filter(Boolean).at(-1);
-  const started=last?Date.parse(JSON.parse(last).startedUtc):NaN;
+  // The cycle's id is its slot; startedUtc is later when the disk floor paused the cycle.
+  const entry=last?JSON.parse(last):null,slot=entry?.id?.match(/^(.*T\d\d)-(\d\d)-(\d\d)-(\d+Z)$/);
+  const started=slot?Date.parse(`${slot[1]}:${slot[2]}:${slot[3]}.${slot[4]}`):entry?Date.parse(entry.startedUtc):NaN;
   return Number.isFinite(started)?Math.max(now,started+CYCLE_MS):now;
 }
 /** One capture cycle: every listed file (or the first `limit` of them, a commissioning subset that never reads as complete), its registered record and its sidecar.
