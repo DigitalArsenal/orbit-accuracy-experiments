@@ -147,6 +147,129 @@ export async function geoSteps(lines, elements, rule = GEO) {
   return { steps, rows, checked, medianResidualM: mr, medianPlaneMdeg: mp };
 }
 
+// The maneuver flag (PER-REV-FLAG.md, replacing the 8 m truth step in every table it writes): FFM24's flight less the truth as mean semimajor axis per revolution
+// (both through `revolutions`), each flight revolution against the truth revolution starting within 10 minutes of it; the change between consecutive compared
+// revolutions k = 1 to 7 periods apart, less k times the drift (the median change at k = 1 over the span); a change of 1 m or more flags the window.
+export const PER_REV = { jumpM: 1, matchMs: 600000, maxGapPeriods: 7, endPeriods: 2 };
+
+/** Flight revolution means less the truth's, revolution by revolution: [[t ms, m]] from two [[t ms, aM]] lists in time order. */
+export function revDifferences(flight, truth, rule = PER_REV) {
+  const out = [];
+  let j = 0;
+  if (!truth.length) return out;
+  for (const [t, a] of flight) {
+    while (j + 1 < truth.length && Math.abs(truth[j + 1][0] - t) <= Math.abs(truth[j][0] - t)) j += 1;
+    if (Math.abs(truth[j][0] - t) <= rule.matchMs) out.push([t, a - truth[j][1]]);
+  }
+  return out;
+}
+
+/** The period: the median spacing of a revolution list ([[t ms, aM]]). */
+export const periodOf = (revs) => { const g = revs.slice(1).map((x, i) => x[0] - revs[i][0]).sort((a, b) => a - b); return g[g.length >> 1]; };
+
+/**
+ * The flag over [from, to] (ms) from the differences: { flagged, burnFree, unchecked, largest: { t, sizeM, periods } | null, driftM, changes }. Burn-free needs the
+ * compared revolutions to cover the span: no hole over maxGapPeriods, the first and last within endPeriods of its ends.
+ */
+export function revFlag(diff, period, from, to, rule = PER_REV) {
+  const span = diff.filter(([t]) => t >= from && t <= to), steps = [];
+  for (let i = 1; i < span.length; i += 1) {
+    const k = Math.round((span[i][0] - span[i - 1][0]) / period);
+    if (k >= 1 && k <= rule.maxGapPeriods) steps.push({ t: span[i][0], k, d: span[i][1] - span[i - 1][1] });
+  }
+  const ones = steps.filter((s) => s.k === 1).map((s) => s.d), drift = ones.length ? median(ones) : 0;
+  const changes = steps.map((s) => ({ t: s.t, sizeM: s.d - drift * s.k, periods: s.k }));
+  const largest = changes.reduce((b, s) => (!b || Math.abs(s.sizeM) > Math.abs(b.sizeM) ? s : b), null);
+  const flagged = changes.some((s) => Math.abs(s.sizeM) >= rule.jumpM);
+  const holed = span.length < 2 || span.slice(1).some((x, i) => x[0] - span[i][0] > (rule.maxGapPeriods + 0.5) * period);
+  const covered = !holed && span[0][0] - from <= rule.endPeriods * period && to - span.at(-1)[0] <= rule.endPeriods * period;
+  return { flagged, burnFree: !flagged && covered, unchecked: !flagged && !covered, largest, driftM: drift, changes };
+}
+
+// Rule (b) (PER-REV-FLAG.md, amendment of 2026-11-06, parameters fixed there): a noise-scaled threshold, persistence over N revolutions, no verdict on noisy truth.
+export const RULE_B = { k: 10, floorM: 1, noVerdictM: 0.2, N: 6, minSide: 2, maxGapPeriods: 7, endPeriods: 2, tauFromHours: -24, tauToHours: 168 };
+
+/**
+ * Rule (b) on a window's differences ([[t ms, m]] over the flown span, cutoff C in ms): { tauM, thetaM, driftM, noVerdict, steps: [{ t, sizeM }], state(fitHours, leadHours) }.
+ * state gives { flagged, burnFree, unchecked, noVerdict }.
+ */
+export function revFlagB(diff, period, C, rule = RULE_B) {
+  const H = 3600000, tf = C + rule.tauFromHours * H, tt = C + rule.tauToHours * H;
+  const span = diff.filter(([t]) => t >= tf && t <= tt), pairs = [];
+  for (let i = 1; i < span.length; i += 1) { const k = Math.round((span[i][0] - span[i - 1][0]) / period); if (k >= 1 && k <= rule.maxGapPeriods) pairs.push({ k, d: span[i][1] - span[i - 1][1] }); }
+  const ones = pairs.filter((p) => p.k === 1).map((p) => p.d), drift = ones.length ? median(ones) : 0;
+  const tau = pairs.length ? median(pairs.map((p) => Math.abs(p.d - drift * p.k))) : Infinity, theta = Math.max(rule.floorM, rule.k * tau), noVerdict = !(tau <= rule.noVerdictM);
+  const res = diff.map(([t], i) => {
+    const before = [], after = [];
+    for (let j = i - 1; j >= 0 && before.length < rule.N && t - diff[j][0] <= (rule.N + 0.5) * period; j -= 1) before.push(diff[j]);
+    for (let j = i; j < diff.length && after.length < rule.N && diff[j][0] - t <= (rule.N - 0.5) * period; j += 1) after.push(diff[j]);
+    if (before.length < rule.minSide || after.length < rule.minSide) return null;
+    const mid = (v) => median(v.map((x) => x[0]));
+    return median(after.map((x) => x[1])) - median(before.map((x) => x[1])) - (drift * (mid(after) - mid(before))) / period;
+  });
+  const steps = [];
+  for (let i = 0; i < diff.length; i += 1) {
+    if (res[i] === null || Math.abs(res[i]) < theta) continue;
+    let top = true;
+    for (let j = 0; j < diff.length && top; j += 1) if (j !== i && res[j] !== null && Math.abs(diff[j][0] - diff[i][0]) <= rule.N * period && (Math.abs(res[j]) > Math.abs(res[i]) || (j < i && Math.abs(res[j]) === Math.abs(res[i])))) top = false;
+    if (top) steps.push({ t: diff[i][0], sizeM: res[i] });
+  }
+  const state = (fit, lead) => {
+    const from = C - fit * H, to = C + lead * H, s = diff.filter(([t]) => t >= from && t <= to);
+    const flagged = steps.some((x) => x.t >= from && x.t <= to);
+    const holed = s.length < 2 || s.slice(1).some((x, i) => x[0] - s[i][0] > (rule.maxGapPeriods + 0.5) * period);
+    const covered = !holed && s[0][0] - from <= rule.endPeriods * period && to - s.at(-1)[0] <= rule.endPeriods * period;
+    if (noVerdict) return { flagged: false, burnFree: false, unchecked: false, noVerdict: true };
+    return { flagged, burnFree: !flagged && covered, unchecked: !flagged && !covered, noVerdict: false };
+  };
+  return { tauM: tau, thetaM: theta, driftM: drift, noVerdict, steps, state };
+}
+
+// Rule (c) (PER-REV-FLAG.md, amendment of 2026-11-06 (c), near 700 km only): rule (b)'s threshold, persistence and no-verdict class with the persistence span,
+// the typical change and the drift taken in hours, the typical change and the drift estimated away from each candidate step.
+export const RULE_C = { k: 10, floorM: 1, noVerdictM: 0.2, spanH: 10, minSide: 3, maxGapPeriods: 7, endPeriods: 2, fromHours: -24, toHours: 168 };
+
+/**
+ * Rule (c) on a window's differences ([[t ms, m]] over the flown span, cutoff C in ms): { tauM, noVerdict, steps: [{ t, sizeM, thetaM }], state(fitHours, leadHours) }.
+ * At each compared revolution i: the drift (m per hour) and the typical change from the one-revolution changes in [C - 24 h, C + 168 h] more than spanH from i;
+ * the residual is the median of the differences in [t_i, t_i + spanH) less the median in [t_i - spanH, t_i), less the drift times the hours between their
+ * median epochs. A step: |residual| >= max(floorM, k x the typical change), the largest within spanH either side. The window's typical change (no verdict above
+ * noVerdictM) excludes the changes within spanH of its steps.
+ */
+export function revFlagC(diff, period, C, rule = RULE_C) {
+  const H = 3600000, S = rule.spanH * H, tf = C + rule.fromHours * H, tt = C + rule.toHours * H;
+  const pairs = [];
+  for (let i = 1; i < diff.length; i += 1) {
+    const [t, d] = diff[i], [t0, d0] = diff[i - 1], k = Math.round((t - t0) / period);
+    if (t0 >= tf && t <= tt && k >= 1 && k <= rule.maxGapPeriods) pairs.push({ t, k, d: d - d0, h: (t - t0) / H });
+  }
+  const away = (centers) => pairs.filter((p) => centers.every((c) => Math.abs(p.t - c) > S));
+  const drift = (ps) => { const ones = ps.filter((p) => p.k === 1); return ones.length ? median(ones.map((p) => p.d / p.h)) : 0; };
+  const tauOf = (ps) => { const r = drift(ps); return ps.length ? median(ps.map((p) => Math.abs(p.d - r * p.h))) : Infinity; };
+  const cand = diff.map(([t], i) => {
+    const before = diff.filter(([u]) => u >= t - S && u < t), after = diff.filter(([u]) => u >= t && u < t + S);
+    if (before.length < rule.minSide || after.length < rule.minSide) return null;
+    const ps = away([t]), r = drift(ps), theta = Math.max(rule.floorM, rule.k * tauOf(ps));
+    const mid = (v) => median(v.map((x) => x[0]));
+    return { t, theta, res: median(after.map((x) => x[1])) - median(before.map((x) => x[1])) - (r * (mid(after) - mid(before))) / H, i };
+  });
+  const steps = [];
+  for (const c of cand) {
+    if (!c || Math.abs(c.res) < c.theta) continue;
+    if (cand.some((o) => o && o.i !== c.i && Math.abs(o.t - c.t) <= S && (Math.abs(o.res) > Math.abs(c.res) || (o.i < c.i && Math.abs(o.res) === Math.abs(c.res))))) continue;
+    steps.push({ t: c.t, sizeM: c.res, thetaM: c.theta });
+  }
+  const tau = tauOf(away(steps.map((s) => s.t))), noVerdict = !(tau <= rule.noVerdictM);
+  const state = (fit, lead) => {
+    if (noVerdict) return { flagged: false, burnFree: false, unchecked: false, noVerdict: true };
+    const from = C - fit * H, to = C + lead * H, s = diff.filter(([t]) => t >= from && t <= to), flagged = steps.some((x) => x.t >= from && x.t <= to);
+    const holed = s.length < 2 || s.slice(1).some((x, i) => x[0] - s[i][0] > (rule.maxGapPeriods + 0.5) * period);
+    const covered = !holed && s[0][0] - from <= rule.endPeriods * period && to - s.at(-1)[0] <= rule.endPeriods * period;
+    return { flagged, burnFree: !flagged && covered, unchecked: !flagged && !covered, noVerdict: false };
+  };
+  return { tauM: tau, noVerdict, steps, state };
+}
+
 /** A window's flag from an object's detector output ({ steps, checked } in ms): its steps in [cutoff - fit, cutoff + lead] by hours from the cutoff (sizes to 0.1 m), and the
  *  spans of it the detector could not cover. */
 export function windowSteps(d, cutoffMs, { fitHours = 72, leadHours = 168 } = {}) {

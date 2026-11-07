@@ -15,6 +15,9 @@
 // of TRACKS, and a file of the reference's Float64 track, each arm's Float32 offset vector and the reference's Float32 rotations, 24 + 12 x 5 + 16 bytes per time.
 // The track is the arm's offset vector from the reference; a jump is the change between two consecutive samples less the change before it (the second difference),
 // so a steady trend in the error is not counted as a jump and a partial-step sawtooth is. The plain change between samples is printed beside it.
+// --ffm-only <dir>,<dir>: FFM's track alone, flown again on lib/host.mjs's FFM build on each stored example's own window (the window it was picked on: its fit and
+// its epochs); every other track, field and $OCM is the stored example's, byte for byte, FFM's build named as flown, and nothing is picked again. A later
+// folder's example replaces an earlier one's. FFM's next-file products are ap/ffm220's (cycle-ffm220.sh).
 //   node experiments/operator-theory/compare-examples.mjs --mode <mode> [--pick showcase] --reflight <dir>[,<dir>] --out <dir>
 // --reflight: the stored flights of the published examples (a later folder's example replacing an earlier one's). Each example's window is found again as its mode
 // finds it (its start or cutoff and satellite, then its reference track byte for byte), and AP and whiteroom XP alone are fitted and flown again, on
@@ -28,8 +31,8 @@ import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
-// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-0-6-3-20261106): sdn-ap 0.6.3, its committed dist by SHA-256.
-const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.3', commit: '93cb5a0584fa728864e4426cc9ceb368936589f9', sha256: 'aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e' };
+// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-0-6-4-20261106): sdn-ap 0.6.4, named by its canonical module hash (sds.* sections stripped, what the signature covers), opened from its signed dist by the bundle's whole-file hash.
+const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.4', commit: 'cfd750eb8de2f5d7c339173ee674bc7a481da8c2', sha256: 'fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5', bundleSha256: 'e98b63558d84cfd3b8509f4c4c640502e38f81cc05a0e0277fcffa7da97cf51d' };
 // The examples flown again on it: every one but the highly elliptical (TESS) examples, which the site withholds.
 const FLOWN_AGAIN = (d) => d.regime !== 'Highly elliptical';
 if (args.check) {
@@ -53,7 +56,8 @@ if (args.check) {
     // AP and whiteroom XP flown again on REFLIGHT_BUILD (their tracks byte for byte the flights cells.json's build made, COMPARE.md), with the $OCM AP flew
     // beside the example; every other arm on cells.json's build.
     for (const arm of new Set(['AP', ...arms])) {
-      const got = d.build?.[arm]?.join(' '), w = FLOWN_AGAIN(d) && (arm === 'AP' || arm === 'XP') ? again : [...(want[arm] ?? [])][0];
+      // The withheld highly elliptical (TESS) examples, not flown again, keep the build they flew: AP's measured build in cells.json's provenance.
+      const got = d.build?.[arm]?.join(' '), w = arm === 'AP' || arm === 'XP' ? (FLOWN_AGAIN(d) ? again : cells.provenance.AP.measuredOn) : [...(want[arm] ?? [])][0];
       if (!got || got !== w) fails.push(`${e.id} ${arm}: ${got ?? 'no build named'}, not ${w ?? 'none'}`);
       for (const k of d.build?.[arm] ?? []) if (JSON.stringify(d.builds?.[k]) !== JSON.stringify(recordOf(k))) fails.push(`${e.id} ${k}: its record is not ${k === again ? 'the build flown again' : "cells.json's"}`);
     }
@@ -107,7 +111,7 @@ const storedWindow = (id, { start, cutoff, satellite }) => { const { d } = store
 async function openApAt(b) {
   const { standalone } = await import('./lib/ap.mjs');
   const { TYPE, oemLines, flightPcfBytes } = await import('../xp-atmosphere-merit/lib/sds.mjs');
-  const h = await standalone(b.module, { modulesCommit: b.commit, wasmSha256: b.sha256 });
+  const h = await standalone(b.module, { modulesCommit: b.commit, wasmSha256: b.bundleSha256 });
   return {
     build: { modulesCommit: b.commit, version: b.version, wasmSha256: b.sha256 },
     async fit(oem, pcf, extra) {
@@ -181,6 +185,20 @@ const burnFree = (doc, tracks, key) => {
   write({ ...doc, tracks: Object.fromEntries(Object.entries(tracks).map(([k, v]) => [k, encode(v)])) });
   return true;
 };
+const FFM_ONLY = args['ffm-only'] ? new Map(args['ffm-only'].split(',').flatMap((dir) => fs.readdirSync(dir).filter((n) => n.endsWith('.json') && n !== 'index.json' && !/starlink/i.test(n)).map((n) => [n.replace(/\.json$/, ''), dir]))) : null;
+const storedExample = (id) => { const dir = FFM_ONLY?.get(id); if (!dir) return null; const d = JSON.parse(fs.readFileSync(path.join(dir, `${id}.json`), 'utf8')); return d.dropped ? null : { d, dir, bin: fs.readFileSync(path.join(dir, `${id}.bin`)) }; };
+/** --ffm-only: the stored example with its FFM track replaced and FFM's build named as the run opened it (F); the window's epochs must be the stored example's. */
+const writeFfm = (stored, epochsMs, t0, ffm, F) => {
+  const { d, dir, bin } = stored, at = d.tracks.indexOf('FFM'), size = 24 * d.count;
+  if (epochsMs.length !== d.count || epochsMs.some((t, i) => (t - t0) / 1000 !== d.epochsSeconds[i])) throw new Error(`${d.id}: the window's epochs are not the stored example's`);
+  const keys = [buildKey('analysis/estimation', F.provenance.estimation.wasmSha256), buildKey('propagator/ffm', F.provenance.ffm.wasmSha256)], missing = keys.filter((k) => !BUILD_RECORDS[k]);
+  if (missing.length) throw new Error(`builds not in lib/build.mjs BUILD_RECORDS: ${missing.join(', ')}`);
+  const build = { ...d.build, FFM: keys }, all = [...new Set(Object.values(build).flat())];
+  fs.writeFileSync(path.join(OUT, `${d.id}.bin`), Buffer.concat([bin.subarray(0, size * at), encode(ffm), bin.subarray(size * (at + 1))]));
+  fs.writeFileSync(path.join(OUT, `${d.id}.json`), `${JSON.stringify({ ...d, build, builds: Object.fromEntries(all.map((k) => [k, keys.includes(k) ? BUILD_RECORDS[k] : d.builds[k]])) })}\n`);
+  if (fs.existsSync(path.join(dir, `${d.id}.ocm`))) fs.copyFileSync(path.join(dir, `${d.id}.ocm`), path.join(OUT, `${d.id}.ocm`));
+  console.error(`${d.id}: FFM flown again on its stored window`);
+};
 /** Every window tried had a step in its fit: the example is dropped, and says so. */
 const dropped = (head) => { fs.writeFileSync(path.join(OUT, `${head.id}.json`), `${JSON.stringify({ ...head, ...(SHOWCASE ? { showcase: true } : {}), dropped: 'every window tried holds a step or a hole inside its fit' })}\n`); console.error(`${head.id}: dropped, every window tried holds a step or a hole inside its fit`); };
 /**
@@ -237,7 +255,7 @@ if (MODE === 'next') {
   const rows = rowsIn(path.join(NEW, 'laser', 'forward')).filter((r) => binOf(r.leadHours) === 72);
   const stores = ['laser-sgp4', 'laser-sgp4-high'].map((d) => new Map(rowsIn(path.join(NEW, d)).map((r) => [key(r), r])));
   const sgp = (r) => stores.map((s) => s.get(key(r))?.arms['S@48']?.km).find(Number.isFinite);
-  const ffmRows = new Map(rowsIn(path.join(STORE, 'cheaper', 'forward')).map((r) => [key(r), r]));
+  const ffmRows = new Map(rowsIn(path.join(AP, 'ffm220', 'cheaper', 'forward')).map((r) => [key(r), r]));
   const NAV = /^(beidou|compass|galileo|glonass|gps|irnss|qzs)/;
   const regimeOf = (r) => (r.source.endsWith('-leo') ? 'Low orbit' : NAV.test(r.object) ? 'Navigation' : 'Geodetic');
   const cells = new Map();
@@ -270,14 +288,16 @@ if (MODE === 'next') {
     const ranked = nearestMedian(list.filter((r) => Number.isFinite(sgp(r)) && Number.isFinite(ffmRows.get(key(r))?.arms[ffmName]?.km)), (r) => r.arms[`${AP_ARM}@48`]?.km);
     const id = `next-${provider}-${regime.toLowerCase().replace(/\s+/g, '-')}`;
     if (!wanted(id)) continue;
+    const stored = FFM_ONLY && storedExample(id);
+    if (FFM_ONLY && !stored) continue;
     if (!ranked.length) { console.error(`${id}: no forecast has every arm`); continue; }
     let done = false, stepped = 0, tried = 0;
-    for (const pick of ranked) {
+    for (const pick of stored ? ranked.filter((p) => Date.parse(p.olderStart) === Date.parse(stored.d.start) && p.leadHours === stored.d.leadHours && p.object === stored.d.satellite) : ranked) {
       if (!more(tried, stepped, 12)) break;
       tried += 1;
       const apP = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.olderStart);
       const xpP = findProduct(path.join(NEW, 'laser-xp'), pick.source, pick.norad, pick.olderStart);
-      const ffP = findProduct(path.join(STORE, 'cheaper'), pick.source, pick.norad, pick.olderStart);
+      const ffP = findProduct(path.join(AP, 'ffm220', 'cheaper'), pick.source, pick.norad, pick.olderStart);
       const newer = findProduct(path.join(NEW, 'laser'), pick.source, pick.norad, pick.newerStart);
       if (!apP || !xpP || !ffP || !newer) { console.error(`${id}: a stored product is missing`); continue; }
       const older = lines(apP.forecastOem), next = lines(newer.forecastOem);
@@ -299,6 +319,7 @@ if (MODE === 'next') {
       const f = ffP.products[ffmName];
       // FFM first: its offsets from the reference carry the steps, so a window the burn-free rule refuses is not fitted by the other arms.
       tracks.FFM = (await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, { forces: f.forces, fixed: f.fixed, integrator: f.integrator }, w.rows)).map((s) => s.r);
+      if (stored) { writeFfm(stored, epochsMs, t0, tracks.FFM, F); done = true; break; }
       const head = { id, reference: 'next', regime, provider, satellite: pick.object, fitHours: 48, leadHours: pick.leadHours, start: isoMs(t0), fitEndMs: t0 + 48 * HOUR, scoreFromMs: tn, scoreToMs: end, epochsSeconds: epochsMs.map((t) => (t - t0) / 1000), meanMotion: meanMotion(refs[0]), count: epochs.length, ffm: leo ? 'FFM 40×40' : 'FFM 20×20' };
       if (pickedSteps(head, tracks).some((x) => x.hour < head.fitHours) || fitHoles(head.epochsSeconds, head.fitHours).length) { burnFree(head, tracks, key(pick)); stepped += 1; continue; }
       // AP (the stored arm's: 31x20, NRLMSISE-00, the module's priors) and whiteroom XP re-fitted as $OCM on the stored window, the older file's first 48 h
@@ -387,8 +408,10 @@ if (MODE === 'next') {
     const ranked = nearestMedian(past.length ? past : usable, (r) => r.arms[`${AP_ARM}@${FIT_H}`]?.km);
     const id = `next-${provider.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${source}`;
     if (!wanted(id)) continue;
+    const stored = FFM_ONLY && storedExample(id);
+    if (FFM_ONLY && !stored) continue;
     let done = false, stepped = 0, tried = 0;
-    for (const pick of ranked) {
+    for (const pick of stored ? ranked.filter((p) => Date.parse(p.olderStart) === Date.parse(stored.d.start) && p.leadHours === stored.d.leadHours && p.object === stored.d.satellite) : ranked) {
       if (!more(tried, stepped, 8)) break;
       tried += 1;
       try {
@@ -416,6 +439,17 @@ if (MODE === 'next') {
         }
         const seg = older.filter((l) => Date.parse(l.epoch) <= t0 + FIT_H * HOUR);
         const oem = S.oemBytes({ frame: 'GCRF', object: { name: pick.object, id: '', norad: pick.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
+        const seed = older.statedB ?? 0.01;
+        const settings = leo
+          ? { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: !ISS, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: seed }], fixed: { agom: ISS ? 0 : 0.02 }, apriori: apriori([seed * 10]) }
+          : { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 20, order: 20, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixed: {}, apriori: apriori([0.2]) };
+        if (stored) {
+          const ff = await F.fit(seg, [...seg[0].r, ...seg[0].v], settings, spw, Date.parse(seg.at(-1).epoch));
+          if (!ff.state) continue;
+          writeFfm(stored, epochsMs, t0, (await F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, epochs, settings, spw)).map((x) => x.r), F);
+          done = true;
+          break;
+        }
         if (REFLIGHT) { await reflight({ id, A, M, oem, pcfAp: PCF_AP, extraAp: extra, pcfXp: PCF_XP, reference: reference.map((x) => x.r), epochs }); done = true; break; }
         const fa = await A.fit(oem, PCF_AP, extra); if (!fa.ok) continue;
         const fx = await A.fit(oem, PCF_XP, undefined); if (!fx.ok) continue;
@@ -423,10 +457,6 @@ if (MODE === 'next') {
         const { el } = await G.fit(oem, { from: seg[0].epoch, to: seg.at(-1).epoch, epoch: 'first', fitBstar: true }, { name: pick.object, objectId: '' });
         const sg = await M.propagateSgp4(el, pick.norad, epochsMs, step / 1000);
         if (sg.some((x) => !x)) continue;
-        const seed = older.statedB ?? 0.01;
-        const settings = leo
-          ? { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 40, order: 40, thirdBodies: [10, 301], srp: !ISS, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: seed }], fixed: { agom: ISS ? 0 : 0.02 }, apriori: apriori([seed * 10]) }
-          : { forces: { gravity: 'SPHERICAL_HARMONICS', degree: 20, order: 20, thirdBodies: [10, 301], srp: true, drag: false, solidTides: false, relativity: undefined }, integrator: { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }, sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01, parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixed: {}, apriori: apriori([0.2]) };
         const ff = await F.fit(seg, [...seg[0].r, ...seg[0].v], settings, spw, Date.parse(seg.at(-1).epoch));
         if (!ff.state) continue;
         const tracks = {
@@ -522,8 +552,11 @@ if (MODE === 'next') {
       : nearestMedian(rows.filter((r) => r.group === group && r.name === only), (r) => r.arms.AP72?.days?.[D3]?.e);
     const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     if (!wanted(id)) continue;
+    const stored = FFM_ONLY && storedExample(id);
+    if (FFM_ONLY && !stored) continue;
+    const cutoffOf = (p) => iso(Date.parse(p.cutoff.length === 10 ? `${p.cutoff}T00:00:00Z` : p.cutoff));
     let done = false, stepped = 0, tried = 0;
-    for (const pick of ranked) {
+    for (const pick of stored ? ranked.filter((p) => cutoffOf(p) === stored.d.cutoff && (only ?? p.name) === stored.d.satellite) : ranked) {
       if (!more(tried, stepped, SHOWCASE ? 12 : Infinity)) break;
       tried += 1;
       const name = only ?? pick.name;
@@ -551,6 +584,14 @@ if (MODE === 'next') {
           if (R.excluded) continue;
           ex = { spw: fitWeather(R.rows, horizonOf(D0)) };
           spw = driverRows(R.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
+        }
+        if (stored) {
+          const settings = ffmSettings(high);
+          const ff = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0); if (!ff.state) continue;
+          if (epochsMs.some((t) => t <= Date.parse(ff.epoch))) continue;
+          writeFfm(stored, epochsMs, t0, (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((x) => x.r), F);
+          done = true;
+          break;
         }
         const pcfAp = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20, atmosphere: !vacuum }), fit: null });
         const oem = S.oemBytes({ frame: 'GCRF', object: { name, id: o.objectId, norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
@@ -621,8 +662,10 @@ if (MODE === 'next') {
       const slug = cut.regime.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       const id = SHOWCASE ? `best-${slug}` : `truth-${slug}-${only.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
       if (!wanted(id)) continue;
+      const stored = FFM_ONLY && storedExample(id);
+      if (FFM_ONLY && !stored) continue;
       let done = false, stepped = 0, tried = 0;
-      for (const pick of ranked) {
+      for (const pick of stored ? ranked.filter((p) => byKey.has(p.key) && iso(byKey.get(p.key).cutoffMs) === stored.d.cutoff && (only ?? p.name) === stored.d.satellite) : ranked) {
         if (!more(tried, stepped, 12)) break;
         tried += 1;
         const w = byKey.get(pick.key);
@@ -650,6 +693,14 @@ if (MODE === 'next') {
           if (O.excluded) continue;
           const ex = { spw: fitWeather(O.rows, horizonOf(D0)) };
           const spw = driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap }));
+          if (stored) {
+            const settings = ffmSettings(high);
+            const ff = await F.fit(thin, [...thin[0].r, ...thin[0].v], settings, spw, D0); if (!ff.state) continue;
+            if (epochsMs.some((t) => t <= Date.parse(ff.epoch))) continue;
+            writeFfm(stored, epochsMs, t0, (await inBatches(epochs, (part) => F.forecast({ epoch: ff.epoch, state: ff.state, parameters: ff.parameters }, part, settings, spw))).map((x) => x.r), F);
+            done = true;
+            break;
+          }
           const oem = S.oemBytes({ frame: 'GCRF', object: { name: o.name, id: o.objectId ?? '', norad: o.norad }, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
           if (REFLIGHT) { await reflight({ id, A, M: m, oem, pcfAp: PCF_AP, extraAp: ex, pcfXp: PCF_XP, reference: grid.map((l) => l.r), epochs }); done = true; break; }
           const fa = await A.fit(oem, PCF_AP, ex); if (!fa.ok) continue;

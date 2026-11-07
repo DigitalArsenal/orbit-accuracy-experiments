@@ -1,0 +1,253 @@
+{
+ "registered": "PER-REV-FLAG.md, amendment of 2026-11-06 (rule (b) and its validation)",
+ "rule": {
+  "k": 10,
+  "floorM": 1,
+  "noVerdictM": 0.2,
+  "N": 6,
+  "minSide": 2,
+  "maxGapPeriods": 7,
+  "endPeriods": 2,
+  "tauFromHours": -24,
+  "tauToHours": 168
+ },
+ "known": {
+  "registered": 26,
+  "rows": 26,
+  "detected": 11,
+  "pass": false,
+  "missed": [
+   {
+    "key": "S1|62261|2025-12-10|2025-12-12T18:00",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.042,
+    "thetaM": 1,
+    "nearestStepM": -6.26
+   },
+   {
+    "key": "S1|62261|2025-12-21|2025-12-23T19:00",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.023,
+    "thetaM": 1,
+    "nearestStepM": -9.85
+   },
+   {
+    "key": "S1|39634|2026-03-19|2026-03-21T01:06",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.024,
+    "thetaM": 1,
+    "nearestStepM": -3.66
+   },
+   {
+    "key": "S1|39634|2026-04-08|2026-04-10T16:30",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.016,
+    "thetaM": 1,
+    "nearestStepM": -5.16
+   },
+   {
+    "key": "S1|39634|2026-04-12|2026-04-14T17:36",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.014,
+    "thetaM": 1,
+    "nearestStepM": -3
+   },
+   {
+    "key": "S1|62261|2026-01-12|2026-01-14T17:36",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.024,
+    "thetaM": 1,
+    "nearestStepM": -4.53
+   },
+   {
+    "key": "S1|62261|2026-05-10|2026-05-12T16:12",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.014,
+    "thetaM": 1,
+    "nearestStepM": -4.75
+   },
+   {
+    "key": "S1|39634|2026-01-19|2026-01-21T03:30",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.041,
+    "thetaM": 1,
+    "nearestStepM": -9.62
+   },
+   {
+    "key": "S1|62261|2026-04-22|2026-04-24T20:18",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.021,
+    "thetaM": 1,
+    "nearestStepM": -6.09
+   },
+   {
+    "key": "S1|62261|2026-05-13|2026-05-15T19:54",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.017,
+    "thetaM": 1,
+    "nearestStepM": -3.31
+   },
+   {
+    "key": "S1|62261|2026-05-20|2026-05-22T16:30",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.018,
+    "thetaM": 1,
+    "nearestStepM": -4.15
+   },
+   {
+    "key": "S1|39634|2026-01-14|2026-01-16T16:30",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.032,
+    "thetaM": 1,
+    "nearestStepM": -3.04
+   },
+   {
+    "key": "S1|39634|2026-03-22|2026-03-24T16:24",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.02,
+    "thetaM": 1,
+    "nearestStepM": -3.26
+   },
+   {
+    "key": "S1|39634|2026-05-21|2026-05-23T04:48",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.023,
+    "thetaM": 1,
+    "nearestStepM": -4.88
+   },
+   {
+    "key": "S1|62261|2026-02-25|2026-02-27T19:48",
+    "detected": false,
+    "why": "no step near the burn",
+    "tauM": 0.015,
+    "thetaM": 1,
+    "nearestStepM": -3.99
+   }
+  ]
+ },
+ "injected": {
+  "inject-s1": {
+   "label": "Sentinel-1",
+   "rows": 40,
+   "used": 40,
+   "notUsed": {},
+   "bySize": {
+    "2": {
+     "windows": 40,
+     "detected": 36,
+     "rate": 0.9,
+     "noVerdict": 0,
+     "realizedMedianM": 2
+    },
+    "3": {
+     "windows": 40,
+     "detected": 38,
+     "rate": 0.95,
+     "noVerdict": 0,
+     "realizedMedianM": 3
+    },
+    "4": {
+     "windows": 40,
+     "detected": 38,
+     "rate": 0.95,
+     "noVerdict": 0,
+     "realizedMedianM": 4
+    },
+    "8": {
+     "windows": 40,
+     "detected": 30,
+     "rate": 0.75,
+     "noVerdict": 7,
+     "realizedMedianM": 8
+    }
+   },
+   "pass": false
+  },
+  "inject-geo": {
+   "label": "Geostationary (GFZ)",
+   "rows": 128,
+   "used": 40,
+   "notUsed": {
+    "no truth over the span": 85,
+    "coverage": 3
+   },
+   "bySize": {
+    "2": {
+     "windows": 40,
+     "detected": 15,
+     "rate": 0.375,
+     "noVerdict": 9,
+     "realizedMedianM": 2
+    },
+    "3": {
+     "windows": 40,
+     "detected": 18,
+     "rate": 0.45,
+     "noVerdict": 9,
+     "realizedMedianM": 3
+    },
+    "4": {
+     "windows": 40,
+     "detected": 18,
+     "rate": 0.45,
+     "noVerdict": 12,
+     "realizedMedianM": 4
+    },
+    "8": {
+     "windows": 40,
+     "detected": 18,
+     "rate": 0.45,
+     "noVerdict": 14,
+     "realizedMedianM": 8
+    }
+   },
+   "pass": false
+  }
+ },
+ "quiet": {
+  "flown": 79,
+  "notFlown": 13,
+  "groups": {
+   "LS": {
+    "windows": 24,
+    "noVerdict": 0,
+    "eligible": 24,
+    "flagged": 0,
+    "flaggedKeys": []
+   },
+   "DO": {
+    "windows": 15,
+    "noVerdict": 0,
+    "eligible": 15,
+    "flagged": 0,
+    "flaggedKeys": []
+   },
+   "GD": {
+    "windows": 40,
+    "noVerdict": 0,
+    "eligible": 40,
+    "flagged": 0,
+    "flaggedKeys": []
+   }
+  },
+  "eligible": 79,
+  "flagged": 0,
+  "rate": 0,
+  "pass": true
+ },
+ "pass": false
+}

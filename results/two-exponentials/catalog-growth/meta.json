@@ -1,0 +1,12 @@
+{
+  "registration_commit": "b8650c764bd98e452a40b5015da5d8c5641cf06d",
+  "registration_blob": "a83537e83c96c4e4fc434db22ac37766f01bfd19",
+  "runner_sha256": "7a7e704cdb83a2fbc46ee5eef5681066f9526aea946c4719cc29798c1cea4004",
+  "sources": {
+    "archives2": "/opt/data/sdn-archive/historical/space-track-gp-history-1959-2022-11-22/Archives2.zip",
+    "gp_history": "/opt/data/sdn-archive/spacetrack/gp_history/by-creation",
+    "satcat": "/opt/data/sdn-archive/spacetrack/satcat/2026/2026-11-05.json.gz"
+  },
+  "window_days": 30,
+  "note": "counts.jsonl is for the whitepaper only; the site, chart and marketing never read it."
+}

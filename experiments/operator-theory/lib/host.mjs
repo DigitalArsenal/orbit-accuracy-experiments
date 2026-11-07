@@ -1,5 +1,6 @@
 // The modules this experiment runs, each wasm read with git show at a registered commit and SHA-256 checked, through XM's and XM3's pinning:
-//   XM3's build: propagator/ffm 2.0.4, analysis/estimation 0.7.0 (fit_batch version 3)
+//   XM3's build: analysis/estimation 0.7.0 (fit_batch version 3); propagator/ffm at lib/build.mjs FFM_220 (2.2.0, RK78 on Fehlberg's 8th-order weights),
+//   the one FFM build every comparison arm flies since 2026-11-05 (COMPARE.md)
 //   XM's build: propagator/sdn-ap, propagator/sgp4, analysis/gp-error-model, foundation/frames
 // Fits and forecasts of FFM go through lib/fit.mjs and lib/frame.mjs, so every force selection the module offers can be asked for. Operator
 // bytes live in memory only and nothing raw is written. Encoding, decoding and routing only: every number comes out of a module.
@@ -14,6 +15,7 @@ import { config as XM3, root, modulesRoot, pinned, sha256 } from './xm3.mjs';
 import * as XM from '../../xp-atmosphere-merit/common.mjs';
 import { fitV3, estimationCodecV3 } from './fit.mjs';
 import { executionFrame, decodeSamples, kernelFrame, encode } from './frame.mjs';
+import { FFM_220 } from './build.mjs';
 
 const PRW_TYPE = { schemaName: 'PRW.fbs', fileIdentifier: '$PRW', rootTypeName: 'PRW' };
 const DAY = 86400000;
@@ -64,8 +66,8 @@ function earthOrientation() {
   return P.PRW.getSizePrefixedRootAsPRW(new flatbuffers.ByteBuffer(new Uint8Array(Buffer.from(saved.inputs.earth_orientation_finals, 'base64')))).unpack().EARTH_ORIENTATION.ROWS;
 }
 
-/** FFM's fit and flight: analysis/estimation and propagator/ffm at XM3's pin, or propagator/ffm at `ffm` ({ modulesCommit, wasmSha256 }). */
-export async function openFfmHost({ ffm: ffmBuild } = {}) {
+/** FFM's fit and flight: analysis/estimation at XM3's pin, propagator/ffm at `ffm` ({ modulesCommit, wasmSha256 }), FFM_220 unless named. */
+export async function openFfmHost({ ffm: ffmBuild = FFM_220 } = {}) {
   const estimation = await host('analysis/estimation'), ffm = await host('propagator/ffm', ffmBuild);
   const modules = modulesRoot();
   const { FIT_PARAMETER_DOMAINS: domains } = await import(path.join(modules, 'propagator/ffm/catalog-configuration.mjs'));

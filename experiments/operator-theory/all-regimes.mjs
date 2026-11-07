@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { config, root, HOUR, DAY, iso, ms, rms, XM } from './lib/xp2.mjs';
 import { openSgp4Fit } from './lib/xp2.mjs';
 import { driverRows } from './lib/xm3.mjs';
-import { apForces, openAp, fitPcf, fitWeather, horizonOf, readOcm } from './lib/ap.mjs';
+import { apForces, openAp, standalone, fitPcf, fitWeather, horizonOf, readOcm } from './lib/ap.mjs';
 import { openUssfXp, openUssfXp011, typedOmm } from './lib/ussf-xp.mjs';
 import { openFfmHost, openAxes, apriori } from './lib/host.mjs';
 import { HX, STATIC, DO9, MGEX_CUTOFFS, TESS, WA_CUTOFFS, windowKey } from './lib/regimes.mjs';
@@ -30,7 +30,32 @@ const { openModules } = await import(path.join(root, config.xm.dir, 'lib/modules
 const USSF_ARMS = ['U', 'U11', 'U11F', 'UW'];
 const ARMS = (args.arms ?? 'AP,XP,S,F').split(','), ONLY_U = ARMS.some((a) => USSF_ARMS.includes(a)), has = (a) => !ONLY_U && ARMS.includes(a), hasU = (a) => ONLY_U && ARMS.includes(a);
 const ARCS = args.arcs ? args.arcs.split(',').map(Number) : null;
-const m = await openModules(), A = has('AP') || has('XP') || hasU('UW') ? await openAp() : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null;
+// --ap-build <version>@<modulesCommit>@<wasmSha256>: propagator/sdn-ap at that build in place of lib/build.mjs PIN's, through lib/ap.mjs standalone()
+// (git show at the commit from SDN_MODULES_GIT or the modules root, SHA-256 checked), the same two calls as openAp(); the AP and XP arms alone change.
+// Without it, openAp(), unchanged. COMPARE.md's 0.6.3 cells: --arms AP --groups HX --ap-build 0.6.3@93cb5a0584fa728864e4426cc9ceb368936589f9@aa3ed22a...
+const AP_BUILD = args['ap-build'] ? (([version, modulesCommit, wasmSha256]) => { if (!/^\d+\.\d+\.\d+$/.test(version ?? '') || !/^[0-9a-f]{40}$/.test(modulesCommit ?? '') || !/^[0-9a-f]{64}$/.test(wasmSha256 ?? '')) throw new Error('--ap-build is <version>@<modulesCommit>@<wasmSha256>'); return { version, modulesCommit, wasmSha256 }; })(args['ap-build'].split('@')) : null;
+async function openApAt(b) {
+  const h = await standalone('propagator/sdn-ap', { modulesCommit: b.modulesCommit, wasmSha256: b.wasmSha256 });
+  return {
+    build: { ...b },
+    async fit(oem, pcf, extra) {
+      const inputs = [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(extra?.spw ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: extra.spw }] : [])];
+      let r;
+      try { r = await h.invoke({ methodId: 'fit', inputs }); } catch (error) { return { ok: false, error: String(error?.message ?? error).slice(0, 200) }; }
+      if (r.statusCode !== 0) return { ok: false, error: `${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}` };
+      return { ok: true, ocm: new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload) };
+    },
+    async propagate(ocm, epochs, count) {
+      const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: S.flightPcfBytes(epochs) }] });
+      if (r.statusCode !== 0) throw new Error(`propagate: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
+      const lines = S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload));
+      if (lines.length !== count) throw new Error(`propagate returned ${lines.length} of ${count} states`);
+      return lines;
+    },
+    close: async () => h.destroy?.(),
+  };
+}
+const m = await openModules(), A = has('AP') || has('XP') || hasU('UW') ? await (AP_BUILD ? openApAt(AP_BUILD) : openAp()) : null, G = has('S') ? await openSgp4Fit() : null, F = has('F') ? await openFfmHost() : null;
 const U = ONLY_U ? await openUssfXp() : null, U11 = hasU('U11') || hasU('U11F') ? await openUssfXp011() : null;
 const LEADS = XM.config.scoring.leadDays, GRID = XM.config.scoring.gridSeconds * 1000, MIN_BIN = XM.config.scoring.binMinimumEpochs, MIN_COV = XM.config.fit.minimumCoverage;
 const PCF_AP = fitPcf({ forces: apForces({ tesseral: 31, zonal: 20 }), fit: null });
@@ -181,7 +206,7 @@ for (const o of await objects()) {
         });
       }
     } catch (error) { row.error = String(error?.message ?? error).slice(0, 180); }
-    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    fs.appendFileSync(outFile, `${JSON.stringify(F ? { ...row, ffm: F.provenance.ffm } : row)}\n`);
   }
 }
 console.error(`shard ${SHARD}/${SHARDS}: done`);

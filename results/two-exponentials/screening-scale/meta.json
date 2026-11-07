@@ -1,0 +1,55 @@
+{
+  "registration_commit": "76684d3092b60ed7491674b980cf979e923028f1",
+  "registration_blob": "918880bfb624e368bc4902095e8393beb7e0a380",
+  "registration_time": "2026-11-06T09:37:28-05:00",
+  "amendments": [
+    "a77b8a5454efa421937417cb5e2036e0a0fe051d 2026-11-06T09:38:27-05:00",
+    "bce15e8420dc2e1828576b2a633c3bdd0fbe3634 2026-11-06T09:40:54-05:00",
+    "1e95aff917761ee74b689dc743d0da881be23658 2026-11-06T09:46:28-05:00",
+    "d1f6396e9512a8f297d57094cc86fab3ee47b4ce 2026-11-06T09:47:48-05:00",
+    "45839db4a78e302c214a125a582f2c385267cefd 2026-11-06T09:58:22-05:00"
+  ],
+  "runner_sha256": "a608cc85dd1c48a5b2f0d1a21c56a05103bff4fc151f1a9c23a174d697547c28",
+  "node": "v25.4.0",
+  "module": {
+    "plugin": "analysis/conjunction-assessment",
+    "version": "0.18.4",
+    "wasm_sha256": "fe7533e9168c65f31b5d98ea90bafb76024a5e035df5c7f34d252da44718bfec",
+    "root": "space-data-network-modules-ca",
+    "pinned": {
+      "gpu/catalogScreen.mjs": "259ec4674b91a321a577d2455b560b89606c135ce734f9eddbdd6694d6ae2cfc",
+      "gpu/continuousScreen.mjs": "e191d9f3a8cc3f3438dcbabe459c99cbbb49f4f730b3a88bbd0462acc70167d2",
+      "gpu/allVsAll.mjs": "fd7fc206b31b7e4c4ca9e33203f2880ebb3e0bff72adff3d14542f8bd283edfa",
+      "gpu/scrFrames.mjs": "6181c730044e5c879b8b10188652bc359bfa2f44e1b08780edfff599fec37423",
+      "tests/lib/conjunctionCommandHarness.mjs": "c96a13d43af9c569677cb46a34c2d578ef77ef1d2bfe16fca1e1392f7c4ec022",
+      "tests/lib/cqr.mjs": "df0e968326a662c041ce3fc7bf465468b68e41d23936b67c2c7f832f6390c9f0",
+      "scripts/lib/ommCatalog.mjs": "2a11f493daa87f30ba2ff0398826f192c17580e74b8c0a5c6b2f0b9eb51adf35",
+      "plugin-manifest.json": "5285b8dcb05c619c15edf2795b31a0e4b457bfd17594b54e9e208dfbacf86c4f",
+      "dist/isomorphic/module.wasm": "fe7533e9168c65f31b5d98ea90bafb76024a5e035df5c7f34d252da44718bfec"
+    }
+  },
+  "controls": {
+    "thresholdKm": 5,
+    "coarseStepSec": 60,
+    "workers": 8,
+    "algorithm": "ALFANO_MAXIMUM",
+    "horizonDays": 7,
+    "windowHours": 6,
+    "path": "CPU, no GPU; coarse_grid, search_grid, refine_candidates"
+  },
+  "host": {
+    "cpus": 28,
+    "model": "Apple M3 Ultra"
+  },
+  "parity": {
+    "id": "parity-1-8-s1",
+    "phasedEvents": 16091,
+    "fusedEvents": 16091,
+    "phasedDigest": "0262a9f9aa29fed913c86dd74d1b74d99fc68ba3026731b2c044e53ae62b503e",
+    "fusedDigest": "0262a9f9aa29fed913c86dd74d1b74d99fc68ba3026731b2c044e53ae62b503e",
+    "equal": true,
+    "fusedCpuS": 29.446851,
+    "phasedCpuS": 39.168543
+  },
+  "note": "counts.jsonl is for the whitepaper only; the site, chart and marketing never read it."
+}

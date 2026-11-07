@@ -167,7 +167,7 @@ for (const [key, list] of items()) {
         } catch (error) { row.arms[name] = { error: String(error.message).slice(0, 120) }; }
       }
     } catch (error) { row.error = String(error.message).slice(0, 160); }
-    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    fs.appendFileSync(outFile, `${JSON.stringify(F ? { ...row, ffm: F.provenance.ffm } : row)}\n`);
     added += 1;
   }
 }

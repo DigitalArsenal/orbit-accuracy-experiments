@@ -1,0 +1,1682 @@
+{
+ "what": "The AP fits behind the precise-orbit rows of cells.json, each window fitted again and the set's MEAN_ELEMENTS read, against sdn-ap 0.6.4's class rule. No flight.",
+ "build": "Fitted on propagator/sdn-ap 0.5.1 (modules ea824356, dist d29acd2b5d92), the build the cells were flown on, by each store's own runner (all-regimes.mjs, ap-truth.mjs) with the fit's result logged in place of its flight (the two .patch files). The THEMIS and Chandra rows flew on 0.6.3; their sets here are 0.5.1's fits, above 0.3 on both.",
+ "rule": "propagator/sdn-ap/src/tesseral.inc at modules cfd750eb8: wide_set(cls, e0) = e0 > (cls == 0 ? 0.05 : 0.3), cls = res::band_of(n0). A set moves only where that answer differs from 0.6.3's e0 > 0.3: class 0 with 0.05 < e <= 0.3.",
+ "coverage": "Read at every window, AP and whiteroom XP arms: LS, DO, GD, GE, IG, HE, HX, WA (the regimes, regimes-hx and regimes-wa stores); GRACE-FO (Research satellite 1 and 2) at every window, AP arm alone. Sampled, every fifth window, AP arm alone: Swarm, Sentinel-1 and the medium Earth orbit satellites. Whiteroom XP on the truth and truth2 stores is not read here. A window whose arc had too little coverage has no set, as in its store.",
+ "totals": {
+  "sets": 3353,
+  "windows": 1386,
+  "inBand": 0,
+  "largestClass0EBelowBand": 0.0213399,
+  "smallestClass0EAboveBand": 0.45408329999999997
+ },
+ "satellites": [
+  {
+   "group": "DO",
+   "name": "CRYOSAT 2",
+   "norad": 36508,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.528422839999998,
+    14.528589270317884
+   ],
+   "e": [
+    0.0012774,
+    0.001337196899898206
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "HAIYANG 2C",
+   "norad": 46469,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 11,
+   "sets": 44,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    13.837979253296497,
+    13.838054669999998
+   ],
+   "e": [
+    0.00047129999999999996,
+    0.0005109064156710938
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "HAIYANG 2D",
+   "norad": 48621,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    13.837949689999997,
+    13.838055649587117
+   ],
+   "e": [
+    0.00017094477120894585,
+    0.00019649999999999998
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "JASON 3",
+   "norad": 41240,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    12.879880295876616,
+    12.879931599999997
+   ],
+   "e": [
+    0.0001048,
+    0.0001766590591755471
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "S6 MICHAEL FREILICH",
+   "norad": 46984,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    12.812861750000003,
+    12.812909509999997
+   ],
+   "e": [
+    0.00008581779288108562,
+    0.00011503981959468985
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "SARAL",
+   "norad": 39086,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.33583033335798,
+    14.336210789999999
+   ],
+   "e": [
+    0.0009580119463469967,
+    0.0013280556357195051
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "SENTINEL 3A",
+   "norad": 41335,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.275803589999997,
+    14.275954326445785
+   ],
+   "e": [
+    0.0011242,
+    0.0011547
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "SENTINEL 3B",
+   "norad": 43437,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.275780440000002,
+    14.275918991130325
+   ],
+   "e": [
+    0.0010812,
+    0.0011940468166022093
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "SENTINEL-6B",
+   "norad": 66514,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 20,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    12.812873482971234,
+    12.862391026922786
+   ],
+   "e": [
+    0.0000991611943362249,
+    0.0012182
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "DO",
+   "name": "SWOT",
+   "norad": 54754,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 15,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.009183470000002,
+    14.009286539999996
+   ],
+   "e": [
+    0.0009762999999999999,
+    0.0010408254179271577
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GD",
+   "name": "ETALON 1",
+   "norad": 19751,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 11,
+   "sets": 22,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    2
+   ],
+   "nRevDay": [
+    2.131609193651099,
+    2.13161028
+   ],
+   "e": [
+    0.0021807,
+    0.0022086
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GD",
+   "name": "ETALON 2",
+   "norad": 20026,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 11,
+   "sets": 22,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    2
+   ],
+   "nRevDay": [
+    2.1320951255298675,
+    2.1320962299999997
+   ],
+   "e": [
+    0.0018969999999999998,
+    0.0019138
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GD",
+   "name": "LAGEOS 1",
+   "norad": 8820,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 11,
+   "sets": 22,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    6.38756532,
+    6.38756592
+   ],
+   "e": [
+    0.004319707461279474,
+    0.004466974940302978
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GD",
+   "name": "LAGEOS 2",
+   "norad": 22195,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 11,
+   "sets": 22,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    6.47278684,
+    6.47278719
+   ],
+   "e": [
+    0.01425519473904668,
+    0.014273099999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GD",
+   "name": "LARES-2",
+   "norad": 53105,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 10,
+   "sets": 20,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    6.39056839,
+    6.39056895
+   ],
+   "e": [
+    0.0008596999999999999,
+    0.000937
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C006 BDS-2G",
+   "norad": 37210,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 3,
+   "sets": 6,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.002620808033389,
+    1.0026470499999998
+   ],
+   "e": [
+    0.0009188870760881579,
+    0.001003307552193832
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C011 BDS-2G",
+   "norad": 38091,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 3,
+   "sets": 6,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026886702257642,
+    1.00272053
+   ],
+   "e": [
+    0.000754,
+    0.0008839999999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C016 BDS-2G",
+   "norad": 38953,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 3,
+   "sets": 6,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0027134191029738,
+    1.0027685300000002
+   ],
+   "e": [
+    0.0005927769564133044,
+    0.0006370999999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C018 BDS-2G",
+   "norad": 41586,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 4,
+   "sets": 8,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026405131275913,
+    1.0026691600000002
+   ],
+   "e": [
+    0.0004449525543650048,
+    0.0005600089194298281
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C020 BDS-2G",
+   "norad": 44231,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.002653474611348,
+    1.0026992300000002
+   ],
+   "e": [
+    0.0006163506834535234,
+    0.0007153999999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C217 BDS-3G",
+   "norad": 43683,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026689123562975,
+    1.0027112700000003
+   ],
+   "e": [
+    0.00027366756492243013,
+    0.0004145
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C229 BDS-3G",
+   "norad": 45344,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 4,
+   "sets": 8,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.002676207984543,
+    1.0027334500000002
+   ],
+   "e": [
+    0.00013543301897167405,
+    0.0002962
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "C231 BDS-3G",
+   "norad": 56564,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 3,
+   "sets": 6,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.002600739902869,
+    1.0026260600000003
+   ],
+   "e": [
+    0.0005275999999999999,
+    0.000601
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GE",
+   "name": "J003 QZS-2G",
+   "norad": 42917,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026713640726923,
+    1.0027075600000002
+   ],
+   "e": [
+    0.0002175401874308659,
+    0.0002734
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GN",
+   "name": "E218 GAL-2",
+   "norad": 43058,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    2
+   ],
+   "nRevDay": [
+    1.7047419797483885,
+    1.704748890640934
+   ],
+   "e": [
+    0.00006848101949127831,
+    0.00021762072547177984
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GN",
+   "name": "G053 GPS-IIR-M",
+   "norad": 28874,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    2
+   ],
+   "nRevDay": [
+    2.0056726730746477,
+    2.0057744185324373
+   ],
+   "e": [
+    0.012567331815468324,
+    0.012888833783217127
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GN",
+   "name": "G073 GPS-IIF",
+   "norad": 41019,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    2
+   ],
+   "nRevDay": [
+    2.0056800505133965,
+    2.0056808892535445
+   ],
+   "e": [
+    0.010921145060678024,
+    0.010988193983897335
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GN",
+   "name": "R743 GLO-M",
+   "norad": 37869,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 59,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    2
+   ],
+   "nRevDay": [
+    2.1310650349831897,
+    2.1310692314583446
+   ],
+   "e": [
+    0.0023495109717533856,
+    0.00257007370557133
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "GN",
+   "name": "R859 GLO-M+",
+   "norad": 44850,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    2
+   ],
+   "nRevDay": [
+    2.1310705986186886,
+    2.1310719106779277
+   ],
+   "e": [
+    0.0011040625100274168,
+    0.0013315324172184905
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "HE",
+   "name": "TESS",
+   "norad": 43435,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 7,
+   "sets": 28,
+   "arms": [
+    "AP336",
+    "AP72",
+    "XP336",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    0.06782318,
+    0.07058602
+   ],
+   "e": [
+    0.45408329999999997,
+    0.4936287
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "HX",
+   "name": "CHANDRA",
+   "norad": 25867,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 7,
+   "sets": 28,
+   "arms": [
+    "AP168",
+    "AP72",
+    "XP168",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    0.37782765,
+    0.37808613
+   ],
+   "e": [
+    0.6847312416181529,
+    0.6866106999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "HX",
+   "name": "THEMIS A",
+   "norad": 30580,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 4,
+   "sets": 8,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0493333200000003,
+    1.0493767824440767
+   ],
+   "e": [
+    0.8234825674511599,
+    0.8246593999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "HX",
+   "name": "THEMIS D",
+   "norad": 30797,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 4,
+   "sets": 8,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.04979066,
+    1.0499089270872375
+   ],
+   "e": [
+    0.8209824006821904,
+    0.8222343110793395
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "HX",
+   "name": "THEMIS E",
+   "norad": 30798,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 4,
+   "sets": 8,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0496065850986567,
+    1.0497121889241912
+   ],
+   "e": [
+    0.8212782,
+    0.8224993999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C005 BDS-2I",
+   "norad": 36828,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0029572900000003,
+    1.0029752963158822
+   ],
+   "e": [
+    0.0049958,
+    0.005017342533513341
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C007 BDS-2I",
+   "norad": 37256,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0025240998435407,
+    1.00256575
+   ],
+   "e": [
+    0.0046784,
+    0.0047551
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C008 BDS-2I",
+   "norad": 37384,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0028803609600685,
+    1.0029230299999998
+   ],
+   "e": [
+    0.00362,
+    0.0036745999999999997
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C009 BDS-2I",
+   "norad": 37763,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.00257567,
+    1.0025939499999998
+   ],
+   "e": [
+    0.014365699999999999,
+    0.0144055
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C010 BDS-2I",
+   "norad": 37948,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.002607561778456,
+    1.0026514000000002
+   ],
+   "e": [
+    0.010853699999999999,
+    0.010940799999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C017 BDS-2I",
+   "norad": 41434,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.002668470984847,
+    1.0027179699999997
+   ],
+   "e": [
+    0.005577591487504481,
+    0.005619848495200448
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C019 BDS-2I",
+   "norad": 43539,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0027679600000001,
+    1.0027904019540674
+   ],
+   "e": [
+    0.00905028295513492,
+    0.009082699999999999
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C220 BDS-3I",
+   "norad": 44204,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026481886622032,
+    1.0026979299999998
+   ],
+   "e": [
+    0.0024874,
+    0.0025215092261732905
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C221 BDS-3I",
+   "norad": 44337,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.00290924,
+    1.00293177
+   ],
+   "e": [
+    0.003653,
+    0.0036646368516361828
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "C224 BDS-3I",
+   "norad": 44709,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026314454298801,
+    1.0026691299999997
+   ],
+   "e": [
+    0.0044944,
+    0.0045227
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "J002 QZS-2I",
+   "norad": 42738,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0025222861574674,
+    1.00255803
+   ],
+   "e": [
+    0.07463779199007572,
+    0.07486510773476744
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "IG",
+   "name": "J004 QZS-2I",
+   "norad": 42965,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 5,
+   "sets": 10,
+   "arms": [
+    "AP72",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.00267640755261,
+    1.0027325900000001
+   ],
+   "e": [
+    0.0746314,
+    0.0748825114240926
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "LS",
+   "name": "AJISAI",
+   "norad": 16908,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 13,
+   "sets": 52,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    12.443535829999997,
+    12.443558299999998
+   ],
+   "e": [
+    0.0003881,
+    0.0018515949328376817
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "LS",
+   "name": "LARES",
+   "norad": 38077,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 14,
+   "sets": 48,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    12.553581279999998,
+    12.553609799999998
+   ],
+   "e": [
+    0.0002519,
+    0.0007647005770712175
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "LS",
+   "name": "LARETS",
+   "norad": 27944,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 14,
+   "sets": 52,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.647006739999998,
+    14.647307309999997
+   ],
+   "e": [
+    0.00008015217672476057,
+    0.0024085
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "LS",
+   "name": "STARLETTE",
+   "norad": 7646,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 14,
+   "sets": 54,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    13.821328570000002,
+    13.821360299999997
+   ],
+   "e": [
+    0.0199457,
+    0.0213399
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "LS",
+   "name": "STELLA",
+   "norad": 22824,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 13,
+   "sets": 46,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.283056079999998,
+    14.283141600535332
+   ],
+   "e": [
+    0.0005579928589203247,
+    0.0017746348168090063
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "LS",
+   "name": "WESTPAC",
+   "norad": 25398,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 14,
+   "sets": 48,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.238718486433948,
+    14.238806809999996
+   ],
+   "e": [
+    0.0010688811486406309,
+    0.0012699
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "GRACE-FO 1",
+   "norad": 43476,
+   "year": "2025",
+   "coverage": "every window, AP alone",
+   "windows": 79,
+   "sets": 158,
+   "arms": [
+    "AP24",
+    "APRa12"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.366510226377398,
+    15.376638259911708
+   ],
+   "e": [
+    0.000288115638794392,
+    0.0025392857478721566
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "GRACE-FO 1",
+   "norad": 43476,
+   "year": "2026",
+   "coverage": "every window, AP alone",
+   "windows": 150,
+   "sets": 300,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.377576565506143,
+    15.392134203844954
+   ],
+   "e": [
+    0.0002665292093556953,
+    0.0024835659621401623
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "GRACE-FO 2",
+   "norad": 43477,
+   "year": "2025",
+   "coverage": "every window, AP alone",
+   "windows": 79,
+   "sets": 158,
+   "arms": [
+    "AP24",
+    "APRa12"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.366471887463957,
+    15.376615404209875
+   ],
+   "e": [
+    0.00028942416150832433,
+    0.0025398029982190086
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "GRACE-FO 2",
+   "norad": 43477,
+   "year": "2026",
+   "coverage": "every window, AP alone",
+   "windows": 150,
+   "sets": 300,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.37756060873045,
+    15.392154546626587
+   ],
+   "e": [
+    0.00026589066493852277,
+    0.0024823183265845748
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "Swarm A",
+   "norad": 39452,
+   "year": "2025",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 53,
+   "sets": 106,
+   "arms": [
+    "AP24",
+    "APRa12"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.417890080508084,
+    15.47677289153477
+   ],
+   "e": [
+    0.001315511903195563,
+    0.0014559970834027366
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "Swarm A",
+   "norad": 39452,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.480018600131535,
+    15.515417601224694
+   ],
+   "e": [
+    0.0013383000290752333,
+    0.00147651722980885
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "Swarm B",
+   "norad": 39451,
+   "year": "2025",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 53,
+   "sets": 106,
+   "arms": [
+    "AP24",
+    "APRa12"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.256396152666715,
+    15.281158888226038
+   ],
+   "e": [
+    0.0012987722591123298,
+    0.001441773552694759
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "Swarm B",
+   "norad": 39451,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.282167948366451,
+    15.2946448522598
+   ],
+   "e": [
+    0.0013334325426509757,
+    0.0014655230762395566
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "Swarm C",
+   "norad": 39453,
+   "year": "2025",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 53,
+   "sets": 106,
+   "arms": [
+    "AP24",
+    "APRa12"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.417880800559715,
+    15.476762049003865
+   ],
+   "e": [
+    0.0013186080291181898,
+    0.001455071993130915
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "P",
+   "name": "Swarm C",
+   "norad": 39453,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 30,
+   "sets": 60,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    15.480015425291956,
+    15.515437604202193
+   ],
+   "e": [
+    0.0013393215091256478,
+    0.0014789897225786631
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "S1",
+   "name": "Sentinel-1A",
+   "norad": 39634,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 27,
+   "sets": 53,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.600976006427242,
+    14.60105306772415
+   ],
+   "e": [
+    0.001175947966175817,
+    0.001190715545650462
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "S1",
+   "name": "Sentinel-1C",
+   "norad": 62261,
+   "year": "2026",
+   "coverage": "every fifth window (cutoff day number divisible by 5), AP alone",
+   "windows": 27,
+   "sets": 53,
+   "arms": [
+    "AP24",
+    "AP72"
+   ],
+   "class": [
+    0
+   ],
+   "nRevDay": [
+    14.600893909615056,
+    14.60107218005977
+   ],
+   "e": [
+    0.0011758828866357015,
+    0.001191177160006888
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "WA",
+   "name": "EUTELSAT 117 WEST B",
+   "norad": 41589,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 26,
+   "sets": 90,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026598759297134,
+    1.0027448499999998
+   ],
+   "e": [
+    0.000012842813055747903,
+    0.0001064
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "WA",
+   "name": "GALAXY 30 (G-30)",
+   "norad": 46114,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 28,
+   "sets": 112,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.0026498426304313,
+    1.0027351599999998
+   ],
+   "e": [
+    0.0001748939620085963,
+    0.0002831131405274389
+   ],
+   "inBand": 0
+  },
+  {
+   "group": "WA",
+   "name": "SES-15",
+   "norad": 42709,
+   "coverage": "every window, AP and whiteroom XP",
+   "windows": 28,
+   "sets": 110,
+   "arms": [
+    "AP24",
+    "AP72",
+    "XP24",
+    "XP72"
+   ],
+   "class": [
+    1
+   ],
+   "nRevDay": [
+    1.00262503320893,
+    1.0027221000000002
+   ],
+   "e": [
+    0.000008,
+    0.0001049426153268332
+   ],
+   "inBand": 0
+  }
+ ]
+}
