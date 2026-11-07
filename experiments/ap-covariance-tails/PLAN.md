@@ -113,3 +113,14 @@ Labeled post-hoc wherever it appears. Written before the arm is computed, but af
 - Arm-sample counts equal the refit's per cell.
 
 It prints the numbers: the 18-cell counts for A0, A1 and V-one, and the 2 and 3 sigma shares at the verdict leads.
+
+## Amendment 1, 2026-11-06, after reading the first run (written to scratch, not committed)
+
+Timing: every item here was written after the registered tables above were read. None changes a registered figure. The first run's counts stand; items 2 to 4 are post-read diagnostics and are labeled so in the report. Nothing here selects a covariance form.
+
+1. **Correction to the decision rule.** A percentile interval cannot bound a share with few or no hits: a zero-hit cell's interval is [0, 0] whatever its n, so the registered rule printed "lighter" where the data cannot say so. From here "lighter" also needs a calibrated expected count of at least 5 at the cell's n_eff, and a zero-hit cell is "not decidable". "Heavier" is unchanged. The report prints how many cells this moved, and the registered reading stays in `table.json` as `rawDecision`.
+2. **Whole-covariance factor (post-read).** Beside k2 and k3 per axis: the factor on the whole covariance that puts d2's share at nominal, sqrt(95th percentile of d2 / 7.815) and sqrt(99.73rd percentile of d2 / 14.156). Reason: the first run showed d2 far past chi-square 3 in strong drag at days 5 and 7 while each axis stays near nominal.
+3. **Why the joint and the axes disagree (post-read, explanation only).** Per regime and lead: d2 beside Sum z^2 from the same flights; rho(R, I) and 1 - rho^2; sigma_R given I against the radial residual after the block's own R-on-I slope; a least-squares fit of e_R on 1, e_I and e_I^2, whose quadratic term is compared with -1 / (2r), the curvature of the orbit in straight axes; d2 with e_I^2 / (2r) removed from e_R. r is a nominal radius, 6,878 km strong drag and 7,071 km near 700 km: a size estimate, not a state, used nowhere else.
+4. **R-C plane (post-read).** d2 of the R-C sub-block against chi-square 2 (5.991 and 11.829), with B-hier and the decision rule, to show whether the joint miss is confined to the R-I plane. No statement about collision probability follows from it.
+
+Also read after the first run, for the report's wording only: the pooled reduced verdict rises because Swarm and GRACE-FO lie on opposite sides of the band on the cross-track axis, so the report prints each flip with both groups' medians.

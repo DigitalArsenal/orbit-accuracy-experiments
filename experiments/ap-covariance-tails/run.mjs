@@ -97,7 +97,8 @@ function load(kind, table) {
           if (kind === 'A1') {
             const p = L.p.full, q = d2Of(p, L.e);
             s.z = [Math.abs(L.e[0]) / Math.sqrt(p[0]), Math.abs(L.e[1]) / Math.sqrt(p[2]), Math.abs(L.e[2]) / Math.sqrt(p[5])];
-            s.d2 = q.d2; s.inv = q.inv;
+            s.d2 = q.d2; s.inv = q.inv; s.p = p;
+            s.d2rc = (p[5] * L.e[0] * L.e[0] - 2 * p[3] * L.e[0] * L.e[2] + p[0] * L.e[2] * L.e[2]) / (p[0] * p[5] - p[3] * p[3]);
             if (!q.pd) checks.notPd += 1;
             else if (Number.isFinite(L.d2)) { checks.d2Compared += 1; checks.maxD2Diff = Math.max(checks.maxD2Diff, Math.abs(L.d2 - q.d2) / q.d2); }
           } else {
@@ -114,8 +115,9 @@ function load(kind, table) {
 }
 
 // ---- a cell: the values of one statistic over a list of samples.
-const valueOf = (s, stat) => (stat === 'D' ? s.d2 : s.z[AXES.indexOf(stat)]);
-const tailsOf = (stat) => (stat === 'D' ? CHI.map((c) => ({ thr: c.q, ref: c.tail })) : [{ thr: 2, ref: GAUSS2 }, { thr: 3, ref: GAUSS3 }]);
+const CHI2_RC = [{ thr: -2 * Math.log(0.05), ref: 0.05 }, { thr: -2 * Math.log(GAUSS3), ref: GAUSS3 }];
+const valueOf = (s, stat) => (stat === 'D' ? s.d2 : stat === 'RC' ? s.d2rc : s.z[AXES.indexOf(stat)]);
+const tailsOf = (stat) => (stat === 'D' ? CHI.map((c) => ({ thr: c.q, ref: c.tail })) : stat === 'RC' ? CHI2_RC : [{ thr: 2, ref: GAUSS2 }, { thr: 3, ref: GAUSS3 }]);
 const usable = (list, stat) => list.filter((s) => Number.isFinite(valueOf(s, stat)));
 /** Weighted median and weighted nearest-rank quantile; with equal weights the median is the refit's. */
 function weightedQuantile(pairs, p) {
@@ -145,7 +147,7 @@ function intervals(list, stat, keys, keyOf, draws, wantQuantiles) {
   const at = new Map(keys.map((k, i) => [k, i])), tails = tailsOf(stat), vals = keys.map(() => []);
   for (const s of list) { const i = at.get(keyOf(s)); if (i !== undefined) vals[i].push(valueOf(s, stat)); }
   const unit = vals.map((v) => ({ v: Float64Array.from(v), n: v.length, c: tails.map((t) => v.filter((x) => x > t.thr).length) }));
-  const shares = tails.map(() => new Float64Array(draws.length)), Q = [0.5, 0.9545002638963584, 1 - GAUSS3], qs = Q.map(() => new Float64Array(draws.length));
+  const shares = tails.map(() => new Float64Array(draws.length)), Q = [0.5, stat === 'D' ? 0.95 : 1 - GAUSS2, 1 - GAUSS3], qs = Q.map(() => new Float64Array(draws.length));
   let used = 0;
   for (const d of draws) {
     let n = 0;
@@ -182,6 +184,8 @@ function hierarchy(list) {
   return { keys, draws };
 }
 const decide = (iv, ref) => (!iv ? 'not decidable' : iv[0] > ref ? 'heavier' : iv[1] < ref ? 'lighter' : 'not decidable');
+/** Amendment 1, item 1: "lighter" needs a calibrated expected count of at least 5 at n_eff; a zero-hit cell is not decidable. */
+const guarded = (raw, expected) => (raw === 'lighter' && !(expected >= 5) ? 'not decidable' : raw);
 const inBand = (m) => m !== null && m >= BAND[0] && m <= BAND[1];
 
 /** One cell's full figures. */
@@ -200,15 +204,16 @@ function cell(list, stat, opts) {
     let sum = 0, ks = 0;
     for (let i = 0; i < n; i += 1) { sum += sorted[i]; const F = chi3Cdf(sorted[i]); ks = Math.max(ks, Math.abs((i + 1) / n - F), Math.abs(i / n - F)); }
     out.meanOver3 = sig(sum / n / 3, 4); out.ks = sig(ks, 3);
+    out.k2 = sig(Math.sqrt(quantile(sorted, n, 0.95) / CHI[0].q), 4); out.k3 = sig(Math.sqrt(quantile(sorted, n, 1 - GAUSS3) / CHI[2].q), 4);
   }
   const want = opts.quantiles;
   for (const [name, b] of Object.entries(opts.boots ?? {})) {
     if (!b) { out[name] = null; continue; }
     const iv = intervals(v, stat, b.keys, b.keyOf, b.draws, want);
     out[name] = { draws: iv.draws, shares: iv.shares.map((x) => roundN(x)), median: want ? roundN(iv.quantiles[0]) : null,
-      k2: want && stat !== 'D' ? roundN(iv.quantiles[1].map((x) => x / 2), 4) : null, k3: want && stat !== 'D' ? roundN(iv.quantiles[2].map((x) => x / 3), 4) : null };
+      k2: want ? roundN(iv.quantiles[1].map((x) => (stat === 'D' ? Math.sqrt(x / CHI[0].q) : x / 2)), 4) : null, k3: want ? roundN(iv.quantiles[2].map((x) => (stat === 'D' ? Math.sqrt(x / CHI[2].q) : x / 3)), 4) : null };
   }
-  if (out.bHier) out.tails.forEach((t, i) => { t.decision = decide(out.bHier.shares[i], t.reference); });
+  if (out.bHier) out.tails.forEach((t, i) => { t.rawDecision = decide(out.bHier.shares[i], t.reference); t.decision = guarded(t.rawDecision, t.expectedAtNeff); });
   return out;
 }
 const leadsOf = (list, h) => list.filter((s) => s.h === h);
@@ -299,8 +304,37 @@ function swarmStudy(samples, s1BandCount, grid18) {
   const counts = Object.fromEntries(Object.entries(R).map(([k, c]) => [k, { strongDragInside: bandCount(c), of18: bandCount(c) + s1BandCount }]));
   const flips = R['V-all'].filter((c) => c.stat !== 'D').map((c) => { const o = R['V-one'].find((q) => q.h === c.h && q.stat === c.stat); return { h: c.h, axis: c.stat, all: c.median, one: o.median, allInside: c.inBand, oneInside: o.inBand }; }).filter((f) => f.allInside !== f.oneInside);
   const samplesShare = held.filter(isSwarm).length / held.length;
-  return { heldWindows: shareRow(held, isSwarm), pairAC: shareRow(held, (s) => s.group === 'Swarm A+C'), training: shareRow(train, isSwarm), sampleShare: sig(samplesShare, 4), readings: R, counts, flips, vOneIntervals: vOneIntervals(samples),
-    regimeCells: { strongDrag: 9, nearSeven: 9 }, grid18 };
+  for (const f of flips) { const m = (name) => R[name].find((c) => c.h === f.h && c.stat === f.axis).median; f.swarm = m('V-swarm'); f.grace = m('V-grace'); f.opposite = (f.swarm > BAND[1] && f.grace < BAND[0]) || (f.swarm < BAND[0] && f.grace > BAND[1]); }
+  const vOne = vOneIntervals(samples);
+  for (const iv of vOne) { const c = R['V-one'].find((q) => q.h === iv.h && q.stat === iv.stat); iv.rawDecisions = iv.decisions; iv.decisions = iv.rawDecisions.map((d, t) => guarded(d, c.tails[t].neff === null ? null : c.tails[t].neff * c.tails[t].reference)); }
+  return { heldWindows: shareRow(held, isSwarm), pairAC: shareRow(held, (s) => s.group === 'Swarm A+C'), training: shareRow(train, isSwarm), sampleShare: sig(samplesShare, 4), readings: R, counts, flips, vOneIntervals: vOne,
+    regimeCells: { strongDrag: 9, nearSeven: 9 } };
+}
+/** Amendment 1, items 3 and 4: post-read, explanation only. */
+const NOMINAL_RADIUS = { T: 6878, S1: 7071 };
+function jointDiagnostics(samples) {
+  const out = [];
+  for (const regime of Object.keys(BLOCKS)) {
+    const list = samples.filter((s) => s.regime === regime && s.block === 'heldOut'), hier = hierarchy(list), r = NOMINAL_RADIUS[regime];
+    for (const h of LEADS) {
+      const v = leadsOf(list, h), n = v.length, med = (a, p = 0.5) => quantile(Float64Array.from(a).sort(), a.length, p), share = (a, t) => a.filter((x) => x > t).length / n;
+      const diag = v.map((s) => s.z.reduce((t, z) => t + z * z, 0)), full = v.map((s) => s.d2);
+      const rho = v.map((s) => s.p[1] / Math.sqrt(s.p[0] * s.p[2])), one = rho.map((q) => 1 - q * q), cond = v.map((s, i) => Math.sqrt(s.p[0] * one[i])), resid = v.map((s) => Math.abs(s.e[0] - (s.p[1] / s.p[2]) * s.e[1]));
+      const curv = v.map((s) => s.e[1] * s.e[1] / (2 * r)), noCurv = v.map((s, i) => quad(s.inv, [s.e[0] + curv[i], s.e[1], s.e[2]]));
+      // least squares of e_R on 1, e_I, e_I^2
+      const A = [[0, 0, 0], [0, 0, 0], [0, 0, 0]], B = [0, 0, 0];
+      for (const s of v) { const q = [1, s.e[1], s.e[1] * s.e[1]]; for (let a = 0; a < 3; a += 1) { B[a] += q[a] * s.e[0]; for (let b = 0; b < 3; b += 1) A[a][b] += q[a] * q[b]; } }
+      for (let i = 0; i < 3; i += 1) for (let j = i + 1; j < 3; j += 1) { const f = A[j][i] / A[i][i]; for (let k = i; k < 3; k += 1) A[j][k] -= f * A[i][k]; B[j] -= f * B[i]; }
+      const c = [0, 0, 0];
+      for (let i = 2; i >= 0; i -= 1) { let t = B[i]; for (let k = i + 1; k < 3; k += 1) t -= A[i][k] * c[k]; c[i] = t / A[i][i]; }
+      const iv = intervals(v, 'RC', hier.keys, clusterGroupWeek, hier.draws, false);
+      const rc = CHI2_RC.map((t, i) => { const e = effectiveN(v, (s) => s.d2rc > t.thr, clusterGroupWeek), x = share(v.map((s) => s.d2rc), t.thr), raw = decide(iv.shares[i], t.ref); return { threshold: sig(t.thr, 5), reference: sig(t.ref, 4), share: sig(x), interval: roundN(iv.shares[i]), neff: sig(e.neff, 4), rawDecision: raw, decision: guarded(raw, e.neff === null ? null : e.neff * t.ref) }; });
+      out.push({ regime, h, n, fullBeyond5: sig(share(full, CHI[0].q), 4), diagBeyond5: sig(share(diag, CHI[0].q), 4), fullBeyond027: sig(share(full, CHI[2].q), 4), diagBeyond027: sig(share(diag, CHI[2].q), 4), noCurvBeyond5: sig(share(noCurv, CHI[0].q), 4),
+        rhoRI: sig(med(rho), 3), oneMinusRho2: { p10: sig(med(one, 0.1), 3), median: sig(med(one), 3) }, sigmaRkm: sig(med(v.map((s) => Math.sqrt(s.p[0]))), 3), sigmaIkm: sig(med(v.map((s) => Math.sqrt(s.p[2]))), 3), sigmaRgivenIkm: sig(med(cond), 3), radialResidualKm: sig(med(resid), 3), residualOverSigma: sig(med(resid.map((x, i) => x / cond[i])), 3),
+        curvatureKm: { median: sig(med(curv), 3), p90: sig(med(curv, 0.9), 3) }, quadraticTerm: sig(c[2], 3), curvatureExpected: sig(-1 / (2 * r), 3), rc });
+    }
+  }
+  return out;
 }
 /** Burn-censored near 700 km: PLAN.md, the model study's amendments 3 and 4. */
 function burnCensored(samples) {
@@ -368,7 +402,7 @@ function study() {
   const cells = grid(A1.samples), satellites = perSatellite(A1.samples), arms = perArm(A1.samples), control = controlA0(A0.samples, A1.samples), size = sizeOfTest(cells);
   const s1Band = cells.filter((c) => c.regime === 'S1' && VERDICT.includes(c.h) && c.stat !== 'D' && c.inBand).length;
   const swarm = swarmStudy(A1.samples, s1Band);
-  const burns = burnCensored(A1.samples), post = postHoc(A1.samples);
+  const burns = burnCensored(A1.samples), post = postHoc(A1.samples), joint = jointDiagnostics(A1.samples);
   // the control against the refit's own table
   const refitCells = refit.heldOutVerdict.cells, mismatch = refitCells.filter((v) => { const c = control.cells.find((q) => q.regime === v.regime && q.h === v.h && q.axis === v.axis); return !c || c.medianA0 !== v.medianAbsZ || c.nA0 !== v.n; }).map((v) => `${v.regime} ${v.h} ${v.axis}`);
   const a0Inside = refitCells.filter((v) => control.cells.find((q) => q.regime === v.regime && q.h === v.h && q.axis === v.axis)?.insideA0).length;
@@ -378,7 +412,7 @@ function study() {
   return { study: PLAN, task: 'experiments-ap-covariance-tails-20261107', builds: BUILD, draws: DRAWS, seed: SEED,
     chiSquare3: { quantiles: CHI.map((c) => ({ tail: sig(c.tail, 4), q: sig(c.q, 6) })), median: sig(CHI3_MEDIAN, 5) }, reference: { two: sig(GAUSS2, 4), three: sig(GAUSS3, 4) },
     checks: { a1: A1.checks, a0: A0.checks, refitMismatch: mismatch, a0Inside, onlyA0, onlyA1, refused, opened: [...opened].sort() },
-    cells, satellites, arms, swarm, burns, postHoc: post, control, size };
+    cells, satellites, arms, swarm, burns, postHoc: post, joint, control, size };
 }
 
 // ---- the report.
@@ -395,19 +429,31 @@ function writeOut(outDir, t) {
     mahalanobis: { beyond95: range(mahal), beyond9973: range(mahal3) },
     factorOfTwo: { k0: kr('k0'), k2: kr('k2'), k3: kr('k3'), k0Inside: within('k0'), k2Inside: within('k2'), k3Inside: within('k3') }, swarm: { all, one },
   };
+  const ks = (regime, h) => D.find((c) => c.regime === regime && c.h === h);
+  summary.wholeCovariance = D.map((c) => ({ regime: c.regime, h: c.h, k95: c.k2, k9973: c.k3 }));
+  const moved = (list) => list.filter((x) => x.rawDecision !== x.decision).length;
+  summary.decisionsMoved = moved(t.cells.flatMap((c) => c.tails));
+  const opposite = t.swarm.flips.filter((f) => f.opposite).length;
   const result = { ...t, summary };
-  const L = [`Report only. On the refit's held-out windows, flown on 0.6.1: beyond 2 sigma ${pct(s2r[0])} to ${pct(s2r[1])} per axis at days 1, 3 and 7 against 4.55 % (heavier ${d2.heavier}, lighter ${d2.lighter}, not decidable ${d2.none} of 18); beyond 3 sigma ${pct(s3r[0])} to ${pct(s3r[1])} against 0.27 % (heavier ${d3.heavier}, lighter ${d3.lighter}, not decidable ${d3.none}); Mahalanobis beyond the 5 % chi-square 3 quantile ${pct(summary.mahalanobis.beyond95[0])} to ${pct(summary.mahalanobis.beyond95[1])}, beyond the 0.27 % quantile ${pct(summary.mahalanobis.beyond9973[0])} to ${pct(summary.mahalanobis.beyond9973[1])}. The factor on sigma that would make each share nominal: median ${num(summary.factorOfTwo.k0[0])} to ${num(summary.factorOfTwo.k0[1])}, 2 sigma ${num(summary.factorOfTwo.k2[0])} to ${num(summary.factorOfTwo.k2[1])}, 3 sigma ${num(summary.factorOfTwo.k3[0])} to ${num(summary.factorOfTwo.k3[1])} (cells within a factor of two: ${summary.factorOfTwo.k0Inside}, ${summary.factorOfTwo.k2Inside}, ${summary.factorOfTwo.k3Inside} of 18). Median band: ${all.of18} of 18 pooled, ${one.of18} of 18 with Swarm reduced to one independent group.`, '',
+  const L = [`Report only. On the refit's held-out windows, flown on 0.6.1: beyond 2 sigma ${pct(s2r[0])} to ${pct(s2r[1])} per axis at days 1, 3 and 7 against 4.55 % (heavier ${d2.heavier}, lighter ${d2.lighter}, not decidable ${d2.none} of 18); beyond 3 sigma ${pct(s3r[0])} to ${pct(s3r[1])} against 0.27 % (heavier ${d3.heavier}, lighter ${d3.lighter}, not decidable ${d3.none}). Per axis the factor on sigma that would make each share nominal is: median ${num(summary.factorOfTwo.k0[0])} to ${num(summary.factorOfTwo.k0[1])}, 2 sigma ${num(summary.factorOfTwo.k2[0])} to ${num(summary.factorOfTwo.k2[1])}, 3 sigma ${num(summary.factorOfTwo.k3[0])} to ${num(summary.factorOfTwo.k3[1])} (cells within a factor of two: ${summary.factorOfTwo.k0Inside}, ${summary.factorOfTwo.k2Inside}, ${summary.factorOfTwo.k3Inside} of 18). The joint figure is worse: Mahalanobis beyond the 5 % chi-square 3 quantile ${pct(summary.mahalanobis.beyond95[0])} to ${pct(summary.mahalanobis.beyond95[1])} and beyond the 0.27 % quantile ${pct(summary.mahalanobis.beyond9973[0])} to ${pct(summary.mahalanobis.beyond9973[1])}, the whole covariance needing a factor of ${num(ks('T', 24).k3)}, ${num(ks('T', 72).k3)} and ${num(ks('T', 167).k3)} at days 1, 3 and 7 in strong drag for the 0.27 % share. Median band: ${all.of18} of 18 pooled; ${t.swarm.counts['V-swarm'].of18} on Swarm alone, ${t.swarm.counts['V-grace'].of18} on GRACE-FO alone; ${one.of18} with Swarm reduced to one independent group, ${opposite} of the ${t.swarm.flips.length} cells it changes being cross-track cells where the two groups lie on opposite sides of the band: that is averaging, not calibration.`, '',
     '# AP covariance tails (PLAN.md)', '',
     `Rows: ${BUILD.A1} (primary, the coverage study's windows re-flown with the full RIC block); ${BUILD.A0} (control). Nothing flown here. That 0.6.3 and 0.6.4 have the same covariance is the site's statement, not tested here. z = forward error component / propagated 1-sigma. Both arms pooled, as the refit. n counts arm-samples: two arms of each daily window, so n far overstates the information; n_eff is the cluster-robust effective n (independent group x 7-day cutoff block), and groups are ${Object.keys(GROUP).length ? 'Swarm A+C, Swarm B, GRACE-FO; Sentinel-1' : ''}. Intervals are 95 %: B-sat over satellites (exact), B-hier over groups then weeks (decision interval). Few clusters make all of them coarse; a percentile interval over 3 groups does not have its nominal coverage.`, '',
     '## Tail shares per axis and lead (0.6.1, held-out)', '',
     '| Regime | Lead | Axis | n | Median \\|z\\| | >2 sigma | B-sat | B-hier | n_eff | Reading | >3 sigma | B-sat | B-hier | n_eff | Calibrated count at n_eff | Reading |', '|---|---|---|---:|---:|---:|---|---|---:|---|---:|---|---|---:|---:|---|'];
   for (const c of t.cells.filter((q) => q.stat !== 'D')) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${c.stat} | ${c.n} | ${num(c.median)} | ${pct(c.tails[0].share)} | ${pr(c.bSat.shares[0])} | ${pr(c.bHier.shares[0])} | ${ni(c.tails[0].neff)} | ${c.tails[0].decision} | ${pct(c.tails[1].share)} | ${pr(c.bSat.shares[1])} | ${pr(c.bHier.shares[1])} | ${ni(c.tails[1].neff)} | ${c.tails[1].expectedAtNeff === null ? 'undefined' : c.tails[1].expectedAtNeff < 5 ? `${num(c.tails[1].expectedAtNeff)} (too few to resolve)` : num(c.tails[1].expectedAtNeff)} | ${c.tails[1].decision} |`);
-  L.push('', 'Gaussian: 4.55 % and 0.27 %. Reading: "heavier" if B-hier\'s lower bound exceeds the reference, "lighter" if its upper bound is below it, otherwise "not decidable".', '',
+  L.push('', `Gaussian: 4.55 % and 0.27 %. Reading: "heavier" if B-hier's lower bound exceeds the reference; "lighter" if its upper bound is below it and a calibrated covariance would expect at least 5 hits at n_eff (amendment 1; ${summary.decisionsMoved} registered "lighter" readings in this study's main grid moved to "not decidable"); otherwise "not decidable". "Too few to resolve": a calibrated covariance would expect under 5 hits at n_eff, so a share at or below 0.27 % cannot be confirmed, while a large excess can still be seen. n_eff is an estimate and is unstable for rare events; above n means no cluster effect could be detected.`, '',
     '## Mahalanobis against chi-square 3 (full RIC position block)', '',
-    '| Regime | Lead | n | Mean d2/3 | Median d2 | KS | >7.815 (5 %) | B-hier | Reading | >11.345 (1 %) | B-hier | Reading | >14.156 (0.27 %) | B-hier | Reading | n_eff (5 %) |', '|---|---|---:|---:|---:|---:|---:|---|---|---:|---|---|---:|---|---|---:|');
-  for (const c of t.cells.filter((q) => q.stat === 'D')) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${c.n} | ${num(c.meanOver3)} | ${num(c.median)} | ${num(c.ks)} | ${c.tails.map((x, i) => `${pct(x.share)} | ${pr(c.bHier.shares[i])} | ${x.decision}`).join(' | ')} | ${ni(c.tails[0].neff)} |`);
-  L.push('', `Chi-square 3 median ${t.chiSquare3.median}, mean d2/3 = 1. Blocks not positive definite: ${t.checks.a1.notPd}. The row's own d2 (the module's, 6 x 6 where it says so) against this 3 x 3 d2: max relative difference ${num(t.checks.a1.maxD2Diff)} over ${t.checks.a1.d2Compared} samples.`, '',
-    '## "Within about a factor of two": the factor on sigma per cell', '',
+    '| Regime | Lead | n | Mean d2/3 | Median d2 | KS | >7.815 (5 %) | B-hier | Reading | >11.345 (1 %) | B-hier | Reading | >14.156 (0.27 %) | B-hier | Reading | n_eff (5 %) | Whole-covariance factor, 5 % | 0.27 % |', '|---|---|---:|---:|---:|---:|---:|---|---|---:|---|---|---:|---|---|---:|---:|---:|');
+  for (const c of t.cells.filter((q) => q.stat === 'D')) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${c.n} | ${num(c.meanOver3)} | ${num(c.median)} | ${num(c.ks)} | ${c.tails.map((x, i) => `${pct(x.share)} | ${pr(c.bHier.shares[i])} | ${x.decision}`).join(' | ')} | ${ni(c.tails[0].neff)} | ${num(c.k2)} ${VERDICT.includes(c.h) ? nr(c.bHier.k2) : ''} | ${num(c.k3)} ${VERDICT.includes(c.h) ? nr(c.bHier.k3) : ''} |`);
+  L.push('', `Chi-square 3 median ${t.chiSquare3.median}, mean d2/3 = 1. Blocks not positive definite: ${t.checks.a1.notPd}. The module's own d2 in the row against this 3 x 3 d2: max relative difference ${num(t.checks.a1.maxD2Diff)} over ${t.checks.a1.d2Compared} samples. Whole-covariance factor: post-read, amendment 1.`, '',
+    '## Why the joint and the axes disagree (post-read, amendment 1; explanation only)', '',
+    'Each axis can sit near nominal while d2 fails, because d2 also tests the correlation. In strong drag the block\'s R-I correlation grows with lead, so given the in-track error the block allows little radial error; the sigma_R given I column is what it allows and the residual column is what occurs. The quadratic term is the fit of e_R on e_I^2: its match with -1 / (2r) shows the orbit\'s curvature is in e_R, as straight axes require. Removing that curvature does not cure d2, so curvature alone is not the explanation; what is is not settled here. r is a nominal radius, a size estimate only.', '',
+    '| Regime | Lead | d2 >7.815 | Sum z^2 >7.815 | d2 >14.156 | Sum z^2 >14.156 | d2 >7.815, curvature removed | rho(R, I) | 1 - rho^2, p10, median | sigma_R, km | sigma_I, km | sigma_R given I, km | Radial residual, km | Residual / sigma | e_I^2 / 2r, median, p90, km | Quadratic term, 1/km (expected) |', '|---|---|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|---|---|');
+  for (const c of t.joint) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${pct(c.fullBeyond5)} | ${pct(c.diagBeyond5)} | ${pct(c.fullBeyond027)} | ${pct(c.diagBeyond027)} | ${pct(c.noCurvBeyond5)} | ${num(c.rhoRI)} | ${num(c.oneMinusRho2.p10)}, ${num(c.oneMinusRho2.median)} | ${num(c.sigmaRkm)} | ${num(c.sigmaIkm)} | ${num(c.sigmaRgivenIkm)} | ${num(c.radialResidualKm)} | ${num(c.residualOverSigma)} | ${num(c.curvatureKm.median)}, ${num(c.curvatureKm.p90)} | ${num(c.quadraticTerm)} (${num(c.curvatureExpected)}) |`);
+  L.push('', 'The R-C plane alone, against chi-square 2. Whether the joint miss is confined to the R-I plane; no statement about collision probability follows from it.', '',
+    '| Regime | Lead | >5.991 (5 %) | B-hier | Reading | >11.83 (0.27 %) | B-hier | Reading |', '|---|---|---:|---|---|---:|---|---|');
+  for (const c of t.joint) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${pct(c.rc[0].share)} | ${pr(c.rc[0].interval)} | ${c.rc[0].decision} | ${pct(c.rc[1].share)} | ${pr(c.rc[1].interval)} | ${c.rc[1].decision} |`);
+  L.push('', '## "Within about a factor of two": the factor on sigma per cell', '',
     'k0 = median |z| / 0.6745; k2 = 95.45th percentile / 2; k3 = 99.73rd percentile / 3. k > 1: the covariance is too narrow by that factor at that level; k < 1: too wide. The claim holds in the tails on a cell if k lies in [0.5, 2].', '',
     '| Regime | Lead | Axis | k0 | B-hier | k2 | B-hier | k3 | B-hier |', '|---|---|---|---:|---|---:|---|---:|---|');
   for (const c of axisV) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${c.stat} | ${num(c.k0)} | ${nr(c.bHier.median?.map((x) => x / HALF_NORMAL_MEDIAN))} | ${num(c.k2)} | ${nr(c.bHier.k2)} | ${num(c.k3)} | ${nr(c.bHier.k3)} |`);
@@ -417,7 +463,7 @@ function writeOut(outDir, t) {
     '| Reading of strong drag | Strong-drag cells inside the band (of 9) | Of 18 with near 700 km |', '|---|---:|---:|');
   const LABEL = { 'V-all': 'All, as the refit pooled', 'V-swarm': 'Swarm only', 'V-grace': 'GRACE-FO only', 'V-common': 'All, cutoffs from 2025-10-04', 'V-common-swarm': 'Swarm, cutoffs from 2025-10-04', 'V-common-grace': 'GRACE-FO, cutoffs from 2025-10-04', 'V-one': 'Swarm as one independent group (the reduced verdict)', 'V-three': 'Groups A+C, B, GRACE-FO equal' };
   for (const [k, c] of Object.entries(S.counts)) L.push(`| ${LABEL[k]} | ${c.strongDragInside} | ${c.of18} |`);
-  L.push('', S.flips.length ? `Cells that flip between pooled and reduced: ${S.flips.map((f) => `${leadLabel(f.h)} ${f.axis}, ${num(f.all)} to ${num(f.one)}`).join('; ')}.` : 'No cell flips between pooled and reduced.', '',
+  L.push('', S.flips.length ? `Cells that flip between pooled and reduced: ${S.flips.map((f) => `${leadLabel(f.h)} ${f.axis}, ${num(f.all)} to ${num(f.one)} (Swarm ${num(f.swarm)}, GRACE-FO ${num(f.grace)})`).join('; ')}. ${opposite} of ${S.flips.length} lie where the two groups are on opposite sides of the band: a weighted median between them lands inside without either group being calibrated.` : 'No cell flips between pooled and reduced.', '',
     '| Lead | Axis | All >2 | Swarm >2 | GRACE-FO >2 | Reduced >2 | Reduced interval | Reading | All >3 | Swarm >3 | GRACE-FO >3 | Reduced >3 | Reduced interval | Reading |', '|---|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|---|---|');
   const pick = (name, q) => S.readings[name].find((c) => c.h === q.h && c.stat === q.stat);
   for (const q of S.readings['V-all'].filter((c) => c.stat !== 'D')) { const iv = S.vOneIntervals.find((x) => x.h === q.h && x.stat === q.stat), row = (i) => `${pct(q.tails[i].share)} | ${pct(pick('V-swarm', q).tails[i].share)} | ${pct(pick('V-grace', q).tails[i].share)} | ${pct(pick('V-one', q).tails[i].share)} | ${pr(iv.shares[i])} | ${iv.decisions[i]}`; L.push(`| ${leadLabel(q.h)} | ${q.stat} | ${row(0)} | ${row(1)} |`); }
