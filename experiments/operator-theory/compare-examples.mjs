@@ -56,7 +56,8 @@ if (args.check) {
     // AP and whiteroom XP flown again on REFLIGHT_BUILD (their tracks byte for byte the flights cells.json's build made, COMPARE.md), with the $OCM AP flew
     // beside the example; every other arm on cells.json's build.
     for (const arm of new Set(['AP', ...arms])) {
-      const got = d.build?.[arm]?.join(' '), w = FLOWN_AGAIN(d) && (arm === 'AP' || arm === 'XP') ? again : [...(want[arm] ?? [])][0];
+      // The withheld highly elliptical (TESS) examples, not flown again, keep the build they flew: AP's measured build in cells.json's provenance.
+      const got = d.build?.[arm]?.join(' '), w = arm === 'AP' || arm === 'XP' ? (FLOWN_AGAIN(d) ? again : cells.provenance.AP.measuredOn) : [...(want[arm] ?? [])][0];
       if (!got || got !== w) fails.push(`${e.id} ${arm}: ${got ?? 'no build named'}, not ${w ?? 'none'}`);
       for (const k of d.build?.[arm] ?? []) if (JSON.stringify(d.builds?.[k]) !== JSON.stringify(recordOf(k))) fails.push(`${e.id} ${k}: its record is not ${k === again ? 'the build flown again' : "cells.json's"}`);
     }
