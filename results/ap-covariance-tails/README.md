@@ -188,6 +188,26 @@ Cells that flip between pooled and reduced: day 1 C, 0.781 to 0.706 (Swarm 0.884
 
 GRACE-FO's held-out windows start 2025-10-04, Swarm's 2025-08-21: the common-span rows above separate season from satellite. The same storm reaches all five satellites, so groups are less independent than their count suggests.
 
+### Concentration of the >3 sigma samples in one group-week
+
+| Regime | Lead | Axis | Hits | Largest share from one group-week | Group, week starting |
+|---|---|---|---:|---:|---|
+| Strong drag, 2025 | day 1 | R | 5 | 60.00 % | Swarm A+C, 2025-11-06 |
+| Strong drag, 2025 | day 1 | I | 19 | 21.10 % | GRACE-FO, 2025-11-06 |
+| Strong drag, 2025 | day 1 | C | 6 | 50.00 % | Swarm A+C, 2025-08-21 |
+| Strong drag, 2025 | day 3 | R | 42 | 23.80 % | Swarm A+C, 2025-11-06 |
+| Strong drag, 2025 | day 3 | I | 20 | 25.00 % | Swarm A+C, 2025-11-06 |
+| Strong drag, 2025 | day 3 | C | 1 | 100.00 % | Swarm A+C, 2025-11-20 |
+| Strong drag, 2025 | day 7 (167 h) | R | 44 | 11.40 % | Swarm B, 2025-08-21 |
+| Strong drag, 2025 | day 7 (167 h) | I | 18 | 11.10 % | GRACE-FO, 2025-11-06 |
+| Near 700 km, 2026 | day 1 | R | 1 | 100.00 % | Sentinel-1, 2026-04-16 |
+| Near 700 km, 2026 | day 1 | I | 2 | 100.00 % | Sentinel-1, 2026-03-26 |
+| Near 700 km, 2026 | day 1 | C | 7 | 42.90 % | Sentinel-1, 2026-04-23 |
+| Near 700 km, 2026 | day 3 | R | 1 | 100.00 % | Sentinel-1, 2026-04-16 |
+| Near 700 km, 2026 | day 3 | I | 3 | 66.70 % | Sentinel-1, 2026-04-23 |
+| Near 700 km, 2026 | day 3 | C | 5 | 100.00 % | Sentinel-1, 2026-04-23 |
+| Near 700 km, 2026 | day 7 (167 h) | I | 8 | 50.00 % | Sentinel-1, 2026-03-26 |
+
 ## Per satellite
 
 | Satellite | Lead | Axis | n | n_eff | Median \|z\| | Inside band | >2 sigma | B-hier | >3 sigma | B-hier | k2 | k3 |
@@ -416,6 +436,8 @@ A0's 18 medians equal the refit's table: yes; inside the band 8 of 18. Between A
 | Near 700 km, 2026 | day 7 (167 h) | R | 249 | 249 | 0.852 | 0.852 | 6.43 % | 6.43 % | 0.00 % | 0.00 % |
 | Near 700 km, 2026 | day 7 (167 h) | I | 249 | 249 | 0.674 | 0.674 | 10.44 % | 10.44 % | 3.21 % | 3.21 % |
 | Near 700 km, 2026 | day 7 (167 h) | C | 249 | 249 | 0.380 | 0.380 | 3.61 % | 3.61 % | 0.00 % | 0.00 % |
+
+A0's Sum z^2 (diagonal, not Mahalanobis): Strong drag, 2025 day 1: mean / 3 1.13, beyond 7.815 8.30 %; Strong drag, 2025 day 3: mean / 3 1.47, beyond 7.815 13.03 %; Strong drag, 2025 day 7 (167 h): mean / 3 1.56, beyond 7.815 16.02 %; Near 700 km, 2026 day 1: mean / 3 0.980, beyond 7.815 9.31 %; Near 700 km, 2026 day 3: mean / 3 0.953, beyond 7.815 6.07 %; Near 700 km, 2026 day 7 (167 h): mean / 3 1.10, beyond 7.815 8.03 %.
 
 Rows read: A1 1246, A0 1246; hold-outs 0; in the guard 100. Not opened: `covariance-model/{p26,s1q4,dols}`.
 

@@ -470,7 +470,11 @@ function writeOut(outDir, t) {
   L.push('', '| Lead | Mahalanobis >5 % quantile: all | Swarm | GRACE-FO | Reduced | >0.27 % quantile: all | Swarm | GRACE-FO | Reduced |', '|---|---:|---:|---:|---:|---:|---:|---:|---:|');
   for (const q of S.readings['V-all'].filter((c) => c.stat === 'D')) L.push(`| ${leadLabel(q.h)} | ${pct(q.tails[0].share)} | ${pct(pick('V-swarm', q).tails[0].share)} | ${pct(pick('V-grace', q).tails[0].share)} | ${pct(pick('V-one', q).tails[0].share)} | ${pct(q.tails[2].share)} | ${pct(pick('V-swarm', q).tails[2].share)} | ${pct(pick('V-grace', q).tails[2].share)} | ${pct(pick('V-one', q).tails[2].share)} |`);
   L.push('', 'GRACE-FO\'s held-out windows start 2025-10-04, Swarm\'s 2025-08-21: the common-span rows above separate season from satellite. The same storm reaches all five satellites, so groups are less independent than their count suggests.', '',
-    '## Per satellite', '',
+    '### Concentration of the >3 sigma samples in one group-week', '',
+    '| Regime | Lead | Axis | Hits | Largest share from one group-week | Group, week starting |', '|---|---|---|---:|---:|---|');
+  const weekOf = (regime, key) => { const [g, w] = key.split('|'); return `${g}, ${new Date(Date.parse(`${BLOCKS[regime].heldOut[0]}T00:00:00Z`) + Number(w) * 7 * DAY).toISOString().slice(0, 10)}`; };
+  for (const c of axisV.filter((q) => q.tails[1].count)) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${c.stat} | ${c.tails[1].count} | ${pct(c.tails[1].concentration.share)} | ${weekOf(c.regime, c.tails[1].concentration.cluster)} |`);
+  L.push('', '## Per satellite', '',
     '| Satellite | Lead | Axis | n | n_eff | Median \\|z\\| | Inside band | >2 sigma | B-hier | >3 sigma | B-hier | k2 | k3 |', '|---|---|---|---:|---:|---:|---|---:|---|---:|---|---:|---:|');
   for (const c of t.satellites.filter((q) => q.stat !== 'D')) L.push(`| ${c.name} | ${leadLabel(c.h)} | ${c.stat} | ${c.n} | ${ni(c.neffMedian)} | ${num(c.median)} | ${c.inBand ? 'yes' : 'no'} | ${pct(c.tails[0].share)} | ${pr(c.bHier.shares[0])} | ${pct(c.tails[1].share)} | ${pr(c.bHier.shares[1])} | ${num(c.k2)} | ${num(c.k3)} |`);
   L.push('', 'One satellite\'s interval is over its own weeks only.', '', '| Satellite | Lead | n | Mean d2/3 | >7.815 | >14.156 |', '|---|---|---:|---:|---:|---:|');
@@ -496,6 +500,7 @@ function writeOut(outDir, t) {
     `A0's 18 medians equal the refit's table: ${t.checks.refitMismatch.length ? `NO (${t.checks.refitMismatch.join(', ')})` : 'yes'}; inside the band ${t.checks.a0Inside} of 18. Between A0 and the 0.6.1 flights over all 48 axis-lead cells: largest difference in median ${num(maxd('medianA0', 'medianA1'))}, in the 2-sigma share ${pct(maxd('share2A0', 'share2A1'))}, in the 3-sigma share ${pct(maxd('share3A0', 'share3A1'))}. Window-arm-lead keys only in A0: ${t.checks.onlyA0}; only in A1: ${t.checks.onlyA1}.`, '',
     '| Regime | Lead | Axis | n A0 | n A1 | Median A0 | Median A1 | >2 A0 | >2 A1 | >3 A0 | >3 A1 |', '|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|');
   for (const c of t.control.cells.filter((q) => VERDICT.includes(q.h))) L.push(`| ${REGIME[c.regime]} | ${leadLabel(c.h)} | ${c.axis} | ${c.nA0} | ${c.nA1} | ${num(c.medianA0)} | ${num(c.medianA1)} | ${pct(c.share2A0)} | ${pct(c.share2A1)} | ${pct(c.share3A0)} | ${pct(c.share3A1)} |`);
+  L.push('', 'A0\'s Sum z^2 (diagonal, not Mahalanobis): ' + t.control.diagonal.map((c) => `${REGIME[c.regime]} ${leadLabel(c.h)}: mean / 3 ${num(c.meanSumZ2Over3)}, beyond 7.815 ${pct(c.shareBeyond7815)}`).join('; ') + '.');
   L.push('', `Rows read: A1 ${t.checks.a1.rows}, A0 ${t.checks.a0.rows}; hold-outs ${t.checks.a1.held + t.checks.a0.held}; in the guard ${t.checks.a1.guard + t.checks.a0.guard}. Not opened: \`covariance-model/{p26,s1q4,dols}\`.`, '',
     '## What these rows cannot support', '',
     '- A burn-censored strong-drag reading: no maneuver record is held.', '- More than a coarse between-group interval: 3 groups strong drag, 1 near 700 km.', '- Any claim beyond these two regimes, or about a shape of the covariance in another.', '- A statement that 0.6.3 or 0.6.4 behave the same: only 0.6.1 was flown on these windows.', '');
