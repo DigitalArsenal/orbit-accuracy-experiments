@@ -212,3 +212,30 @@ Storage: about 0.77 GB a day, about 66 GB more to 2027-02-01. The 25 GiB floor s
 before then.
 
 Same day: the floor now pauses a running cycle as it already paused one about to start, as this plan's "free-disk floor 25 GiB" and A4's "pauses the collector" say. The 15:53Z cycle of 2026-11-07 was lost after 115 of 11,202 files to a short dip. A restart also schedules from the cycle's slot rather than its late start. Neither changes what a cycle records.
+
+## Amendment A6 — one fitted AP $OCM per object per cycle (2026-11-07, during capture)
+
+Owner, 2026-11-07: "The captures are supposed to be creating $OCMs not keeping the ephemeris around forever". The fit is additive. No endpoint, threshold, window,
+estimator, hypothesis or `config.json` value changes, and no E13b estimator reads a fit. The decision does not respond to any outcome: no hypothesis has been scored. Sidecars and
+`.json.gz` records stay as they are; stopping them is a separate decision.
+
+After a cycle's capture has ended, the same single worker, under the same 50% CPU duty limit, runs `propagator/sdn-ap` `fit` on each file's 16 h, 600 s states (the sidecar's states, the
+frames module's output): AP at tesseral 31, zonal 20, NRLMSISE-00 on daily rows. No prior is carried and no arc is stitched. The records go, one per file, into one stream per cycle,
+`cycles/<id>/ap-fits.ocm.gz`: gzip over `[u32 little-endian length][$OCM]` frames. A record holds its elements, its covariance and credit, and no states; the fit's `$ODR` is not stored.
+Its in-track covariance is too small by about 4 to 8 times: it carries `Uncalibrated`, and no realism label is published. Its PROVENANCE names SpaceX as ORIGINATOR, and LINEAGE names the
+source file and the weather. SOURCE_URL, SOURCE_VERSION, RETRIEVED_AT, SOURCE_SHA256 and SOURCE_BYTES describe the fetched range.
+
+The fit runs after the capture, not between its files, so a capture is fetched and timed as before, and no fit can touch it. A failed fit is counted (`fitFailures`) and logged in
+`failures.jsonl` with `product: fit`, and removes nothing. The fit pass stops 10 minutes before the next slot and counts what it did not run (`fitsNotRun`), so the eight-hour cadence never
+moves for it.
+
+Weather: `data-source/space-weather` 0.3.1 accepts a NOAA forecast up to 7 days old and states its age. The fit flies on that build's rows; when that build refuses, on the last good rows
+held at `_collector/fit-weather/`. The summary (`fitWeather`) and each record's LINEAGE say which, and how old. This rule is the fit's only. The registered records keep the carried
+space-weather artifact, byte for byte, with its one-day rule: per A5, a cycle whose sources that artifact refuses writes no registered record, and that cycle is missing coverage for E13b.
+A registered record is never written with stale or substituted weather. Each weather source is fetched once a cycle; both builds parse the same responses.
+
+Artifacts: `propagator/sdn-ap` 0.6.4 and `data-source/space-weather` 0.3.1, signed by the owner key and pinned by hash in `collector/fit.mjs`, sit in `fit-modules/` of a release, beside
+the carried `modules/`, whose hashes do not change.
+
+Cost, measured: 0.58 s CPU per fit on the sampled fleet with no refusal in 1,623 fits, about 7,200 CPU s a cycle with capture against 14,400 s at 50% duty, one cycle in about 4 hours;
+about 55 MB of records a cycle, under 10 MB in the stream. `experiments/operator-capture/collector/check-fit.mjs` is the E2E.

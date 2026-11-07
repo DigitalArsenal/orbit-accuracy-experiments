@@ -12,11 +12,16 @@ export async function registeredProducts({ file, physics, weatherRows, weatherSh
   return { head, derived, truth, record: weatherRows ? registeredRecord({ head, derived, truth, reg, weatherSha256 }) : null };
 }
 
-/** The sidecar: the ten-minute GCRF states of the first 16 hours (the first 49 are the registered samples' states, the rest come from the
- *  frames module) with the operator's UVW covariance at each epoch. Returns the FlatBuffer bytes. */
-export async function sidecarProducts({ file, head, derived, physics, producer }) {
+/** The ten-minute GCRF states of the first 16 hours (the first 49 are the registered samples' states, the rest come from the frames module),
+ *  with the operator's UVW covariance at each epoch on the points. The sidecar stores them and the fit flies them. */
+export async function retainedStates({ file, derived, physics }) {
   const points = retainedPoints(file);
   const states = derived.samples.map(p => ({ ms: p.ms, stateM: p.stateM }));
   for (const p of points.slice(states.length)) states.push(await physics.normalize(p));
-  return ocmSidecar({ file, head, states, points, producer });
+  return { points, states };
+}
+
+/** The sidecar's FlatBuffer bytes. */
+export function sidecarProducts({ file, head, retained, producer }) {
+  return ocmSidecar({ file, head, states: retained.states, points: retained.points, producer });
 }

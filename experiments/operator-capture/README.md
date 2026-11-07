@@ -48,6 +48,21 @@ Control and evidence under `/opt/data/sdn-archive/operator-capture/`:
   `USER_DEFINED_PARAMETERS` carry the fetched range, its SHA-256 and the hash
   that pairs the sidecar with its `json.gz` record. The `json.gz` record is the
   registered E13b product and is unchanged by the sidecar.
+* `cycles/<UTC>/ap-fits.ocm.gz`: one fitted AP `$OCM` per file (E13b amendment A6),
+  gzip over `[u32 little-endian length][$OCM]` frames; `readFitStream` in
+  `collector/fit.mjs` reads it. Elements, covariance (`Uncalibrated`) and credit,
+  no states. The name never matches `^\d+\.ocm$`, which readers of states use.
+  The summary counts `fits`, `fitsPlanned`, `fitFailures`, `fitsNotRun`, `fitBytes`,
+  `fitStreamBytes`, `fitCpuSeconds` and `fitWallSeconds`, and `fitWeather` says
+  whose rows the fits flew on.
+* `_collector/fit-weather/last-good.spw` and `last-good.json`: the fit's last good
+  rows, saved each cycle, used when `data-source/space-weather` 0.3.1 refuses.
+
+Fits run after a cycle's capture, serially, under the same CPU duty limit, and stop
+10 minutes before the next slot. `collector/fit.mjs` pins their two artifacts by
+hash. A first install names a modules checkout holding them with
+`OPERATOR_FIT_MODULES_ROOT`; a later one carries them from the release whose
+`modules/` it names.
 
 One physics worker consumes at most four prefetched heads; HTTP request starts
 are globally at least 100 ms apart, with at most four requests in flight. No automatic full
@@ -101,6 +116,7 @@ Checks, from the repository checkout (`npm ci --prefix experiments/operator-capt
 ```sh
 node experiments/operator-capture/collector/check.mjs          # the A4 E2E (live files, pinned WASM, nothing skipped) and the restart check
 node experiments/operator-capture/collector/count-cycle.mjs <cycle-id>
+OPERATOR_MODULES_ROOT=<release>/modules OPERATOR_FIT_MODULES_ROOT=<modules checkout> node experiments/operator-capture/collector/check-fit.mjs   # the A6 E2E
 ```
 
 `count-cycle.mjs` reads one NEW cycle (it started after the installed release's
