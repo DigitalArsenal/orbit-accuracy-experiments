@@ -1,0 +1,21 @@
+diff --git a/experiments/operator-theory/ap-truth.mjs b/experiments/operator-theory/ap-truth.mjs
+index c908bcd7..8630b65e 100644
+--- a/experiments/operator-theory/ap-truth.mjs
++++ b/experiments/operator-theory/ap-truth.mjs
+@@ -49,7 +49,7 @@ fs.mkdirSync(OUT, { recursive: true });
+ const outFile = path.join(OUT, `rows-${SHARD}.jsonl`);
+ const done = new Set(fs.existsSync(outFile) ? fs.readFileSync(outFile, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).key) : []);
+ const xmWindows = () => Object.entries(XM.config.groups).flatMap(([group, g]) => g.objects.flatMap((o) => XM.daysOf(XM.config.period.from, XM.config.period.to).map((t) => ({ group, o, cutoffMs: t, date: XM.dateOf(t), key: `${group}|${o.norad}|${XM.dateOf(t)}` }))));
+-const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key));
++const list = (ON_XM ? xmWindows() : Object.keys(config.spans).flatMap((s) => windows(s))).filter((w) => w.date >= FROM && w.date <= TO && inShard(w.key) && !done.has(w.key) && (/GRACE/.test(w.o.name) || Math.round(w.cutoffMs / 86400000) % 5 === 0));
+ for (const w of list) {
+   const { o, cutoffMs: D0, key } = w;
+   const row = { key, group: w.group, norad: o.norad, name: o.name, cutoff: iso(D0), arms: {} };
+@@ -81,6 +81,7 @@ for (const w of list) {
+         a.fitMs = Math.round(performance.now() - t1);
+         if (!f.ok) throw new Error(f.error);
+         const info = readOcm(f.ocm);
++        { const me = info.o.MEAN_ELEMENTS; fs.appendFileSync(process.env.PROBE_LOG, JSON.stringify({ key, arm: spec.name, group: w.group ?? '', name: o.name, norad: o.norad, n: me.MEAN_MOTION, e: me.ECCENTRICITY }) + '\n'); a.ok = true; row.arms[spec.name] = a; continue; }
+         a.bterm = info.bterm; a.agom = info.agom; a.rms = info.fitRmsKm; bterm[spec.name] = info.bterm;
+         const st = await A.propagate(f.ocm, epochs, epochs.length);
+         a.days = score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth));

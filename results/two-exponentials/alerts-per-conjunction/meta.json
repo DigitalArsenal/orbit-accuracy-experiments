@@ -1,0 +1,100 @@
+{
+  "registration_commit": "4fd82c4ffba89c148323e34d380d1b51a7314497",
+  "registration_blob": "1008afb629f4f2022960628aed20d9183912f5c1",
+  "registration_time": "2026-11-06T22:08:14-05:00",
+  "amendments": [
+    "cc9d18cb7a8d6a12d8615985992900a5c17763c8 2026-11-06T22:16:50-05:00",
+    "9827e2686e8d9e899fdefdfd319295f0632a48e3 2026-11-06T22:20:44-05:00"
+  ],
+  "sizing_commit": "9827e2686e8d9e899fdefdfd319295f0632a48e3",
+  "sizing_time": "2026-11-06T22:20:44-05:00",
+  "node": "v25.4.0",
+  "runner_sha256": "fdcf13f405f36092915f087afd2ba98490c5646b85e601d49e1b6472f4dacb1e",
+  "screen": {
+    "plugin": "analysis/conjunction-assessment",
+    "version": "0.18.4",
+    "wasm_sha256": "fe7533e9168c65f31b5d98ea90bafb76024a5e035df5c7f34d252da44718bfec",
+    "root": "space-data-network-modules-ca",
+    "snapshot_sha256": "b63176497acc503080a5243980319e577f3387de6b318426a1766ff6359aa1c1",
+    "coarseStepSec": 60,
+    "horizonDays": 7
+  },
+  "b2": {
+    "digest": "ef114fe59487d57ffc7c92be81fe22d01f443c564e3fce362897837ebb8f4eb7",
+    "events": 1069553,
+    "ladder_1_8_s1": 16091
+  },
+  "t0_digest": "ef114fe59487d57ffc7c92be81fe22d01f443c564e3fce362897837ebb8f4eb7",
+  "geometry": {
+    "t0": {
+      "n": 1069553,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 22,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t1-s1": {
+      "n": 800052,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 6,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t1-s2": {
+      "n": 783141,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 4,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t1-s3": {
+      "n": 826559,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 8,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t2-s1": {
+      "n": 213459,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 0,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t2-s2": {
+      "n": 219614,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 0,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t2-s3": {
+      "n": 221228,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 0,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t3-s1": {
+      "n": 71393,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 0,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t3-s2": {
+      "n": 78359,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 0,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    },
+    "t3-s3": {
+      "n": 79837,
+      "offMissOver1m": 0,
+      "offPlaneOver1pct": 0,
+      "zeroSpeed": 0,
+      "noRegime": 0
+    }
+  }
+}

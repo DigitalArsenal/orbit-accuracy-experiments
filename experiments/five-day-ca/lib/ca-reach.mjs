@@ -3,12 +3,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createRequire} from 'node:module';
 import {pathToFileURL} from 'node:url';
-import {config,hash} from '../guard.mjs';
+import {modules} from '../guard.mjs';
+import {registeredWasm} from './covariance-modules.mjs';
 export const wasmSha256='0cc09d7b1399b5037392004327b40c70f76d3150ddfcd303636039a77d936a6a';
+/** analysis/conjunction-assessment as registered: the newest modules commit that writes those bytes (the working tree has moved past them). */
+const CA_COMMIT='d8b8fbf47149df5f026f96e0f715b276705a3f3f';
 export async function openPc(){
- const dir=path.join(config.modulesRoot,'analysis/conjunction-assessment'),req=createRequire(path.join(dir,'package.json'));
- const bytes=fs.readFileSync(path.join(dir,'dist/isomorphic/module.wasm'));
- if(hash(bytes)!==wasmSha256)throw Error('conjunction-assessment artifact changed');
+ const dir=path.join(modules(),'analysis/conjunction-assessment'),req=createRequire(path.join(dir,'package.json'));
+ const bytes=registeredWasm('analysis/conjunction-assessment',CA_COMMIT,wasmSha256);
  const {createBrowserModuleHarness}=await import(pathToFileURL(req.resolve('space-data-module-sdk/testing')).href);
  const fb=await import(pathToFileURL(req.resolve('flatbuffers')).href);
  const C=await import(pathToFileURL(req.resolve('spacedatastandards.org/lib/js/CQR/main.js')).href);

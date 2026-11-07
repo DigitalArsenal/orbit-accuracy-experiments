@@ -8,7 +8,65 @@ What it means: in low orbit AP's gain is largest early. Against AP 0.3.0, 0.4.0 
 
 What it does not mean: every fit reads precise products, which are not real-time, so this says nothing about a service fed by anything else. The strong-drag pool is 83 % Swarm. The windows were read for AP 0.3.0 and for other arms before 0.4.0, though never for 0.4.0. Near 700 km its 72 h fit still fails its registered statement, on the 95th percentile. In the storm cut, day 7 is about 17 km for every arm in it.
 
-Everything below `## AP 0.4.11
+Everything below `## AP 0.4.0` is AP 0.3.0's record: build 783133149a, wasm 0b021c575466.
+
+## AP 0.4.18
+
+`experiments/operator-theory/AP9.md`, registered at eb43ba6 before any fit of this build on these data and before any fit of any build on the 150 new altimetry windows: modules 501508b98785, wasm 225bf936f2ad. The build adds one rule to 0.4.17: after a 72-hour fit between 800 and 1,400 km, refit with 0.4.11's band-median drag prior when the fitted drag term is wide (log posterior sigma above 0.5), or sits more than three sigma off the band median while the fit RMS is 25 % over the band's, or the two fitted states lie more than two revolutions apart, or an along-track velocity step of 0.002 m/s or more is found. Three arms: 0.4.18 (`b0418`), 0.4.17 (`b0417`) and 0.4.11 (`b0411`, the gate). Tables: `table-t-0418.md`, `table-t2-0418.md`, `table-l-0418.md`, `table-r-0418.md`, `table-s-0418.md` against 0.4.11; the same names with `-vs-0417` against 0.4.17, report only; the same as JSON beside them.
+
+| Statement | Result |
+|---|---|
+| 1. Part T, `APRa12` and `AP24` do not lose to 0.4.11, days 1, 2, 3, 7 | PASS: identical, 0.0 % [0.0, 0.0] at every day |
+| 2. `AP72` in `S1` and `GN` does not lose, days 1, 2, 3, 7 | PASS: identical in both, 0.0 % [0.0, 0.0]; `GN` 95th upper at most +2.5 % |
+| 3. Part L, `low` at 48 h fits (24 h, 72 h) and `navigation` at 72 h fits (72 h, 168 h) do not lose | PASS: 0.000 km [0.000, 0.000] everywhere |
+| 4a. `DO` on the new windows, `AP72` beats 0.4.11: rule 1 at days 1 and 3, rules 2 and 3 at days 1, 2, 3, 7 | **fail**: the median paired change is 0.0 % [0.0, 0.0] at every day, so rule 1 holds at neither day; the 95th upper is +7.2 %, +15.0 %, +10.8 % and +1.7 % at days 1, 2, 3 and 7, over rule 2's +10 % at days 2 and 3. The weaker "does not lose" reading fails on the same two days |
+| 4b. `DO`, `AP72` beats 0.4.17, report only | fail: median change 0.0 %; 95th upper +183 % at day 1 and +68.8 % at day 2, where the fall-back returns a window to 0.4.11's answer and gives up 0.4.17's |
+| 5. `LS` and `GD` do not lose to 0.4.11, days 1, 2, 3, 7 | PASS: both identical, 0.0 % [0.0, 0.0]. Against 0.4.17, report only: `GD` PASS, `LS` fail (95th upper +57 % to +123 %: the fall-back fires on laser spheres in the band and reverts them to 0.4.11) |
+| 6. `DO`, `AP72` beats `XP72` at 0.4.18, report either way | fail on the tail rule; medians 0.036 against 0.572 km at day 1 and 1.59 against 2.75 km at day 7 |
+| Part S, Starlink, report only | identical to 0.4.11 and 0.4.17 at every lead |
+
+Altimetry (`DO`), 148 of the 150 new windows (two had no lead bin), median km, 95th in brackets:
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP72 0.4.18 | 0.036 (0.68) | 0.086 (1.99) | 0.179 (4.34) | 1.591 (17.2) |
+| AP72 0.4.17 | 0.032 (0.68) | 0.074 (1.99) | 0.144 (4.34) | 1.096 (17.3) |
+| AP72 0.4.11 | 0.070 (0.68) | 0.211 (1.99) | 0.389 (4.34) | 2.050 (17.2) |
+| XP72 0.4.18 | 0.572 (1.01) | 0.685 (1.82) | 0.871 (4.25) | 2.750 (18.5) |
+
+By satellite the rule is a class switch, as the 0.4.18 landing read it: every Sentinel-3A, Sentinel-3B, SARAL, CryoSat-2, Sentinel-6 Michael Freilich and Sentinel-6B window falls back and equals 0.4.11 to the metre; no SWOT, Haiyang-2C, Haiyang-2D or Jason-3 window falls back, and those equal 0.4.17 (Haiyang-2C day 3: 0.055 km against 0.517 at 0.4.11). The pooled median halves, the paired median change is zero, and the windows that move the tail move it the wrong way. Statement 4a fails, so under AP9.md the site stays at 0.4.11.
+
+Run note: the first `do9` run of `cycle-ap9.sh` excluded all 150 windows ("no RSGA issued in the 72 h before the cutoff") at all three builds: `all-regimes.mjs` takes its weather configuration from `xp2-fit-design/common.mjs`, which pins the as-issued RSGA directory to the XP2 store's normalized set, and that set ends 2025-12-31. The directory list was extended with the archive's NOAA warehouse copy of the 2026 reports (the same files, fetched 2026-10-09, the same parser) in commit cc04c9f, the failed rows were set aside under `do9-apxp/failed-20261104T0241Z/`, and the three runs were repeated before any verdict was read. No fit had run, so nothing was read twice. The 2025 parts are untouched by the change.
+
+## AP 0.4.17
+
+`experiments/operator-theory/AP8.md`, registered at 81d18ff before any fit of this build on these data: modules 3ae1eb289d, wasm 7d4920ee23f4, the same forces, weather and priors as 0.4.11. Each statement is this build against the same arm of 0.4.11, by pair, with AP7.md's rules. Tables: `table-t-0417.md`, `table-t2-0417.md`, `table-l-0417.md`, `table-s-0417.md`, `table-r-0417.md`, the same as JSON beside them.
+
+| Statement | Result |
+|---|---|
+| 1. Part T, `APRa12` and `AP24` do not lose, days 1, 2, 3, 7 | PASS: identical, 0.0 % [0.0, 0.0] at every day |
+| 2. `AP72` in `S1` and `GN` does not lose, days 1, 2, 3, 7 | PASS: identical in `S1`; in `GN` 0.0 % [0.0, 0.0], 95th upper at most +2.5 % |
+| 3. Part L, `low`, 48 h fits, does not lose at 24 h and 72 h | PASS: 0.000 km [0.000, 0.000] at both |
+| 3. Part L, `navigation`, 72 h fits, does not lose at 72 h and 168 h | PASS: 0.000 km [0.000, 0.000] at both. Fix to match the registered text, made after the verdict was read: `ap8-verdict.mjs` tested "beats" (bound 0), carried over from AP7, while AP8.md statement 3 says "do not lose"; the bound is now `NOLOSS_KM` (0.005 km) and the label matches. The run printed `fail` before the fix. The outcome does not change: statement 4 still fails |
+| 4. `DO`, `AP72` beats 0.4.11: rule 1 at days 1 and 3, rules 2 and 3 at days 1, 2, 3, 7 | **fail**: day 1 -0.9 % [-41.0, -0.2] passes rule 1; day 3 0.0 % [-0.9, 0.0] does not; 95th upper +13.1 % at day 2 and +12.6 % at day 7, over rule 2's bound |
+| 5. `LS` and `GD` do not lose, days 1, 2, 3, 7 | PASS: both 0.0 % [0.0, 0.0]; `LS` 95th upper at most -10.1 % |
+| 6. `DO`, `AP72` beats `XP72` at 0.4.17, report either way | fail: -93.8 % [-94.5, -92.2] at day 1, -74.0 % at day 3, but 95th upper +11.7 % at day 2 |
+
+Altimetry (`DO`), median km, 95th in brackets, 138 windows:
+
+| Arm | Day 1 | Day 2 | Day 3 | Day 7 |
+|---|---:|---:|---:|---:|
+| AP72 0.4.17 | 0.034 (2.54) | 0.094 (4.96) | 0.248 (7.48) | 1.335 (28.9) |
+| AP72 0.4.11 | 0.078 (2.55) | 0.223 (4.98) | 0.502 (7.48) | 2.263 (28.1) |
+| XP72 0.4.17 | 0.586 (2.56) | 0.702 (5.08) | 0.960 (7.48) | 3.597 (30.1) |
+
+So 0.4.17 gives the same answer as 0.4.11 everywhere except where its changes reach: in `DO` the pooled median halves, but the median paired change is near zero, most windows are unchanged, and some got worse by more than rule 2 allows. Statement 4 fails, so under AP8.md the site stays at 0.4.11. Report only: `HX` is 8 % to 14 % closer at days 2 and 3, `IG`, `GE` and `HE` are unchanged, and Starlink is identical to 0.4.11 at every lead.
+
+Run note: the first `regimes` run of `cycle-ap8.sh` started none of its default group's eight workers (an empty array under `set -u` in bash 3.2). The script was fixed in the same commit as these tables, with no change to arm, window or rule, and the group was rerun before Part R's verdict was read; Parts T, N, L and S had been read by then.
+
+Note on Sentinel-6B in `DO` (read only, no rerun; `b0417` and `b0411` `regimes-apxp` rows): the tail errors of 211 to 973 km come from burns in the truth, not from a bad product, a wrong satellite or a frame or unit problem. The truth is Data E's CNES DORIS orbit files `ssas6b30.b25327.e25331` to `ssas6b30.b25359.e26004` (NORAD 66514, launched 2025-11-17; the first file starts 2025-11-23, so the windows of 2025-10-10 to 2025-11-24 have no truth and fail on coverage or have no product, 10 of the 15). The truth's mean semi-major axis, from its own states, steps from 7694.6 km to 7702.1 km on 2025-12-05 (06 to 12 UTC), to 7712.4 km on 2025-12-09 (06 to 12 UTC), and then by about 1 km each near 2025-12-12 and 2025-12-16, reaching 7714.4 km: orbit raising of 19.8 km over the days, which no force model of the fit input can forecast. Every large error sits after one of those steps: 2025-12-04 cutoff, 211 km at day 2 and 973 km at day 3 (the 2025-11-29 cutoff reads the same 211 km at day 7, the same instant); 2025-12-09 cutoff, 346 km at day 1 and 1423 km at day 2 (the step falls in the first day of flight); 2025-12-14 cutoff, 65 km at day 3. The fits are sound (fit RMS 12 m, and XP errs the same 211 and 346 km at the same days); both versions carry the same tail. Not removed here, since AP8.md registered the windows as they are; a rerun that drops Sentinel-6B after 2025-12-04 would be a new registration.
+
+## AP 0.4.11
 
 `experiments/operator-theory/AP7.md`, registered at fb80f20 before any fit of this build on these data: modules a0f33bc545, wasm e4edacb03daf, the same forces, weather and priors as AP 0.4.0. Each statement is this build against the same arm of 0.4.0, by pair. A statement that it does not lose needs the upper bound of the median's interval below +2 %, or below 0.005 km on Part L. Tables: `table-t-0411.md`, `table-t2-0411.md`, `table-l-0411.md`, `table-s-0411.md`, the same as JSON beside them.
 
@@ -48,8 +106,6 @@ On CHEAPER.md's 54 days, against each center's next prediction, not independent 
 | Laser-ranging, navigation, 72 h fits, beats 0.4.0 at 72 h and 168 h | PASS: -0.007 km [-0.008, -0.006], -0.011 km [-0.018, -0.003] |
 
 So 0.4.11 is closer in medium Earth orbit, where a rounding of 1e-4 degrees in the set had been about 45 m, and level everywhere drag sets the error. Near 700 km against the public set, report only, it fails the 95th-percentile rule at days 1 and 2 as 0.4.0 did. On Starlink, report only, it is level with 0.4.0 at every lead (0.000 km [0.000, 0.000] at 24 h), and against XP -0.448 km [-0.581, -0.319] at 24 h and -1.002 km [-1.510, +0.197] at 48 h: the 48 h interval now crosses zero, where 0.4.0's did not, on the same pairs and a different draw. Under AP7.md the site moved to 0.4.11 as a whole. AP's arm was rerun at this build wherever the site shows AP, and so was whiteroom XP, which is this module with its forces off: on one day of Part N, its 24 h fit was about 20 % closer in medium Earth orbit at 0.4.11 and its 72 h fit identical. See `compare/README.md`.
-
-## AP 0.4.0` is AP 0.3.0's record: build 783133149a, wasm 0b021c575466.
 
 ## AP 0.4.0
 

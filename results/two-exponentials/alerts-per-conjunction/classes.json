@@ -1,0 +1,29 @@
+{
+ "names": [
+  "SD-SD",
+  "DO-DO",
+  "S1-S1",
+  "S1-DO",
+  "SD-S1",
+  "SD-DO",
+  "sparse"
+ ],
+ "shape": {
+  "slowTrueShare": 0.00693,
+  "under500mShare": 0.265,
+  "ringShares0to5km": [
+   0.0636,
+   0.152,
+   0.199,
+   0.252,
+   0.333
+  ],
+  "uniformPlane": [
+   0.04,
+   0.12,
+   0.2,
+   0.28,
+   0.36
+  ]
+ }
+}

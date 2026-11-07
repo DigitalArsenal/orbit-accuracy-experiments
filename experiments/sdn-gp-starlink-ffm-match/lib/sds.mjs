@@ -6,17 +6,23 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import * as flatbuffers from 'flatbuffers';
+import { modulesRoot } from './modules.mjs';
 
 const require = createRequire(import.meta.url);
 const standards = path.dirname(require.resolve('spacedatastandards.org/package.json'));
 const load = (code) => import(pathToFileURL(path.join(standards, `lib/js/${code}/main.js`)));
 export const [OMM, OEM, RFM, TIM] = await Promise.all(['OMM', 'OEM', 'RFM', 'TIM'].map(load));
+// The $OCM a fit emits (propagator/sgp4-xp 0.2.1: MEAN_ELEMENTS, ORBIT_DETERMINATION.FIT_STATISTICS) through the bindings
+// of the SDS release that module is built with (its own install, spacedatastandards.org 1.276.0, the release that types them).
+const ocmStandards = path.dirname(createRequire(path.join(modulesRoot(), 'propagator/sgp4-xp/package.json')).resolve('spacedatastandards.org/package.json'));
+export const OCM = await import(pathToFileURL(path.join(ocmStandards, 'lib/js/OCM/main.js')));
 export { flatbuffers };
 export const sdsVersion = JSON.parse(fs.readFileSync(path.join(standards, 'package.json'), 'utf8')).version;
 
 export const TYPES = {
   OMM: { schemaName: 'OMM.fbs', fileIdentifier: '$OMM', rootTypeName: 'OMM', wireFormat: 'flatbuffer' },
   OEM: { schemaName: 'OEM.fbs', fileIdentifier: '$OEM', rootTypeName: 'OEM', wireFormat: 'flatbuffer' },
+  OCM: { schemaName: 'OCM.fbs', fileIdentifier: '$OCM', rootTypeName: 'OCM', wireFormat: 'flatbuffer' },
   ERM: { schemaName: 'ERM.fbs', fileIdentifier: '$ERM', rootTypeName: 'ERM', wireFormat: 'flatbuffer' },
 };
 export const frame = (portId, type, bytes) => ({ portId, payload: Buffer.from(bytes), typeRef: TYPES[type] });
@@ -25,6 +31,11 @@ export const json = (portId, value) => ({ portId, payload: Buffer.from(JSON.stri
 const readSizePrefixed = (cls, finder) => (bytes) => cls[finder](new flatbuffers.ByteBuffer(new Uint8Array(bytes))).unpack();
 export const readOmm = readSizePrefixed(OMM.OMM, 'getSizePrefixedRootAsOMM');
 export const readOem = readSizePrefixed(OEM.OEM, 'getSizePrefixedRootAsOEM');
+/** An $OCM, plain or size-prefixed, as its object form. */
+export function readOcm(bytes) {
+  const u = new Uint8Array(bytes), prefixed = String.fromCharCode(...u.slice(8, 12)) === '$OCM';
+  return (prefixed ? OCM.OCM.getSizePrefixedRootAsOCM(new flatbuffers.ByteBuffer(u)) : OCM.OCM.getRootAsOCM(new flatbuffers.ByteBuffer(u))).unpack();
+}
 export const blockLines = (block) => block.EPHEMERIS_DATA_LINES.map((l) => ({ epoch: l.EPOCH, r: [l.X, l.Y, l.Z], v: [l.X_DOT, l.Y_DOT, l.Z_DOT] }));
 
 const rfm = (name) => new RFM.RFMT(RFM.RFMUnion.CelestialFrameWrapper, new RFM.CelestialFrameWrapperT(RFM.CelestialFrame[name]));
@@ -75,4 +86,4 @@ export function ommBytes(o) {
   return b.asUint8Array();
 }
 export const ommFrame = (portId, bytes) => ({ portId, payload: Buffer.from(bytes), typeRef: TYPES.OMM });
-export const paramsOf = (omm) => Object.fromEntries(omm.USER_DEFINED_PARAMETERS.map((p) => [p.PARAM_NAME, p.PARAM_VALUE]));
+export const ocmFrame = (portId, bytes) => ({ portId, payload: Buffer.from(bytes), typeRef: TYPES.OCM });

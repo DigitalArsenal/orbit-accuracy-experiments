@@ -68,7 +68,28 @@ const { dclAt } = await import('./lib/dca.mjs');
 const { publicSetAt, extraction } = await import('./lib/public.mjs');
 if (extraction().missing.length) throw new Error('the public extraction is incomplete: run --prep public first');
 
-const pcfOf = (name) => S.pcfBytes({ forces: config.arms[name].forces, fit: { dragPrior: config.fit.dragPrior, srpPrior: config.fit.srpPrior } });
+/** An arm's fit $PCF from config.json's registered forces, as $PCF 1.0.7 states them: the atmosphere named (ENABLE_DRAG true
+ *  was NRLMSISE-00, else Jacchia 1970), no ENABLE_DRAG and no WEATHER_EXTENSION (the rows the fit is given reach the
+ *  record's horizon: heldThrough); a force model other than the theory's own makes an AP set. */
+function pcfOf(name) {
+  const { ENABLE_DRAG, WEATHER_EXTENSION, ...rest } = config.arms[name].forces ?? {};
+  const stock = !ENABLE_DRAG && !rest.WEATHER_SOURCE && !rest.DENSITY_CORRECTION;
+  return S.pcfBytes({ theory: stock ? config.fit.theory : 'AP', forces: { ...rest, ATMOSPHERE_MODEL: ENABLE_DRAG ? 'NRLMSISE00' : 'JACCHIA70' }, fit: { dragPrior: config.fit.dragPrior, srpPrior: config.fit.srpPrior } });
+}
+const FIT_HORIZON_DAYS = 30; // $PCF FIT.WEATHER_HORIZON_DAYS at its default: the record carries rows through its epoch's day + 30
+/** The condition's rows with a missing day filled by the row before it and the last one held, as PRD, on every later day
+ *  through `throughMs`'s day: the drivers the
+ *  registered build held past the last row (WEATHER_EXTENSION HOLD_LAST), now carried by the record. Under M the held days
+ *  lie past the last scored epoch and no flight reads them. */
+function heldThrough(rows, throughMs) {
+  const out = [];
+  for (const r of rows) {
+    for (let t = out.length ? Date.parse(`${out.at(-1).date}T00:00:00Z`) + DAY : Infinity; t < Date.parse(`${r.date}T00:00:00Z`); t += DAY) out.push({ ...out.at(-1), date: new Date(t).toISOString().slice(0, 10), held: true });
+    out.push(r);
+  }
+  for (let t = Date.parse(`${out.at(-1).date}T00:00:00Z`) + DAY; t <= throughMs; t += DAY) out.push({ ...out.at(-1), date: new Date(t).toISOString().slice(0, 10), held: true });
+  return out;
+}
 const PCF = Object.fromEntries(['X0', 'X2', 'X3'].map((a) => [a, pcfOf(a)]));
 const finite = (s) => [...s.r, ...s.v].every(Number.isFinite);
 const spacingSeconds = (lines) => {
@@ -127,20 +148,21 @@ export async function scoreWindow(m, w) {
   const O = W.rowsO(from, D0), M = W.rowsM(from, epochsMs.at(-1) + DAY);
   row.O = O.excluded ? { excluded: O.excluded } : { rsga: O.rsga, c81: O.c81, lastObserved: O.lastObserved, rows: O.rows.length, first: O.rows[0]?.date, last: O.rows.at(-1)?.date };
   row.M = { rows: M.rows.length, first: M.rows[0]?.date, last: M.rows.at(-1)?.date };
-  const spw = { O: O.excluded ? null : S.spwBytes(O.rows), M: S.spwBytes(M.rows) };
+  const horizon = D0 + (FIT_HORIZON_DAYS + 1) * DAY;
+  const spw = { O: O.excluded ? null : S.spwBytes(heldThrough(O.rows, horizon)), M: S.spwBytes(heldThrough(M.rows, horizon)) };
   const dcl = {};
   for (const c of ['O', 'M']) dcl[c] = await dclAt(m, Math.round(D0 + config.conditions[c].dclIssueOffsetHours * HOUR));
   row.dca = { O: dclInfo(dcl.O), M: dclInfo(dcl.M) };
 
-  /** An X arm: fit on the block, then the set propagated with the same $PCF and inputs and scored. */
+  /** An X arm: fit on the block (the rows and the $DCL go to the fit), then the fitted $OCM alone propagated and scored. */
   const arm = async (arc, oem, name, extra) => {
     const f = await m.fit(oem, PCF[name], extra);
     timing.fitMs[`${arc}|${name}|${extra?.rows === spw.O ? 'O' : extra ? 'M' : '-'}`] = f.fitMs;
     if (!f.ok) return { ok: false, error: f.error };
-    const info = S.readFitOmm(f.omm), obd = S.readObd(f.obd);
-    const fit = { epoch: info.epoch, bterm: info.bterm, agom: info.agom, fitRmsKm: info.fitRmsKm, iterations: info.iterations, states: info.states, wrmsKm: obd.wrmsKm, sigmaLnB: obd.sigmaLnB, priorLimited: obd.priorLimited };
+    const info = S.readFitOcm(f.ocm);
+    const fit = { epoch: info.epoch, bterm: info.bterm, agom: info.agom, fitRmsKm: info.fitRmsKm, iterations: info.iterations, states: info.states, sigmaLnB: info.sigmaLnB };
     let lines;
-    try { lines = await m.propagate(f.omm, S.gridBytes(epochs), PCF[name], extra, epochs.length); } catch (error) { return { ok: false, error: short(error), fit }; }
+    try { lines = await m.propagate(f.ocm, epochs, epochs.length); } catch (error) { return { ok: false, error: short(error), fit }; }
     if (!lines.every(finite)) return { ok: false, error: 'non-finite state', fit };
     return { ok: true, fit, temeSha256: sha256(JSON.stringify(lines.map((l) => [l.r, l.v]))), days: await score(lines) };
   };

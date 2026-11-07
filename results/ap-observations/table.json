@@ -1,0 +1,454 @@
+{
+ "experiment": "ap-observations",
+ "task": "experiments-ap-observations-laser-20261104",
+ "modulesCommit": "c2f476f6193c2355cef778a0abe081ff6e06f29d",
+ "versions": {
+  "data-source/ilrs-crd-source": "0.2.0",
+  "data-source/ilrs-station-coordinates": "0.1.0",
+  "data-source/eop-parser": "0.2.0",
+  "flows/observation-od": "0.1.1",
+  "analysis/estimation": "0.7.0",
+  "propagator/ffm": "2.1.0",
+  "propagator/sdn-ap": "0.5.1",
+  "propagator/sgp4": "1.4.1",
+  "analysis/reference-states": "0.4.0",
+  "flows/observation-ap": "0.1.0"
+ },
+ "cutoffs": 206,
+ "statistic": "per cutoff and lead day: RMS of the 3D position error (compare_to_reference against NSGF, B2 thinning and coverage); across cutoffs: median, 95th percentile (linear), n",
+ "arms": {
+  "ap": {
+   "scored": 175,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.02102643718802638,
+     "p95Km": 0.07934859094885686,
+     "n": 158
+    },
+    "2": {
+     "medianKm": 0.046722966431976126,
+     "p95Km": 0.23709372518072008,
+     "n": 157
+    },
+    "3": {
+     "medianKm": 0.09672699271170147,
+     "p95Km": 0.5415001947080648,
+     "n": 152
+    }
+   },
+   "failures": [
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-18T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-19T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-20T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-21T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-22T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-24T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-29T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "stella",
+     "cutoff": "2026-08-08T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-18T00:00:00.000Z",
+     "refused": "arc-too-short:20.70: the normal points span 20.70 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-19T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-21T00:00:00.000Z",
+     "refused": "no NSGF state at 2026-07-19T00:00:00.000000Z"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-22T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-25T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "arc-too-short:23.73: the normal points span 23.73 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-27T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-01T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-04T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-07T00:00:00.000Z",
+     "refused": "arc-too-short:23.66: the normal points span 23.66 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-13T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-15T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-17T00:00:00.000Z",
+     "refused": "arc-too-short:5.85: the normal points span 5.85 h, less than 24 h"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-22T00:00:00.000Z",
+     "refused": "arc-too-short:20.59: the normal points span 20.59 h, less than 24 h"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-07-19T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-01T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-10T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-15T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-19T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-21T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    },
+    {
+     "target": "lares",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no-convergence:20: fit_batch ended MAXIMUM_ITERATIONS after 20 propagation rounds"
+    }
+   ]
+  },
+  "apNsgf": {
+   "scored": 204,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.02337980714596971,
+     "p95Km": 0.07503572574652544,
+     "n": 181
+    },
+    "2": {
+     "medianKm": 0.05132181475463164,
+     "p95Km": 0.2280306403523637,
+     "n": 178
+    },
+    "3": {
+     "medianKm": 0.10911716675521296,
+     "p95Km": 0.468956876225987,
+     "n": 177
+    }
+   },
+   "failures": [
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-20T00:00:00.000Z",
+     "refused": "1 NSGF states in the 24 h before T"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-17T00:00:00.000Z",
+     "refused": "1 NSGF states in the 24 h before T"
+    }
+   ]
+  },
+  "ffm": {
+   "scored": 175,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.0011551560661703913,
+     "p95Km": 0.007597939377493888,
+     "n": 158
+    },
+    "2": {
+     "medianKm": 0.003041991153482808,
+     "p95Km": 0.02902102662367249,
+     "n": 157
+    },
+    "3": {
+     "medianKm": 0.005643101620869095,
+     "p95Km": 0.05211824129916687,
+     "n": 152
+    }
+   },
+   "failures": [
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-18T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-19T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-20T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-21T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-22T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-24T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "starlette",
+     "cutoff": "2026-07-29T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "stella",
+     "cutoff": "2026-08-08T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-18T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-19T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-21T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-22T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-25T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-07-27T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-01T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-04T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-07T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-13T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-15T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-17T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "westpac",
+     "cutoff": "2026-08-22T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-07-19T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-01T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-10T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-15T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-19T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "larets",
+     "cutoff": "2026-08-21T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    },
+    {
+     "target": "lares",
+     "cutoff": "2026-07-26T00:00:00.000Z",
+     "refused": "no estimate (the flow refused)"
+    }
+   ]
+  },
+  "sgp4": {
+   "scored": 206,
+   "attempted": 206,
+   "days": {
+    "1": {
+     "medianKm": 0.5774731233113719,
+     "p95Km": 0.632894514100507,
+     "n": 183
+    },
+    "2": {
+     "medianKm": 0.5904374120602868,
+     "p95Km": 0.6549830699767099,
+     "n": 180
+    },
+    "3": {
+     "medianKm": 0.6083383553076512,
+     "p95Km": 0.6761483833214232,
+     "n": 179
+    }
+   },
+   "failures": []
+  }
+ },
+ "b2MedianKm": {
+  "sdnap": [
+   0.093,
+   0.229,
+   0.444
+  ],
+  "ffm": [
+   0.008,
+   0.011,
+   0.015
+  ],
+  "sgp4": [
+   0.577,
+   0.59,
+   0.609
+  ],
+  "sdnapTruth": [
+   0.102,
+   0.249,
+   0.466
+  ]
+ }
+}

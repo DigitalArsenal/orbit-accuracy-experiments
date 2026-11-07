@@ -1,0 +1,153 @@
+{
+ "registered": "PER-REV-FLAG.md, amendment of 2026-11-06",
+ "span": {
+  "fitHours": 24,
+  "leadHours": 168
+ },
+ "draws": 10000,
+ "sets": [
+  {
+   "set": "low",
+   "label": "Low passive spheres (LARETS, WESTPAC, Starlette)",
+   "windows": 37,
+   "satellites": [
+    "LARETS",
+    "STARLETTE",
+    "WESTPAC"
+   ],
+   "flaggedReal": 37,
+   "joinTest": {
+    "joins": {
+     "units": 1209,
+     "coinciding": 22,
+     "share": 0.018,
+     "nullMedianCount": 15,
+     "p": 0.0256,
+     "reading": "inconclusive"
+    },
+    "boundaries": {
+     "units": 1209,
+     "coinciding": 23,
+     "share": 0.019,
+     "nullMedianCount": 23,
+     "p": 0.5848,
+     "reading": "does not explain the flags"
+    }
+   },
+   "control": {
+    "windows": 37,
+    "realFlagged": 37,
+    "modelFlagged": 0,
+    "realShare": 1,
+    "modelShare": 0,
+    "modelLargestMedianM": 0.009,
+    "reading": "the truth product is the cause"
+   }
+  },
+  {
+   "set": "high-spheres",
+   "label": "Laser spheres near 1,450 km (Ajisai, LARES)",
+   "windows": 24,
+   "satellites": [
+    "AJISAI",
+    "LARES"
+   ],
+   "flaggedReal": 0,
+   "joinTest": {
+    "joins": {
+     "units": 0,
+     "coinciding": 0,
+     "share": null,
+     "nullMedianCount": 0,
+     "p": 1,
+     "reading": "no flagged change"
+    },
+    "boundaries": {
+     "units": 0,
+     "coinciding": 0,
+     "share": null,
+     "nullMedianCount": 0,
+     "p": 1,
+     "reading": "no flagged change"
+    }
+   },
+   "control": {
+    "windows": 24,
+    "realFlagged": 0,
+    "modelFlagged": 0,
+    "realShare": 0,
+    "modelShare": 0,
+    "modelLargestMedianM": 0.002,
+    "reading": "no flag on the real truth to explain"
+   }
+  },
+  {
+   "set": "geodetic",
+   "label": "Laser geodetic (LAGEOS-2, Etalon-1, Etalon-2, LARES-2)",
+   "windows": 44,
+   "satellites": [
+    "ETALON 1",
+    "ETALON 2",
+    "LAGEOS 2",
+    "LARES-2"
+   ],
+   "flaggedReal": 0,
+   "joinTest": {
+    "joins": {
+     "units": 0,
+     "coinciding": 0,
+     "share": null,
+     "nullMedianCount": 0,
+     "p": 1,
+     "reading": "no flagged change"
+    },
+    "boundaries": {
+     "units": 0,
+     "coinciding": 0,
+     "share": null,
+     "nullMedianCount": 0,
+     "p": 1,
+     "reading": "no flagged change"
+    }
+   },
+   "control": {
+    "windows": 44,
+    "realFlagged": 0,
+    "modelFlagged": 0,
+    "realShare": 0,
+    "modelShare": 0,
+    "modelLargestMedianM": 0.001,
+    "reading": "no flag on the real truth to explain"
+   }
+  },
+  {
+   "set": "waas",
+   "label": "WAAS broadcast (report only, no burn verdict)",
+   "windows": 79,
+   "satellites": [
+    "EUTELSAT 117 WEST B",
+    "GALAXY 30 (G-30)",
+    "SES-15"
+   ],
+   "flaggedReal": 78,
+   "joinTest": {
+    "joins": {
+     "units": 405,
+     "coinciding": 19,
+     "share": 0.047,
+     "nullMedianCount": 17,
+     "p": 0.0503,
+     "reading": "does not explain the flags"
+    },
+    "boundaries": {
+     "units": 405,
+     "coinciding": 66,
+     "share": 0.163,
+     "nullMedianCount": 68,
+     "p": 0.8824,
+     "reading": "does not explain the flags"
+    }
+   }
+  }
+ ]
+}

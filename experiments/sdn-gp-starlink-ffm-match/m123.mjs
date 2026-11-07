@@ -24,7 +24,7 @@ const LEAD_DAYS = config.windows.leadDays;
 const FITS = [['h24', 24 * 3600], ['h21_7', Math.round(21.7 * 3600)], ['h34_2', Math.round(34.2 * 3600)]]; // A7, A7c
 const M_HOURS = 120; // A7c: the 34.2 h fit plus three held-out days
 
-// FFM force-configuration overrides (propagator/ffm PRWForceConfiguration). MAXIMUM_ORDER truncates the order of the whole
+// FFM force-configuration overrides (propagator/ffm PCFForceModel). MAXIMUM_ORDER truncates the order of the whole
 // field; MAXIMUM_TESSERAL_DEGREE drops the tesseral and sectorial terms above that degree (the zonals run to degree 70).
 const GRAVITY = {
   full: {},

@@ -1,0 +1,298 @@
+{
+ "set": "beidou",
+ "medianBreakM": 7.485894754528999,
+ "medianBreakMdeg": 1.0863342870600194,
+ "satellites": [
+  {
+   "name": "C006 BDS-2G",
+   "burns": [],
+   "hourly": {
+    "medianResidualM": 14.2,
+    "medianPlaneMdeg": 2.42,
+    "burns": [
+     {
+      "t": "2025-10-02T07:56",
+      "semimajorAxisM": 227,
+      "residualM": 203,
+      "planeMdeg": 1.8,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-03T08:56",
+      "semimajorAxisM": -560,
+      "residualM": -576,
+      "planeMdeg": 1.8,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  },
+  {
+   "name": "C011 BDS-2G",
+   "burns": [
+    {
+     "day": "2025-10-14T23:04:39.267Z",
+     "afterGap": true,
+     "semimajorAxisM": 2327,
+     "planeMdeg": 2.8
+    },
+    {
+     "day": "2025-10-15T23:00:43.357Z",
+     "afterGap": false,
+     "semimajorAxisM": -1198,
+     "planeMdeg": 1.3
+    }
+   ],
+   "hourly": {
+    "medianResidualM": 13.6,
+    "medianPlaneMdeg": 1.95,
+    "burns": [
+     {
+      "t": "2025-10-05T14:56",
+      "semimajorAxisM": 522,
+      "residualM": 601,
+      "planeMdeg": 0.7,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-08T16:56",
+      "semimajorAxisM": 354,
+      "residualM": 435,
+      "planeMdeg": 3.8,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-13T04:56",
+      "semimajorAxisM": -210,
+      "residualM": -130,
+      "planeMdeg": 3.3,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-14T08:56",
+      "semimajorAxisM": 2462,
+      "residualM": 2550,
+      "planeMdeg": 4.2,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  },
+  {
+   "name": "C016 BDS-2G",
+   "burns": [],
+   "hourly": {
+    "medianResidualM": 12.8,
+    "medianPlaneMdeg": 2.58,
+    "burns": [
+     {
+      "t": "2025-10-04T07:56",
+      "semimajorAxisM": -210,
+      "residualM": -259,
+      "planeMdeg": 0.5,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-05T08:56",
+      "semimajorAxisM": 654,
+      "residualM": 601,
+      "planeMdeg": 2,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  },
+  {
+   "name": "C018 BDS-2G",
+   "burns": [
+    {
+     "day": "2025-10-10T23:20:22.905Z",
+     "afterGap": true,
+     "semimajorAxisM": -3619,
+     "planeMdeg": 3.3
+    },
+    {
+     "day": "2025-10-11T23:16:26.995Z",
+     "afterGap": false,
+     "semimajorAxisM": 1774,
+     "planeMdeg": 1.7
+    }
+   ],
+   "hourly": {
+    "medianResidualM": 12.8,
+    "medianPlaneMdeg": 2.04,
+    "burns": [
+     {
+      "t": "2025-10-10T14:56",
+      "semimajorAxisM": -3888,
+      "residualM": -4038,
+      "planeMdeg": 6.9,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-11T15:56",
+      "semimajorAxisM": 327,
+      "residualM": 178,
+      "planeMdeg": 3.7,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  },
+  {
+   "name": "J003 QZS-2G",
+   "burns": [
+    {
+     "day": "2025-10-18T22:48:55.629Z",
+     "afterGap": true,
+     "semimajorAxisM": -3032,
+     "planeMdeg": 103.5
+    },
+    {
+     "day": "2025-10-19T22:44:59.719Z",
+     "afterGap": false,
+     "semimajorAxisM": 1029,
+     "planeMdeg": 33.3
+    }
+   ],
+   "hourly": {
+    "medianResidualM": 14.9,
+    "medianPlaneMdeg": 2.84,
+    "burns": [
+     {
+      "t": "2025-10-16T14:56",
+      "semimajorAxisM": -175,
+      "residualM": -318,
+      "planeMdeg": 1.2,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-19T11:56",
+      "semimajorAxisM": 102,
+      "residualM": 165,
+      "planeMdeg": 0.9,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  },
+  {
+   "name": "C217 BDS-3G",
+   "burns": [],
+   "hourly": {
+    "medianResidualM": 12.7,
+    "medianPlaneMdeg": 2.58,
+    "burns": []
+   }
+  },
+  {
+   "name": "C020 BDS-2G",
+   "burns": [],
+   "hourly": {
+    "medianResidualM": 13.1,
+    "medianPlaneMdeg": 2.28,
+    "burns": []
+   }
+  },
+  {
+   "name": "C229 BDS-3G",
+   "burns": [
+    {
+     "day": "2025-10-08T23:28:14.724Z",
+     "afterGap": true,
+     "semimajorAxisM": -601,
+     "planeMdeg": 3.4
+    },
+    {
+     "day": "2025-10-09T23:24:18.814Z",
+     "afterGap": false,
+     "semimajorAxisM": 269,
+     "planeMdeg": 1.6
+    }
+   ],
+   "hourly": {
+    "medianResidualM": 12.9,
+    "medianPlaneMdeg": 1.81,
+    "burns": [
+     {
+      "t": "2025-10-08T14:56",
+      "semimajorAxisM": -1377,
+      "residualM": -1410,
+      "planeMdeg": 5.6,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-09T16:56",
+      "semimajorAxisM": 388,
+      "residualM": 361,
+      "planeMdeg": 3.7,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  },
+  {
+   "name": "C231 BDS-3G",
+   "burns": [
+    {
+     "day": "2025-10-03T23:47:54.271Z",
+     "afterGap": true,
+     "semimajorAxisM": 639,
+     "planeMdeg": 2.2
+    },
+    {
+     "day": "2025-10-04T23:43:58.362Z",
+     "afterGap": false,
+     "semimajorAxisM": -301,
+     "planeMdeg": 1.3
+    },
+    {
+     "day": "2025-10-15T23:00:43.357Z",
+     "afterGap": true,
+     "semimajorAxisM": -1408,
+     "planeMdeg": 5.4
+    },
+    {
+     "day": "2025-10-16T22:56:47.448Z",
+     "afterGap": false,
+     "semimajorAxisM": 500,
+     "planeMdeg": 1.6
+    }
+   ],
+   "hourly": {
+    "medianResidualM": 17.3,
+    "medianPlaneMdeg": 1.95,
+    "burns": [
+     {
+      "t": "2025-10-02T07:56",
+      "semimajorAxisM": 218,
+      "residualM": 144,
+      "planeMdeg": 2.6,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-03T13:56",
+      "semimajorAxisM": 860,
+      "residualM": 845,
+      "planeMdeg": 3.7,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-13T14:56",
+      "semimajorAxisM": 147,
+      "residualM": 137,
+      "planeMdeg": 2.6,
+      "by": "semimajor axis"
+     },
+     {
+      "t": "2025-10-16T08:56",
+      "semimajorAxisM": 307,
+      "residualM": 297,
+      "planeMdeg": 1.2,
+      "by": "semimajor axis"
+     }
+    ]
+   }
+  }
+ ]
+}

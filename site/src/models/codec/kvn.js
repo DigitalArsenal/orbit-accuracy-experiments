@@ -34,7 +34,7 @@ export function sdsField(schema, code, block, key) {
     const field = schema.tables[table]?.find((f) => f.name === key);
     if (field) return { path: [PARENT[table] ?? table, field.name].filter(Boolean).join('.'), doc: field.doc, type: field.type };
   }
-  if (block === 'USER') return { path: 'USER_DEFINED_PARAMETERS[].PARAM_NAME / PARAM_VALUE', doc: 'User-defined parameter.', type: 'string' };
+  if (block === 'USER') return { path: 'USER_DEFINED_PARAMETERS[].PARAM_NAME / PARAM_VALUE', doc: 'User-defined parameter: a foreign CCSDS message only; no SDN record writes one.', type: 'string' };
   return null;
 }
 

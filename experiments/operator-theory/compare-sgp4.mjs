@@ -1,11 +1,13 @@
 // COMPARE.md, report only: SGP4 on Part L's low-orbit pairs, beside AP, XP and FFM. The same stored files, fit arcs from each file's first state, reference (the first 3 h of a
 // newer file) and pair rule as score.mjs. An SGP4 set flies on SGP4 and nothing else.
-//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-sgp4.mjs --root <store with cycles> --out <rows file> [--shard k/n] [--arcs 24,48] [--regime leo|high|all]
+//   SDN_MODULES_ROOT=<modules> node experiments/operator-theory/compare-sgp4.mjs --root <store with cycles> --out <rows file> [--shard k/n] [--arcs 24,48] [--regime leo|high|all] [--arms U] [--pairs <store>]
+// --pairs: only the pairs of that store's rows (a registered set, lib/pairs.mjs), and only the files of their satellites are opened.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { isoMs } from './lib/host.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
+import { pairsOf } from './lib/pairs.mjs';
 import { openUssfXp } from './lib/ussf-xp.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
@@ -16,9 +18,11 @@ if (!ROOT || !OUT) throw new Error('--root and --out');
 const [SHARD, SHARDS] = (args.shard ?? '0/1').split('/').map(Number);
 const ARCS = (args.arcs ?? "24,48").split(",").map(Number), REGIME = args.regime ?? "leo", HOUR = 3600000, TRUTH_H = 3, MAX_LEAD_H = 180, MIN_GAP_H = 6;
 
+const PAIRS = args.pairs ? pairsOf(args.pairs) : null, NORADS = PAIRS && new Set([...PAIRS].map((k) => k.split('|')[1]));
 const cycles = fs.readdirSync(ROOT).filter((d) => /^c\d{8}T\d{4}$/.test(d) && fs.existsSync(path.join(ROOT, d, 'products'))).sort();
 const items = new Map();
 for (const c of cycles) for (const f of fs.readdirSync(path.join(ROOT, c, 'products'))) {
+  if (NORADS && !NORADS.has(/-(\d+)-\d+\.json$/.exec(f)?.[1])) continue;
   const file = path.join(ROOT, c, 'products', f);
   const p = JSON.parse(fs.readFileSync(file, 'utf8'));
   if (!p.start || !p.forecastOem || (REGIME !== 'all' && !String(p.source).endsWith(`-${REGIME}`))) continue;
@@ -49,7 +53,7 @@ async function fitsOf(ref) {
     if (tEnd - t0 < arc * HOUR) continue;
     const seg = all.filter((l) => Date.parse(l.epoch) <= t0 + arc * HOUR);
     const oem = S.oemBytes({ frame: 'GCRF', object: { name: p.object, id: '', norad: p.norad }, lines: seg, useableStart: seg[0].epoch, useableStop: seg.at(-1).epoch, originator: 'operator-theory' });
-    if (ONLY_U) { const f = await U.fit(oem); out[`U-XP@${arc}`] = f.ok ? { omm: f.omm } : { error: f.error }; continue; }
+    if (ONLY_U) { const f = await U.fit(oem); out[`U-XP@${arc}`] = f.ok ? { ocm: f.ocm } : { error: f.error }; continue; }
     try {
       const { el } = await G.fit(oem, { from: seg[0].epoch, to: isoMs(t0 + arc * HOUR), epoch: 'first', fitBstar: true }, { name: p.object, objectId: '' });
       out[`S@${arc}`] = { el };
@@ -67,7 +71,8 @@ for (const [, list] of items) {
     const older = list[i], newerRef = list[j];
     const leadHours = (Date.parse(newerRef.start) - Date.parse(older.start)) / HOUR;
     if (leadHours <= MIN_GAP_H || leadHours > MAX_LEAD_H) continue;
-    if (done.has(`${older.source}|${older.norad}|${older.start}|${newerRef.start}`)) continue;
+    const pair = `${older.source}|${older.norad}|${older.start}|${newerRef.start}`;
+    if (done.has(pair) || (PAIRS && !PAIRS.has(pair))) continue;
     const newer = JSON.parse(fs.readFileSync(newerRef.file, 'utf8'));
     const t0 = Date.parse(newer.start);
     const truth = lines(newer.forecastOem).filter((l) => Date.parse(l.epoch) <= t0 + TRUTH_H * HOUR);
@@ -76,7 +81,7 @@ for (const [, list] of items) {
     for (const [name, f] of Object.entries(await fitsOf(older))) {
       if (f.error) { row.arms[name] = { error: f.error }; continue; }
       try {
-        const flown = f.omm ? await U.propagate(f.omm, S.gridBytes(epochs), epochs.length) : await M.propagateSgp4(f.el, older.norad, epochsMs, (epochsMs[1] - epochsMs[0]) / 1000);
+        const flown = f.ocm ? await U.propagate(f.ocm, epochs, epochs.length) : await M.propagateSgp4(f.el, older.norad, epochsMs, (epochsMs[1] - epochsMs[0]) / 1000);
         if (flown.some((x) => !x)) throw new Error('SGP4 returned no state');
         const e = await M.rtn(await M.toAxes(flown, epochs, 'GCRF'), truthStates);
         const r = rmsOf(e.map((x) => x[0])), t = rmsOf(e.map((x) => x[1])), n = rmsOf(e.map((x) => x[2]));

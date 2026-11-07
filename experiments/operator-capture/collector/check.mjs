@@ -5,13 +5,16 @@
 //      (only the request time is aligned), and it keeps the contract of experiments/e13b-starlink-dca/run.mjs:34-37;
 //   2. the sidecar holds 97 ten-minute GCRF states, 21 UVW covariance values each, 16.0 hours, the values exactly as the source gives them;
 //   3. a file shorter than 16 hours gives all it holds, and a 256 KiB range cannot give a sidecar;
-//   4. a real capture cycle (runCycle, three files, scratch root) writes both products for each file and the counts-only reader reads them.
+//   4. a real capture cycle (runCycle, three files, scratch root) writes both products for each file and the counts-only reader reads them;
+//   5. the restart (experiments-operator-capture-restart-20261104): the launchd agent is loaded and runs release 532bd3d4 by its installed command,
+//      and the first cycle after its start ended without error with a record per listed file (names and counts only: no cycle file is opened).
 // Unreachable inputs fail. Nothing is skipped.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {gzipSync,gunzipSync} from 'node:zlib';
+import {execFileSync} from 'node:child_process';
 import {Fetcher,PREFIX_BYTES} from './transport.mjs';
 import {openMeme,retainedPoints,STEP,REGISTERED_BYTES,RETAINED_RECORDS} from './meme.mjs';
 import {registeredProducts,sidecarProducts} from './capture.mjs';
@@ -29,10 +32,31 @@ const active=JSON.parse(fs.readFileSync(path.join(captureRoot,'_collector','acti
 const modules=process.env.OPERATOR_MODULES_ROOT??path.join(active.release,'modules');
 const registration=JSON.parse(fs.readFileSync(path.join(active.release,'registration.json'),'utf8'));
 const producer='sdn-operator-capture check';
+const RELEASE='532bd3d4ec60f0e77bfb8d39af2fe84c0a7a06e0',LABEL='io.spacedatanetwork.operator-capture';
+function restartCheck(){
+  const agent=path.join(os.homedir(),'Library','LaunchAgents',LABEL+'.plist');
+  assert(fs.readFileSync(agent).equals(fs.readFileSync(new URL(`./launchd/${LABEL}.plist`,import.meta.url))),'the installed agent differs from the committed plist');
+  const printed=execFileSync('launchctl',['print',`gui/${process.getuid()}/${LABEL}`],{encoding:'utf8'}),pid=Number(/^\tpid = (\d+)$/m.exec(printed)?.[1]);
+  assert(/^\tstate = running$/m.test(printed)&&Number.isSafeInteger(pid),'the launchd agent is not running');
+  assert.equal(fs.readFileSync(path.join(captureRoot,'collector.pid'),'utf8').trim(),String(pid));
+  assert.equal(active.release,path.join(captureRoot,'_collector','releases',RELEASE));
+  assert.equal(execFileSync('ps',['-p',String(pid),'-o','command='],{encoding:'utf8'}).trim(),`/opt/homebrew/bin/node ${path.join(active.release,'collect.mjs')}`);
+  const start=fs.readFileSync(path.join(captureRoot,'collector.log'),'utf8').trim().split('\n').map(l=>JSON.parse(l)).filter(e=>e.pid===pid&&e.event==='start').at(-1);
+  assert(start,`no start event for PID ${pid}`);
+  const cycle=fs.readFileSync(path.join(captureRoot,'cycles.jsonl'),'utf8').trim().split('\n').map(l=>JSON.parse(l)).find(c=>Date.parse(c.startedUtc)>=Date.parse(start.at));
+  assert(cycle,'no cycle has ended since the restart');
+  assert(['complete','partial'].includes(cycle.status)&&!cycle.error,`the first cycle after the restart is ${cycle.status}: ${cycle.error}`);
+  assert.equal(cycle.registration.componentCommit,RELEASE);assert.equal(cycle.subsetMode,'fallback-all');
+  assert(cycle.files>0);assert.equal(cycle.files+cycle.failures,cycle.listed);assert.equal(cycle.sidecars+cycle.sidecarFailures,cycle.files);
+  const names=fs.readdirSync(path.join(captureRoot,'cycles',cycle.id)),count=suffix=>names.filter(n=>n.endsWith(suffix)).length;
+  assert(names.includes('summary.json'));assert.equal(count('.json.gz'),cycle.files);assert.equal(count('.ocm'),cycle.sidecars);
+  return {label:LABEL,pid,startUtc:start.at,cycle:{id:cycle.id,status:cycle.status,listed:cycle.listed,files:cycle.files,failures:cycle.failures,sidecars:cycle.sidecars,sidecarFailures:cycle.sidecarFailures,jsonGzNames:count('.json.gz'),ocmNames:count('.ocm')}};
+}
+const restart=restartCheck();
 await verifyReference(modules);                                         // the pinned orbits module on the public Basilisk case
 const physics=await openPhysics(modules),fetcher=new Fetcher(),scratch=fs.mkdtempSync(path.join(os.tmpdir(),'operator-capture-check-'));
 const reg=subsets(path.join(scratch,'no-registration'));                // fallback-all, the mode the capture runs in
-const report={files:[]};
+const report={restart,files:[]};
 try{
   const weather=await physics.weather(fetcher),manifest=await fetcher.manifest();
   const gz=record=>gzipSync(JSON.stringify(record)+'\n');

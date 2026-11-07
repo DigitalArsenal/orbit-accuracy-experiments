@@ -1,0 +1,97 @@
+{
+ "report": "/Users/tj/software/terrain-work/body-look/ffm-losses/heo/REPORT.md",
+ "losses": 27,
+ "classes": {
+  "maneuver": 0.185,
+  "weather": 0,
+  "estimator": 0,
+  "force": 0,
+  "settings": 0.074,
+  "scoring": 0.741,
+  "unexplained": 0
+ },
+ "mechanisms": [
+  {
+   "claim": "The MAST TESS definitive kernels store a state every 60 s, but only every 10th is a real orbit point. The nine between lie on the straight chord between two 10-minute nodes, so half of the 300 s fit and scoring lattice sits radially inside the orbit by GM/r^2 x 600^2 / 8: 0.94 km near perigee, 0.13 km at apogee.",
+   "evidence": "The 60 s second differences are exactly 0 at 9 of every 10 stored states and 0.76 km at each node (scripts/raw-check.mjs, file 2026229, 2026-08-09 23:00 to 23:30). The reader keeps stored nodes as they are (files/orbit-products/src/spk_read.hpp:545). The in-arc radial residual flips between -0.46 and +0.48 km at every 5-minute point (HE|TESS|2026-08-10).",
+   "strength": "shown"
+  },
+  {
+   "claim": "The chord states in the fit arc cause 14 of the 19 TESS losses. FFM's state absorbs the bias and drifts along-track. AP's registered lead in the perigee windows is partly compensating error.",
+   "evidence": "Refit both arms on the 10-minute nodes and keep the registered scoring: FFM is worse at day 1 in 2 of 7 windows instead of 6 of 7, in 5 of 28 window-leads instead of 19, and the median day-1 FFM/AP falls from 1.33 to 0.77. AP's own day-1 error rises 1.4 to 2.5 times on 08-10, 08-24 and 09-07 with clean arcs. Fixing SRP at 0.0165, or a prior of sigma 0.001 on it, leaves the loss in place (08-10, 08-24).",
+   "strength": "shown"
+  },
+  {
+   "claim": "The TESS truth carries velocity steps of about 1 cm/s at each apogee and perigee, so 6 of 7 of the 72 h arcs hold one and 08-31 has one 6 h after its cutoff. The premise that TESS does not maneuver fails for this truth.",
+   "evidence": "Detected steps: 08-02 09:50, 08-09 14:00, 08-16 15:50, 08-23 23:20, 08-31 05:50, 09-06 23:30. Arcs started after a step give FFM 0.067/0.100/0.100/0.334 km (08-17; AP 0.127/0.467/1.023/8.375) and 0.087/0.152/0.145/0.260 km (08-10). On 08-31 FFM fits the node arc to 3 m and both arms leave the truth together between 06:10 and 09:10. Calling the steps momentum unloading rests on their timing only.",
+   "strength": "shown"
+  },
+  {
+   "claim": "Stitching the newest file at each epoch is not the cause.",
+   "evidence": "One definitive file covering the arc and all 7 days reproduces the registered errors to within 0.11 km in all 7 windows.",
+   "strength": "shown"
+  },
+  {
+   "claim": "The integrator, extra third bodies, relativity and the frames are not causes. Arc conditioning is not either: longer arcs make it worse.",
+   "evidence": "Tolerance 1e-10 with 30 s steps matches base to the meter (08-10, 09-07). Adding Venus, Jupiter and IERS 2010 relativity changes the result by 4 m or less. Shadow, tides and gravity have no effect (results/ap-gap README, HE). 168 h node arcs fit at 29 to 98 m and 336 h arcs at 0.31 to 2.11 km. The 336 h arc is worse than the 72 h node arc at day 1 in 7 of 7 windows, because longer arcs collect more steps.",
+   "strength": "shown"
+  },
+  {
+   "claim": "The Chandra losses are weekly joins in the merged kernel, where both arms carry the same step. Within one weekly segment the kernel is a prediction that FFM reproduces to centimeters.",
+   "evidence": "Joins step by 2.0 to 32.8 km and up to 3.97 m/s. FFM is within 2.5e-5 km over days 1 to 3 inside one segment (HX|CHANDRA|2018-03-08). An arc started after the 04-16 join gives FFM 0.000/0.000/0.000/2.372 against AP 0.107/0.569/1.101/2.737 (HX|CHANDRA|2018-04-19).",
+   "strength": "shown"
+  },
+  {
+   "claim": "The THEMIS A 2013-02-13 loss is a settings defect: the regime switch keys on the radius of the first scored state.",
+   "evidence": "all-regimes.mjs:128 (eb43ba6) chose the low-orbit settings: drag solved, SRP fixed 0.02, 40x40, arc residual 41 m. Forced to the high settings, FFM scores 0.033/0.058/0.083/0.190 against AP 0.147/0.179/0.203/0.937.",
+   "strength": "shown"
+  },
+  {
+   "claim": "THEMIS and Chandra show no loss of the TESS kind because their kernels hold no chord states and THEMIS is one continuous solution.",
+   "evidence": "The collinear share is 0.000 in every HX segment, and the THEMIS joins step by 0.0000 km (out/hx-truth.json).",
+   "strength": "shown"
+  }
+ ],
+ "fixes": [
+  {
+   "module": "experiments/operator-theory/all-regimes.mjs:49-54 and the HE reader at :76-81 (also ap-heo-frame-confirm and ap-gap HE)",
+   "change": "Keep only the TESS states that are not collinear with both neighbors (the 10-minute nodes) and grid at 600 s.",
+   "expected": "HE day-1 FFM-worse falls from 6/7 to 2/7 and the median FFM/AP from 1.33 to about 0.6-0.8. AP's perigee-window numbers get worse. A registration needs unread TESS windows (MAST files after day 260) showing 9 of 10 states dropped, step-free arc residuals of 10 m or less, and a paired day-1 ln(FFM/AP) interval below 0.",
+   "cells": "AP6 HE (report only), the site's HEO rows, the ap-gap HE epoch/date-frame candidate (its 420 m gap was measured on chord truth), ap-heo-frame-confirm HE and HEr"
+  },
+  {
+   "module": "experiments/operator-theory (window design and scoring)",
+   "change": "Run a second-difference step detector on the TESS node series. Mark windows with a step inside the arc or a bin as maneuver windows and report them apart, or start the arc after the last step. In-fit impulsive velocity estimation in analysis/estimation is the module route; it was not tested.",
+   "expected": "Removes TESS 08-17 (4 leads) and 08-31 day 1. Post-step arcs give FFM 0.07-0.09 km at day 1 and 0.26-0.33 km at day 7.",
+   "cells": "HE all leads, mainly day 7"
+  },
+  {
+   "module": "experiments/operator-theory/all-regimes.mjs:128",
+   "change": "Choose high or low settings from the orbit (the arc's semimajor axis or median radius), not from the radius of the first scored state.",
+   "expected": "Removes the THEMIS A 2013-02-13 day 2 and day 3 losses; FFM 0.033/0.058/0.083/0.190 km.",
+   "cells": "HX THEMIS"
+  },
+  {
+   "module": "experiments/operator-theory/lib/regimes.mjs:48 and the scorer bins",
+   "change": "Score only inside the weekly Chandra solution that holds the arc's end, and start arcs after the last join (or set cutoffs from the join epochs). Report HX as model consistency, because the kernel is a prediction.",
+   "expected": "Removes all 6 Chandra losses.",
+   "cells": "HX Chandra days 1, 2, 3 and 7"
+  },
+  {
+   "module": "scratchpad/ffm-losses/pairs.mjs",
+   "change": "Count the HX windows once; the regimes and regimes-hx joins carry the same 19 windows.",
+   "expected": "HX cell counts halve; no ratio changes.",
+   "cells": "cells.json and summary.md HX"
+  }
+ ],
+ "reruns": 61,
+ "rows": "/Users/tj/software/terrain-work/body-look/ffm-losses/heo/rows.json",
+ "unsettled": [
+  "Why AP is less hurt than FFM by the chord states. AP's fit internals were not examined; the measured part is that AP's perigee-window wins are partly compensating error.",
+  "What the TESS steps are. Momentum unloading is inferred from their timing and a size of about 1 cm/s; no operations log was read. The 07-27 arc's perigee step was not localized.",
+  "AP168 beats FFM168 by a wide margin on 2026-08-31 at days 2 to 7 (2.6 against 11.5 km at day 7). One window, not examined.",
+  "How accurate the TESS nodes are. Consecutive solutions differ by 0.01-0.22 km where the series switches between them, which leaves a day-1 floor of about 0.1-0.2 km for both arms.",
+  "The chord finding uses the experiment's own reader (files/orbit-products) and was not cross-checked with SPICE.",
+  "61 FFM runs were used against a cap of 60, one over because of a counting slip."
+ ]
+}

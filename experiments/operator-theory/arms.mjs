@@ -2,14 +2,18 @@
 // operator's own later states here and against newer files or truth by score.mjs. Every arm fits operator states; none starts from an SGP4 set or from a state SGP4
 // made. Arms and their fits:
 //   S     SGP4 fitted by analysis/gp-error-model on CelesTrak's window (Starlink [start, +12 h], ISS [start, +6 h]), flown by propagator/sgp4
-//   X0    SGP4-XP with its built-in atmosphere, propagator/sdn-ap fit, flown by the module
-//   X2    SGP4-XP with NRLMSISE-00 on the weather in force (XP2), propagator/sdn-ap fit, flown by the module
+//   X0    SGP4-XP with its built-in atmosphere, propagator/sdn-ap fit (one $OCM), flown by the module at the pinned build (lib/build.mjs)
+//   X2    SGP4-XP with NRLMSISE-00 on the weather in force (XP2, an AP set), propagator/sdn-ap fit (one $OCM carrying its rows), flown by the module
 //   F     propagator/ffm fitted by analysis/estimation fit_batch, one per atmosphere asked for
 //   RFa12 XP2's front-page recipe: drag from an FFM fit of the arc's last 12 h, elements from its last 17 h with that drag held, flown by the module
 // Operator bytes stay in memory. What is written: statistics, each arm's fitted product and its cost. Times are wall clock of one call on one thread, with the step
 // sizes in the row, so they can be read as a cost.
 //   node experiments/operator-theory/arms.mjs --source starlink --count 12 --arcs 12,24,48 --out <dir> [--shard k/n]
 //   node experiments/operator-theory/arms.mjs --source iss --arcs 6,24,48,72 --out <dir>
+// --stored <cycle dir>: the source's files as that cycle stored them (each product file's compact $OEM: the GCRF states at the fit grid the arms were
+// fitted to), read from the archive with nothing fetched, at the cycle's weather day unless --weather names one; a file already in --out is not run again;
+// --shard k/n takes every n-th file from the k-th.
+// --fit-only: each FFM arm's fit and product, no flight over the file itself (score.mjs flies the products to the newer files).
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -17,9 +21,9 @@ import { execFileSync } from 'node:child_process';
 import { openFfmHost, openAxes, apriori, isoMs } from './lib/host.mjs';
 import { weatherRows } from './lib/weather.mjs';
 import { vendorFiles } from './lib/vendors.mjs';
-import { openSgp4Fit } from '../xp2-fit-design/lib/sgp4fit.mjs';
+import { openSgp4Fit } from './lib/xp2.mjs';
 import { openModules } from '../xp-atmosphere-merit/lib/modules.mjs';
-import { apForces, openAp } from './lib/ap.mjs';
+import { apForces, openAp, fitPcf, fitWeather, rowsOfSpw, horizonOf, readOcm, MSIS } from './lib/ap.mjs';
 import * as S from '../xp-atmosphere-merit/lib/sds.mjs';
 import { config as XMC } from '../xp-atmosphere-merit/common.mjs';
 
@@ -127,32 +131,49 @@ async function cssFiles() {
 }
 // The forward test's four sources (PLAN.md), or a vendor added by VENDORS.md. Nothing below changes for the four.
 const VENDOR = !['starlink', 'iss', 'planet', 'css'].includes(SOURCE);
+const FIT_ONLY = args['fit-only'] === 'true';
+/** --stored: the cycle's product files of this source, oldest first; ISS files carry NASA's stated drag, which a product file does not keep. */
+function storedFiles(dir) {
+  if (SOURCE === 'iss') throw new Error('--stored: an ISS product file does not keep the stated drag its fit seeds');
+  const doneNames = new Set(fs.existsSync(path.join(OUT, `arms-${SOURCE}.jsonl`)) ? fs.readFileSync(path.join(OUT, `arms-${SOURCE}.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).name) : []);
+  const stored = fs.readdirSync(path.join(dir, 'products')).filter((f) => f.startsWith(`${SOURCE}-`)).sort().map((f) => JSON.parse(fs.readFileSync(path.join(dir, 'products', f), 'utf8'))).filter((p) => p.start && p.forecastOem);
+  const days = new Set(stored.map((p) => p.weatherDay));
+  if (days.size > 1) throw new Error(`--stored: ${dir} holds ${SOURCE} files of ${days.size} weather days`);
+  storedWeatherDay = [...days][0];
+  const [k, n] = (args.shard ?? '0/1').split('/').map(Number);
+  return stored.filter((p, i) => i % n === k && !doneNames.has(p.name)).map((p) => ({ name: p.name, norad: p.norad, object: p.object, label: p.source, async read() {
+    return { lines: S.oemLines(Buffer.from(p.forecastOem, 'base64')).map((l) => ({ epoch: isoMs(Date.parse(l.epoch)), r: l.r, v: l.v })), meta: {}, frame: 'GCRF' };
+  } }));
+}
+let storedWeatherDay = null;
 // Exploratory (--lite): only cheaper FFM, 20x20, no tides or relativity, tolerance 1e-8, steps to 300 s; rows are read beside the store's by pair.
 // --ffm-ladder '[{name, degree, tides, rel, tolerance, maxStep, minStep, regime}]': those FFM settings, on low orbits unless regime is 'high'. --with-xp adds X0 beside them. --weather-from: the first weather day, for files before the default.
 const LADDER = args['ffm-ladder'] ? JSON.parse(args['ffm-ladder']) : null;
 const LITE = args.lite === 'true' || !!LADDER;
-const FILES = SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
+const FILES = args.stored ? storedFiles(args.stored) : SOURCE === 'iss' ? await issFiles() : SOURCE === 'planet' ? await planetFiles() : SOURCE === 'css' ? await cssFiles() : VENDOR ? await vendorFiles(SOURCE, args) : await starlinkFiles();
+if (args.stored && !FILES.length) { console.error(`--stored: no ${SOURCE} file left to run in ${args.stored}`); process.exit(0); }
 const SUPGP_WINDOW_H = { iss: 6, css: 6, planet: 24 }[SOURCE] ?? (VENDOR ? 24 : 12);
 const BINS = { iss: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 240], [240, 360]],
   css: [[0, 6], [6, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168]],
   planet: [[0, 12], [12, 24], [24, 48], [48, 72], [72, 96], [96, 120]] }[SOURCE] ?? (VENDOR ? [[0, 12], [12, 24], [24, 48], [48, 72], [72, 120], [120, 168], [168, 336]] : null) ?? [[0, 6], [6, 12], [12, 24], [24, 36], [36, 48], [48, 60], [60, 72]];
 
 // ---- weather in force today, as issued
-const today = args.weather ?? new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10);
+const today = args.weather ?? storedWeatherDay ?? new Date(Date.now() - 12 * HOUR).toISOString().slice(0, 10);
 const weather = weatherRows(today, args['weather-from'] ?? '2026-07-15', '2026-12-14');
-const spw = S.spwBytes(weather.rows.map((r) => ({ date: r.DATE, f107: r.F107_OBS, c81: r.F107_OBS_CENTER81, ap: r.AP_AVG })));
+const daily = rowsOfSpw(weather.rows);
 const FIT = { dragPrior: XMC.fit.dragPrior, srpPrior: XMC.fit.srpPrior };
-const PCF = { X0: S.pcfBytes({ forces: XMC.arms.X0.forces, fit: FIT }), X2: S.pcfBytes({ forces: XMC.arms.X2.forces, fit: FIT }) };
-const EXTRA = { X0: undefined, X2: { rows: spw } };
+const PCF = { X0: fitPcf({ forces: {}, fit: FIT }), X2: fitPcf({ forces: MSIS, fit: FIT }) };
+/** The fit's $SPW for an arc ending at endMs: the rows reach the record's horizon. */
+const rowsTo = (endMs) => ({ spw: fitWeather(daily, horizonOf(endMs)) });
 // --variants: JSON [{ name, atmosphere, gravity, degree, order, srp, agom, thirdBodies, ... }]: extra FFM candidates beside the atmospheres.
 const FFM_VARIANTS = [...(args.atmospheres ?? 'NRLMSISE00').split(',').filter(Boolean).map((atmosphere) => ({ name: atmosphere, atmosphere })), ...(args.variants ? JSON.parse(args.variants) : [])];
 const integrator = { tolerance: 1e-10, maxStep: 120, minStep: 1e-4 };
 const COST_NOTE = { ffm: { integrator: 'RK78', tolerance: integrator.tolerance, maxStepSeconds: integrator.maxStep, gravity: '70x70', outputSeconds: THIN_MS / 1000 }, xp: 'the theory\'s own grid; output at 300 s', sgp4: 'analytic; output at 300 s' };
 
 const M = await openModules();
-// --ap-arms '[{name, tesseral, zonal, atmosphere}]' --ap-wasm <file>: AP (SGP4XP with parts replaced) from a build not yet pinned; exploratory.
+// --ap-arms '[{name, tesseral, zonal, atmosphere, noTerms, fit}]': AP (SGP4XP with parts replaced) arms beside X0 and X2.
 const AP_ARMS = args['ap-arms'] ? JSON.parse(args['ap-arms']) : null;
-const A = AP_ARMS ? await openAp(args['ap-wasm']) : null;
+const A = await openAp();
 const G = await openSgp4Fit();
 const F = await openFfmHost();
 const axes = await openAxes();
@@ -234,36 +255,36 @@ for (const file of FILES) {
       for (const name of LITE ? (args['with-xp'] ? ['X0'] : []) : ['X0', 'X2']) {
         const a = { fitHours: arc, states: states.length };
         const t1 = performance.now();
-        const f = await M.fit(oem, PCF[name], EXTRA[name]);
+        const f = await A.fit(oem, PCF[name], name === 'X2' ? rowsTo(Date.parse(states.at(-1).epoch)) : undefined);
         a.fitMs = performance.now() - t1;
         if (!f.ok) { a.ok = false; a.error = f.error; row.arms[`${name}@${arc}`] = a; continue; }
-        const info = S.readFitOmm(f.omm);
+        const info = readOcm(f.ocm);
         a.bterm = info.bterm; a.agom = info.agom; a.iterations = info.iterations; a.reportedRmsKm = info.fitRmsKm;
         try {
           const t2 = performance.now();
-          const flown = await M.propagate(f.omm, S.gridBytes(epochs), PCF[name], EXTRA[name], epochs.length);
+          const flown = await A.propagate(f.ocm, epochs, epochs.length);
           a.flyMs = performance.now() - t2;
-          a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = Buffer.from(f.omm).toString('base64');
+          a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = { ocm: Buffer.from(f.ocm).toString('base64') };
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`${name}@${arc}`] = a;
       }
       for (const spec of AP_ARMS ?? []) {
         const a = { fitHours: arc, states: states.length };
-        const forces = apForces(XMC.arms.X2.forces, spec);
+        const forces = apForces(spec);
         // spec.fit: 'module' the module's own priors, or { dragPrior, srpPrior }; else the registered XM priors (AGOM held at 0.01).
         const fitOf = spec.fit === 'module' ? null : spec.fit ?? FIT;
-        const pcf = S.pcfBytes({ forces, fit: fitOf }), extra = spec.atmosphere === false ? undefined : EXTRA.X2;
+        const pcf = fitPcf({ forces, fit: fitOf }), extra = spec.atmosphere === false ? undefined : rowsTo(Date.parse(states.at(-1).epoch));
         const t1 = performance.now();
         const f = await A.fit(oem, pcf, extra);
         a.fitMs = performance.now() - t1;
         if (!f.ok) { a.ok = false; a.error = f.error; row.arms[`A-${spec.name}@${arc}`] = a; continue; }
-        const info = S.readFitOmm(f.omm);
+        const info = readOcm(f.ocm);
         a.bterm = info.bterm; a.agom = info.agom; a.iterations = info.iterations; a.reportedRmsKm = info.fitRmsKm;
         try {
           const t2 = performance.now();
-          const flown = await A.propagate(f.omm, S.gridBytes(epochs), pcf, extra, epochs.length);
+          const flown = await A.propagate(f.ocm, epochs, epochs.length);
           a.flyMs = performance.now() - t2;
-          a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = { omm: Buffer.from(f.omm).toString('base64'), forces, atmosphere: spec.atmosphere !== false };
+          a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = { ocm: Buffer.from(f.ocm).toString('base64'), forces, atmosphere: spec.atmosphere !== false, fit: spec.fit === 'module' ? 'module' : fitOf };
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`A-${spec.name}@${arc}`] = a;
       }
@@ -279,6 +300,7 @@ for (const file of FILES) {
           a.termination = f.termination; a.iterations = f.iterations; a.ffmCalls = f.ffmCalls;
           if (!f.state) throw new Error(f.error ?? f.termination);
           a.b = f.parameters?.[0]?.value;
+          if (FIT_ONLY) { a.ok = !!f.ok; a.product = { epoch: f.epoch, state: f.state, parameters: f.parameters, forces: settings.forces, fixed: settings.fixed, ...(LITE ? { integrator: settings.integrator } : {}) }; row.arms[`F-${variantName}@${arc}`] = a; continue; }
           const t2 = performance.now();
           const flown = await F.forecast({ epoch: f.epoch, state: f.state, parameters: f.parameters }, epochs, settings, weather.rows);
           a.flyMs = performance.now() - t2;
@@ -302,15 +324,15 @@ for (const file of FILES) {
           a.bHeld = b;
           if (!g.state) throw new Error(g.error ?? g.termination);
           if (!(b > 0)) throw new Error('no positive drag from the 12 h fit');
-          const pcf = S.pcfBytes({ forces: XMC.arms.X2.forces, fit: { dragPrior: { form: 'LOG_NORMAL', mean: b, sigma: 1e-6 }, srpPrior: FIT.srpPrior } });
+          const pcf = fitPcf({ forces: MSIS, fit: { dragPrior: { form: 'LOG_NORMAL', mean: b, sigma: 1e-6 }, srpPrior: FIT.srpPrior } });
           const t2 = performance.now();
-          const f = await M.fit(S.oemBytes({ frame: 'GCRF', object, lines: elements, useableStart: elements[0].epoch, useableStop: elements.at(-1).epoch, originator: 'operator-theory' }), pcf, EXTRA.X2);
+          const f = await A.fit(S.oemBytes({ frame: 'GCRF', object, lines: elements, useableStart: elements[0].epoch, useableStop: elements.at(-1).epoch, originator: 'operator-theory' }), pcf, rowsTo(end));
           a.fitMs = performance.now() - t2;
           if (!f.ok) throw new Error(f.error);
           const t3 = performance.now();
-          const flown = await M.propagate(f.omm, S.gridBytes(epochs), pcf, EXTRA.X2, epochs.length);
+          const flown = await A.propagate(f.ocm, epochs, epochs.length);
           a.flyMs = performance.now() - t3;
-          a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = { omm: Buffer.from(f.omm).toString('base64'), b };
+          a.ok = true; a.bins = await score(await M.toAxes(flown, epochs, 'GCRF')); a.product = { ocm: Buffer.from(f.ocm).toString('base64'), b };
         } catch (error) { a.ok = false; a.error = short(error); }
         row.arms[`RFa12@${arc}`] = a;
       }
@@ -320,10 +342,11 @@ for (const file of FILES) {
   const products = Object.fromEntries(Object.entries(row.arms).filter(([, a]) => a.product).map(([k, a]) => [k, a.product]));
   fs.writeFileSync(path.join(OUT, 'products', `${SOURCE}-${file.norad}-${started}.json`), JSON.stringify({ name: file.name, norad: file.norad, object: file.object, source: row.source, fetchedAt: row.fetchedAt, start: row.start, stop: row.stop, weatherDay: today, forecastOem: row.forecastOem ?? null, products }));
   delete row.forecastOem;
+  row.ffm = F.provenance.ffm;
   for (const a of Object.values(row.arms)) delete a.product;
   fs.appendFileSync(path.join(OUT, `arms-${SOURCE}.jsonl`), `${JSON.stringify(row)}\n`);
   console.error(`${file.object} ${row.error ?? 'ok'} ${row.wallSeconds.toFixed(0)} s`);
   await nap(500);
 }
-await F.close(); await axes.close(); await M.close();
+await F.close(); await axes.close(); await A.close(); await M.close();
 process.exit(0);

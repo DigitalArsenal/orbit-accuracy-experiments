@@ -1,0 +1,789 @@
+{
+ "about": "DSST.md, Windows, as amended 2026-11-05: the window set by store, group and count, the laser-prediction draw per source, the cost subsample per (input, regime), and the SHA-256 of the sorted keys over every store (windows.mjs --list prints them). Keys only; no arm figure is read. Held windows are dropped and counted.",
+ "cellsFrom": "results/ap-truth/compare/cells.json",
+ "holds": {
+  "starlink": "every Starlink source",
+  "galileo": [
+   43567,
+   37847,
+   41862,
+   41174,
+   43055,
+   41175
+  ],
+  "swarmGraceFoAfter": "2026-10-31",
+  "vendorExcludedNorads": [
+   31698,
+   66315,
+   22824,
+   8820,
+   39451,
+   39452,
+   39453,
+   43476,
+   43477,
+   43567,
+   37847,
+   41862,
+   41174,
+   43055,
+   41175
+  ],
+  "vendorExcludedTargets": [
+   "terrasarx",
+   "sentinel1d",
+   "stella",
+   "lageos1",
+   "swarma",
+   "swarmb",
+   "swarmc",
+   "gracefo1",
+   "gracefo2"
+  ]
+ },
+ "draw": {
+  "target": 2000,
+  "floor": 25,
+  "salt": "dsst-arm:",
+  "rule": "per source, the k pairs with the lowest SHA-256 of salt + key, k = max(floor, round(target * count / total)), hex compared as text"
+ },
+ "costSample": {
+  "perCell": 10,
+  "salt": "dsst-arm-cost:",
+  "rule": "per (input, regime), the perCell windows with the lowest SHA-256 of salt + key",
+  "windows": {
+   "operator-file|Geodetic": [
+    "cpf-sgf-high|22195|2026-04-15T00:00:00.000Z|2026-04-17T00:00:00.000Z",
+    "cpf-hts-high|20026|2026-04-30T22:30:00.000Z|2026-05-01T22:30:00.000Z",
+    "cpf-dgf-high|22195|2026-04-27T00:00:00.000Z|2026-04-28T00:00:00.000Z",
+    "cpf-dgf-high|53105|2026-03-15T00:00:00.000Z|2026-03-18T00:00:00.000Z",
+    "cpf-dgf-high|20026|2026-04-18T00:00:00.000Z|2026-04-21T00:00:00.000Z",
+    "cpf-hts-high|22195|2026-02-28T23:30:00.000Z|2026-03-01T23:30:00.000Z",
+    "cpf-dgf-high|19751|2026-03-01T00:00:00.000Z|2026-03-05T00:00:00.000Z",
+    "cpf-hts-high|19751|2026-04-17T22:30:00.000Z|2026-04-20T22:30:00.000Z",
+    "cpf-dgf-high|20026|2026-04-13T00:00:00.000Z|2026-04-18T00:00:00.000Z",
+    "cpf-hts-high|22195|2026-03-27T23:30:00.000Z|2026-03-29T23:30:00.000Z"
+   ],
+   "operator-file|Geostationary, station-kept": [
+    "intelsat|26900|2026-10-26T00:00:00.000Z|2026-10-29T00:00:00.000Z",
+    "intelsat|40271|2026-10-26T00:00:00.000Z|2026-10-29T00:00:00.000Z",
+    "intelsat|38356|2026-10-26T00:00:00.000Z|2026-11-02T00:00:00.000Z",
+    "intelsat|54741|2026-10-26T00:00:00.000Z|2026-11-02T00:00:00.000Z",
+    "intelsat|54027|2026-10-26T00:00:00.000Z|2026-10-29T00:00:00.000Z",
+    "intelsat|33376|2026-10-29T00:00:00.000Z|2026-11-02T00:00:00.000Z",
+    "intelsat|31307|2026-10-29T00:00:00.000Z|2026-11-02T00:00:00.000Z",
+    "intelsat|43633|2026-10-26T00:00:00.000Z|2026-11-02T00:00:00.000Z",
+    "intelsat|42818|2026-10-29T00:00:00.000Z|2026-11-02T00:00:00.000Z",
+    "ses|28446|2026-11-01T06:30:00.000Z|2026-11-01T17:30:00.000Z"
+   ],
+   "operator-file|Low orbit": [
+    "cpf-hts-leo|38077|2026-02-27T23:40:00.000Z|2026-03-02T23:40:00.000Z",
+    "cpf-dgf-leo|7646|2026-03-13T00:00:00.000Z|2026-03-16T00:00:00.000Z",
+    "cpf-cne-leo|54754|2026-03-26T00:00:00.000Z|2026-03-30T00:00:00.000Z",
+    "cpf-hts-leo|38077|2026-04-04T23:40:00.000Z|2026-04-05T23:40:00.000Z",
+    "cpf-sgf-leo|7646|2026-03-24T00:00:00.000Z|2026-03-27T00:00:00.000Z",
+    "cpf-dgf-leo|16908|2026-03-02T00:00:00.000Z|2026-03-08T00:00:00.000Z",
+    "cpf-sgf-leo|25398|2026-03-02T00:00:00.000Z|2026-03-03T00:00:00.000Z",
+    "cpf-dgf-leo|27944|2026-04-03T00:00:00.000Z|2026-04-04T00:00:00.000Z",
+    "cpf-dgf-leo|27944|2026-03-15T00:00:00.000Z|2026-03-22T00:00:00.000Z",
+    "cpf-sgf-leo|7646|2026-03-11T00:00:00.000Z|2026-03-17T00:00:00.000Z"
+   ],
+   "operator-file|Low orbit, crewed": [
+    "iss|25544|2026-05-15T12:00:00.000Z|2026-05-20T12:00:00.000Z",
+    "iss|25544|2026-05-13T12:00:00.000Z|2026-05-15T12:00:00.000Z",
+    "iss|25544|2026-05-13T12:00:00.000Z|2026-05-20T12:00:00.000Z",
+    "iss|25544|2026-04-27T12:00:00.000Z|2026-04-29T12:00:00.000Z",
+    "iss|25544|2026-04-13T12:00:00.000Z|2026-04-20T12:00:00.000Z",
+    "iss|25544|2026-01-09T12:00:00.000Z|2026-01-12T12:00:00.000Z",
+    "iss|25544|2026-03-11T12:00:00.000Z|2026-03-18T12:00:00.000Z",
+    "iss|25544|2026-03-18T12:00:00.000Z|2026-03-25T12:00:00.000Z",
+    "iss|25544|2026-02-27T12:00:00.000Z|2026-03-02T12:00:00.000Z",
+    "iss|25544|2026-05-13T12:00:00.000Z|2026-05-18T12:00:00.000Z"
+   ],
+   "operator-file|Low orbit, imaging fleet": [
+    "planet|2587|2026-11-01T14:44:57.000Z|2026-11-02T00:45:01.000Z",
+    "planet|60488|2026-11-01T16:44:53.000Z|2026-11-02T04:44:56.000Z",
+    "planet|259b|2026-11-01T12:44:58.000Z|2026-11-02T02:44:58.000Z",
+    "planet|66715|2026-11-01T06:44:57.000Z|2026-11-02T04:44:54.000Z",
+    "planet|62641|2026-11-01T12:44:55.000Z|2026-11-02T04:44:54.000Z",
+    "planet|41772|2026-11-01T18:49:18.000Z|2026-11-02T04:50:03.000Z",
+    "planet|60517|2026-11-01T14:44:58.000Z|2026-11-02T02:45:00.000Z",
+    "planet|66716|2026-11-01T12:44:56.000Z|2026-11-02T04:45:00.000Z",
+    "planet|60512|2026-11-01T16:44:55.000Z|2026-11-02T00:44:59.000Z",
+    "planet|3013|2026-11-01T18:44:08.000Z|2026-11-02T04:44:53.000Z"
+   ],
+   "operator-file|Navigation": [
+    "cpf-cod-high|39155|2026-03-06T23:59:42.000Z|2026-03-13T23:59:42.000Z",
+    "cpf-cod-high|37868|2026-04-05T23:59:42.000Z|2026-04-08T23:59:42.000Z",
+    "cpf-gsf-high|67588|2026-04-07T22:45:00.000Z|2026-04-08T22:45:00.000Z",
+    "cpf-sha-high|43707|2026-04-18T00:00:00.000Z|2026-04-20T00:00:00.000Z",
+    "cpf-sha-high|44231|2026-04-13T00:00:00.000Z|2026-04-17T00:00:00.000Z",
+    "cpf-cod-high|43566|2026-03-06T23:59:42.000Z|2026-03-13T23:59:42.000Z",
+    "cpf-qss-high|42738|2026-03-01T00:00:00.000Z|2026-03-05T00:00:00.000Z",
+    "cpf-qss-high|42965|2026-03-28T00:00:00.000Z|2026-04-02T00:00:00.000Z",
+    "cpf-cod-high|41549|2026-03-08T23:59:42.000Z|2026-03-12T23:59:42.000Z",
+    "cpf-cod-high|39155|2026-04-10T23:59:42.000Z|2026-04-16T23:59:42.000Z"
+   ],
+   "operator-file|Navigation, ultra-rapid": [
+    "gps|39533|2026-10-22T17:59:42.000Z|2026-10-25T17:59:42.000Z",
+    "gps|29601|2026-10-23T17:59:42.000Z|2026-10-28T17:59:42.000Z",
+    "gps|32711|2026-10-29T17:59:42.000Z|2026-10-31T11:59:42.000Z",
+    "gps|39533|2026-10-28T17:59:42.000Z|2026-10-31T23:59:42.000Z",
+    "glonass|40315|2026-10-25T17:59:42.000Z|2026-10-31T11:59:42.000Z",
+    "glonass|41330|2026-10-23T17:59:42.000Z|2026-10-29T17:59:42.000Z",
+    "glonass|37868|2026-10-23T17:59:42.000Z|2026-10-28T17:59:42.000Z",
+    "glonass|44299|2026-10-25T17:59:42.000Z|2026-10-30T17:59:42.000Z",
+    "gps|32711|2026-10-25T17:59:42.000Z|2026-10-31T23:59:42.000Z",
+    "glonass|63130|2026-10-31T11:59:42.000Z|2026-10-31T23:59:42.000Z"
+   ],
+   "precise-orbit|Geostationary": [
+    "GE|C006 BDS-2G|2025-10-06",
+    "GE|C011 BDS-2G|2025-10-10",
+    "GE|J003 QZS-2G|2025-10-12",
+    "GE|C229 BDS-3G|2025-10-06",
+    "GE|C231 BDS-3G|2025-10-06",
+    "GE|C006 BDS-2G|2025-10-04",
+    "GE|C018 BDS-2G|2025-10-12",
+    "GE|C229 BDS-3G|2025-10-08",
+    "GE|C006 BDS-2G|2025-10-08",
+    "GE|J003 QZS-2G|2025-10-08"
+   ],
+   "precise-orbit|Geostationary, station-kept": [
+    "WA|GALAXY 30 (G-30)|2026-10-12",
+    "WA|EUTELSAT 117 WEST B|2026-09-16",
+    "WA|SES-15|2026-09-02",
+    "WA|SES-15|2026-09-26",
+    "WA|EUTELSAT 117 WEST B|2026-09-24",
+    "WA|SES-15|2026-09-24",
+    "WA|SES-15|2026-10-10",
+    "WA|SES-15|2026-09-06",
+    "WA|EUTELSAT 117 WEST B|2026-09-02",
+    "WA|GALAXY 30 (G-30)|2026-09-12"
+   ],
+   "precise-orbit|Highly elliptical": [
+    "HE|TESS|2026-07-27",
+    "HE|TESS|2026-08-17",
+    "HE|TESS|2026-09-07",
+    "HE|TESS|2026-08-10",
+    "HE|TESS|2026-08-24",
+    "HE|TESS|2026-08-31",
+    "HE|TESS|2026-08-03"
+   ],
+   "precise-orbit|Highly elliptical, THEMIS and Chandra": [
+    "HX|THEMIS A|2013-02-13",
+    "HX|THEMIS D|2013-02-13",
+    "HX|THEMIS E|2013-02-15",
+    "HX|CHANDRA|2018-04-12",
+    "HX|THEMIS A|2013-02-17",
+    "HX|THEMIS E|2013-02-11",
+    "HX|THEMIS E|2013-02-17",
+    "HX|THEMIS A|2013-02-11",
+    "HX|THEMIS D|2013-02-11",
+    "HX|CHANDRA|2018-04-05"
+   ],
+   "precise-orbit|Inclined geosynchronous": [
+    "IG|C005 BDS-2I|2025-10-12",
+    "IG|C017 BDS-2I|2025-10-08",
+    "IG|C005 BDS-2I|2025-10-06",
+    "IG|C017 BDS-2I|2025-10-10",
+    "IG|C007 BDS-2I|2025-10-06",
+    "IG|C220 BDS-3I|2025-10-06",
+    "IG|J002 QZS-2I|2025-10-10",
+    "IG|C017 BDS-2I|2025-10-06",
+    "IG|C224 BDS-3I|2025-10-04",
+    "IG|C007 BDS-2I|2025-10-10"
+   ],
+   "precise-orbit|Laser geodetic": [
+    "GD|ETALON 1|2025-12-20",
+    "GD|LAGEOS 2|2025-11-01",
+    "GD|LAGEOS 2|2025-10-25",
+    "GD|LAGEOS 1|2025-11-08",
+    "GD|LARES-2|2025-11-29",
+    "GD|ETALON 2|2025-12-13",
+    "GD|LAGEOS 2|2025-11-15",
+    "GD|LAGEOS 1|2025-12-20",
+    "GD|ETALON 1|2025-11-15",
+    "GD|LAGEOS 1|2025-11-22"
+   ],
+   "precise-orbit|Low orbit, altimetry": [
+    "DO|SENTINEL-6B|2025-10-20",
+    "DO|SENTINEL 3A|2025-11-04",
+    "DO|CRYOSAT 2|2025-11-09",
+    "DO|JASON 3|2025-10-20",
+    "DO|S6 MICHAEL FREILICH|2025-11-19",
+    "DO|JASON 3|2025-11-24",
+    "DO|S6 MICHAEL FREILICH|2025-10-20",
+    "DO|HAIYANG 2C|2025-10-20",
+    "DO|SENTINEL 3A|2025-11-29",
+    "DO|S6 MICHAEL FREILICH|2025-12-04"
+   ],
+   "precise-orbit|Low orbit, laser spheres": [
+    "LS|STARLETTE|2025-11-24",
+    "LS|AJISAI|2025-12-14",
+    "LS|STARLETTE|2025-11-29",
+    "LS|LARES|2025-11-09",
+    "LS|STELLA|2025-12-19",
+    "LS|LARETS|2025-11-04",
+    "LS|LARETS|2025-12-09",
+    "LS|WESTPAC|2025-10-15",
+    "LS|WESTPAC|2025-12-04",
+    "LS|LARETS|2025-12-14"
+   ],
+   "precise-orbit|Medium Earth orbit": [
+    "GN|44850|2026-05-31",
+    "GN|28874|2026-04-14",
+    "GN|44850|2026-01-26",
+    "GN|37869|2026-04-14",
+    "GN|37869|2026-04-08",
+    "GN|41019|2026-01-12",
+    "GN|37869|2026-04-21",
+    "GN|37869|2026-05-24",
+    "GN|43058|2026-05-06",
+    "GN|28874|2026-03-03"
+   ],
+   "precise-orbit|Near 700 km": [
+    "S1|39634|2026-01-24",
+    "S1|62261|2026-03-15",
+    "S1|39634|2026-02-03",
+    "S1|62261|2026-01-03",
+    "S1|62261|2026-02-05",
+    "S1|62261|2026-04-01",
+    "S1|62261|2026-02-18",
+    "S1|39634|2026-01-04",
+    "S1|62261|2026-04-18",
+    "S1|39634|2026-02-26"
+   ],
+   "precise-orbit|Strong drag, 2025": [
+    "P|43476|2025-10-15",
+    "P|43476|2025-10-17",
+    "P|39453|2025-11-21",
+    "P|39452|2025-09-17",
+    "P|39451|2025-10-21",
+    "P|39451|2025-04-18",
+    "P|39453|2025-08-22",
+    "P|39453|2025-06-22",
+    "P|39451|2025-12-12",
+    "P|39453|2025-08-18"
+   ],
+   "precise-orbit|Strong drag, 2026": [
+    "P|43477|2026-04-17",
+    "P|43476|2026-01-18",
+    "P|39452|2026-04-22",
+    "P|43476|2026-05-10",
+    "P|43477|2026-04-05",
+    "P|43477|2026-03-03",
+    "P|39451|2026-03-18",
+    "P|39451|2026-01-22",
+    "P|39453|2026-02-08",
+    "P|43476|2026-02-22"
+   ]
+  }
+ },
+ "windows": 7174,
+ "digest": "95f03c46232251ae0029f57fb5fd8c30c927d7208f2224b79dbff31ff79a2553",
+ "stores": [
+  {
+   "store": "ap/b051/truth",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP5.md Part T",
+   "windows": 944,
+   "before": 944,
+   "groups": {
+    "P": 944
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/truth2",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP5.md Part N",
+   "windows": 1812,
+   "before": 1812,
+   "groups": {
+    "P": 755,
+    "S1": 302,
+    "GN": 755
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/regimes",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP6.md",
+   "windows": 407,
+   "before": 407,
+   "groups": {
+    "LS": 90,
+    "DO": 150,
+    "GD": 55,
+    "IG": 60,
+    "GE": 45,
+    "HE": 7
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/regimes-hx",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "AP6.md, HX",
+   "windows": 19,
+   "before": 19,
+   "groups": {
+    "HX": 19
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b051/regimes-wa",
+   "reference": "truth",
+   "input": "precise-orbit",
+   "registration": "GEO-TRUTH.md",
+   "windows": 84,
+   "before": 84,
+   "groups": {
+    "WA": 84
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b0411/laser/forward",
+   "reference": "next",
+   "input": "operator-file",
+   "registration": "COMPARE.md",
+   "windows": 2015,
+   "before": 19399,
+   "groups": {
+    "cpf-cne-leo": 88,
+    "cpf-cod-high": 269,
+    "cpf-dgf-high": 118,
+    "cpf-dgf-leo": 118,
+    "cpf-esa-high": 206,
+    "cpf-esa-leo": 25,
+    "cpf-eum-leo": 59,
+    "cpf-gal-high": 73,
+    "cpf-gfz-leo": 29,
+    "cpf-gsf-high": 25,
+    "cpf-hds-leo": 28,
+    "cpf-hts-high": 87,
+    "cpf-hts-leo": 175,
+    "cpf-isr-high": 58,
+    "cpf-qss-high": 74,
+    "cpf-sgf-high": 118,
+    "cpf-sgf-leo": 176,
+    "cpf-sha-high": 223,
+    "cpf-sha-leo": 66
+   },
+   "draw": {
+    "cpf-cne-leo": {
+     "of": 855,
+     "drawn": 88
+    },
+    "cpf-cod-high": {
+     "of": 2612,
+     "drawn": 269
+    },
+    "cpf-dgf-high": {
+     "of": 1140,
+     "drawn": 118
+    },
+    "cpf-dgf-leo": {
+     "of": 1140,
+     "drawn": 118
+    },
+    "cpf-esa-high": {
+     "of": 1995,
+     "drawn": 206
+    },
+    "cpf-esa-leo": {
+     "of": 236,
+     "drawn": 25
+    },
+    "cpf-eum-leo": {
+     "of": 570,
+     "drawn": 59
+    },
+    "cpf-gal-high": {
+     "of": 709,
+     "drawn": 73
+    },
+    "cpf-gfz-leo": {
+     "of": 285,
+     "drawn": 29
+    },
+    "cpf-gsf-high": {
+     "of": 122,
+     "drawn": 25
+    },
+    "cpf-hds-leo": {
+     "of": 273,
+     "drawn": 28
+    },
+    "cpf-hts-high": {
+     "of": 844,
+     "drawn": 87
+    },
+    "cpf-hts-leo": {
+     "of": 1699,
+     "drawn": 175
+    },
+    "cpf-isr-high": {
+     "of": 559,
+     "drawn": 58
+    },
+    "cpf-qss-high": {
+     "of": 715,
+     "drawn": 74
+    },
+    "cpf-sgf-high": {
+     "of": 1140,
+     "drawn": 118
+    },
+    "cpf-sgf-leo": {
+     "of": 1710,
+     "drawn": 176
+    },
+    "cpf-sha-high": {
+     "of": 2159,
+     "drawn": 223
+    },
+    "cpf-sha-leo": {
+     "of": 636,
+     "drawn": 66
+    }
+   },
+   "dropped": {
+    "starlink": 0
+   }
+  },
+  {
+   "store": "ap/b0411/providers",
+   "reference": "next",
+   "input": "operator-file",
+   "registration": "providers-run.mjs",
+   "windows": 1893,
+   "before": 1893,
+   "groups": {
+    "gps": 979,
+    "intelsat": 126,
+    "planet": 100,
+    "ses": 33,
+    "glonass": 617,
+    "css": 1,
+    "iss": 37
+   },
+   "dropped": {
+    "starlink": 357
+   }
+  }
+ ],
+ "cells": {
+  "next|Geodetic": {
+   "reference": "next",
+   "regime": "Geodetic",
+   "input": "operator-file",
+   "fits": [
+    48,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "next|Geostationary, station-kept": {
+   "reference": "next",
+   "regime": "Geostationary, station-kept",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    72,
+    96,
+    168
+   ]
+  },
+  "next|Low orbit": {
+   "reference": "next",
+   "regime": "Low orbit",
+   "input": "operator-file",
+   "fits": [
+    48,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "next|Low orbit, crewed": {
+   "reference": "next",
+   "regime": "Low orbit, crewed",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    48,
+    72,
+    96,
+    120,
+    168
+   ]
+  },
+  "next|Low orbit, imaging fleet": {
+   "reference": "next",
+   "regime": "Low orbit, imaging fleet",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    24
+   ]
+  },
+  "next|Low orbit, maneuvering": {
+   "reference": "next",
+   "regime": "Low orbit, maneuvering",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    24,
+    36
+   ]
+  },
+  "next|Navigation": {
+   "reference": "next",
+   "regime": "Navigation",
+   "input": "operator-file",
+   "fits": [
+    48,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "next|Navigation, ultra-rapid": {
+   "reference": "next",
+   "regime": "Navigation, ultra-rapid",
+   "input": "operator-file",
+   "fits": [
+    24,
+    48
+   ],
+   "leads": [
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    96,
+    120,
+    144,
+    168
+   ]
+  },
+  "truth|Geostationary": {
+   "reference": "truth",
+   "regime": "Geostationary",
+   "input": "precise-orbit",
+   "fits": [
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Highly elliptical": {
+   "reference": "truth",
+   "regime": "Highly elliptical",
+   "input": "precise-orbit",
+   "fits": [
+    72,
+    336
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Highly elliptical, THEMIS and Chandra": {
+   "reference": "truth",
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "input": "precise-orbit",
+   "fits": [
+    72,
+    168
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Inclined geosynchronous": {
+   "reference": "truth",
+   "regime": "Inclined geosynchronous",
+   "input": "precise-orbit",
+   "fits": [
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Laser geodetic": {
+   "reference": "truth",
+   "regime": "Laser geodetic",
+   "input": "precise-orbit",
+   "fits": [
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Low orbit, altimetry": {
+   "reference": "truth",
+   "regime": "Low orbit, altimetry",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Low orbit, laser spheres": {
+   "reference": "truth",
+   "regime": "Low orbit, laser spheres",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Medium Earth orbit": {
+   "reference": "truth",
+   "regime": "Medium Earth orbit",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Near 700 km": {
+   "reference": "truth",
+   "regime": "Near 700 km",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Strong drag, 2025": {
+   "reference": "truth",
+   "regime": "Strong drag, 2025",
+   "input": "precise-orbit",
+   "fits": [
+    24
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  },
+  "truth|Strong drag, 2026": {
+   "reference": "truth",
+   "regime": "Strong drag, 2026",
+   "input": "precise-orbit",
+   "fits": [
+    24,
+    72
+   ],
+   "leads": [
+    24,
+    48,
+    72,
+    168
+   ]
+  }
+ }
+}

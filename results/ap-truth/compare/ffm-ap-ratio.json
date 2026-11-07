@@ -1,0 +1,992 @@
+{
+ "ffm": {
+  "before": {
+   "version": "2.0.4",
+   "sha256": "c36f1b14fc233e88725d57724c3bae7ad025cfdd9d8d4520c3bcccd0f8a816b2"
+  },
+  "after": {
+   "version": "2.2.0",
+   "sha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153"
+  }
+ },
+ "ap": "sdn-ap 0.5.1 (ap/b051)",
+ "statistic": "exp(median by window of ln(FFM / AP)), on the windows where AP and both FFM builds scored",
+ "rows": [
+  {
+   "regime": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 24,
+   "windows": 944,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.784,
+   "after": 0.783,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 48,
+   "windows": 944,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.888,
+   "after": 0.888,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 72,
+   "windows": 944,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.901,
+   "after": 0.9,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 168,
+   "windows": 944,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.956,
+   "after": 0.956,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 24,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.806,
+   "after": 0.806,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 48,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.876,
+   "after": 0.876,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 72,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.9,
+   "after": 0.902,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 168,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.985,
+   "after": 0.985,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 72,
+   "lead": 24,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.966,
+   "after": 0.967,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 72,
+   "lead": 48,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.978,
+   "after": 0.977,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 72,
+   "lead": 72,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.995,
+   "after": 0.994,
+   "moved": false
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "fit": 72,
+   "lead": 168,
+   "windows": 750,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 1.005,
+   "after": 1.005,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 0,
+    "burnFree": 0,
+    "notCovered": 750,
+    "burnFreeRatio": null,
+    "objects": {},
+    "interval": [
+     0.991,
+     1.012
+    ],
+    "clusters": 110,
+    "verdict": "parity: the interval holds 1"
+   }
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 24,
+   "lead": 24,
+   "windows": 276,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 0.231,
+   "after": 0.232,
+   "moved": false
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 24,
+   "lead": 48,
+   "windows": 274,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 0.787,
+   "after": 0.786,
+   "moved": false
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 24,
+   "lead": 72,
+   "windows": 275,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 1.173,
+   "after": 1.173,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 60,
+    "burnFree": 182,
+    "notCovered": 33,
+    "burnFreeRatio": 1.082,
+    "objects": {
+     "Sentinel-1C": 50,
+     "Sentinel-1A": 45
+    },
+    "interval": [
+     0.976,
+     1.29
+    ],
+    "clusters": 44,
+    "verdict": "parity: the interval holds 1"
+   }
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 24,
+   "lead": 168,
+   "windows": 274,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 2.055,
+   "after": 2.055,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 116,
+    "burnFree": 128,
+    "notCovered": 30,
+    "burnFreeRatio": 2.192,
+    "objects": {
+     "Sentinel-1C": 55,
+     "Sentinel-1A": 41
+    },
+    "interval": [
+     1.763,
+     2.321
+    ],
+    "clusters": 44,
+    "verdict": "unexplained: no registered burn of 8 m or more; the 11-05 Sentinel-1 study found burns under 8 m, below the flag threshold and not yet registered (record experiments-ffm-step-flag-per-rev-20261105)"
+   }
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 72,
+   "lead": 24,
+   "windows": 259,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 0.984,
+   "after": 0.977,
+   "moved": false
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 72,
+   "lead": 48,
+   "windows": 258,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 1.025,
+   "after": 1.024,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 65,
+    "burnFree": 169,
+    "notCovered": 24,
+    "burnFreeRatio": 1.045,
+    "objects": {
+     "Sentinel-1A": 52,
+     "Sentinel-1C": 48
+    },
+    "interval": [
+     1.003,
+     1.045
+    ],
+    "clusters": 42,
+    "verdict": "unexplained: no registered burn of 8 m or more; the 11-05 Sentinel-1 study found burns under 8 m, below the flag threshold and not yet registered (record experiments-ffm-step-flag-per-rev-20261105)"
+   }
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 72,
+   "lead": 72,
+   "windows": 258,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 1.046,
+   "after": 1.04,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 75,
+    "burnFree": 155,
+    "notCovered": 28,
+    "burnFreeRatio": 1.084,
+    "objects": {
+     "Sentinel-1A": 56,
+     "Sentinel-1C": 51
+    },
+    "interval": [
+     1.027,
+     1.066
+    ],
+    "clusters": 42,
+    "verdict": "unexplained: no registered burn of 8 m or more; the 11-05 Sentinel-1 study found burns under 8 m, below the flag threshold and not yet registered (record experiments-ffm-step-flag-per-rev-20261105)"
+   }
+  },
+  {
+   "regime": "Near 700 km",
+   "fit": 72,
+   "lead": 168,
+   "windows": 257,
+   "satellites": 2,
+   "notRun": 0,
+   "before": 1.039,
+   "after": 1.037,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 122,
+    "burnFree": 108,
+    "notCovered": 27,
+    "burnFreeRatio": 1.08,
+    "objects": {
+     "Sentinel-1C": 38,
+     "Sentinel-1A": 37
+    },
+    "interval": [
+     1.022,
+     1.062
+    ],
+    "clusters": 42,
+    "verdict": "unexplained: no registered burn of 8 m or more; the 11-05 Sentinel-1 study found burns under 8 m, below the flag threshold and not yet registered (record experiments-ffm-step-flag-per-rev-20261105)"
+   }
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 24,
+   "lead": 24,
+   "windows": 748,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.053,
+   "after": 0.053,
+   "moved": false
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 24,
+   "lead": 48,
+   "windows": 748,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.1,
+   "after": 0.1,
+   "moved": false
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 24,
+   "lead": 72,
+   "windows": 748,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.143,
+   "after": 0.143,
+   "moved": false
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 24,
+   "lead": 168,
+   "windows": 748,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.317,
+   "after": 0.317,
+   "moved": false
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 24,
+   "windows": 746,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.276,
+   "after": 0.276,
+   "moved": false
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 48,
+   "windows": 746,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.468,
+   "after": 0.468,
+   "moved": false
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 72,
+   "windows": 746,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.614,
+   "after": 0.614,
+   "moved": false
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 168,
+   "windows": 746,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.853,
+   "after": 0.853,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 24,
+   "lead": 24,
+   "windows": 59,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 0.588,
+   "after": 0.582,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 24,
+   "lead": 48,
+   "windows": 56,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 0.806,
+   "after": 0.809,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 24,
+   "lead": 72,
+   "windows": 49,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 0.9,
+   "after": 0.907,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 24,
+   "lead": 168,
+   "windows": 56,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 0.61,
+   "after": 0.589,
+   "moved": true
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 24,
+   "windows": 65,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 1.001,
+   "after": 0.959,
+   "moved": true
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 48,
+   "windows": 63,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 1.03,
+   "after": 1.022,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 0,
+    "burnFree": 0,
+    "notCovered": 63,
+    "burnFreeRatio": null,
+    "objects": {},
+    "interval": [
+     0.894,
+     1.16
+    ],
+    "clusters": 54,
+    "verdict": "parity: the interval holds 1"
+   }
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 72,
+   "windows": 57,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 0.92,
+   "after": 0.929,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 168,
+   "windows": 64,
+   "satellites": 6,
+   "notRun": 0,
+   "before": 0.822,
+   "after": 0.817,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 24,
+   "lead": 24,
+   "windows": 136,
+   "satellites": 10,
+   "notRun": 0,
+   "before": 0.119,
+   "after": 0.121,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 24,
+   "lead": 48,
+   "windows": 132,
+   "satellites": 10,
+   "notRun": 0,
+   "before": 0.152,
+   "after": 0.152,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 24,
+   "lead": 72,
+   "windows": 121,
+   "satellites": 10,
+   "notRun": 0,
+   "before": 0.142,
+   "after": 0.144,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 24,
+   "lead": 168,
+   "windows": 103,
+   "satellites": 9,
+   "notRun": 0,
+   "before": 0.18,
+   "after": 0.182,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 24,
+   "windows": 136,
+   "satellites": 10,
+   "notRun": 0,
+   "before": 0.47,
+   "after": 0.474,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 48,
+   "windows": 132,
+   "satellites": 10,
+   "notRun": 0,
+   "before": 0.566,
+   "after": 0.548,
+   "moved": true
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 72,
+   "windows": 121,
+   "satellites": 10,
+   "notRun": 0,
+   "before": 0.706,
+   "after": 0.708,
+   "moved": false
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 168,
+   "windows": 103,
+   "satellites": 9,
+   "notRun": 0,
+   "before": 0.893,
+   "after": 0.905,
+   "moved": true
+  },
+  {
+   "regime": "Laser geodetic",
+   "fit": 72,
+   "lead": 24,
+   "windows": 54,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.389,
+   "after": 0.297,
+   "moved": true
+  },
+  {
+   "regime": "Laser geodetic",
+   "fit": 72,
+   "lead": 48,
+   "windows": 54,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.4,
+   "after": 0.451,
+   "moved": true
+  },
+  {
+   "regime": "Laser geodetic",
+   "fit": 72,
+   "lead": 72,
+   "windows": 54,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 0.358,
+   "after": 0.572,
+   "moved": true
+  },
+  {
+   "regime": "Laser geodetic",
+   "fit": 72,
+   "lead": 168,
+   "windows": 54,
+   "satellites": 5,
+   "notRun": 0,
+   "before": 1.34,
+   "after": 0.695,
+   "moved": true
+  },
+  {
+   "regime": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 24,
+   "windows": 60,
+   "satellites": 12,
+   "notRun": 0,
+   "before": 0.198,
+   "after": 0.198,
+   "moved": false
+  },
+  {
+   "regime": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 48,
+   "windows": 60,
+   "satellites": 12,
+   "notRun": 0,
+   "before": 0.364,
+   "after": 0.364,
+   "moved": false
+  },
+  {
+   "regime": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 72,
+   "windows": 60,
+   "satellites": 12,
+   "notRun": 0,
+   "before": 0.564,
+   "after": 0.564,
+   "moved": false
+  },
+  {
+   "regime": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 168,
+   "windows": 59,
+   "satellites": 12,
+   "notRun": 0,
+   "before": 0.921,
+   "after": 0.921,
+   "moved": false
+  },
+  {
+   "regime": "Geostationary",
+   "fit": 72,
+   "lead": 24,
+   "windows": 32,
+   "satellites": 9,
+   "notRun": 0,
+   "before": 0.624,
+   "after": 0.624,
+   "moved": false
+  },
+  {
+   "regime": "Geostationary",
+   "fit": 72,
+   "lead": 48,
+   "windows": 33,
+   "satellites": 9,
+   "notRun": 0,
+   "before": 0.937,
+   "after": 0.937,
+   "moved": false
+  },
+  {
+   "regime": "Geostationary",
+   "fit": 72,
+   "lead": 72,
+   "windows": 30,
+   "satellites": 9,
+   "notRun": 0,
+   "before": 1.088,
+   "after": 1.088,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 5,
+    "burnFree": 25,
+    "notCovered": 0,
+    "burnFreeRatio": 1.094,
+    "objects": {
+     "C020 BDS-2G": 5,
+     "C217 BDS-3G": 4,
+     "C006 BDS-2G": 3,
+     "C229 BDS-3G": 1,
+     "C016 BDS-2G": 1,
+     "C231 BDS-3G": 1
+    },
+    "interval": [
+     0.939,
+     1.527
+    ],
+    "clusters": 15,
+    "verdict": "parity: the interval holds 1"
+   }
+  },
+  {
+   "regime": "Geostationary",
+   "fit": 72,
+   "lead": 168,
+   "windows": 32,
+   "satellites": 9,
+   "notRun": 0,
+   "before": 1.04,
+   "after": 1.04,
+   "moved": false,
+   "worseThanAp": {
+    "burned": 14,
+    "burnFree": 18,
+    "notCovered": 0,
+    "burnFreeRatio": 1.457,
+    "objects": {
+     "C020 BDS-2G": 5,
+     "C217 BDS-3G": 4,
+     "C006 BDS-2G": 3,
+     "C016 BDS-2G": 2,
+     "J003 QZS-2G": 1
+    },
+    "interval": [
+     0.998,
+     1.742
+    ],
+    "clusters": 15,
+    "verdict": "parity: the interval holds 1"
+   }
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 72,
+   "lead": 24,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 1.335,
+   "after": 0.623,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 72,
+   "lead": 48,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 1.586,
+   "after": 1.354,
+   "moved": true,
+   "worseThanAp": {
+    "burned": 6,
+    "burnFree": 1,
+    "notCovered": 0,
+    "burnFreeRatio": 0.369,
+    "objects": {},
+    "interval": [
+     0.443,
+     1.619
+    ],
+    "clusters": 7,
+    "verdict": "parity: the interval holds 1"
+   }
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 72,
+   "lead": 72,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 1.817,
+   "after": 1.638,
+   "moved": true,
+   "worseThanAp": {
+    "burned": 6,
+    "burnFree": 1,
+    "notCovered": 0,
+    "burnFreeRatio": 0.729,
+    "objects": {},
+    "interval": [
+     0.729,
+     2.889
+    ],
+    "clusters": 7,
+    "verdict": "parity: the interval holds 1"
+   }
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 72,
+   "lead": 168,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.958,
+   "after": 2.012,
+   "moved": true,
+   "worseThanAp": {
+    "burned": 7,
+    "burnFree": 0,
+    "notCovered": 0,
+    "burnFreeRatio": null,
+    "objects": {},
+    "interval": [
+     0.911,
+     3.088
+    ],
+    "clusters": 7,
+    "verdict": "parity: the interval holds 1; every window also holds a registered burn"
+   }
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 336,
+   "lead": 24,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.909,
+   "after": 0.73,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 336,
+   "lead": 48,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.62,
+   "after": 0.443,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 336,
+   "lead": 72,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.503,
+   "after": 0.47,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical",
+   "fit": 336,
+   "lead": 168,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.643,
+   "after": 0.653,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 24,
+   "windows": 19,
+   "satellites": 4,
+   "notRun": 0,
+   "before": 0.154,
+   "after": 0.076,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 48,
+   "windows": 19,
+   "satellites": 4,
+   "notRun": 0,
+   "before": 0.124,
+   "after": 0.08,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 72,
+   "windows": 19,
+   "satellites": 4,
+   "notRun": 0,
+   "before": 0.128,
+   "after": 0.086,
+   "moved": true
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 168,
+   "windows": 19,
+   "satellites": 4,
+   "notRun": 0,
+   "before": 0.238,
+   "after": 0.235,
+   "moved": false
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 168,
+   "lead": 24,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.961,
+   "after": 0.961,
+   "moved": false
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 168,
+   "lead": 48,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.974,
+   "after": 0.974,
+   "moved": false
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 168,
+   "lead": 72,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.98,
+   "after": 0.98,
+   "moved": false
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "fit": 168,
+   "lead": 168,
+   "windows": 7,
+   "satellites": 1,
+   "notRun": 0,
+   "before": 0.986,
+   "after": 0.986,
+   "moved": false
+  }
+ ]
+}

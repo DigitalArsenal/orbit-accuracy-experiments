@@ -1,57 +1,94 @@
 {
   "verdict": "PASS",
-  "testedCommit": "c237900adf8d49e21ae4ba62b8d5d8799a479db2",
-  "replayedScalars": 120,
+  "testedCommit": "8fb10bb6b0a8d6d2c018778d3f166d331d1f6881",
+  "build": {
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": {
+      "propagator/sdn-ap": "d29acd2b5d921446f7da8dbf51f45ba53d59dc7685e677616dcd81944981efdb",
+      "propagator/sgp4-xp": "816fd137d76197f2af93501d7d71c527383f7589ab698d5d1d3544782cd2feef"
+    },
+    "versions": {
+      "propagator/sdn-ap": "0.5.1",
+      "propagator/sgp4-xp": "0.2.1"
+    }
+  },
+  "replayedScalars": 240,
   "replayDifferences": 0,
   "replayMaxAbsKm": 0,
   "replayRejected": 0,
   "replayByArm": {
-    "U": {
-      "scalars": 24,
-      "differences": 0,
-      "maxAbsKm": 0,
-      "toleranceKm": 0.001
-    },
     "AP": {
-      "scalars": 24,
+      "scalars": 48,
       "differences": 0,
       "maxAbsKm": 0,
       "toleranceKm": 0
     },
     "XP": {
-      "scalars": 24,
+      "scalars": 48,
       "differences": 0,
       "maxAbsKm": 0,
       "toleranceKm": 0
     },
     "S": {
-      "scalars": 24,
+      "scalars": 48,
       "differences": 0,
       "maxAbsKm": 0,
       "toleranceKm": 0
     },
+    "U": {
+      "scalars": 48,
+      "differences": 0,
+      "maxAbsKm": 0,
+      "toleranceKm": 0.001
+    },
     "F": {
-      "scalars": 24,
+      "scalars": 48,
       "differences": 0,
       "maxAbsKm": 0,
       "toleranceKm": 0
     }
   },
-  "productReplayScalars": 357280,
-  "expectedProductReplayScalars": 357280,
-  "productReplayDifferences": 0,
+  "products": 10148,
+  "productDifferences": 0,
   "oldLeadScalars": 398392,
   "oldLeadDifferences": 0,
-  "completeGroupPhases": 22,
-  "totalGroupPhases": 22,
+  "oldLeadByArm": {
+    "AP": {
+      "compared": 79892,
+      "different": 0,
+      "maxAbsKm": 0
+    },
+    "XP": {
+      "compared": 79892,
+      "different": 0,
+      "maxAbsKm": 0
+    },
+    "S": {
+      "compared": 78824,
+      "different": 0,
+      "maxAbsKm": 0
+    },
+    "U": {
+      "compared": 79892,
+      "different": 0,
+      "maxAbsKm": 0
+    },
+    "F": {
+      "compared": 79892,
+      "different": 0,
+      "maxAbsKm": 0
+    }
+  },
+  "completeGroupPhases": 33,
+  "totalGroupPhases": 33,
   "armDayCells": 540,
   "missingArmDays": 0,
   "scoredArmDays": 149134,
   "excludedArmDays": 7076,
-  "registrationManifests": 144,
+  "registrationManifests": 575,
   "syntheticCells": 1080,
-  "syntheticEncounters": 2064413,
-  "syntheticPcFailures": 29,
+  "syntheticEncounters": 2064412,
+  "syntheticPcFailures": 30,
   "syntheticPairedCells": 2160,
   "syntheticReplayScalars": 5,
   "syntheticReplayMaxAbs": 0,
@@ -59,7 +96,7 @@
     "AP": {
       "scalars": 89721,
       "different": 89721,
-      "maxAbsM": 63.61106731162925,
+      "maxAbsM": 63.61128648467388,
       "missing": 0
     },
     "XP": {
