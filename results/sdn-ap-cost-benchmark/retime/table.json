@@ -1,5 +1,43 @@
 {
- "reading": "AP keeps its registered rows (300 s) and its 60 s flights from the screening-scale study. SGP4, XP whiteroom (sdn-ap 0.6.3) and XP Space Force are re-timed in calls of at least 1.2 s of CPU, five measurements per window; fits are timed once (their input is the 300 s arc, whatever the output step). Statistic: per regime AP's median over the arm's, the median over the eight regimes (the page's rule).",
+ "reading": "AP keeps its registered rows (300 s) and its 60 s flights from the screening-scale study. SGP4, XP whiteroom (sdn-ap 0.6.3) and XP Space Force are re-timed in calls of at least 1.2 s of CPU, five measurements per window; fits are timed once (their input is the 300 s arc, whatever the output step). Statistic: per regime AP's median over the arm's, the median over the eight regimes (the page's rule). armsRetimed: per arm, the median over every window the arm completed of the per-window CPU seconds per object-day (the rule of the registered table's arms[...].cpuSecondsPerObjectDay.median), flight at 300 s and at 60 s, and fit; windows gives the count.",
+ "armsRetimed": {
+  "SGP4": {
+   "step300": {
+    "flightCpuSecondsPerObjectDay": 0.0005581828743545611,
+    "windows": 25
+   },
+   "step60": {
+    "flightCpuSecondsPerObjectDay": 0.002685672877846791,
+    "windows": 25
+   },
+   "fitCpuSecondsPerObjectDay": 0.024141560000000003,
+   "fitWindows": 25
+  },
+  "XPU": {
+   "step300": {
+    "flightCpuSecondsPerObjectDay": 0.009006424812030074,
+    "windows": 28
+   },
+   "step60": {
+    "flightCpuSecondsPerObjectDay": 0.03480657142857142,
+    "windows": 28
+   },
+   "fitCpuSecondsPerObjectDay": 0.47255325000000004,
+   "fitWindows": 28
+  },
+  "XP": {
+   "step300": {
+    "flightCpuSecondsPerObjectDay": 0.007789449965493444,
+    "windows": 28
+   },
+   "step60": {
+    "flightCpuSecondsPerObjectDay": 0.029024380952380954,
+    "windows": 28
+   },
+   "fitCpuSecondsPerObjectDay": 0.05457170833333333,
+   "fitWindows": 28
+  }
+ },
  "byRegimeRetimed": {
   "step300": {
    "Low orbit, laser spheres": {
