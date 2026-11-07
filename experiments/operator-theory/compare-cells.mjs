@@ -1,14 +1,14 @@
 // COMPARE.md: every figure of the comparison site's explorer, by reference, regime, provider, satellite, fit and lead. Statistics only.
 //   node experiments/operator-theory/compare-cells.mjs --out results/ap-truth/compare/cells.json [--examples <dir>,<dir>]
 //   node experiments/operator-theory/compare-cells.mjs --check     exit 1 unless cells.json and hx-0-6-3.json reproduce from the stored rows byte for byte, the
-//                                                                 provenance block names the proofs, and sdn-ap 0.6.3 stands on every AP and whiteroom XP cell
+//                                                                 provenance block names the proofs, and sdn-ap 0.6.4 stands on every AP and whiteroom XP cell
 //                                                                 on precise orbits: measured on the THEMIS and Chandra rows, by identity on every other
-// Each row names its fits' input and each column's builds by SHA-256 (lib/build.mjs COLUMN_BUILDS). AP on precise orbits is sdn-ap 0.6.3 (AP063): the Highly
-// elliptical THEMIS and Chandra rows (HX) are flown on it (ap/b063/regimes-hx, all-regimes.mjs --ap-build), the grid 0.6.3 changes above an eccentricity of 0.3;
+// Each row names its fits' input and each column's builds by SHA-256 (lib/build.mjs COLUMN_BUILDS). AP on precise orbits names sdn-ap 0.6.4 (AP064, on the identity IDENTITY_064 from 0.6.3): the Highly
+// elliptical THEMIS and Chandra rows (HX) are flown on 0.6.3 (ap/b063/regimes-hx, all-regimes.mjs --ap-build), the grid 0.6.3 changes above an eccentricity of 0.3;
 // every other precise-orbit AP cell was flown on 0.5.1 (ap/b051), whose flights 0.6.3 equals byte for byte at e 0.3 and below (IDENTITY: 53 of 53 example sets,
 // 6 of 6 fits, 8 of 8 fixtures at experiments 9de1a40ff; 56 of 56 examples 0.5.1 to 0.6.2 at aa2a0a7b). The Space Force XP is sgp4-xp 0.2.1 (ap/b051; the
 // next-file pairs ap/xp-arm-0-2-1, XP-ARM-0-2-1.md). Whiteroom XP on precise orbits was flown on sdn-ap 0.4.11, re-measured on 0.5.1 byte for byte on every
-// stored window of its stores (PROOF), and 0.6.3 equals 0.5.1 on whiteroom XP in 56 of 56 examples (IDENTITY): its cells name 0.6.3, both proofs in the
+// stored window of its stores (PROOF), and 0.6.3 equals 0.5.1 on whiteroom XP in 56 of 56 examples (IDENTITY): and 0.6.4 equals 0.6.3 there (IDENTITY_064): its cells name 0.6.4, all the proofs in the
 // provenance block. Next-file AP and whiteroom XP ran on 0.4.11 alone and are left out until their rerun. Every Starlink group is held: no Starlink row or example is parsed, and the SpaceX
 // rows are carried from HELD_FROM's cells.json, less their cells on builds no longer current (AP and whiteroom XP 0.4.11, the Space Force XP 0.1.1).
 // Each FFM cell names the integrator its fits and flights ran: the one algorithm every FFM request of this harness carries (lib/frame.mjs, the request
@@ -31,7 +31,12 @@ const ROOT = '/opt/data/sdn-archive/operator-theory', AP = path.join(ROOT, 'ap')
 // The AP build every precise-orbit AP and whiteroom XP cell names (sdn-ap-site-accuracy-tables-0-6-3-20261106): propagator/sdn-ap 0.6.3, the site's shipped build.
 const AP063 = { module: 'propagator/sdn-ap', version: '0.6.3', commit: '93cb5a0584fa728864e4426cc9ceb368936589f9', sha256: 'aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e' };
 AP063.key = `${AP063.module}@${AP063.sha256.slice(0, 12)}`;
-const RECORDS = { ...BUILD_RECORDS, [AP063.key]: { module: AP063.module, version: AP063.version, commit: AP063.commit, sha256: AP063.sha256 } };
+// The build the site ships (sdn-ap-site-module-0-6-4-20261106): propagator/sdn-ap 0.6.4, named by its canonical module hash (sds.* sections stripped, what the signature covers), the signed bundle's whole-file hash beside it.
+const AP064 = { module: 'propagator/sdn-ap', version: '0.6.4', commit: 'cfd750eb8de2f5d7c339173ee674bc7a481da8c2', sha256: 'fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5', bundleSha256: 'e98b63558d84cfd3b8509f4c4c640502e38f81cc05a0e0277fcffa7da97cf51d' };
+AP064.key = `${AP064.module}@${AP064.sha256.slice(0, 12)}`;
+const RECORDS = { ...BUILD_RECORDS, [AP063.key]: { module: AP063.module, version: AP063.version, commit: AP063.commit, sha256: AP063.sha256 }, [AP064.key]: { module: AP064.module, version: AP064.version, commit: AP064.commit, sha256: AP064.sha256, bundleSha256: AP064.bundleSha256 } };
+// The identity that carries 0.6.3 to 0.6.4: the switch record's table (tesseral-switch-by-class): 0.6.4 moves non-resonant sets at e 0.05 to 0.3 alone; seeded sets outside that band equal 106 of 106 and published examples 56 of 56, none in the band; compare-examples.mjs --reflight on 0.6.4 finds the same on every published example (COMPARE.md).
+const IDENTITY_064 = { commit: '2d6974aae965267c0da60aae981ed93904c3c590', table: 'results/ap-truth/tesseral-switch-by-class/table.json', readme: 'results/ap-truth/tesseral-switch-by-class/README.md', band: { nonResonantFrom: 0.05, resonantFrom: 0.3 } };
 // The identity that carries the 0.5.1 flights to 0.6.3 at e 0.3 and below: the 0.6.3 version step (version-step.json: the dist aa3ed22a against the candidate it was
 // cut from, 56 of 56 example sets, 6 of 6 fits, 8 of 8 fixtures identical; fit.e2e 53 of 53 example sets at e 0.3 and below identical to 0.6.2) and the candidate's
 // acceptance list (final-build.json: 53 of 53 at e 0.3 and below identical to 0.6.2, the 3 above it changed by design), with 0.6.2 equal to 0.5.1 on all 56 published
@@ -58,8 +63,8 @@ const PROOF = {
   stores: ['truth', 'truth2', 'regimes', 'regimes-hx', 'regimes-wa', 'compare-truth', 'compare-truth2'],
 };
 const AP_OF = (version) => Object.entries(RECORDS).find(([, b]) => b.module === 'propagator/sdn-ap' && b.version === version)?.[0] ?? (() => { throw new Error(`no sdn-ap ${version} build record`); })();
-// Whiteroom XP: measured on 0.4.11, equal on 0.5.1 (PROOF) and on 0.6.3 (IDENTITY). AP: measured on 0.5.1, equal on 0.6.3 (IDENTITY) except the HX rows, measured on 0.6.3.
-const XP_MEASURED = AP_OF('0.4.11'), XP_REMEASURED = AP_OF('0.5.1'), AP_MEASURED = AP_OF('0.5.1'), XP_EQUAL = AP063.key, AP_NAMED = AP063.key;
+// Whiteroom XP: measured on 0.4.11, equal on 0.5.1 (PROOF) and on 0.6.3 (IDENTITY). AP: measured on 0.5.1, equal on 0.6.3 (IDENTITY) except the HX rows, measured on 0.6.3; 0.6.4 equal to 0.6.3 outside its band (IDENTITY_064), and no cell is in the band.
+const XP_MEASURED = AP_OF('0.4.11'), XP_REMEASURED = AP_OF('0.5.1'), AP_MEASURED = AP_OF('0.5.1'), XP_EQUAL = AP064.key, AP_NAMED = AP064.key, HX_FLOWN = AP063.key;
 const HX_LABEL = GROUPS.HX.label;
 // The columns on builds no longer current: next-file AP and whiteroom XP (0.4.11), the held cells' Space Force XP (0.1.1) and FFM (2.0.4).
 const DROPPED = { next: ['XP', 'AP'], held: ['XP', 'XPU', 'AP', 'FFM20', 'FFM40', 'FFMfull'] };
@@ -250,7 +255,7 @@ const doc = {
   columns: { SGP4: 'SGP4', XP: 'XP, whiteroom', XPU: 'XP, Space Force', AP: 'AP', FFM20: 'FFM 20×20', FFM40: 'FFM 40×40', FFMfull: 'FFM full', Center: "The center's own" },
   fields: 'input: what the fits read, operator-file (an operator\'s or a center\'s own prediction file) or precise-orbit (a precise orbit product). build: column to the keys of builds, each module build by SHA-256. integrator: for each FFM column in the row, the integrator algorithm its fits and flights ran, read at generation from the one request builder every FFM call of this harness goes through (experiments/operator-theory/lib/frame.mjs); the tolerances and steps are each writer\'s settings (arms.mjs, truth-compare.mjs, all-regimes.mjs, providers-run.mjs, score.mjs). arms: column to [median km, 95th percentile km, forecasts]. burnsInFit, burnsInForecast: of the n windows, those with a step of the truth\'s mean semimajor axis of 8 m or more in the fit arc, and in the forecast span to the lead (results/operator-theory/maneuver-flags); a window the detector could not cover counts in neither; null where no detector ran. lead: for reference next, hours from the start of the older file to the start of the newer, so a lead at or below the fit is not a forecast; for reference truth, hours past the end of the fit.',
   // the builds the rows name, and the builds whiteroom XP and AP were measured on (the provenance's measuredOn)
-  builds: Object.fromEntries(Object.entries(RECORDS).filter(([k]) => k === XP_MEASURED || k === XP_REMEASURED || k === AP_MEASURED || out.some((r) => Object.values(r.build ?? {}).some((keys) => keys.includes(k))))),
+  builds: Object.fromEntries(Object.entries(RECORDS).filter(([k]) => k === XP_MEASURED || k === XP_REMEASURED || k === AP_MEASURED || k === HX_FLOWN || out.some((r) => Object.values(r.build ?? {}).some((keys) => keys.includes(k))))),
   provenance: {
     XP: {
       reference: 'truth',
@@ -260,15 +265,17 @@ const doc = {
       statement: 'Whiteroom XP on precise orbits was flown on sdn-ap 0.4.11; re-measured on sdn-ap 0.5.1 (modules ea824356), every stored window of these stores is equal byte for byte; sdn-ap 0.6.3 flies whiteroom XP equal to 0.5.1 byte for byte on all 56 published examples (through 0.6.2), so its cells name 0.6.3.',
       proof: { commit: PROOF.commit, table: PROOF.table, data: PROOF.data },
       identity: { commit: IDENTITY.commit, data: IDENTITY.step, examples: IDENTITY.examples },
+      identity064: IDENTITY_064,
       stores: PROOF.stores,
     },
     AP: {
       reference: 'truth',
       build: AP_NAMED,
       measuredOn: AP_MEASURED,
-      statement: `AP on precise orbits was flown on sdn-ap 0.5.1 (modules ea824356). sdn-ap 0.6.3 (modules 93cb5a05) changes the theory above an eccentricity of ${IDENTITY.eMax} alone: at ${IDENTITY.eMax} and below its flights equal 0.6.2's byte for byte (53 of 53 example sets, 6 of 6 fits, 8 of 8 fixtures), and 0.6.2 equals 0.5.1 on all 56 published examples, so those cells name 0.6.3; the ${HX_LABEL} rows were flown again on 0.6.3 (ap/b063/regimes-hx), their change against 0.5.1 in hx-0-6-3.json.`,
+      statement: `AP on precise orbits was flown on sdn-ap 0.5.1 (modules ea824356). sdn-ap 0.6.3 (modules 93cb5a05) changes the theory above an eccentricity of ${IDENTITY.eMax} alone: at ${IDENTITY.eMax} and below its flights equal 0.6.2's byte for byte (53 of 53 example sets, 6 of 6 fits, 8 of 8 fixtures), and 0.6.2 equals 0.5.1 on all 56 published examples, so those cells name 0.6.3; the ${HX_LABEL} rows were flown again on 0.6.3 (ap/b063/regimes-hx), their change against 0.5.1 in hx-0-6-3.json. sdn-ap 0.6.4 (modules cfd750eb, canonical module fd1ef468, signed bundle e98b6355) moves non-resonant sets at an eccentricity from 0.05 to 0.3 alone: outside that band its flights equal 0.6.3's byte for byte (106 of 106 seeded sets; 56 of 56 published examples, none in the band; ${IDENTITY_064.commit.slice(0, 8)}, and the reflight of the examples in COMPARE.md), so every cell names 0.6.4 and the build it was flown on stays named here.`,
       identity: { commit: IDENTITY.commit, data: IDENTITY.step, final: IDENTITY.final, examples: IDENTITY.examples, eMax: IDENTITY.eMax },
-      remeasured: { regime: HX_LABEL, store: 'ap/b063/regimes-hx', tool: 'experiments/operator-theory/all-regimes.mjs --arms AP --groups HX --ap-build', windows: hxNew.size, change: 'results/ap-truth/compare/hx-0-6-3.json' },
+      identity064: IDENTITY_064,
+      remeasured: { regime: HX_LABEL, build: HX_FLOWN, store: 'ap/b063/regimes-hx', tool: 'experiments/operator-theory/all-regimes.mjs --arms AP --groups HX --ap-build', windows: hxNew.size, change: 'results/ap-truth/compare/hx-0-6-3.json' },
     },
   },
   dropped: 'Next-file AP and whiteroom XP (sdn-ap 0.4.11, no re-measure) and the held SpaceX cells on sgp4-xp 0.1.1 and ffm 2.0.4, until their rerun on the current builds.',
@@ -290,7 +297,7 @@ const hxCells = [...new Set(hxWindows.map((w) => w.fit))].sort((a, b) => a - b).
 }));
 const hxDoc = {
   what: `${HX_LABEL}: AP flown again on sdn-ap 0.6.3 on the same windows, truth, settings and measures as the 0.5.1 rows (all-regimes.mjs --arms AP --groups HX --ap-build); each figure the 3D forward error in km at the day past the fit's end, old then new; cells: each regime-level cell of cells.json on both builds.`,
-  builds: { old: { key: AP_MEASURED, ...RECORDS[AP_MEASURED] }, new: { key: AP_NAMED, ...RECORDS[AP_NAMED] } },
+  builds: { old: { key: AP_MEASURED, ...RECORDS[AP_MEASURED] }, new: { key: HX_FLOWN, ...RECORDS[HX_FLOWN] } },
   stores: { old: 'ap/b051/regimes-hx', new: 'ap/b063/regimes-hx' },
   days: HX_DAYS.map(Number),
   windows: hxWindows,
@@ -311,8 +318,11 @@ function check() {
   const fitE2e = step.e2es?.['fit.e2e.mjs (SDNAP_EXAMPLES)'] ?? '';
   if (step.dist?.wasmSha256 !== AP063.sha256 || step.examples?.sets !== 56 || step.examples?.identical !== 56 || step.fits?.count !== step.fits?.identical || !/53 of 53 example sets at e 0\.3 and below identical/.test(fitE2e)) faults.push('the identity (version-step.json at 9de1a40ff) does not carry 0.6.3 equal to its candidate on 56 of 56 examples and 53 of 53 sets at e 0.3 and below');
   if (final.exampleSets?.['eAtMost0.3'] !== 53 || final.exampleSets?.['identicalTo0.6.2'] !== 53) faults.push('the identity (final-build.json at 9de1a40ff) does not carry 53 of 53 sets at e 0.3 and below identical to 0.6.2');
+  // 0.6.3 to 0.6.4: the switch record's table holds the identity on the 0.6.4 module, and every published example flies on 0.6.4 outside the band.
+  const switched = JSON.parse(execFileSync('git', ['-C', REPO, 'show', `${IDENTITY_064.commit}:${IDENTITY_064.table}`], { maxBuffer: 1 << 26 }).toString('utf8'));
+  if (switched.pins?.next?.canonicalSha256 !== AP064.sha256 || switched.p3?.outsideEqual !== true || switched.p3?.outsideCount !== 106 || switched.examples?.length !== 56 || switched.examples.some((x) => !x.equal || x.inBand)) faults.push('the identity (tesseral-switch-by-class table.json) does not carry 0.6.3 to 0.6.4');
   const apRows = doc.rows.filter((r) => r.arms.AP && r.reference === 'truth');
-  if (apRows.some((r) => r.build.AP.join() !== AP_NAMED) || doc.rows.some((r) => r.reference !== 'truth' && r.build?.AP?.includes(AP_NAMED))) faults.push('an AP cell on precise orbits does not name sdn-ap 0.6.3, or one off them does');
+  if (apRows.some((r) => r.build.AP.join() !== AP_NAMED) || doc.rows.some((r) => r.reference !== 'truth' && r.build?.AP?.includes(AP_NAMED))) faults.push('an AP cell on precise orbits does not name sdn-ap 0.6.4, or one off them does');
   if (doc.provenance?.AP?.build !== AP_NAMED || doc.provenance?.AP?.measuredOn !== AP_MEASURED || doc.provenance?.AP?.identity?.commit !== IDENTITY.commit || doc.provenance?.AP?.remeasured?.regime !== HX_LABEL) faults.push('the AP provenance block is missing or does not name the identity and the re-measured regime');
   const proof = JSON.parse(execFileSync('git', ['-C', REPO, 'show', `${PROOF.commit}:${PROOF.data}`], { maxBuffer: 1 << 26 }).toString('utf8'));
   const xpPairs = (store) => proof.pairs.filter((p) => p.store === store && p.against.startsWith('b0411/')).flatMap((p) => Object.entries(p.arms).filter(([arm]) => /^XP\d+$/.test(arm)));
@@ -328,14 +338,14 @@ function check() {
   const p = doc.provenance?.XP;
   if (!p || p.build !== XP_EQUAL || p.measuredOn !== XP_MEASURED || p.remeasuredOn !== XP_REMEASURED || p.proof.commit !== PROOF.commit || p.identity?.commit !== IDENTITY.commit || p.stores.join() !== PROOF.stores.join()) faults.push('the provenance block is missing or does not name the proof and the identity');
   const relabeled = doc.rows.filter((r) => r.build?.XP?.includes(XP_EQUAL));
-  if (relabeled.some((r) => r.reference !== 'truth')) faults.push('a row off precise orbits names whiteroom XP on 0.6.3');
+  if (relabeled.some((r) => r.reference !== 'truth')) faults.push('a row off precise orbits names whiteroom XP on 0.6.4');
   if (doc.rows.some((r) => Object.values(r.build ?? {}).some((k) => k.some((x) => [XP_MEASURED, XP_REMEASURED, AP_MEASURED].includes(x) || doc.builds[x]?.version === '0.1.1')))) faults.push('a cell names sdn-ap 0.4.11, sdn-ap 0.5.1 or sgp4-xp 0.1.1');
   if (doc.rows.some((r) => r.reference === 'next' && (r.arms.XP || r.arms.AP))) faults.push('a next-file row carries AP or whiteroom XP');
   const ffmCells = doc.rows.flatMap((r) => Object.keys(r.arms).filter((c) => c.startsWith('FFM')).map((c) => r.integrator?.[c]));
   if (ffmCells.some((x) => x !== INTEGRATOR) || doc.rows.some((r) => Object.keys(r.integrator ?? {}).some((c) => !r.arms[c]))) faults.push(`an FFM cell does not name the integrator lib/frame.mjs carries (${INTEGRATOR})`);
   const ffmBuilds = doc.rows.flatMap((r) => Object.keys(r.arms).filter((c) => c.startsWith('FFM')).map((c) => (r.build[c] ?? []).filter((k) => doc.builds[k]?.module === 'propagator/ffm').map((k) => doc.builds[k])));
   if (ffmBuilds.some((b) => b.length !== 1 || b[0].version !== FFM_220.version || b[0].sha256 !== FFM_220.wasmSha256)) faults.push(`an FFM cell does not name propagator/ffm ${FFM_220.version} (${FFM_220.wasmSha256.slice(0, 12)})`);
-  console.log(faults.length ? `COMPARE CELLS: FAIL\n${faults.slice(0, 10).join('\n')}` : `COMPARE CELLS: PASS (${doc.rows.length} rows reproduce; AP on sdn-ap 0.6.3 (${AP063.sha256.slice(0, 12)}) in ${apRows.length} precise-orbit rows: ${apRows.filter((r) => r.regime === HX_LABEL).length} ${HX_LABEL} rows flown on it (${hxLive.length} windows, ${hxWindows.length} fits; hx-0-6-3.json reproduces), the rest on the identity at ${IDENTITY.commit.slice(0, 9)}; whiteroom XP on 0.6.3 in ${relabeled.length} precise-orbit rows, fed by ${[...xpFrom].map(([k, v]) => `${k} ${v.size}`).join(', ')}, each a store the proof covers with no differing window; no cell on sdn-ap 0.4.11, sdn-ap 0.5.1 or sgp4-xp 0.1.1; ${ffmCells.length} FFM cells name their integrator, ${INTEGRATOR}, and propagator/ffm ${FFM_220.version} (${FFM_220.wasmSha256.slice(0, 12)}))`);
+  console.log(faults.length ? `COMPARE CELLS: FAIL\n${faults.slice(0, 10).join('\n')}` : `COMPARE CELLS: PASS (${doc.rows.length} rows reproduce; AP on sdn-ap 0.6.4 (${AP064.sha256.slice(0, 12)}) in ${apRows.length} precise-orbit rows: ${apRows.filter((r) => r.regime === HX_LABEL).length} ${HX_LABEL} rows flown on 0.6.3 (${hxLive.length} windows, ${hxWindows.length} fits; hx-0-6-3.json reproduces), the rest on the identity at ${IDENTITY.commit.slice(0, 9)}; all carried to 0.6.4 by the identity at ${IDENTITY_064.commit.slice(0, 9)}; whiteroom XP on 0.6.4 in ${relabeled.length} precise-orbit rows, fed by ${[...xpFrom].map(([k, v]) => `${k} ${v.size}`).join(', ')}, each a store the proof covers with no differing window; no cell on sdn-ap 0.4.11, sdn-ap 0.5.1 or sgp4-xp 0.1.1; ${ffmCells.length} FFM cells name their integrator, ${INTEGRATOR}, and propagator/ffm ${FFM_220.version} (${FFM_220.wasmSha256.slice(0, 12)}))`);
   process.exit(faults.length ? 1 : 0);
 }
 const counts = {};

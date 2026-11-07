@@ -31,8 +31,8 @@ import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
-// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-0-6-3-20261106): sdn-ap 0.6.3, its committed dist by SHA-256.
-const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.3', commit: '93cb5a0584fa728864e4426cc9ceb368936589f9', sha256: 'aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e' };
+// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-0-6-4-20261106): sdn-ap 0.6.4, named by its canonical module hash (sds.* sections stripped, what the signature covers), opened from its signed dist by the bundle's whole-file hash.
+const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.4', commit: 'cfd750eb8de2f5d7c339173ee674bc7a481da8c2', sha256: 'fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5', bundleSha256: 'e98b63558d84cfd3b8509f4c4c640502e38f81cc05a0e0277fcffa7da97cf51d' };
 // The examples flown again on it: every one but the highly elliptical (TESS) examples, which the site withholds.
 const FLOWN_AGAIN = (d) => d.regime !== 'Highly elliptical';
 if (args.check) {
@@ -110,7 +110,7 @@ const storedWindow = (id, { start, cutoff, satellite }) => { const { d } = store
 async function openApAt(b) {
   const { standalone } = await import('./lib/ap.mjs');
   const { TYPE, oemLines, flightPcfBytes } = await import('../xp-atmosphere-merit/lib/sds.mjs');
-  const h = await standalone(b.module, { modulesCommit: b.commit, wasmSha256: b.sha256 });
+  const h = await standalone(b.module, { modulesCommit: b.commit, wasmSha256: b.bundleSha256 });
   return {
     build: { modulesCommit: b.commit, version: b.version, wasmSha256: b.sha256 },
     async fit(oem, pcf, extra) {
