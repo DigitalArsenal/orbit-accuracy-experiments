@@ -4,11 +4,12 @@ import { registeredRecord } from './products.mjs';
 import { ocmSidecar } from './sidecar.mjs';
 import { selectTruth } from './registration.mjs';
 
-/** The registered record of a fetched prefix. Only the prefix's first 262,144 bytes enter it. */
+/** The registered record of a fetched prefix. Only the prefix's first 262,144 bytes enter it. Without weather rows there is no drag
+ *  work, so there is no registered record (amendment A5): record is null and the sidecar is still built from the derived states. */
 export async function registeredProducts({ file, physics, weatherRows, weatherSha256, reg }) {
   const head = registeredHead(file), derived = await physics.derive(head, weatherRows);
   const truth = selectTruth(reg, head.source.norad, derived.native, derived.samples);
-  return { head, derived, truth, record: registeredRecord({ head, derived, truth, reg, weatherSha256 }) };
+  return { head, derived, truth, record: weatherRows ? registeredRecord({ head, derived, truth, reg, weatherSha256 }) : null };
 }
 
 /** The sidecar: the ten-minute GCRF states of the first 16 hours (the first 49 are the registered samples' states, the rest come from the
