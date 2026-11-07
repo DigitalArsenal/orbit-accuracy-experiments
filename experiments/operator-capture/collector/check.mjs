@@ -17,7 +17,8 @@ import {gzipSync,gunzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import {Fetcher,PREFIX_BYTES} from './transport.mjs';
 import {openMeme,retainedPoints,STEP,REGISTERED_BYTES,RETAINED_RECORDS} from './meme.mjs';
-import {registeredProducts,sidecarProducts} from './capture.mjs';
+import {registeredProducts,retainedStates,sidecarProducts} from './capture.mjs';
+import {openFit} from './fit.mjs';
 import {sidecarCounts} from './sidecar.mjs';
 import {subsets} from './registration.mjs';
 import {runCycle,firstSlot,CYCLE_MS} from './collect.mjs';
@@ -83,7 +84,7 @@ try{
     record.samples.forEach((p,j)=>{assert.equal(p.ms-record.samples[0].ms,j*600000);assert(Number.isFinite(p.energyJkg));assert(Number.isFinite(p.cumulativeDragWorkB1Jkg));assert.equal(p.meanElements.length,6);assert(p.meanElements.every(Number.isFinite));});
     for(const p of record.truth){assert.equal(p.stateM.length,6);assert(p.stateM.every(Number.isFinite));assert(p.ms>=record.samples[0].ms&&p.ms<=record.samples.at(-1).ms);}
     // the sidecar
-    const bytes=await sidecarProducts({file:r512,head:a.head,derived:a.derived,physics,producer}),counts=sidecarCounts(bytes);
+    const bytes=sidecarProducts({file:r512,head:a.head,retained:await retainedStates({file:r512,derived:a.derived,physics}),producer}),counts=sidecarCounts(bytes);
     assert.deepEqual({states:counts.states,covariancePerState:counts.covariancePerState,hours:counts.hours,covFrame:counts.covFrame,covOrdering:counts.covOrdering,trajFrame:counts.trajFrame,identifier:counts.identifier},
       {states:97,covariancePerState:21,hours:16,covFrame:'UVW',covOrdering:'LTM',trajFrame:'GCRF',identifier:'$OCM'});
     const ocm=O.OCM.getSizePrefixedRootAsOCM(new fb.ByteBuffer(bytes)).unpack(),source=covarianceOf(r512.bytes);
@@ -104,7 +105,9 @@ try{
   assert.equal(short.length,60);assert.equal(short.at(-1).ms-short[0].ms,590*STEP*1000);report.shortFile={records:cut,sidecarStates:short.length};
   // a real cycle on a scratch root: both products per file, counted by the guarded reader
   fs.mkdirSync(path.join(scratch,'_collector'));fs.writeFileSync(path.join(scratch,'_collector','active.json'),JSON.stringify({registration:{installedUtc:'2000-01-01T00:00:00.000Z'}}));
-  const cycle=await runCycle({captureRoot:scratch,physics,registration,producer,subsetsFile:path.join(scratch,'no-registration'),log:()=>{},stop:()=>false,limit:3});
+  const fitter=await openFit(process.env.OPERATOR_FIT_MODULES_ROOT??path.join(modules,'..','fit-modules'));
+  const cycle=await runCycle({captureRoot:scratch,physics,fitter,registration,producer,subsetsFile:path.join(scratch,'no-registration'),log:()=>{},stop:()=>false,limit:3});
+  await fitter.destroy();
   assert(cycle&&!cycle.failure,cycle?.failure?.message);
   const ledger=JSON.parse(fs.readFileSync(path.join(scratch,'cycles.jsonl'),'utf8').trim().split('\n').at(-1)),counted=countCycle(scratch,ledger.id);
   assert.equal(ledger.status,'partial');assert.equal(ledger.limit,3);assert.equal(ledger.files+ledger.failures,3);assert.equal(ledger.sidecars,ledger.files);assert.equal(ledger.sidecarFailures,0);

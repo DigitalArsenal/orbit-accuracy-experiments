@@ -8,15 +8,16 @@ import path from 'node:path';
 import {openPhysics} from './physics.mjs';
 import {runCycle,firstSlot} from './collect.mjs';
 import {sidecarCounts} from './sidecar.mjs';
+import {openFit} from './fit.mjs';
 
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'capture-no-weather-'));
-const physics=await openPhysics(process.env.OPERATOR_MODULES_ROOT);
+const physics=await openPhysics(process.env.OPERATOR_MODULES_ROOT),fitter=await openFit(process.env.OPERATOR_FIT_MODULES_ROOT??path.join(process.env.OPERATOR_MODULES_ROOT,'..','fit-modules'));
 try{
   const refused={...physics,weather:async()=>{throw new Error('data-source/space-weather/parse_weather: space-weather-source: Invalid or stale NOAA 45-day forecast.');}};
   const events=[];
   // The disk dips below the floor at the second file and recovers: the cycle pauses and finishes.
   let reads=0;const freeGiB=()=>{reads++;return reads===2||reads===3?20:100;};
-  const out=await runCycle({captureRoot:root,physics:refused,registration:{},producer:'check-no-weather',subsetsFile:path.join(root,'no-registration'),log:(e,x)=>events.push([e,x]),stop:()=>false,limit:3,freeGiB,pauseMs:10});
+  const out=await runCycle({captureRoot:root,physics:refused,fitter,registration:{},producer:'check-no-weather',subsetsFile:path.join(root,'no-registration'),log:(e,x)=>events.push([e,x]),stop:()=>false,limit:3,freeGiB,pauseMs:10});
   assert.equal(events.filter(([e])=>e==='paused').length,2,'a dip inside the cycle pauses it');
   assert.equal(out.failure,undefined);
   const [cycle]=fs.readdirSync(path.join(root,'cycles'));
@@ -35,4 +36,4 @@ try{
   fs.writeFileSync(path.join(paused,'cycles.jsonl'),JSON.stringify({id:'2026-11-07T07-53-00-496Z',startedUtc:'2026-11-07T12:50:34.563Z'})+'\n');
   assert.equal(firstSlot(paused,Date.parse('2026-11-07T15:02:00Z')),Date.parse('2026-11-07T15:53:00.496Z'));
   console.log('CHECK-NO-WEATHER PASS',{status:summary.status,sidecars:summary.sidecars,sidecarBytes:summary.sidecarBytes});
-}finally{await physics.destroy();fs.rmSync(root,{recursive:true,force:true});}
+}finally{await physics.destroy();await fitter.destroy();fs.rmSync(root,{recursive:true,force:true});}

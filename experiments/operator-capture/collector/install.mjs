@@ -4,6 +4,7 @@ import path from 'node:path';
 import {execFileSync,spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {sha} from './transport.mjs';
+import {FIT_MODULES,FIT_MODULES_COMMIT} from './fit.mjs';
 const here=path.dirname(fileURLToPath(import.meta.url)),repo=path.resolve(here,'../../..');
 const root=process.env.OPERATOR_CAPTURE_ROOT??'/opt/data/sdn-archive/operator-capture';
 const modules=process.env.OPERATOR_MODULES_ROOT;
@@ -21,7 +22,7 @@ fs.mkdirSync(release,{recursive:true});
 for(const name of fs.readdirSync(here))if(name.endsWith('.mjs')||name==='package.json'||name==='package-lock.json')fs.copyFileSync(path.join(here,name),path.join(release,name));
 // Dependencies are copied once; no symlink survives into a removable worktree.
 const deps=path.join(root,'_collector','dependencies',sha(fs.readFileSync(path.join(here,'package-lock.json'))));
-if(!fs.existsSync(deps)){fs.mkdirSync(deps,{recursive:true});fs.cpSync(path.join(here,'node_modules'),path.join(deps,'node_modules'),{recursive:true});}
+if(!fs.existsSync(deps)){fs.mkdirSync(deps,{recursive:true});fs.cpSync(path.join(here,'node_modules'),path.join(deps,'node_modules'),{recursive:true,mode:fs.constants.COPYFILE_FICLONE});}
 fs.symlinkSync(path.join(deps,'node_modules'),path.join(release,'node_modules'),'dir');
 // OPERATOR_MODULES_ROOT is a modules checkout, or the modules/ directory of an installed release: the same bytes and commit carry forward, checked against that release's registration.
 const prior=path.join(modules,'..','registration.json'),carried=!fs.existsSync(path.join(modules,'.git'))&&fs.existsSync(prior)?JSON.parse(fs.readFileSync(prior)):null;
@@ -32,6 +33,14 @@ for(const name of ['foundation/frames','foundation/orbits','analysis/density-cal
   registration.modules.push({name,wasmSha256:sha(fs.readFileSync(path.join(dir,'dist/isomorphic/module.wasm'))),manifestSha256:sha(fs.readFileSync(path.join(dir,'plugin-manifest.json')))});
 }
 if(carried)for(const m of registration.modules){const pin=carried.modules.find(x=>x.name===m.name);if(pin?.wasmSha256!==m.wasmSha256||pin?.manifestSha256!==m.manifestSha256)throw new Error(`carried module differs from its release: ${m.name}`);}
+// The fit's own artifacts (amendment A6), beside the E13b ones and never in their place: from a modules checkout named by OPERATOR_FIT_MODULES_ROOT, else carried from the prior release. Pinned in fit.mjs.
+const fitSource=process.env.OPERATOR_FIT_MODULES_ROOT??path.join(modules,'..','fit-modules');
+registration.fitModulesCommit=FIT_MODULES_COMMIT;registration.fitModules=FIT_MODULES;
+for(const pin of FIT_MODULES){
+  const dir=path.join(release,'fit-modules',pin.name);fs.mkdirSync(path.join(dir,'dist/isomorphic'),{recursive:true});
+  for(const file of ['plugin-manifest.json','dist/isomorphic/module.wasm'])fs.copyFileSync(path.join(fitSource,pin.name,file),path.join(dir,file));
+  if(sha(fs.readFileSync(path.join(dir,'dist/isomorphic/module.wasm')))!==pin.wasmSha256||sha(fs.readFileSync(path.join(dir,'plugin-manifest.json')))!==pin.manifestSha256)throw new Error(`fit artifact differs from its pin: ${pin.name}`);
+}
 for(const name of ['PLAN.md','config.json'])fs.copyFileSync(path.join(repo,'experiments/e13b-starlink-dca',name),path.join(release,name));
 registration.planSha256=sha(fs.readFileSync(path.join(release,'PLAN.md')));registration.configSha256=sha(fs.readFileSync(path.join(release,'config.json')));
 registration.sourceHashes=Object.fromEntries(fs.readdirSync(release).filter(n=>n.endsWith('.mjs')).sort().map(n=>[n,sha(fs.readFileSync(path.join(release,n)))]));
