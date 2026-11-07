@@ -36,7 +36,7 @@ const AP064 = { module: 'propagator/sdn-ap', version: '0.6.4', commit: 'cfd750eb
 AP064.key = `${AP064.module}@${AP064.sha256.slice(0, 12)}`;
 const RECORDS = { ...BUILD_RECORDS, [AP063.key]: { module: AP063.module, version: AP063.version, commit: AP063.commit, sha256: AP063.sha256 }, [AP064.key]: { module: AP064.module, version: AP064.version, commit: AP064.commit, sha256: AP064.sha256, bundleSha256: AP064.bundleSha256 } };
 // The identity that carries 0.6.3 to 0.6.4: the switch record's table (tesseral-switch-by-class): 0.6.4 moves non-resonant sets at e 0.05 to 0.3 alone; seeded sets outside that band equal 106 of 106 and published examples 56 of 56, none in the band; compare-examples.mjs --reflight on 0.6.4 finds the same on every published example (COMPARE.md).
-const IDENTITY_064 = { commit: '2d6974aae965267c0da60aae981ed93904c3c590', table: 'results/ap-truth/tesseral-switch-by-class/table.json', readme: 'results/ap-truth/tesseral-switch-by-class/README.md', band: { nonResonantFrom: 0.05, resonantFrom: 0.3 } };
+const IDENTITY_064 = { commit: '2d6974aae965267c0da60aae981ed93904c3c590', table: 'results/ap-truth/tesseral-switch-by-class/table.json', readme: 'results/ap-truth/tesseral-switch-by-class/README.md', band: { nonResonantFrom: 0.05, resonantFrom: 0.3 }, sets: 'results/ap-truth/compare/band-sets/table.json' };
 // The identity that carries the 0.5.1 flights to 0.6.3 at e 0.3 and below: the 0.6.3 version step (version-step.json: the dist aa3ed22a against the candidate it was
 // cut from, 56 of 56 example sets, 6 of 6 fits, 8 of 8 fixtures identical; fit.e2e 53 of 53 example sets at e 0.3 and below identical to 0.6.2) and the candidate's
 // acceptance list (final-build.json: 53 of 53 at e 0.3 and below identical to 0.6.2, the 3 above it changed by design), with 0.6.2 equal to 0.5.1 on all 56 published
@@ -262,7 +262,7 @@ const doc = {
       build: XP_EQUAL,
       measuredOn: XP_MEASURED,
       remeasuredOn: XP_REMEASURED,
-      statement: 'Whiteroom XP on precise orbits was flown on sdn-ap 0.4.11; re-measured on sdn-ap 0.5.1 (modules ea824356), every stored window of these stores is equal byte for byte; sdn-ap 0.6.3 flies whiteroom XP equal to 0.5.1 byte for byte on all 56 published examples (through 0.6.2), so its cells name 0.6.3.',
+      statement: `Whiteroom XP on precise orbits was flown on sdn-ap 0.4.11; re-measured on sdn-ap 0.5.1 (modules ea824356), every stored window of these stores is equal byte for byte; sdn-ap 0.6.3 flies whiteroom XP equal to 0.5.1 byte for byte on all 56 published examples (through 0.6.2), and 0.6.4 equals 0.6.3 outside its band, where the cells' fitted sets lie (${IDENTITY_064.sets}), so its cells name 0.6.4.`,
       proof: { commit: PROOF.commit, table: PROOF.table, data: PROOF.data },
       identity: { commit: IDENTITY.commit, data: IDENTITY.step, examples: IDENTITY.examples },
       identity064: IDENTITY_064,
@@ -272,7 +272,7 @@ const doc = {
       reference: 'truth',
       build: AP_NAMED,
       measuredOn: AP_MEASURED,
-      statement: `AP on precise orbits was flown on sdn-ap 0.5.1 (modules ea824356). sdn-ap 0.6.3 (modules 93cb5a05) changes the theory above an eccentricity of ${IDENTITY.eMax} alone: at ${IDENTITY.eMax} and below its flights equal 0.6.2's byte for byte (53 of 53 example sets, 6 of 6 fits, 8 of 8 fixtures), and 0.6.2 equals 0.5.1 on all 56 published examples, so those cells name 0.6.3; the ${HX_LABEL} rows were flown again on 0.6.3 (ap/b063/regimes-hx), their change against 0.5.1 in hx-0-6-3.json. sdn-ap 0.6.4 (modules cfd750eb, canonical module fd1ef468, signed bundle e98b6355) moves non-resonant sets at an eccentricity from 0.05 to 0.3 alone: outside that band its flights equal 0.6.3's byte for byte (106 of 106 seeded sets; 56 of 56 published examples, none in the band; ${IDENTITY_064.commit.slice(0, 8)}, and the reflight of the examples in COMPARE.md), so every cell names 0.6.4 and the build it was flown on stays named here.`,
+      statement: `AP on precise orbits was flown on sdn-ap 0.5.1 (modules ea824356). sdn-ap 0.6.3 (modules 93cb5a05) changes the theory above an eccentricity of ${IDENTITY.eMax} alone: at ${IDENTITY.eMax} and below its flights equal 0.6.2's byte for byte (53 of 53 example sets, 6 of 6 fits, 8 of 8 fixtures), and 0.6.2 equals 0.5.1 on all 56 published examples, so those cells name 0.6.3; the ${HX_LABEL} rows were flown again on 0.6.3 (ap/b063/regimes-hx), their change against 0.5.1 in hx-0-6-3.json. sdn-ap 0.6.4 (modules cfd750eb, canonical module fd1ef468, signed bundle e98b6355) moves non-resonant sets at an eccentricity from 0.05 to 0.3 alone: outside that band its flights equal 0.6.3's byte for byte (106 of 106 seeded sets; 56 of 56 published examples, none in the band; ${IDENTITY_064.commit.slice(0, 8)}, and the reflight of the examples in COMPARE.md), and the cells' fitted sets lie outside it (${IDENTITY_064.sets}: the windows and the sampled regimes stated there), so every cell names 0.6.4 and the build it was flown on stays named here.`,
       identity: { commit: IDENTITY.commit, data: IDENTITY.step, final: IDENTITY.final, examples: IDENTITY.examples, eMax: IDENTITY.eMax },
       identity064: IDENTITY_064,
       remeasured: { regime: HX_LABEL, build: HX_FLOWN, store: 'ap/b063/regimes-hx', tool: 'experiments/operator-theory/all-regimes.mjs --arms AP --groups HX --ap-build', windows: hxNew.size, change: 'results/ap-truth/compare/hx-0-6-3.json' },
@@ -321,6 +321,8 @@ function check() {
   // 0.6.3 to 0.6.4: the switch record's table holds the identity on the 0.6.4 module, and every published example flies on 0.6.4 outside the band.
   const switched = JSON.parse(execFileSync('git', ['-C', REPO, 'show', `${IDENTITY_064.commit}:${IDENTITY_064.table}`], { maxBuffer: 1 << 26 }).toString('utf8'));
   if (switched.pins?.next?.canonicalSha256 !== AP064.sha256 || switched.p3?.outsideEqual !== true || switched.p3?.outsideCount !== 106 || switched.examples?.length !== 56 || switched.examples.some((x) => !x.equal || x.inBand)) faults.push('the identity (tesseral-switch-by-class table.json) does not carry 0.6.3 to 0.6.4');
+  const bandSets = JSON.parse(fs.readFileSync(path.join(REPO, IDENTITY_064.sets), 'utf8'));
+  if (bandSets.totals?.inBand !== 0 || !(bandSets.totals?.sets > 0)) faults.push(`${IDENTITY_064.sets}: ${bandSets.totals?.inBand ?? 'no count of'} fitted sets in the band`);
   const apRows = doc.rows.filter((r) => r.arms.AP && r.reference === 'truth');
   if (apRows.some((r) => r.build.AP.join() !== AP_NAMED) || doc.rows.some((r) => r.reference !== 'truth' && r.build?.AP?.includes(AP_NAMED))) faults.push('an AP cell on precise orbits does not name sdn-ap 0.6.4, or one off them does');
   if (doc.provenance?.AP?.build !== AP_NAMED || doc.provenance?.AP?.measuredOn !== AP_MEASURED || doc.provenance?.AP?.identity?.commit !== IDENTITY.commit || doc.provenance?.AP?.remeasured?.regime !== HX_LABEL) faults.push('the AP provenance block is missing or does not name the identity and the re-measured regime');
