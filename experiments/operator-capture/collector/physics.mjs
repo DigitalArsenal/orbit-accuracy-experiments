@@ -72,7 +72,7 @@ export async function openPhysics(root){
   }
   async function derive(head,weatherRows){
     const native=[];for(const p of head.points)native.push(await normalize(p));
-    const energy=await dcl('energy',native),work=await dcl('drag_work',native,weatherRows);
+    const energy=await dcl('energy',native),work=weatherRows?await dcl('drag_work',native,weatherRows):null;
     const samples=[];
     for(let i=0;i<native.length;i+=10){samples.push({ms:native[i].ms,energyJkg:energy.ENERGY_J_KG[i],altitudeKm:energy.ALTITUDE_KM[i],meanElements:await mean(head.points[i]),stateM:native[i].stateM});}
     return {samples,native,work};

@@ -190,3 +190,24 @@ Cost, measured on the 11,187 listed files: network per cycle 2.93 GB to 5.87 GB 
 Cadence: eight-hour cycles are registered, so the replacement process starts its first cycle at the next scheduled slot (the last recorded start
 plus eight hours), not at once, and a restart never moves the cadence. Installed WASM artifacts are carried forward byte for byte (same hashes and
 modules commit); the upgrade is another install, and cycles before it keep their format.
+
+## Amendment A5 — capture runs through January, and survives a refused weather source (2026-11-07, during capture)
+
+Owner, 2026-11-07: "Capture extends until the end of january; by then we will have transitioned it to actual SDN nodes." The collector now stops at
+2027-02-01T00:00:00Z instead of 2026-12-02T00:00:00Z. This is not an extension of E13b: its confirmatory window, truth dates, scoring date, endpoints,
+thresholds, estimator and `config.json` do not change. Files captured after the window are for other work and enter no E13b score. The decision does
+not respond to any outcome: no hypothesis has been scored.
+
+Found the same day: from 2026-11-06T07:53Z every cycle failed before fetching a file with "Invalid or stale NOAA 45-day forecast": NOAA's forecast was
+last issued 2026-11-04, and `data-source/space-weather` refuses one whose first day is over a day old. Four cycles were lost (11-06 07:53, 15:53,
+23:53 and 11-07 07:53 UTC, the last started late, at 12:50Z, by the disk floor). Their files are gone: a raw file is never persisted and the operator's
+are replaced. Those cycles are missing coverage under this plan's rules; nothing fills them.
+
+Weather feeds only the drag work of the registered record. So when the weather sources refuse, a cycle now fetches as usual, keeps the A4 sidecars,
+writes no registered record, states `weather.unavailable` in its summary and ends `sidecars-only`. For E13b that cycle is missing coverage, and it is
+never scored with stale or substituted weather. With weather available the cycle and its record are byte for byte what they were. Physics and the
+installed WASM do not change; artifacts carry forward by hash.
+
+Storage: about 0.77 GB a day, about 66 GB more to 2027-02-01. The 25 GiB floor still pauses the collector, so older cycles have to move off this volume
+before then.
+

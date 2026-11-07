@@ -35,7 +35,11 @@ export async function runCycle({captureRoot,physics,registration,producer,subset
   try{
     const reg=subsets(subsetsFile);
     summary.subsetSha256=reg.sha256;summary.subsetMode=reg.mode;
-    const weather=await physics.weather(fetcher);summary.weather={sha256:weather.sha256,sources:weather.sources,rows:weather.rows.length};
+    // The operator's files cannot be fetched later, and weather feeds only the drag work of the registered record: when the weather
+    // sources refuse, the cycle still keeps the sidecars and writes no registered record (amendment A5).
+    let weather=null;
+    try{weather=await physics.weather(fetcher);summary.weather={sha256:weather.sha256,sources:weather.sources,rows:weather.rows.length};}
+    catch(error){if(error.fatal)throw error;summary.weather={unavailable:error.message};log('weather-unavailable',{id,error:error.message});}
     const manifest=await fetcher.manifest();summary.listed=manifest.names.length;summary.manifestSha256=manifest.sha256;
     const names=limit?manifest.names.slice(0,limit):manifest.names;if(limit)summary.limit=limit;
     write(path.join(cycleDir,'summary.json'),summary);
@@ -49,10 +53,12 @@ export async function runCycle({captureRoot,physics,registration,producer,subset
         const fetched=await pending.shift();
         if(fetched.error)throw fetched.error;
         if(queued<names.length)queue();
-        const {head,derived,truth,record}=await registeredProducts({file:fetched.file,physics,weatherRows:weather.rows,weatherSha256:weather.sha256,reg});
-        const bytes=gzipSync(JSON.stringify(record)+'\n'),file=path.join(cycleDir,head.source.norad+'.json.gz');
-        fs.writeFileSync(file,bytes,{flag:'wx'});
-        summary.files++;summary.samples+=record.samples.length;summary.truthStates+=truth.length;summary.storedBytes+=bytes.length;
+        const {head,derived,truth,record}=await registeredProducts({file:fetched.file,physics,weatherRows:weather?.rows??null,weatherSha256:weather?.sha256??null,reg});
+        if(record){
+          const bytes=gzipSync(JSON.stringify(record)+'\n'),file=path.join(cycleDir,head.source.norad+'.json.gz');
+          fs.writeFileSync(file,bytes,{flag:'wx'});
+          summary.files++;summary.samples+=record.samples.length;summary.truthStates+=truth.length;summary.storedBytes+=bytes.length;
+        }
         // The sidecar never changes the registered record above: a failure here is counted and logged, and the record stays.
         try{
           const ocm=await sidecarProducts({file:fetched.file,head,derived,physics,producer});
@@ -69,9 +75,9 @@ export async function runCycle({captureRoot,physics,registration,producer,subset
       }
       const cpu=process.cpuUsage(cpu0),cpuSeconds=(cpu.user+cpu.system)/1e6,elapsed=(Date.now()-started)/1000;
       await sleep(Math.max(0,Math.min(30000,(cpuSeconds/0.5-elapsed)*1000)));
-      if((summary.files+summary.failures)%100===0){log('progress',{id,...summary,bytes:fetcher.bytes,cpuSeconds});write(path.join(cycleDir,'summary.json'),summary);}
+      if((summary.files+summary.sidecars+summary.failures)%100===0){log('progress',{id,...summary,bytes:fetcher.bytes,cpuSeconds});write(path.join(cycleDir,'summary.json'),summary);}
     }
-    if(summary.status==='running')summary.status=summary.files===summary.listed?'complete':'partial';
+    if(summary.status==='running')summary.status=!weather?'sidecars-only':summary.files===summary.listed?'complete':'partial';
   }catch(error){failure=error;summary.status='failed';summary.error=error.message;}
   fetcher.cancel();await Promise.all(pending);
   const cpu=process.cpuUsage(cpu0);
@@ -104,7 +110,7 @@ async function main(){
     const subsetsFile=process.env.OPERATOR_SUBSETS??path.resolve(new URL('../SUBSETS.md',import.meta.url).pathname),producer=`sdn-operator-capture ${registration.componentCommit}`;
     const first=once?Date.now():firstSlot(root);
     if(first>Date.now()){log('waiting',{nextUtc:new Date(first).toISOString()});while(!stop()&&Date.now()<first)await sleep(Math.min(30000,first-Date.now()));}
-    while(!stop()&&Date.now()<Date.parse('2026-12-02T00:00:00Z')){
+    while(!stop()&&Date.now()<Date.parse('2027-02-01T00:00:00Z')){
       const cycle=await runCycle({captureRoot:root,physics,registration,producer,subsetsFile,log,stop,limit});
       if(!cycle)break;
       if(cycle.failure?.fatal)throw cycle.failure;
