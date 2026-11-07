@@ -2171,7 +2171,10 @@
    "wording": "for payload-class error; debris holds only if debris error >= payload error (V10)"
   },
   "statement": "the honest limit as stated is withdrawn: at the smallest covariance the truth does not reject, a zero-miss pair at 5 days in drag LEO can exceed Pc 1e-4",
-  "ruling": null
+  "ruling": {
+   "date": "2026-11-07",
+   "words": "Owner delegation 2026-11-04: \"The covariance study just do what you think is best\". The registered S3 default applied at 2026-11-07 12:00 UTC (PLAN.md section 12): the limit is withdrawn and nothing is tuned."
+  }
  },
  "s5": {
   "LEO-L|0": {
