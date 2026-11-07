@@ -103,3 +103,7 @@ Read before this registration: B2's README, rows, tables and diagnosis; `cells.j
 - `meta.json`: registration commit, sizing commit, builds, tier digests. `counts.jsonl`: raw objects and events per tier, whitepaper only; the site never reads it.
 - `sizing.json`, `rows.jsonl` (per replicate), `table.json`, `README.md`, `chart.json`.
 - `--check`: registration before the first row, and sizing before the first alert row, by committer dates; t0's digest equal to B2's; arm 1's medians equal to `cells.json`; the table reproducing byte for byte from the rows; alerts per true event per theory with intervals; both arms; the sensitivities.
+
+## Amendment 1 (2026-11-06, before any alert)
+
+Tier t3 seed 1, on its first start, stopped in the module: one guest thread trapped (`memory access out of bounds`) and the process hung at no CPU. It left no row and was stopped by its exact process number. It was started once more, unchanged, and ran clean; seeds 2 and 3 ran clean first time. The trap appeared only at the 1000 km threshold, which no landed screen uses, and is reported to the coordinator as a module matter. t0 equals B2's event set by digest. t1 seed 1 holds exactly B2's 16,091 events under 5 km. The geometry was read before the sizing: 6 regime pairs hold 100 or more true events, and every other pair is in the sparse class, so every regime above 2000 km and every highly elliptical object shares one radius.

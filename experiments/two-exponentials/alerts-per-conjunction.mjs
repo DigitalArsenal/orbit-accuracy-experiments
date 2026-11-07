@@ -610,7 +610,7 @@ const TRIALS = 200, SIZE_B = 100, SUBSAMPLE = 16;
 function subsampleTier(t, stride) {
   const n = Math.floor(t.n / stride), g = new Float32Array(n * RECORD), reg = new Uint8Array(n * 2), cls = new Uint8Array(n);
   for (let j = 0; j < n; j++) { const i = j * stride; g.set(t.g.subarray(i * RECORD, (i + 1) * RECORD), j * RECORD); reg[j * 2] = t.reg[i * 2]; reg[j * 2 + 1] = t.reg[i * 2 + 1]; cls[j] = t.cls[i]; }
-  return { g, reg, cls, n, weight: t.weight * stride };
+  return { g, reg, cls, n, weight: t.weight };
 }
 function lawParents() {
   const landed = JSON.parse(fs.readFileSync(path.join(ROOT, 'results/ap-truth/compare/cells.json'), 'utf8')).rows;
@@ -645,7 +645,7 @@ function resample(E, next) {
 function sizingGeo() {
   const geo = loadGeometry();
   const small = { classNames: geo.classNames, truth: subsampleTier(geo.truth, SUBSAMPLE) };
-  const use = [{ tier: subsampleTier(geo.tiers.t0, SUBSAMPLE), weight: SUBSAMPLE }];
+  const use = [{ tier: subsampleTier(geo.tiers.t0, SUBSAMPLE), weight: 1 }];
   for (const tier of [1, 2, 3]) { const t = geo.tiers[`t${tier}-s1`]; const s = subsampleTier(t, SUBSAMPLE); use.push({ tier: s, weight: s.weight }); }
   const max = Math.max(small.truth.n, ...use.map((u) => u.tier.n));
   return { small, use, buf: new Float32Array(max) };
@@ -839,7 +839,7 @@ function check() {
   if (!sizingC || !rowsC) fails.push('sizing or rows not committed');
   else {
     if (!(Date.parse(reg.time) < Date.parse(sizingC[1]))) fails.push('sizing is not after the registration');
-    if (!(Date.parse(sizingC[1]) < Date.parse(rowsC[1]) || sizingC[1] === rowsC[1] && false)) fails.push('the alert rows are not after the sizing');
+    if (!(Date.parse(sizingC[1]) < Date.parse(rowsC[1]))) fails.push('the alert rows are not after the sizing');
     const ancestor = (a, b) => { try { execFileSync('git', ['merge-base', '--is-ancestor', a, b], { cwd: ROOT }); return true; } catch { return false; } };
     if (!ancestor(reg.commit, sizingC[0]) || !ancestor(sizingC[0], rowsC[0])) fails.push('registration, sizing and rows are not one ancestry chain');
   }

@@ -1,0 +1,2025 @@
+{
+ "rows": [
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 944,
+   "median": 1.715,
+   "p95": 3.122,
+   "column": "SGP4",
+   "landed": [
+    1.715,
+    3.122,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 1,
+   "theory": "XP",
+   "n": 944,
+   "median": 1.612,
+   "p95": 2.947,
+   "column": "XP",
+   "landed": [
+    1.612,
+    2.947,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 944,
+   "median": 1.722,
+   "p95": 3.178,
+   "column": "XPU",
+   "landed": [
+    1.722,
+    3.178,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 1,
+   "theory": "AP",
+   "n": 944,
+   "median": 0.1954,
+   "p95": 0.7041,
+   "column": "AP",
+   "landed": [
+    0.1954,
+    0.7041,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 944,
+   "median": 0.1396,
+   "p95": 0.6481,
+   "column": "FFM40",
+   "landed": [
+    0.1396,
+    0.6481,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 944,
+   "median": 12.205,
+   "p95": 25.526,
+   "column": "SGP4",
+   "landed": [
+    12.205,
+    25.526,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 3,
+   "theory": "XP",
+   "n": 944,
+   "median": 11.211,
+   "p95": 24.103,
+   "column": "XP",
+   "landed": [
+    11.211,
+    24.103,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 944,
+   "median": 12.426,
+   "p95": 26.309,
+   "column": "XPU",
+   "landed": [
+    12.426,
+    26.309,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 3,
+   "theory": "AP",
+   "n": 944,
+   "median": 2.125,
+   "p95": 8.589,
+   "column": "AP",
+   "landed": [
+    2.125,
+    8.589,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 944,
+   "median": 1.741,
+   "p95": 8.325,
+   "column": "FFM40",
+   "landed": [
+    1.741,
+    8.325,
+    944
+   ]
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 5,
+   "theory": "XP",
+   "n": 944,
+   "median": 30.309,
+   "p95": 66.99
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "fit": 24,
+   "lead": 5,
+   "theory": "AP",
+   "n": 944,
+   "median": 6.275,
+   "p95": 24.936
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "lead": 1,
+   "windowsAny": 944,
+   "windowsAllFive": 944
+  },
+  {
+   "cut": "T",
+   "cell": "Strong drag, 2025",
+   "lead": 3,
+   "windowsAny": 944,
+   "windowsAllFive": 944
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 750,
+   "median": 1.687,
+   "p95": 3.11,
+   "column": "SGP4",
+   "landed": [
+    1.687,
+    3.11,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 1,
+   "theory": "XP",
+   "n": 750,
+   "median": 1.607,
+   "p95": 2.894,
+   "column": "XP",
+   "landed": [
+    1.607,
+    2.894,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 750,
+   "median": 1.744,
+   "p95": 3.104,
+   "column": "XPU",
+   "landed": [
+    1.744,
+    3.104,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 1,
+   "theory": "AP",
+   "n": 750,
+   "median": 0.1868,
+   "p95": 0.7843,
+   "column": "AP",
+   "landed": [
+    0.1868,
+    0.7843,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 750,
+   "median": 0.1451,
+   "p95": 0.7009,
+   "column": "FFM40",
+   "landed": [
+    0.1451,
+    0.7009,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 750,
+   "median": 11.905,
+   "p95": 24.541,
+   "column": "SGP4",
+   "landed": [
+    11.905,
+    24.541,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 3,
+   "theory": "XP",
+   "n": 750,
+   "median": 11.215,
+   "p95": 22.759,
+   "column": "XP",
+   "landed": [
+    11.215,
+    22.759,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 750,
+   "median": 12.434,
+   "p95": 24.68,
+   "column": "XPU",
+   "landed": [
+    12.434,
+    24.68,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 3,
+   "theory": "AP",
+   "n": 750,
+   "median": 1.836,
+   "p95": 8.374,
+   "column": "AP",
+   "landed": [
+    1.836,
+    8.374,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 750,
+   "median": 1.577,
+   "p95": 8.093,
+   "column": "FFM40",
+   "landed": [
+    1.577,
+    8.093,
+    750
+   ]
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 5,
+   "theory": "XP",
+   "n": 750,
+   "median": 30.556,
+   "p95": 64.588
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "fit": 24,
+   "lead": 5,
+   "theory": "AP",
+   "n": 750,
+   "median": 5.228,
+   "p95": 26.549
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "lead": 1,
+   "windowsAny": 750,
+   "windowsAllFive": 750
+  },
+  {
+   "cut": "P",
+   "cell": "Strong drag, 2026",
+   "lead": 3,
+   "windowsAny": 750,
+   "windowsAllFive": 750
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 259,
+   "median": 0.714,
+   "p95": 1.446,
+   "column": "SGP4",
+   "landed": [
+    0.714,
+    1.446,
+    259
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 259,
+   "median": 0.6886,
+   "p95": 1.367,
+   "column": "XP",
+   "landed": [
+    0.6886,
+    1.367,
+    259
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 259,
+   "median": 0.6885,
+   "p95": 1.404,
+   "column": "XPU",
+   "landed": [
+    0.6885,
+    1.404,
+    259
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 259,
+   "median": 0.1852,
+   "p95": 1.109,
+   "column": "AP",
+   "landed": [
+    0.1852,
+    1.109,
+    259
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 259,
+   "median": 0.1795,
+   "p95": 1.113,
+   "column": "FFM40",
+   "landed": [
+    0.1795,
+    1.113,
+    259
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 258,
+   "median": 1.726,
+   "p95": 6.491,
+   "column": "SGP4",
+   "landed": [
+    1.726,
+    6.491,
+    258
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 258,
+   "median": 1.383,
+   "p95": 5.964,
+   "column": "XP",
+   "landed": [
+    1.383,
+    5.964,
+    258
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 258,
+   "median": 1.352,
+   "p95": 6.031,
+   "column": "XPU",
+   "landed": [
+    1.352,
+    6.031,
+    258
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 258,
+   "median": 0.9101,
+   "p95": 4.469,
+   "column": "AP",
+   "landed": [
+    0.9101,
+    4.469,
+    258
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 258,
+   "median": 0.9337,
+   "p95": 4.453,
+   "column": "FFM40",
+   "landed": [
+    0.9337,
+    4.453,
+    258
+   ]
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 5,
+   "theory": "XP",
+   "n": 257,
+   "median": 2.662,
+   "p95": 10.497
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "fit": 72,
+   "lead": 5,
+   "theory": "AP",
+   "n": 257,
+   "median": 1.833,
+   "p95": 8.486
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "lead": 1,
+   "windowsAny": 259,
+   "windowsAllFive": 259
+  },
+  {
+   "cut": "S1",
+   "cell": "Near 700 km",
+   "lead": 3,
+   "windowsAny": 258,
+   "windowsAllFive": 258
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 745,
+   "median": 0.4162,
+   "p95": 0.7883,
+   "column": "SGP4",
+   "landed": [
+    0.4162,
+    0.7883,
+    745
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 746,
+   "median": 0.039,
+   "p95": 0.0719,
+   "column": "XP",
+   "landed": [
+    0.039,
+    0.0719,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 746,
+   "median": 0.041,
+   "p95": 0.0735,
+   "column": "XPU",
+   "landed": [
+    0.041,
+    0.0735,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 746,
+   "median": 0.0124,
+   "p95": 0.023,
+   "column": "AP",
+   "landed": [
+    0.0124,
+    0.023,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 746,
+   "median": 0.0032,
+   "p95": 0.0234,
+   "column": "FFM20",
+   "landed": [
+    0.0032,
+    0.0234,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 745,
+   "median": 0.9183,
+   "p95": 1.881,
+   "column": "SGP4",
+   "landed": [
+    0.9183,
+    1.881,
+    745
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 746,
+   "median": 0.0719,
+   "p95": 0.1458,
+   "column": "XP",
+   "landed": [
+    0.0719,
+    0.1458,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 746,
+   "median": 0.0745,
+   "p95": 0.1513,
+   "column": "XPU",
+   "landed": [
+    0.0745,
+    0.1513,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 746,
+   "median": 0.0256,
+   "p95": 0.098,
+   "column": "AP",
+   "landed": [
+    0.0256,
+    0.098,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 746,
+   "median": 0.014,
+   "p95": 0.1022,
+   "column": "FFM20",
+   "landed": [
+    0.014,
+    0.1022,
+    746
+   ]
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 5,
+   "theory": "XP",
+   "n": 746,
+   "median": 0.1107,
+   "p95": 0.3024
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "fit": 72,
+   "lead": 5,
+   "theory": "AP",
+   "n": 746,
+   "median": 0.044,
+   "p95": 0.2279
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "lead": 1,
+   "windowsAny": 746,
+   "windowsAllFive": 745
+  },
+  {
+   "cut": "GN",
+   "cell": "Medium Earth orbit",
+   "lead": 3,
+   "windowsAny": 746,
+   "windowsAllFive": 745
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 136,
+   "median": 0.614,
+   "p95": 1.441,
+   "column": "SGP4",
+   "landed": [
+    0.614,
+    1.441,
+    136
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 136,
+   "median": 0.5855,
+   "p95": 2.558,
+   "column": "XP",
+   "landed": [
+    0.5855,
+    2.558,
+    136
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 136,
+   "median": 0.5908,
+   "p95": 2.585,
+   "column": "XPU",
+   "landed": [
+    0.5908,
+    2.585,
+    136
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 136,
+   "median": 0.0388,
+   "p95": 2.547,
+   "column": "AP",
+   "landed": [
+    0.0388,
+    2.547,
+    136
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 136,
+   "median": 0.0135,
+   "p95": 2.539,
+   "column": "FFM40",
+   "landed": [
+    0.0135,
+    2.539,
+    136
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 121,
+   "median": 1.221,
+   "p95": 10.436,
+   "column": "SGP4",
+   "landed": [
+    1.221,
+    10.436,
+    121
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 121,
+   "median": 0.9597,
+   "p95": 7.478,
+   "column": "XP",
+   "landed": [
+    0.9597,
+    7.478,
+    121
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 121,
+   "median": 1.009,
+   "p95": 7.594,
+   "column": "XPU",
+   "landed": [
+    1.009,
+    7.594,
+    121
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 121,
+   "median": 0.2527,
+   "p95": 7.478,
+   "column": "AP",
+   "landed": [
+    0.2527,
+    7.478,
+    121
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 121,
+   "median": 0.0932,
+   "p95": 7.423,
+   "column": "FFM40",
+   "landed": [
+    0.0932,
+    7.423,
+    121
+   ]
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 5,
+   "theory": "XP",
+   "n": 112,
+   "median": 1.964,
+   "p95": 16.171
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "fit": 72,
+   "lead": 5,
+   "theory": "AP",
+   "n": 112,
+   "median": 0.7558,
+   "p95": 14.923
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "lead": 1,
+   "windowsAny": 136,
+   "windowsAllFive": 136
+  },
+  {
+   "cut": "DO",
+   "cell": "Low orbit, altimetry",
+   "lead": 3,
+   "windowsAny": 121,
+   "windowsAllFive": 121
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 65,
+   "median": 0.5705,
+   "p95": 0.7997,
+   "column": "SGP4",
+   "landed": [
+    0.5705,
+    0.7997,
+    65
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 65,
+   "median": 0.4622,
+   "p95": 0.6828,
+   "column": "XP",
+   "landed": [
+    0.4622,
+    0.6828,
+    65
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 65,
+   "median": 0.4826,
+   "p95": 0.6753,
+   "column": "XPU",
+   "landed": [
+    0.4826,
+    0.6753,
+    65
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 65,
+   "median": 0.0247,
+   "p95": 0.0682,
+   "column": "AP",
+   "landed": [
+    0.0247,
+    0.0682,
+    65
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 65,
+   "median": 0.0241,
+   "p95": 0.0391,
+   "column": "FFM40",
+   "landed": [
+    0.0241,
+    0.0391,
+    65
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 57,
+   "median": 0.8242,
+   "p95": 2.18,
+   "column": "SGP4",
+   "landed": [
+    0.8242,
+    2.18,
+    57
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 57,
+   "median": 0.6238,
+   "p95": 1.852,
+   "column": "XP",
+   "landed": [
+    0.6238,
+    1.852,
+    57
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 57,
+   "median": 0.6256,
+   "p95": 1.88,
+   "column": "XPU",
+   "landed": [
+    0.6256,
+    1.88,
+    57
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 57,
+   "median": 0.0578,
+   "p95": 0.3176,
+   "column": "AP",
+   "landed": [
+    0.0578,
+    0.3176,
+    57
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 57,
+   "median": 0.0532,
+   "p95": 0.2504,
+   "column": "FFM40",
+   "landed": [
+    0.0532,
+    0.2504,
+    57
+   ]
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 5,
+   "theory": "XP",
+   "n": 56,
+   "median": 0.8415,
+   "p95": 3.268
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "fit": 72,
+   "lead": 5,
+   "theory": "AP",
+   "n": 56,
+   "median": 0.1288,
+   "p95": 0.7251
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "lead": 1,
+   "windowsAny": 65,
+   "windowsAllFive": 65
+  },
+  {
+   "cut": "LS",
+   "cell": "Low orbit, laser spheres",
+   "lead": 3,
+   "windowsAny": 57,
+   "windowsAllFive": 57
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 54,
+   "median": 0.2085,
+   "p95": 0.3594,
+   "column": "SGP4",
+   "landed": [
+    0.2085,
+    0.3594,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 54,
+   "median": 0.1042,
+   "p95": 0.1406,
+   "column": "XP",
+   "landed": [
+    0.1042,
+    0.1406,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 54,
+   "median": 0.1039,
+   "p95": 0.1422,
+   "column": "XPU",
+   "landed": [
+    0.1039,
+    0.1422,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 54,
+   "median": 0.0063,
+   "p95": 0.0093,
+   "column": "AP",
+   "landed": [
+    0.0063,
+    0.0093,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 54,
+   "median": 0.0016,
+   "p95": 0.0038,
+   "column": "FFM20",
+   "landed": [
+    0.0016,
+    0.0038,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 54,
+   "median": 0.4174,
+   "p95": 0.9393,
+   "column": "SGP4",
+   "landed": [
+    0.4174,
+    0.9393,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 54,
+   "median": 0.1078,
+   "p95": 0.162,
+   "column": "XP",
+   "landed": [
+    0.1078,
+    0.162,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 54,
+   "median": 0.1087,
+   "p95": 0.1663,
+   "column": "XPU",
+   "landed": [
+    0.1087,
+    0.1663,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 54,
+   "median": 0.0085,
+   "p95": 0.0128,
+   "column": "AP",
+   "landed": [
+    0.0085,
+    0.0128,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 54,
+   "median": 0.0037,
+   "p95": 0.0095,
+   "column": "FFM20",
+   "landed": [
+    0.0037,
+    0.0095,
+    54
+   ]
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 5,
+   "theory": "XP",
+   "n": 53,
+   "median": 0.1273,
+   "p95": 0.1905
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "fit": 72,
+   "lead": 5,
+   "theory": "AP",
+   "n": 53,
+   "median": 0.0099,
+   "p95": 0.0183
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "lead": 1,
+   "windowsAny": 54,
+   "windowsAllFive": 54
+  },
+  {
+   "cut": "GD",
+   "cell": "Laser geodetic",
+   "lead": 3,
+   "windowsAny": 54,
+   "windowsAllFive": 54
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 49,
+   "median": 1.919,
+   "p95": 3.034,
+   "column": "SGP4",
+   "landed": [
+    1.919,
+    3.034,
+    49
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 60,
+   "median": 0.0379,
+   "p95": 0.0602,
+   "column": "XP",
+   "landed": [
+    0.0379,
+    0.0602,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 60,
+   "median": 0.0454,
+   "p95": 0.0714,
+   "column": "XPU",
+   "landed": [
+    0.0454,
+    0.0714,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 60,
+   "median": 0.0114,
+   "p95": 0.0197,
+   "column": "AP",
+   "landed": [
+    0.0114,
+    0.0197,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 60,
+   "median": 0.002,
+   "p95": 0.022,
+   "column": "FFM20",
+   "landed": [
+    0.002,
+    0.022,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 49,
+   "median": 5.764,
+   "p95": 9.223,
+   "column": "SGP4",
+   "landed": [
+    5.764,
+    9.223,
+    49
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 60,
+   "median": 0.0787,
+   "p95": 0.1322,
+   "column": "XP",
+   "landed": [
+    0.0787,
+    0.1322,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 60,
+   "median": 0.0883,
+   "p95": 0.1439,
+   "column": "XPU",
+   "landed": [
+    0.0883,
+    0.1439,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 60,
+   "median": 0.0171,
+   "p95": 0.0943,
+   "column": "AP",
+   "landed": [
+    0.0171,
+    0.0943,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 60,
+   "median": 0.0075,
+   "p95": 0.0965,
+   "column": "FFM20",
+   "landed": [
+    0.0075,
+    0.0965,
+    60
+   ]
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 5,
+   "theory": "XP",
+   "n": 59,
+   "median": 0.1191,
+   "p95": 0.2653
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "fit": 72,
+   "lead": 5,
+   "theory": "AP",
+   "n": 59,
+   "median": 0.0312,
+   "p95": 0.226
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "lead": 1,
+   "windowsAny": 60,
+   "windowsAllFive": 49
+  },
+  {
+   "cut": "IG",
+   "cell": "Inclined geosynchronous",
+   "lead": 3,
+   "windowsAny": 60,
+   "windowsAllFive": 49
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 32,
+   "median": 2.439,
+   "p95": 3.654,
+   "column": "SGP4",
+   "landed": [
+    2.439,
+    3.654,
+    32
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 32,
+   "median": 0.037,
+   "p95": 0.0494,
+   "column": "XP",
+   "landed": [
+    0.037,
+    0.0494,
+    32
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 32,
+   "median": 0.0387,
+   "p95": 0.0613,
+   "column": "XPU",
+   "landed": [
+    0.0387,
+    0.0613,
+    32
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 32,
+   "median": 0.0207,
+   "p95": 0.0325,
+   "column": "AP",
+   "landed": [
+    0.0207,
+    0.0325,
+    32
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 32,
+   "median": 0.0154,
+   "p95": 0.0198,
+   "column": "FFM20",
+   "landed": [
+    0.0154,
+    0.0198,
+    32
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 30,
+   "median": 5.527,
+   "p95": 10.032,
+   "column": "SGP4",
+   "landed": [
+    5.527,
+    10.032,
+    30
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 30,
+   "median": 0.0699,
+   "p95": 4.697,
+   "column": "XP",
+   "landed": [
+    0.0699,
+    4.697,
+    30
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 30,
+   "median": 0.089,
+   "p95": 4.73,
+   "column": "XPU",
+   "landed": [
+    0.089,
+    4.73,
+    30
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 30,
+   "median": 0.0459,
+   "p95": 4.687,
+   "column": "AP",
+   "landed": [
+    0.0459,
+    4.687,
+    30
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 30,
+   "median": 0.0643,
+   "p95": 4.668,
+   "column": "FFM20",
+   "landed": [
+    0.0643,
+    4.668,
+    30
+   ]
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 5,
+   "theory": "XP",
+   "n": 32,
+   "median": 0.1256,
+   "p95": 57.401
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "fit": 72,
+   "lead": 5,
+   "theory": "AP",
+   "n": 32,
+   "median": 0.1076,
+   "p95": 57.408
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "lead": 1,
+   "windowsAny": 32,
+   "windowsAllFive": 32
+  },
+  {
+   "cut": "GE",
+   "cell": "Geostationary",
+   "lead": 3,
+   "windowsAny": 30,
+   "windowsAllFive": 30
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 1,
+   "theory": "SGP4",
+   "n": 19,
+   "median": 17.722,
+   "p95": 105.7,
+   "column": "SGP4",
+   "landed": [
+    17.722,
+    105.7,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XP",
+   "n": 19,
+   "median": 0.6288,
+   "p95": 2.902,
+   "column": "XP",
+   "landed": [
+    0.6288,
+    2.902,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 1,
+   "theory": "XPU",
+   "n": 19,
+   "median": 0.6185,
+   "p95": 2.895,
+   "column": "XPU",
+   "landed": [
+    0.6185,
+    2.895,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 1,
+   "theory": "AP",
+   "n": 19,
+   "median": 0.1688,
+   "p95": 2.851,
+   "column": "AP",
+   "landed": [
+    0.1688,
+    2.851,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 1,
+   "theory": "FFM",
+   "n": 19,
+   "median": 0.0139,
+   "p95": 2.817,
+   "column": "FFM20",
+   "landed": [
+    0.0139,
+    2.817,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 3,
+   "theory": "SGP4",
+   "n": 19,
+   "median": 56.381,
+   "p95": 374.6,
+   "column": "SGP4",
+   "landed": [
+    56.381,
+    374.6,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XP",
+   "n": 19,
+   "median": 2.182,
+   "p95": 4.952,
+   "column": "XP",
+   "landed": [
+    2.182,
+    4.952,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 3,
+   "theory": "XPU",
+   "n": 19,
+   "median": 2.992,
+   "p95": 4.95,
+   "column": "XPU",
+   "landed": [
+    2.992,
+    4.95,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 3,
+   "theory": "AP",
+   "n": 19,
+   "median": 0.4042,
+   "p95": 3.566,
+   "column": "AP",
+   "landed": [
+    0.4042,
+    3.566,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "fit": 72,
+   "lead": 3,
+   "theory": "FFM",
+   "n": 19,
+   "median": 0.0426,
+   "p95": 3.435,
+   "column": "FFM20",
+   "landed": [
+    0.0426,
+    3.435,
+    19
+   ]
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "lead": 1,
+   "windowsAny": 19,
+   "windowsAllFive": 19
+  },
+  {
+   "cut": "HX",
+   "cell": "Highly elliptical, THEMIS and Chandra",
+   "lead": 3,
+   "windowsAny": 19,
+   "windowsAllFive": 19
+  }
+ ],
+ "pub": {
+  "geo-gnss": {
+   "1": {
+    "n": 89,
+    "objects": 9,
+    "median": 1.86,
+    "p95": 2.835
+   },
+   "3": {
+    "n": 79,
+    "objects": 9,
+    "median": 2.811,
+    "p95": 44.362
+   }
+  },
+  "heo-tess": {
+   "1": {
+    "n": 3,
+    "objects": 1,
+    "median": 2323.6,
+    "p95": 6629.6
+   },
+   "3": {
+    "n": 3,
+    "objects": 1,
+    "median": 7108.1,
+    "p95": 15751.6
+   }
+  },
+  "igso-gnss": {
+   "1": {
+    "n": 148,
+    "objects": 12,
+    "median": 1.904,
+    "p95": 10.33
+   },
+   "3": {
+    "n": 131,
+    "objects": 12,
+    "median": 2.324,
+    "p95": 10.898
+   }
+  },
+  "leo-iss": {
+   "1": {
+    "n": 15,
+    "objects": 1,
+    "median": 57.668,
+    "p95": 171.7
+   },
+   "3": {
+    "n": 13,
+    "objects": 1,
+    "median": 69.911,
+    "p95": 172.5
+   }
+  },
+  "leo-slr": {
+   "1": {
+    "n": 196,
+    "objects": 7,
+    "median": 0.5737,
+    "p95": 3.813
+   },
+   "3": {
+    "n": 50,
+    "objects": 7,
+    "median": 0.6093,
+    "p95": 4.271
+   }
+  },
+  "meo-gnss": {
+   "1": {
+    "n": 96,
+    "objects": 12,
+    "median": 1.223,
+    "p95": 3.711
+   },
+   "3": {
+    "n": 84,
+    "objects": 12,
+    "median": 1.285,
+    "p95": 3.254
+   }
+  },
+  "meo-slr": {
+   "1": {
+    "n": 60,
+    "objects": 4,
+    "median": 0.9077,
+    "p95": 2.083
+   },
+   "3": {
+    "n": 60,
+    "objects": 4,
+    "median": 0.7091,
+    "p95": 2.762
+   }
+  }
+ },
+ "mismatches": []
+}
