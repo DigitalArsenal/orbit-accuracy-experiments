@@ -107,3 +107,7 @@ Read before this registration: B2's README, rows, tables and diagnosis; `cells.j
 ## Amendment 1 (2026-11-06, before any alert)
 
 Tier t3 seed 1, on its first start, stopped in the module: one guest thread trapped (`memory access out of bounds`) and the process hung at no CPU. It left no row and was stopped by its exact process number. It was started once more, unchanged, and ran clean; seeds 2 and 3 ran clean first time. The trap appeared only at the 1000 km threshold, which no landed screen uses, and is reported to the coordinator as a module matter. t0 equals B2's event set by digest. t1 seed 1 holds exactly B2's 16,091 events under 5 km. The geometry was read before the sizing: 6 regime pairs hold 100 or more true events, and every other pair is in the sparse class, so every regime above 2000 km and every highly elliptical object shares one radius.
+
+## Amendment 2 (2026-11-06, before any alert)
+
+The pass chances, as computed (`sizing.json`): P(fewer | 1) 0.005, P(not fewer | 1) 0.065, undecided 0.93; P(fewer | 0.5) 0.45, P(not fewer | 0.5) 0, undecided 0.55. The rule rarely gives a false "fewer" and misses a true halving more often than it finds one: an undecided verdict here does not mean the theories are level. The trials draw the two laws' windows independently, while the real keys are nearly all common to the theories and resampled jointly, so the real power is likely higher, by an amount not measured. The rule is unchanged.
