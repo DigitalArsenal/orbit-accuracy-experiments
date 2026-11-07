@@ -1,0 +1,19 @@
+diff --git a/experiments/operator-theory/all-regimes.mjs b/experiments/operator-theory/all-regimes.mjs
+index 2ca5eda7..90f167b0 100644
+--- a/experiments/operator-theory/all-regimes.mjs
++++ b/experiments/operator-theory/all-regimes.mjs
+@@ -181,12 +181,14 @@ for (const o of await objects()) {
+         await run('AP', async () => {
+           const f = await A.fit(oem, pcfAp, ex);
+           if (!f.ok) throw new Error(f.error);
++          { const me = readOcm(f.ocm).o.MEAN_ELEMENTS; fs.appendFileSync(process.env.PROBE_LOG, JSON.stringify({ key, arm: 'AP' + hours, group: o.group, name: o.name, norad: o.norad, n: me.MEAN_MOTION, e: me.ECCENTRICITY }) + '\n'); return {}; }
+           const st = await A.propagate(f.ocm, epochs, epochs.length);
+           return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+         });
+         await run('XP', async () => {
+           const f = await A.fit(oem, PCF_XP, undefined);
+           if (!f.ok) throw new Error(f.error);
++          { const me = readOcm(f.ocm).o.MEAN_ELEMENTS; fs.appendFileSync(process.env.PROBE_LOG, JSON.stringify({ key, arm: 'XP' + hours, group: o.group, name: o.name, norad: o.norad, n: me.MEAN_MOTION, e: me.ECCENTRICITY }) + '\n'); return {}; }
+           const st = await A.propagate(f.ocm, epochs, epochs.length);
+           return { rms: readOcm(f.ocm).fitRmsKm, days: score(await m.rtn(await m.toAxes(st, epochs, 'GCRF'), truth)) };
+         });
