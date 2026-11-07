@@ -1,5 +1,5 @@
 {
- "status": "DRAFT: items marked PENDING await Part 1",
+ "status": "FROZEN 2026-11-07: report-only; the states read PENDING until each stratum opens",
  "owner": {
   "o5": "yes",
   "answeredBy": "owner, 2026-11-03",
@@ -48,19 +48,19 @@
   "sgp4Pins": "lib/sgp4.mjs PINS (space-data-network-modules origin/main 3ae1eb289)"
  },
  "part1FrozenConstantsSha256": {
-  "sha256": "b62bfc50239e2679072da85d63101d829d8d4aa961bf8c8ed0cbed605f6c6a5f",
-  "source": "origin wip/experiments-gp-covariance-strata-20261103/claude-gpstrata-d9 599f1ab",
+  "sha256": "837c681fbbbadc2b36bf8a6e4cb42aaa71881ec4090a64a0047c73e6f781d91c",
+  "source": "origin main f6260d9e (Part 1 frozen)",
   "devRowsManifestSha256": "0b05a2e9e4a449d5f59bbfdaac5ddc2514b4139d9d0885cf2e22959ef0116bcb",
   "devRowsFiles": 118,
-  "provisional": true,
-  "note": "Re-pinned after Part 1 adds its s3.ruling field; the pin in the committed freeze is the one in Part 1's final results/gp-covariance-strata/frozen-constants.json"
+  "provisional": false,
+  "note": "Part 1 final results/gp-covariance-strata/frozen-constants.json, with its s3.ruling"
  },
  "denominatorsSha256": "4ccf5060b7a9e03027b497d3b5d1574aa875277bf083d5b47cc9382acef6640f",
  "devValuesUnderAR": {
   "devPairsManifestSha256": "163a7f565f70c4e83169517654a55c8833a1c0be42d6ca528d1ec28354145b1f",
   "clusterMomentsSha256": "a654b1e1ef8701dc796cb448f694b2c22fbf98a9ec5ac30c46a3f1fc250248cd"
  },
- "devResultsComputedOn": "Part 1 dev rows at 599f1ab (118 placements)",
+ "devResultsComputedOn": "Part 1 dev rows at 599f1ab, unchanged in the Part 1 freeze f6260d9e (118 placements)",
  "n0": {
   "status": "Part 1 block lengths (median over strata with an admitted bin) and SD-admitted bins; the S2.1 null condition is applied in the freeze",
   "admittedAxisCells": 26,

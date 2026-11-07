@@ -7,7 +7,7 @@ Files here are stratum-level aggregates only: no element set, no per-set value a
 - `denominators.json`: a_{s,b,k}, the pooled unclipped second moment of the set-to-set residual per regime and age bin, from the dev truth objects on lawful spans. Unclipped as registered. Per stratum and axis, `top10` gives the share of the moment carried by the ten largest pairs and the clusters they come from. Where that share is near 1 (all of MEO, LEO-H from 2.5 d, LEO-M from 0.25 d, LEO-L from 2.5 d), a few pairs set the denominator; the admission rule decides whether such a bin is used.
 - `provenance-audit.json`: counts for acceptance (d).
 - `n0-rows.json`: the n0 simulation, provisional until Part 1 states its block length and admitted bins.
-- `frozen-constants.json`: constants and hashes; items needing Part 1 read PENDING.
+- `frozen-constants.json`: constants and hashes, frozen 2026-11-07 against Part 1 at f6260d9e; the states read PENDING until each stratum opens.
 
 One early name scan of a single day's creation file used a loose pattern and printed object names, some of them Starlink names (names only, no element or state values); nothing from it entered any computation, and the script was deleted.
 
