@@ -14,7 +14,10 @@ const physics=await openPhysics(process.env.OPERATOR_MODULES_ROOT);
 try{
   const refused={...physics,weather:async()=>{throw new Error('data-source/space-weather/parse_weather: space-weather-source: Invalid or stale NOAA 45-day forecast.');}};
   const events=[];
-  const out=await runCycle({captureRoot:root,physics:refused,registration:{},producer:'check-no-weather',subsetsFile:path.join(root,'no-registration'),log:(e,x)=>events.push([e,x]),stop:()=>false,limit:3});
+  // The disk dips below the floor at the second file and recovers: the cycle pauses and finishes.
+  let reads=0;const freeGiB=()=>{reads++;return reads===2||reads===3?20:100;};
+  const out=await runCycle({captureRoot:root,physics:refused,registration:{},producer:'check-no-weather',subsetsFile:path.join(root,'no-registration'),log:(e,x)=>events.push([e,x]),stop:()=>false,limit:3,freeGiB,pauseMs:10});
+  assert.equal(events.filter(([e])=>e==='paused').length,2,'a dip inside the cycle pauses it');
   assert.equal(out.failure,undefined);
   const [cycle]=fs.readdirSync(path.join(root,'cycles'));
   const dir=path.join(root,'cycles',cycle),summary=JSON.parse(fs.readFileSync(path.join(dir,'summary.json'),'utf8')),names=fs.readdirSync(dir);

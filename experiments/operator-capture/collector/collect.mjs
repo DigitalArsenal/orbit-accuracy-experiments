@@ -23,13 +23,11 @@ export function firstSlot(captureRoot,now=Date.now()){
 }
 /** One capture cycle: every listed file (or the first `limit` of them, a commissioning subset that never reads as complete), its registered record and its sidecar.
  *  Returns { started, failure }, or null when stopped before it began. */
-export async function runCycle({captureRoot,physics,registration,producer,subsetsFile,log,stop,limit=null}){
+export async function runCycle({captureRoot,physics,registration,producer,subsetsFile,log,stop,limit=null,freeGiB=()=>{const s=fs.statfsSync(captureRoot);return s.bavail*s.bsize/2**30;},pauseMs=30000}){
   const started=Date.now(),cpu0=process.cpuUsage(),id=iso().replace(/[:.]/g,'-');
-  while(!stop()){
-    const stat=fs.statfsSync(captureRoot),freeGiB=stat.bavail*stat.bsize/2**30;
-    if(freeGiB>=25)break;
-    log('paused',{freeGiB});await sleep(30000);
-  }
+  // The 25 GiB floor pauses, before a cycle and inside one: a short dip must not lose the cycle.
+  const waitForDisk=async()=>{while(!stop()){const free=freeGiB();if(free>=25)return;log('paused',{id,freeGiB:free});await sleep(pauseMs);}};
+  await waitForDisk();
   if(stop())return null;
   const cycleDir=path.join(captureRoot,'cycles',id);fs.mkdirSync(cycleDir,{recursive:true});
   const fetcher=new Fetcher(),summary={id,startedUtc:iso(),status:'running',files:0,samples:0,truthStates:0,failures:0,storedBytes:0,sidecars:0,sidecarFailures:0,sidecarBytes:0};
@@ -50,7 +48,7 @@ export async function runCycle({captureRoot,physics,registration,producer,subset
     while(queued<Math.min(4,names.length))queue();
     for(const name of names){
       if(stop()){summary.status='interrupted';break;}
-      const s=fs.statfsSync(captureRoot);if(s.bavail*s.bsize<25*2**30)throw new Error('disk below 25 GiB; cycle interrupted');
+      await waitForDisk();if(stop()){summary.status='interrupted';break;}
       try{
         const fetched=await pending.shift();
         if(fetched.error)throw fetched.error;
