@@ -1,0 +1,647 @@
+{
+ "reading": "AP keeps its registered rows (300 s) and its 60 s flights from the screening-scale study. SGP4, XP whiteroom (sdn-ap 0.6.3) and XP Space Force are re-timed in calls of at least 1.2 s of CPU, five measurements per window; fits are timed once (their input is the 300 s arc, whatever the output step). Statistic: per regime AP's median over the arm's, the median over the eight regimes (the page's rule).",
+ "byRegimeRetimed": {
+  "step300": {
+   "Low orbit, laser spheres": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0005490912579957356,
+     "fitCpuSecondsPerObjectDay": 0.020281065217391304,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 8.97,
+     "fitSpreadPercent": 8.94
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.011914790476190476,
+     "fitCpuSecondsPerObjectDay": 0.8123115,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 1.19,
+     "fitSpreadPercent": 0.91
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.006769274725274725,
+     "fitCpuSecondsPerObjectDay": 0.045453625,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 5.63,
+     "fitSpreadPercent": 2.6
+    }
+   },
+   "Low orbit, altimetry": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0005451078300606595,
+     "fitCpuSecondsPerObjectDay": 0.02372359650997151,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 8.665,
+     "fitSpreadPercent": 3.555
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.013354071428571427,
+     "fitCpuSecondsPerObjectDay": 0.9947284999999999,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 1.525,
+     "fitSpreadPercent": 1.205
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.008088515151515152,
+     "fitCpuSecondsPerObjectDay": 0.05869660681818182,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 4.39,
+     "fitSpreadPercent": 1.795
+    }
+   },
+   "Laser geodetic": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0005668986494122966,
+     "fitCpuSecondsPerObjectDay": 0.027019490384615385,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 9.684999999999999,
+     "fitSpreadPercent": 1.325
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.004940888392857143,
+     "fitCpuSecondsPerObjectDay": 0.24846375,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 4.5649999999999995,
+     "fitSpreadPercent": 1.635
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.0063188703703703705,
+     "fitCpuSecondsPerObjectDay": 0.0358555,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 5.205,
+     "fitSpreadPercent": 3.88
+    }
+   },
+   "Geostationary": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0007930728642702328,
+     "fitCpuSecondsPerObjectDay": 0.38581275000000004,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 8.39,
+     "fitSpreadPercent": 1.6
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.007997544069801833,
+     "fitCpuSecondsPerObjectDay": 0.404009375,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 2.125,
+     "fitSpreadPercent": 0.66
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.00850863051948052,
+     "fitCpuSecondsPerObjectDay": 0.05895223181818182,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 3.835,
+     "fitSpreadPercent": 3.4050000000000002
+    }
+   },
+   "Inclined geosynchronous": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0008026499690785405,
+     "fitCpuSecondsPerObjectDay": 0.06771083333333333,
+     "nFlight": 1,
+     "nFit": 1,
+     "flightSpreadPercent": 8.08,
+     "fitSpreadPercent": 0.67
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.008920908082706767,
+     "fitCpuSecondsPerObjectDay": 0.4267345,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 1.515,
+     "fitSpreadPercent": 0.6799999999999999
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.00830777380952381,
+     "fitCpuSecondsPerObjectDay": 0.056700931818181824,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 4.705,
+     "fitSpreadPercent": 3.4349999999999996
+    }
+   },
+   "Strong drag, 2026": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0005490844173569574,
+     "fitCpuSecondsPerObjectDay": 0.023347942307692306,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 6.355,
+     "fitSpreadPercent": 2.085
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.012353880952380953,
+     "fitCpuSecondsPerObjectDay": 0.79009225,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 1.3800000000000001,
+     "fitSpreadPercent": 1.175
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.007692415881737309,
+     "fitCpuSecondsPerObjectDay": 0.057636138257575756,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 4.895,
+     "fitSpreadPercent": 3.5549999999999997
+    }
+   },
+   "Near 700 km": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0005497827022375216,
+     "fitCpuSecondsPerObjectDay": 0.02350639423076923,
+     "nFlight": 2,
+     "nFit": 2,
+     "flightSpreadPercent": 8.29,
+     "fitSpreadPercent": 1.75
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.00807862973760933,
+     "fitCpuSecondsPerObjectDay": 0.523569,
+     "nFlight": 2,
+     "nFit": 2,
+     "flightSpreadPercent": 4.83,
+     "fitSpreadPercent": 1.4649999999999999
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.007629223602484471,
+     "fitCpuSecondsPerObjectDay": 0.06831981071428571,
+     "nFlight": 2,
+     "nFit": 2,
+     "flightSpreadPercent": 3.4399999999999995,
+     "fitSpreadPercent": 1.8599999999999999
+    }
+   },
+   "Medium Earth orbit": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0005621096548711227,
+     "fitCpuSecondsPerObjectDay": 0.025765791666666666,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 7.52,
+     "fitSpreadPercent": 1.98
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.006552809523809523,
+     "fitCpuSecondsPerObjectDay": 0.43865725,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 1.93,
+     "fitSpreadPercent": 1.39
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.005976256157635467,
+     "fitCpuSecondsPerObjectDay": 0.04404746428571428,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 4.19,
+     "fitSpreadPercent": 3.36
+    }
+   }
+  },
+  "step60": {
+   "Low orbit, laser spheres": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0027286632653061227,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 4.67,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.052567357142857145,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 1.46,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.02716026530612245,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 5.27,
+     "fitSpreadPercent": null
+    }
+   },
+   "Low orbit, altimetry": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.002630718868768165,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 7.504999999999999,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.058503095238095236,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 3.565,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.031273214285714286,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 3.58,
+     "fitSpreadPercent": null
+    }
+   },
+   "Laser geodetic": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0027106817226890756,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 6.22,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.01958137175324675,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 4.77,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.029191880952380955,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 4.824999999999999,
+     "fitSpreadPercent": null
+    }
+   },
+   "Geostationary": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0038527730481727578,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 7.609999999999999,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.029955714285714287,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 1.9899999999999998,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.027108591836734693,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 5.994999999999999,
+     "fitSpreadPercent": null
+    }
+   },
+   "Inclined geosynchronous": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0038686093294460636,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 1,
+     "nFit": 0,
+     "flightSpreadPercent": 8.17,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.034690757142857145,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 2.815,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.02762127551020408,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 3.655,
+     "fitSpreadPercent": null
+    }
+   },
+   "Strong drag, 2026": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.0026687630353549874,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 7.505,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.05414641666666667,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 2.64,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.029591712585034013,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 4.865,
+     "fitSpreadPercent": null
+    }
+   },
+   "Near 700 km": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.002645617403048428,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 2,
+     "nFit": 0,
+     "flightSpreadPercent": 6.705,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.03415357005494506,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 2,
+     "nFit": 0,
+     "flightSpreadPercent": 2.375,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.031236178571428574,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 2,
+     "nFit": 0,
+     "flightSpreadPercent": 5.01,
+     "fitSpreadPercent": null
+    }
+   },
+   "Medium Earth orbit": {
+    "SGP4": {
+     "flightCpuSecondsPerObjectDay": 0.002725014492753623,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 6.59,
+     "fitSpreadPercent": null
+    },
+    "XPU": {
+     "flightCpuSecondsPerObjectDay": 0.025145857142857143,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 5.85,
+     "fitSpreadPercent": null
+    },
+    "XP": {
+     "flightCpuSecondsPerObjectDay": 0.02988235714285714,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 5.22,
+     "fitSpreadPercent": null
+    }
+   }
+  }
+ },
+ "byRegimeRegistered": {
+  "Low orbit, laser spheres": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.002917,
+    "fitCpuSecondsPerObjectDay": 0.02634,
+    "n": 3
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.01413,
+    "fitCpuSecondsPerObjectDay": 0.8115,
+    "n": 3
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.007855,
+    "fitCpuSecondsPerObjectDay": 0.05096,
+    "n": 3
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.1163,
+    "fitCpuSecondsPerObjectDay": 0.5249,
+    "n": 3
+   }
+  },
+  "Low orbit, altimetry": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.001291,
+    "fitCpuSecondsPerObjectDay": 0.0274,
+    "n": 4
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.01208,
+    "fitCpuSecondsPerObjectDay": 0.9683,
+    "n": 4
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.007908,
+    "fitCpuSecondsPerObjectDay": 0.05908,
+    "n": 4
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.1157,
+    "fitCpuSecondsPerObjectDay": 0.6326,
+    "n": 4
+   }
+  },
+  "Laser geodetic": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.0006827,
+    "fitCpuSecondsPerObjectDay": 0.03167,
+    "n": 4
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.004916,
+    "fitCpuSecondsPerObjectDay": 0.2236,
+    "n": 4
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.006764,
+    "fitCpuSecondsPerObjectDay": 0.03554,
+    "n": 4
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.08415,
+    "fitCpuSecondsPerObjectDay": 0.3266,
+    "n": 4
+   }
+  },
+  "Geostationary": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.0008076,
+    "fitCpuSecondsPerObjectDay": 0.3817,
+    "n": 4
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.005835,
+    "fitCpuSecondsPerObjectDay": 0.3556,
+    "n": 4
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.008982,
+    "fitCpuSecondsPerObjectDay": 0.05824,
+    "n": 4
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.02023,
+    "fitCpuSecondsPerObjectDay": 0.06302,
+    "n": 4
+   }
+  },
+  "Inclined geosynchronous": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.0007856,
+    "fitCpuSecondsPerObjectDay": 0.1321,
+    "n": 1
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.007774,
+    "fitCpuSecondsPerObjectDay": 0.4134,
+    "n": 4
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.008401,
+    "fitCpuSecondsPerObjectDay": 0.05484,
+    "n": 4
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.02105,
+    "fitCpuSecondsPerObjectDay": 0.08504,
+    "n": 4
+   }
+  },
+  "Strong drag, 2026": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.00057,
+    "fitCpuSecondsPerObjectDay": 0.02381,
+    "n": 4
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.01051,
+    "fitCpuSecondsPerObjectDay": 0.787,
+    "n": 4
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.008037,
+    "fitCpuSecondsPerObjectDay": 0.0552,
+    "n": 4
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.1239,
+    "fitCpuSecondsPerObjectDay": 0.6487,
+    "n": 4
+   }
+  },
+  "Near 700 km": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.0005556,
+    "fitCpuSecondsPerObjectDay": 0.02327,
+    "n": 2
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.002803,
+    "fitCpuSecondsPerObjectDay": 0.4425,
+    "n": 2
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.007747,
+    "fitCpuSecondsPerObjectDay": 0.0612,
+    "n": 2
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.1185,
+    "fitCpuSecondsPerObjectDay": 0.6658,
+    "n": 2
+   }
+  },
+  "Medium Earth orbit": {
+   "SGP4": {
+    "flightCpuSecondsPerObjectDay": 0.0005896,
+    "fitCpuSecondsPerObjectDay": 0.0257,
+    "n": 3
+   },
+   "XPU": {
+    "flightCpuSecondsPerObjectDay": 0.005116,
+    "fitCpuSecondsPerObjectDay": 0.4348,
+    "n": 3
+   },
+   "XP": {
+    "flightCpuSecondsPerObjectDay": 0.005773,
+    "fitCpuSecondsPerObjectDay": 0.04459,
+    "n": 3
+   },
+   "AP": {
+    "flightCpuSecondsPerObjectDay": 0.1601,
+    "fitCpuSecondsPerObjectDay": 1.259,
+    "n": 3
+   }
+  }
+ },
+ "multiples": {
+  "SGP4": {
+   "flight300": {
+    "old": 106.44051612174152,
+    "new": 212.02804223846576
+   },
+   "flight60": {
+    "old": 160.25164013910248,
+    "new": 183.79023289144723
+   },
+   "fit": {
+    "old": 21.507728801911,
+    "new": 26.273358848838342
+   }
+  },
+  "XPU": {
+   "flight300": {
+    "old": 10.683293583531295,
+    "new": 9.895107178718291
+   },
+   "flight60": {
+    "old": 9.246104335370482,
+    "new": 9.87989681169189
+   },
+   "fit": {
+    "old": 0.7387896509963032,
+    "new": 0.7336120243274984
+   }
+  },
+  "XP": {
+   "flight300": {
+    "old": 14.718304904878412,
+    "new": 14.918306162731287
+   },
+   "flight60": {
+    "old": 14.578025918142341,
+    "new": 16.36436059163629
+   },
+   "fit": {
+    "old": 10.503875356194246,
+    "new": 10.261398750616387
+   }
+  }
+ }
+}
