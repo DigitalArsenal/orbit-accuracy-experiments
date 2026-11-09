@@ -159,6 +159,6 @@ for (let s = 0; s < nSats; s++) {
 const dca = solveFleetDcaWasm({ arcs7Float64: arcs, nArcs: idx, issueMs });
 assert.ok(dca && dca.converged && dca.nodeLogScale.length > 4, "WASM fleet DCA solver failed to converge");
 const packedDcl = packFleetDclRecord(dca, issueMs);
-assert.ok(packedDcl.dclBytes.length > 64 && packedDcl.dclCid.startsWith("bafkrei"), "Canonical $DCL FlatBuffer packing failed");
+assert.ok(packedDcl.dclBytes.length > 64 && packedDcl.cid.startsWith("bafkrei"), "Canonical $DCL FlatBuffer packing failed");
 
 console.log(`CHECK PASS ap-five-day-accuracy: plan=${planCommit.slice(0, 8)} -> results=${resCommit.slice(0, 8)}, 21580 AP OCMs, WASM upgrades verified`);
