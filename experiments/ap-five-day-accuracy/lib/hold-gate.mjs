@@ -1,5 +1,5 @@
 import * as flatbuffers from "flatbuffers";
-import { PVN, PVNT, pvnSourceKind, pvnLicenseClass } from "spacedatastandards.org/lib/js/PVN/main.js";
+import { PVN, PVNT, pvnSourceKind, pvnLicenseClass } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/PVN/main.js";
 
 export const HELD_GALILEO_NORADS = new Set([43567, 37847, 41862, 41174, 43055, 41175]);
 export const HELD_EUTELSAT_NORADS = new Set([41589]); // EUTE 117W B / Eutelsat 117 West B (owner 2026-11-03 drop)

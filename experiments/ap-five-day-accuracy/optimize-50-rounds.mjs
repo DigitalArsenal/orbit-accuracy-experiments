@@ -3,8 +3,8 @@ import path from "node:path";
 import { Worker } from "node:worker_threads";
 import { performance } from "node:perf_hooks";
 import * as flatbuffers from "flatbuffers";
-import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
-import { OEM } from "spacedatastandards.org/lib/js/OEM/main.js";
+import * as PCF from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/PCF/main.js";
+import { OEM } from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/OEM/main.js";
 
 import { isHeldForStudy, CREDITS } from "./lib/hold-gate.mjs";
 import { loadGpHistory, isoFromJd } from "./lib/gp-history-loader.mjs";

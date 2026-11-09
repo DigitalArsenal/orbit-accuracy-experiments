@@ -1,13 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import * as flatbuffers from "flatbuffers";
-import * as P from "spacedatastandards.org/lib/js/PRW/main.js";
-import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
-import { OCM } from "spacedatastandards.org/lib/js/OCM/main.js";
-import { OEM } from "spacedatastandards.org/lib/js/OEM/main.js";
-import { TDM } from "spacedatastandards.org/lib/js/TDM/main.js";
-import { EOO, EOOT } from "spacedatastandards.org/lib/js/EOO/main.js";
-import { ASG } from "spacedatastandards.org/lib/js/ASG/main.js";
+import * as P from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/PRW/main.js";
+import * as PCF from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/PCF/main.js";
+import { OCM } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/main.js";
+import { OEM } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OEM/main.js";
+import { TDM } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/TDM/main.js";
+import { EOO, EOOT } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/EOO/main.js";
+import { ASG } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/ASG/main.js";
 import { encodeModuleConfig, decodeFlowNotice } from "space-data-module-sdk/runtime-contracts";
 
 import { TYPES } from "./wasm-hosts.mjs";

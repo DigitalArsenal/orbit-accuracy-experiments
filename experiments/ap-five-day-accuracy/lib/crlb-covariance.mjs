@@ -1,8 +1,8 @@
 import * as flatbuffers from "flatbuffers";
-import { OCM } from "spacedatastandards.org/lib/js/OCM/OCM.js";
-import { CVRT } from "spacedatastandards.org/lib/js/OCM/CVR.js";
-import { covarianceRule } from "spacedatastandards.org/lib/js/OCM/covarianceRule.js";
-import { covarianceCalibration } from "spacedatastandards.org/lib/js/OCM/covarianceCalibration.js";
+import { OCM } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/OCM.js";
+import { CVRT } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/CVR.js";
+import { covarianceRule } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/covarianceRule.js";
+import { covarianceCalibration } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/covarianceCalibration.js";
 
 const RE_KM = 6378.137;
 const MU_KM3_S2 = 398600.4418;

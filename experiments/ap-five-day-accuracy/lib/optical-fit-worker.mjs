@@ -1,7 +1,7 @@
 import { parentPort, workerData } from "node:worker_threads";
 import * as flatbuffers from "flatbuffers";
-import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
-import { OCM } from "spacedatastandards.org/lib/js/OCM/OCM.js";
+import * as PCF from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/PCF/main.js";
+import { OCM } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/OCM.js";
 
 import { loadWasmModule, TYPES } from "./wasm-hosts.mjs";
 import { ALL_REGIME_OPTICAL_WASM_PATH, fitOpenOpticalArcToApOcm } from "./external-and-optical-ap-engine.mjs";

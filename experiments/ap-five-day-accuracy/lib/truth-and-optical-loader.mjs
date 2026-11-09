@@ -14,9 +14,9 @@ import {
   RFMUnion,
   CATT,
   timingStandard,
-} from "spacedatastandards.org/lib/js/OEM/main.js";
-import { TDM, TDMT, TDMSegmentT, TDMObservationT } from "spacedatastandards.org/lib/js/TDM/main.js";
-import { EOO, EOOT } from "spacedatastandards.org/lib/js/EOO/main.js";
+} from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OEM/main.js";
+import { TDM, TDMT, TDMSegmentT, TDMObservationT } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/TDM/main.js";
+import { EOO, EOOT } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/EOO/main.js";
 import { encodeModuleConfig } from "space-data-module-sdk/runtime-contracts";
 import { assertAllowedPath, isHeldForStudy } from "./hold-gate.mjs";
 import { TYPES, transformStateKm, MODULES_ROOT } from "./wasm-hosts.mjs";
@@ -270,7 +270,7 @@ export async function loadMetopSgGcrfSeries(framesHost, eopRows, {
     /<OSV>\s*<TAI>[^<]+<\/TAI>\s*<UTC>UTC=([^<]+)<\/UTC>\s*<UT1>UT1=[^<]+<\/UT1>[\s\S]*?<X[^>]*>([^<]+)<\/X>\s*<Y[^>]*>([^<]+)<\/Y>\s*<Z[^>]*>([^<]+)<\/Z>\s*<VX[^>]*>([^<]+)<\/VX>\s*<VY[^>]*>([^<]+)<\/VY>\s*<VZ[^>]*>([^<]+)<\/VZ>/g;
 
   // Compact EOP slice around Nov 2026 for fast WASM calls
-  const { EOP } = await import("spacedatastandards.org/lib/js/EOP/main.js");
+  const { EOP } = await import("../../../../../../repos/main-packages/spacedatastandards.org/lib/js/EOP/main.js");
   const nearEop = eopRows
     .filter((r) => r.MJD >= 61340 && r.MJD <= 61365)
     .map((row) => {
@@ -310,7 +310,7 @@ export async function loadWaasSbasGcrfByPrn(framesHost, eopRows, {
   sampleStepSeconds = 900,
 } = {}) {
   assertAllowedPath(sbasDir);
-  const { EOP } = await import("spacedatastandards.org/lib/js/EOP/main.js");
+  const { EOP } = await import("../../../../../../repos/main-packages/spacedatastandards.org/lib/js/EOP/main.js");
   const nearEop = eopRows
     .filter((r) => r.MJD >= 61335 && r.MJD <= 61365)
     .map((row) => {

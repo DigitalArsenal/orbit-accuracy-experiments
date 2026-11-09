@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import * as flatbuffers from "flatbuffers";
-import { SPW, SPWT } from "spacedatastandards.org/lib/js/SPW/SPW.js";
-import { F107DataType } from "spacedatastandards.org/lib/js/SPW/F107DataType.js";
+import { SPW, SPWT } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/SPW/SPW.js";
+import { F107DataType } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/SPW/F107DataType.js";
 import { assertAllowedPath } from "./hold-gate.mjs";
 import { forecastSpwBartelsWasm } from "./tle-upgrades-host.mjs";
 

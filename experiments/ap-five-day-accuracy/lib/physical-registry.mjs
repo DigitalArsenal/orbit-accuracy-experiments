@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
-import { PhysicalPropertiesT } from "spacedatastandards.org/lib/js/OCM/PhysicalProperties.js";
+import { PhysicalPropertiesT } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/PhysicalProperties.js";
 import { assertAllowedPath, isHeldForStudy } from "./hold-gate.mjs";
 
 const RCS_SIZE_DEFAULT_M2 = {

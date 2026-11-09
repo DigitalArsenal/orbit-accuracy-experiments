@@ -20,7 +20,7 @@ const OUT_WASM = path.join(OUT_DIR, "sdn-ap-tides.wasm");
 const require = createRequire(path.join(PACKAGE_ROOT, "package.json"));
 const { compileModuleFromSource, ModuleThreadModel } = await import("space-data-module-sdk/compiler");
 const { FlatcRunner } = await import("flatc-wasm");
-const sdsRoot = path.dirname(require.resolve("spacedatastandards.org/package.json"));
+const sdsRoot = new URL("../../../../../repos/main-packages/spacedatastandards.org", import.meta.url).pathname;
 
 function replaceExact(src, label, target, replacement) {
   if (!src.includes(target)) {

@@ -6,11 +6,11 @@ import os from "node:os";
 import { Worker } from "node:worker_threads";
 import { performance } from "node:perf_hooks";
 import * as flatbuffers from "flatbuffers";
-import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
-import { DCL } from "spacedatastandards.org/lib/js/DCL/main.js";
-import { OCM } from "spacedatastandards.org/lib/js/OCM/OCM.js";
-import { meanElementSource } from "spacedatastandards.org/lib/js/OCM/meanElementSource.js";
-import { OEM } from "spacedatastandards.org/lib/js/OEM/OEM.js";
+import * as PCF from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/PCF/main.js";
+import { DCL } from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/DCL/main.js";
+import { OCM } from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/OCM.js";
+import { meanElementSource } from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/meanElementSource.js";
+import { OEM } from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/OEM/OEM.js";
 import { assertNoUserDefined } from "../../../../../repos/main-packages/space-data-network-modules/common/tests/no-user-defined.mjs";
 
 import { assertAllowedPath, isHeldForStudy, CREDITS } from "./lib/hold-gate.mjs";

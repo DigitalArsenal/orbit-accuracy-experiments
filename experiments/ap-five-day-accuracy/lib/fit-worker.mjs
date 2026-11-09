@@ -1,8 +1,8 @@
 import { parentPort, workerData } from "node:worker_threads";
 import * as flatbuffers from "flatbuffers";
-import * as ERM from "spacedatastandards.org/lib/js/ERM/main.js";
-import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
-import { OCM } from "spacedatastandards.org/lib/js/OCM/OCM.js";
+import * as ERM from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/ERM/main.js";
+import * as PCF from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/PCF/main.js";
+import { OCM } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OCM/OCM.js";
 
 import { loadWasmModule, TYPES } from "./wasm-hosts.mjs";
 import { fitPureOwnEpochAp, evalSgp4OwnEpochs } from "./ssn-epoch-engine.mjs";

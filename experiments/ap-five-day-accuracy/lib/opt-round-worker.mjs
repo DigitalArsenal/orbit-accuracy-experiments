@@ -1,8 +1,8 @@
 import { parentPort, workerData } from "node:worker_threads";
 import * as flatbuffers from "flatbuffers";
-import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
-import * as ERM from "spacedatastandards.org/lib/js/ERM/main.js";
-import { OEM } from "spacedatastandards.org/lib/js/OEM/main.js";
+import * as PCF from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/PCF/main.js";
+import * as ERM from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/ERM/main.js";
+import { OEM } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/OEM/main.js";
 
 import { vecToUvw } from "./crlb-covariance.mjs";
 import { loadWasmModule, TYPES } from "./wasm-hosts.mjs";

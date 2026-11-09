@@ -5,9 +5,9 @@ import { Worker, isMainThread, parentPort, workerData } from "node:worker_thread
 import { fileURLToPath } from "node:url";
 import { performance } from "node:perf_hooks";
 import * as flatbuffers from "flatbuffers";
-import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
-import * as ERM from "spacedatastandards.org/lib/js/ERM/main.js";
-import { OEM } from "spacedatastandards.org/lib/js/OEM/main.js";
+import * as PCF from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/PCF/main.js";
+import * as ERM from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/ERM/main.js";
+import { OEM } from "../../../../../repos/main-packages/spacedatastandards.org/lib/js/OEM/main.js";
 
 import { assertAllowedPath, isHeldForStudy } from "./lib/hold-gate.mjs";
 import { jdOf } from "./lib/gp-history-loader.mjs";

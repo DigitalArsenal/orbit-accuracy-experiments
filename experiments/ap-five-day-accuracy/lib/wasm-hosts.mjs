@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import * as flatbuffers from "flatbuffers";
-import * as F from "spacedatastandards.org/lib/js/FRM/main.js";
-import * as P from "spacedatastandards.org/lib/js/PRW/main.js";
-import { EOP } from "spacedatastandards.org/lib/js/EOP/main.js";
+import * as F from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/FRM/main.js";
+import * as P from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/PRW/main.js";
+import { EOP } from "../../../../../../repos/main-packages/spacedatastandards.org/lib/js/EOP/main.js";
 import { createStandaloneHarness } from "space-data-module-sdk/testing/isomorphic";
 import { encodeHttpResponse } from "space-data-module-sdk/runtime-contracts";
 import { assertAllowedPath } from "./hold-gate.mjs";
