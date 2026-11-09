@@ -1,0 +1,3754 @@
+{
+  "experiment": "ap-five-day-accuracy",
+  "cutoffUtc": "2026-11-03T00:00:00Z",
+  "catalogEpochUtc": "2026-11-08T00:00:00Z",
+  "leadHours": [
+    0,
+    24,
+    48,
+    72,
+    96,
+    120
+  ],
+  "producer": "com.spacedatanetwork.sdn-ap@0.6.5",
+  "meanElementTheory": "AP",
+  "tier1ExternalAndOptical120h": {
+    "SUN_SYNC_POD_LEO": {
+      "+0h": {
+        "n": 1,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 28.19,
+          "p68": 28.19,
+          "p90": 28.19,
+          "rms": 28.19
+        },
+        "sgp3dM": {
+          "median": 689.18,
+          "p68": 689.18,
+          "p90": 689.18,
+          "rms": 689.18
+        },
+        "gainFactor": {
+          "medianRatio": 24.45,
+          "p68Ratio": 24.45,
+          "rmsRatio": 24.45
+        },
+        "apRtnP68M": [
+          22.9,
+          14,
+          8.7
+        ],
+        "sgpRtnP68M": [
+          170.2,
+          645.6,
+          171.1
+        ],
+        "covarianceRealism": {
+          "count": 1,
+          "medianMahalD": 2.097,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+24h": {
+        "n": 1,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 69.47,
+          "p68": 69.47,
+          "p90": 69.47,
+          "rms": 69.47
+        },
+        "sgp3dM": {
+          "median": 232.86,
+          "p68": 232.86,
+          "p90": 232.86,
+          "rms": 232.86
+        },
+        "gainFactor": {
+          "medianRatio": 3.35,
+          "p68Ratio": 3.35,
+          "rmsRatio": 3.35
+        },
+        "apRtnP68M": [
+          15.5,
+          67.2,
+          8
+        ],
+        "sgpRtnP68M": [
+          68.6,
+          217,
+          49.4
+        ],
+        "covarianceRealism": {
+          "count": 1,
+          "medianMahalD": 1.289,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+48h": {
+        "n": 1,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 121.21,
+          "p68": 121.21,
+          "p90": 121.21,
+          "rms": 121.21
+        },
+        "sgp3dM": {
+          "median": 342.33,
+          "p68": 342.33,
+          "p90": 342.33,
+          "rms": 342.33
+        },
+        "gainFactor": {
+          "medianRatio": 2.82,
+          "p68Ratio": 2.82,
+          "rmsRatio": 2.82
+        },
+        "apRtnP68M": [
+          10.1,
+          120.3,
+          11.3
+        ],
+        "sgpRtnP68M": [
+          235.5,
+          241.8,
+          57
+        ],
+        "covarianceRealism": {
+          "count": 1,
+          "medianMahalD": 1.291,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+72h": {
+        "n": 1,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 206.46,
+          "p68": 206.46,
+          "p90": 206.46,
+          "rms": 206.46
+        },
+        "sgp3dM": {
+          "median": 949.12,
+          "p68": 949.12,
+          "p90": 949.12,
+          "rms": 949.12
+        },
+        "gainFactor": {
+          "medianRatio": 4.6,
+          "p68Ratio": 4.6,
+          "rmsRatio": 4.6
+        },
+        "apRtnP68M": [
+          5.9,
+          206,
+          12.4
+        ],
+        "sgpRtnP68M": [
+          364.1,
+          876.3,
+          19.1
+        ],
+        "covarianceRealism": {
+          "count": 1,
+          "medianMahalD": 0.644,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+96h": {
+        "n": 1,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 308.25,
+          "p68": 308.25,
+          "p90": 308.25,
+          "rms": 308.25
+        },
+        "sgp3dM": {
+          "median": 1568.11,
+          "p68": 1568.11,
+          "p90": 1568.11,
+          "rms": 1568.11
+        },
+        "gainFactor": {
+          "medianRatio": 5.09,
+          "p68Ratio": 5.09,
+          "rmsRatio": 5.09
+        },
+        "apRtnP68M": [
+          22.6,
+          307.1,
+          13.4
+        ],
+        "sgpRtnP68M": [
+          41.4,
+          1567.2,
+          35
+        ],
+        "covarianceRealism": {
+          "count": 1,
+          "medianMahalD": 1.894,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+120h": {
+        "n": 1,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 393.34,
+          "p68": 393.34,
+          "p90": 393.34,
+          "rms": 393.34
+        },
+        "sgp3dM": {
+          "median": 1379.88,
+          "p68": 1379.88,
+          "p90": 1379.88,
+          "rms": 1379.88
+        },
+        "gainFactor": {
+          "medianRatio": 3.51,
+          "p68Ratio": 3.51,
+          "rmsRatio": 3.51
+        },
+        "apRtnP68M": [
+          26.7,
+          391.9,
+          20.2
+        ],
+        "sgpRtnP68M": [
+          349.3,
+          1333,
+          71.4
+        ],
+        "covarianceRealism": {
+          "count": 1,
+          "medianMahalD": 2.052,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "fiveDayLossSummary": {
+        "n0": 1,
+        "n120": 1,
+        "apMed0M": 28.19,
+        "apMed120M": 393.34,
+        "apAddedDriftMedM": 365.15,
+        "apLossPct5dMed": 1295.32,
+        "sgpMed0M": 689.18,
+        "sgpMed120M": 1379.88,
+        "sgpAddedDriftMedM": 690.7,
+        "sgpLossPct5dMed": 100.22,
+        "gainVsSgp0": 24.45,
+        "gainVsSgp120": 3.51,
+        "apWinRate120Pct": 100
+      }
+    },
+    "SATNOGS_OPTICAL_UNSEEDED_LEO": {
+      "+0h": {
+        "n": 2,
+        "apWinRatePct": 0,
+        "ap3dM": {
+          "median": 1989.7,
+          "p68": 2039.29,
+          "p90": 2098.27,
+          "rms": 1994.32
+        },
+        "sgp3dM": {
+          "median": 269.18,
+          "p68": 269.94,
+          "p90": 270.86,
+          "rms": 269.18
+        },
+        "gainFactor": {
+          "medianRatio": 0.14,
+          "p68Ratio": 0.13,
+          "rmsRatio": 0.13
+        },
+        "apRtnP68M": [
+          1333.8,
+          585,
+          1431.8
+        ],
+        "sgpRtnP68M": [
+          29.3,
+          187.8,
+          194.8
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 288.577,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 0,
+          "within3Sigma997Pct": 0
+        }
+      },
+      "+24h": {
+        "n": 2,
+        "apWinRatePct": 0,
+        "ap3dM": {
+          "median": 1855.51,
+          "p68": 1951.71,
+          "p90": 2066.12,
+          "rms": 1874.1
+        },
+        "sgp3dM": {
+          "median": 60.79,
+          "p68": 63.56,
+          "p90": 66.84,
+          "rms": 61.26
+        },
+        "gainFactor": {
+          "medianRatio": 0.03,
+          "p68Ratio": 0.03,
+          "rmsRatio": 0.03
+        },
+        "apRtnP68M": [
+          1099.7,
+          1240,
+          984.5
+        ],
+        "sgpRtnP68M": [
+          17.8,
+          55.2,
+          24.9
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 126.891,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 0,
+          "within3Sigma997Pct": 0
+        }
+      },
+      "+48h": {
+        "n": 2,
+        "apWinRatePct": 0,
+        "ap3dM": {
+          "median": 3893.2,
+          "p68": 4513.36,
+          "p90": 5250.96,
+          "rms": 4247.06
+        },
+        "sgp3dM": {
+          "median": 366.63,
+          "p68": 367.07,
+          "p90": 367.6,
+          "rms": 366.63
+        },
+        "gainFactor": {
+          "medianRatio": 0.09,
+          "p68Ratio": 0.08,
+          "rmsRatio": 0.09
+        },
+        "apRtnP68M": [
+          2039.8,
+          3827.1,
+          870.8
+        ],
+        "sgpRtnP68M": [
+          11.5,
+          189.1,
+          315
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 235.356,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 0,
+          "within3Sigma997Pct": 0
+        }
+      },
+      "+72h": {
+        "n": 2,
+        "apWinRatePct": 0,
+        "ap3dM": {
+          "median": 6803.34,
+          "p68": 7446.04,
+          "p90": 8210.45,
+          "rms": 7027.03
+        },
+        "sgp3dM": {
+          "median": 255.12,
+          "p68": 256.67,
+          "p90": 258.51,
+          "rms": 255.15
+        },
+        "gainFactor": {
+          "medianRatio": 0.04,
+          "p68Ratio": 0.03,
+          "rmsRatio": 0.04
+        },
+        "apRtnP68M": [
+          594.5,
+          7283.9,
+          1469.2
+        ],
+        "sgpRtnP68M": [
+          105.5,
+          218,
+          89.3
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 76.224,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 0,
+          "within3Sigma997Pct": 0
+        }
+      },
+      "+96h": {
+        "n": 2,
+        "apWinRatePct": 0,
+        "ap3dM": {
+          "median": 5483.3,
+          "p68": 5781.92,
+          "p90": 6137.09,
+          "rms": 5543.86
+        },
+        "sgp3dM": {
+          "median": 518.91,
+          "p68": 521.04,
+          "p90": 523.58,
+          "rms": 518.94
+        },
+        "gainFactor": {
+          "medianRatio": 0.09,
+          "p68Ratio": 0.09,
+          "rmsRatio": 0.09
+        },
+        "apRtnP68M": [
+          1814.6,
+          5479.3,
+          157.1
+        ],
+        "sgpRtnP68M": [
+          176.8,
+          110.2,
+          477.5
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 168.95,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 0,
+          "within3Sigma997Pct": 0
+        }
+      },
+      "fiveDayLossSummary": null
+    },
+    "WAAS_SBAS_GEO": {
+      "+0h": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 4710.59,
+          "p68": 6116.95,
+          "p90": 7789.64,
+          "rms": 6083.01
+        },
+        "sgp3dM": {
+          "median": 24811.65,
+          "p68": 26979.4,
+          "p90": 29557.68,
+          "rms": 25511.04
+        },
+        "gainFactor": {
+          "medianRatio": 5.27,
+          "p68Ratio": 4.41,
+          "rmsRatio": 4.19
+        },
+        "apRtnP68M": [
+          1274.8,
+          5907.7,
+          635.5
+        ],
+        "sgpRtnP68M": [
+          1701.8,
+          26880.3,
+          1531.3
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 2.872,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+24h": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 2968.95,
+          "p68": 3443.7,
+          "p90": 4008.36,
+          "rms": 3240.79
+        },
+        "sgp3dM": {
+          "median": 21723.75,
+          "p68": 23644.87,
+          "p90": 25929.82,
+          "rms": 22350.91
+        },
+        "gainFactor": {
+          "medianRatio": 7.32,
+          "p68Ratio": 6.87,
+          "rmsRatio": 6.9
+        },
+        "apRtnP68M": [
+          406.3,
+          3385,
+          433
+        ],
+        "sgpRtnP68M": [
+          444.1,
+          23568.4,
+          1850.1
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 2.292,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+48h": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 10069.55,
+          "p68": 10883.34,
+          "p90": 11851.26,
+          "rms": 10312.9
+        },
+        "sgp3dM": {
+          "median": 27277.95,
+          "p68": 28814.67,
+          "p90": 30642.42,
+          "rms": 27600.25
+        },
+        "gainFactor": {
+          "medianRatio": 2.71,
+          "p68Ratio": 2.65,
+          "rmsRatio": 2.68
+        },
+        "apRtnP68M": [
+          1069.1,
+          10793.8,
+          818
+        ],
+        "sgpRtnP68M": [
+          1595.3,
+          28735.9,
+          1455.2
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 3.239,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 0,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+72h": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 7059.64,
+          "p68": 8639.5,
+          "p90": 10518.56,
+          "rms": 8278.43
+        },
+        "sgp3dM": {
+          "median": 22752.78,
+          "p68": 24075.63,
+          "p90": 25648.99,
+          "rms": 23039
+        },
+        "gainFactor": {
+          "medianRatio": 3.22,
+          "p68Ratio": 2.79,
+          "rmsRatio": 2.78
+        },
+        "apRtnP68M": [
+          457.4,
+          8595,
+          629.9
+        ],
+        "sgpRtnP68M": [
+          299.8,
+          23982.6,
+          2077.1
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 1.996,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+96h": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 12901.87,
+          "p68": 13632.36,
+          "p90": 14501.2,
+          "rms": 13055.84
+        },
+        "sgp3dM": {
+          "median": 27156.54,
+          "p68": 31469.46,
+          "p90": 36599.16,
+          "rms": 29610.72
+        },
+        "gainFactor": {
+          "medianRatio": 2.1,
+          "p68Ratio": 2.31,
+          "rmsRatio": 2.27
+        },
+        "apRtnP68M": [
+          803,
+          13566.7,
+          1167.3
+        ],
+        "sgpRtnP68M": [
+          762.2,
+          31423.8,
+          1470.2
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 2.923,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+120h": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 10284.9,
+          "p68": 13274.36,
+          "p90": 16829.96,
+          "rms": 13142.04
+        },
+        "sgp3dM": {
+          "median": 21694.81,
+          "p68": 25258.53,
+          "p90": 29497.16,
+          "rms": 23786.23
+        },
+        "gainFactor": {
+          "medianRatio": 2.11,
+          "p68Ratio": 1.9,
+          "rmsRatio": 1.81
+        },
+        "apRtnP68M": [
+          627.9,
+          13185.1,
+          858.5
+        ],
+        "sgpRtnP68M": [
+          1153.8,
+          25045.6,
+          2935
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 1.708,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "fiveDayLossSummary": {
+        "n0": 2,
+        "n120": 2,
+        "apMed0M": 4710.59,
+        "apMed120M": 10284.9,
+        "apAddedDriftMedM": 5574.31,
+        "apLossPct5dMed": 118.34,
+        "sgpMed0M": 24811.65,
+        "sgpMed120M": 21694.81,
+        "sgpAddedDriftMedM": -3116.84,
+        "sgpLossPct5dMed": -12.56,
+        "gainVsSgp0": 5.27,
+        "gainVsSgp120": 2.11,
+        "apWinRate120Pct": 50
+      }
+    },
+    "ESA_GNSS": {
+      "+0h": {
+        "n": 112,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 12.08,
+          "p68": 14.87,
+          "p90": 20.69,
+          "rms": 3016.79
+        },
+        "sgp3dM": {
+          "median": 949.8,
+          "p68": 1923.14,
+          "p90": 3332.88,
+          "rms": 243066.26
+        },
+        "gainFactor": {
+          "medianRatio": 78.62,
+          "p68Ratio": 129.33,
+          "rmsRatio": 80.57
+        },
+        "apRtnP68M": [
+          6.9,
+          14,
+          1.2
+        ],
+        "sgpRtnP68M": [
+          343.9,
+          1820.5,
+          199.2
+        ],
+        "covarianceRealism": {
+          "count": 112,
+          "medianMahalD": 2.16,
+          "within1Sigma68Pct": 32.1,
+          "within2Sigma95Pct": 91.1,
+          "within3Sigma997Pct": 99.1
+        }
+      },
+      "+24h": {
+        "n": 112,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 19.83,
+          "p68": 27.02,
+          "p90": 46.07,
+          "rms": 11506.29
+        },
+        "sgp3dM": {
+          "median": 1535.55,
+          "p68": 2410.22,
+          "p90": 4068.51,
+          "rms": 259125.62
+        },
+        "gainFactor": {
+          "medianRatio": 77.44,
+          "p68Ratio": 89.21,
+          "rmsRatio": 22.52
+        },
+        "apRtnP68M": [
+          11.1,
+          25,
+          1.5
+        ],
+        "sgpRtnP68M": [
+          408,
+          2242.4,
+          228.4
+        ],
+        "covarianceRealism": {
+          "count": 112,
+          "medianMahalD": 0.291,
+          "within1Sigma68Pct": 97.3,
+          "within2Sigma95Pct": 97.3,
+          "within3Sigma997Pct": 97.3
+        }
+      },
+      "+48h": {
+        "n": 111,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 32.38,
+          "p68": 46.77,
+          "p90": 82.42,
+          "rms": 18483.01
+        },
+        "sgp3dM": {
+          "median": 1598.7,
+          "p68": 2660.16,
+          "p90": 4786.8,
+          "rms": 276807.47
+        },
+        "gainFactor": {
+          "medianRatio": 49.37,
+          "p68Ratio": 56.88,
+          "rmsRatio": 14.98
+        },
+        "apRtnP68M": [
+          16.2,
+          44.8,
+          1.7
+        ],
+        "sgpRtnP68M": [
+          427.2,
+          2559.4,
+          260.2
+        ],
+        "covarianceRealism": {
+          "count": 111,
+          "medianMahalD": 0.212,
+          "within1Sigma68Pct": 97.3,
+          "within2Sigma95Pct": 97.3,
+          "within3Sigma997Pct": 97.3
+        }
+      },
+      "+72h": {
+        "n": 112,
+        "apWinRatePct": 99.1,
+        "ap3dM": {
+          "median": 51.83,
+          "p68": 66.33,
+          "p90": 122.27,
+          "rms": 35832.33
+        },
+        "sgp3dM": {
+          "median": 1658.22,
+          "p68": 2675.95,
+          "p90": 5680.12,
+          "rms": 293473.83
+        },
+        "gainFactor": {
+          "medianRatio": 31.99,
+          "p68Ratio": 40.34,
+          "rmsRatio": 8.19
+        },
+        "apRtnP68M": [
+          20.2,
+          62.7,
+          2
+        ],
+        "sgpRtnP68M": [
+          538,
+          2589.7,
+          244.6
+        ],
+        "covarianceRealism": {
+          "count": 112,
+          "medianMahalD": 0.165,
+          "within1Sigma68Pct": 96.4,
+          "within2Sigma95Pct": 96.4,
+          "within3Sigma997Pct": 96.4
+        }
+      },
+      "+96h": {
+        "n": 112,
+        "apWinRatePct": 99.1,
+        "ap3dM": {
+          "median": 66.24,
+          "p68": 93.79,
+          "p90": 175.1,
+          "rms": 49909.42
+        },
+        "sgp3dM": {
+          "median": 1802.49,
+          "p68": 2687.94,
+          "p90": 6351.1,
+          "rms": 311884.32
+        },
+        "gainFactor": {
+          "medianRatio": 27.21,
+          "p68Ratio": 28.66,
+          "rmsRatio": 6.25
+        },
+        "apRtnP68M": [
+          27.4,
+          89.9,
+          2.4
+        ],
+        "sgpRtnP68M": [
+          656.7,
+          2540.2,
+          293
+        ],
+        "covarianceRealism": {
+          "count": 112,
+          "medianMahalD": 0.201,
+          "within1Sigma68Pct": 96.4,
+          "within2Sigma95Pct": 96.4,
+          "within3Sigma997Pct": 96.4
+        }
+      },
+      "+120h": {
+        "n": 112,
+        "apWinRatePct": 99.1,
+        "ap3dM": {
+          "median": 85.84,
+          "p68": 132.93,
+          "p90": 244.4,
+          "rms": 64184
+        },
+        "sgp3dM": {
+          "median": 1879.52,
+          "p68": 2815.03,
+          "p90": 7844.46,
+          "rms": 331035.35
+        },
+        "gainFactor": {
+          "medianRatio": 21.9,
+          "p68Ratio": 21.18,
+          "rmsRatio": 5.16
+        },
+        "apRtnP68M": [
+          30.2,
+          128.2,
+          3.2
+        ],
+        "sgpRtnP68M": [
+          721.4,
+          2632,
+          282
+        ],
+        "covarianceRealism": {
+          "count": 112,
+          "medianMahalD": 0.155,
+          "within1Sigma68Pct": 96.4,
+          "within2Sigma95Pct": 96.4,
+          "within3Sigma997Pct": 96.4
+        }
+      },
+      "fiveDayLossSummary": {
+        "n0": 112,
+        "n120": 112,
+        "apMed0M": 12.08,
+        "apMed120M": 85.84,
+        "apAddedDriftMedM": 73.76,
+        "apLossPct5dMed": 610.6,
+        "sgpMed0M": 949.8,
+        "sgpMed120M": 1879.52,
+        "sgpAddedDriftMedM": 929.72,
+        "sgpLossPct5dMed": 97.89,
+        "gainVsSgp0": 78.62,
+        "gainVsSgp120": 21.9,
+        "apWinRate120Pct": 99.1
+      }
+    },
+    "COPERNICUS_S1_POD": {
+      "+0h": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 173.46,
+          "p68": 213.31,
+          "p90": 260.72,
+          "rms": 204.9
+        },
+        "sgp3dM": {
+          "median": 344.59,
+          "p68": 405.01,
+          "p90": 476.88,
+          "rms": 382.21
+        },
+        "gainFactor": {
+          "medianRatio": 1.99,
+          "p68Ratio": 1.9,
+          "rmsRatio": 1.87
+        },
+        "apRtnP68M": [
+          2.6,
+          212.8,
+          14.3
+        ],
+        "sgpRtnP68M": [
+          150.7,
+          341.4,
+          60.5
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 2.359,
+          "within1Sigma68Pct": 0,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+24h": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 1090.96,
+          "p68": 1239.27,
+          "p90": 1415.66,
+          "rms": 1164.01
+        },
+        "sgp3dM": {
+          "median": 831.4,
+          "p68": 832.47,
+          "p90": 833.73,
+          "rms": 831.41
+        },
+        "gainFactor": {
+          "medianRatio": 0.76,
+          "p68Ratio": 0.67,
+          "rmsRatio": 0.71
+        },
+        "apRtnP68M": [
+          6.5,
+          1239.2,
+          8
+        ],
+        "sgpRtnP68M": [
+          202.2,
+          810.8,
+          16.5
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 2.275,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+48h": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 1956.41,
+          "p68": 2279.99,
+          "p90": 2664.86,
+          "rms": 2147.5
+        },
+        "sgp3dM": {
+          "median": 1960.48,
+          "p68": 1997.13,
+          "p90": 2040.72,
+          "rms": 1963.04
+        },
+        "gainFactor": {
+          "medianRatio": 1,
+          "p68Ratio": 0.88,
+          "rmsRatio": 0.91
+        },
+        "apRtnP68M": [
+          11.5,
+          2279.9,
+          12.5
+        ],
+        "sgpRtnP68M": [
+          166.9,
+          1990,
+          22.6
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 2.293,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+72h": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 2736.4,
+          "p68": 3321.3,
+          "p90": 4016.96,
+          "rms": 3170.2
+        },
+        "sgp3dM": {
+          "median": 3015.72,
+          "p68": 3414.01,
+          "p90": 3887.73,
+          "rms": 3206.66
+        },
+        "gainFactor": {
+          "medianRatio": 1.1,
+          "p68Ratio": 1.03,
+          "rmsRatio": 1.01
+        },
+        "apRtnP68M": [
+          11.4,
+          3321.1,
+          24.7
+        ],
+        "sgpRtnP68M": [
+          81.4,
+          3412.8,
+          35.5
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 2.23,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+96h": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 3426.1,
+          "p68": 4235.4,
+          "p90": 5197.97,
+          "rms": 4079.66
+        },
+        "sgp3dM": {
+          "median": 4039.21,
+          "p68": 4153.49,
+          "p90": 4289.41,
+          "rms": 4051.3
+        },
+        "gainFactor": {
+          "medianRatio": 1.18,
+          "p68Ratio": 0.98,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          1.5,
+          4235.3,
+          23
+        ],
+        "sgpRtnP68M": [
+          110.5,
+          4151.5,
+          79.6
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 1.924,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+120h": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 4084.09,
+          "p68": 5179.75,
+          "p90": 6482.92,
+          "rms": 5066.65
+        },
+        "sgp3dM": {
+          "median": 5072.82,
+          "p68": 5736.86,
+          "p90": 6526.66,
+          "rms": 5388.51
+        },
+        "gainFactor": {
+          "medianRatio": 1.24,
+          "p68Ratio": 1.11,
+          "rmsRatio": 1.06
+        },
+        "apRtnP68M": [
+          5.2,
+          5179.5,
+          25.8
+        ],
+        "sgpRtnP68M": [
+          303.2,
+          5727.9,
+          75.3
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 1.892,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 50,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "fiveDayLossSummary": {
+        "n0": 2,
+        "n120": 2,
+        "apMed0M": 173.46,
+        "apMed120M": 4084.09,
+        "apAddedDriftMedM": 3910.63,
+        "apLossPct5dMed": 2254.49,
+        "sgpMed0M": 344.59,
+        "sgpMed120M": 5072.82,
+        "sgpAddedDriftMedM": 4728.23,
+        "sgpLossPct5dMed": 1372.13,
+        "gainVsSgp0": 1.99,
+        "gainVsSgp120": 1.24,
+        "apWinRate120Pct": 50
+      }
+    },
+    "ILRS_SLR_MEO": {
+      "+0h": {
+        "n": 4,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 3.58,
+          "p68": 3.82,
+          "p90": 5.2,
+          "rms": 4.07
+        },
+        "sgp3dM": {
+          "median": 837.66,
+          "p68": 1258.88,
+          "p90": 1307.02,
+          "rms": 939.35
+        },
+        "gainFactor": {
+          "medianRatio": 233.79,
+          "p68Ratio": 329.65,
+          "rmsRatio": 230.68
+        },
+        "apRtnP68M": [
+          2.8,
+          3.3,
+          0.5
+        ],
+        "sgpRtnP68M": [
+          31.6,
+          1244,
+          90.6
+        ],
+        "covarianceRealism": {
+          "count": 4,
+          "medianMahalD": 1.874,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 75,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+24h": {
+        "n": 4,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 5.6,
+          "p68": 8.38,
+          "p90": 8.75,
+          "rms": 6.4
+        },
+        "sgp3dM": {
+          "median": 615.9,
+          "p68": 1010.3,
+          "p90": 1298.21,
+          "rms": 879.35
+        },
+        "gainFactor": {
+          "medianRatio": 110,
+          "p68Ratio": 120.55,
+          "rmsRatio": 137.43
+        },
+        "apRtnP68M": [
+          1.8,
+          8.2,
+          1.5
+        ],
+        "sgpRtnP68M": [
+          112.7,
+          967.8,
+          64
+        ],
+        "covarianceRealism": {
+          "count": 4,
+          "medianMahalD": 0.149,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+48h": {
+        "n": 4,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 8.03,
+          "p68": 8.58,
+          "p90": 9.42,
+          "rms": 7.74
+        },
+        "sgp3dM": {
+          "median": 640.7,
+          "p68": 868.62,
+          "p90": 1226.72,
+          "rms": 844.31
+        },
+        "gainFactor": {
+          "medianRatio": 79.81,
+          "p68Ratio": 101.28,
+          "rmsRatio": 109.02
+        },
+        "apRtnP68M": [
+          1.1,
+          7.5,
+          2.5
+        ],
+        "sgpRtnP68M": [
+          37.2,
+          830.4,
+          222.1
+        ],
+        "covarianceRealism": {
+          "count": 4,
+          "medianMahalD": 0.076,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+72h": {
+        "n": 4,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 7.19,
+          "p68": 9.07,
+          "p90": 11.74,
+          "rms": 8.41
+        },
+        "sgp3dM": {
+          "median": 617.82,
+          "p68": 1032.94,
+          "p90": 1245.6,
+          "rms": 849.85
+        },
+        "gainFactor": {
+          "medianRatio": 85.9,
+          "p68Ratio": 113.94,
+          "rmsRatio": 101.05
+        },
+        "apRtnP68M": [
+          4.7,
+          7.6,
+          2.9
+        ],
+        "sgpRtnP68M": [
+          102.2,
+          1017,
+          217.7
+        ],
+        "covarianceRealism": {
+          "count": 4,
+          "medianMahalD": 0.083,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+96h": {
+        "n": 4,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 6.14,
+          "p68": 8.99,
+          "p90": 15.61,
+          "rms": 10.44
+        },
+        "sgp3dM": {
+          "median": 670.23,
+          "p68": 1192.96,
+          "p90": 1257.83,
+          "rms": 881.12
+        },
+        "gainFactor": {
+          "medianRatio": 109.15,
+          "p68Ratio": 132.71,
+          "rmsRatio": 84.41
+        },
+        "apRtnP68M": [
+          2.1,
+          1.8,
+          1.7
+        ],
+        "sgpRtnP68M": [
+          86.4,
+          1183.9,
+          97.5
+        ],
+        "covarianceRealism": {
+          "count": 4,
+          "medianMahalD": 0.043,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+120h": {
+        "n": 4,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 5.59,
+          "p68": 8.13,
+          "p90": 20.18,
+          "rms": 13.59
+        },
+        "sgp3dM": {
+          "median": 732.33,
+          "p68": 1013.45,
+          "p90": 1112.22,
+          "rms": 803.53
+        },
+        "gainFactor": {
+          "medianRatio": 131.1,
+          "p68Ratio": 124.64,
+          "rmsRatio": 59.12
+        },
+        "apRtnP68M": [
+          1.6,
+          7.1,
+          3.1
+        ],
+        "sgpRtnP68M": [
+          40.5,
+          1006.3,
+          175.2
+        ],
+        "covarianceRealism": {
+          "count": 4,
+          "medianMahalD": 0.043,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "fiveDayLossSummary": {
+        "n0": 4,
+        "n120": 4,
+        "apMed0M": 3.58,
+        "apMed120M": 5.59,
+        "apAddedDriftMedM": 2.01,
+        "apLossPct5dMed": 56.15,
+        "sgpMed0M": 837.66,
+        "sgpMed120M": 732.33,
+        "sgpAddedDriftMedM": -105.33,
+        "sgpLossPct5dMed": -12.57,
+        "gainVsSgp0": 233.79,
+        "gainVsSgp120": 131.1,
+        "apWinRate120Pct": 100
+      }
+    },
+    "LOW_ORBIT_ALTIMETRY": {
+      "+0h": {
+        "n": 6,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 26.21,
+          "p68": 33.01,
+          "p90": 39.04,
+          "rms": 28.46
+        },
+        "sgp3dM": {
+          "median": 429.45,
+          "p68": 622.41,
+          "p90": 822.55,
+          "rms": 561.54
+        },
+        "gainFactor": {
+          "medianRatio": 16.39,
+          "p68Ratio": 18.85,
+          "rmsRatio": 19.73
+        },
+        "apRtnP68M": [
+          9.6,
+          30.3,
+          8.7
+        ],
+        "sgpRtnP68M": [
+          95.8,
+          606,
+          158.1
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 1.775,
+          "within1Sigma68Pct": 66.7,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+24h": {
+        "n": 6,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 55.86,
+          "p68": 86.21,
+          "p90": 785.32,
+          "rms": 592.68
+        },
+        "sgp3dM": {
+          "median": 1026.14,
+          "p68": 1237.19,
+          "p90": 1573.39,
+          "rms": 1145.27
+        },
+        "gainFactor": {
+          "medianRatio": 18.37,
+          "p68Ratio": 14.35,
+          "rmsRatio": 1.93
+        },
+        "apRtnP68M": [
+          8.3,
+          83.8,
+          13.8
+        ],
+        "sgpRtnP68M": [
+          128.7,
+          1231.4,
+          180.9
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 1.701,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+48h": {
+        "n": 6,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 194.09,
+          "p68": 254.94,
+          "p90": 1971.9,
+          "rms": 1504.11
+        },
+        "sgp3dM": {
+          "median": 1027.3,
+          "p68": 1442.26,
+          "p90": 3158.24,
+          "rms": 2143.41
+        },
+        "gainFactor": {
+          "medianRatio": 5.29,
+          "p68Ratio": 5.66,
+          "rmsRatio": 1.43
+        },
+        "apRtnP68M": [
+          10.3,
+          254.3,
+          20.1
+        ],
+        "sgpRtnP68M": [
+          210,
+          1405.7,
+          148.3
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 1.516,
+          "within1Sigma68Pct": 66.7,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "+72h": {
+        "n": 6,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 422.55,
+          "p68": 530.85,
+          "p90": 3236.11,
+          "rms": 2435.1
+        },
+        "sgp3dM": {
+          "median": 1726.19,
+          "p68": 1995.9,
+          "p90": 4724.35,
+          "rms": 3282.91
+        },
+        "gainFactor": {
+          "medianRatio": 4.09,
+          "p68Ratio": 3.76,
+          "rmsRatio": 1.35
+        },
+        "apRtnP68M": [
+          28.2,
+          530.5,
+          18.5
+        ],
+        "sgpRtnP68M": [
+          188.6,
+          1976.6,
+          201.2
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 2.187,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 66.7,
+          "within3Sigma997Pct": 66.7
+        }
+      },
+      "+96h": {
+        "n": 6,
+        "apWinRatePct": 83.3,
+        "ap3dM": {
+          "median": 678.81,
+          "p68": 869.64,
+          "p90": 4492.9,
+          "rms": 3324.75
+        },
+        "sgp3dM": {
+          "median": 1428.29,
+          "p68": 1832.03,
+          "p90": 5685.05,
+          "rms": 3920.78
+        },
+        "gainFactor": {
+          "medianRatio": 2.1,
+          "p68Ratio": 2.11,
+          "rmsRatio": 1.18
+        },
+        "apRtnP68M": [
+          10.3,
+          869.4,
+          29
+        ],
+        "sgpRtnP68M": [
+          197.1,
+          1706.8,
+          274.3
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 1.34,
+          "within1Sigma68Pct": 66.7,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 83.3
+        }
+      },
+      "+120h": {
+        "n": 6,
+        "apWinRatePct": 66.7,
+        "ap3dM": {
+          "median": 1020.08,
+          "p68": 1325.63,
+          "p90": 5699.46,
+          "rms": 4178.44
+        },
+        "sgp3dM": {
+          "median": 1369.36,
+          "p68": 1944.68,
+          "p90": 7266.97,
+          "rms": 5122.32
+        },
+        "gainFactor": {
+          "medianRatio": 1.34,
+          "p68Ratio": 1.47,
+          "rmsRatio": 1.23
+        },
+        "apRtnP68M": [
+          17.6,
+          1325.5,
+          18.9
+        ],
+        "sgpRtnP68M": [
+          290.2,
+          1862,
+          230.6
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 1.992,
+          "within1Sigma68Pct": 50,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 83.3
+        }
+      },
+      "fiveDayLossSummary": {
+        "n0": 6,
+        "n120": 6,
+        "apMed0M": 26.21,
+        "apMed120M": 1020.08,
+        "apAddedDriftMedM": 993.87,
+        "apLossPct5dMed": 3791.95,
+        "sgpMed0M": 429.45,
+        "sgpMed120M": 1369.36,
+        "sgpAddedDriftMedM": 939.91,
+        "sgpLossPct5dMed": 218.86,
+        "gainVsSgp0": 16.39,
+        "gainVsSgp120": 1.34,
+        "apWinRate120Pct": 66.7
+      }
+    }
+  },
+  "tier2MultiEpochCatalogAgainstTruth": {
+    "allTruth": {
+      "+0h": {
+        "n": 117,
+        "apWinRatePct": 46.2,
+        "ap3dM": {
+          "median": 684.23,
+          "p68": 1337.33,
+          "p90": 2651.41,
+          "rms": 1495.77
+        },
+        "sgp3dM": {
+          "median": 694.35,
+          "p68": 1196.53,
+          "p90": 2438.71,
+          "rms": 1478.04
+        },
+        "gainFactor": {
+          "medianRatio": 1.01,
+          "p68Ratio": 0.89,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          242.1,
+          1280.8,
+          68.9
+        ],
+        "sgpRtnP68M": [
+          270.8,
+          1170.7,
+          157.2
+        ],
+        "covarianceRealism": {
+          "count": 117,
+          "medianMahalD": 1.59,
+          "within1Sigma68Pct": 60.7,
+          "within2Sigma95Pct": 82.1,
+          "within3Sigma997Pct": 95.7
+        }
+      },
+      "+24h": {
+        "n": 118,
+        "apWinRatePct": 54.2,
+        "ap3dM": {
+          "median": 958.76,
+          "p68": 1395.12,
+          "p90": 2896.83,
+          "rms": 1645.92
+        },
+        "sgp3dM": {
+          "median": 946.26,
+          "p68": 1446.55,
+          "p90": 2975.73,
+          "rms": 1613.23
+        },
+        "gainFactor": {
+          "medianRatio": 0.99,
+          "p68Ratio": 1.04,
+          "rmsRatio": 0.98
+        },
+        "apRtnP68M": [
+          242.1,
+          1342.5,
+          96.8
+        ],
+        "sgpRtnP68M": [
+          256.6,
+          1365,
+          183.3
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 1.205,
+          "within1Sigma68Pct": 67.8,
+          "within2Sigma95Pct": 90.7,
+          "within3Sigma997Pct": 97.5
+        }
+      },
+      "+48h": {
+        "n": 117,
+        "apWinRatePct": 59.8,
+        "ap3dM": {
+          "median": 997.31,
+          "p68": 1650.46,
+          "p90": 3045.32,
+          "rms": 1843.77
+        },
+        "sgp3dM": {
+          "median": 1217.68,
+          "p68": 1786.87,
+          "p90": 3010.2,
+          "rms": 1776.22
+        },
+        "gainFactor": {
+          "medianRatio": 1.22,
+          "p68Ratio": 1.08,
+          "rmsRatio": 0.96
+        },
+        "apRtnP68M": [
+          271.4,
+          1643.8,
+          97.6
+        ],
+        "sgpRtnP68M": [
+          324.9,
+          1694.1,
+          176.5
+        ],
+        "covarianceRealism": {
+          "count": 117,
+          "medianMahalD": 1.236,
+          "within1Sigma68Pct": 73.5,
+          "within2Sigma95Pct": 89.7,
+          "within3Sigma997Pct": 96.6
+        }
+      },
+      "+72h": {
+        "n": 118,
+        "apWinRatePct": 56.8,
+        "ap3dM": {
+          "median": 1101.35,
+          "p68": 1826.8,
+          "p90": 3361.15,
+          "rms": 7227.7
+        },
+        "sgp3dM": {
+          "median": 1145.26,
+          "p68": 2034,
+          "p90": 3344.35,
+          "rms": 7285.22
+        },
+        "gainFactor": {
+          "medianRatio": 1.04,
+          "p68Ratio": 1.11,
+          "rmsRatio": 1.01
+        },
+        "apRtnP68M": [
+          281.5,
+          1771.5,
+          74.3
+        ],
+        "sgpRtnP68M": [
+          368.9,
+          1978.9,
+          236.2
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 1.279,
+          "within1Sigma68Pct": 80.5,
+          "within2Sigma95Pct": 90.7,
+          "within3Sigma997Pct": 95.8
+        }
+      },
+      "+96h": {
+        "n": 118,
+        "apWinRatePct": 54.2,
+        "ap3dM": {
+          "median": 1067.11,
+          "p68": 1961.43,
+          "p90": 3481.58,
+          "rms": 11223.8
+        },
+        "sgp3dM": {
+          "median": 1200,
+          "p68": 2009.12,
+          "p90": 3924.92,
+          "rms": 11241.71
+        },
+        "gainFactor": {
+          "medianRatio": 1.12,
+          "p68Ratio": 1.02,
+          "rmsRatio": 1
+        },
+        "apRtnP68M": [
+          235.9,
+          1937.8,
+          85.9
+        ],
+        "sgpRtnP68M": [
+          370.8,
+          1913,
+          261.2
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 1.099,
+          "within1Sigma68Pct": 82.2,
+          "within2Sigma95Pct": 95.8,
+          "within3Sigma997Pct": 96.6
+        }
+      },
+      "+120h": {
+        "n": 118,
+        "apWinRatePct": 59.3,
+        "ap3dM": {
+          "median": 1119.89,
+          "p68": 1876.56,
+          "p90": 3895.09,
+          "rms": 15264.84
+        },
+        "sgp3dM": {
+          "median": 1349.26,
+          "p68": 2013.96,
+          "p90": 3900.92,
+          "rms": 15177.99
+        },
+        "gainFactor": {
+          "medianRatio": 1.2,
+          "p68Ratio": 1.07,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          238.4,
+          1868.4,
+          82.8
+        ],
+        "sgpRtnP68M": [
+          471.2,
+          1765,
+          236.3
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 0.959,
+          "within1Sigma68Pct": 85.6,
+          "within2Sigma95Pct": 94.1,
+          "within3Sigma997Pct": 98.3
+        }
+      }
+    },
+    "fiveDayLossAllTruth": {
+      "n0": 117,
+      "n120": 118,
+      "apMed0M": 684.23,
+      "apMed120M": 1119.89,
+      "apAddedDriftMedM": 435.66,
+      "apLossPct5dMed": 63.67,
+      "sgpMed0M": 694.35,
+      "sgpMed120M": 1349.26,
+      "sgpAddedDriftMedM": 654.91,
+      "sgpLossPct5dMed": 94.32,
+      "gainVsSgp0": 1.01,
+      "gainVsSgp120": 1.2,
+      "apWinRate120Pct": 59.3
+    },
+    "byRegime0h": {
+      "HIGH_LEO": {
+        "n": 6,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 150.18,
+          "p68": 167.29,
+          "p90": 274.28,
+          "rms": 200.76
+        },
+        "sgp3dM": {
+          "median": 597.78,
+          "p68": 608.15,
+          "p90": 628.52,
+          "rms": 555.15
+        },
+        "gainFactor": {
+          "medianRatio": 3.98,
+          "p68Ratio": 3.64,
+          "rmsRatio": 2.77
+        },
+        "apRtnP68M": [
+          25.6,
+          159.9,
+          67.3
+        ],
+        "sgpRtnP68M": [
+          178.5,
+          550.6,
+          177.6
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 0.462,
+          "within1Sigma68Pct": 83.3,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 83.3
+        }
+      },
+      "MEO": {
+        "n": 103,
+        "apWinRatePct": 39.8,
+        "ap3dM": {
+          "median": 844.29,
+          "p68": 1450.04,
+          "p90": 2651.67,
+          "rms": 1525.35
+        },
+        "sgp3dM": {
+          "median": 757.96,
+          "p68": 1316.4,
+          "p90": 2449.79,
+          "rms": 1495.54
+        },
+        "gainFactor": {
+          "medianRatio": 0.9,
+          "p68Ratio": 0.91,
+          "rmsRatio": 0.98
+        },
+        "apRtnP68M": [
+          241.3,
+          1431.4,
+          68.9
+        ],
+        "sgpRtnP68M": [
+          277.6,
+          1291.7,
+          152.2
+        ],
+        "covarianceRealism": {
+          "count": 103,
+          "medianMahalD": 1.656,
+          "within1Sigma68Pct": 57.3,
+          "within2Sigma95Pct": 80.6,
+          "within3Sigma997Pct": 96.1
+        }
+      },
+      "HEO": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 402.63,
+          "p68": 420.88,
+          "p90": 442.59,
+          "rms": 405.71
+        },
+        "sgp3dM": {
+          "median": 400.99,
+          "p68": 419.85,
+          "p90": 442.29,
+          "rms": 404.3
+        },
+        "gainFactor": {
+          "medianRatio": 1,
+          "p68Ratio": 1,
+          "rmsRatio": 1
+        },
+        "apRtnP68M": [
+          377.6,
+          162.3,
+          74
+        ],
+        "sgpRtnP68M": [
+          366.9,
+          188.4,
+          77.8
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 1.357,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "GEO": {
+        "n": 3,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 1457.37,
+          "p68": 2520.66,
+          "p90": 3785.31,
+          "rms": 2677.55
+        },
+        "sgp3dM": {
+          "median": 1710.07,
+          "p68": 2685.33,
+          "p90": 3845.29,
+          "rms": 2744.56
+        },
+        "gainFactor": {
+          "medianRatio": 1.17,
+          "p68Ratio": 1.07,
+          "rmsRatio": 1.03
+        },
+        "apRtnP68M": [
+          555.3,
+          2381,
+          240.7
+        ],
+        "sgpRtnP68M": [
+          497.4,
+          2491.2,
+          699.6
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 1.436,
+          "within1Sigma68Pct": 66.7,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "MID_LEO": {
+        "n": 3,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 47.04,
+          "p68": 98.18,
+          "p90": 159.01,
+          "rms": 113.49
+        },
+        "sgp3dM": {
+          "median": 220.9,
+          "p68": 361.05,
+          "p90": 527.74,
+          "rms": 387.66
+        },
+        "gainFactor": {
+          "medianRatio": 4.7,
+          "p68Ratio": 3.68,
+          "rmsRatio": 3.42
+        },
+        "apRtnP68M": [
+          14.3,
+          94.6,
+          19
+        ],
+        "sgpRtnP68M": [
+          78.3,
+          292.1,
+          141.8
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 0.22,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      }
+    },
+    "byRegime120h": {
+      "HIGH_LEO": {
+        "n": 6,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 890.69,
+          "p68": 1545.78,
+          "p90": 6473.36,
+          "rms": 4492.38
+        },
+        "sgp3dM": {
+          "median": 473.62,
+          "p68": 1840.53,
+          "p90": 7187.84,
+          "rms": 4607.34
+        },
+        "gainFactor": {
+          "medianRatio": 0.53,
+          "p68Ratio": 1.19,
+          "rmsRatio": 1.03
+        },
+        "apRtnP68M": [
+          37.9,
+          1540.6,
+          82.4
+        ],
+        "sgpRtnP68M": [
+          219.2,
+          1782.7,
+          267.2
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 0.72,
+          "within1Sigma68Pct": 83.3,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 83.3
+        }
+      },
+      "MEO": {
+        "n": 104,
+        "apWinRatePct": 57.7,
+        "ap3dM": {
+          "median": 1142.99,
+          "p68": 1856.1,
+          "p90": 3682.35,
+          "rms": 16205.01
+        },
+        "sgp3dM": {
+          "median": 1349.26,
+          "p68": 1890.95,
+          "p90": 3504.15,
+          "rms": 16094.74
+        },
+        "gainFactor": {
+          "medianRatio": 1.18,
+          "p68Ratio": 1.02,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          240.9,
+          1845,
+          96.1
+        ],
+        "sgpRtnP68M": [
+          484.6,
+          1762.9,
+          222.2
+        ],
+        "covarianceRealism": {
+          "count": 104,
+          "medianMahalD": 0.985,
+          "within1Sigma68Pct": 84.6,
+          "within2Sigma95Pct": 94.2,
+          "within3Sigma997Pct": 99
+        }
+      },
+      "HEO": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 352.59,
+          "p68": 396.57,
+          "p90": 448.89,
+          "rms": 372.57
+        },
+        "sgp3dM": {
+          "median": 532.72,
+          "p68": 537.59,
+          "p90": 543.39,
+          "rms": 532.89
+        },
+        "gainFactor": {
+          "medianRatio": 1.51,
+          "p68Ratio": 1.36,
+          "rmsRatio": 1.43
+        },
+        "apRtnP68M": [
+          115,
+          322.1,
+          192.9
+        ],
+        "sgpRtnP68M": [
+          39.9,
+          478.2,
+          260.4
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 0.415,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "GEO": {
+        "n": 3,
+        "apWinRatePct": 66.7,
+        "ap3dM": {
+          "median": 1102.49,
+          "p68": 2850.2,
+          "p90": 4928.89,
+          "rms": 3481.25
+        },
+        "sgp3dM": {
+          "median": 3946.39,
+          "p68": 5092.1,
+          "p90": 6454.79,
+          "rms": 4864.48
+        },
+        "gainFactor": {
+          "medianRatio": 3.58,
+          "p68Ratio": 1.79,
+          "rmsRatio": 1.4
+        },
+        "apRtnP68M": [
+          991.2,
+          2494.4,
+          264.7
+        ],
+        "sgpRtnP68M": [
+          1988.6,
+          1744.2,
+          3265.5
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 1.265,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "MID_LEO": {
+        "n": 3,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 2984.74,
+          "p68": 3467.96,
+          "p90": 4042.69,
+          "rms": 3025.83
+        },
+        "sgp3dM": {
+          "median": 3195.11,
+          "p68": 4165.83,
+          "p90": 5320.38,
+          "rms": 3857.54
+        },
+        "gainFactor": {
+          "medianRatio": 1.07,
+          "p68Ratio": 1.2,
+          "rmsRatio": 1.27
+        },
+        "apRtnP68M": [
+          27.3,
+          3467.7,
+          31.8
+        ],
+        "sgpRtnP68M": [
+          329.3,
+          4155.2,
+          156
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 1.086,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      }
+    },
+    "fiveDayLossByRegime": {
+      "HIGH_LEO": {
+        "n0": 6,
+        "n120": 6,
+        "apMed0M": 150.18,
+        "apMed120M": 890.69,
+        "apAddedDriftMedM": 740.51,
+        "apLossPct5dMed": 493.08,
+        "sgpMed0M": 597.78,
+        "sgpMed120M": 473.62,
+        "sgpAddedDriftMedM": -124.16,
+        "sgpLossPct5dMed": -20.77,
+        "gainVsSgp0": 3.98,
+        "gainVsSgp120": 0.53,
+        "apWinRate120Pct": 50
+      },
+      "MEO": {
+        "n0": 103,
+        "n120": 104,
+        "apMed0M": 844.29,
+        "apMed120M": 1142.99,
+        "apAddedDriftMedM": 298.7,
+        "apLossPct5dMed": 35.38,
+        "sgpMed0M": 757.96,
+        "sgpMed120M": 1349.26,
+        "sgpAddedDriftMedM": 591.3,
+        "sgpLossPct5dMed": 78.01,
+        "gainVsSgp0": 0.9,
+        "gainVsSgp120": 1.18,
+        "apWinRate120Pct": 57.7
+      },
+      "HEO": {
+        "n0": 2,
+        "n120": 2,
+        "apMed0M": 402.63,
+        "apMed120M": 352.59,
+        "apAddedDriftMedM": -50.04,
+        "apLossPct5dMed": -12.43,
+        "sgpMed0M": 400.99,
+        "sgpMed120M": 532.72,
+        "sgpAddedDriftMedM": 131.73,
+        "sgpLossPct5dMed": 32.85,
+        "gainVsSgp0": 1,
+        "gainVsSgp120": 1.51,
+        "apWinRate120Pct": 100
+      },
+      "GEO": {
+        "n0": 3,
+        "n120": 3,
+        "apMed0M": 1457.37,
+        "apMed120M": 1102.49,
+        "apAddedDriftMedM": -354.88,
+        "apLossPct5dMed": -24.35,
+        "sgpMed0M": 1710.07,
+        "sgpMed120M": 3946.39,
+        "sgpAddedDriftMedM": 2236.32,
+        "sgpLossPct5dMed": 130.77,
+        "gainVsSgp0": 1.17,
+        "gainVsSgp120": 3.58,
+        "apWinRate120Pct": 66.7
+      },
+      "MID_LEO": {
+        "n0": 3,
+        "n120": 3,
+        "apMed0M": 47.04,
+        "apMed120M": 2984.74,
+        "apAddedDriftMedM": 2937.7,
+        "apLossPct5dMed": 6245.11,
+        "sgpMed0M": 220.9,
+        "sgpMed120M": 3195.11,
+        "sgpAddedDriftMedM": 2974.21,
+        "sgpLossPct5dMed": 1346.41,
+        "gainVsSgp0": 4.7,
+        "gainVsSgp120": 1.07,
+        "apWinRate120Pct": 100
+      }
+    },
+    "byFamily120h": {
+      "SUN_SYNC_POD_LEO": {
+        "n": 1,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 132.91,
+          "p68": 132.91,
+          "p90": 132.91,
+          "rms": 132.91
+        },
+        "sgp3dM": {
+          "median": 466.71,
+          "p68": 466.71,
+          "p90": 466.71,
+          "rms": 466.71
+        },
+        "gainFactor": {
+          "medianRatio": 3.51,
+          "p68Ratio": 3.51,
+          "rmsRatio": 3.51
+        },
+        "apRtnP68M": [
+          2.2,
+          120.4,
+          56.3
+        ],
+        "sgpRtnP68M": [
+          232.5,
+          401.8,
+          47.8
+        ],
+        "covarianceRealism": {
+          "count": 1,
+          "medianMahalD": 0.382,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "ESA_GNSS": {
+        "n": 105,
+        "apWinRatePct": 57.1,
+        "ap3dM": {
+          "median": 1149.08,
+          "p68": 1881.12,
+          "p90": 3811.4,
+          "rms": 16138.29
+        },
+        "sgp3dM": {
+          "median": 1473.99,
+          "p68": 2023.36,
+          "p90": 3785.23,
+          "rms": 16038.62
+        },
+        "gainFactor": {
+          "medianRatio": 1.28,
+          "p68Ratio": 1.08,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          248.5,
+          1873.6,
+          100.1
+        ],
+        "sgpRtnP68M": [
+          492.8,
+          1765.4,
+          248.1
+        ],
+        "covarianceRealism": {
+          "count": 105,
+          "medianMahalD": 1.027,
+          "within1Sigma68Pct": 84.8,
+          "within2Sigma95Pct": 94.3,
+          "within3Sigma997Pct": 99
+        }
+      },
+      "COPERNICUS_S1_POD": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 3645.96,
+          "p68": 3887.57,
+          "p90": 4174.94,
+          "rms": 3705.43
+        },
+        "sgp3dM": {
+          "median": 4523.4,
+          "p68": 5008.76,
+          "p90": 5586.04,
+          "rms": 4714.4
+        },
+        "gainFactor": {
+          "medianRatio": 1.24,
+          "p68Ratio": 1.29,
+          "rmsRatio": 1.27
+        },
+        "apRtnP68M": [
+          23.8,
+          3887.2,
+          44.5
+        ],
+        "sgpRtnP68M": [
+          218,
+          5001.6,
+          169
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 1.357,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "ILRS_SLR_MEO": {
+        "n": 4,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 112.95,
+          "p68": 149.73,
+          "p90": 560.31,
+          "rms": 385.29
+        },
+        "sgp3dM": {
+          "median": 518.86,
+          "p68": 892.84,
+          "p90": 983.15,
+          "rms": 685.05
+        },
+        "gainFactor": {
+          "medianRatio": 4.59,
+          "p68Ratio": 5.96,
+          "rmsRatio": 1.78
+        },
+        "apRtnP68M": [
+          39.3,
+          149.2,
+          18.9
+        ],
+        "sgpRtnP68M": [
+          78.6,
+          865.9,
+          88.8
+        ],
+        "covarianceRealism": {
+          "count": 4,
+          "medianMahalD": 0.297,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "LOW_ORBIT_ALTIMETRY": {
+        "n": 6,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 890.69,
+          "p68": 1545.78,
+          "p90": 6473.36,
+          "rms": 4492.17
+        },
+        "sgp3dM": {
+          "median": 458.67,
+          "p68": 1840.53,
+          "p90": 7187.84,
+          "rms": 4606.85
+        },
+        "gainFactor": {
+          "medianRatio": 0.51,
+          "p68Ratio": 1.19,
+          "rmsRatio": 1.03
+        },
+        "apRtnP68M": [
+          37.9,
+          1540.6,
+          82.4
+        ],
+        "sgpRtnP68M": [
+          219.2,
+          1769.5,
+          267.2
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 0.72,
+          "within1Sigma68Pct": 83.3,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 83.3
+        }
+      }
+    },
+    "fiveDayLossByFamily": {
+      "SUN_SYNC_POD_LEO": {
+        "n0": 1,
+        "n120": 1,
+        "apMed0M": 147.12,
+        "apMed120M": 132.91,
+        "apAddedDriftMedM": -14.21,
+        "apLossPct5dMed": -9.66,
+        "sgpMed0M": 619.35,
+        "sgpMed120M": 466.71,
+        "sgpAddedDriftMedM": -152.64,
+        "sgpLossPct5dMed": -24.65,
+        "gainVsSgp0": 4.21,
+        "gainVsSgp120": 3.51,
+        "apWinRate120Pct": 100
+      },
+      "ESA_GNSS": {
+        "n0": 104,
+        "n120": 105,
+        "apMed0M": 886.45,
+        "apMed120M": 1149.08,
+        "apAddedDriftMedM": 262.63,
+        "apLossPct5dMed": 29.63,
+        "sgpMed0M": 743.75,
+        "sgpMed120M": 1473.99,
+        "sgpAddedDriftMedM": 730.24,
+        "sgpLossPct5dMed": 98.18,
+        "gainVsSgp0": 0.84,
+        "gainVsSgp120": 1.28,
+        "apWinRate120Pct": 57.1
+      },
+      "COPERNICUS_S1_POD": {
+        "n0": 2,
+        "n120": 2,
+        "apMed0M": 117.02,
+        "apMed120M": 3645.96,
+        "apAddedDriftMedM": 3528.94,
+        "apLossPct5dMed": 3015.67,
+        "sgpMed0M": 397.98,
+        "sgpMed120M": 4523.4,
+        "sgpAddedDriftMedM": 4125.42,
+        "sgpLossPct5dMed": 1036.59,
+        "gainVsSgp0": 3.4,
+        "gainVsSgp120": 1.24,
+        "apWinRate120Pct": 100
+      },
+      "ILRS_SLR_MEO": {
+        "n0": 4,
+        "n120": 4,
+        "apMed0M": 413.36,
+        "apMed120M": 112.95,
+        "apAddedDriftMedM": -300.41,
+        "apLossPct5dMed": -72.68,
+        "sgpMed0M": 600.82,
+        "sgpMed120M": 518.86,
+        "sgpAddedDriftMedM": -81.96,
+        "sgpLossPct5dMed": -13.64,
+        "gainVsSgp0": 1.45,
+        "gainVsSgp120": 4.59,
+        "apWinRate120Pct": 100
+      },
+      "LOW_ORBIT_ALTIMETRY": {
+        "n0": 6,
+        "n120": 6,
+        "apMed0M": 150.18,
+        "apMed120M": 890.69,
+        "apAddedDriftMedM": 740.51,
+        "apLossPct5dMed": 493.08,
+        "sgpMed0M": 571.96,
+        "sgpMed120M": 458.67,
+        "sgpAddedDriftMedM": -113.29,
+        "sgpLossPct5dMed": -19.81,
+        "gainVsSgp0": 3.81,
+        "gainVsSgp120": 0.51,
+        "apWinRate120Pct": 50
+      }
+    }
+  },
+  "tier2WithSolidEarthTidesWasm": {
+    "allTruth": {
+      "+0h": {
+        "n": 117,
+        "apWinRatePct": 46.2,
+        "ap3dM": {
+          "median": 684.21,
+          "p68": 1337.53,
+          "p90": 2651.52,
+          "rms": 1495.71
+        },
+        "sgp3dM": {
+          "median": 694.35,
+          "p68": 1196.53,
+          "p90": 2438.71,
+          "rms": 1478.04
+        },
+        "gainFactor": {
+          "medianRatio": 1.01,
+          "p68Ratio": 0.89,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          242.1,
+          1280.7,
+          68
+        ],
+        "sgpRtnP68M": [
+          270.8,
+          1170.7,
+          157.2
+        ],
+        "covarianceRealism": {
+          "count": 117,
+          "medianMahalD": 1.589,
+          "within1Sigma68Pct": 60.7,
+          "within2Sigma95Pct": 82.1,
+          "within3Sigma997Pct": 95.7
+        }
+      },
+      "+24h": {
+        "n": 118,
+        "apWinRatePct": 54.2,
+        "ap3dM": {
+          "median": 958.99,
+          "p68": 1394.41,
+          "p90": 2896.21,
+          "rms": 1646.01
+        },
+        "sgp3dM": {
+          "median": 946.26,
+          "p68": 1446.55,
+          "p90": 2975.73,
+          "rms": 1613.23
+        },
+        "gainFactor": {
+          "medianRatio": 0.99,
+          "p68Ratio": 1.04,
+          "rmsRatio": 0.98
+        },
+        "apRtnP68M": [
+          242.1,
+          1342.2,
+          96.4
+        ],
+        "sgpRtnP68M": [
+          256.6,
+          1365,
+          183.3
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 1.205,
+          "within1Sigma68Pct": 67.8,
+          "within2Sigma95Pct": 90.7,
+          "within3Sigma997Pct": 97.5
+        }
+      },
+      "+48h": {
+        "n": 117,
+        "apWinRatePct": 59.8,
+        "ap3dM": {
+          "median": 996.41,
+          "p68": 1651.96,
+          "p90": 3062.31,
+          "rms": 1845.03
+        },
+        "sgp3dM": {
+          "median": 1217.68,
+          "p68": 1786.87,
+          "p90": 3010.2,
+          "rms": 1776.22
+        },
+        "gainFactor": {
+          "medianRatio": 1.22,
+          "p68Ratio": 1.08,
+          "rmsRatio": 0.96
+        },
+        "apRtnP68M": [
+          271.3,
+          1645.3,
+          101.4
+        ],
+        "sgpRtnP68M": [
+          324.9,
+          1694.1,
+          176.5
+        ],
+        "covarianceRealism": {
+          "count": 117,
+          "medianMahalD": 1.252,
+          "within1Sigma68Pct": 73.5,
+          "within2Sigma95Pct": 89.7,
+          "within3Sigma997Pct": 96.6
+        }
+      },
+      "+72h": {
+        "n": 118,
+        "apWinRatePct": 56.8,
+        "ap3dM": {
+          "median": 1102.08,
+          "p68": 1826.19,
+          "p90": 3362.11,
+          "rms": 7228.71
+        },
+        "sgp3dM": {
+          "median": 1145.26,
+          "p68": 2034,
+          "p90": 3344.35,
+          "rms": 7285.22
+        },
+        "gainFactor": {
+          "medianRatio": 1.04,
+          "p68Ratio": 1.11,
+          "rmsRatio": 1.01
+        },
+        "apRtnP68M": [
+          281.4,
+          1771.9,
+          75.7
+        ],
+        "sgpRtnP68M": [
+          368.9,
+          1978.9,
+          236.2
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 1.284,
+          "within1Sigma68Pct": 81.4,
+          "within2Sigma95Pct": 90.7,
+          "within3Sigma997Pct": 95.8
+        }
+      },
+      "+96h": {
+        "n": 118,
+        "apWinRatePct": 53.4,
+        "ap3dM": {
+          "median": 1065,
+          "p68": 1960.33,
+          "p90": 3531.4,
+          "rms": 11225.04
+        },
+        "sgp3dM": {
+          "median": 1200,
+          "p68": 2009.12,
+          "p90": 3924.92,
+          "rms": 11241.71
+        },
+        "gainFactor": {
+          "medianRatio": 1.13,
+          "p68Ratio": 1.02,
+          "rmsRatio": 1
+        },
+        "apRtnP68M": [
+          235.9,
+          1936.7,
+          87.6
+        ],
+        "sgpRtnP68M": [
+          370.8,
+          1913,
+          261.2
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 1.093,
+          "within1Sigma68Pct": 82.2,
+          "within2Sigma95Pct": 95.8,
+          "within3Sigma997Pct": 96.6
+        }
+      },
+      "+120h": {
+        "n": 118,
+        "apWinRatePct": 59.3,
+        "ap3dM": {
+          "median": 1120.88,
+          "p68": 1878.02,
+          "p90": 3895.58,
+          "rms": 15266.29
+        },
+        "sgp3dM": {
+          "median": 1349.26,
+          "p68": 2013.96,
+          "p90": 3900.92,
+          "rms": 15177.99
+        },
+        "gainFactor": {
+          "medianRatio": 1.2,
+          "p68Ratio": 1.07,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          238.4,
+          1869.7,
+          92.7
+        ],
+        "sgpRtnP68M": [
+          471.2,
+          1765,
+          236.3
+        ],
+        "covarianceRealism": {
+          "count": 118,
+          "medianMahalD": 0.958,
+          "within1Sigma68Pct": 85.6,
+          "within2Sigma95Pct": 94.1,
+          "within3Sigma997Pct": 98.3
+        }
+      }
+    },
+    "fiveDayLossAllTruth": {
+      "n0": 117,
+      "n120": 118,
+      "apMed0M": 684.21,
+      "apMed120M": 1120.88,
+      "apAddedDriftMedM": 436.67,
+      "apLossPct5dMed": 63.82,
+      "sgpMed0M": 694.35,
+      "sgpMed120M": 1349.26,
+      "sgpAddedDriftMedM": 654.91,
+      "sgpLossPct5dMed": 94.32,
+      "gainVsSgp0": 1.01,
+      "gainVsSgp120": 1.2,
+      "apWinRate120Pct": 59.3
+    },
+    "byRegime0h": {
+      "HIGH_LEO": {
+        "n": 6,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 157.17,
+          "p68": 171.03,
+          "p90": 272.53,
+          "rms": 201.34
+        },
+        "sgp3dM": {
+          "median": 597.78,
+          "p68": 608.15,
+          "p90": 628.52,
+          "rms": 555.15
+        },
+        "gainFactor": {
+          "medianRatio": 3.8,
+          "p68Ratio": 3.56,
+          "rmsRatio": 2.76
+        },
+        "apRtnP68M": [
+          25.6,
+          162.9,
+          70.4
+        ],
+        "sgpRtnP68M": [
+          178.5,
+          550.6,
+          177.6
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 0.469,
+          "within1Sigma68Pct": 83.3,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 83.3
+        }
+      },
+      "MEO": {
+        "n": 103,
+        "apWinRatePct": 39.8,
+        "ap3dM": {
+          "median": 844.29,
+          "p68": 1450.54,
+          "p90": 2652,
+          "rms": 1525.29
+        },
+        "sgp3dM": {
+          "median": 757.96,
+          "p68": 1316.4,
+          "p90": 2449.79,
+          "rms": 1495.54
+        },
+        "gainFactor": {
+          "medianRatio": 0.9,
+          "p68Ratio": 0.91,
+          "rmsRatio": 0.98
+        },
+        "apRtnP68M": [
+          241.3,
+          1431.3,
+          68.2
+        ],
+        "sgpRtnP68M": [
+          277.6,
+          1291.7,
+          152.2
+        ],
+        "covarianceRealism": {
+          "count": 103,
+          "medianMahalD": 1.63,
+          "within1Sigma68Pct": 57.3,
+          "within2Sigma95Pct": 80.6,
+          "within3Sigma997Pct": 96.1
+        }
+      },
+      "HEO": {
+        "n": 2,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 402.61,
+          "p68": 420.87,
+          "p90": 442.59,
+          "rms": 405.7
+        },
+        "sgp3dM": {
+          "median": 400.99,
+          "p68": 419.85,
+          "p90": 442.29,
+          "rms": 404.3
+        },
+        "gainFactor": {
+          "medianRatio": 1,
+          "p68Ratio": 1,
+          "rmsRatio": 1
+        },
+        "apRtnP68M": [
+          377.6,
+          162.2,
+          74
+        ],
+        "sgpRtnP68M": [
+          366.9,
+          188.4,
+          77.8
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 1.357,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "GEO": {
+        "n": 3,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 1457.31,
+          "p68": 2520.62,
+          "p90": 3785.3,
+          "rms": 2677.52
+        },
+        "sgp3dM": {
+          "median": 1710.07,
+          "p68": 2685.33,
+          "p90": 3845.29,
+          "rms": 2744.56
+        },
+        "gainFactor": {
+          "medianRatio": 1.17,
+          "p68Ratio": 1.07,
+          "rmsRatio": 1.03
+        },
+        "apRtnP68M": [
+          555.3,
+          2381,
+          240.6
+        ],
+        "sgpRtnP68M": [
+          497.4,
+          2491.2,
+          699.6
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 1.436,
+          "within1Sigma68Pct": 66.7,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "MID_LEO": {
+        "n": 3,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 54.99,
+          "p68": 102.01,
+          "p90": 157.93,
+          "rms": 111.75
+        },
+        "sgp3dM": {
+          "median": 220.9,
+          "p68": 361.05,
+          "p90": 527.74,
+          "rms": 387.66
+        },
+        "gainFactor": {
+          "medianRatio": 4.02,
+          "p68Ratio": 3.54,
+          "rmsRatio": 3.47
+        },
+        "apRtnP68M": [
+          14.3,
+          97,
+          24.7
+        ],
+        "sgpRtnP68M": [
+          78.3,
+          292.1,
+          141.8
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 0.291,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      }
+    },
+    "byRegime120h": {
+      "HIGH_LEO": {
+        "n": 6,
+        "apWinRatePct": 50,
+        "ap3dM": {
+          "median": 817.49,
+          "p68": 1576.32,
+          "p90": 6565.06,
+          "rms": 4543.6
+        },
+        "sgp3dM": {
+          "median": 473.62,
+          "p68": 1840.53,
+          "p90": 7187.84,
+          "rms": 4607.34
+        },
+        "gainFactor": {
+          "medianRatio": 0.58,
+          "p68Ratio": 1.17,
+          "rmsRatio": 1.01
+        },
+        "apRtnP68M": [
+          37.9,
+          1571.2,
+          89.2
+        ],
+        "sgpRtnP68M": [
+          219.2,
+          1782.7,
+          267.2
+        ],
+        "covarianceRealism": {
+          "count": 6,
+          "medianMahalD": 0.691,
+          "within1Sigma68Pct": 83.3,
+          "within2Sigma95Pct": 83.3,
+          "within3Sigma997Pct": 83.3
+        }
+      },
+      "MEO": {
+        "n": 104,
+        "apWinRatePct": 57.7,
+        "ap3dM": {
+          "median": 1142.63,
+          "p68": 1857.38,
+          "p90": 3681.74,
+          "rms": 16205.11
+        },
+        "sgp3dM": {
+          "median": 1349.26,
+          "p68": 1890.95,
+          "p90": 3504.15,
+          "rms": 16094.74
+        },
+        "gainFactor": {
+          "medianRatio": 1.18,
+          "p68Ratio": 1.02,
+          "rmsRatio": 0.99
+        },
+        "apRtnP68M": [
+          240.9,
+          1846.3,
+          95.4
+        ],
+        "sgpRtnP68M": [
+          484.6,
+          1762.9,
+          222.2
+        ],
+        "covarianceRealism": {
+          "count": 104,
+          "medianMahalD": 0.984,
+          "within1Sigma68Pct": 84.6,
+          "within2Sigma95Pct": 94.2,
+          "within3Sigma997Pct": 99
+        }
+      },
+      "HEO": {
+        "n": 2,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 352.07,
+          "p68": 395.7,
+          "p90": 447.6,
+          "rms": 371.77
+        },
+        "sgp3dM": {
+          "median": 532.72,
+          "p68": 537.59,
+          "p90": 543.39,
+          "rms": 532.89
+        },
+        "gainFactor": {
+          "medianRatio": 1.51,
+          "p68Ratio": 1.36,
+          "rmsRatio": 1.43
+        },
+        "apRtnP68M": [
+          114.8,
+          320.8,
+          193.4
+        ],
+        "sgpRtnP68M": [
+          39.9,
+          478.2,
+          260.4
+        ],
+        "covarianceRealism": {
+          "count": 2,
+          "medianMahalD": 0.416,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "GEO": {
+        "n": 3,
+        "apWinRatePct": 66.7,
+        "ap3dM": {
+          "median": 1102.46,
+          "p68": 2849.82,
+          "p90": 4928.08,
+          "rms": 3480.65
+        },
+        "sgp3dM": {
+          "median": 3946.39,
+          "p68": 5092.1,
+          "p90": 6454.79,
+          "rms": 4864.48
+        },
+        "gainFactor": {
+          "medianRatio": 3.58,
+          "p68Ratio": 1.79,
+          "rmsRatio": 1.4
+        },
+        "apRtnP68M": [
+          991.2,
+          2493.8,
+          264.5
+        ],
+        "sgpRtnP68M": [
+          1988.6,
+          1744.2,
+          3265.5
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 1.265,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      },
+      "MID_LEO": {
+        "n": 3,
+        "apWinRatePct": 100,
+        "ap3dM": {
+          "median": 3119.35,
+          "p68": 3606.48,
+          "p90": 4185.87,
+          "rms": 3138.81
+        },
+        "sgp3dM": {
+          "median": 3195.11,
+          "p68": 4165.83,
+          "p90": 5320.38,
+          "rms": 3857.54
+        },
+        "gainFactor": {
+          "medianRatio": 1.02,
+          "p68Ratio": 1.16,
+          "rmsRatio": 1.23
+        },
+        "apRtnP68M": [
+          27.7,
+          3606.2,
+          36.6
+        ],
+        "sgpRtnP68M": [
+          329.3,
+          4155.2,
+          156
+        ],
+        "covarianceRealism": {
+          "count": 3,
+          "medianMahalD": 1.136,
+          "within1Sigma68Pct": 100,
+          "within2Sigma95Pct": 100,
+          "within3Sigma997Pct": 100
+        }
+      }
+    },
+    "fiveDayLossByRegime": {
+      "HIGH_LEO": {
+        "n0": 6,
+        "n120": 6,
+        "apMed0M": 157.17,
+        "apMed120M": 817.49,
+        "apAddedDriftMedM": 660.32,
+        "apLossPct5dMed": 420.13,
+        "sgpMed0M": 597.78,
+        "sgpMed120M": 473.62,
+        "sgpAddedDriftMedM": -124.16,
+        "sgpLossPct5dMed": -20.77,
+        "gainVsSgp0": 3.8,
+        "gainVsSgp120": 0.58,
+        "apWinRate120Pct": 50
+      },
+      "MEO": {
+        "n0": 103,
+        "n120": 104,
+        "apMed0M": 844.29,
+        "apMed120M": 1142.63,
+        "apAddedDriftMedM": 298.34,
+        "apLossPct5dMed": 35.34,
+        "sgpMed0M": 757.96,
+        "sgpMed120M": 1349.26,
+        "sgpAddedDriftMedM": 591.3,
+        "sgpLossPct5dMed": 78.01,
+        "gainVsSgp0": 0.9,
+        "gainVsSgp120": 1.18,
+        "apWinRate120Pct": 57.7
+      },
+      "HEO": {
+        "n0": 2,
+        "n120": 2,
+        "apMed0M": 402.61,
+        "apMed120M": 352.07,
+        "apAddedDriftMedM": -50.54,
+        "apLossPct5dMed": -12.55,
+        "sgpMed0M": 400.99,
+        "sgpMed120M": 532.72,
+        "sgpAddedDriftMedM": 131.73,
+        "sgpLossPct5dMed": 32.85,
+        "gainVsSgp0": 1,
+        "gainVsSgp120": 1.51,
+        "apWinRate120Pct": 100
+      },
+      "GEO": {
+        "n0": 3,
+        "n120": 3,
+        "apMed0M": 1457.31,
+        "apMed120M": 1102.46,
+        "apAddedDriftMedM": -354.85,
+        "apLossPct5dMed": -24.35,
+        "sgpMed0M": 1710.07,
+        "sgpMed120M": 3946.39,
+        "sgpAddedDriftMedM": 2236.32,
+        "sgpLossPct5dMed": 130.77,
+        "gainVsSgp0": 1.17,
+        "gainVsSgp120": 3.58,
+        "apWinRate120Pct": 66.7
+      },
+      "MID_LEO": {
+        "n0": 3,
+        "n120": 3,
+        "apMed0M": 54.99,
+        "apMed120M": 3119.35,
+        "apAddedDriftMedM": 3064.36,
+        "apLossPct5dMed": 5572.58,
+        "sgpMed0M": 220.9,
+        "sgpMed120M": 3195.11,
+        "sgpAddedDriftMedM": 2974.21,
+        "sgpLossPct5dMed": 1346.41,
+        "gainVsSgp0": 4.02,
+        "gainVsSgp120": 1.02,
+        "apWinRate120Pct": 100
+      }
+    }
+  },
+  "tier3CatalogWide5DayHeldOut": {
+    "overall": {
+      "n": 841,
+      "medianLeadHours": 120.9,
+      "apWinRatePct": 52.6,
+      "rawM": {
+        "apMed": 3798.4,
+        "sgpMed": 2929.3,
+        "medRatio": 0.77,
+        "apP68": 8305.7,
+        "sgpP68": 7970.5,
+        "p68Ratio": 0.96
+      },
+      "deconvM": {
+        "apMed": 3763.6,
+        "sgpMed": 2884.1,
+        "apP68": 8230.3,
+        "sgpP68": 7891.9,
+        "p68Ratio": 0.96
+      }
+    },
+    "debrisAndRocketBodies": {
+      "n": 372,
+      "medianLeadHours": 125.7,
+      "apWinRatePct": 53.2,
+      "rawM": {
+        "apMed": 3662.8,
+        "sgpMed": 2994.8,
+        "medRatio": 0.82,
+        "apP68": 6941.1,
+        "sgpP68": 7267.7,
+        "p68Ratio": 1.05
+      },
+      "deconvM": {
+        "apMed": 3626.7,
+        "sgpMed": 2950.5,
+        "apP68": 6869,
+        "sgpP68": 7198.8,
+        "p68Ratio": 1.05
+      }
+    },
+    "byRegime": {
+      "HEO": {
+        "n": 133,
+        "medianLeadHours": 129.3,
+        "apWinRatePct": 39.8,
+        "rawM": {
+          "apMed": 6627.8,
+          "sgpMed": 5043,
+          "medRatio": 0.76,
+          "apP68": 13323.3,
+          "sgpP68": 11693.6,
+          "p68Ratio": 0.88
+        },
+        "deconvM": {
+          "apMed": 6567.1,
+          "sgpMed": 4963,
+          "apP68": 13274.5,
+          "sgpP68": 11637.9,
+          "p68Ratio": 0.88
+        }
+      },
+      "MID_LEO": {
+        "n": 146,
+        "medianLeadHours": 114,
+        "apWinRatePct": 67.8,
+        "rawM": {
+          "apMed": 5270.3,
+          "sgpMed": 6580.9,
+          "medRatio": 1.25,
+          "apP68": 8276.5,
+          "sgpP68": 9916.2,
+          "p68Ratio": 1.2
+        },
+        "deconvM": {
+          "apMed": 5254.2,
+          "sgpMed": 6568.1,
+          "apP68": 8259.8,
+          "sgpP68": 9902.1,
+          "p68Ratio": 1.2
+        }
+      },
+      "LOW_LEO": {
+        "n": 140,
+        "medianLeadHours": 109.7,
+        "apWinRatePct": 77.9,
+        "rawM": {
+          "apMed": 9595.1,
+          "sgpMed": 27000.4,
+          "medRatio": 2.81,
+          "apP68": 16066.3,
+          "sgpP68": 48742.6,
+          "p68Ratio": 3.03
+        },
+        "deconvM": {
+          "apMed": 9581.4,
+          "sgpMed": 26995.6,
+          "apP68": 16052.2,
+          "sgpP68": 48737.9,
+          "p68Ratio": 3.04
+        }
+      },
+      "HIGH_LEO": {
+        "n": 144,
+        "medianLeadHours": 115.2,
+        "apWinRatePct": 39.6,
+        "rawM": {
+          "apMed": 1376.8,
+          "sgpMed": 727.4,
+          "medRatio": 0.53,
+          "apP68": 2274.6,
+          "sgpP68": 1327.3,
+          "p68Ratio": 0.58
+        },
+        "deconvM": {
+          "apMed": 1304.1,
+          "sgpMed": 578,
+          "apP68": 2210.7,
+          "sgpP68": 1214.6,
+          "p68Ratio": 0.55
+        }
+      },
+      "MEO": {
+        "n": 135,
+        "medianLeadHours": 130.4,
+        "apWinRatePct": 57.8,
+        "rawM": {
+          "apMed": 641.6,
+          "sgpMed": 823.7,
+          "medRatio": 1.28,
+          "apP68": 1250.9,
+          "sgpP68": 1193.5,
+          "p68Ratio": 0.95
+        },
+        "deconvM": {
+          "apMed": 0,
+          "sgpMed": 0,
+          "apP68": 0,
+          "sgpP68": 0,
+          "p68Ratio": null
+        }
+      },
+      "GEO": {
+        "n": 143,
+        "medianLeadHours": 126.1,
+        "apWinRatePct": 32.2,
+        "rawM": {
+          "apMed": 6753.9,
+          "sgpMed": 2442.5,
+          "medRatio": 0.36,
+          "apP68": 10582.8,
+          "sgpP68": 4917.1,
+          "p68Ratio": 0.46
+        },
+        "deconvM": {
+          "apMed": 6624,
+          "sgpMed": 2056.1,
+          "apP68": 10421.1,
+          "sgpP68": 4558.7,
+          "p68Ratio": 0.44
+        }
+      }
+    }
+  },
+  "catalogSummary": {
+    "catalogDate": "2026-11-08",
+    "counts": {
+      "nonHeldActiveCatalogObjects": 21587,
+      "emittedApOcms": 21580,
+      "refusedDecayingEdgeCases": 11,
+      "maneuverSegmentedObjects": 2375,
+      "bySourceTier": {
+        "multiEpochCatalogAp": 20752,
+        "singleEpochHeldFallback": 823,
+        "openOpticalNetNewAp": 4,
+        "sunSyncPodAp": 1
+      },
+      "byObjectType": {
+        "PAYLOAD": 8462,
+        "ROCKET BODY": 2217,
+        "DEBRIS": 10279,
+        "UNKNOWN": 622
+      },
+      "epochCrossingTotals": {
+        "ASCENDING_NODE": 189025,
+        "RADAR_LAST_OBS": 105497,
+        "OPERATOR_BOUNDARY": 93,
+        "OPTICAL_LAST_OBS": 187,
+        "OTHER_EPOCH": 1586
+      }
+    },
+    "verificationGates": {
+      "zeroHeldObjectsInCatalog": true,
+      "noUserDefinedChecked": 21580,
+      "noUserDefinedPassed": 21580,
+      "allRecordsMeanElementTheoryAp": true,
+      "sdkPropagateGcrfWithCovSampleSize": 240,
+      "sdkPropagateGcrfWithCovPassed": 240
+    },
+    "byRegime": {
+      "HEO": {
+        "objects": 1844,
+        "multiTleObjects": 1731,
+        "physicalTableObjects": 1823,
+        "medianTlesUsed": 16,
+        "medianArcDays": 18.36,
+        "medianFitRmsM": 3038.7,
+        "posteriorSigmaP10P50P90_M": {
+          "R": [
+            428.9,
+            1172.5,
+            37830.5
+          ],
+          "T": [
+            1201.1,
+            3326.9,
+            107153.5
+          ],
+          "N": [
+            148.9,
+            397.5,
+            1513.6
+          ],
+          "RSS_3D": [
+            1370.6,
+            3749.7,
+            111534.3
+          ]
+        }
+      },
+      "MID_LEO": {
+        "objects": 6215,
+        "multiTleObjects": 6043,
+        "physicalTableObjects": 6033,
+        "medianTlesUsed": 12,
+        "medianArcDays": 6.77,
+        "medianFitRmsM": 249.1,
+        "posteriorSigmaP10P50P90_M": {
+          "R": [
+            76.9,
+            108.6,
+            190.3
+          ],
+          "T": [
+            557.6,
+            728.7,
+            1375.5
+          ],
+          "N": [
+            75,
+            95.2,
+            179.2
+          ],
+          "RSS_3D": [
+            570,
+            745.1,
+            1401.2
+          ]
+        }
+      },
+      "LOW_LEO": {
+        "objects": 1800,
+        "multiTleObjects": 1723,
+        "physicalTableObjects": 1725,
+        "medianTlesUsed": 10,
+        "medianArcDays": 4.68,
+        "medianFitRmsM": 308,
+        "posteriorSigmaP10P50P90_M": {
+          "R": [
+            103.4,
+            128.4,
+            287.8
+          ],
+          "T": [
+            762.6,
+            945.5,
+            3332.2
+          ],
+          "N": [
+            86.7,
+            105.3,
+            241.1
+          ],
+          "RSS_3D": [
+            775.8,
+            961.4,
+            3338.3
+          ]
+        }
+      },
+      "HIGH_LEO": {
+        "objects": 9461,
+        "multiTleObjects": 9104,
+        "physicalTableObjects": 9064,
+        "medianTlesUsed": 11,
+        "medianArcDays": 5.94,
+        "medianFitRmsM": 189.5,
+        "posteriorSigmaP10P50P90_M": {
+          "R": [
+            59.4,
+            107.4,
+            199.8
+          ],
+          "T": [
+            482,
+            667,
+            1094.9
+          ],
+          "N": [
+            65.7,
+            98.3,
+            186
+          ],
+          "RSS_3D": [
+            491.2,
+            683.8,
+            1124.7
+          ]
+        }
+      },
+      "MEO": {
+        "objects": 536,
+        "multiTleObjects": 522,
+        "physicalTableObjects": 534,
+        "medianTlesUsed": 26,
+        "medianArcDays": 40.8,
+        "medianFitRmsM": 976.1,
+        "posteriorSigmaP10P50P90_M": {
+          "R": [
+            120.8,
+            177.4,
+            427
+          ],
+          "T": [
+            649,
+            1114.7,
+            2257.5
+          ],
+          "N": [
+            62.5,
+            111,
+            236.6
+          ],
+          "RSS_3D": [
+            669.9,
+            1133.7,
+            2318.4
+          ]
+        }
+      },
+      "GEO": {
+        "objects": 1724,
+        "multiTleObjects": 1630,
+        "physicalTableObjects": 1712,
+        "medianTlesUsed": 28,
+        "medianArcDays": 24.01,
+        "medianFitRmsM": 4957.8,
+        "posteriorSigmaP10P50P90_M": {
+          "R": [
+            534.7,
+            948.3,
+            2037.8
+          ],
+          "T": [
+            1323.5,
+            3614.4,
+            6401.7
+          ],
+          "N": [
+            224.8,
+            432.4,
+            1663.6
+          ],
+          "RSS_3D": [
+            1448.3,
+            3851,
+            6645.4
+          ]
+        }
+      }
+    },
+    "performance": {
+      "workers": 22,
+      "fitWallSeconds": 422.78,
+      "msPerObjectWall": 19.586,
+      "totalScriptSeconds": 1736.55
+    }
+  },
+  "wallSeconds": 1486.6
+}
