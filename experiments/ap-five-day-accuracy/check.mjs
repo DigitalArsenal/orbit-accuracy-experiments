@@ -112,7 +112,7 @@ if (!fs.existsSync(wasmPath)) {
 }
 assert.ok(fs.existsSync(wasmPath), "tle-astrodynamics-upgrades.wasm must exist after build");
 
-const { cidV1RawSha256Wasm, forecastSpwBartelsWasm, solveFleetDcaWasm } = await import("./lib/tle-upgrades-host.mjs");
+const { cidV1RawSha256Wasm, forecastSpwBartelsWasm, solveFleetDcaWasm, packFleetDclRecord } = await import("./lib/tle-upgrades-host.mjs");
 const cid = cidV1RawSha256Wasm(Buffer.from("sdn-ap-five-day-accuracy-e2e"));
 assert.ok(cid.startsWith("bafkrei"), `Expected CIDv1 raw-sha256 multibase string, got ${cid}`);
 
@@ -139,18 +139,26 @@ assert.equal(spwOut.outF107.length, 15);
 assert.ok(spwOut.outF107.every((v) => Number.isFinite(v) && v > 60 && v < 300), "27-day solar-rotation WASM forecast out of physical bounds");
 
 const issueMs = Date.parse("2026-11-03T00:00:00Z");
-const arcs = new Float64Array(8 * 7);
-for (let i = 0; i < 8; i++) {
-  const base = i * 7;
-  arcs[base + 0] = 1000 + i; // synthetic object id
-  arcs[base + 1] = issueMs - (8 - i) * 3600000 * 24;
-  arcs[base + 2] = issueMs - (7 - i) * 3600000 * 24;
-  arcs[base + 3] = 480.0; // altitude km
-  arcs[base + 4] = 0.08;  // observed log-density residual
-  arcs[base + 5] = 0.12;  // prior log-B sigma
-  arcs[base + 6] = 1.0;   // arc weight
+const nSats = 6;
+const nSteps = 6;
+const arcs = new Float64Array(nSats * nSteps * 7);
+let idx = 0;
+for (let s = 0; s < nSats; s++) {
+  for (let k = 0; k < nSteps; k++) {
+    const base = idx * 7;
+    arcs[base + 0] = 1000 + s; // synthetic object id with 6 arcs each
+    arcs[base + 1] = issueMs - (nSteps - k) * 3600000 * 48;
+    arcs[base + 2] = issueMs - (nSteps - 1 - k) * 3600000 * 48;
+    arcs[base + 3] = 480.0 + s * 15.0; // altitude km
+    arcs[base + 4] = 0.09 + 0.01 * s;  // observed log-density residual
+    arcs[base + 5] = 0.10;             // prior log-B sigma
+    arcs[base + 6] = 1.0;              // arc weight
+    idx++;
+  }
 }
-const dca = solveFleetDcaWasm({ arcs7Float64: arcs, nArcs: 8, issueMs });
+const dca = solveFleetDcaWasm({ arcs7Float64: arcs, nArcs: idx, issueMs });
 assert.ok(dca && dca.converged && dca.nodeLogScale.length > 4, "WASM fleet DCA solver failed to converge");
+const packedDcl = packFleetDclRecord(dca, issueMs);
+assert.ok(packedDcl.dclBytes.length > 64 && packedDcl.dclCid.startsWith("bafkrei"), "Canonical $DCL FlatBuffer packing failed");
 
 console.log(`CHECK PASS ap-five-day-accuracy: plan=${planCommit.slice(0, 8)} -> results=${resCommit.slice(0, 8)}, 21580 AP OCMs, WASM upgrades verified`);
