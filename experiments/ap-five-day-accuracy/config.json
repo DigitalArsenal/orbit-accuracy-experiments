@@ -1,0 +1,50 @@
+{
+  "experiment": "ap-five-day-accuracy",
+  "registered": "2026-11-09",
+  "issue": "DigitalArsenal/spacedatanetwork-stack#266",
+  "cutoffUtc": "2026-11-03T00:00:00Z",
+  "catalogEpochUtc": "2026-11-08T00:00:00Z",
+  "archiveLookbackStartUtc": "2026-06-26T00:00:00Z",
+  "leadHours": [0, 24, 48, 72, 96, 120],
+  "regimes": {
+    "LOW_LEO": { "label": "Low LEO (< 525 km)", "altMinKm": 0, "altMaxKm": 525 },
+    "MID_LEO": { "label": "Mid LEO (525-750 km)", "altMinKm": 525, "altMaxKm": 750 },
+    "HIGH_LEO": { "label": "High LEO (750-2,000 km)", "altMinKm": 750, "altMaxKm": 2000 },
+    "MEO": { "label": "Medium Earth Orbit (2,000-20,000 km, e < 0.2)", "altMinKm": 2000, "altMaxKm": 30000 },
+    "HEO": { "label": "Highly Elliptical Orbit (e >= 0.2)", "eccMin": 0.2 },
+    "GEO": { "label": "Geosynchronous Orbit (~35,786 km, e < 0.2)", "altMinKm": 30000, "altMaxKm": 42000 }
+  },
+  "upgrades": [
+    {
+      "id": "upgrade-1-dcl-spw",
+      "title": "Fleet Dynamic Calibration of the Atmosphere ($DCL) + 27-day Bartels Solar-Rotation Space Weather ($SPW)",
+      "wasmBuilder": "build-tle-upgrades-wasm.mjs"
+    },
+    {
+      "id": "upgrade-2-rolling-resonance",
+      "title": "135-Day Rolling Drag/SRP State-Space Estimator + Exact Deep-Space Tesseral Resonance De-Aliasing",
+      "wasmBuilder": "build-tle-upgrades-wasm.mjs"
+    },
+    {
+      "id": "upgrade-3-debias-ar1-gls",
+      "title": "Exact SGP4-to-AP Short-Periodic De-Biasing + Autoregressive AR(1) Cholesky GLS Whitening",
+      "wasmBuilder": "build-tle-upgrades-wasm.mjs",
+      "ar1Parameters": { "eta": 0.38, "tauDays": 0.6 }
+    },
+    {
+      "id": "upgrade-4-boxwing-tides",
+      "title": "Attitude-Law Box-Wing Solar Radiation Pressure + IERS 2010 Solid-Earth k2 Body Tides",
+      "wasmBuilders": ["build-tle-upgrades-wasm.mjs", "build-sdn-ap-tides-wasm.mjs"],
+      "loveNumbersIers2010": { "k20": 0.3019, "k21": 0.2983, "k22": 0.30102 }
+    }
+  ],
+  "opticalUnseededWasmBuilder": "build-all-regime-optical-wasm.mjs",
+  "holdGate": "experiments/truth-gate/flags.json#hold_from_headline",
+  "schema": {
+    "ocmFileIdentifier": "$OCM",
+    "dclFileIdentifier": "$DCL",
+    "spwFileIdentifier": "$SPW",
+    "meanElementTheory": "AP",
+    "forbidUserDefinedParameters": true
+  }
+}

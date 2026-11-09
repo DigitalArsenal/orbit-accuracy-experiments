@@ -3,3 +3,4 @@ runs/
 *.log
 site/dist/
 site/.cache/
+experiments/ap-five-day-accuracy/wasm/
