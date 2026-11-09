@@ -113,3 +113,7 @@ The ffm module accepts at most 10,000 samples per call. The first FFM flights at
 ## Amendment 7 (2026-11-06, wording; SDN-AP ruling)
 
 The dates diagnosis reads: the construction is not the cause; the composition changed sharply; how much of the event jump that carries is not yet measured (events by altitude band were not measured, so the cause is inferred). Page-facing text (chart.json and the README) prints, where AP costs more than its comparator, "no gain against FFM 20x20 here; AP costs 1.74 times as much" (MEO; 1.26 for laser geodetic), with the signed doublings kept in table.json only. The band-resolved events, the counterfactual with the shell mix held fixed and the share of the jump carried by the 400 to 500 km shell are a separate record after the site gates.
+
+## Amendment 7 (2026-11-09): timing arm re-run on propagator/sdn-ap 0.6.5
+
+Task issue-268-all-regimes-065-benchmark (`DigitalArsenal/spacedatanetwork-stack#268`). Re-runs the 60 s timing arm (`cost-flights.mjs`, 10,080 states per 7-day flight) for `XP` and `AP` on `propagator/sdn-ap 0.6.5` (`f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7`, canonical `ca5515048baf7ab43bdecda67cd27173ebef424044233c5e8ff2ac6db85487c6`), plus the quiet-window check flight on `DO|SENTINEL 3B|2025-11-29`. Every screen case (`rows.jsonl`, `counts.jsonl`) and every non-`sdn-ap` timing arm (`SGP4`, `XPU`, `FFM20`, `FFM40`) stays unchanged.

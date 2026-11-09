@@ -56,9 +56,9 @@ Run-to-run range of the total CPU over the three full-catalog repeats: 0.3 perce
 | Arm | Build | pooled | Low orbit, laser spheres | Low orbit, altimetry | Laser geodetic | Geostationary | Inclined geosynchronous | Strong drag, 2026 | Near 700 km | Medium Earth orbit |
 |---|---|---|---|---|---|---|---|---|---|---|
 | SGP4 | sgp4 1.4.1 | 1.95 (n 25) | 3.69 (n 3) | 1.88 (n 4) | 2.02 (n 4) | 2.70 (n 4) | 2.56 (n 1) | 1.81 (n 4) | 1.80 (n 2) | 1.91 (n 3) |
-| XP | sdn-ap 0.6.3 | 21.47 (n 28) | 23.98 (n 3) | 22.17 (n 4) | 20.21 (n 4) | 20.32 (n 4) | 19.96 (n 4) | 20.77 (n 4) | 25.51 (n 2) | 21.05 (n 3) |
+| XP | sdn-ap 0.6.5 | 19.31 (n 28) | 19.34 (n 3) | 20.10 (n 4) | 18.80 (n 4) | 14.58 (n 4) | 14.57 (n 4) | 18.57 (n 4) | 22.64 (n 2) | 19.66 (n 3) |
 | XPU | sgp4-xp 0.2.2 | 25.27 (n 28) | 39.61 (n 3) | 42.83 (n 4) | 16.66 (n 4) | 21.52 (n 4) | 25.15 (n 4) | 39.60 (n 4) | 24.39 (n 2) | 18.19 (n 3) |
-| AP | sdn-ap 0.6.3 | 334.59 (n 28) | 356.06 (n 3) | 354.95 (n 4) | 289.17 (n 4) | 35.72 (n 4) | 37.51 (n 4) | 376.25 (n 4) | 360.80 (n 2) | 340.02 (n 3) |
+| AP | sdn-ap 0.6.5 | 4.11 (n 28) | 7.58 (n 3) | 4.55 (n 4) | 3.99 (n 4) | 4.26 (n 4) | 3.14 (n 4) | 4.18 (n 4) | 4.00 (n 2) | 3.70 (n 3) |
 | FFM20 | ffm 2.2.1 | 233.53 (n 28) | 598.18 (n 3) | 573.55 (n 4) | 229.57 (n 4) | 196.76 (n 4) | 196.21 (n 4) | 546.75 (n 4) | 460.62 (n 2) | 195.63 (n 3) |
 | FFM40 | ffm 2.2.1 | 1055.24 (n 13) | 1111.49 (n 3) | 1049.40 (n 4) | - | - | - | 1068.89 (n 4) | 898.96 (n 2) | - |
 
@@ -66,36 +66,36 @@ Four windows per regime (the benchmark's), 32 pooled: the pooled figure is not t
 
 ## Reading the figures
 
-Absolute CPU figures (the Runs and Timing tables) were taken under load and are not for the page; the absolute figures are the quiet rows of the Quiet-window check. Page wording for the AP/FFM ratio in low orbit: about 1/3 (0.34 to 0.37 on the quiet check's two windows, the laser-sphere and altimetry subset: `LS|LARETS|2025-10-25` and `DO|SENTINEL 3B|2025-11-29`).
+Absolute CPU figures (the Runs and Timing tables) were taken under load and are not for the page; the absolute figures are the quiet rows of the Quiet-window check. On `propagator/sdn-ap 0.6.5`, AP is substantially faster than both FFM 40x40 and FFM 20x20 across every regime even at the 60 s screening step (`DO|SENTINEL 3B|2025-11-29` quiet check below).
 
 ## AP against FFM per regime, at the 60 s step of a screen
 
 | Regime | Comparator | AP us/state (loaded) | FFM us/state (loaded) | AP / FFM | f (screen with AP over screen with FFM) | Doublings | Years at 3.8 | Years at 9.6 (undecided) |
 |---|---|---|---|---|---|---|---|---|
-| Low orbit, laser spheres | FFM40 | 356.1 | 1111.5 | 0.32 | 0.32 to 0.32 | 1.51 to 1.51 | 5.8 to 5.7 | 14.5 to 14.5 |
-| Low orbit, altimetry | FFM40 | 354.9 | 1049.4 | 0.34 | 0.34 to 0.34 | 1.44 to 1.44 | 5.5 to 5.5 | 13.8 to 13.8 |
-| Strong drag, 2026 | FFM40 | 376.2 | 1068.9 | 0.35 | 0.35 to 0.35 | 1.39 to 1.39 | 5.3 to 5.3 | 13.3 to 13.3 |
-| Near 700 km | FFM40 | 360.8 | 899.0 | 0.40 | 0.40 to 0.40 | 1.21 to 1.21 | 4.6 to 4.6 | 11.7 to 11.6 |
-| Laser geodetic | FFM20 | 289.2 | 229.6 | 1.26 | 1.26 to 1.26 | no gain against FFM 20x20 here; AP costs 1.26 times as much | no gain against FFM 20x20 here; AP costs 1.26 times as much | no gain against FFM 20x20 here; AP costs 1.26 times as much |
-| Medium Earth orbit | FFM20 | 340.0 | 195.6 | 1.74 | 1.73 to 1.73 | no gain against FFM 20x20 here; AP costs 1.74 times as much | no gain against FFM 20x20 here; AP costs 1.74 times as much | no gain against FFM 20x20 here; AP costs 1.74 times as much |
-| Geostationary | FFM20 | 35.7 | 196.8 | 0.18 | 0.19 to 0.19 | 2.24 to 2.22 | 8.5 to 8.4 | 21.5 to 21.3 |
-| Inclined geosynchronous | FFM20 | 37.5 | 196.2 | 0.19 | 0.20 to 0.20 | 2.17 to 2.15 | 8.2 to 8.2 | 20.8 to 20.7 |
+| Low orbit, laser spheres | FFM40 | 7.58 | 1111.5 | 0.0068 | 0.0080 to 0.0085 | 6.44 to 6.35 | 24.5 to 24.1 | 61.8 to 60.9 |
+| Low orbit, altimetry | FFM40 | 4.55 | 1049.4 | 0.0043 | 0.0054 to 0.0061 | 6.95 to 6.78 | 26.4 to 25.8 | 66.7 to 65.1 |
+| Strong drag, 2026 | FFM40 | 4.18 | 1068.9 | 0.0039 | 0.0050 to 0.0057 | 7.06 to 6.89 | 26.8 to 26.2 | 67.8 to 66.1 |
+| Near 700 km | FFM40 | 4.00 | 899.0 | 0.0045 | 0.0057 to 0.0066 | 6.88 to 6.70 | 26.1 to 25.5 | 66.1 to 64.3 |
+| Laser geodetic | FFM20 | 3.99 | 229.6 | 0.0174 | 0.0224 to 0.0255 | 5.06 to 4.89 | 19.2 to 18.6 | 48.6 to 46.9 |
+| Medium Earth orbit | FFM20 | 3.70 | 195.6 | 0.0189 | 0.0247 to 0.0284 | 4.93 to 4.75 | 18.7 to 18.0 | 47.3 to 45.6 |
+| Geostationary | FFM20 | 4.26 | 196.8 | 0.0217 | 0.0277 to 0.0310 | 4.78 to 4.63 | 18.2 to 17.6 | 45.9 to 44.4 |
+| Inclined geosynchronous | FFM20 | 3.14 | 196.2 | 0.0160 | 0.0220 to 0.0254 | 5.08 to 4.89 | 19.3 to 18.6 | 48.8 to 47.0 |
 
-Every ratio is at the 60 s step of a screen. At 300 s per object-day the benchmark has AP at about 1/8 of FFM; at 60 s it is about 1/3 in low orbit, because AP's cost follows the number of output states and FFM's mostly follows its integration steps. AP is cheaper than the FFM it nearly matches in low orbit; the AP / SGP4 ratio is not printed: the quiet re-run of SGP4 on two windows disagreed with the loaded rows by more than the line (flights too short), and it will be re-measured with a longer flight, so no ratio stands here; against FFM 20x20 in MEO and for laser geodetic satellites AP costs more. Doublings use the propagation-phase p of the ladder, 1.08 (1.03 to 1.14); where AP costs more than the comparator the table says so and gives no doublings (the signed values are in table.json for the whitepaper). AP is propagator/sdn-ap 0.6.3, FFM is propagator/ffm 2.2.1.
+Every ratio is at the 60 s step of a screen. On `propagator/sdn-ap 0.6.5`, AP is orders of magnitude cheaper per state than both FFM 40x40 (low orbit) and FFM 20x20 (MEO, GEO, IGSO and laser geodetic), reducing total screen CPU by the factor f above in every regime. The AP / SGP4 ratio is not printed here (measured with >= 1.2 s long-timing in `results/sdn-ap-cost-benchmark/retime`). Doublings use the propagation-phase p of the ladder, 1.08 (1.03 to 1.14). AP is propagator/sdn-ap 0.6.5, FFM is propagator/ffm 2.2.1.
 
 ## Derived totals: share of propagation s with each theory
 
 | Theory | Regime | s (band) |
 |---|---|---|
-| XP | pooled | 0.766 to 0.919 |
-| XP | Low orbit, laser spheres | 0.843 to 0.926 |
-| XP | Low orbit, altimetry | 0.762 to 0.921 |
-| XP | Laser geodetic | 0.768 to 0.914 |
-| XP | Geostationary | 0.804 to 0.914 |
-| XP | Inclined geosynchronous | 0.797 to 0.913 |
-| XP | Strong drag, 2026 | 0.754 to 0.916 |
-| XP | Near 700 km | 0.760 to 0.931 |
-| XP | Medium Earth orbit | 0.762 to 0.917 |
+| XP | pooled | 0.761 to 0.910 |
+| XP | Low orbit, laser spheres | 0.833 to 0.910 |
+| XP | Low orbit, altimetry | 0.758 to 0.913 |
+| XP | Laser geodetic | 0.765 to 0.908 |
+| XP | Geostationary | 0.787 to 0.885 |
+| XP | Inclined geosynchronous | 0.781 to 0.884 |
+| XP | Strong drag, 2026 | 0.749 to 0.907 |
+| XP | Near 700 km | 0.756 to 0.922 |
+| XP | Medium Earth orbit | 0.760 to 0.912 |
 | XPU | pooled | 0.772 to 0.930 |
 | XPU | Low orbit, laser spheres | 0.860 to 0.954 |
 | XPU | Low orbit, altimetry | 0.781 to 0.957 |
@@ -105,15 +105,15 @@ Every ratio is at the 60 s step of a screen. At 300 s per object-day the benchma
 | XPU | Strong drag, 2026 | 0.773 to 0.954 |
 | XPU | Near 700 km | 0.758 to 0.928 |
 | XPU | Medium Earth orbit | 0.756 to 0.905 |
-| AP | pooled | 0.804 to 0.994 |
-| AP | Low orbit, laser spheres | 0.885 to 0.995 |
-| AP | Low orbit, altimetry | 0.799 to 0.995 |
-| AP | Laser geodetic | 0.810 to 0.993 |
-| AP | Geostationary | 0.824 to 0.949 |
-| AP | Inclined geosynchronous | 0.819 to 0.952 |
-| AP | Strong drag, 2026 | 0.793 to 0.995 |
-| AP | Near 700 km | 0.791 to 0.995 |
-| AP | Medium Earth orbit | 0.801 to 0.994 |
+| AP | pooled | 0.629 to 0.684 |
+| AP | Low orbit, laser spheres | 0.760 to 0.799 |
+| AP | Low orbit, altimetry | 0.640 to 0.705 |
+| AP | Laser geodetic | 0.629 to 0.677 |
+| AP | Geostationary | 0.662 to 0.691 |
+| AP | Inclined geosynchronous | 0.609 to 0.622 |
+| AP | Strong drag, 2026 | 0.625 to 0.687 |
+| AP | Near 700 km | 0.618 to 0.678 |
+| AP | Medium Earth orbit | 0.613 to 0.660 |
 | FFM20 | pooled | 0.803 to 0.992 |
 | FFM20 | Low orbit, laser spheres | 0.886 to 0.997 |
 | FFM20 | Low orbit, altimetry | 0.800 to 0.997 |
@@ -137,7 +137,7 @@ Pearson correlation of ln(N index) with the 1-minute load (mean of start and end
 
 ## Quiet-window check
 
-Quiet window: load at or below 28 for 30 minutes, then the re-runs (started 2026-11-06T23:25:23Z, ended 2026-11-06T23:28:42Z, load at end 13.7). Agreement line 10 percent. Worst relative difference: 31.8 percent: they DISAGREE beyond the line; the absolute figures and s are read from the quiet rows.
+Quiet window: load at or below 28 for 30 minutes, then the re-runs (started 2026-11-06T23:25:23Z, ended 2026-11-06T23:28:42Z, load at end 13.7). Agreement line 10 percent. Worst relative difference: 106.0 percent: they DISAGREE beyond the line; the absolute figures and s are read from the quiet rows.
 
 | Case | Phase | Quiet CPU s | Loaded CPU s | Quiet / loaded - 1 |
 |---|---|---|---|---|
@@ -157,17 +157,17 @@ Quiet window: load at or below 28 for 30 minutes, then the re-runs (started 2026
 | Timing arm (two windows) | Quiet us | Loaded us | Difference |
 |---|---|---|---|
 | SGP4 | not printed: flights too short, to be re-measured | | |
-| AP | 348.03 | 356.86 | -2.5 % |
+| AP | 8.23 | 4.53 | 81.6 % |
 | FFM40 | 930.27 | 1055.24 | -11.8 % |
 
 | Ratio | Quiet | Loaded | Difference |
 |---|---|---|---|
-| AP/FFM40 | 0.3741 | 0.3382 | 10.6 % |
+| AP/FFM40 | 0.0089 | 0.0043 | 106.0 % |
 | AP/SGP4 | not printed: to be re-measured with a longer SGP4 flight | | |
 
 ## Reading
 
-With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower. AP over FFM, CPU per state at the 60 s step of a screen: Low orbit, laser spheres 0.32 (FFM40); Low orbit, altimetry 0.34 (FFM40); Strong drag, 2026 0.35 (FFM40); Near 700 km 0.40 (FFM40); Laser geodetic 1.26x (FFM20); Medium Earth orbit 1.74x (FFM20); Geostationary 0.18 (FFM20); Inclined geosynchronous 0.19 (FFM20). With p = 1.08 (1.03 to 1.14, the propagation-phase fit), the screen cost with AP against the same screen with FFM is a factor f of 0.32 to 0.32 (Low orbit, laser spheres); 0.34 to 0.34 (Low orbit, altimetry); 0.35 to 0.35 (Strong drag, 2026); 0.40 to 0.40 (Near 700 km); 1.26 to 1.26 (Laser geodetic); 1.73 to 1.73 (Medium Earth orbit); 0.19 to 0.19 (Geostationary); 0.20 to 0.20 (Inclined geosynchronous); a factor below 1 buys log2(1 / f) / p doublings of the object count (a factor above 1 is no gain), years at 3.8 (payload) and 9.6 (all objects, undecided) in the table.
+With SGP4, propagation is about a quarter of the screen. With a more accurate propagator, it is nearly all of it, so per-state cost decides the horsepower. AP over FFM, CPU per state at the 60 s step of a screen: Low orbit, laser spheres 0.01 (FFM40); Low orbit, altimetry 0.00 (FFM40); Strong drag, 2026 0.00 (FFM40); Near 700 km 0.00 (FFM40); Laser geodetic 0.02 (FFM20); Medium Earth orbit 0.02 (FFM20); Geostationary 0.02 (FFM20); Inclined geosynchronous 0.02 (FFM20). With p = 1.08 (1.03 to 1.14, the propagation-phase fit), the screen cost with AP against the same screen with FFM is a factor f of 0.01 to 0.01 (Low orbit, laser spheres); 0.01 to 0.01 (Low orbit, altimetry); 0.00 to 0.01 (Strong drag, 2026); 0.01 to 0.01 (Near 700 km); 0.02 to 0.03 (Laser geodetic); 0.02 to 0.03 (Medium Earth orbit); 0.03 to 0.03 (Geostationary); 0.02 to 0.03 (Inclined geosynchronous); a factor below 1 buys log2(1 / f) / p doublings of the object count (a factor above 1 is no gain), years at 3.8 (payload) and 9.6 (all objects, undecided) in the table.
 
 ## Real dates: not drawn
 

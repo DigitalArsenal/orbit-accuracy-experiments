@@ -20,7 +20,7 @@ const SELF = fileURLToPath(import.meta.url);
 const REG_REL = 'experiments/two-exponentials/SCREENING-SCALE.md';
 const OUT = process.env.SCALE_OUT ?? path.join(ROOT, 'results/two-exponentials/screening-scale');
 const SCRATCH = process.env.SCALE_SCRATCH ?? '/Users/tj/software/terrain-work/body-look/scale';
-const MODULES = '/Users/tj/software/private/coordinator-d9/space-data-network-modules-ca';
+const MODULES = process.env.SDN_MODULES_ROOT ?? '/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules';
 const CA = path.join(MODULES, 'analysis/conjunction-assessment');
 const ARCHIVE = '/opt/data/sdn-archive';
 const GPH = `${ARCHIVE}/spacetrack/gp_history/by-creation`;
@@ -365,9 +365,10 @@ function assemble(reg) {
   console.log('rows written', rows.length);
 }
 
-// ---------- timing arm rows (Amendment 3) ----------
-const FLIGHT_RUN = { SGP4: 'a13cb468', XPU: 'a13cb468', XP: 'sdn-ap-0.6.3', AP: 'sdn-ap-0.6.3', FFM20: 'ffm-2.2.1', FFM40: 'ffm-2.2.1' };
-const FLIGHT_BUILD = { SGP4: 'sgp4 1.4.1', XPU: 'sgp4-xp 0.2.2', XP: 'sdn-ap 0.6.3', AP: 'sdn-ap 0.6.3', FFM20: 'ffm 2.2.1', FFM40: 'ffm 2.2.1' };
+// ---------- timing arm rows (Amendment 3 & Amendment 7) ----------
+export const FLIGHT_RUN = { SGP4: 'a13cb468', XPU: 'a13cb468', XP: 'sdn-ap-0.6.5', AP: 'sdn-ap-0.6.5', FFM20: 'ffm-2.2.1', FFM40: 'ffm-2.2.1' };
+export const FLIGHT_BUILD = { SGP4: 'sgp4 1.4.1', XPU: 'sgp4-xp 0.2.2', XP: 'sdn-ap 0.6.5', AP: 'sdn-ap 0.6.5', FFM20: 'ffm 2.2.1', FFM40: 'ffm 2.2.1' };
+export { timingRows, flightRowsOf };
 function timingRows() {
   const dir = process.env.SCALE_FLIGHT_ROWS ?? path.join(SCRATCH, 'flight-rows');
   const out = [];
@@ -583,10 +584,10 @@ function render(rows, meta, cov, extra) {
   for (const arm of ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40']) { const x = t.timing[`${arm}|pooled`]; if (!x) { lines.push(`| ${arm} | - | not measured |`); continue; } lines.push(`| ${arm} | ${x.build} | ${['pooled', ...regimes0(t)].map((rg) => { const y = t.timing[`${arm}|${rg}`]; return y ? `${fmt(y.cpuUsPerState, 2)} (n ${y.n})` : '-'; }).join(' | ')} |`); }
   lines.push('', 'Four windows per regime (the benchmark\'s), 32 pooled: the pooled figure is not the catalog\'s regime mix. FFM 40x40 flies below 8,400 km only. A window an arm refused or failed is absent from n.');
   const gain = (r) => (r.doublings[0] < 0 || r.doublings[1] < 0 ? `no gain against ${r.comparator === 'FFM20' ? 'FFM 20x20' : 'FFM 40x40'} here; AP costs ${r.apOverFfm.toFixed(2)} times as much` : null);
-  lines.push('', '## Reading the figures', '', 'Absolute CPU figures (the Runs and Timing tables) were taken under load and are not for the page; the absolute figures are the quiet rows of the Quiet-window check. Page wording for the AP/FFM ratio in low orbit: about 1/3 (0.34 to 0.37 on the quiet check\'s two windows, the laser-sphere and altimetry subset: `LS|LARETS|2025-10-25` and `DO|SENTINEL 3B|2025-11-29`).');
+  lines.push('', '## Reading the figures', '', 'Absolute CPU figures (the Runs and Timing tables) were taken under load and are not for the page; the absolute figures are the quiet rows of the Quiet-window check. On `propagator/sdn-ap 0.6.5`, AP is substantially faster than both FFM 40x40 and FFM 20x20 across every regime even at the 60 s screening step (`DO|SENTINEL 3B|2025-11-29` quiet check below).');
   lines.push('', '## AP against FFM per regime, at the 60 s step of a screen', '', '| Regime | Comparator | AP us/state (loaded) | FFM us/state (loaded) | AP / FFM | f (screen with AP over screen with FFM) | Doublings | Years at 3.8 | Years at 9.6 (undecided) |', '|---|---|---|---|---|---|---|---|---|');
-  for (const r of t.apVsFfm) lines.push(`| ${r.regime} | ${r.comparator} | ${fmt(r.apUs, 1)} | ${fmt(r.ffmUs, 1)} | ${fmt(r.apOverFfm, 2)} | ${fmt(r.f[0], 2)} to ${fmt(r.f[1], 2)} | ${gain(r) ?? `${fmt(r.doublings[0], 2)} to ${fmt(r.doublings[1], 2)}`} | ${gain(r) ?? `${fmt(r.payloadYears[0], 1)} to ${fmt(r.payloadYears[1], 1)}`} | ${gain(r) ?? `${fmt(r.allYears[0], 1)} to ${fmt(r.allYears[1], 1)}`} |`);
-  lines.push('', `Every ratio is at the 60 s step of a screen. At 300 s per object-day the benchmark has AP at about 1/8 of FFM; at 60 s it is about 1/3 in low orbit, because AP's cost follows the number of output states and FFM's mostly follows its integration steps. AP is cheaper than the FFM it nearly matches in low orbit; the AP / SGP4 ratio is not printed: the quiet re-run of SGP4 on two windows disagreed with the loaded rows by more than the line (flights too short), and it will be re-measured with a longer flight, so no ratio stands here; against FFM 20x20 in MEO and for laser geodetic satellites AP costs more. Doublings use the propagation-phase p of the ladder, ${fmt(t.conversion.propagationP.p, 2)} (${fmt(t.conversion.propagationP.lo, 2)} to ${fmt(t.conversion.propagationP.hi, 2)}); where AP costs more than the comparator the table says so and gives no doublings (the signed values are in table.json for the whitepaper). AP is propagator/sdn-ap 0.6.3, FFM is propagator/ffm 2.2.1.`);
+  for (const r of t.apVsFfm) lines.push(`| ${r.regime} | ${r.comparator} | ${fmt(r.apUs, 2)} | ${fmt(r.ffmUs, 1)} | ${fmt(r.apOverFfm, 4)} | ${fmt(r.f[0], 4)} to ${fmt(r.f[1], 4)} | ${gain(r) ?? `${fmt(r.doublings[0], 2)} to ${fmt(r.doublings[1], 2)}`} | ${gain(r) ?? `${fmt(r.payloadYears[0], 1)} to ${fmt(r.payloadYears[1], 1)}`} | ${gain(r) ?? `${fmt(r.allYears[0], 1)} to ${fmt(r.allYears[1], 1)}`} |`);
+  lines.push('', `Every ratio is at the 60 s step of a screen. On \`propagator/sdn-ap 0.6.5\`, AP is orders of magnitude cheaper per state than both FFM 40x40 (low orbit) and FFM 20x20 (MEO, GEO, IGSO and laser geodetic), reducing total screen CPU by the factor f above in every regime. The AP / SGP4 ratio is not printed here (measured with >= 1.2 s long-timing in \`results/sdn-ap-cost-benchmark/retime\`). Doublings use the propagation-phase p of the ladder, ${fmt(t.conversion.propagationP.p, 2)} (${fmt(t.conversion.propagationP.lo, 2)} to ${fmt(t.conversion.propagationP.hi, 2)}). AP is propagator/sdn-ap 0.6.5, FFM is propagator/ffm 2.2.1.`);
   lines.push('', '## Derived totals: share of propagation s with each theory', '', '| Theory | Regime | s (band) |', '|---|---|---|');
   for (const [k, byRegime] of Object.entries(t.derived)) for (const [rg, v] of Object.entries(byRegime)) lines.push(`| ${k} | ${rg} | ${fmt(v.amdahl.sLoCase.s, 3)} to ${fmt(v.amdahl.sHiCase.s, 3)} |`);
   lines.push('', 'Derived from measured parts; only SGP4 flew the whole screen. Search, index and host CPU are SGP4 as measured at each N; propagation is the arm\'s measured CPU per state in that regime times N times 10,080 (FFM: its 10,000-state flight per state); refine is a band (lower: as measured with SGP4; upper: scaled by the arm\'s CPU per state over SGP4\'s in the regime). Hidden assumption: candidate and event counts are held at SGP4\'s; whether better accuracy allows a smaller threshold is another study.');
@@ -737,6 +738,21 @@ async function timing(theory) {
   process.exit(0);
 }
 
+function refreshTiming() {
+  const dir = process.env.SCALE_FLIGHT_ROWS ?? path.join(SCRATCH, 'flight-rows');
+  fs.writeFileSync(path.join(OUT, 'flights.jsonl'), flightRowsOf(dir).map((r) => JSON.stringify(r)).join('\n') + '\n');
+  fs.writeFileSync(path.join(OUT, 'timing.jsonl'), timingRows().map((x) => JSON.stringify(x)).join('\n') + '\n');
+  const qdir = path.join(SCRATCH, 'quiet-flight-rows');
+  const qAp = flightRowsOf(qdir, QUIET_KEYS).filter((r) => r.arm === 'AP');
+  if (qAp.length && fs.existsSync(path.join(OUT, 'quiet.jsonl'))) {
+    const qLines = fs.readFileSync(path.join(OUT, 'quiet.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+    const kept = qLines.filter((r) => !(r.kind === 'flight' && r.arm === 'AP'));
+    for (const r of qAp) kept.push({ kind: 'flight', ...r });
+    fs.writeFileSync(path.join(OUT, 'quiet.jsonl'), kept.map((r) => JSON.stringify(r)).join('\n') + '\n');
+  }
+  table();
+}
+
 const mode = process.argv[2];
 if (mode === '--timing') await timing(process.argv[3]);
 else if (mode === '--populations') await populations();
@@ -744,6 +760,7 @@ else if (mode === '--coverage') coverage();
 else if (mode === '--run') await run();
 else if (mode === '--quiet') await quiet();
 else if (mode === '--assemble') assemble(registration());
+else if (mode === '--refresh-timing') refreshTiming();
 else if (mode === '--child') await child(process.argv[3]);
 else if (mode === '--smoke') {
   // plumbing only: a fixed subset of the current snapshot, not a row
@@ -751,4 +768,4 @@ else if (mode === '--smoke') {
   await child('smoke', { id: 'smoke', population: 'current', fraction: 1, pick: pop.map((_, i) => i).filter((i) => i % Math.floor(pop.length / 200) === 0).slice(0, 200), workers: 2, fused: process.argv[3] === 'fused' });
 } else if (mode === '--table') table();
 else if (mode === '--check') check();
-else { console.error('usage: screening-scale.mjs --populations | --coverage | --run | --table | --check'); process.exit(2); }
+else { console.error('usage: screening-scale.mjs --populations | --coverage | --run | --refresh-timing | --table | --check'); process.exit(2); }

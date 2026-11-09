@@ -1,5 +1,5 @@
 {
- "reading": "AP keeps its registered rows (300 s) and its 60 s flights from the screening-scale study. SGP4, XP whiteroom (sdn-ap 0.6.3) and XP Space Force are re-timed in calls of at least 1.2 s of CPU, five measurements per window; fits are timed once (their input is the 300 s arc, whatever the output step). Statistic: per regime AP's median over the arm's, the median over the eight regimes (the page's rule). armsRetimed: per arm, the median over every window the arm completed of the per-window CPU seconds per object-day (the rule of the registered table's arms[...].cpuSecondsPerObjectDay.median), flight at 300 s and at 60 s, and fit; windows gives the count.",
+ "reading": "SGP4, XP whiteroom (sdn-ap 0.6.5), XP Space Force, and AP (sdn-ap 0.6.5) are re-timed in calls of at least 1.2 s of CPU, five measurements per window; fits are timed once (their input is the 300 s arc, whatever the output step). Statistic: per regime AP's median over the arm's, the median over the eight regimes (the page's rule). armsRetimed: per arm, the median over every window the arm completed of the per-window CPU seconds per object-day (the rule of the registered table's arms[...].cpuSecondsPerObjectDay.median), flight at 300 s and at 60 s, and fit; windows gives the count.",
  "armsRetimed": {
   "SGP4": {
    "step300": {
@@ -27,14 +27,26 @@
   },
   "XP": {
    "step300": {
-    "flightCpuSecondsPerObjectDay": 0.007789449965493444,
+    "flightCpuSecondsPerObjectDay": 0.006103684289232934,
     "windows": 28
    },
    "step60": {
-    "flightCpuSecondsPerObjectDay": 0.029024380952380954,
+    "flightCpuSecondsPerObjectDay": 0.028383028571428572,
     "windows": 28
    },
-   "fitCpuSecondsPerObjectDay": 0.05457170833333333,
+   "fitCpuSecondsPerObjectDay": 0.04623694917582418,
+   "fitWindows": 28
+  },
+  "AP": {
+   "step300": {
+    "flightCpuSecondsPerObjectDay": 0.0014466312266004063,
+    "windows": 28
+   },
+   "step60": {
+    "flightCpuSecondsPerObjectDay": 0.006313700460829493,
+    "windows": 28
+   },
+   "fitCpuSecondsPerObjectDay": 0.02348424465811966,
    "fitWindows": 28
   }
  },
@@ -58,12 +70,20 @@
      "fitSpreadPercent": 0.91
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.006769274725274725,
-     "fitCpuSecondsPerObjectDay": 0.045453625,
+     "flightCpuSecondsPerObjectDay": 0.005984911330049261,
+     "fitCpuSecondsPerObjectDay": 0.042393,
      "nFlight": 3,
      "nFit": 3,
-     "flightSpreadPercent": 5.63,
-     "fitSpreadPercent": 2.6
+     "flightSpreadPercent": 5.25,
+     "fitSpreadPercent": 1.84
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.001503706632653061,
+     "fitCpuSecondsPerObjectDay": 0.02483396,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 6.51,
+     "fitSpreadPercent": 5.41
     }
    },
    "Low orbit, altimetry": {
@@ -84,12 +104,20 @@
      "fitSpreadPercent": 1.205
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.008088515151515152,
-     "fitCpuSecondsPerObjectDay": 0.05869660681818182,
+     "flightCpuSecondsPerObjectDay": 0.007037777142857143,
+     "fitCpuSecondsPerObjectDay": 0.05521918181818182,
      "nFlight": 4,
      "nFit": 4,
-     "flightSpreadPercent": 4.39,
-     "fitSpreadPercent": 1.795
+     "flightSpreadPercent": 4.49,
+     "fitSpreadPercent": 0.7749999999999999
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.001485517869148466,
+     "fitCpuSecondsPerObjectDay": 0.037845772222222226,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 4.955,
+     "fitSpreadPercent": 5.215
     }
    },
    "Laser geodetic": {
@@ -110,12 +138,20 @@
      "fitSpreadPercent": 1.635
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.0063188703703703705,
-     "fitCpuSecondsPerObjectDay": 0.0358555,
+     "flightCpuSecondsPerObjectDay": 0.006103684289232934,
+     "fitCpuSecondsPerObjectDay": 0.0361035,
      "nFlight": 4,
      "nFit": 4,
-     "flightSpreadPercent": 5.205,
-     "fitSpreadPercent": 3.88
+     "flightSpreadPercent": 5.140000000000001,
+     "fitSpreadPercent": 4.715
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.0012285436022283634,
+     "fitCpuSecondsPerObjectDay": 0.016874340277777778,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 5.43,
+     "fitSpreadPercent": 1.575
     }
    },
    "Geostationary": {
@@ -136,12 +172,20 @@
      "fitSpreadPercent": 0.66
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.00850863051948052,
-     "fitCpuSecondsPerObjectDay": 0.05895223181818182,
+     "flightCpuSecondsPerObjectDay": 0.006084551988036594,
+     "fitCpuSecondsPerObjectDay": 0.04462858928571428,
      "nFlight": 4,
      "nFit": 4,
-     "flightSpreadPercent": 3.835,
-     "fitSpreadPercent": 3.4050000000000002
+     "flightSpreadPercent": 5.485,
+     "fitSpreadPercent": 3.9400000000000004
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.0014097245727559317,
+     "fitCpuSecondsPerObjectDay": 0.020392710253456223,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 5.185,
+     "fitSpreadPercent": 2.55
     }
    },
    "Inclined geosynchronous": {
@@ -162,12 +206,20 @@
      "fitSpreadPercent": 0.6799999999999999
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.00830777380952381,
-     "fitCpuSecondsPerObjectDay": 0.056700931818181824,
+     "flightCpuSecondsPerObjectDay": 0.005987073891625615,
+     "fitCpuSecondsPerObjectDay": 0.04468635714285714,
      "nFlight": 4,
      "nFit": 4,
-     "flightSpreadPercent": 4.705,
-     "fitSpreadPercent": 3.4349999999999996
+     "flightSpreadPercent": 4.880000000000001,
+     "fitSpreadPercent": 3.8850000000000002
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.0014134266026824167,
+     "fitCpuSecondsPerObjectDay": 0.021897655172413794,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 4.324999999999999,
+     "fitSpreadPercent": 2.8899999999999997
     }
    },
    "Strong drag, 2026": {
@@ -188,12 +240,20 @@
      "fitSpreadPercent": 1.175
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.007692415881737309,
-     "fitCpuSecondsPerObjectDay": 0.057636138257575756,
+     "flightCpuSecondsPerObjectDay": 0.0066879951690821254,
+     "fitCpuSecondsPerObjectDay": 0.05403879356060606,
      "nFlight": 4,
      "nFit": 4,
-     "flightSpreadPercent": 4.895,
-     "fitSpreadPercent": 3.5549999999999997
+     "flightSpreadPercent": 5.085,
+     "fitSpreadPercent": 4.155
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.0016028846107459444,
+     "fitCpuSecondsPerObjectDay": 0.03134386513157895,
+     "nFlight": 4,
+     "nFit": 4,
+     "flightSpreadPercent": 5.525,
+     "fitSpreadPercent": 4.21
     }
    },
    "Near 700 km": {
@@ -214,12 +274,20 @@
      "fitSpreadPercent": 1.4649999999999999
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.007629223602484471,
-     "fitCpuSecondsPerObjectDay": 0.06831981071428571,
+     "flightCpuSecondsPerObjectDay": 0.006906517142857144,
+     "fitCpuSecondsPerObjectDay": 0.06425960833333333,
      "nFlight": 2,
      "nFit": 2,
-     "flightSpreadPercent": 3.4399999999999995,
-     "fitSpreadPercent": 1.8599999999999999
+     "flightSpreadPercent": 4.965,
+     "fitSpreadPercent": 3.915
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.0015629929441406429,
+     "fitCpuSecondsPerObjectDay": 0.03408158625730995,
+     "nFlight": 2,
+     "nFit": 2,
+     "flightSpreadPercent": 8.15,
+     "fitSpreadPercent": 4.33
     }
    },
    "Medium Earth orbit": {
@@ -240,12 +308,20 @@
      "fitSpreadPercent": 1.39
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.005976256157635467,
-     "fitCpuSecondsPerObjectDay": 0.04404746428571428,
+     "flightCpuSecondsPerObjectDay": 0.00595492118226601,
+     "fitCpuSecondsPerObjectDay": 0.04623457692307693,
      "nFlight": 3,
      "nFit": 3,
-     "flightSpreadPercent": 4.19,
-     "fitSpreadPercent": 3.36
+     "flightSpreadPercent": 4.5,
+     "fitSpreadPercent": 4.31
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.0014240821018062396,
+     "fitCpuSecondsPerObjectDay": 0.021062365384615384,
+     "nFlight": 3,
+     "nFit": 3,
+     "flightSpreadPercent": 4.35,
+     "fitSpreadPercent": 4.89
     }
    }
   },
@@ -268,11 +344,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.02716026530612245,
+     "flightCpuSecondsPerObjectDay": 0.026861448979591838,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 3,
      "nFit": 0,
-     "flightSpreadPercent": 5.27,
+     "flightSpreadPercent": 6.06,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.006752030612244899,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 4.92,
      "fitSpreadPercent": null
     }
    },
@@ -294,11 +378,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.031273214285714286,
+     "flightCpuSecondsPerObjectDay": 0.03029922857142857,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 4,
      "nFit": 0,
-     "flightSpreadPercent": 3.58,
+     "flightSpreadPercent": 5.805,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.006452893913210446,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 2.91,
      "fitSpreadPercent": null
     }
    },
@@ -320,11 +412,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.029191880952380955,
+     "flightCpuSecondsPerObjectDay": 0.028383028571428572,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 4,
      "nFit": 0,
-     "flightSpreadPercent": 4.824999999999999,
+     "flightSpreadPercent": 5.98,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.005812014251578767,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 5.0649999999999995,
      "fitSpreadPercent": null
     }
    },
@@ -346,11 +446,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.027108591836734693,
+     "flightCpuSecondsPerObjectDay": 0.021742845238095238,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 4,
      "nFit": 0,
-     "flightSpreadPercent": 5.994999999999999,
+     "flightSpreadPercent": 6.09,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.005513441037457167,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 5.18,
      "fitSpreadPercent": null
     }
    },
@@ -372,11 +480,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.02762127551020408,
+     "flightCpuSecondsPerObjectDay": 0.022405026785714287,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 4,
      "nFit": 0,
-     "flightSpreadPercent": 3.655,
+     "flightSpreadPercent": 5.23,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.005659415413533835,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 6.83,
      "fitSpreadPercent": null
     }
    },
@@ -398,11 +514,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.029591712585034013,
+     "flightCpuSecondsPerObjectDay": 0.02950552551020408,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 4,
      "nFit": 0,
-     "flightSpreadPercent": 4.865,
+     "flightSpreadPercent": 4.984999999999999,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.006851543308702791,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 4,
+     "nFit": 0,
+     "flightSpreadPercent": 7.285,
      "fitSpreadPercent": null
     }
    },
@@ -424,11 +548,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.031236178571428574,
+     "flightCpuSecondsPerObjectDay": 0.03065007619047619,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 2,
      "nFit": 0,
-     "flightSpreadPercent": 5.01,
+     "flightSpreadPercent": 5.845000000000001,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.006719100457424349,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 2,
+     "nFit": 0,
+     "flightSpreadPercent": 5.83,
      "fitSpreadPercent": null
     }
    },
@@ -450,11 +582,19 @@
      "fitSpreadPercent": null
     },
     "XP": {
-     "flightCpuSecondsPerObjectDay": 0.02988235714285714,
+     "flightCpuSecondsPerObjectDay": 0.030122142857142858,
      "fitCpuSecondsPerObjectDay": null,
      "nFlight": 3,
      "nFit": 0,
-     "flightSpreadPercent": 5.22,
+     "flightSpreadPercent": 6.09,
+     "fitSpreadPercent": null
+    },
+    "AP": {
+     "flightCpuSecondsPerObjectDay": 0.0059589308755760365,
+     "fitCpuSecondsPerObjectDay": null,
+     "nFlight": 3,
+     "nFit": 0,
+     "flightSpreadPercent": 5.8,
      "fitSpreadPercent": null
     }
    }
@@ -473,13 +613,13 @@
     "n": 3
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.007855,
-    "fitCpuSecondsPerObjectDay": 0.05096,
+    "flightCpuSecondsPerObjectDay": 0.00692,
+    "fitCpuSecondsPerObjectDay": 0.04559,
     "n": 3
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.1163,
-    "fitCpuSecondsPerObjectDay": 0.5249,
+    "flightCpuSecondsPerObjectDay": 0.003112,
+    "fitCpuSecondsPerObjectDay": 0.03176,
     "n": 3
    }
   },
@@ -495,13 +635,13 @@
     "n": 4
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.007908,
-    "fitCpuSecondsPerObjectDay": 0.05908,
+    "flightCpuSecondsPerObjectDay": 0.007279,
+    "fitCpuSecondsPerObjectDay": 0.05174,
     "n": 4
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.1157,
-    "fitCpuSecondsPerObjectDay": 0.6326,
+    "flightCpuSecondsPerObjectDay": 0.002194,
+    "fitCpuSecondsPerObjectDay": 0.03287,
     "n": 4
    }
   },
@@ -517,13 +657,13 @@
     "n": 4
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.006764,
-    "fitCpuSecondsPerObjectDay": 0.03554,
+    "flightCpuSecondsPerObjectDay": 0.007289,
+    "fitCpuSecondsPerObjectDay": 0.03452,
     "n": 4
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.08415,
-    "fitCpuSecondsPerObjectDay": 0.3266,
+    "flightCpuSecondsPerObjectDay": 0.002251,
+    "fitCpuSecondsPerObjectDay": 0.01644,
     "n": 4
    }
   },
@@ -539,13 +679,13 @@
     "n": 4
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.008982,
-    "fitCpuSecondsPerObjectDay": 0.05824,
+    "flightCpuSecondsPerObjectDay": 0.006265,
+    "fitCpuSecondsPerObjectDay": 0.04224,
     "n": 4
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.02023,
-    "fitCpuSecondsPerObjectDay": 0.06302,
+    "flightCpuSecondsPerObjectDay": 0.001897,
+    "fitCpuSecondsPerObjectDay": 0.01871,
     "n": 4
    }
   },
@@ -561,13 +701,13 @@
     "n": 4
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.008401,
-    "fitCpuSecondsPerObjectDay": 0.05484,
+    "flightCpuSecondsPerObjectDay": 0.006345,
+    "fitCpuSecondsPerObjectDay": 0.03959,
     "n": 4
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.02105,
-    "fitCpuSecondsPerObjectDay": 0.08504,
+    "flightCpuSecondsPerObjectDay": 0.001594,
+    "fitCpuSecondsPerObjectDay": 0.01904,
     "n": 4
    }
   },
@@ -583,13 +723,13 @@
     "n": 4
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.008037,
-    "fitCpuSecondsPerObjectDay": 0.0552,
+    "flightCpuSecondsPerObjectDay": 0.006043,
+    "fitCpuSecondsPerObjectDay": 0.04926,
     "n": 4
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.1239,
-    "fitCpuSecondsPerObjectDay": 0.6487,
+    "flightCpuSecondsPerObjectDay": 0.00168,
+    "fitCpuSecondsPerObjectDay": 0.02761,
     "n": 4
    }
   },
@@ -605,13 +745,13 @@
     "n": 2
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.007747,
-    "fitCpuSecondsPerObjectDay": 0.0612,
+    "flightCpuSecondsPerObjectDay": 0.00678,
+    "fitCpuSecondsPerObjectDay": 0.05418,
     "n": 2
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.1185,
-    "fitCpuSecondsPerObjectDay": 0.6658,
+    "flightCpuSecondsPerObjectDay": 0.001582,
+    "fitCpuSecondsPerObjectDay": 0.03007,
     "n": 2
    }
   },
@@ -627,13 +767,13 @@
     "n": 3
    },
    "XP": {
-    "flightCpuSecondsPerObjectDay": 0.005773,
-    "fitCpuSecondsPerObjectDay": 0.04459,
+    "flightCpuSecondsPerObjectDay": 0.005918,
+    "fitCpuSecondsPerObjectDay": 0.04277,
     "n": 3
    },
    "AP": {
-    "flightCpuSecondsPerObjectDay": 0.1601,
-    "fitCpuSecondsPerObjectDay": 1.259,
+    "flightCpuSecondsPerObjectDay": 0.001812,
+    "fitCpuSecondsPerObjectDay": 0.02162,
     "n": 3
    }
   }
@@ -641,44 +781,44 @@
  "multiples": {
   "SGP4": {
    "flight300": {
-    "old": 106.44051612174152,
-    "new": 212.02804223846576
+    "old": 2.5981536633087186,
+    "new": 2.629320637661195
    },
    "flight60": {
-    "old": 160.25164013910248,
-    "new": 183.79023289144723
+    "old": 2.0135900746143705,
+    "new": 2.319826681201146
    },
    "fit": {
-    "old": 21.507728801911,
-    "new": 26.273358848838342
+    "old": 1.0004209721253046,
+    "new": 1.020972270840546
    }
   },
   "XPU": {
    "flight300": {
-    "old": 10.683293583531295,
-    "new": 9.895107178718291
+    "old": 0.27267386752101763,
+    "new": 0.16735472618437283
    },
    "flight60": {
-    "old": 9.246104335370482,
-    "new": 9.87989681169189
+    "old": 0.1777606349460313,
+    "new": 0.17359603241813915
    },
    "fit": {
-    "old": 0.7387896509963032,
-    "new": 0.7336120243274984
+    "old": 0.04789054930303997,
+    "new": 0.04924568787379996
    }
   },
   "XP": {
    "flight300": {
-    "old": 14.718304904878412,
-    "new": 14.918306162731287
+    "old": 0.30210416281320496,
+    "new": 0.23388441587003359
    },
    "flight60": {
-    "old": 14.578025918142341,
-    "new": 16.36436059163629
+    "old": 0.2202430671444919,
+    "new": 0.2257159545696763
    },
    "fit": {
-    "old": 10.503875356194246,
-    "new": 10.261398750616387
+    "old": 0.5302481755970128,
+    "new": 0.5102016898954382
    }
   }
  }
