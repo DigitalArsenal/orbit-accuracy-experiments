@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MODULES_ROOT =
-  process.env.SDN_MODULES_ROOT || new URL("../../../../repos/main-packages/space-data-network-modules", import.meta.url).pathname;
+  process.env.SDN_MODULES_ROOT || new URL("../../../../../repos/main-packages/space-data-network-modules", import.meta.url).pathname;
 const SDNAP_ROOT = path.join(MODULES_ROOT, "propagator/sdn-ap");
 const OUT_DIR = path.join(__dirname, "wasm");
 const OUT_WASM = path.join(OUT_DIR, "tle-astrodynamics-upgrades.wasm");

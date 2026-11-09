@@ -9,7 +9,7 @@ import { encodeHttpResponse } from "space-data-module-sdk/runtime-contracts";
 import { assertAllowedPath } from "./hold-gate.mjs";
 
 export const MODULES_ROOT =
-  process.env.SDN_MODULES_ROOT || new URL("../../../../../repos/main-packages/space-data-network-modules", import.meta.url).pathname;
+  process.env.SDN_MODULES_ROOT || new URL("../../../../../../../repos/main-packages/space-data-network-modules", import.meta.url).pathname;
 
 const T = (schemaName, fileIdentifier, rootTypeName) => ({
   schemaName,

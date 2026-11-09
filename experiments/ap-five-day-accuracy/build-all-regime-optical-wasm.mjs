@@ -5,7 +5,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 const MODULES_ROOT =
-  process.env.SDN_MODULES_ROOT || new URL("../../../../repos/main-packages/space-data-network-modules", import.meta.url).pathname;
+  process.env.SDN_MODULES_ROOT || new URL("../../../../../repos/main-packages/space-data-network-modules", import.meta.url).pathname;
 const OA_ROOT = path.join(MODULES_ROOT, "analysis/optical-astrometry");
 const OUT_DIR =
   new URL("./wasm", import.meta.url).pathname;

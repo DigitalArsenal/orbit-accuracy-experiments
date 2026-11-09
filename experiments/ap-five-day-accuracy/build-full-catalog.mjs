@@ -11,7 +11,7 @@ import { DCL } from "spacedatastandards.org/lib/js/DCL/main.js";
 import { OCM } from "spacedatastandards.org/lib/js/OCM/OCM.js";
 import { meanElementSource } from "spacedatastandards.org/lib/js/OCM/meanElementSource.js";
 import { OEM } from "spacedatastandards.org/lib/js/OEM/OEM.js";
-import { assertNoUserDefined } from "../../../../repos/main-packages/space-data-network-modules/common/tests/no-user-defined.mjs";
+import { assertNoUserDefined } from "../../../../../repos/main-packages/space-data-network-modules/common/tests/no-user-defined.mjs";
 
 import { assertAllowedPath, isHeldForStudy, CREDITS } from "./lib/hold-gate.mjs";
 import { buildSpaceWeather } from "./lib/space-weather.mjs";

@@ -7,7 +7,7 @@ import * as PCF from "spacedatastandards.org/lib/js/PCF/main.js";
 import * as ERM from "spacedatastandards.org/lib/js/ERM/main.js";
 import { OEM } from "spacedatastandards.org/lib/js/OEM/main.js";
 import { OCM } from "spacedatastandards.org/lib/js/OCM/main.js";
-import { assertNoUserDefined } from "../../../../repos/main-packages/space-data-network-modules/common/tests/no-user-defined.mjs";
+import { assertNoUserDefined } from "../../../../../repos/main-packages/space-data-network-modules/common/tests/no-user-defined.mjs";
 
 import { assertAllowedPath, isHeldForStudy, CREDITS } from "./lib/hold-gate.mjs";
 import { jdOf, isoFromJd } from "./lib/gp-history-loader.mjs";
