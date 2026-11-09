@@ -40,17 +40,20 @@ export const ARMS = ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40'];
 /** The runs (BENCHMARK.md amendment 2026-11-06): the registered run and one run per shipped build, each with its own row directory and the arms it reruns;
  *  every other module at its registered build. */
 const QUIET_BOX = 'the DSST run\'s seven accuracy JVMs SIGSTOPped through the DSST governor from 2026-11-06T07:05:58Z to 07:19:17Z, around the benchmark (07:12:32Z to 07:18:58Z); the FFM rerun lane\'s eight single-thread scoring workers ran throughout (disclosed by the coordinator at 07:12Z); 1-minute load 11.7 to 12.7 at every phase boundary, under the ceiling';
+const QUIET_BOX_065 = 'quiet Apple M3 Ultra box (no background accuracy JVMs or scoring workers; 1-minute load recorded before and after every row and phase, under the 22.83 ceiling)';
 export const RUNS = {
   a13cb468: { label: 'the registered run, 2026-11-05', rows: ROWS_ROOT, builds: REGISTERED_BUILDS, arms: ARMS, machine: 'shared with other lanes; the load before and after each arm in load' },
   'sdn-ap-0.6.2': { label: 'propagator/sdn-ap 0.6.2', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.2-84d50dca'), arms: ['XP', 'AP'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.2', commit: 'e1e4fad87ae810dd71e9acb568e9f083df1cc9b8', sha256: '84d50dca4efdfea87eff7e3b4618d795c26a7d0a6df0e877341e69bc73161f41' } } },
   'sdn-ap-0.6.3': { label: 'propagator/sdn-ap 0.6.3', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.3-aa3ed22a'), arms: ['XP', 'AP'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.3', commit: '93cb5a0584fa728864e4426cc9ceb368936589f9', sha256: 'aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e' } } },
+  'sdn-ap-0.6.5': { label: 'propagator/sdn-ap 0.6.5', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.5-f0b8352a'), arms: ['XP', 'AP'], machine: QUIET_BOX_065,
+    builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.5', commit: '3a3661eaf9caa84fc776a9959494e1ca14358db1', sha256: 'f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7' } } },
   'ffm-2.2.1': { label: 'propagator/ffm 2.2.1', rows: path.join(ROWS_ROOT, 'builds', 'ffm-2.2.1-a9133120'), arms: ['FFM20', 'FFM40'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/ffm': { version: '2.2.1', commit: '9cb02c8e22f5a738a9984992e8af2246cd11e090', sha256: 'a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4' } } },
 };
 /** The shipped build of each arm: the run whose column the comparison page and the paper read (table.json arms, builds, byRegime). */
-export const SHIPPED = { SGP4: 'a13cb468', XP: 'sdn-ap-0.6.3', XPU: 'a13cb468', AP: 'sdn-ap-0.6.3', FFM20: 'ffm-2.2.1', FFM40: 'ffm-2.2.1' };
+export const SHIPPED = { SGP4: 'a13cb468', XP: 'sdn-ap-0.6.5', XPU: 'a13cb468', AP: 'sdn-ap-0.6.5', FFM20: 'ffm-2.2.1', FFM40: 'ffm-2.2.1' };
 /** The module whose build names an arm's column. */
 const COLUMN_MODULE = { SGP4: 'propagator/sgp4', XP: 'propagator/sdn-ap', XPU: 'propagator/sgp4-xp', AP: 'propagator/sdn-ap', FFM20: 'propagator/ffm', FFM40: 'propagator/ffm' };
 const RUN = args.run ?? 'a13cb468';
@@ -389,7 +392,7 @@ async function parent(phase) {
   }
 }
 function memory() {
-  const modules = modulesRoot();
+  const modules = process.env.SDN_MODULES_GIT ?? modulesRoot();
   const size = (rel) => Number(execFileSync('git', ['-C', modules, 'cat-file', '-s', `${BUILDS[rel].commit}:${rel}/dist/isomorphic/module.wasm`]).toString().trim());
   for (const arm of RUNS[RUN].arms) {
     const fits = readJsonl(path.join(ROWS, `fits-${arm}.jsonl`)), mf = JSON.parse(fs.readFileSync(path.join(ROWS, `memory-fits-${arm}.json`), 'utf8')), ml = JSON.parse(fs.readFileSync(path.join(ROWS, `memory-flights-${arm}.json`), 'utf8'));
@@ -465,7 +468,7 @@ function buildTable() {
     machine: MACHINE, stepSeconds: STEP_SECONDS, fitHours: FIT_HOURS, fitStatesAtMost: FIT_STATES, flightDays: FLIGHT_DAYS, flightStates: FLIGHT_STATES,
     windows: ws.length, regimes: [...new Set(ws.map((w) => w.regime))], windowKeys: ws.map((w) => w.key),
     builds, shipped: SHIPPED, arms, byRegime, comparison,
-    lowOrbitRatio: { shipped: lowOrbitRatio(SHIPPED.AP, SHIPPED.FFM40, cols), comparison: { 'sdn-ap-0.6.2 over ffm-2.2.1': lowOrbitRatio('sdn-ap-0.6.2', 'ffm-2.2.1', cols), a13cb468: lowOrbitRatio('a13cb468', 'a13cb468', cols) } },
+    lowOrbitRatio: { shipped: lowOrbitRatio(SHIPPED.AP, SHIPPED.FFM40, cols), comparison: { 'sdn-ap-0.6.3 over ffm-2.2.1': lowOrbitRatio('sdn-ap-0.6.3', 'ffm-2.2.1', cols), 'sdn-ap-0.6.2 over ffm-2.2.1': lowOrbitRatio('sdn-ap-0.6.2', 'ffm-2.2.1', cols), a13cb468: lowOrbitRatio('a13cb468', 'a13cb468', cols) } },
     runs,
     load: Object.keys(RUNS).flatMap((run) => phasesOf(run).map((p) => ({ run, phase: p.phase, arm: p.arm, loadBefore: p.loadBefore, loadAfter: p.loadAfter, seconds: p.seconds }))),
   };

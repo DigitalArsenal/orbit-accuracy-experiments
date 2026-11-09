@@ -44,17 +44,20 @@ export const ARMS = ['SGP4', 'XP', 'XPU', 'AP', 'FFM20', 'FFM40'];
 /** The runs (BENCHMARK.md amendment 2026-11-06): the registered run and one run per shipped build, each with its own row directory and the arms it reruns;
  *  every other module at its registered build. */
 const QUIET_BOX = 'the DSST run\'s seven accuracy JVMs SIGSTOPped through the DSST governor from 2026-11-06T07:05:58Z to 07:19:17Z, around the benchmark (07:12:32Z to 07:18:58Z); the FFM rerun lane\'s eight single-thread scoring workers ran throughout (disclosed by the coordinator at 07:12Z); 1-minute load 11.7 to 12.7 at every phase boundary, under the ceiling';
+const QUIET_BOX_065 = 'quiet Apple M3 Ultra box (no background accuracy JVMs or scoring workers; 1-minute load recorded before and after every row and phase, under the 22.83 ceiling)';
 export const RUNS = {
   a13cb468: { label: 'the registered run, 2026-11-05', rows: ROWS_ROOT, builds: REGISTERED_BUILDS, arms: ARMS, machine: 'shared with other lanes; the load before and after each arm in load' },
   'sdn-ap-0.6.2': { label: 'propagator/sdn-ap 0.6.2', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.2-84d50dca'), arms: ['XP', 'AP'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.2', commit: 'e1e4fad87ae810dd71e9acb568e9f083df1cc9b8', sha256: '84d50dca4efdfea87eff7e3b4618d795c26a7d0a6df0e877341e69bc73161f41' } } },
   'sdn-ap-0.6.3': { label: 'propagator/sdn-ap 0.6.3', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.3-aa3ed22a'), arms: ['XP', 'AP'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.3', commit: '93cb5a0584fa728864e4426cc9ceb368936589f9', sha256: 'aa3ed22aa61a3a514e06619b9bff4aa1b1051d704dc32cd360b5c572b2c57f4e' } } },
+  'sdn-ap-0.6.5': { label: 'propagator/sdn-ap 0.6.5', rows: path.join(ROWS_ROOT, 'builds', 'sdn-ap-0.6.5-f0b8352a'), arms: ['XP', 'AP'], machine: QUIET_BOX_065,
+    builds: { ...REGISTERED_BUILDS, 'propagator/sdn-ap': { version: '0.6.5', commit: '3a3661eaf9caa84fc776a9959494e1ca14358db1', sha256: 'f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7' } } },
   'ffm-2.2.1': { label: 'propagator/ffm 2.2.1', rows: path.join(ROWS_ROOT, 'builds', 'ffm-2.2.1-a9133120'), arms: ['FFM20', 'FFM40'], machine: QUIET_BOX,
     builds: { ...REGISTERED_BUILDS, 'propagator/ffm': { version: '2.2.1', commit: '9cb02c8e22f5a738a9984992e8af2246cd11e090', sha256: 'a9133120775291c4dfbf9151d0617850be560934943a178419fdd8e3fed765e4' } } },
 };
 /** The shipped build of each arm: the run whose column the comparison page and the paper read (table.json arms, builds, byRegime). */
-export const SHIPPED = { SGP4: 'a13cb468', XP: 'sdn-ap-0.6.3', XPU: 'a13cb468', AP: 'sdn-ap-0.6.3', FFM20: 'ffm-2.2.1', FFM40: 'ffm-2.2.1' };
+export const SHIPPED = { SGP4: 'a13cb468', XP: 'sdn-ap-0.6.5', XPU: 'a13cb468', AP: 'sdn-ap-0.6.5', FFM20: 'ffm-2.2.1', FFM40: 'ffm-2.2.1' };
 /** The module whose build names an arm's column. */
 const COLUMN_MODULE = { SGP4: 'propagator/sgp4', XP: 'propagator/sdn-ap', XPU: 'propagator/sgp4-xp', AP: 'propagator/sdn-ap', FFM20: 'propagator/ffm', FFM40: 'propagator/ffm' };
 const RUN = args.run ?? 'a13cb468';
@@ -423,7 +426,7 @@ async function parent(phase) {
   }
 }
 function memory() {
-  const modules = modulesRoot();
+  const modules = process.env.SDN_MODULES_GIT ?? modulesRoot();
   const size = (rel) => Number(execFileSync('git', ['-C', modules, 'cat-file', '-s', `${BUILDS[rel].commit}:${rel}/dist/isomorphic/module.wasm`]).toString().trim());
   for (const arm of RUNS[RUN].arms) {
     const fits = readJsonl(path.join(ROWS, `fits-${arm}.jsonl`)), mf = JSON.parse(fs.readFileSync(path.join(ROWS, `memory-fits-${arm}.json`), 'utf8')), ml = JSON.parse(fs.readFileSync(path.join(ROWS, `memory-flights-${arm}.json`), 'utf8'));
@@ -579,7 +582,8 @@ function check() {
 }
 
 const RETIME_OUT = path.join(ROOT, 'results/sdn-ap-cost-benchmark/retime');
-const RETIME_ARMS = { SGP4: 'a13cb468', XPU: 'a13cb468', XP: 'sdn-ap-0.6.3' };
+const RETIME_ARMS = { SGP4: 'a13cb468', XPU: 'a13cb468', XP: 'sdn-ap-0.6.5', AP: 'sdn-ap-0.6.5' };
+const COMPARE_ARMS = ['SGP4', 'XPU', 'XP'];
 const med = (v) => { const a = [...v].sort(asc); return a.length % 2 ? a[(a.length - 1) / 2] : (a[a.length / 2 - 1] + a[a.length / 2]) / 2; };
 /** The scratch rows of this run (flights at both steps, fits) as one rows.jsonl in the repository: per window, arm, phase and step, CPU per object-day with its five measurements and the load. */
 function collect() {
@@ -619,33 +623,32 @@ function retimeTables() {
       }
     }
   }
-  // AP keeps its rows: 300 s from the registered table (the shipped column); 60 s from the screening-scale study's AP flights (flights.jsonl, CPU per state times 10,080 over 7 days)
   const ap60 = {};
   for (const regime of regimes) { const v = screen60.filter((r) => r.arm === 'AP' && r.regime === regime).map((r) => (r.cpuUsPerState * 1e-6 * 10080) / FLIGHT_DAYS); ap60[regime] = v.length ? med(v) : null; }
   const old60 = {};
-  for (const arm of Object.keys(RETIME_ARMS)) for (const regime of regimes) { const v = screen60.filter((r) => r.arm === arm && r.regime === regime).map((r) => (r.cpuUsPerState * 1e-6 * 10080) / FLIGHT_DAYS); (old60[arm] ??= {})[regime] = v.length ? med(v) : null; }
+  for (const arm of COMPARE_ARMS) for (const regime of regimes) { const v = screen60.filter((r) => r.arm === arm && r.regime === regime).map((r) => (r.cpuUsPerState * 1e-6 * 10080) / FLIGHT_DAYS); (old60[arm] ??= {})[regime] = v.length ? med(v) : null; }
   const stat = (ap, other) => med(regimes.map((g) => ap(g) / other(g)));
   const multiples = {};
-  for (const arm of Object.keys(RETIME_ARMS)) {
+  for (const arm of COMPARE_ARMS) {
     multiples[arm] = {
-      flight300: { old: stat((g) => reg[g].AP.flightCpuSecondsPerObjectDay, (g) => reg[g][arm].flightCpuSecondsPerObjectDay), new: stat((g) => reg[g].AP.flightCpuSecondsPerObjectDay, (g) => byRegime.step300[g][arm].flightCpuSecondsPerObjectDay) },
-      flight60: { old: stat((g) => ap60[g], (g) => old60[arm][g]), new: stat((g) => ap60[g], (g) => byRegime.step60[g][arm].flightCpuSecondsPerObjectDay) },
-      fit: { old: stat((g) => reg[g].AP.fitCpuSecondsPerObjectDay, (g) => reg[g][arm].fitCpuSecondsPerObjectDay), new: stat((g) => reg[g].AP.fitCpuSecondsPerObjectDay, (g) => byRegime.step300[g][arm].fitCpuSecondsPerObjectDay) },
+      flight300: { old: stat((g) => reg[g].AP.flightCpuSecondsPerObjectDay, (g) => reg[g][arm].flightCpuSecondsPerObjectDay), new: stat((g) => byRegime.step300[g].AP.flightCpuSecondsPerObjectDay, (g) => byRegime.step300[g][arm].flightCpuSecondsPerObjectDay) },
+      flight60: { old: stat((g) => ap60[g], (g) => old60[arm][g]), new: stat((g) => byRegime.step60[g].AP.flightCpuSecondsPerObjectDay, (g) => byRegime.step60[g][arm].flightCpuSecondsPerObjectDay) },
+      fit: { old: stat((g) => reg[g].AP.fitCpuSecondsPerObjectDay, (g) => reg[g][arm].fitCpuSecondsPerObjectDay), new: stat((g) => byRegime.step300[g].AP.fitCpuSecondsPerObjectDay, (g) => byRegime.step300[g][arm].fitCpuSecondsPerObjectDay) },
     };
   }
-  const old = Object.fromEntries(regimes.map((g) => [g, Object.fromEntries(Object.keys(RETIME_ARMS).concat('AP').map((a) => [a, { flightCpuSecondsPerObjectDay: reg[g][a].flightCpuSecondsPerObjectDay, fitCpuSecondsPerObjectDay: reg[g][a].fitCpuSecondsPerObjectDay, n: reg[g][a].n }]))]));
+  const old = Object.fromEntries(regimes.map((g) => [g, Object.fromEntries(Object.keys(RETIME_ARMS).map((a) => [a, { flightCpuSecondsPerObjectDay: reg[g][a].flightCpuSecondsPerObjectDay, fitCpuSecondsPerObjectDay: reg[g][a].fitCpuSecondsPerObjectDay, n: reg[g][a].n }]))]));
   // Amendment (all-window medians): per arm, the median of the per-window CPU seconds per object-day over every window the arm completed, as the registered table's arms[...].cpuSecondsPerObjectDay.median is computed
   const pooled = (phase, step, arm) => { const v = rows.filter((r) => r.phase === phase && r.step === step && r.arm === arm).map((r) => r.cpuSecondsPerObjectDay); return { median: v.length ? med(v) : null, windows: v.length }; };
   const armsRetimed = Object.fromEntries(Object.keys(RETIME_ARMS).map((arm) => { const f3 = pooled('flight', 300, arm), f6 = pooled('flight', 60, arm), ft = pooled('fit', 300, arm); return [arm, { step300: { flightCpuSecondsPerObjectDay: f3.median, windows: f3.windows }, step60: { flightCpuSecondsPerObjectDay: f6.median, windows: f6.windows }, fitCpuSecondsPerObjectDay: ft.median, fitWindows: ft.windows }]; }));
-  const table = { reading: 'AP keeps its registered rows (300 s) and its 60 s flights from the screening-scale study. SGP4, XP whiteroom (sdn-ap 0.6.3) and XP Space Force are re-timed in calls of at least 1.2 s of CPU, five measurements per window; fits are timed once (their input is the 300 s arc, whatever the output step). Statistic: per regime AP\'s median over the arm\'s, the median over the eight regimes (the page\'s rule). armsRetimed: per arm, the median over every window the arm completed of the per-window CPU seconds per object-day (the rule of the registered table\'s arms[...].cpuSecondsPerObjectDay.median), flight at 300 s and at 60 s, and fit; windows gives the count.', armsRetimed, byRegimeRetimed: byRegime, byRegimeRegistered: old, multiples };
-  const f1 = (v) => (v === null || v === undefined ? '-' : v >= 10 ? Math.round(v) : v.toFixed(1));
-  const L = ['# Long timing of SGP4 and XP flights and fits (BENCHMARK.md amendment 2026-11-06)', '', 'Each timed call holds at least 1.2 s of CPU (the same flight or fit repeated inside the call), five measurements per window; AP keeps its rows. Rows: `rows.jsonl`. Load through the run: ' + `${Math.min(...rows.map((r) => r.loadMin))} to ${Math.max(...rows.map((r) => r.loadMax))}` + '.', '', '## AP over the arm, the page\'s statistic (median over eight regimes of AP\'s regime median over the arm\'s)', '', '| Arm | Phase and step | Registered (single call) | Long timing | Spread across the five measurements, median |', '|---|---|---|---|---|'];
-  for (const arm of Object.keys(RETIME_ARMS)) for (const [k, label, sp] of [['flight300', 'flight, 300 s', 'flight'], ['flight60', 'flight, 60 s', 'flight'], ['fit', 'fit', 'fit']]) {
+  const table = { reading: 'SGP4, XP whiteroom (sdn-ap 0.6.5), XP Space Force, and AP (sdn-ap 0.6.5) are re-timed in calls of at least 1.2 s of CPU, five measurements per window; fits are timed once (their input is the 300 s arc, whatever the output step). Statistic: per regime AP\'s median over the arm\'s, the median over the eight regimes (the page\'s rule). armsRetimed: per arm, the median over every window the arm completed of the per-window CPU seconds per object-day (the rule of the registered table\'s arms[...].cpuSecondsPerObjectDay.median), flight at 300 s and at 60 s, and fit; windows gives the count.', armsRetimed, byRegimeRetimed: byRegime, byRegimeRegistered: old, multiples };
+  const f1 = (v) => (v === null || v === undefined ? '-' : v >= 10 ? Math.round(v) : v >= 1 ? v.toFixed(1) : v.toFixed(2));
+  const L = ['# Long timing of SGP4, XP and AP flights and fits (BENCHMARK.md amendments 2026-11-06 and 2026-11-09)', '', 'Each timed call holds at least 1.2 s of CPU (the same flight or fit repeated inside the call), five measurements per window, across SGP4, XP whiteroom (`sdn-ap 0.6.5`), XP Space Force (`sgp4-xp 0.2.2`), and AP (`sdn-ap 0.6.5`). Rows: `rows.jsonl`. Load through the run: ' + `${Math.min(...rows.map((r) => r.loadMin))} to ${Math.max(...rows.map((r) => r.loadMax))}` + '.', '', '## AP over the arm, the page\'s statistic (median over eight regimes of AP\'s regime median over the arm\'s)', '', '| Arm | Phase and step | Registered (single call) | Long timing | Spread across the five measurements, median |', '|---|---|---|---|---|'];
+  for (const arm of COMPARE_ARMS) for (const [k, label, sp] of [['flight300', 'flight, 300 s', 'flight'], ['flight60', 'flight, 60 s', 'flight'], ['fit', 'fit', 'fit']]) {
     const step = k === 'flight60' ? 60 : 300;
     const spreads = rows.filter((r) => r.arm === arm && r.phase === sp && r.step === step).map((r) => r.spreadPercent);
     L.push(`| ${arm} | ${label} | ${f1(multiples[arm][k].old)}x | ${f1(multiples[arm][k].new)}x | ${spreads.length ? med(spreads).toFixed(1) : '-'} % |`);
   }
-  L.push('', 'Registered at 60 s means the single-call flights of the screening-scale study (loaded). The fit is not step-dependent.', '');
+  L.push('', 'Registered at 60 s means the single-call flights of the screening-scale study (`sdn-ap 0.6.5`). Values below 1.00x mean AP (`sdn-ap 0.6.5`) is faster than the comparator arm. The fit is not step-dependent.', '');
   return { 'table.json': JSON.stringify(table, null, 1) + '\n', 'README.md': L.join('\n') };
 }
 function retimeCheck() {
@@ -653,8 +656,9 @@ function retimeCheck() {
   const fails = [];
   for (const [n, c] of Object.entries(files)) { const f = path.join(RETIME_OUT, n); if (!fs.existsSync(f) || fs.readFileSync(f, 'utf8') !== c) fails.push(`${n} does not reproduce`); }
   const t = JSON.parse(files['table.json']);
-  for (const arm of Object.keys(RETIME_ARMS)) for (const k of ['flight300', 'flight60', 'fit']) if (!Number.isFinite(t.multiples[arm][k].new) || !Number.isFinite(t.multiples[arm][k].old)) fails.push(`${arm} ${k} multiple missing`);
-  console.log(fails.length ? `FAIL\n${fails.join('\n')}` : `PASS: ${Object.keys(RETIME_ARMS).map((a) => `${a} flight ${t.multiples[a].flight300.old.toFixed(1)} -> ${t.multiples[a].flight300.new.toFixed(1)}`).join('; ')}`);
+  for (const arm of COMPARE_ARMS) for (const k of ['flight300', 'flight60', 'fit']) if (!Number.isFinite(t.multiples[arm][k].new) || !Number.isFinite(t.multiples[arm][k].old)) fails.push(`${arm} ${k} multiple missing`);
+  for (const arm of Object.keys(RETIME_ARMS)) if (!Number.isFinite(t.armsRetimed[arm]?.step300?.flightCpuSecondsPerObjectDay) || !Number.isFinite(t.armsRetimed[arm]?.step60?.flightCpuSecondsPerObjectDay)) fails.push(`${arm} armsRetimed missing`);
+  console.log(fails.length ? `FAIL\n${fails.join('\n')}` : `PASS: ${COMPARE_ARMS.map((a) => `${a} flight ${t.multiples[a].flight300.old.toFixed(2)} -> ${t.multiples[a].flight300.new.toFixed(2)}`).join('; ')}`);
   process.exit(fails.length ? 1 : 0);
 }
 if (PHASE === 'collect') collect();
