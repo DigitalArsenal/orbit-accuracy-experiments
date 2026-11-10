@@ -122,7 +122,11 @@ export async function openArms({ apWasm, apcMethod = null }) {
       const ocm = await fitAp('fit', S.oemBytes({ frame: 'GCRF', object, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }), pcf, spw);
       const info = APL.readOcm(ocm);
       const states = await flyAp(ocm, sc.epochs, frame);
-      const fit = { b: info.bterm, s: info.agom, sigmaLnB: info.sigmaLnB, iterations: info.iterations, converged: info.o.ORBIT_DETERMINATION?.FIT_STATISTICS?.CONVERGED ?? null };
+      // held: the hold rule's outcome as the record states it in OD COMMENT (sdn-ap 0.6.8 candidate (e) and later, SPEC 12.1: "prior-limited:
+      // BTERM held at its prior ..."); a build without the rule states nothing, read as not held
+      const odComment = [].concat(info.o.ORBIT_DETERMINATION?.COMMENT ?? []).join(' ');
+      const fit = { b: info.bterm, s: info.agom, sigmaLnB: info.sigmaLnB, iterations: info.iterations, converged: info.o.ORBIT_DETERMINATION?.FIT_STATISTICS?.CONVERGED ?? null,
+        held: { drag: /BTERM held at its prior/.test(odComment), srp: /AGOM held at its prior/.test(odComment) } };
       return { ok: true, rms: info.fitRmsKm, fit, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), states, s: (performance.now() - t0) / 1000 };
     },
     /** AP fitted to given arc lines (GCRF) and flown on the given epochs: { rms (km), states }. */
@@ -185,7 +189,7 @@ export async function openArms({ apWasm, apcMethod = null }) {
     async apc({ object, traj, pcf, spw, sc }) {
       const t0 = performance.now();
       const ocm = await fitAp(apcMethod, S.oemBytes({ frame: 'GCRF', object, lines: traj, useableStart: traj[0].epoch, useableStop: traj.at(-1).epoch }), pcf, spw);
-      const states = await flyAp(ocm, sc.epochs);
+      const states = await flyAp(ocm, sc.epochs, 'GCRF');
       return { ok: true, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), states, s: (performance.now() - t0) / 1000 };
     },
     /** One FFM arm: fitted to the arc, flown on the scored epochs; with cacheDir, cached (json: the product and the scored states) so a later AP

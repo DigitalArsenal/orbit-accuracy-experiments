@@ -5,7 +5,7 @@
 //        [--keys-file <file of window keys>] [--half-tolerance-every 12] [--hindcast-every 3] [--floor-every 8] [--period 2026-03..05]
 //   --period 2026-03..05: the second pass, the windows touching March to May 2026 the first pass leaves out, rows flagged `period`, to
 //   rows-truth-spring-<k>of<n>.jsonl in the same store; a window reaching past 2026-11-10 flies in neither pass
-//   node experiments/headline-loop/refly.mjs --ap-only --ap-wasm <file> --base-rows <store>/<base sha12> [--shard k/n] [--groups GD,IG] [--only-ap]
+//   node experiments/headline-loop/refly.mjs --ap-only --ap-wasm <file> --base-rows <store>/<base sha12> [--shard k/n] [--groups GD,IG] [--only-ap] [--nice n]
 //        another AP build on the base run's windows: AP arms only, every numerical arm from the base rows and the FFM cache (runApOnly);
 //        --only-ap leaves out APwide, APobs and APfloor; AP's fitted B, S, iterations and convergence are recorded
 //   node experiments/headline-loop/refly.mjs --check        made-up inputs: window rules, cache key, statistics helpers (no module, no truth)
@@ -151,6 +151,8 @@ async function run() {
  *  (never fitted again: a missing cache entry is an error in that row). D against FFMr and against the hindcast FFM is not formed (their
  *  states are not cached). Rows go to <store>/<this build's sha12>/, the base and its period flags carried. */
 async function runApOnly() {
+  // --nice n: this process at nice n or above (a candidate behind the baseline and the release builds); only ever raised, which needs no privilege
+  if (args.nice && os.getPriority() < Number(args.nice)) os.setPriority(Number(args.nice));
   usePackages();
   const W = await import('./lib/windows.mjs');
   const A = await import('./lib/arms.mjs');
