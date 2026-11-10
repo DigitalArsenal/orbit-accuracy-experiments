@@ -276,7 +276,8 @@ function truthFor(norad, t0) {
   const gaps = []; for (let k = 1; k < Math.min(series.length, 400); k += 1) gaps.push(series[k].ms - series[k - 1].ms);
   gaps.sort((x, y) => x - y);
   const native = gaps.length ? gaps[gaps.length >> 1] : STEP;
-  const perDay = DAY / Math.max(STEP, native);
+  // Amendment A1 (PLAN.md): a full day holds what the thinning yields, the truth's step times the smallest whole number reaching the grid step
+  const perDay = DAY / (native * Math.max(1, Math.ceil((STEP - 1000) / native)));
   const truth = []; let prev = -Infinity;
   for (const s of series) if (s.ms - prev >= STEP - 1000) { truth.push(s); prev = s.ms; }
   return { truth, perDay };
