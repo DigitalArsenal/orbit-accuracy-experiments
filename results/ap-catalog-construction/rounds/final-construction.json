@@ -1,0 +1,71 @@
+{
+ "issue": "DigitalArsenal/spacedatanetwork-stack#312",
+ "status": "exploratory: the development result of 20 rounds on periods A (set epochs 2026-09-05 to 10-28) and B (2026-06-01 to 08-10); registered as experiments/ap-catalog-construction (its config.json is the authority; the hold list is not used there, stack issue 314)",
+ "base": "experiments/ap-from-public-sets (PLAN.md with amendment A1, config.json, run.mjs, lib.mjs) at orbit-accuracy-experiments 05ce6610: same module, weather table, truth families, selection of sets, scoring and statistics; only the arms and the served rule change",
+ "build": { "module": "propagator/sdn-ap", "version": "0.6.5", "wasmSha256": "f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7", "weatherForecasterSha256": "68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73" },
+ "reference_code": "experiments/ap-catalog-construction (the development runner was not committed; its kept arms are ported there)",
+
+ "fitDefaults": {
+  "what": "every AP fit below, unless the arm says otherwise: buildApFitPcfBytes as registered",
+  "atmosphere": "NRLMSISE00 on the weather table as known on the day of t0 (the fit's own day for source arms: the day of t0)",
+  "tesseralDegree": 31, "tesseralOffAboveEccentricity": 0.048, "zonalDegree": 20, "weatherHorizonDays": 30,
+  "priors": "module defaults (BTERM log-normal median 0.01 m2/kg, sigma ln 10; AGOM weak Gaussian about 0)",
+  "ephemeris": "one GCRF $OEM block whose useable interval is the whole block (the fit takes the whole arc); states sorted, no instant twice",
+  "flights": "public sets flown by the module's own SGP4 (propagateSingleTleSgp4Gcrf); AP records flown by the module's propagate in GCRF",
+  "refusedFit": "the arm does not exist for that set; the module instance is replaced"
+ },
+
+ "arms": {
+  "P13": { "kind": "ILRS CPF prediction", "issueRule": "newest CPF file of the satellite whose H1 production date and hour is at or before t0 (and whose archive retrieval time, when the file name carries one, is at or before t0), name date within 3 days before t0; a file reaching into a reserved span is not read", "reader": "data-source/cpf-source emit, then analysis/reference-states (ITRF to GCRF; IERS finals2000A.all of 2026-10-09)", "states": "the file's states from t0 - 1 d to t0 + 3 d, thinned to >= 300 s", "minimumStates": 100, "recordEpoch": "last state (placement 2)" },
+  "U2": { "kind": "ESA ultra-rapid GNSS orbit (ESA0OPSULT, GPS and GLONASS)", "issueRule": "newest file whose start is at least 26 h before t0 (and at most 32 h)", "reader": "files/orbit-products read_container, data-source/eop-parser (finals2000A.all of 2026-10-09), analysis/reference-states; identities from the IGS satellite metadata SINEX of 2026-10-09", "states": "all 48 h of the newest file (24 h solved, 24 h predicted) plus the solved first 24 h of the files started 1 and 2 days earlier; 300 s", "minimumStates": 100, "recordEpoch": "last state" },
+  "R3": { "kind": "GFZ rapid multi-GNSS orbit (GFZ0MGXRAP)", "issueRule": "daily files whose CDDIS Last-Modified time is at or before t0; the newest such file must end at most 3 days before t0; the newest 3 such days", "reader": "as U2 (finals2000A.all of 2026-11-04)", "states": "the 3 days at 300 s", "minimumStates": 200, "recordEpoch": "last state" },
+  "B3": { "registered": true, "states": "the current set flown from t0 to t0 + 3 d at 300 s", "recordEpoch": "first state" },
+  "D5": { "registered": true, "states": "registered history (each set of the 8 days before t0 flown from its epoch to the next set's epoch, t0 - 5 d to t0, 300 s; >= 3 sets and >= 80 % of the grid) plus B3's states", "recordEpoch": "first state" },
+  "H8F3": { "states": "as D5 with an 8-day history (look-back 11 days) and a 3-day forecast", "recordEpoch": "first state" },
+  "H5F5": { "states": "as D5 with a 5-day forecast", "recordEpoch": "first state" },
+  "H5F7": { "states": "as D5 with a 7-day forecast", "recordEpoch": "first state" },
+  "interleavedHistory": {
+   "what": "the history of K12, K10, KG8c, KH8, KM5: every set with epoch in [t0 - (H + 3) d, t0], the current one included, each flown over [its epoch - back, its epoch + fwd] intersected with [t0 - H d, t0), on a grid of step s offset by rank_j * s / n (j-th of the n sets), so no instant is flown twice and no positions are averaged; exists with >= 3 sets and >= 80 % of an H-day grid at step s",
+   "maneuverCut": "when cutKm is set: a jump is where the earlier set's SGP4 position at the later set's epoch is more than cutKm from the later set's position there; only the sets from the last jump on are used"
+  },
+  "K12": { "history": { "H": 12, "back": 8, "fwd": 0, "stepSeconds": 3600 }, "forecast": "current set, t0 to t0 + 5 d, 300 s", "recordEpoch": "first state" },
+  "K10": { "history": { "H": 8, "back": 6, "fwd": 0, "stepSeconds": 3600 }, "forecast": "current set, t0 to t0 + 5 d, 300 s", "recordEpoch": "first state" },
+  "KG8c": { "history": { "H": 8, "back": 6, "fwd": 0, "stepSeconds": 3600, "cutKm": 10 }, "forecast": "current set, t0 to t0 + 5 d, 300 s", "recordEpoch": "first state" },
+  "KH8": { "history": { "H": 8, "back": 1, "fwd": 1, "stepSeconds": 1800 }, "forecast": "current set, t0 to t0 + 3 d, 300 s", "recordEpoch": "first state" },
+  "KM5": { "history": { "H": 5, "back": 0.5, "fwd": 0.5, "stepSeconds": 900 }, "forecast": "current set, t0 to t0 + 3 d, 300 s", "recordEpoch": "first state" }
+ },
+
+ "servedRule": {
+  "what": "by the orbit class of the current set (classifyOrbitRegime of the plan); the first arm that exists is served, else the set itself on SGP4; chosen without truth",
+  "LOW_LEO": ["P13", "U2", "R3", "D5", "B3"],
+  "MID_LEO": ["P13", "U2", "R3", "KM5", "D5", "B3"],
+  "HIGH_LEO": ["P13", "U2", "R3", "KH8", "H8F3", "D5", "B3"],
+  "MEO": ["P13", "U2", "R3", "K12", "K10", "D5", "B3"],
+  "GEO": ["P13", "U2", "R3", "KG8c", "B3"],
+  "HEO": ["P13", "U2", "R3", "H5F7", "H5F5", "D5", "B3"]
+ },
+
+ "evidence": {
+  "kept": {
+   "round1_U2": "A only (no B set has both a file and truth): GPS/GLONASS 72 h 1.364 -> 0.015 km",
+   "round2_P13": "A and B: low satellites with a file 0.47-0.65 -> 0.018-0.031 km; navigation satellites with a file (A) 1.17 -> 0.0105 km",
+   "round3_R3": "A only: MEO 1.265 -> 0.034, GEO 2.185 -> 0.054 km",
+   "round5_H5F5_GEO_HEO": "paired / D5 pooled GEO 0.917 (0.869-0.999); later replaced for GEO by KG8c",
+   "round6_H8F3_HIGH_LEO": "pooled 0.947 (0.928-0.963); later behind KH8",
+   "round8_K10_MEO": "pooled 0.918 (0.895-0.945)",
+   "round9_KG8_GEO": "pooled 0.928 (0.859-0.983)",
+   "round10_KH8_HIGH_LEO": "pooled 0.962 (0.950-0.979)",
+   "round11_KM5_MID_LEO": "pooled 0.945 (0.919-0.978)",
+   "round12_cut_GEO": "changed sets A 0.594 (0.303-0.683), B 0.889 (0.215-0.924)",
+   "round14_H5F7_HEO": "pooled 0.934 (0.844-0.979), two satellites",
+   "round16_K12_MEO": "pooled 0.988 (0.986-0.989)"
+  },
+  "dropped": ["round4 radiation-pressure prior (1.000)", "round7 MID_LEO 2-day forecast (pooled 0.938, 0.889-1.029)", "round13 record epoch placement (1.000)", "round15 back-check selection (1.037 on A)", "round17 GEO 3- or 7-day forecast (1.15, 1.19)", "round18 MID_LEO cut at 1.5 km (class median worse on B)", "round19 HIGH_LEO 12-day history (pooled 0.990, 0.955-1.000)", "MEO maneuver cut at 8 km (1.000)", "tesseral terms kept on to e 0.2 (no effect on public sets)"]
+ },
+
+ "toRegister": [
+  "The operator-grade arms (U2, R3, P13) can only be tested in the reserved period (sets 2026-03-01 to 05-31) if the archive holds those products then; today it does not (ultra-rapid from 08-01, rapid 10-11 to 10-22, CPF for 4 satellites from 2025-10 and Galileo for one week): see needs-collection.md. Without a back-fill, register the public-set arms and the served rule, and the operator-grade arms as conditional (served only where the product exists), and say which classes they can reach.",
+  "The issue rules of the operator-grade arms read file metadata (CPF H1 production time, CDDIS Last-Modified, ultra-rapid start + 26 h); register them as written here.",
+  "EOP: the input conversions used IERS files of 2026-10-09 (ultra-rapid, CPF) and 2026-11-04 (rapid), i.e. EOP as known after t0; the effect is centimetres, below anything measured, but a registration should name the file or use the one as known at t0."
+ ]
+}
