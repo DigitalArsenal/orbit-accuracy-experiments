@@ -30,13 +30,15 @@ Error: RMS of 3D position over the 72 hours after the set's epoch, median km. Ra
 
 ## By orbit class, against the earlier construction, and the catalog
 
-| Class | Served / earlier | Public / earlier | Catalog serves | Public sets only, catalog would serve |
+The candidate is taken on the public record; nothing is served from part 1 alone (PLAN.md). The same rule on the served record, with orbit products, is reported and decides nothing.
+
+| Class | Public / earlier | Served / earlier | Candidate (public record) | Served record, reported |
 | --- | --- | --- | --- | --- |
 | LOW_LEO | FEW | FEW | set | set |
-| MID_LEO | 0.98 (0.18 to 1.01) TIE | 0.98 (0.91 to 1.01) TIE | earlier construction | earlier construction |
-| HIGH_LEO | 0.89 (0.13 to 0.93) BEATS | 0.89 (0.86 to 0.93) BEATS | earlier construction | earlier construction |
-| MEO | 0.10 (0.07 to 0.20) BEATS | 0.91 (0.88 to 0.97) BEATS | new construction | earlier construction |
-| GEO | 0.73 (0.50 to 0.96) BEATS | 0.84 (0.62 to 1.01) TIE | set | set |
+| MID_LEO | 0.98 (0.91 to 1.01) TIE | 0.98 (0.18 to 1.01) TIE | earlier construction | earlier construction |
+| HIGH_LEO | 0.89 (0.86 to 0.93) BEATS | 0.89 (0.13 to 0.93) BEATS | earlier construction | earlier construction |
+| MEO | 0.91 (0.88 to 0.97) BEATS | 0.10 (0.07 to 0.20) BEATS | earlier construction | new construction |
+| GEO | 0.84 (0.62 to 1.01) TIE | 0.73 (0.50 to 0.96) BEATS | set | set |
 | HEO | FEW | FEW | set | set |
 
 ## Served as

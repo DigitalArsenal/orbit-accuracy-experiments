@@ -3,6 +3,7 @@
 // the store. Parts 1 and 2 write results/ap-catalog-construction/part<N>/; part H writes into the store only (published on the owner's
 // word, stack issue 288); the dry runs write beside their rows under runs/.
 //   node experiments/ap-catalog-construction/table.mjs --part 1|2|H|dev-A|dev-B|dev-H [--check]
+//   run.mjs --check also runs it on made-up rows: --store <rows folder> --out <table folder> [--part1 <part 1 table.json>]
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,21 +15,23 @@ const REPO = path.resolve(HERE, '../..');
 const CONFIG = JSON.parse(fs.readFileSync(path.join(HERE, 'config.json'), 'utf8'));
 const STATS = CONFIG.statistics, TH = STATS.tailThresholds;
 
-/** The catalog's rule for a class (PLAN.md): the new construction where its served record BEATS the set, its interval against the
- *  earlier construction lies wholly below 1 and it meets the three tail thresholds; else the earlier construction where that BEATS the
- *  set and meets them; else the set on SGP4. An interval that spans 1, or does not exist, keeps the earlier construction. */
-export function catalogDecision(servedVsSet, servedVsEarlier, servedTail, earlierVsSet, earlierTail, th = TH) {
-  if (servedVsSet.verdict === 'BEATS' && servedVsEarlier.hi != null && servedVsEarlier.hi < 1 && meetsTail(servedTail, th)) return 'new construction';
+/** Part 1's candidate for a class (PLAN.md), taken on the public record: the new construction where that record BEATS the set, its
+ *  interval against the earlier construction lies wholly below 1 and it meets the three tail thresholds; else the earlier construction
+ *  where that BEATS the set and meets them; else the set on SGP4. An interval that spans 1, or does not exist, is not the new
+ *  construction. The same function on the served record (with orbit products) is reported and decides nothing. */
+export function catalogDecision(recordVsSet, recordVsEarlier, recordTail, earlierVsSet, earlierTail, th = TH) {
+  if (recordVsSet.verdict === 'BEATS' && recordVsEarlier.hi != null && recordVsEarlier.hi < 1 && meetsTail(recordTail, th)) return 'new construction';
   if (earlierVsSet.verdict === 'BEATS' && meetsTail(earlierTail, th)) return 'earlier construction';
   return 'set';
 }
-/** Part 2 for a class that part 1 gave to the new construction: holds when its served record against the earlier construction has an
- *  interval whose upper end is below the registered margin, on at least the minimum satellites and sets; fails when it does not; a
- *  class with fewer is untested. Other classes: not applicable. */
-export function part2Holds(part1Decision, servedVsEarlier, stats = STATS) {
+/** Part 2 for a class that part 1 named for the new construction, on the public record: holds when its interval against the earlier
+ *  construction ends below the registered margin, its interval against the set ends below the smallest effect worth serving, and it
+ *  meets the three tail thresholds, on at least the minimum satellites and sets; fails otherwise; a class with fewer is untested.
+ *  Other classes: not applicable. */
+export function part2Holds(part1Decision, publicVsEarlier, publicVsSet, publicTail, stats = STATS, th = TH) {
   if (part1Decision !== 'new construction') return 'not applicable';
-  if (servedVsEarlier.satellites < stats.minimumSatellites || servedVsEarlier.sets < stats.minimumSets || servedVsEarlier.hi == null) return 'untested';
-  return servedVsEarlier.hi < stats.part2Margin ? 'holds' : 'fails';
+  if (publicVsEarlier.satellites < stats.minimumSatellites || publicVsEarlier.sets < stats.minimumSets || publicVsEarlier.hi == null) return 'untested';
+  return publicVsEarlier.hi < stats.part2Margin && publicVsSet.hi != null && publicVsSet.hi < stats.smallestEffect && meetsTail(publicTail, th) ? 'holds' : 'fails';
 }
 
 const km = (x) => (x == null ? null : Number(x.toFixed(4)));
@@ -40,7 +43,8 @@ const val = (x, d = null) => (x && !x.e ? (d == null ? x.p : x.d?.[d]) ?? null :
 const pairsOf = (list, N, D, d = null) => list.flatMap((r) => { const a = val(N(r), d), b = val(D(r), d); return a > 0 && b > 0 ? [{ sat: r.norad, x: Math.log(a / b) }] : []; });
 const tailRows = (list, R) => list.flatMap((r) => { const a = val(fig(r, 'A')), b = val(R(r)); return a > 0 && b > 0 ? [{ sat: r.norad, a, b }] : []; });
 const count = (list, key) => list.reduce((m, r) => ({ ...m, [r[key]]: (m[r[key]] ?? 0) + 1 }), {});
-const shrink = (s) => ({ ...s, ratio: num(s.ratio), lo: num(s.lo), hi: num(s.hi), coverage: num(s.coverage), shareCloser: num(s.shareCloser), bootstrap: s.bootstrap && { ratio: num(s.bootstrap.ratio), lo: num(s.bootstrap.lo), hi: num(s.bootstrap.hi) } });
+const few = (s) => s.verdict === 'FEW'; // under the minimum: no ratio and no interval (the bootstrap beside it decides nothing)
+const shrink = (s) => ({ ...s, ratio: few(s) ? null : num(s.ratio), lo: few(s) ? null : num(s.lo), hi: few(s) ? null : num(s.hi), coverage: num(s.coverage), shareCloser: num(s.shareCloser), bootstrap: s.bootstrap && { ratio: num(s.bootstrap.ratio), lo: num(s.bootstrap.lo), hi: num(s.bootstrap.hi) } });
 const shrinkTail = (t) => Object.fromEntries(Object.entries(t).map(([k, v]) => [k, Array.isArray(v) ? v.map(num) : num(v)]));
 
 const REC = { served: (r) => fig(r, r.served), public: (r) => fig(r, r.public), earlier: (r) => fig(r, r.earlier), earlier0: (r) => fig(r, r.earlier0), set: (r) => fig(r, 'A') };
@@ -56,9 +60,9 @@ function block(list, part1Decision) {
   out.publicVsEarlier = shrink(satelliteStatistic(pairsOf(list, REC.public, REC.earlier), STATS));
   out.days = Array.from({ length: CONFIG.scoring.days }, (_, d) => ({ day: d + 1, servedVsSet: num(satelliteStatistic(pairsOf(list, REC.served, REC.set, d), STATS).ratio), servedVsEarlier: num(satelliteStatistic(pairsOf(list, REC.served, REC.earlier, d), STATS).ratio) }));
   const R = out.records;
-  out.catalog = catalogDecision(R.served.vsSet, out.servedVsEarlier, R.served.tail, R.earlier.vsSet, R.earlier.tail);
-  out.catalogPublicOnly = catalogDecision(R.public.vsSet, out.publicVsEarlier, R.public.tail, R.earlier.vsSet, R.earlier.tail);
-  if (part1Decision !== undefined) out.part2 = { part1Decision, result: part2Holds(part1Decision, out.servedVsEarlier) };
+  out.catalog = catalogDecision(R.public.vsSet, out.publicVsEarlier, R.public.tail, R.earlier.vsSet, R.earlier.tail);
+  out.servedWithOrbitProducts = catalogDecision(R.served.vsSet, out.servedVsEarlier, R.served.tail, R.earlier.vsSet, R.earlier.tail);
+  if (part1Decision !== undefined) out.part2 = { part1Decision, result: part2Holds(part1Decision, out.publicVsEarlier, R.public.vsSet, R.public.tail) };
   return out;
 }
 /** Part H: one row per satellite; verdicts on satellites alone (no set minimum: one set each). */
@@ -71,7 +75,7 @@ function blockH(list) {
     days: Array.from({ length: CONFIG.parts.H.days }, (_, d) => ({ day: d + 1, xpKm: km(median(list.map((r) => val(XPof(r), d)))), servedKm: km(median(list.map((r) => val(REC.served(r), d)))) })) };
 }
 
-const cell = (s) => (s?.verdict === 'FEW' && s.lo == null ? 'FEW' : s?.ratio == null ? 'no pairs' : `${s.ratio.toFixed(2)}${s.lo == null ? '' : ` (${s.lo.toFixed(2)} to ${s.hi.toFixed(2)})`} ${s.verdict}`);
+const cell = (s) => (s?.verdict === 'FEW' ? 'FEW' : s?.ratio == null ? 'no pairs' : `${s.ratio.toFixed(2)}${s.lo == null ? '' : ` (${s.lo.toFixed(2)} to ${s.hi.toFixed(2)})`} ${s.verdict}`);
 const bcell = (s) => (s?.bootstrap?.ratio == null ? '' : `${s.bootstrap.ratio.toFixed(2)}${s.bootstrap.lo == null ? '' : ` (${s.bootstrap.lo.toFixed(2)} to ${s.bootstrap.hi.toFixed(2)})`}`);
 const tailCell = (t) => (t?.T95 == null ? '' : `${t.T95.toFixed(2)} / ${t.Trms.toFixed(2)} / ${(100 * t.shareBeyondTwice).toFixed(1)} %`);
 function render(partId, t) {
@@ -93,8 +97,8 @@ function render(partId, t) {
   for (const c of CONFIG.classes) { const b = t.classes[c], R = b.records; L.push(`| ${c} | ${b.setKm ?? ''} | ${R.served.km ?? ''} | ${cell(R.served.vsSet)} | ${tailCell(R.served.tail)} | ${cell(R.public.vsSet)} | ${tailCell(R.public.tail)} | ${cell(R.earlier.vsSet)} | ${tailCell(R.earlier.tail)} | ${cell(R.earlier0.vsSet)} |`); }
   L.push('', '## Secondary: the bootstrap of ap-from-public-sets (pooled median of sets, satellites resampled; decides nothing)', '', '| Class | Served / set | Public / set | Earlier / set | Served / earlier |', '| --- | --- | --- | --- | --- |');
   for (const c of CONFIG.classes) { const b = t.classes[c], R = b.records; L.push(`| ${c} | ${bcell(R.served.vsSet)} | ${bcell(R.public.vsSet)} | ${bcell(R.earlier.vsSet)} | ${bcell(b.servedVsEarlier)} |`); }
-  L.push('', '## By orbit class, against the earlier construction, and the catalog', '', `| Class | Served / earlier | Public / earlier | Catalog serves | Public sets only, catalog would serve |${t.part === '2' ? ' Part 2 |' : ''}`, `| --- | --- | --- | --- | --- |${t.part === '2' ? ' --- |' : ''}`);
-  for (const c of CONFIG.classes) { const b = t.classes[c]; L.push(`| ${c} | ${cell(b.servedVsEarlier)} | ${cell(b.publicVsEarlier)} | ${b.catalog} | ${b.catalogPublicOnly} |${b.part2 ? ` ${b.part2.result} (part 1: ${b.part2.part1Decision}) |` : ''}`); }
+  L.push('', '## By orbit class, against the earlier construction, and the catalog', '', 'The candidate is taken on the public record; nothing is served from part 1 alone (PLAN.md). The same rule on the served record, with orbit products, is reported and decides nothing.', '', `| Class | Public / earlier | Served / earlier | Candidate (public record) | Served record, reported |${t.part === '2' ? ' Part 2 (public record) |' : ''}`, `| --- | --- | --- | --- | --- |${t.part === '2' ? ' --- |' : ''}`);
+  for (const c of CONFIG.classes) { const b = t.classes[c]; L.push(`| ${c} | ${cell(b.publicVsEarlier)} | ${cell(b.servedVsEarlier)} | ${b.catalog} | ${b.servedWithOrbitProducts} |${b.part2 ? ` ${b.part2.result} (part 1: ${b.part2.part1Decision}) |` : ''}`); }
   L.push('', '## Served as', '', '| Class | Served | Public | Earlier (guarded) |', '| --- | --- | --- | --- |');
   const as = (m) => Object.entries(m).map(([k, n]) => `${k} ${n}`).join(', ');
   for (const c of CONFIG.classes) { const b = t.classes[c]; L.push(`| ${c} | ${as(b.servedAs)} | ${as(b.publicAs)} | ${as(b.earlierAs)} |`); }
@@ -112,8 +116,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const part = CONFIG.parts[partId];
   if (!part) throw new Error('usage: table.mjs --part 1|2|H|dev-A|dev-B|dev-H [--check]');
   const registered = ['1', '2', 'H'].includes(partId);
-  const store = registered ? path.join(CONFIG.store, `part${partId}`) : path.join(REPO, 'runs/ap-catalog-construction', partId);
-  const outDir = partId === '1' || partId === '2' ? path.join(REPO, 'results/ap-catalog-construction', `part${partId}`) : store;
+  const opt = (name) => (argv.includes(name) ? path.resolve(argv[argv.indexOf(name) + 1]) : null);
+  const store = opt('--store') ?? (registered ? path.join(CONFIG.store, `part${partId}`) : path.join(REPO, 'runs/ap-catalog-construction', partId));
+  const outDir = opt('--out') ?? (partId === '1' || partId === '2' ? path.join(REPO, 'results/ap-catalog-construction', `part${partId}`) : store);
+  const part1Table = opt('--part1') ?? path.join(REPO, 'results/ap-catalog-construction/part1/table.json');
   const files = fs.existsSync(store) ? fs.readdirSync(store).filter((f) => /^rows-s\d+of\d+\.jsonl$/.test(f)).sort() : [];
   if (!files.length) { console.log(`SKIPPED, not a pass: no rows in ${store}`); process.exit(1); }
   if (files.length !== Number(/of(\d+)/.exec(files[0])[1])) throw new Error(`${files.length} shard files in ${store}`);
@@ -127,7 +133,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     Object.assign(table, { capture: part.capture, captureUtc: rows[0]?.captureUtc ?? null });
     table.classes = Object.fromEntries(CONFIG.classes.map((c) => [c, blockH(good.filter((r) => r.cls === c))]));
   } else {
-    const p1 = partId === '2' ? JSON.parse(fs.readFileSync(path.join(REPO, 'results/ap-catalog-construction/part1/table.json'), 'utf8')) : null;
+    const p1 = partId === '2' ? JSON.parse(fs.readFileSync(part1Table, 'utf8')) : null;
     table.span = { from: part.from, to: part.to };
     table.classes = Object.fromEntries(CONFIG.classes.map((c) => [c, block(good.filter((r) => r.cls === c), p1 ? p1.classes[c].catalog : undefined)]));
     table.families = Object.fromEntries([...new Set(good.map((r) => r.family))].sort().map((f) => [f, block(good.filter((r) => r.family === f))]));

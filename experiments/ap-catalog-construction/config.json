@@ -137,7 +137,8 @@
     "secondary": "the bootstrap of ap-from-public-sets (pooled median of sets, satellites resampled), printed beside, deciding nothing",
     "bootstrapResamples": 2000, "seed": 20261110,
     "tailThresholds": { "T95": 1.0, "Trms": 1.0, "shareBeyondTwice": 0.01 },
-    "part2Margin": 1.05
+    "part2Margin": 1.05,
+    "smallestEffect": 0.95
   },
   "classes": ["LOW_LEO", "MID_LEO", "HIGH_LEO", "MEO", "GEO", "HEO"]
 }

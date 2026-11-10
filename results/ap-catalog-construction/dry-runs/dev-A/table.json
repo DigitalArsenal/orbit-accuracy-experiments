@@ -12,11 +12,11 @@
   "experiments/ap-catalog-construction/lib/engine.mjs": "ead1a48accc81a9ceccae5493d548ac3b6194993ca440d350a250c29643c1125",
   "experiments/ap-catalog-construction/lib/guards.mjs": "2ebfebf5ce24a306bf82e7883fb1038143158195c09709afe764911c54bbda57",
   "experiments/ap-catalog-construction/lib/inputs.mjs": "df25d3ce50ce2e33b6396d3f026de450e42706934e9dc74c3961d90329969e4d",
-  "experiments/ap-catalog-construction/lib/main.mjs": "fdf03e3bdbf12dd2a5b2653d3f653dd81589e5460c3e75709081654a879615d3",
+  "experiments/ap-catalog-construction/lib/main.mjs": "8ca8dc75f59394d0308e61f5878e3703e867369edc491ae0c1d33ec86aee687e",
   "experiments/ap-catalog-construction/lib/sets.mjs": "4f14adafa202acf381d1200f3bcfc277bf985f582276e6f41092b1d68cf1218e",
   "experiments/ap-catalog-construction/lib/stats.mjs": "418ef8e2e02c5f110059e9ae28b294c9ea6b86672227d87bcb7b88374be23a2b",
   "experiments/ap-catalog-construction/run.mjs": "b7b311ed723db935118c15ad1b43b71a778efcf56825c8b3bbefc8585c4d7f04",
-  "experiments/ap-catalog-construction/table.mjs": "568b495a7cbc09ceb544f34a2dba1d0fd1b6e39e647b0d2994a3e3b3adcde555",
+  "experiments/ap-catalog-construction/table.mjs": "e9f1f1ef35b4e0eefdb0de7af146b739b759fec824124b12c86ae2a19f4eff5b",
   "experiments/ap-five-day-accuracy/lib/crlb-covariance.mjs": "b3ce4604a5dad19bec7e0b43d8ac3aa147087b723c945d2da54360fae57d42be",
   "experiments/ap-five-day-accuracy/lib/external-and-optical-ap-engine.mjs": "68a8ba58d004382d3c10ed1eec1294738f061eac4dc6075d4c95b0a1e5caf9f2",
   "experiments/ap-five-day-accuracy/lib/gp-history-loader.mjs": "694044ba69b1f8b45ae9b495e2cb10ac6f61dc1807f98495a6c36e79f518ab58",
@@ -2895,7 +2895,7 @@
   "stack:repos/main-packages/spacedatastandards.org/node_modules/flatbuffers/js/flatbuffers.js": "6c1926a3619557a23511da2bebff056736407cccd446e0cfdb63a925b8f50de6",
   "stack:repos/main-packages/spacedatastandards.org/node_modules/flatbuffers/js/utils.js": "37b6f6e5c227bd75e6779ed687125a58f8c3dd15db10cd4ebc4a26651f0f5f9f"
  },
- "repositoryCommit": "80f3e1af5fac5591a24fdf8e6508fdfd12e4d0bc",
+ "repositoryCommit": "e376cd61a1e848a6a3dd89db5b3881df0e1f1cb6",
  "wasmSha256": "f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7",
  "counts": {
   "sets": 1650,
@@ -3038,7 +3038,7 @@
     }
    ],
    "catalog": "set",
-   "catalogPublicOnly": "set"
+   "servedWithOrbitProducts": "set"
   },
   "MID_LEO": {
    "rows": 70,
@@ -3291,7 +3291,7 @@
     }
    ],
    "catalog": "earlier construction",
-   "catalogPublicOnly": "earlier construction"
+   "servedWithOrbitProducts": "earlier construction"
   },
   "HIGH_LEO": {
    "rows": 65,
@@ -3543,7 +3543,7 @@
     }
    ],
    "catalog": "earlier construction",
-   "catalogPublicOnly": "earlier construction"
+   "servedWithOrbitProducts": "earlier construction"
   },
   "MEO": {
    "rows": 1383,
@@ -3801,8 +3801,8 @@
      "servedVsEarlier": 0.284
     }
    ],
-   "catalog": "new construction",
-   "catalogPublicOnly": "earlier construction"
+   "catalog": "earlier construction",
+   "servedWithOrbitProducts": "new construction"
   },
   "GEO": {
    "rows": 113,
@@ -4058,7 +4058,7 @@
     }
    ],
    "catalog": "set",
-   "catalogPublicOnly": "set"
+   "servedWithOrbitProducts": "set"
   },
   "HEO": {
    "rows": 19,
@@ -4085,7 +4085,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 18,
-      "ratio": 0.125,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4126,7 +4126,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 18,
-      "ratio": 0.793,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4167,7 +4167,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 18,
-      "ratio": 0.969,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4208,7 +4208,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 18,
-      "ratio": 0.964,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4249,7 +4249,7 @@
    "servedVsEarlier": {
     "satellites": 2,
     "sets": 18,
-    "ratio": 0.128,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -4264,7 +4264,7 @@
    "publicVsEarlier": {
     "satellites": 2,
     "sets": 18,
-    "ratio": 0.84,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -4314,7 +4314,7 @@
     }
    ],
    "catalog": "set",
-   "catalogPublicOnly": "set"
+   "servedWithOrbitProducts": "set"
   }
  },
  "families": {
@@ -4570,7 +4570,7 @@
     }
    ],
    "catalog": "earlier construction",
-   "catalogPublicOnly": "earlier construction"
+   "servedWithOrbitProducts": "earlier construction"
   },
   "COSMIC-2 (UCAR near-real-time orbits)": {
    "rows": 38,
@@ -4593,7 +4593,7 @@
      "vsSet": {
       "satellites": 5,
       "sets": 12,
-      "ratio": 0.777,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4634,7 +4634,7 @@
      "vsSet": {
       "satellites": 5,
       "sets": 12,
-      "ratio": 0.777,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4675,7 +4675,7 @@
      "vsSet": {
       "satellites": 5,
       "sets": 12,
-      "ratio": 0.726,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4716,7 +4716,7 @@
      "vsSet": {
       "satellites": 5,
       "sets": 12,
-      "ratio": 0.767,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4757,7 +4757,7 @@
    "servedVsEarlier": {
     "satellites": 5,
     "sets": 12,
-    "ratio": 0.985,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -4772,7 +4772,7 @@
    "publicVsEarlier": {
     "satellites": 5,
     "sets": 12,
-    "ratio": 0.985,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -4822,7 +4822,7 @@
     }
    ],
    "catalog": "set",
-   "catalogPublicOnly": "set"
+   "servedWithOrbitProducts": "set"
   },
   "LAGEOS and Etalon (ILRS combined orbits)": {
    "rows": 38,
@@ -4846,7 +4846,7 @@
      "vsSet": {
       "satellites": 4,
       "sets": 34,
-      "ratio": 0.747,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4887,7 +4887,7 @@
      "vsSet": {
       "satellites": 4,
       "sets": 34,
-      "ratio": 0.747,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4928,7 +4928,7 @@
      "vsSet": {
       "satellites": 4,
       "sets": 34,
-      "ratio": 1.011,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -4969,7 +4969,7 @@
      "vsSet": {
       "satellites": 4,
       "sets": 34,
-      "ratio": 1.011,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -5010,7 +5010,7 @@
    "servedVsEarlier": {
     "satellites": 4,
     "sets": 34,
-    "ratio": 0.756,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -5025,7 +5025,7 @@
    "publicVsEarlier": {
     "satellites": 4,
     "sets": 34,
-    "ratio": 0.756,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -5075,7 +5075,7 @@
     }
    ],
    "catalog": "set",
-   "catalogPublicOnly": "set"
+   "servedWithOrbitProducts": "set"
   },
   "Navigation satellites (ESA final orbits)": {
    "rows": 1477,
@@ -5337,8 +5337,8 @@
      "servedVsEarlier": 0.36
     }
    ],
-   "catalog": "new construction",
-   "catalogPublicOnly": "earlier construction"
+   "catalog": "earlier construction",
+   "servedWithOrbitProducts": "new construction"
   },
   "Sentinel-1 (Copernicus precise orbits)": {
    "rows": 20,
@@ -5360,7 +5360,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 17,
-      "ratio": 0.732,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -5401,7 +5401,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 17,
-      "ratio": 0.732,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -5442,7 +5442,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 17,
-      "ratio": 0.81,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -5483,7 +5483,7 @@
      "vsSet": {
       "satellites": 2,
       "sets": 17,
-      "ratio": 0.81,
+      "ratio": null,
       "lo": null,
       "hi": null,
       "coverage": null,
@@ -5524,7 +5524,7 @@
    "servedVsEarlier": {
     "satellites": 2,
     "sets": 17,
-    "ratio": 0.986,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -5539,7 +5539,7 @@
    "publicVsEarlier": {
     "satellites": 2,
     "sets": 17,
-    "ratio": 0.986,
+    "ratio": null,
     "lo": null,
     "hi": null,
     "coverage": null,
@@ -5589,7 +5589,7 @@
     }
    ],
    "catalog": "set",
-   "catalogPublicOnly": "set"
+   "servedWithOrbitProducts": "set"
   }
  }
 }

@@ -11,9 +11,8 @@ import { CONFIG, HERE, REPO, MODULES, DAY, sha256, wasmSha, tleMs, grid, classif
 import { makeWindow, loadPublicSets, truthIndex, truthFor, truthCounts } from './sets.mjs';
 import { armStates, afterLastJump } from './arms.mjs';
 import { INPUTS, inputFiles, configureInputs, preloadReaders } from './inputs.mjs';
-import { satelliteStatistic, exactMedianInterval } from './stats.mjs';
 import { claimStart, verifyFiles, verifyLedger, manifestGuard, verifyRunDay, verifyClean } from './guards.mjs';
-import { catalogDecision, part2Holds } from '../table.mjs';
+import '../table.mjs'; // loaded, not called: so the registration hook checks the table builder's bytes (and the statistic's) in every run
 
 const HOOK = globalThis.__apcc;
 const argv = process.argv.slice(2);
@@ -146,31 +145,60 @@ async function check() {
   say(`guards tripped (${trips.length}):\n  ${trips.join('\n  ')}`);
   fs.rmSync(root, { recursive: true, force: true }); fs.rmSync(store, { recursive: true, force: true });
 
-  // The statistic, the verdicts and the catalog's decisions on fixed numbers.
-  const meds = [-0.3, -0.25, -0.2, -0.15, -0.1, -0.05];
-  const iv = exactMedianInterval(meds);
-  say(`exact interval, 6 satellites: ${iv.lo} to ${iv.hi}, coverage ${iv.coverage.toFixed(4)}`);
-  if (!(iv.lo === -0.3 && iv.hi === -0.05 && Math.abs(iv.coverage - 0.96875) < 1e-9) || exactMedianInterval(meds.slice(0, 5))) problems.push('the order-statistic interval is off');
-  const pairs = [];
-  for (let sat = 1; sat <= 8; sat += 1) for (let k = 0; k < 6; k += 1) pairs.push({ sat, x: Math.log(0.5 + 0.05 * sat + 0.01 * k) });
-  const r = satelliteStatistic(pairs, CONFIG.statistics);
-  say(`statistic on fixed numbers: ratio ${r.ratio.toFixed(4)} (${r.lo.toFixed(4)} to ${r.hi.toFixed(4)}, coverage ${r.coverage.toFixed(3)}), verdict ${r.verdict}`);
-  if (!(r.ratio > 0.74 && r.ratio < 0.76 && r.verdict === 'BEATS')) problems.push('the statistic on fixed numbers is off');
-  if (satelliteStatistic(pairs.slice(0, 30), CONFIG.statistics).verdict !== 'FEW') problems.push('five satellites must read FEW');
-  const tailOk = { T95: 0.9, Trms: 0.9, shareBeyondTwice: 0 };
-  const cases2 = [
-    [{ verdict: 'BEATS' }, { lo: 0.85, hi: 0.95 }, tailOk, { verdict: 'BEATS' }, tailOk, 'new construction'],
-    [{ verdict: 'BEATS' }, { lo: 0.9, hi: 1.02 }, tailOk, { verdict: 'BEATS' }, tailOk, 'earlier construction'],
-    [{ verdict: 'BEATS' }, { lo: null, hi: null }, tailOk, { verdict: 'BEATS' }, tailOk, 'earlier construction'],
-    [{ verdict: 'BEATS' }, { lo: 0.85, hi: 0.95 }, { ...tailOk, T95: 1.1 }, { verdict: 'BEATS' }, tailOk, 'earlier construction'],
-    [{ verdict: 'TIE' }, { lo: 0.85, hi: 0.95 }, tailOk, { verdict: 'TIE' }, tailOk, 'set'],
-  ];
-  const got = cases2.map(([sv, se, st, ev, et]) => catalogDecision(sv, se, st, ev, et, CONFIG.statistics.tailThresholds));
-  say(`catalog decisions on fixed verdicts: ${got.join(', ')}`);
-  cases2.forEach((c, i) => { if (got[i] !== c[5]) problems.push(`catalog decision case ${i + 1}: ${got[i]}, expected ${c[5]}`); });
-  const p2 = [part2Holds('new construction', { satellites: 8, sets: 40, hi: 1.03 }), part2Holds('new construction', { satellites: 8, sets: 40, hi: 1.06 }), part2Holds('new construction', { satellites: 4, sets: 40, hi: 0.9 }), part2Holds('set', { satellites: 8, sets: 40, hi: 0.9 })];
-  say(`part 2 on fixed numbers: ${p2.join(', ')}`);
-  if (p2.join() !== 'holds,fails,untested,not applicable') problems.push('the part 2 rule is off');
+  // The statistic, the verdicts, part 1's candidate and part 2's rule, end to end: made-up rows in a scratch store, the real table.mjs
+  // run on them as a separate process, and every assertion made on the table.json it writes.
+  const tdir = fs.mkdtempSync(path.join(os.tmpdir(), 'apcc-table-'));
+  const writeStore = (dir, rows) => {
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'rows-s0of1.jsonl'), `${rows.map((x) => JSON.stringify(x)).join('\n')}\n`);
+    fs.writeFileSync(path.join(dir, 'manifest-s0of1.json'), JSON.stringify({ executedFiles: {}, repositoryCommit: 'made-up', wasmSha256: 'made-up', counts: { noTruth: 0 }, truthStatesScreenedOut: 0 }));
+  };
+  // n satellites of m sets in a class: the set's 72 h error a(i, j), the public record's pub(i) times it, the earlier construction's ear(i)
+  const made = (cls, n, m, pub, ear, a = (i, j) => 1 + 0.01 * j) => Array.from({ length: n * m }, (_, k) => {
+    const i = Math.floor(k / m), j = k % m, x = a(i, j);
+    return { norad: 90000 + 100 * CONFIG.classes.indexOf(cls) + i, cls, family: 'made-up', served: 'K12', public: 'K12', earlier: 'D5', earlier0: 'D5',
+      A: { primary: x }, arms: { K12: { p: x * pub(i, j) }, D5: { p: x * ear(i, j) } } };
+  });
+  const table = (partId, rows, extra = []) => {
+    const dir = fs.mkdtempSync(path.join(tdir, `${partId}-`));
+    writeStore(path.join(dir, 'store'), rows);
+    execFileSync(process.execPath, [path.join(HERE, 'table.mjs'), '--part', partId, '--store', path.join(dir, 'store'), '--out', path.join(dir, 'out'), ...extra], { stdio: 'ignore' });
+    return { dir, t: JSON.parse(fs.readFileSync(path.join(dir, 'out', 'table.json'), 'utf8')) };
+  };
+  const spike = (p) => (i, j) => (j === 5 ? 1.6 : p(i, j)); // one set in six at 1.6 times the set: T95 above 1, the median untouched
+  const p1 = table('1', [
+    ...made('MEO', 8, 5, (i) => 0.8 + 0.01 * i, (i) => 0.95 + 0.005 * i), // beats the set and the earlier construction, tail within
+    ...made('HIGH_LEO', 6, 6, spike((i) => 0.7 + 0.02 * i), () => 0.9), // the same, but its tail is over T95
+    ...made('GEO', 8, 5, (i) => 0.8 + 0.01 * i, (i) => 0.95 - 0.02 * i), // its interval against the earlier construction spans 1
+    ...made('MID_LEO', 8, 5, (i) => 0.9 + 0.03 * i, (i) => 0.92 + 0.03 * i), // public and earlier TIE against the set
+    ...made('HEO', 5, 8, () => 0.5, () => 0.9), // 5 satellites: FEW, no ratio
+  ]);
+  const C = p1.t.classes, cand = Object.fromEntries(CONFIG.classes.map((c) => [c, C[c].catalog]));
+  const want1 = { LOW_LEO: 'set', MID_LEO: 'set', HIGH_LEO: 'earlier construction', MEO: 'new construction', GEO: 'earlier construction', HEO: 'set' };
+  say(`table.mjs on made-up rows, part 1 candidates: ${CONFIG.classes.map((c) => `${c} ${cand[c]}`).join('; ')}`);
+  for (const c of CONFIG.classes) if (cand[c] !== want1[c]) problems.push(`part 1 candidate ${c}: ${cand[c]}, expected ${want1[c]}`);
+  const m = C.MEO.records.public.vsSet, h = C.HIGH_LEO.records.public.vsSet, f = C.HEO.records.public.vsSet;
+  say(`statistic in the written table: MEO ${m.ratio} (${m.lo} to ${m.hi}, coverage ${m.coverage}) ${m.verdict} on ${m.satellites} satellites; HIGH_LEO ${h.ratio} (${h.lo} to ${h.hi}, coverage ${h.coverage}) on ${h.satellites}; HEO ${f.verdict}, ratio ${f.ratio}`);
+  if (!(m.ratio === 0.835 && m.lo === 0.8 && m.hi === 0.87 && m.coverage === 0.992 && m.verdict === 'BEATS')) problems.push('the statistic on 8 made-up satellites is off');
+  if (!(h.ratio === 0.75 && h.lo === 0.7 && h.hi === 0.8 && h.coverage === 0.969)) problems.push('the order-statistic interval on 6 made-up satellites is off');
+  if (!(f.verdict === 'FEW' && f.ratio == null)) problems.push('five satellites must read FEW with no ratio');
+  // Part 2 on the public record, against a part 1 table that names every class but LOW_LEO for the new construction.
+  const p1file = path.join(tdir, 'part1-table.json');
+  fs.writeFileSync(p1file, JSON.stringify({ classes: Object.fromEntries(CONFIG.classes.map((c) => [c, { catalog: c === 'LOW_LEO' ? 'set' : 'new construction' }])) }));
+  const p2 = table('2', [
+    ...made('MEO', 8, 5, (i) => 0.8 + 0.01 * i, () => 0.9), // holds
+    ...made('GEO', 8, 5, (i) => 0.8 + 0.01 * i, (i) => 0.95 - 0.02 * i), // upper end against the earlier construction 1.07
+    ...made('HIGH_LEO', 6, 6, spike((i) => 0.7 + 0.02 * i), () => 0.9), // T95 over 1
+    ...made('MID_LEO', 8, 5, (i) => 0.9 + 0.01 * i, () => 0.95), // beats the set, but its interval ends at 0.97: not below 0.95
+    ...made('HEO', 4, 10, () => 0.5, () => 0.9), // 4 satellites: untested
+  ], ['--part1', p1file]).t.classes;
+  const tie = table('2', made('MID_LEO', 8, 5, (i) => 0.9 + 0.02 * i, () => 1, (i, j) => (i >= 5 ? 0.5 : 1 + 0.01 * j)), ['--part1', p1file]).t.classes.MID_LEO;
+  const res = Object.fromEntries(CONFIG.classes.map((c) => [c, p2[c].part2?.result]));
+  const want2 = { LOW_LEO: 'not applicable', MID_LEO: 'fails', HIGH_LEO: 'fails', MEO: 'holds', GEO: 'fails', HEO: 'untested' };
+  say(`part 2 in the written table (public record): MEO ${res.MEO}; GEO ${res.GEO} (upper end against the earlier construction ${p2.GEO.publicVsEarlier.hi}); HIGH_LEO ${res.HIGH_LEO} (T95 ${p2.HIGH_LEO.records.public.tail.T95}); MID_LEO ${res.MID_LEO} (against the set ${p2.MID_LEO.records.public.vsSet.lo} to ${p2.MID_LEO.records.public.vsSet.hi}); MID_LEO with a TIE against the set ${tie.part2?.result} (${tie.records.public.vsSet.verdict}, tail ${tie.records.public.tail.T95} / ${tie.records.public.tail.Trms}, against the earlier construction to ${tie.publicVsEarlier.hi}); HEO ${res.HEO}; LOW_LEO ${res.LOW_LEO}`);
+  for (const c of CONFIG.classes) if (res[c] !== want2[c]) problems.push(`part 2 ${c}: ${res[c]}, expected ${want2[c]}`);
+  if (!(tie.part2?.result === 'fails' && tie.records.public.vsSet.verdict === 'TIE' && tie.publicVsEarlier.hi < 1.05 && tie.records.public.tail.T95 <= 1 && tie.records.public.tail.Trms <= 1)) problems.push('part 2 with a TIE against the set (margin and tail within) must fail');
+  fs.rmSync(tdir, { recursive: true, force: true });
   say(problems.length ? `CHECK FAILED\n- ${problems.join('\n- ')}` : `CHECK PASSED (${CONFIG.build.module} ${CONFIG.build.version} ${wasmSha.slice(0, 12)})`);
   process.exit(problems.length ? 1 : 0);
 }

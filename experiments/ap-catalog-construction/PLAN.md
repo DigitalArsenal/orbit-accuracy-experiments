@@ -1,7 +1,8 @@
 # Registered confirmation: the catalog's AP construction, against the public set and against the registered construction
 
 Registration under [stack issue 312](https://github.com/DigitalArsenal/spacedatanetwork-stack/issues/312), second version, written on
-2026-11-10 after adversarial review 0 (findings C6-1 to C6-7 on the first version, C4-1 to C4-5 on the development rounds) and aligned
+2026-11-10 after adversarial review 0 (findings C6-1 to C6-7 on the first version, C4-1 to C4-5 on the development rounds, and C6-8
+and C6-9 of its closing review) and aligned
 with amendment A3 of [ap-from-public-sets](../ap-from-public-sets/PLAN.md). The first version was never run on a registered part. `config.json` holds the same
 numbers for the code. `run.mjs`, `table.mjs`, `lib/*.mjs` and every file they load are registered by SHA-256 in `registration.json`; a
 registered part refuses to run if any of them, `config.json`, this plan, the truth gate's ledger or its archive manifest differs.
@@ -14,8 +15,9 @@ inputs that are not public sets where the archive holds them (ILRS CPF predictio
 construction beat the registered one, class by class, on sets it was not developed on, and is it closer to precise orbits than the set
 on SGP4? And, from one later capture, how does it stand against the provider's XP sets?
 
-Part 1 tests the public-set changes (it has CPF files for a handful of low satellites and no GNSS orbit product). Part 2 tests the whole
-construction, including the GNSS inputs, as far as their products are in the archive when it runs.
+The catalog decision rests on the public-set changes alone: part 1 names the classes where they beat the registered construction, and
+part 2 confirms them on sets that did not exist at registration. The orbit-product inputs (CPF in part 1 for a handful of low
+satellites; the GNSS products too in parts 2 and H) are scored and reported, and decide nothing.
 
 ## What was read before this plan
 
@@ -36,26 +38,28 @@ construction, including the GNSS inputs, as far as their products are in the arc
   first version of this runner was dry-run on period B, and drafts of this version on the same three dry runs; none was registered
   and their results are not used. The figures below are from the registered code (every file they executed is in `registration.json` with the same SHA-256).
   - `dev-B`, period B (inputs as part 2's; only CPF files exist there): 2,297 sets of 148 satellites. A3's reading rules
-    (first-published set, history created no later, weather cut a day earlier) change which revision is the set at 426 of the rounds'
-    2,223 epochs; the class figures against the set, on the earlier plan's bootstrap as the rounds printed them: served MID_LEO 0.40
-    (rounds 0.39), HIGH_LEO 0.24 (0.24), MEO 0.86 (0.86; six more navigation satellites here), GEO 0.72 (0.72), HEO 0.78 (0.78);
-    public sets only MID_LEO 0.48 (0.19 to 0.74), HIGH_LEO 0.26 (0.20 to 0.41). Under the rule below: MEO would go to the new
-    construction (0.92, 0.88 to 0.98 against the earlier one; tail 0.97 / 0.92 / 0.9 %); MID_LEO and GEO read TIE against the earlier
-    construction (0.98, 0.91 to 1.00; 0.86, 0.69 to 1.00); HIGH_LEO beats it (0.91, 0.79 to 0.99) but its served record misses A3's
-    tail thresholds against the set (T95 1.44; 4.2 % of sets beyond twice the set's error), so it stays with the earlier construction;
-    LOW_LEO and HEO read FEW.
+    (first-published set, history created no later, weather cut a day earlier) move the scored set: 426 of the rounds' 2,223 scored
+    (satellite, epoch) pairs have no set at the same epoch in dev-B's rows (the first-published revision carries its own epoch, and
+    the every-3-days selection moves with it); the class figures against the set, on the earlier plan's bootstrap as the rounds
+    printed them: served MID_LEO 0.40 (rounds 0.39), HIGH_LEO 0.24 (0.24), MEO 0.86 (0.86; six more navigation satellites here), GEO
+    0.72 (0.72), HEO 0.78 (0.78); public sets only MID_LEO 0.48 (0.19 to 0.74), HIGH_LEO 0.26 (0.20 to 0.41). Under the rule below
+    (the public record; here it equals the served one except for the CPF sets of two low satellites): MEO would be the new construction's
+    candidate (0.92, 0.88 to 0.98 against the earlier one; tail 0.97 / 0.92 / 0.9 %); MID_LEO and GEO read TIE against the earlier
+    construction (0.98, 0.91 to 1.00; 0.86, 0.69 to 1.00); HIGH_LEO beats it (0.92, 0.85 to 0.99) but misses A3's tail thresholds
+    against the set (T95 1.44; 4.2 % of sets beyond twice the set's error), so it is not a candidate; LOW_LEO and HEO read FEW.
   - `dev-A`, period A (CPF, ultra-rapid and rapid files exist there): 1,650 sets of 138 satellites; the served record came from the
     ultra-rapid orbit on 415 sets, the rapid orbit on 376 and CPF files on 71. Class figures against the set, on the earlier plan's
     bootstrap as the rounds printed them: served MID_LEO 0.56 (rounds 0.55), HIGH_LEO 0.18 (0.18), MEO 0.07 (0.07), GEO 0.56 (0.56),
-    HEO 0.11 (0.11); public sets only 0.61 (0.60), 0.20 (0.20), 0.89 (0.89), 0.63 (0.63), 0.81 (0.81). Under the rule below: MEO would
-    go to the new construction (0.10, 0.07 to 0.20 against the earlier one); MID_LEO reads TIE against the earlier construction;
-    HIGH_LEO beats it (0.89, 0.13 to 0.93) but 1.7 % of its sets exceed twice the set's error; GEO's served record beats the earlier
-    one (0.73, 0.50 to 0.96) but misses the tail thresholds (T95 1.08, Trms 1.67), and the earlier construction reads TIE against the
-    set, so GEO would stay on the set; LOW_LEO has no set and HEO reads FEW.
+    HEO 0.11 (0.11); public sets only 0.61 (0.60), 0.20 (0.20), 0.89 (0.89), 0.63 (0.63), 0.81 (0.81). Under the rule below, on the
+    public record: no class is a candidate. MEO's public record beats the earlier construction (0.91, 0.88 to 0.97) but 1.2 % of its
+    sets exceed twice the set's error (threshold 1.0 %); MID_LEO reads TIE against the earlier construction; HIGH_LEO beats it (0.89,
+    0.86 to 0.93) but 1.7 % of its sets exceed twice the set's error; GEO reads TIE. The served record, with the orbit products,
+    would read MEO new construction (0.10, 0.07 to 0.20 against the earlier one); it is printed beside and decides nothing. This
+    period's truth lost sound altimetry states to the jump screen (C6-9 below).
   - `dev-H`, part H's protocol on the provider's capture of 2026-10-23: 111 satellites scored from the capture time, of which 103 at
     MEO (98 served from the rapid orbit, 5 from public sets), 5 GEO, 2 HEO, 1 HIGH_LEO: under the rule below only MEO would get a
     statement. Its figures stay local with part H's (stack issue 288); its `table.json` has SHA-256
-    `56a775da577f4c3213cb0e0c86fc8bca6da61b335324c637fd6dddd2d1f91915`.
+    `938a9325dd83f3d163fb006eb6618aa21bf49e62d1b1cf23aa250fb3e8e97fac`.
 - Nothing of part 1, part 2 or part H has been read by this construction. The capture folder of part H has not been opened. Part 1's
   archive manifest was made from directory listings and the truth indexes (paths and byte counts); no file of its window was opened
   for its contents.
@@ -66,6 +70,15 @@ The owner ruled on 2026-11-10 ([stack issue 314](https://github.com/DigitalArsen
 November rule and any rule that says to exclude data." This runner includes every satellite that has truth and never consults the
 five-day pipeline's hold list. What stays is the truth gate, which drops corrupted truth states (its ledger, pinned by SHA-256 in
 `config.json`; its sanity rule; its jump screen), and the archive's path guard against credential folders.
+
+**The jump screen drops sound truth when a satellite's files have different steps** (review 0, C6-9). Its residual is the trapezoid
+rule's error over the step, which grows as the step cubed (about 0.14 km at 60 s and 18 km at 300 s in low orbit), and its threshold is
+10 times the series' median residual with a 10 km floor; in a series that mixes 60 s and 300 s files every 300 s state is marked. In
+period A it removed 8,011 sound altimetry states (within 21 m of their neighbors' interpolation) from five satellites. Part 1 is not
+affected: its manifest holds only 300 s altimetry files. **Parts 2 and H do not run until a dated amendment fixes the screen** (a
+threshold per step, with a check case), merged before their run day. That amendment also brings to this runner the two lines that
+amendment A4 of ap-from-public-sets adds to its part 2: the figure from the set's creation time (A4 item 5; this plan counts lead from
+the set's epoch) and the line on satellites outside AP's development lists (A4 item 6).
 
 ## Build
 
@@ -153,7 +166,8 @@ By the orbit class of the current set (classes below), chosen without truth; an 
 
 Every row holds four records, all scored:
 - **served**: the class's chain;
-- **public**: the same chain without P13, U2 and R3 (what the catalog serves for an object with nothing but public sets);
+- **public**: the same chain without P13, U2 and R3 (what an object with nothing but public sets gets; the catalog decision is taken
+  on this record);
 - **earlier**: the record the earlier construction serves, as amendment A3 guards it: `D5` when its fit residual is at most 3 times
   `B3`'s for the same set, else `B3`, else the set;
 - **earlier, unguarded**: `D5`, else `B3`, else the set (printed beside).
@@ -162,7 +176,7 @@ Every row holds four records, all scored:
 
 | Part | Sets | Inputs | When |
 | --- | --- | --- | --- |
-| 1 | epochs 2026-03-01 to 2026-05-23 | CPF only (the archive holds CPF files for CryoSat-2, Sentinel-6A, Starlette and Swarm A in this period; Swarm A has no truth family here) | once, after this plan is merged |
+| 1 | epochs 2026-03-01 to 2026-05-23 | CPF only (the archive holds CPF files for CryoSat-2, Sentinel-6A, Starlette and Swarm A in this period; Swarm A has no truth family here) | once, after this plan and the amendment named under Checks are merged |
 | 2 | epochs 2026-11-11 to 2026-12-22 (the sets of A3's part 2) | CPF, ultra-rapid, rapid, where a product out by t0 is in the archive on the run day | once, on 2027-01-12 |
 | H | the provider's XP capture of 2026-11-10 | as part 2, out by the capture time | once, on 2027-01-12 |
 
@@ -198,7 +212,7 @@ inclined geosynchronous orbits (QZSS, BeiDou IGSO), not the geostationary belt, 
 
 **The unit is the satellite.** For a comparison (a record against another, paired by set): each satellite's median of ln(ratio) over its
 sets; the class's figure is the median of those satellite medians; its interval is the order-statistic interval for that median, the
-widest [x(k), x(n+1-k)] whose coverage 1 - 2 P(Bin(n, 1/2) <= k - 1) is at least 95 % (it exists from 6 satellites on).
+narrowest [x(k), x(n+1-k)] whose coverage 1 - 2 P(Bin(n, 1/2) <= k - 1) is at least 95 % (it exists from 6 satellites on).
 - **BEATS**: the whole interval below 1. **LOSES**: above 1. **TIE**: it spans 1.
 - **FEW**: under 6 satellites or under 30 sets (part H: under 6 satellites). No verdict, no statement.
 - Secondary, printed beside and deciding nothing: the bootstrap of ap-from-public-sets (pooled median of sets, satellites resampled,
@@ -212,41 +226,56 @@ against the earlier construction; the days 1 to 7; the arms served; every truth 
 
 ## Decision rule for the catalog
 
-**From part 1, per class:**
-- the **new construction** where its served record BEATS the set, its interval against the earlier construction lies **wholly below 1**,
-  and it meets A3's three tail thresholds against the set (`T95` at most 1.00, `Trms` at most 1.00, at most 1.0 % of sets beyond twice
-  the set's error);
-- otherwise the **earlier construction** where its record BEATS the set and meets the same thresholds;
-- otherwise the **set** on SGP4.
+Nothing is served from part 1 alone. Between the earlier construction and the set, ap-from-public-sets' part 2 decides (A3 and any
+later amendment of it, merged before 2026-11-11); this plan decides only whether a class moves from there to the new construction. A
+class that holds speaks for satellites of the kinds tested. Both parts decide on the **public record** (the chain without P13, U2 and
+R3), the record an object with nothing but public sets gets.
 
-A class whose interval against the earlier construction spans 1, or has none, is not given to the new construction and is reported "not
-shown better"; it goes to the earlier construction where that passes, else to the set. The same rule applied to the public record is printed beside, so part 1 states what the public-set changes alone show.
+**Part 1 names the candidate, per class:**
+- the **new construction** where the public record BEATS the set, its interval against the earlier construction lies **wholly below
+  1**, and it meets A3's three tail thresholds against the set (`T95` at most 1.00, `Trms` at most 1.00, at most 1.0 % of sets beyond
+  twice the set's error);
+- otherwise, printed for reference, the **earlier construction** where its record BEATS the set and meets the same thresholds, else
+  the **set** on SGP4.
 
-**Part 2** (computed by `table.mjs`, which reads part 1's table): for each class that part 1 gave to the new construction, the rule
-**holds** when part 2's interval of the served record against the earlier construction has its upper end below **1.05**, on at least 6
-satellites and 30 sets; it **fails** when the upper end is at 1.05 or above; with fewer satellites or sets the class is **untested**,
-not holding. Classes part 1 did not give to the new construction are "not applicable".
+A class whose interval against the earlier construction spans 1, or has none, is not a candidate ("not shown better").
+
+**Part 2** (computed by `table.mjs`, which reads part 1's table): for each class part 1 named for the new construction, the rule
+**holds** when, in part 2, the public record's interval against the earlier construction ends below **1.05**, its interval against
+the set ends below **0.95** (the smallest effect worth serving, shared with amendment A4 of ap-from-public-sets, which gives the
+reason: an AP record costs every user 1.4 to 2.6 times SGP4's computation), and it **meets the three tail thresholds**, on at least 6
+satellites and 30 sets; it **fails** otherwise; with fewer satellites or sets the class is **untested**, not holding. Classes part 1
+did not name are "not applicable". A class that holds is served the new construction, for objects of the kinds tested as A4 (item 4)
+defines them; any other class stays with what ap-from-public-sets' part 2 decides.
+
+**Orbit-product records** (P13, U2, R3: the served record): reported in every part against the set and the earlier construction, with
+the same rule's reading printed beside; this registration decides nothing about serving them.
 
 **Part H**, per class with at least 6 satellites: the hypothesis is served / XP below 1; BEATS, LOSES or TIE by the order-statistic
 interval over satellites; under 6 satellites FEW and no statement. Primary: the served record, 72 h from the capture time. Registered
 secondaries: the public record against XP, the set against XP, and the served record against `XPsame` (what AP adds over the provider's
 own theory on the same input).
 
-**Operating characteristics of the rule**, simulated from period B's satellites and sets (the world of the review's power simulation:
-satellites drawn with replacement, sets resampled to the part's length, the served error scaled so the population's satellite-median
-ratio to the earlier construction is rho; the committed code applied; 600 parts per line):
+**Operating characteristics of the rule**, simulated on the public record from period B's satellites and sets (the world of the
+review's power simulation: satellites drawn with replacement, sets resampled to the part's length, the public record's error scaled so
+the population's satellite-median ratio to the earlier construction, A3's guarded record, is rho; the committed code applied; 600
+parts per line):
 
-| Class (period B: satellites) | P(new construction) at rho 1.00 | at 0.95 | at 0.90 | at 0.80 | P(interval of served / earlier wholly below 1) at 0.90 | misses of 1 at rho 1.00 (above or below) |
-| --- | --: | --: | --: | --: | --: | --: |
-| MID_LEO (10) | 0.00 | 0.32 | 0.44 | 0.39 | 0.95 | 0.02 |
-| HIGH_LEO (14) | 0.00 | 0.01 | 0.03 | 0.05 | 0.92 | 0.02 |
-| MEO (107) | 0.01 | 0.11 | 0.53 | 0.81 | 1.00 | 0.05 |
-| GEO (8) | 0.00 | 0.00 | 0.01 | 0.75 | 0.02 | 0.03 |
+| Class (period B: satellites) | Part 1, P(candidate) at rho 1.00 | at 0.95 | at 0.90 | at 0.80 | P(interval of public / earlier wholly below 1) at 0.90 | misses of 1 at rho 1.00 | Part 2, P(holds) at rho 0.90 | at 1.00 | at 1.05 |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |
+| MID_LEO (10) | 0.00 | 0.20 | 0.25 | 0.24 | 0.95 | 0.02 | 0.30 | 0.25 | 0.00 |
+| HIGH_LEO (14) | 0.00 | 0.01 | 0.03 | 0.05 | 0.97 | 0.03 | 0.03 | 0.00 | 0.00 |
+| MEO (107) | 0.01 | 0.11 | 0.53 | 0.81 | 1.00 | 0.05 | 0.54 | 0.01 | 0.00 |
+| GEO (8) | 0.00 | 0.00 | 0.01 | 0.75 | 0.02 | 0.03 | 0.04 | 0.00 | 0.00 |
 
 LOW_LEO (1 satellite) and HEO (2) receive no verdict. The interval against the earlier construction separates 0.9 from 1.0 in MID_LEO,
-HIGH_LEO and MEO; adoption at 0.90 is lower than that because the served record must also pass A3's tail thresholds against the set,
-which in HIGH_LEO it rarely does in period B. Part 2 (42 days), P(holds) at rho 1.00 / 1.10: MID_LEO 0.81 / 0.00, HIGH_LEO 0.13 / 0.00,
-MEO 0.36 / 0.00, GEO 0.01 / 0.00 (a class that truly equals the earlier construction usually fails the 1.05 margin outside MID_LEO).
+HIGH_LEO and MEO; the candidate and part 2 are rarer than that because the public record must also beat the set and pass A3's tail
+thresholds, which in HIGH_LEO it rarely does in period B. **What A3's standard costs, said plainly:** a real 10 % gain at MEO is
+confirmed by part 2 in about half of simulated parts in period B's world (0.54) and a third in period A's (0.32; the review's run of
+period A, with the unguarded earlier record and A3's BEATS, 0.11), because the public record's tail sits on the threshold; with the
+margin alone it would be confirmed in every part (1.00). A part 2 class that holds at a true 1.00 (MID_LEO 0.25) is the margin's
+intent: no worse than the earlier construction by 5 %, at least 5 % better than the set, and within A3's tail. (The review's
+`c6-power.mjs` world, with the committed `table.mjs` and `lib/stats.mjs` imported, not re-implemented.)
 
 ## What is fixed before the run
 
@@ -266,8 +295,8 @@ A registered part (1, 2, H) refuses to start unless all of these hold, and each 
 
 ## What this cannot show
 
-- Part 1 tests the public-set changes and the CPF arm on a few low satellites; the GNSS inputs, the source of the rounds' largest gains,
-  are tested only in part 2, and only as far as their products are collected by the run day.
+- The decision is on the public record. The orbit-product inputs, the source of the rounds' largest gains, are reported in parts 2 and
+  H as far as their products are collected by the run day; this registration does not decide whether to serve them.
 - The CPF arm's record is fitted over the 72 h it is scored on: it measures the prediction centre's forecast as AP carries it, not a
   forecast by AP. In period B one satellite's CPF files move `MID_LEO` from 0.48 (public sets) to 0.40 (served) on the earlier plan's bootstrap; on the
   registered statistic both read 0.57, since the unit is the satellite.
@@ -300,7 +329,16 @@ level, without head-to-head tables.
   own epoch, since a made-up history needs orbit mathematics this repository does not do); the maneuver cut on a made-up jump; a part
   that lists only CPF leaves a made-up ultra-rapid file closed, which a part that lists it opens; a made-up CPF file named outside the
   window is never opened; a made-up snapshot row created after the cutoff is not read, and of two revisions of a set the first created
-  is the set; the guards of "What is fixed before the run" tripped one by one; the order-statistic interval, the statistic
-  and verdict, the catalog rule and part 2's rule on fixed numbers. It needs the module at the registered bytes and the weather archive;
-  without them it says SKIPPED and fails.
+  is the set; the guards of "What is fixed before the run" tripped one by one; and, end to end, made-up rows in a scratch store run
+  through the real `table.mjs`, with the assertions made on the `table.json` it writes: the statistic and its order-statistic
+  interval on 8 and on 6 satellites, FEW with no ratio on 5, part 1's candidate in five cases (new construction; a tail over T95; an
+  interval against the earlier construction that spans 1; TIE against the set; FEW), and part 2's rule in six (holds; an upper end
+  against the earlier construction of 1.07; a tail over T95; an interval against the set ending at 0.97; a TIE against the set with
+  the margin and the tail within; 4 satellites, untested). It needs the module at the registered bytes and the weather archive; without
+  them it says SKIPPED and fails.
+- **A known exception to the project's end-to-end-only rule.** Eight of the nine guard cases call the runner's own guard functions
+  with made-up inputs instead of starting the runner, because starting a registered part to watch a guard refuse could start the part.
+  The ninth (an edited file) goes through the real load hook. The dated amendment that fixes the truth screen (C6-9) replaces them
+  with end-to-end cases on a made-up part that exists only for the check, and proves that none of that part's freedoms is open to
+  parts 1, 2 or H; no registered part, part 1 included, starts before that amendment is merged.
 - `node experiments/ap-catalog-construction/table.mjs --part <N> --check`: the written table equals the table rebuilt from the rows.
