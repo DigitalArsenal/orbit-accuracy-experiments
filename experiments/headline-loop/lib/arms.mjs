@@ -33,9 +33,18 @@ export const PCF = {
 
 /** The builds of the two outside theories (table.mjs names them): the Space Force's XP through propagator/sgp4-xp (its library is the
  *  unmodified Sgp4Prop 9.1.1.0 XP build, called as a black box), SGP4 fitted by analysis/gp-error-model and flown by propagator/sgp4. */
+// Each theory's rows are kept in a store keyed by its own builds (<store>/outside/<key>/rows.jsonl): they do not depend on AP's build, so
+// they are flown once and read by every later table run.
+const XMB = (await import(path.join(root, XP2F.xm.dir, 'common.mjs'))).build;
+const ussfBuild = { module: 'propagator/sgp4-xp', version: USSF_PIN.versions['propagator/sgp4-xp'], modulesCommit: USSF_PIN.modulesCommit, wasmSha256: USSF_PIN.wasmSha256['propagator/sgp4-xp'] };
+const sgp4Builds = [
+  { module: 'analysis/gp-error-model', modulesCommit: XP2.build.modulesCommit, wasmSha256: XP2.build.wasmSha256['analysis/gp-error-model'] },
+  { module: 'propagator/sgp4', modulesCommit: XMB.modulesCommit, wasmSha256: XMB.wasmSha256['propagator/sgp4'] },
+  { module: 'foundation/frames', modulesCommit: XMB.modulesCommit, wasmSha256: XMB.wasmSha256['foundation/frames'] },
+];
 export const OUTSIDE = {
-  ussf: { module: 'propagator/sgp4-xp', version: USSF_PIN.versions['propagator/sgp4-xp'], modulesCommit: USSF_PIN.modulesCommit, wasmSha256: USSF_PIN.wasmSha256['propagator/sgp4-xp'] },
-  sgp4Fit: { module: 'analysis/gp-error-model', modulesCommit: XP2.build.modulesCommit, wasmSha256: XP2.build.wasmSha256['analysis/gp-error-model'] },
+  USSFXP: { key: `sgp4-xp-${ussfBuild.wasmSha256.slice(0, 12)}`, builds: [ussfBuild] },
+  SGP4: { key: `sgp4-${sgp4Builds[0].wasmSha256.slice(0, 12)}-${sgp4Builds[1].wasmSha256.slice(0, 12)}`, builds: sgp4Builds },
 };
 
 /** The arms: { axes, ffmProvenance, ap() (when apWasm is given), ussf() and sgp4() (when asked), ffm(), close() }. */
