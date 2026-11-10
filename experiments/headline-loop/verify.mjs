@@ -42,12 +42,25 @@ export function diff(mine, theirs) {
 export const REFEREE_ARM = { FFMc: (row) => row.arms.FFMc?.arm, FFMq: (row) => (row.arms.FFMq?.sameAs ? null : row.arms.FFMq?.arm), FFMbest: () => 'Fbest', FFMr: (row) => (row.arms.FFMr?.arm === 'L40' ? 'L40' : 'F20') };
 
 if (args.check) {
-  const faults = [];
-  const d1 = diff({ 1: { e: 0.010 }, 2: { e: 0.020 } }, { 1: 0.010, 2: 0.021 });
-  if (Math.abs(d1.worst - 1 / 21) > 1e-12 || d1.n !== 2) faults.push(`diff ${JSON.stringify(d1)}`);
-  if (diff({ 1: { e: 0.01 } }, { 2: 0.01 }).n !== 0) faults.push('diff compared leads that are not in both');
-  console.log(faults.length ? `VERIFY CHECK: FAIL\n${faults.join('\n')}` : 'VERIFY CHECK: PASS (relative difference over common leads)');
-  process.exit(faults.length ? 1 : 0);
+  // end to end: verify.mjs on a store made from the stored published rows of four laser geodetic windows (their FFM and AP days copied), one
+  // of them altered by 2 %, and a referee folder holding the same FFM days; assertions on its --json
+  const E = await import('./lib/e2e.mjs');
+  const { check, done } = E.checker('VERIFY');
+  const S = storedRows(), ffm = S.ffmOf('GD'), ap = S.apOf('GD');
+  const keys = [...ffm.keys()].filter((k) => ffm.get(k)?.arms?.F72?.days && ap.get(k)?.arms?.AP72?.days).slice(0, 4);
+  const kmDays = (d) => Object.fromEntries(Object.entries(d).map(([k, v]) => [k, { e: v.e }]));
+  const rows = keys.map((k, i) => ({ key: k, group: 'GD', arcH: 72, arms: { FFMr: { arm: 'F20', days: kmDays(ffm.get(k).arms.F72.days) }, AP: { days: Object.fromEntries(Object.entries(ap.get(k).arms.AP72.days).map(([d, v]) => [d, { e: v.e * (i === 0 ? 1.02 : 1) }])) }, FFMc: { arm: 'Ffull', days: kmDays(ffm.get(k).arms.F72.days) } } }));
+  const dir = E.tmp('verify'), A = E.writeStore(dir, { rows }), ref = path.join(dir, 'referee');
+  fs.mkdirSync(ref);
+  fs.writeFileSync(path.join(ref, 'ref-ffm-GD.jsonl'), keys.map((k) => JSON.stringify({ key: k, arm: 'Ffull', arc: 72, ok: true, days: Object.fromEntries(Object.entries(ffm.get(k).arms.F72.days).map(([d, v]) => [d, v.e])) })).join('\n'));
+  const r = E.run('verify.mjs', ['--rows', A, '--referee', ref, '--json', path.join(dir, 'v.json')]);
+  check(r.code === 0, `verify.mjs exited ${r.code}: ${r.err.slice(-300)}`);
+  const v = E.readJson(path.join(dir, 'v.json')).checks, line = (what) => v.find((c) => c.group === 'GD' && c.what.startsWith(what));
+  check(keys.length === 4 && line('FFMr vs stored FFM')?.windows === 4 && line('FFMr vs stored FFM').worst === 0, `FFMr ${JSON.stringify(line('FFMr vs stored FFM'))}`);
+  check(line('AP vs stored AP')?.over1pct === 1 && Math.abs(line('AP vs stored AP').worst - 0.02) < 1e-9, `AP ${JSON.stringify(line('AP vs stored AP'))}`);
+  check(line('FFMc (Ffull) vs referee')?.windows === 4 && line('FFMc (Ffull) vs referee').worst === 0, `referee ${JSON.stringify(line('FFMc (Ffull) vs referee'))}`);
+  fs.rmSync(dir, { recursive: true, force: true });
+  done('verify.mjs run on stored published rows of 4 laser geodetic windows: the reduced arm and the referee rows match exactly; the one AP row altered by 2 % is the one over 1 %');
 }
 
 const dir = args.rows;

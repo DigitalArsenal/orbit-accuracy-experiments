@@ -19,13 +19,26 @@ export function commonRatio(pairs, day) {
 const inBand = (x, lo = 0.8, hi = 1.25) => x !== null && x >= lo && x <= hi;
 
 if (args.check) {
-  const faults = [];
-  const pairs = [[{ 1: { e: 2 } }, { 1: 1 }], [{ 1: { e: 4 } }, { 1: 2 }], [{ 1: { e: 9 } }, null]];
-  const c = commonRatio(pairs, '1');
-  if (c.n !== 2 || Math.abs(c.ratio - 2) > 1e-12) faults.push(`common ratio ${JSON.stringify(c)}`);
-  if (!inBand(1) || inBand(1.3) || inBand(null)) faults.push('band');
-  console.log(faults.length ? `CLOSING CHECK: FAIL\n${faults.join('\n')}` : 'CLOSING CHECK: PASS (ratio of medians on common windows only; the 0.8 to 1.25 band)');
-  process.exit(faults.length ? 1 : 0);
+  // end to end: closing.mjs on a made-up store and referee folder: laser spheres (LARES) whose configured arm equals the referee's and holds
+  // 1.5 m at day 1 with a fitted coefficient of 3e-4, and laser geodetic rows whose configured arm is twice the referee's; assertions on --json
+  const E = await import('./lib/e2e.mjs');
+  const fails = [], check = (ok, msg) => { if (!ok) fails.push(msg); };
+  const ls = [24, 72].flatMap((fit) => E.cellRows({ group: 'LS', regime: 'Low orbit, laser spheres', fit, sats: 1, blocks: 8, prefix: 'LARES', arm: 'L40S', ffmKm: () => 0.0015 }).map((r, i) => ({ ...r, key: `LS|LARES|2025-10-${String(1 + i).padStart(2, '0')}`, name: 'LARES', arms: { ...r.arms, FFMc: { ...r.arms.FFMc, arm: 'L40S', parameters: [{ kind: 'DRAG_AREA_OVER_MASS', value: 1e-4 }, { kind: 'SRP_AREA_OVER_MASS', value: 3e-4 }] } } })));
+  const gd = E.cellRows({ group: 'GD', regime: 'Laser geodetic', sats: 3, blocks: 2 });
+  const dir = E.tmp('closing'), A = E.writeStore(dir, { rows: [...ls, ...gd] }), ref = path.join(dir, 'referee');
+  fs.mkdirSync(ref);
+  const refRow = (r, arm, k) => JSON.stringify({ key: r.key, arm, arc: r.arcH, ok: true, days: Object.fromEntries(Object.entries(r.arms.FFMc.days).map(([d, v]) => [d, v.e * k])) });
+  fs.writeFileSync(path.join(ref, 'ref-ffm-E2E.jsonl'), [...ls.map((r) => refRow(r, 'L40S', 1)), ...gd.map((r) => refRow(r, 'Ffull', 0.5))].join('\n'));
+  const r = E.run('closing.mjs', ['--rows', A, '--referee', ref, '--json', path.join(dir, 'c.json')]);
+  check(r.code === 0, `closing.mjs exited ${r.code}: ${r.err.slice(-300)}`);
+  const j = E.readJson(path.join(dir, 'c.json'));
+  check(j['REF-1']?.verdict === 'CLOSED', `REF-1 ${JSON.stringify(j['REF-1'])}`);
+  check(j['BUD-1']?.verdict === 'CLOSED' && /1\.50 m/.test(j['BUD-1'].lines[0]), `BUD-1 ${JSON.stringify(j['BUD-1'])}`);
+  check(j['REF-3']?.verdict === 'NOT CLOSED' && j['REF-3'].lines.some((l) => /2\.000 .*OUT OF/.test(l)), `REF-3 ${JSON.stringify(j['REF-3'])}`);
+  check(j['C1-4']?.verdict.startsWith('NOT CLOSED') && j['DSST-1']?.verdict.startsWith('NOT CLOSED'), 'the findings this harness cannot close');
+  fs.rmSync(dir, { recursive: true, force: true });
+  console.log(fails.length ? `CLOSING CHECK: FAIL\n${fails.join('\n')}` : 'CLOSING CHECK: PASS (closing.mjs run on a made-up store and referee folder: REF-1 and BUD-1 close on a LARES arm equal to the referee at 1.5 m with Cr A/m 3e-4; REF-3 stays open where the arm is twice the referee, the cells printed OUT OF band; C1-4 and DSST-1 open)');
+  process.exit(fails.length ? 1 : 0);
 }
 
 const dir = args.rows;

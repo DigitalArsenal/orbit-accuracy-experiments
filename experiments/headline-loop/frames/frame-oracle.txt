@@ -1,0 +1,14 @@
+sdn-ap propagator/sdn-ap/dist/isomorphic/module.wasm; foundation/frames as XM's openModules() hosts it
+AIAA 2006-6753 example 2004-04-06T07:51:28.386009: sdn-ap 0.0034 m from the published GCRF; foundation/frames 0.1094 m; sdn-ap vs frames 0.1095 m (2.21 mas, about the pole 2.83 mas)
+pyerfa GMST06 TEME 2000-06-27T18:50:19.733568Z: sdn-ap 0.460 m (13.25 mas, about the pole 13.25); foundation/frames 0.000 m (0.00 mas)
+pyerfa GMST06 TEME 2006-06-25T19:46:43.980096Z: sdn-ap 0.109 m (3.30 mas, about the pole -3.30); foundation/frames 0.000 m (0.00 mas)
+pyerfa GMST06 TEME 2006-06-25T13:28:40.058400Z: sdn-ap 0.212 m (3.29 mas, about the pole -3.29); foundation/frames 0.000 m (0.00 mas)
+pyerfa GMST06 TEME 1980-08-17T07:06:40.136832Z: sdn-ap 2.462 m (53.52 mas, about the pole 67.93); foundation/frames 0.000 m (0.00 mas)
+pyerfa GMST06 TEME 2006-06-25T00:40:57.987552Z: sdn-ap 0.678 m (3.29 mas, about the pole -3.29); foundation/frames 0.000 m (0.00 mas)
+pyerfa GMST06 TEME 2006-06-20T18:22:06.640032Z: sdn-ap 0.156 m (3.26 mas, about the pole -3.26); foundation/frames 0.000 m (0.00 mas)
+pyerfa GMST06 TEME 2006-06-26T18:52:04.079712Z: sdn-ap 0.115 m (3.30 mas, about the pole -3.30); foundation/frames 0.000 m (0.00 mas)
+2013-02-15T00:00:00: a geosynchronous TEME state, sdn-ap vs foundation/frames 4.432 m (on the x axis), 4.432 m (on the y axis); about the pole -21.68 mas; out of the equator -0.00, -0.03 mas
+2025-10-08T00:00:00: a geosynchronous TEME state, sdn-ap vs foundation/frames 11.610 m (on the x axis), 11.610 m (on the y axis); about the pole -56.79 mas; out of the equator 0.00, -0.14 mas
+2025-11-14T00:00:00: a geosynchronous TEME state, sdn-ap vs foundation/frames 11.667 m (on the x axis), 11.667 m (on the y axis); about the pole -57.07 mas; out of the equator 0.00, -0.14 mas
+2026-01-09T00:00:00: a geosynchronous TEME state, sdn-ap vs foundation/frames 11.755 m (on the x axis), 11.755 m (on the y axis); about the pole -57.51 mas; out of the equator 0.00, -0.15 mas
+2026-09-22T00:00:00: a geosynchronous TEME state, sdn-ap vs foundation/frames 12.154 m (on the x axis), 12.154 m (on the y axis); about the pole -59.45 mas; out of the equator 0.00, -0.16 mas

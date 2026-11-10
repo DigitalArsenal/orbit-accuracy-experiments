@@ -46,19 +46,28 @@ export function cellOf({ rows, fit, lead, stored, flags }) {
 }
 
 if (args.check) {
-  const faults = [];
-  const mk = (k, ap, q) => ({ key: k, group: 'GD', name: k, arcH: 72, arms: { AP: { days: { 1: { e: ap } } }, FFMq: { arm: 'Ffull', days: { 1: { e: q } } }, FFMc: { arm: 'Ffull', days: { 1: { e: q } } }, FFMr: { arm: 'F20', days: { 1: { e: 2 * q } } } } });
-  const rows = [mk('a', 0.003, 0.001), mk('b', 0.005, 0.002), mk('c', 0.004, 0.003), { key: 'd', arcH: 72, error: 'coverage', arms: {} }];
-  const stored = { cmp: (r) => ({ arms: { S72: { days: { 1: { e: 1 } } }, XP72: { days: { 1: { e: 0.1 } } } } }), ussf: () => null };
-  const flags = new Map([['a', { steps: [{ hours: -10 }], unchecked: [] }], ['b', { steps: [{ hours: 5 }], unchecked: [] }], ['c', { steps: [], unchecked: [] }]]);
-  const c = cellOf({ rows, fit: 72, lead: 24, stored, flags });
-  if (c.n !== 3 || JSON.stringify(c.arms.AP) !== JSON.stringify([0.004, 0.0049, 3]) || JSON.stringify(c.arms.FFM20) !== JSON.stringify([0.004, 0.0058, 3])) faults.push(`arms ${JSON.stringify(c.arms)}`);
-  if (c.arms.XPU || JSON.stringify(c.arms.SGP4) !== JSON.stringify([1, 1, 3]) || c.settings.FFMfull?.arm !== 'Ffull') faults.push('stored columns or settings');
-  if (c.burnsInFit !== 1 || c.burnsInForecast !== 1) faults.push(`burns ${c.burnsInFit} ${c.burnsInForecast}`);
-  const c2 = cellOf({ rows, fit: 72, lead: 24, stored, flags: new Map([['a', flags.get('a')]]) });
-  if (c2.burnsInFit !== null) faults.push('a window with no detector run is counted');
-  console.log(faults.length ? `CELLS CHECK: FAIL\n${faults.join('\n')}` : 'CELLS CHECK: PASS (arms tuples [median, p95, n] on scored windows, failed windows left out; stored columns read per window; settings named; burns recounted; null where a window has no detector run)');
-  process.exit(faults.length ? 1 : 0);
+  // end to end: cells.mjs on a made-up store, with Near 700 km rows on real window keys (so the stored SGP4 and XP rows and the maneuver
+  // flags are read) and laser geodetic rows on made-up keys; assertions on cells.json and cells-first-pass.json
+  const E = await import('./lib/e2e.mjs');
+  const { check, done } = E.checker('CELLS');
+  const flagKeys = JSON.parse(fs.readFileSync(path.join(REPO, 'results/operator-theory/maneuver-flags/flags.json'), 'utf8')).windows.filter((w) => w.group === 'S1' && !/2026-0[3-5]/.test(w.key)).slice(0, 8).map((w) => w.key);
+  const s1 = E.cellRows({ group: 'S1', regime: 'Near 700 km', fit: 24, sats: flagKeys.length, blocks: 1, arm: 'L70S' }).map((r, i) => ({ ...r, key: flagKeys[i], name: flagKeys[i].split('|')[1], cutoff: `${flagKeys[i].split('|')[2]}T00:00:00.000Z` }));
+  const gd = [...E.cellRows({ group: 'GD', regime: 'Laser geodetic' }), ...E.cellRows({ group: 'GD', regime: 'Laser geodetic', blocks: 1, start: '2026-03-03', period: '2026-03..05' })];
+  const dir = E.tmp('cells'), out = path.join(dir, 'out'), A = E.writeStore(dir, { rows: [...s1, ...gd, { key: 'GD|X|2025-10-01', group: 'GD', arcH: 72, error: 'coverage', arms: {} }] });
+  const r = E.run('cells.mjs', ['--rows', A, '--out', out]);
+  check(r.code === 0, `cells.mjs exited ${r.code}: ${r.err.slice(-300)}`);
+  const all = E.readJson(path.join(out, 'cells.json')), first = E.readJson(path.join(out, 'cells-first-pass.json'));
+  const at = (doc, regime, fit, lead) => doc.rows.find((x) => x.regime === regime && x.fit === fit && x.lead === lead);
+  const g = at(all, 'Laser geodetic', 72, 24), g1 = at(first, 'Laser geodetic', 72, 24), s = at(all, 'Near 700 km', 24, 24);
+  check(all.rows.length === 72 && first.rows.length === 72, `rows ${all.rows.length}, ${first.rows.length} (the published 72)`);
+  check(g?.n === 40 && g1?.n === 32 && g.satellites === 8, `laser geodetic n ${g?.n} (all), ${g1?.n} (first pass), ${g?.satellites} satellites`);
+  const apMed = Number(g?.arms?.AP?.[0]), qMed = Number(g?.arms?.FFMfull?.[0]);
+  check(g?.arms?.AP?.[2] === 40 && Math.abs(apMed / qMed - 1.5) < 0.05 && g.arms.FFM20?.[2] === 40 && g.settings?.FFMfull?.arm === 'Ffull', `laser geodetic arms ${JSON.stringify(g?.arms)}`);
+  check(g?.burnsInFit === null && g.paired?.verdict === 'shown under 2' && Math.abs(g.paired.ratio[0] - 1.5) < 1e-3, `laser geodetic burns ${g?.burnsInFit}, paired ${JSON.stringify(g?.paired)}`);
+  check(s && s.n === flagKeys.length && Number.isInteger(s.burnsInFit) && s.burnsInFit <= s.n && Array.isArray(s.arms.SGP4) && Array.isArray(s.arms.XP), `Near 700 km on real keys: n ${s?.n}, burns ${s?.burnsInFit}, SGP4 ${JSON.stringify(s?.arms?.SGP4)}, XP ${JSON.stringify(s?.arms?.XP)}`);
+  check(/RMS over the 24 h ending at the lead/.test(all.fields) && /second pass/.test(all.provenance) && /First pass/.test(first.provenance), 'fields or provenance');
+  fs.rmSync(dir, { recursive: true, force: true });
+  done('cells.mjs run on a made-up store: the 72 published cells in both files; counts on all windows and on the first pass; AP 1.5 times FFMfull with the reduced column; paired verdict; a coverage error left out; on real window keys the stored SGP4 and XP and the burn flags are read, on made-up keys burns are null');
 }
 
 const dir = args.rows;

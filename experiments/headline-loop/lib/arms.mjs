@@ -30,7 +30,33 @@ export const PCF = {
   AP_WIDE: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20 }), fit: { dragPrior: { form: 'LOG_NORMAL', mean: 0.01, sigma: 10 * Math.log(10) } } }),
   // BUD-3: AP on a conservative-force model orbit, drag and radiation pinned off by their priors (B 0 +- 1e-12, S 0 +- 1e-9)
   AP_FLOOR: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: { dragPrior: { form: 'GAUSSIAN_SIGNED', mean: 0, sigma: 1e-12 }, srpPrior: { form: 'GAUSSIAN_SIGNED', mean: 0, sigma: 1e-9 } } }),
+  // the whiteroom XP: the same module with the theory's own (stock) forces, as all-regimes.mjs PCF_XP
+  XP: APL.fitPcf({ forces: {}, fit: null }),
 };
+
+/** A fit $PCF naming the forecast the record carries (sdn-ap 0.6.7 and later, SPEC 18.4): S.pcfBytes's encoding (every FORCES scalar on
+ *  the wire, ATMOSPHERE_MODEL stated) plus OUTPUT START_TIME and STOP_TIME. forces: APL.apForces(...). */
+export function carriedPcf({ forces, startIso, stopIso }) {
+  const P = S.PCF, fb = S.flatbuffers;
+  const t = new P.PCFT();
+  t.THEORY = P.pcfTheory.AP;
+  const enumOf = { WEATHER_SOURCE: P.pcfWeatherSource, ATMOSPHERE_MODEL: P.pcfAtmosphereFamily, DENSITY_CORRECTION: P.pcfDensityCorrection };
+  const f = Object.assign(new P.PCFForceModelT(), { EPHEMERIS_SOURCE: '' });
+  for (const [k, v] of Object.entries({ ATMOSPHERE_MODEL: 'JACCHIA70', ...forces })) f[k] = enumOf[k] ? enumOf[k][v] : v;
+  const pack = f.pack.bind(f);
+  f.pack = (b) => {
+    const offset = b.addFieldOffset;
+    b.addFieldOffset = function (slot, value, d) { if (value !== d) offset.call(this, slot, value, d); };
+    b.forceDefaults(true);
+    try { return pack(b); } finally { b.forceDefaults(false); b.addFieldOffset = offset; }
+  };
+  t.FORCES = f;
+  t.OUTPUT = Object.assign(new P.PCFOutputT(), { START_TIME: startIso, STOP_TIME: stopIso });
+  const b = new fb.Builder(512);
+  P.PCF.finishPCFBuffer(b, t.pack(b));
+  return b.asUint8Array().slice();
+}
+export const AP_FORCES = { AP: APL.apForces({ tesseral: 31, zonal: 20 }), AP_VACUUM: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }) };
 
 /** The FFM cache's version key: the FFM and estimation builds, the environment (kernel, Earth orientation), the arm's settings and the trajectory
  *  step. A different build, environment, setting or step is a different key, so no cache is ever mixed. */
@@ -68,11 +94,19 @@ export async function openArms({ apWasm, apcMethod = null }) {
     if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
     return r;
   };
-  const flyAp = async (ocm, epochs) => {
-    const r = await invoke('propagate', [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: S.flightPcfBytes(epochs) }]);
+  // frame 'TEME' (the published harness: the module's TEME, turned to GCRF by foundation/frames) or 'GCRF' (the module's own GCRF output)
+  const gcrfFlightPcf = (epochs) => {
+    const t = new S.PCF.PCFT();
+    t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs });
+    const b = new S.flatbuffers.Builder(1 << 12);
+    S.PCF.PCF.finishPCFBuffer(b, t.pack(b));
+    return b.asUint8Array().slice();
+  };
+  const flyAp = async (ocm, epochs, frame = 'TEME') => {
+    const r = await invoke('propagate', [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: frame === 'GCRF' ? gcrfFlightPcf(epochs) : S.flightPcfBytes(epochs) }]);
     const lines = S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload));
     if (lines.length !== epochs.length) throw new Error(`propagate returned ${lines.length} of ${epochs.length}`);
-    return m.toAxes(lines, epochs, 'GCRF');
+    return frame === 'GCRF' ? lines.map((l) => ({ r: l.r, v: l.v })) : m.toAxes(lines, epochs, 'GCRF');
   };
   const fitAp = async (method, oem, pcf, spw) => {
     const r = await invoke(method, [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(spw ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: spw }] : [])]);
@@ -83,17 +117,67 @@ export async function openArms({ apWasm, apcMethod = null }) {
     ffmProvenance: F.provenance,
     apcAvailable: !!apcMethod && methods.has(apcMethod),
     /** AP: a $PCF on the truth arc, the record flown on the scored epochs: { ok, rms, days, states (GCRF, for D) }. */
-    async ap({ object, thin, D0, pcf, spw, sc }) {
+    async ap({ object, thin, D0, pcf, spw, sc, frame = 'TEME' }) {
       const t0 = performance.now();
       const ocm = await fitAp('fit', S.oemBytes({ frame: 'GCRF', object, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }), pcf, spw);
       const info = APL.readOcm(ocm);
-      const states = await flyAp(ocm, sc.epochs);
-      return { ok: true, rms: info.fitRmsKm, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), states, s: (performance.now() - t0) / 1000 };
+      const states = await flyAp(ocm, sc.epochs, frame);
+      const fit = { b: info.bterm, s: info.agom, sigmaLnB: info.sigmaLnB, iterations: info.iterations, converged: info.o.ORBIT_DETERMINATION?.FIT_STATISTICS?.CONVERGED ?? null };
+      return { ok: true, rms: info.fitRmsKm, fit, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), states, s: (performance.now() - t0) / 1000 };
     },
     /** AP fitted to given arc lines (GCRF) and flown on the given epochs: { rms (km), states }. */
-    async apFitFly({ object, lines, D0, pcf, spw = null, epochs }) {
+    async apFitFly({ object, lines, D0, pcf, spw = null, epochs, frame = 'TEME' }) {
       const ocm = await fitAp('fit', S.oemBytes({ frame: 'GCRF', object, lines, useableStart: lines[0].epoch, useableStop: iso(D0) }), pcf, spw);
-      return { rms: APL.readOcm(ocm).fitRmsKm, states: await flyAp(ocm, epochs) };
+      return { rms: APL.readOcm(ocm).fitRmsKm, states: await flyAp(ocm, epochs, frame) };
+    },
+    /** The record that carries a forecast (SPEC 18): fit to a GCRF block (the theory fitted on the block up to D0, the forecast START to STOP
+     *  carried as Chebyshev segments): { ocm, bytes, segments, maxResidualKm, cpuS, wallS } (CPU of this process over the module's fit). */
+    async carriedRecord({ object, block, D0, startIso, stopIso, forces, spw = null }) {
+      const pcf = carriedPcf({ forces, startIso, stopIso });
+      const oem = S.oemBytes({ frame: 'GCRF', object, lines: block, useableStart: block[0].epoch, useableStop: iso(D0) });
+      const c0 = process.cpuUsage(), t0 = performance.now();
+      const ocm = await fitAp('fit', oem, pcf, spw);
+      const c = process.cpuUsage(c0), wallS = (performance.now() - t0) / 1000;
+      const o = APL.readOcm(ocm).o;
+      const seg = o.POLYNOMIAL_POSITION_RECORDS ?? [];
+      return { ocm, bytes: ocm.length, segments: seg.length, maxResidualKm: seg.length ? Math.max(...seg.map((x) => x.MAX_POSITION_RESIDUAL ?? 0)) : null, cpuS: (c.user + c.system) / 1e6, wallS };
+    },
+    /** A record flown at the given epochs (GCRF states). */
+    flyRecord: (ocm, epochs, frame = 'TEME') => flyAp(ocm, epochs, frame),
+    /** Module states scored against a scoredOf grid's truth: RMS per lead day (e, r, t, n km). */
+    score: async (states, sc) => byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes),
+    /** A fitted FFM product flown at the given epochs in one pass: each 9,000-state chunk starts from the last state of the one before, so
+     *  the states are one integration (the cache's trajectory starts every chunk from the fit epoch, and two integrations of different
+     *  step sequences can part by meters at the chunk's join). [{epoch, r, v}] GCRF km. */
+    async flyContinuous({ arm, product, epochs, rows }) {
+      const settings = SETTINGS[arm], out = [];
+      let p = product;
+      for (let i = 0; i < epochs.length; i += 9000) {
+        const chunk = epochs.slice(i, i + 9000);
+        const s = await F.forecast(p, chunk, settings, rows);
+        s.forEach((x, j) => out.push({ epoch: chunk[j], r: x.r, v: x.v }));
+        const last = s.at(-1);
+        p = { epoch: chunk.at(-1), state: [...last.r, ...last.v].map((x) => x * 1000), parameters: product.parameters };
+      }
+      return out;
+    },
+    /** The making cost of the numerical part (referee's test 6): the arm's fit, then its flight at the given epochs in one pass (each
+     *  chunk started from the last state of the one before), each as this process's CPU seconds. */
+    async ffmCost({ arm, thin, D0, rows, epochs }) {
+      const settings = SETTINGS[arm], cpu = () => { const u = process.cpuUsage(); return (u.user + u.system) / 1e6; };
+      let c0 = cpu();
+      const f = await F.fit(thin, settings, D0, rows);
+      const fitCpuS = cpu() - c0;
+      c0 = cpu();
+      let product = { epoch: f.epoch, state: f.state, parameters: f.parameters }, n = 0;
+      for (let i = 0; i < epochs.length; i += 9000) {
+        const chunk = epochs.slice(i, i + 9000);
+        const s = await F.forecast(product, chunk, settings, rows);
+        n += s.length;
+        const last = s.at(-1);
+        product = { epoch: chunk.at(-1), state: [...last.r, ...last.v].map((x) => x * 1000), parameters: f.parameters };
+      }
+      return { fitCpuS, propagationCpuS: cpu() - c0, states: n };
     },
     /** BUD-3's model orbit: a fitted state flown with conservative forces alone (SETTINGS.Fcons) at the given epochs. */
     async modelOrbit(product, epochs) { return F.forecast({ epoch: product.epoch, state: product.state, parameters: [] }, epochs, SETTINGS.Fcons, null); },

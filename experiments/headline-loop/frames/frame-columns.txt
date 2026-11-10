@@ -1,0 +1,14 @@
+GE|C006 BDS-2G|2025-10-08 (72 h arc, 864 states)
+  AP, TEME + foundation/frames (published path): rotation 56.8 mas, in-arc RMS 12.08 m
+  AP, sdn-ap GCRF output: rotation -0.0 mas, in-arc RMS 3.39 m
+  XP, whiteroom, TEME + foundation/frames (published path): rotation 160.8 mas, in-arc RMS 38.72 m
+  XP, whiteroom, sdn-ap GCRF output: rotation 104.0 mas, in-arc RMS 29.53 m
+  XP, Space Force (sgp4-xp 0.2.1), TEME + foundation/frames: rotation -43.0 mas, in-arc RMS 26.24 m; its own GCRF output differs from that path by at most 0.0000 m
+  SGP4 (analysis/gp-error-model fit, propagator/sgp4), TEME + foundation/frames: rotation -0.0 mas, in-arc RMS 1956.60 m
+IG|C005 BDS-2I|2025-10-06 (72 h arc, 864 states)
+  AP, TEME + foundation/frames (published path): rotation 56.8 mas, in-arc RMS 9.83 m
+  AP, sdn-ap GCRF output: rotation -0.0 mas, in-arc RMS 2.52 m
+  XP, whiteroom, TEME + foundation/frames (published path): rotation -56.9 mas, in-arc RMS 37.41 m
+  XP, whiteroom, sdn-ap GCRF output: rotation -113.7 mas, in-arc RMS 40.88 m
+  XP, Space Force (sgp4-xp 0.2.1), TEME + foundation/frames: rotation -82.5 mas, in-arc RMS 38.35 m; its own GCRF output differs from that path by at most 0.0000 m
+  SGP4: not converged: no step lowers the cost; predicted decrease 0.0968 of the cost (stationary when <= 1e

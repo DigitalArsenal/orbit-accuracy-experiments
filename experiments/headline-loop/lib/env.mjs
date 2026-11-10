@@ -36,7 +36,8 @@ export function packageState(repo = REPO) {
 }
 /** Refuse on wrong packages. Called before any module that reads them. */
 export function usePackages() {
-  const s = packageState();
+  // HEADLINE_LOOP_CHECKOUT judges another checkout's install (the end-to-end check runs the tool against a made-up stale one)
+  const s = packageState(process.env.HEADLINE_LOOP_CHECKOUT ?? REPO);
   Object.assign(BINDINGS, { lockfile: s.lockfile, installed: s.installed });
   if (s.refusal) throw new Error(s.refusal);
 }

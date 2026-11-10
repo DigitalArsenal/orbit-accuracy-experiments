@@ -27,32 +27,36 @@ const round = (x, p = 4) => (x === null || x === undefined || !Number.isFinite(x
 function readRows(dir) { return fs.readdirSync(dir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => fs.readFileSync(path.join(dir, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))); }
 
 if (args.check) {
-  const faults = [];
-  // made-up rows: 8 satellites x 4 blocks, AP = 1.5 x reference everywhere, D = 2 m
-  const rows = [];
-  for (let s = 0; s < 8; s += 1) for (let b = 0; b < 4; b += 1) rows.push({ key: `X|S${s}|${b}`, group: 'GD', name: `S${s}`, cutoff: new Date(Date.parse('2025-10-01T00:00:00Z') + b * 7 * 86400000).toISOString(), arcH: 72, arms: { AP: { days: { 1: { e: 0.003 * (1 + s / 10) } }, dVsFFMq: { 1: 0.002 } }, FFMq: { arm: 'Ffull', weightedRms: 0.001, days: { 1: { e: 0.002 * (1 + s / 10) }, 7: { e: 0.01 } } }, FFMqHalfTol: { arm: 'Ffull', days: { 7: { e: 0.01001 } } }, FFMc: { arm: 'Ffull', days: { 1: { e: 0.002 * (1 + s / 10) } } }, FFMr: { arm: 'F20', days: { 1: { e: 0.004 * (1 + s / 10) } } } } });
-  const [c] = scoreCells(rows, { leads: [24] });
-  if (Math.abs(c.estimateRatio - 1.5) > 1e-9 || Math.abs(c.ratioOfMedians - 1.5) > 1e-9) faults.push(`estimate ${c.estimateRatio}, ratio of medians ${c.ratioOfMedians}`);
-  if (!c.bootstrapRatio || Math.abs(c.bootstrapRatio[0] - 1.5) > 1e-9 || !c.orderRatio || !c.passUnder2) faults.push(`constant ratio: interval ${c.bootstrapRatio}, order ${c.orderRatio}, pass ${c.passUnder2}`);
-  if (Math.abs(c.D.medianM - 2) > 1e-9 || c.satellites !== 8 || c.timeBlocks !== 4 || !c.couldMeetDesign) faults.push('D, satellites or time blocks');
-  if (Math.abs(c.others.FFMr.overReference - 2) > 1e-9 || Math.abs(c.others.FFMc.overReference - 1) > 1e-9 || c.rankCorrelation < 0.99) faults.push('other arms or rank correlation');
-  if (!c.goalPass || !c.gate.halfToleranceDay7?.under1pct) faults.push('a qualified, gated constant 1.5 cell does not pass');
-  // five satellites: no order interval, the cell fails
-  const [c5] = scoreCells(rows.filter((r) => Number(r.name.slice(1)) < 5), { leads: [24] });
-  if (c5.orderRatio !== null || c5.goalPass) faults.push('five satellites have an order interval or pass');
-  // ratio 3: fails
-  const [c3] = scoreCells(rows.map((r) => ({ ...r, arms: { ...r.arms, AP: { ...r.arms.AP, days: { 1: { e: r.arms.FFMq.days[1].e * 3 } } } } })), { leads: [24] });
-  if (c3.passUnder2) faults.push('a ratio of 3 passes');
-  // the gate: a reduced reference fails qualification 1; a fit RMS over 3 sigma (0.2 x 10 m = 2 m against 0.45 m) is "reference not usable"
-  const [cr] = scoreCells(rows.map((r) => ({ ...r, arms: { ...r.arms, FFMq: { ...r.arms.FFMq, arm: 'F20' } } })), { leads: [24] });
-  const [cu] = scoreCells(rows.map((r, i) => ({ ...r, arms: { ...r.arms, FFMq: { ...r.arms.FFMq, weightedRms: i === 0 ? 0.2 : 0.001 } } })), { leads: [24] });
-  if (cr.goalPass || cr.gate.settingsQualified || cu.goalPass || cu.gate.referenceNotUsable !== 1) faults.push('the reference-quality gate');
-  // order interval: n = 8 gives k = 1 (P(B <= 0) = 1/256), so [min, max]
-  const oi = orderInterval([1, 2, 3, 4, 5, 6, 7, 8]);
-  if (!oi || oi[0] !== 1 || oi[1] !== 8) faults.push(`order interval of 1..8: ${oi}`);
-  if (Math.abs(spearman([1, 2, 3, 4], [10, 20, 30, 40]) - 1) > 1e-12 || Math.abs(spearman([1, 2, 3, 4], [4, 3, 2, 1]) + 1) > 1e-12) faults.push('spearman');
-  console.log(faults.length ? `SCORE CHECK: FAIL\n${faults.join('\n')}` : 'SCORE CHECK: PASS (estimate, two-way bootstrap and order interval on a constant ratio; D; design counts; configured and reduced arms; rank correlation; half-tolerance step check; 5 satellites fail for want of an interval; a ratio of 3 fails; a reduced reference and an unusable window fail the gate; order interval; spearman)');
-  process.exit(faults.length ? 1 : 0);
+  // end to end: score.mjs on a made-up store, then --compare against a second build; assertions on scoreboard.json, README.md and the compare file
+  const E = await import('./lib/e2e.mjs');
+  const { check, done } = E.checker('SCORE');
+  const dir = E.tmp('score'), out = path.join(dir, 'out');
+  const rows = [
+    ...E.cellRows({ group: 'GD', regime: 'Laser geodetic', ratio: 1.5, dM: 2 }), // 8 satellites x 4 blocks, AP 1.5 x FFMq
+    ...E.cellRows({ group: 'GD', regime: 'Laser geodetic', ratio: 1.5, dM: 2, blocks: 1, start: '2026-03-03', period: '2026-03..05', prefix: 'S' }),
+    ...E.cellRows({ group: 'GE', regime: 'Geostationary', ratio: 3, arm: 'E5F', prefix: 'G' }), // 8 x 4, AP 3 x FFMq
+    ...E.cellRows({ group: 'IG', regime: 'Inclined geosynchronous', ratio: 1.2, arm: 'E5F', sats: 5, prefix: 'I' }), // 5 satellites: no order interval
+  ];
+  const A = E.writeStore(dir, { rows }), B = E.writeStore(dir, { sha256: 'e2e1'.repeat(16), rows: rows.map((r) => ({ ...r, arms: { ...r.arms, AP: { ...r.arms.AP, days: Object.fromEntries(Object.entries(r.arms.AP.days).map(([k, v]) => [k, { ...v, e: v.e * 1.1 }])) } } })) });
+  const r1 = E.run('score.mjs', ['--rows', A, '--out', out, '--draws', '400']);
+  check(r1.code === 0, `score.mjs exited ${r1.code}: ${r1.err.slice(-300)}`);
+  const sb = E.readJson(path.join(out, 'scoreboard.json')), cell = (list, g, lead) => list.find((c) => c.group === g && c.fit === 72 && c.lead === lead);
+  const gd = cell(sb.cells, 'GD', 24), gd1 = cell(sb.cellsFirstPass, 'GD', 24), ge = cell(sb.cells, 'GE', 24), ig = cell(sb.cells, 'IG', 24);
+  check(gd && Math.abs(gd.estimateRatio - 1.5) < 1e-6 && Math.abs(gd.ratioOfMedians - 1.5) < 1e-6, `GD estimate ${gd?.estimateRatio}, ratio of medians ${gd?.ratioOfMedians}`);
+  check(gd?.verdict === 'shown under 2' && gd.goalPass && gd.satellites === 8 && gd.windows === 40 && Math.abs(gd.D.medianM - 2) < 1e-9, `GD verdict ${gd?.verdict}, pass ${gd?.goalPass}, ${gd?.satellites} satellites, ${gd?.windows} windows, D ${gd?.D?.medianM}`);
+  check(gd1?.windows === 32, `first pass GD windows ${gd1?.windows} (the 8 flagged 2026-03..05 rows belong to all windows only)`);
+  check(ge?.verdict === 'shown at or over 2' && !ge.goalPass, `GE verdict ${ge?.verdict}`);
+  check(ig?.verdict === 'no interval' && ig.orderRatio === null && !ig.goalPass, `IG verdict ${ig?.verdict}`);
+  check(Math.abs(gd?.others?.FFMr?.overReference - 2) < 1e-6 && gd?.gate?.halfToleranceDay7?.under1pct, 'GD reduced arm over the reference, or the half-tolerance check');
+  check(sb.allWindows.cells72.shownUnder2 === 4 && sb.allWindows.cells72.shownAtOrOver2 === 4 && sb.allWindows.cells72.noInterval === 4, `three numbers ${JSON.stringify(sb.allWindows.cells72)}`);
+  const md = fs.readFileSync(path.join(out, 'README.md'), 'utf8');
+  check(/## All windows/.test(md) && /## First pass/.test(md) && /shown under 2 in 4/.test(md), 'README.md sections or counts');
+  const r2 = E.run('score.mjs', ['--rows', A, '--compare', B, '--out', out, '--draws', '400']);
+  check(r2.code === 0, `score.mjs --compare exited ${r2.code}: ${r2.err.slice(-300)}`);
+  const cmp = E.readJson(path.join(out, `compare-${'e2e0'.repeat(3)}-${'e2e1'.repeat(3)}.json`)), cg = cmp.cells.find((c) => c.group === 'GD' && c.lead === 24);
+  check(cg && Math.abs(cg.pairedBOverA.ratio - 1.1) < 1e-3 && cg.pairedBOverA.windows === 40, `compare GD ${JSON.stringify(cg?.pairedBOverA)}`);
+  fs.rmSync(dir, { recursive: true, force: true });
+  done('score.mjs and score.mjs --compare run on a made-up store: a constant 1.5 cell is shown under 2 and passes with D 2 m; a 3 cell is shown at or over 2; five satellites give no interval; flagged 2026-03..05 rows enter all windows only; the three counts; README sections; the second build at 1.1 times reads 1.1 paired');
 }
 
 
