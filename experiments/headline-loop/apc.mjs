@@ -3,8 +3,10 @@
 //   node experiments/headline-loop/apc.mjs --rows <store>/<sha12>-apc [--group GD] [--windows first|spring|all] [--json out.json] [--md out.md]
 //   node experiments/headline-loop/apc.mjs --check     made-up rows: the 5 % rule and the paired ratio
 // Per cell (fit, lead), inside the carried span: APC's error (median, p95 km), FFMq's, the ratio of medians and the paired median of
-// E_APC / E_FFMq with a 95 % interval over time blocks of fit plus lead; D, the RMS over the lead day of |r_APC - r_FFMq| (the compression
-// error, mm: median and p95); the record's bytes and bytes per carried day; the CPU seconds to make it: the module's record build (every
+// E_APC / E_FFMq with a 95 % interval over time blocks of fit plus lead; D, the compression error: the RMS over the lead day of |r_APC - r_block|
+// against the very forecast the record was built from (the cached trajectory, or its one-pass re-flight where the cached join broke the 5 mm
+// rule; the count of each printed); and, under its own name, the distance to FFMq's scored flight (another integration of the same
+// product), mm: median and p95; the record's bytes and bytes per carried day; the CPU seconds to make it: the module's record build (every
 // window), the one-pass re-flight where the cached trajectory's join broke the 5 mm rule, and on a sample the numerical fit and propagation.
 // Past the span (1, 3 and 7 days after its end, where truth exists and not after 2026-11-10): APC's error, the theory flying. Every window
 // whose APC error is not within 5 % of FFMq's at a lead is listed; so is every window the module refused.
@@ -72,7 +74,7 @@ for (const g of groups) for (const fit of [...new Set(ok.filter((r) => r.group =
     const day = DAY[lead], v = rows.filter((r) => r.arms.APC.days?.[day] && r.arms.FFMq?.days?.[day]);
     if (!v.length) continue;
     const a = v.map((r) => r.arms.APC.days[day].e), q = v.map((r) => r.arms.FFMq.days[day].e), d = v.map((r) => r.arms.APC.dVsFFMq?.[day]).filter(Number.isFinite), db = v.map((r) => r.arms.APC.dVsBlock?.[day]).filter(Number.isFinite);
-    out.cells.push({ group: g, regime: v[0].regime, fit, lead, n: v.length, apcKm: [med(a), p95(a)], ffmqKm: [med(q), p95(q)], ratioOfMedians: med(a) / med(q), paired: pairedApc(rows, fit, lead), dMm: [med(d) * 1e6, p95(d) * 1e6], dBlockMm: db.length ? [med(db) * 1e6, p95(db) * 1e6] : null,
+    out.cells.push({ group: g, regime: v[0].regime, fit, lead, n: v.length, apcKm: [med(a), p95(a)], ffmqKm: [med(q), p95(q)], ratioOfMedians: med(a) / med(q), paired: pairedApc(rows, fit, lead), dMm: db.length ? [med(db) * 1e6, p95(db) * 1e6] : null, scoredDistanceMm: [med(d) * 1e6, p95(d) * 1e6], blocks: { cached: rows.filter((r) => (r.arms.APC.block ?? 'cached') === 'cached').length, onePass: rows.filter((r) => r.arms.APC.block && r.arms.APC.block !== 'cached').length },
       bytes: med(rows.map((r) => r.arms.APC.bytes)), bytesPerDay: med(rows.map((r) => r.arms.APC.bytes / r.arms.APC.spanDays)),
       cpuS: { build: med(rows.map((r) => r.arms.APC.buildCpuS)), reflown: refly.length, refly: med(refly.map((r) => r.arms.APC.reflyCpuS)), sampled: cost.length, fit: med(cost.map((r) => r.arms.APC.cost.fitCpuS)), propagation: med(cost.map((r) => r.arms.APC.cost.propagationCpuS)) } });
   }
@@ -85,9 +87,9 @@ const f = (x, p = 3) => (x === null || x === undefined || !Number.isFinite(x) ? 
 const lines = [
   `# APC, the record that carries the forecast: ${build.version} (${build.sha256.slice(0, 12)})${args.group ? `, ${args.group}` : ''} (${which} windows)`, '',
   'Development on windows already read; not a registered result. Inside the carried span (cutoff to 7 days); lead: RMS over the 24 h ending at the lead. Flown in the module\'s GCRF output.', '',
-  '| Regime | fit h | lead h | n | APC km median / p95 | FFMq km median / p95 | ratio of medians | paired APC / FFMq [blocks] | D vs FFMq mm median / p95 | compression D vs block mm median / p95 | bytes (per day) | CPU s: record build; one-pass re-flight (n); FFM fit / propagation (sampled n) |',
-  '|---|--:|--:|--:|---|---|--:|---|---|---|---|---|',
-  ...out.cells.map((c) => `| ${c.regime} | ${c.fit} | ${c.lead} | ${c.n} | ${f(c.apcKm[0])} / ${f(c.apcKm[1])} | ${f(c.ffmqKm[0])} / ${f(c.ffmqKm[1])} | ${f(c.ratioOfMedians, 4)} | ${c.paired ? `${f(c.paired.ratio, 4)} [${c.paired.interval ? c.paired.interval.map((x) => f(x, 4)).join(', ') : 'none'}]` : '-'} | ${f(c.dMm[0])} / ${f(c.dMm[1])} | ${c.dBlockMm ? `${f(c.dBlockMm[0])} / ${f(c.dBlockMm[1])}` : '-'} | ${f(c.bytes, 5)} (${f(c.bytesPerDay, 4)}) | ${f(c.cpuS.build)}; ${c.cpuS.reflown ? `${f(c.cpuS.refly)} (${c.cpuS.reflown})` : '-'}; ${c.cpuS.sampled ? `${f(c.cpuS.fit)} / ${f(c.cpuS.propagation)} (${c.cpuS.sampled})` : '-'} |`),
+  '| Regime | fit h | lead h | n | APC km median / p95 | FFMq km median / p95 | ratio of medians | paired APC / FFMq [blocks] | D, compression against its own block, mm median / p95 | distance to the FFMq scored flight, mm median / p95 | blocks: cached / one-pass | bytes (per day) | CPU s: record build; one-pass re-flight (n); FFM fit / propagation (sampled n) |',
+  '|---|--:|--:|--:|---|---|--:|---|---|---|---|---|---|',
+  ...out.cells.map((c) => `| ${c.regime} | ${c.fit} | ${c.lead} | ${c.n} | ${f(c.apcKm[0])} / ${f(c.apcKm[1])} | ${f(c.ffmqKm[0])} / ${f(c.ffmqKm[1])} | ${f(c.ratioOfMedians, 4)} | ${c.paired ? `${f(c.paired.ratio, 4)} [${c.paired.interval ? c.paired.interval.map((x) => f(x, 4)).join(', ') : 'none'}]` : '-'} | ${c.dMm ? `${f(c.dMm[0])} / ${f(c.dMm[1])}` : '-'} | ${f(c.scoredDistanceMm[0])} / ${f(c.scoredDistanceMm[1])} | ${c.blocks.cached} / ${c.blocks.onePass} | ${f(c.bytes, 5)} (${f(c.bytesPerDay, 4)}) | ${f(c.cpuS.build)}; ${c.cpuS.reflown ? `${f(c.cpuS.refly)} (${c.cpuS.reflown})` : '-'}; ${c.cpuS.sampled ? `${f(c.cpuS.fit)} / ${f(c.cpuS.propagation)} (${c.cpuS.sampled})` : '-'} |`),
   '', '## Past the span (the theory flies; the headline does not apply)', '', '| Regime | fit h | after the span | n | APC km median / p95 |', '|---|--:|---|--:|---|',
   ...out.past.map((p) => `| ${p.regime} | ${p.fit} | ${p.after} | ${p.n} | ${p.apcKm ? `${f(p.apcKm[0])} / ${f(p.apcKm[1])}` : '-'} |`),
   '', `Windows outside 5 % of FFMq at a lead: ${out.outside.length ? out.outside.map((o) => `${o.key} ${o.arcH} h, ${o.lead} h: ${f(o.ratio, 4)}`).join('; ') : 'none'}.`,
