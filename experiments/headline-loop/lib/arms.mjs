@@ -21,10 +21,12 @@ export const STORE_ROOT = process.env.HEADLINE_LOOP_STORE ?? '/opt/data/sdn-arch
 export const NUMERICAL_STORE = 'f0b8352a43f3';
 
 // PCF_AP / PCF_AP_VACUUM of all-regimes.mjs (ap-truth.mjs's fit for the XM groups is the same: FORCES 31, 20, NRLMSISE-00 on the as-issued rows,
-// FIT unset); "vacuum" is the theory's own Jacchia 1970
+// FIT unset); "vacuum" is the theory's own Jacchia 1970. XP: FORCES and FIT unset, which the module fits and flies as THEORY SGP4XP (our
+// clean-room SGP4-XP, the same module and the same fit call as AP), with no space weather
 export const PCF = {
   AP: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20 }), fit: null }),
   AP_VACUUM: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null }),
+  XP: APL.fitPcf({ forces: {}, fit: null }),
 };
 
 /** The arms: { axes, ffmProvenance, ap() (when apWasm is given), ffm(), close() }. */
