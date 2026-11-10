@@ -1,6 +1,6 @@
 // The numerical arms: propagator/ffm 2.2.0 (FFM_220) flown and analysis/estimation 0.7.0 (XM3's pin) fitting, each wasm by git show at its
 // pinned commit and SHA-256 checked. lib/host.mjs and lib/fit.mjs, with two additions the reduced setting never needed: the ECOM2 terms in the
-// request (FORCES.ECOM2) and the fit's parameter kinds by their PRW ordinals, so ECOM2 terms can be fitted (as the round-0 referee's ref-ffm.mjs).
+// request (FORCES.ECOM2) and the fit's parameter kinds by their PRW ordinals, so ECOM2 terms can be fitted.
 // Encoding, decoding and routing only: every state is the module's.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -62,7 +62,7 @@ function executionFrame(request) {
   return { portId: 'request', typeRef: PRW_TYPE, payload: encode('EXECUTION_REQUEST', execution) };
 }
 
-// ---- settings: lib/settings.mjs (the referee's arms by name) ----
+// ---- settings: lib/settings.mjs (the settings by name) ----
 import { SETTINGS } from './settings.mjs';
 export { apriori, SETTINGS, CONFIGURED, reducedFor } from './settings.mjs';
 

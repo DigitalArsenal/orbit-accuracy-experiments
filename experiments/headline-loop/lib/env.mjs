@@ -1,6 +1,6 @@
 // The headline loop's environment. Two conditions, each checked, each recorded in every row.
 //
-// 1. Installed packages (review round 0, REF-8). This repository's package.json and package-lock.json pin spacedatastandards.org 1.276.0 (and
+// 1. Installed packages. This repository's package.json and package-lock.json pin spacedatastandards.org 1.276.0 (and
 //    space-data-module-sdk 0.9.7, flatbuffers 25.9.23, flatc-wasm 26.1.38); the FFM request builder writes 1.276.0 tables (PCFForceModel).
 //    A checkout whose node_modules hold any other version is refused, the refusal naming the fix: `npm ci` in the checkout (or, in the stack,
 //    `node tools/deps-bundle/deps-bundle.mjs attach <checkout>`, which attaches the lockfile's own install). No package is ever redirected.

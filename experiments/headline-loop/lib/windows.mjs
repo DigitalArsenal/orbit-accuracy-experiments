@@ -25,15 +25,11 @@ export const MIN_BIN = XM.config.scoring.binMinimumEpochs;
 export const MIN_COV = XM.config.fit.minimumCoverage;
 export const LEADS = [1, 2, 3, 5, 7];
 
-// Periods. Nothing dated after 2026-11-10 is ever read (held for other registered tests). The first pass also leaves out every window whose
-// fit arc or 7-day forecast touches 2026-03-01 to 05-31; the second pass (refly.mjs --period 2026-03..05) flies exactly those, each row
-// flagged. That reservation protects the catalog studies' public element sets of those months, which this harness never reads; the
-// precise-orbit windows of those months were read by the builds that made the published cells and are read again here (coordinator, 11-10).
+// Periods. Nothing dated after 2026-11-10 is ever read. The windows flown (the first pass) also leave out every window whose fit arc or
+// 7-day forecast touches 2026-03-01 to 05-31; those are not flown.
 const SPRING = [Date.parse('2026-03-01T00:00:00Z'), Date.parse('2026-06-01T00:00:00Z')], AFTER = [Date.parse('2026-11-10T00:00:00Z'), Infinity];
-export const SPRING_PERIOD = '2026-03..05';
 const touches = ([a, b], fromMs, toMs) => fromMs < b && toMs >= a;
 export const reserved = (fromMs, toMs) => touches(SPRING, fromMs, toMs) || touches(AFTER, fromMs, toMs);
-export const afterHorizon = (fromMs, toMs) => touches(AFTER, fromMs, toMs);
 
 /** Each group: its published label, its provider and satellite naming (compare-cells.mjs), its membership store, its fit arcs, vacuum or not. */
 export const GROUPS = {
@@ -53,7 +49,7 @@ export const GROUPS = {
 };
 const XM_PROVIDER = (name) => (/^Swarm/.test(name) ? 'ESA' : /^GRACE/.test(name) ? 'Data E' : /^Sentinel/.test(name) ? 'Copernicus' : 'ESA navigation');
 const XM_PUBLIC = (name) => (/^GRACE-FO/.test(name) ? `Research satellite ${name.at(-1)}` : name);
-export const providerOf = (group, name) => (GROUPS[group].store.startsWith('b0411/truth') ? XM_PROVIDER(name) : R.GROUPS[group]?.provider ?? 'All');
+export const providerOf = (group, name) => (GROUPS[group].store.startsWith('b0411/truth') || GROUPS[group].truth === 'gnss' ? XM_PROVIDER(name) : R.GROUPS[group]?.provider ?? 'All');
 export const satelliteOf = (group, name) => (GROUPS[group].store.startsWith('b0411/truth') ? XM_PUBLIC(name) : name);
 
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
@@ -61,10 +57,9 @@ export const rowsIn = (dir, re = /^rows(-\d+)?\.jsonl$/) => (fs.existsSync(dir) 
 export const inShard = (key, k, n) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % n === k;
 
 /** Every published window of the groups asked for, with the fit arcs its stored row carries: [{ key, group, name, norad, cutoffMs, arcs }].
- *  windows: the first pass; skipped: the rest; spring: those of the rest that touch 2026-03..05 and nothing after 2026-11-10 (the second
- *  pass, each flagged period). A window after 2026-11-10 is in neither pass. */
+ *  windows: the ones flown; skipped: the ones touching 2026-03..05 or after 2026-11-10, not read. */
 export function windowsOf(groups) {
-  const out = [], skipped = [], spring = [];
+  const out = [], skipped = [];
   for (const g of groups) {
     const G = GROUPS[g];
     if (!G) throw new Error(`group ${g}`);
@@ -75,11 +70,10 @@ export function windowsOf(groups) {
       const arcs = G.arcs ?? [...new Set(Object.keys(r.arms).filter((a) => /^AP\d+$/.test(a)).map((a) => Number(a.slice(2))))].sort((a, b) => a - b);
       const w = { key: r.key, group: g, name: r.name, norad: r.norad ?? null, cutoffMs, arcs };
       const from = cutoffMs - Math.max(...arcs) * HOUR - HOUR, to = cutoffMs + 7 * DAY + HOUR;
-      if (!reserved(from, to)) out.push(w);
-      else { skipped.push(w); if (!afterHorizon(from, to)) spring.push({ ...w, period: SPRING_PERIOD }); }
+      (reserved(from, to) ? skipped : out).push(w);
     }
   }
-  return { windows: out, skipped, spring };
+  return { windows: out, skipped };
 }
 
 // ---- truth readers, one object at a time (each kept until the next object of the shard) ----
@@ -182,13 +176,6 @@ export function weatherAt(D0) {
   if (O.excluded) throw new Error(O.excluded);
   return { rows: O.rows, spw: APL.fitWeather(O.rows, APL.horizonOf(D0)), ffm: driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap })) };
 }
-/** Observed weather (XM's condition M, a hindcast): observed F10.7 and definitive Ap through the forecast, the true centered 81-day mean. REF-5. */
-export function weatherObserved(D0) {
-  const M = W.rowsM(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0 + 8 * DAY);
-  if (M.excluded) throw new Error(M.excluded);
-  return { rows: M.rows, spw: APL.fitWeather(M.rows, APL.horizonOf(D0)), ffm: driverRows(M.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap })) };
-}
-export const sampled = (key, every) => every <= 1 || parseInt(crypto.createHash('sha256').update(`sample|${key}`).digest('hex').slice(0, 8), 16) % every === 0;
 /** Per lead day: 3D RMS e and the R, T, N RMS of the [R, T, N] errors (km), as the published rows hold them. */
 export function byDay(err, entered, sizes) {
   const days = {};
