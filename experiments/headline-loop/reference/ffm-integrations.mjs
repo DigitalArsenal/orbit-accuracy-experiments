@@ -44,7 +44,7 @@ for (const w of chosen) {
     for (const [j, d] of sc.entered.entries()) {
       const lo = D0 + (d - 1) * W.DAY, hi = D0 + d * W.DAY;
       const lat = cached.filter((l) => { const t = W.ms(l.epoch); return t > lo && t <= hi; }).map((l) => dist(l.r, O.get(W.ms(l.epoch)).r));
-      const idx = sc.epochs.map((e, i) => [W.ms(e), i]).filter(([t]) => t > lo && t <= hi);
+      const idx = sc.epochs.map((e, i) => [W.ms(e), i]).filter(([t]) => t > lo && t <= hi && O.has(t) && C.has(t)); // truth epochs off the 60 s lattice (WAAS) are left out of these three
       const so = idx.map(([t, i]) => dist(scored[i].r, O.get(t).r)), scd = idx.map(([t, i]) => dist(scored[i].r, C.get(t).r)), hs = idx.map(([, i]) => dist(half.states[i].r, scored[i].r));
       const rms = (v) => Math.sqrt(v.reduce((s, x) => s + x * x, 0) / Math.max(1, v.length));
       rec.days[d] = { cachedVsOnePass: { rms: rms(lat), max: Math.max(...lat) }, scoredVsOnePass: { rms: rms(so), max: Math.max(...so) }, scoredVsCached: { rms: rms(scd), max: Math.max(...scd) }, halfVsScored: { rms: rms(hs), max: Math.max(...hs) }, ffmqErrorKm: doc.days[String(d)]?.e ?? null, halfErrorKm: half.days[String(d)]?.e ?? null };

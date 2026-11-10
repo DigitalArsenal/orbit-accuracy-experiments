@@ -37,26 +37,31 @@ if (args.check) {
     ...E.cellRows({ group: 'GE', regime: 'Geostationary', ratio: 3, arm: 'E5F', prefix: 'G' }), // 8 x 4, AP 3 x FFMq
     ...E.cellRows({ group: 'IG', regime: 'Inclined geosynchronous', ratio: 1.2, arm: 'E5F', sats: 5, prefix: 'I' }), // 5 satellites: no order interval
   ];
+  rows[0].arms.FFMq = { ...rows[0].arms.FFMq, weightedRms: 1 }; // 10 m fit RMS against a bound of 3 x 0.01 m: reference not usable
+  const qual = path.join(dir, 'qualification.jsonl');
+  fs.writeFileSync(qual, `${JSON.stringify({ key: rows[1].key, arc: 72, day7Change: 0.05 })}\n${JSON.stringify({ key: rows[2].key, arc: 72, day7Change: 0.001 })}\n`);
   const A = E.writeStore(dir, { rows }), B = E.writeStore(dir, { sha256: 'e2e1'.repeat(16), rows: rows.map((r) => ({ ...r, arms: { ...r.arms, AP: { ...r.arms.AP, days: Object.fromEntries(Object.entries(r.arms.AP.days).map(([k, v]) => [k, { ...v, e: v.e * 1.1 }])) } } })) });
-  const r1 = E.run('score.mjs', ['--rows', A, '--out', out, '--draws', '400']);
+  const r1 = E.run('score.mjs', ['--rows', A, '--out', out, '--draws', '400', '--qualification', qual]);
   check(r1.code === 0, `score.mjs exited ${r1.code}: ${r1.err.slice(-300)}`);
   const sb = E.readJson(path.join(out, 'scoreboard.json')), cell = (list, g, lead) => list.find((c) => c.group === g && c.fit === 72 && c.lead === lead);
   const gd = cell(sb.cells, 'GD', 24), gd1 = cell(sb.cellsFirstPass, 'GD', 24), ge = cell(sb.cells, 'GE', 24), ig = cell(sb.cells, 'IG', 24);
   check(gd && Math.abs(gd.estimateRatio - 1.5) < 1e-6 && Math.abs(gd.ratioOfMedians - 1.5) < 1e-6, `GD estimate ${gd?.estimateRatio}, ratio of medians ${gd?.ratioOfMedians}`);
-  check(gd?.verdict === 'shown under 2' && gd.goalPass && gd.satellites === 8 && gd.windows === 40 && Math.abs(gd.D.medianM - 2) < 1e-9, `GD verdict ${gd?.verdict}, pass ${gd?.goalPass}, ${gd?.satellites} satellites, ${gd?.windows} windows, D ${gd?.D?.medianM}`);
+  check(gd?.verdict === 'shown under 2' && !gd.goalPass && gd.usableReference?.goalPass && gd.satellites === 8 && gd.windows === 40 && Math.abs(gd.D.medianM - 2) < 1e-9, `GD verdict ${gd?.verdict}, pass ${gd?.goalPass}, ${gd?.satellites} satellites, ${gd?.windows} windows, D ${gd?.D?.medianM}`);
   check(gd1?.windows === 32, `first pass GD windows ${gd1?.windows} (the 8 flagged 2026-03..05 rows belong to all windows only)`);
+  check(gd?.referenceNotUsable?.n === 2 && gd.referenceNotUsable.fitOverBound === 1 && gd.referenceNotUsable.rule2 === 1 && gd.usableReference?.windows === 38 && gd.windows === 40, `gate ${JSON.stringify(gd?.referenceNotUsable)} usable ${JSON.stringify(gd?.usableReference)}`);
+  check(sb.referenceGate?.notUsable?.length === 2 && sb.referenceGate.rule2Measured === 2 && Math.abs(sb.referenceGate.bounds['GD|72'] - 0.03) < 1e-9, `scoreboard gate ${JSON.stringify(sb.referenceGate)}`);
   check(ge?.verdict === 'shown at or over 2' && !ge.goalPass, `GE verdict ${ge?.verdict}`);
   check(ig?.verdict === 'no interval' && ig.orderRatio === null && !ig.goalPass, `IG verdict ${ig?.verdict}`);
   check(Math.abs(gd?.others?.FFMr?.overReference - 2) < 1e-6 && gd?.gate?.halfToleranceDay7?.under1pct, 'GD reduced arm over the reference, or the half-tolerance check');
   check(sb.allWindows.cells72.shownUnder2 === 4 && sb.allWindows.cells72.shownAtOrOver2 === 4 && sb.allWindows.cells72.noInterval === 4, `three numbers ${JSON.stringify(sb.allWindows.cells72)}`);
   const md = fs.readFileSync(path.join(out, 'README.md'), 'utf8');
-  check(/## All windows/.test(md) && /## First pass/.test(md) && /shown under 2 in 4/.test(md), 'README.md sections or counts');
+  check(/## Reference-quality gate/.test(md) && /## All windows/.test(md) && /## First pass/.test(md) && /shown under 2 in 4/.test(md), 'README.md sections or counts');
   const r2 = E.run('score.mjs', ['--rows', A, '--compare', B, '--out', out, '--draws', '400']);
   check(r2.code === 0, `score.mjs --compare exited ${r2.code}: ${r2.err.slice(-300)}`);
   const cmp = E.readJson(path.join(out, `compare-${'e2e0'.repeat(3)}-${'e2e1'.repeat(3)}.json`)), cg = cmp.cells.find((c) => c.group === 'GD' && c.lead === 24);
   check(cg && Math.abs(cg.pairedBOverA.ratio - 1.1) < 1e-3 && cg.pairedBOverA.windows === 40, `compare GD ${JSON.stringify(cg?.pairedBOverA)}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('score.mjs and score.mjs --compare run on a made-up store: a constant 1.5 cell is shown under 2 and passes with D 2 m; a 3 cell is shown at or over 2; five satellites give no interval; flagged 2026-03..05 rows enter all windows only; the three counts; README sections; the second build at 1.1 times reads 1.1 paired');
+  done('score.mjs and score.mjs --compare run on a made-up store: a constant 1.5 cell is shown under 2 and passes with D 2 m; a 3 cell is shown at or over 2; five satellites give no interval; flagged 2026-03..05 rows enter all windows only; the three counts; README sections; the second build at 1.1 times reads 1.1 paired; the reference-quality gate: a window over the fit-RMS bound and one failing rule 2 counted not usable, every cell given on all windows and on usable ones');
 }
 
 
@@ -66,6 +71,24 @@ if (args.compare) { compare(dir, args.compare); process.exit(0); }
 const rowsAll = readRows(dir);
 const build = JSON.parse(fs.readFileSync(path.join(dir, 'build.json'), 'utf8'));
 const opts = { ref: args.reference ?? 'FFMq', statistic: args.statistic ?? 'sat-median', interval: args.interval ?? 'two-way', draws: Number(args.draws ?? 2000), leads: [24, 48, 72, 168] };
+// The reference-quality gate (goal.md; stack #396), a column, never a filter: per window, the reference's fit RMS (its weighted RMS times its
+// setting's sigma) against a bound per regime and fit arc, and qualification rule 2 where measured (--qualification: rows of
+// reference/ffm-integrations.mjs; a day-7 change of 1 % or more fails). Proposed bound: 3 times the median of the reference's own fit RMS over
+// the regime's development windows at that fit arc, chosen from the reference's spread alone, never from AP's figures; --fit-bound <json>
+// ({ "<group>|<fit>": m }) replaces it. A window that fails is printed and counted "reference not usable" and counts for nobody; every cell
+// is given on all windows and on the windows with a usable reference.
+const { SETTINGS } = await import('./lib/settings.mjs');
+const refFit = (r) => { const a = r.arms?.[opts.ref]; return Number(a?.weightedRms) * (SETTINGS[a?.arm]?.sigmaM ?? NaN); };
+const quals = String(args.qualification ?? '').split(',').filter((x) => x && x !== 'true').flatMap((f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))).filter((q) => !q.error);
+const rule2 = new Map(quals.map((q) => [`${q.key}|${q.arc}`, Number.isFinite(q.day7Change) && Math.abs(q.day7Change) >= 0.01 ? 'fail' : 'pass']));
+const bounds = args['fit-bound'] ? JSON.parse(fs.readFileSync(args['fit-bound'], 'utf8')) : (() => { const by = {}; for (const r of rowsAll) { const v = refFit(r); if (!r.error && Number.isFinite(v)) (by[`${r.group}|${r.arcH}`] ??= []).push(v); } return Object.fromEntries(Object.entries(by).map(([k, v]) => [k, 3 * median(v)])); })();
+for (const r of rowsAll) {
+  const v = refFit(r), b = bounds[`${r.group}|${r.arcH}`], q = rule2.get(`${r.key}|${r.arcH}`) ?? 'not measured', why = [];
+  if (Number.isFinite(v) && Number.isFinite(b) && v > b) why.push('fit RMS over the bound');
+  if (q === 'fail') why.push('rule 2');
+  r.referenceGate = { fitRmsM: Number.isFinite(v) ? v : null, boundM: Number.isFinite(b) ? b : null, rule2: q, usable: why.length === 0, why };
+}
+const notUsable = rowsAll.filter((r) => !r.error && !r.referenceGate.usable).map((r) => ({ key: r.key, arc: r.arcH, period: r.period ?? null, fitRmsM: r.referenceGate.fitRmsM, boundM: r.referenceGate.boundM, rule2: r.referenceGate.rule2, why: r.referenceGate.why }));
 const published = JSON.parse(fs.readFileSync(path.join(REPO, 'results/ap-truth/compare/cells.json'), 'utf8')).rows.filter((r) => r.reference === 'truth' && r.level === 'regime');
 const pubOf = (c) => published.find((p) => p.regime === c.regime && p.fit === c.fit && p.lead === c.lead);
 const ffmCol = (p) => Object.keys(p?.arms ?? {}).find((k) => k.startsWith('FFM'));
@@ -77,7 +100,15 @@ const WINDOWS = {
 };
 /** One board: the cells, the summary, the table rows, on the rows given. */
 function board(rows, which) {
-  const cells = scoreCells(rows, opts);
+  const cells = scoreCells(rows, opts), usableCells = scoreCells(rows.filter((r) => r.referenceGate?.usable !== false), opts);
+  const DAYK = { 24: '1', 48: '2', 72: '3', 168: '7' };
+  for (const c of cells) {
+    const inCell = rows.filter((r) => !r.error && r.group === c.group && r.arcH === c.fit && r.arms?.AP?.days?.[DAYK[c.lead]] && r.arms?.[opts.ref]?.days?.[DAYK[c.lead]]);
+    const bad = inCell.filter((r) => r.referenceGate && !r.referenceGate.usable);
+    const u = usableCells.find((x) => x.group === c.group && x.fit === c.fit && x.lead === c.lead);
+    c.referenceNotUsable = { n: bad.length, fitOverBound: bad.filter((r) => r.referenceGate.why.includes('fit RMS over the bound')).length, rule2: bad.filter((r) => r.referenceGate.why.includes('rule 2')).length, boundM: bounds[`${c.group}|${c.fit}`] ?? null };
+    c.usableReference = u ? { windows: u.windows, satellites: u.satellites, ratioOfMedians: u.ratioOfMedians, satelliteBalancedRatio: u.satelliteBalancedRatio, bootstrapRatio: u.bootstrapRatio, orderRatio: u.orderRatio, verdict: u.verdict, goalPass: u.goalPass } : null;
+  }
   const byArm = (k) => ({ n: cells.filter((c) => pubOf(c) && c.others[k]).length, ratioOfMediansUnder2: cells.filter((c) => pubOf(c) && c.others[k]?.ratioOfMedians < 2).length, medianRatioOfMedians: median(cells.filter((c) => pubOf(c) && c.others[k]).map((c) => c.others[k].ratioOfMedians)) });
   const c72 = cells.filter(in72);
   const summary = {
@@ -85,6 +116,7 @@ function board(rows, which) {
     cells72: { n: c72.length, ratioOfMediansUnder2: count(c72, (x) => x.ratioOfMedians < 2), medianRatioOfMedians: median(c72.map((x) => x.ratioOfMedians)), goalPass: count(c72, (x) => x.goalPass), passUnder2BothIntervals: count(c72, (x) => x.passUnder2), noInterval: count(c72, (x) => x.noInterval), couldMeetDesign: count(c72, (x) => x.couldMeetDesign), shownUnder2: count(c72, (x) => x.verdict === 'shown under 2'), shownAtOrOver2: count(c72, (x) => x.verdict === 'shown at or over 2'), undecided: count(c72, (x) => x.verdict === 'undecided'), entersCount: count(c72, (x) => x.entersCount), ratioOfMediansUnder2Entering: count(c72, (x) => x.entersCount && x.ratioOfMedians < 2) },
     cells72Configured: byArm('FFMc'), cells72Reduced: byArm('FFMr'),
     neverDesign: c72.filter((x) => !x.couldMeetDesign).map((x) => `${x.regime} ${x.fit}/${x.lead}: ${x.satellites} satellites, ${x.timeBlocks} blocks`),
+    usableReference: { shownUnder2: count(c72, (x) => x.usableReference?.verdict === 'shown under 2'), shownAtOrOver2: count(c72, (x) => x.usableReference?.verdict === 'shown at or over 2'), undecided: count(c72, (x) => x.usableReference?.verdict === 'undecided'), noInterval: count(c72, (x) => !x.usableReference || x.usableReference.verdict === 'no interval'), goalPass: count(c72, (x) => x.usableReference?.goalPass), windowsNotUsable: rows.filter((r) => !r.error && r.referenceGate && !r.referenceGate.usable).length },
   };
   const table = cells.map((c) => {
     const p = pubOf(c);
@@ -99,22 +131,24 @@ const head = {
 };
 const outDir = args.out ?? path.join(REPO, 'results/headline-loop', `${build.version}-${build.sha256.slice(0, 12)}`);
 fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, 'scoreboard.json'), `${JSON.stringify({ ...head, allWindows: all.summary, firstPass: first.summary, cells: all.table, cellsFirstPass: first.table }, null, 1)}\n`);
+fs.writeFileSync(path.join(outDir, 'scoreboard.json'), `${JSON.stringify({ ...head, referenceGate: { rule: 'fit RMS within the bound per regime and fit arc, and qualification rule 2 where measured; a window that fails counts for nobody', bounds, boundRule: args['fit-bound'] ? `from ${args['fit-bound']}` : '3 times the median of the reference fit RMS over the regime development windows at that fit arc (proposed; for the referee)', rule2Measured: rule2.size, notUsable }, allWindows: all.summary, firstPass: first.summary, cells: all.table, cellsFirstPass: first.table }, null, 1)}\n`);
 const f = (x, p = 3) => (x === null || x === undefined ? '-' : Number(x).toPrecision(p));
 const sums = (s) => [
   `- ${s.windowsNote} ${s.rows} window-arcs.`,
   `- The 72 published cells by the published statistic (ratio of medians): AP under 2 times the qualified FFM in ${s.cells72.ratioOfMediansUnder2} of ${s.cells72.n} (median ratio ${f(s.cells72.medianRatioOfMedians)}); the configured FFM ${s.cells72Configured.ratioOfMediansUnder2} of ${s.cells72Configured.n} (median ${f(s.cells72Configured.medianRatioOfMedians)}); the reduced FFM ${s.cells72Reduced.ratioOfMediansUnder2} of ${s.cells72Reduced.n} (median ${f(s.cells72Reduced.medianRatioOfMedians)}); published ${head.published72.ratioOfMediansUnder2} of ${head.published72.n} (median ${f(head.published72.medianRatioOfMedians)}).`,
   `- By goal.md's definition: ${s.cells72.goalPass} pass; ${s.cells72.passUnder2BothIntervals} have both median upper bounds under 2; ${s.cells72.noInterval} have no interval (fail); ${s.cells72.couldMeetDesign} have at least 8 satellites and 3 time blocks.`,
+  `- With a usable reference only (stack #396; ${s.usableReference.windowsNotUsable} window-arcs not usable, counted for nobody): shown under 2 in ${s.usableReference.shownUnder2}, shown at or over 2 in ${s.usableReference.shownAtOrOver2}, undecided in ${s.usableReference.undecided}, no interval in ${s.usableReference.noInterval}; ${s.usableReference.goalPass} pass.`,
   `- One rule, three numbers (C1-2): shown under 2 in ${s.cells72.shownUnder2}, shown at or over 2 in ${s.cells72.shownAtOrOver2}, undecided in ${s.cells72.undecided}, no interval in ${s.cells72.noInterval}. Cells whose reference fit is within 3 times the truth's sigma in at least 90 % of windows (C1-5): ${s.cells72.entersCount}; of them under 2 by the ratio of medians: ${s.cells72.ratioOfMediansUnder2Entering}.`,
 ];
 const tableLines = (table) => [
-  '| Regime | fit h | lead h | windows | sats | blocks | AP km | FFMq km | FFMc km | FFMr km | ratio of medians: q, c, r (published) | sat-balanced d ratio [two-way] [order] | p95 ratio | rank corr. | paired ratio [blocks] | paired excess m [blocks] | AP floor m (fit RMS) | D median / p95 m | truth sigma m | gate | verdict | pass |',
-  '|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|---|---|--:|--:|---|---|---|---|--:|---|---|---|',
-  ...table.map((c) => `| ${c.regime} | ${c.fit} | ${c.lead} | ${c.windows} | ${c.satellites} | ${c.timeBlocks} | ${f(c.medianKm.AP)} | ${f(c.medianKm.ref)} | ${f(c.others.FFMc?.medianKm)} | ${f(c.others.FFMr?.medianKm)} | ${f(c.ratioOfMedians)}, ${f(c.others.FFMc?.ratioOfMedians)}, ${f(c.others.FFMr?.ratioOfMedians)} (${f(c.published?.ratioOfMedians)}) | ${f(c.satelliteBalancedRatio)} [${c.bootstrapRatio ? c.bootstrapRatio.map((x) => f(x)).join(', ') : 'none'}] [${c.orderRatio ? c.orderRatio.map((x) => f(x)).join(', ') : 'none'}] | ${f(c.p95.satelliteBalancedRatio)} | ${f(c.rankCorrelation, 2)} | ${f(c.pairedMedianRatio)} [${c.pairedRatioBlock ? c.pairedRatioBlock.map((x) => f(x)).join(', ') : 'none'}] | ${f(c.pairedMedianExcessKm * 1000)} [${c.pairedExcessBlockKm ? c.pairedExcessBlockKm.map((x) => f(x * 1000)).join(', ') : 'none'}] | ${c.floor ? `${f(c.floor.vsModelM)} (${f(c.floor.fitRmsM)}), n ${c.floor.n}` : '-'} | ${c.D ? `${f(c.D.medianM)} / ${f(c.D.p95M)}` : '-'} | ${c.truthSigmaM ?? 'none'}${c.refUnder3Sigma ? ' (FFM under 3 sigma)' : ''} | ${c.gate.settingsQualified ? 'settings ok' : 'settings not full'}; ${c.gate.referenceNotUsable}/${c.gate.windowsJudged} unusable${c.gate.halfToleranceDay7 ? `; half tol. ${f(c.gate.halfToleranceDay7.max * 100, 2)} %` : ''}${c.truthNote ? `; ${c.truthNote}` : ''} | ${c.verdict} | ${c.goalPass ? 'yes' : 'no'} |`),
+  '| Regime | fit h | lead h | windows | sats | blocks | AP km | FFMq km | FFMc km | FFMr km | ratio of medians: q, c, r (published) | sat-balanced d ratio [two-way] [order] | p95 ratio | rank corr. | paired ratio [blocks] | paired excess m [blocks] | AP floor m (fit RMS) | D median / p95 m | truth sigma m | gate | verdict | pass | reference not usable (fit / rule 2) | usable reference: windows, sat-balanced ratio [two-way], verdict |',
+  '|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|---|---|--:|--:|---|---|---|---|--:|---|---|---|---|---|',
+  ...table.map((c) => `| ${c.regime} | ${c.fit} | ${c.lead} | ${c.windows} | ${c.satellites} | ${c.timeBlocks} | ${f(c.medianKm.AP)} | ${f(c.medianKm.ref)} | ${f(c.others.FFMc?.medianKm)} | ${f(c.others.FFMr?.medianKm)} | ${f(c.ratioOfMedians)}, ${f(c.others.FFMc?.ratioOfMedians)}, ${f(c.others.FFMr?.ratioOfMedians)} (${f(c.published?.ratioOfMedians)}) | ${f(c.satelliteBalancedRatio)} [${c.bootstrapRatio ? c.bootstrapRatio.map((x) => f(x)).join(', ') : 'none'}] [${c.orderRatio ? c.orderRatio.map((x) => f(x)).join(', ') : 'none'}] | ${f(c.p95.satelliteBalancedRatio)} | ${f(c.rankCorrelation, 2)} | ${f(c.pairedMedianRatio)} [${c.pairedRatioBlock ? c.pairedRatioBlock.map((x) => f(x)).join(', ') : 'none'}] | ${f(c.pairedMedianExcessKm * 1000)} [${c.pairedExcessBlockKm ? c.pairedExcessBlockKm.map((x) => f(x * 1000)).join(', ') : 'none'}] | ${c.floor ? `${f(c.floor.vsModelM)} (${f(c.floor.fitRmsM)}), n ${c.floor.n}` : '-'} | ${c.D ? `${f(c.D.medianM)} / ${f(c.D.p95M)}` : '-'} | ${c.truthSigmaM ?? 'none'}${c.refUnder3Sigma ? ' (FFM under 3 sigma)' : ''} | ${c.gate.settingsQualified ? 'settings ok' : 'settings not full'}; ${c.gate.referenceNotUsable}/${c.gate.windowsJudged} unusable${c.gate.halfToleranceDay7 ? `; half tol. ${f(c.gate.halfToleranceDay7.max * 100, 2)} %` : ''}${c.truthNote ? `; ${c.truthNote}` : ''} | ${c.verdict} | ${c.goalPass ? 'yes' : 'no'} | ${c.referenceNotUsable.n} (${c.referenceNotUsable.fitOverBound} / ${c.referenceNotUsable.rule2}) | ${c.usableReference ? `${c.usableReference.windows}, ${f(c.usableReference.satelliteBalancedRatio)} [${c.usableReference.bootstrapRatio ? c.usableReference.bootstrapRatio.map((x) => f(x)).join(', ') : 'none'}], ${c.usableReference.verdict}` : 'none'} |`),
 ];
 const lines = [
   `# Headline loop: ${build.module} ${build.version} (${build.sha256.slice(0, 12)}), re-flown ${head.flownOn}`, '',
   `Not a registered result. Lead: ${LEAD_DEFINITION}. Reference (${opts.ref}): ${opts.ref === 'FFMq' ? 'the qualified numerical arm, goal.md qualification 1 (L70S below 8,400 km, E5F navigation and geosynchronous, Ffull geodetic and eccentric)' : opts.ref}; beside it the configured arm the round-0 referee flew (FFMc: L40S, E5, Ffull) and the reduced arm the published cells flew (FFMr: L40, F20). Statistic (goal.md): d = ln(E_AP / E_FFM) per window on windows both scored, ${opts.statistic}, ${opts.interval} bootstrap (time blocks of fit + lead) and the exact order-statistic interval over satellites; "pass" needs both upper bounds under 2, the same for the 95th percentiles, a full-setting reference and no window whose reference fit RMS exceeds 3 times the truth's stated sigma. The precise-orbit windows of March to May 2026 were read by the builds that made the published cells and are read again here; the catalog studies' reservation of those months concerns public element sets, which this harness does not read. Aggregates only.`, '',
+  '## Reference-quality gate (stack #396)', '', `Bound per regime and fit arc: ${args['fit-bound'] ? `from ${args['fit-bound']}` : 'proposed, 3 times the median of the reference fit RMS over the regime development windows at that fit arc (from the reference spread alone)'}: ${Object.entries(bounds).map(([k, v]) => `${k} ${f(v)} m`).join('; ')}. Rule 2 measured on ${rule2.size} window-arcs. Not usable: ${notUsable.length ? notUsable.map((n) => `${n.key} ${n.arc} h (${n.why.join(', ')}${n.fitRmsM !== null ? `; fit RMS ${f(n.fitRmsM)} m` : ''})`).join('; ') : 'none'}.`, '',
   '## All windows', '', ...sums(all.summary), '', ...tableLines(all.table), '',
   '## First pass (no window touching 2026-03..05)', '', ...sums(first.summary), '', ...tableLines(first.table),
 ];
