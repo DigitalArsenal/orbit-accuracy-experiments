@@ -75,6 +75,32 @@ export function windowsOf(groups) {
   return { windows: out, second, after };
 }
 
+// GRACE-FO's truth (GFZ ISDC rapid science orbits, converted by experiments/xp-atmosphere-merit/convert.mjs) is in two stores: XP2's store
+// (XM_STORE while this harness runs, which T reads) holds the arcs to 2025-12-28, XM's build store the arcs from 2025-12-27 to 2026-08-04.
+// Reading XP2's alone left every 2026 GRACE-FO window without truth after its cutoff. Both are read here, T's rule kept: each epoch from the
+// newest file that starts at or before it, every file through the truth gate (SRC.readReference).
+const RSO_DIRS = [path.join(process.env.XM_STORE ?? '', 'reference'), path.join(JSON.parse(fs.readFileSync(path.join(REPO, 'experiments/xp-atmosphere-merit/build.json'), 'utf8')).store, 'reference')];
+const rsoStamp = (s) => Date.parse(`${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}T${s.slice(9, 11)}:${s.slice(11, 13)}:${s.slice(13, 15)}Z`);
+const rsoCache = new Map();
+function gfzRsoSeries(o, fromMs, toMs) {
+  const byName = new Map();
+  for (const dir of RSO_DIRS.filter((d) => fs.existsSync(d))) for (const d of fs.readdirSync(dir).filter((x) => x.startsWith(`GFZOP_RSO_${o.code}_`))) {
+    const file = path.join(dir, d, `${o.norad}.oem`);
+    if (!byName.has(d) && fs.existsSync(file)) byName.set(d, { name: d, file, startMs: rsoStamp(d.slice(16, 31)), stopMs: rsoStamp(d.slice(32, 47)) });
+  }
+  const files = [...byName.values()].sort((a, b) => a.startMs - b.startMs || a.name.localeCompare(b.name)).filter((f) => f.stopMs >= fromMs - DAY && f.startMs <= toMs);
+  let merged = [];
+  for (const f of files) {
+    if (!rsoCache.has(f.file)) { rsoCache.set(f.file, SRC.readReference(f.file)); if (rsoCache.size > 32) rsoCache.delete(rsoCache.keys().next().value); }
+    const ref = rsoCache.get(f.file);
+    const lines = ref.lines.filter((l) => { const t = ms(l.epoch); return t >= fromMs && t <= toMs; });
+    if (!lines.length) continue;
+    const start = ms(ref.lines[0].epoch);
+    merged = merged.filter((l) => ms(l.epoch) < start).concat(lines);
+  }
+  return merged.sort((a, b) => ms(a.epoch) - ms(b.epoch));
+}
+
 // ---- truth readers, one object at a time (each kept until the next object of the shard) ----
 const XM_OBJECTS = new Map([...XP2F.objects.map((o) => [o.norad, o]), ...Object.values(XM.config.groups).flatMap((g) => g.objects.map((o) => [o.norad, o]))]);
 const GALILEO = { 43567: 'Galileo FOC 19', 37847: 'Galileo IOV 2', 41862: 'Galileo FOC 14', 41174: 'Galileo FOC 9', 43055: 'Galileo FOC 15', 41175: 'Galileo FOC 8' };
@@ -94,7 +120,7 @@ export async function truthOf(w, fromMs, toMs, axes) {
     const gal = w.norad ?? Object.keys(GALILEO).find((n) => GALILEO[n] === w.name);
     const o = (w.norad ? XM_OBJECTS.get(Number(w.norad)) : null) ?? (GALILEO[gal] ? { norad: Number(gal), name: GALILEO[gal], truth: 'gnss' } : null);
     if (!o) throw new Error(`no truth object for ${w.key}`);
-    return { lines: T.series(o, fromMs, toMs).lines, norad: o.norad, objectId: o.objectId ?? '' };
+    return { lines: o.truth === 'gfz-rso' ? gfzRsoSeries(o, fromMs, toMs) : T.series(o, fromMs, toMs).lines, norad: o.norad, objectId: o.objectId ?? '' };
   }
   if (G.static) {
     // the series' name is its first file's (all-regimes.mjs: series.name || o.name); one object's chained series is kept at a time

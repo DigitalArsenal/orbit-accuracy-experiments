@@ -3,7 +3,8 @@
 // with the truth, windows, fit arcs, coverage rule, scoring grid and as-issued weather of the published harness (all-regimes.mjs, ap-truth.mjs,
 // truth-compare.mjs, ap-all-regimes-suite/run.mjs). Rows go to <store>/f0b8352a43f3/ (lib/arms.mjs NUMERICAL_STORE); a row already there is
 // not flown again. --second-pass flies the windows touching 2026-03..05 (lib/windows.mjs), each row marked pass: "second".
-//   node experiments/headline-loop/refly.mjs [--second-pass] [--shard k/n] [--groups T,P,...] [--keys-file <file of window keys>] [--limit n]
+//   node experiments/headline-loop/refly.mjs [--second-pass] [--retry-errors] [--shard k/n] [--groups T,P,...] [--keys-file <file of window keys>] [--limit n]
+//   --retry-errors: a window whose rows all recorded an error (no truth, coverage) is flown again; table.mjs reads a row that flew in its place
 //   node experiments/headline-loop/refly.mjs --check
 // Settings per window and fit arc (lib/settings.mjs):
 //   FFMr     the reduced setting (F20 above 8,400 km at the first scored state, L40 below)
@@ -32,7 +33,8 @@ async function run() {
   const outDir = path.join(A.STORE_ROOT, A.NUMERICAL_STORE);
   fs.mkdirSync(outDir, { recursive: true });
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
-  const done = new Set(fs.readdirSync(outDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => fs.readFileSync(path.join(outDir, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean).map((r) => `${r.key}|${r.arcH}`)));
+  const retry = !!args['retry-errors'];
+  const done = new Set(fs.readdirSync(outDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => fs.readFileSync(path.join(outDir, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)).filter((r) => !retry || !r.error).map((r) => `${r.key}|${r.arcH}`));
   const second = !!args['second-pass'];
   const outFile = path.join(outDir, `rows-truth-ffm-${second ? 'second-' : ''}${K}of${N}.jsonl`);
   const all = W.windowsOf(groups);
