@@ -1,0 +1,125 @@
+{
+  "experiment": "ap-from-public-sets",
+  "issue": "DigitalArsenal/spacedatanetwork-stack#230",
+  "title": "When an AP record made from public element sets beats the set itself",
+  "frozen": true,
+  "registeredUtc": "2026-11-10",
+  "store": "/opt/data/sdn-archive/ap-from-public-sets",
+  "archive": "/opt/data/sdn-archive",
+  "modulesRoot": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules",
+  "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.6.5",
+    "modulesCommit": "3a3661eaf9caa84fc776a9959494e1ca14358db1",
+    "wasmSha256": "f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7"
+  },
+  "weatherForecaster": {
+    "file": "experiments/ap-five-day-accuracy/wasm/tle-astrodynamics-upgrades.wasm",
+    "sha256": "68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73",
+    "builtBy": "experiments/ap-five-day-accuracy/build-tle-upgrades-wasm.mjs (not in git: built locally)"
+  },
+  "parts": {
+    "1": {
+      "from": "2026-06-01T00:00:00Z",
+      "to": "2026-08-11T00:00:00Z",
+      "kind": "earlier period, never fitted or scored by this construction"
+    },
+    "2": {
+      "from": "2026-11-11T00:00:00Z",
+      "to": "2026-11-25T00:00:00Z",
+      "kind": "sets published after the registration"
+    }
+  },
+  "selection": {
+    "spacingDays": 3
+  },
+  "grid": {
+    "stepSeconds": 300
+  },
+  "arms": {
+    "A": "the current public set flown on SGP4",
+    "B3": "AP fitted to the current set's SGP4 trajectory over the forecastDays after its epoch",
+    "C5": "AP fitted to the earlier sets' SGP4 trajectories over the historyDays before the current set's epoch",
+    "D5": "AP fitted to both: historyDays of earlier sets and forecastDays of the current set",
+    "S": "the served record: D5 when it exists, else B3, else the set itself"
+  },
+  "forecastDays": 3,
+  "historyDays": 5,
+  "history": {
+    "lookbackDays": 8,
+    "minimumSets": 3,
+    "minimumGridShare": 0.8
+  },
+  "fit": {
+    "atmosphere": "NRLMSISE00",
+    "weather": "records as known on the day of the set's epoch",
+    "tesseralDegree": 31,
+    "tesseralOffAboveEccentricity": 0.048,
+    "zonalDegree": 20,
+    "weatherHorizonDays": 30
+  },
+  "truth": {
+    "roots": [
+      "reference-states/reference",
+      "reference-states/reference-leo-pod-2"
+    ],
+    "families": [
+      {
+        "prefix": "ESA0OPSFIN_2026",
+        "family": "Navigation satellites (ESA final orbits)"
+      },
+      {
+        "prefix": "S1A_OPER_AUX_POEORB",
+        "family": "Sentinel-1 (Copernicus precise orbits)"
+      },
+      {
+        "prefix": "S1C_OPER_AUX_POEORB",
+        "family": "Sentinel-1 (Copernicus precise orbits)"
+      },
+      {
+        "prefix": "S1D_OPER_AUX_POEORB",
+        "family": "Sentinel-1 (Copernicus precise orbits)"
+      },
+      {
+        "prefix": "ssa",
+        "family": "Altimetry satellites (IDS DORIS orbits)"
+      },
+      {
+        "prefix": "ilrsa.orb.",
+        "family": "LAGEOS and Etalon (ILRS combined orbits)"
+      },
+      {
+        "prefix": "nsgf.orb.",
+        "family": "Laser spheres (NSGF orbits)"
+      },
+      {
+        "prefix": "SW_OPER_SP3CCOM",
+        "family": "Swarm (ESA precise orbits)"
+      },
+      {
+        "prefix": "leoOrb_",
+        "family": "COSMIC-2 (UCAR near-real-time orbits)"
+      }
+    ]
+  },
+  "scoring": {
+    "days": 7,
+    "minimumDayCoverage": 0.9,
+    "primaryHours": 72
+  },
+  "statistics": {
+    "bootstrapResamples": 2000,
+    "seed": 20261110,
+    "interval": 0.95,
+    "minimumSatellites": 5,
+    "minimumSets": 30
+  },
+  "classes": [
+    "LOW_LEO",
+    "MID_LEO",
+    "HIGH_LEO",
+    "MEO",
+    "GEO",
+    "HEO"
+  ]
+}
