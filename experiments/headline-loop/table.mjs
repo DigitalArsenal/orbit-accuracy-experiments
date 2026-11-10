@@ -1,6 +1,7 @@
 // The site's one table for a released sdn-ap version (owner, 2026-11-10: "True is ALWAYS measured honestly against a properly configured
-// numerical propagator"). AP of the given modules commit is fitted and flown on every first-pass window, in the module's own GCRF output, and
-// scored against truth in meters. The numerical propagator's errors on the same windows are read from the store: it was flown once (FFM,
+// numerical propagator"). AP of the given modules commit is fitted and flown on every window of the first pass, and of a regime's second pass
+// (the windows touching March to May 2026) once its numerical rows are all in the store, in the module's own GCRF output, and scored against
+// truth in meters. The numerical propagator's errors on the same windows are read from the store: it was flown once (FFM,
 // fitted by analysis/estimation) and does not change with AP's version. Writes one JSON (schema sdn-ap-scoreboard/1) and nothing else.
 //
 //   node experiments/headline-loop/table.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 14] [--groups GD,IG]
@@ -10,13 +11,13 @@
 // AP's rows go to <store>/table/<wasm sha12>/rows.jsonl; a row already there is not flown again. The harness's working tree must be clean
 // (the file names the harness commit). The numerical arm of a regime and fit length is the stored arm with the lowest median 3D error at
 // 168 h over that row's windows; among arms within 1 % of it, the fuller setting (Fbest, then the full setting, the configured, the reduced).
-// It is null ("being measured") until the store holds every first-pass window of that row, and null where no stored arm is properly
+// It is null ("being measured") until the store holds every window of that row, and null where no stored arm is properly
 // configured for the truth (NOT_CONFIGURED).
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fork, execFileSync } from 'node:child_process';
-import { REPO, usePackages } from './lib/env.mjs';
+import { REPO, usePackages, envRecord } from './lib/env.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = new URL(import.meta.url).pathname;
@@ -48,9 +49,10 @@ async function worker() {
   const W = await import('./lib/windows.mjs');
   const A = await import('./lib/arms.mjs');
   const groups = args.groups.split(',');
-  const winOf = new Map(W.windowsOf(groups).windows.map((w) => [w.key, w]));
+  const all = W.windowsOf(groups);
+  const winOf = new Map([...all.windows, ...all.second].map((w) => [w.key, w]));
   const arms = await A.openArms({ apWasm: args.wasm });
-  const build = { version: args['ap-version'], sha256: args.sha256 };
+  const build = { version: args['ap-version'], sha256: args.sha256 }, env = envRecord();
   const fly = async (w) => {
     const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs), t0 = performance.now();
     let ctx;
@@ -62,7 +64,7 @@ async function worker() {
     } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
     const truthS = (performance.now() - t0) / 1000, rows = [];
     for (const arc of w.arcs) {
-      const row = { key: w.key, group: w.group, name: w.name, arcH: arc, ap: build, truthS };
+      const row = { key: w.key, group: w.group, name: w.name, arcH: arc, ap: build, env, truthS };
       if (ctx.error) row.error = ctx.error;
       else {
         const thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
@@ -107,14 +109,26 @@ async function main() {
   const file = path.join(dir, 'module.wasm');
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
   const groups = args.groups ? args.groups.split(',') : ALL;
-  const listed = W.windowsOf(groups).windows;
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
-  const rowsFile = path.join(dir, 'rows.jsonl');
   const readRows = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean) : []);
+  // the numerical propagator's rows (refly.mjs, both passes)
+  const baseDir = path.join(A.STORE_ROOT, A.NUMERICAL_STORE);
+  const base = new Map(fs.readdirSync(baseDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(baseDir, f))).map((r) => [`${r.key}|${r.arcH}`, r]));
+  // the windows: the first pass, and a regime's second pass (the windows touching 2026-03..05) once its numerical rows are all in the store
+  const all = W.windowsOf(groups);
+  const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
+  const listed = [...all.windows, ...all.second.filter((w) => secondIn.has(w.group))];
+  const notYet = all.second.filter((w) => !secondIn.has(w.group));
+  const day = (t) => new Date(t).toISOString().slice(0, 10), count = (n) => n.toLocaleString('en-US');
+  const cutoffs = listed.map((w) => w.cutoffMs);
+  const windowsText = `The table holds ${count(listed.length)} windows (one satellite and one cutoff each), cutoffs from ${day(Math.min(...cutoffs))} to ${day(Math.max(...cutoffs))}`
+    + (notYet.length ? `; the ${count(notYet.length)} windows whose fit arc or 7-day forecast touches March to May 2026 (the second pass) are not flown yet` : all.second.length ? ', the windows touching March to May 2026 (the second pass) among them' : '')
+    + (all.after.length ? `; ${count(all.after.length)} windows reaching past 2026-11-10 are not read` : '') + '.';
+  const rowsFile = path.join(dir, 'rows.jsonl');
   const apRows = new Map(readRows(rowsFile).filter((r) => r.ap?.sha256 === wasmSha).map((r) => [`${r.key}|${r.arcH}`, r]));
   const todo = listed.filter((w) => w.arcs.some((a) => !apRows.has(`${w.key}|${a}`)))
     .sort((a, b) => HEAVY.indexOf(a.group) - HEAVY.indexOf(b.group) || Math.max(...b.arcs) - Math.max(...a.arcs) || a.key.localeCompare(b.key));
-  console.error(`table: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${listed.length} first-pass windows, ${todo.length} to fly on ${Math.min(jobs, todo.length)} jobs`);
+  console.error(`table: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${listed.length} windows (${all.windows.length} first pass, ${listed.length - all.windows.length} second), ${todo.length} to fly on ${Math.min(jobs, todo.length)} jobs`);
 
   // fly: each worker takes the next window as it finishes one
   let next = 0, flown = 0;
@@ -132,9 +146,6 @@ async function main() {
     child.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`worker exited ${code}`))));
   })));
 
-  // the numerical arm: the store's first-pass rows of the base run
-  const baseDir = path.join(A.STORE_ROOT, A.NUMERICAL_STORE);
-  const base = new Map(fs.readdirSync(baseDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(baseDir, f))).filter((r) => !r.period).map((r) => [`${r.key}|${r.arcH}`, r]));
   const meters = (row, arm, day) => { const e = arm ? row?.arms?.[arm]?.ok && row.arms[arm].days?.[day]?.e : row?.days?.[day]?.e; return Number.isFinite(e) ? e * 1000 : null; };
   const stats = (v) => { const s = v.slice().sort((a, b) => a - b); return { medianM: round(quantile(s, 0.5)), p95M: round(quantile(s, 0.95)) }; };
   const median = (v) => quantile(v.slice().sort((a, b) => a - b), 0.5);
@@ -180,6 +191,7 @@ async function main() {
     measured: new Date().toISOString().slice(0, 10),
     statistic: 'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it); the median and the 95th percentile (linear interpolation) are taken over the row\'s windows, the same windows for AP and the numerical propagator.',
     ffmSelection: FFM_SELECTION,
+    windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
     harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/table.mjs', ...process.argv.slice(2)].join(' ') },
     frame: 'GCRF, the module\'s own output',
@@ -212,7 +224,7 @@ async function check() {
   const r1 = runIn(s1, out1);
   ok(r1.code === 0 && fs.existsSync(out1), `the table did not run: ${r1.err.slice(-300)}`);
   const doc = fs.existsSync(out1) ? E.readJson(out1) : {};
-  ok(JSON.stringify(Object.keys(doc)) === JSON.stringify(['schema', 'measured', 'statistic', 'ffmSelection', 'module', 'harness', 'frame', 'rows']) && doc.schema === 'sdn-ap-scoreboard/1' && doc.frame === 'GCRF, the module\'s own output', `top-level fields: ${Object.keys(doc)}`);
+  ok(JSON.stringify(Object.keys(doc)) === JSON.stringify(['schema', 'measured', 'statistic', 'ffmSelection', 'windows', 'module', 'harness', 'frame', 'rows']) && doc.windows === 'The table holds 55 windows (one satellite and one cutoff each), cutoffs from 2025-10-11 to 2025-12-20.' && doc.schema === 'sdn-ap-scoreboard/1' && doc.frame === 'GCRF, the module\'s own output', `top-level fields: ${Object.keys(doc)}`);
   ok(doc.module?.modulesCommit === commit && doc.module?.wasmSha256 === wasmSha && /^[0-9a-f]{40}$/.test(doc.harness?.commit ?? ''), `module and harness: ${JSON.stringify(doc.module)} ${doc.harness?.commit}`);
   const row = doc.rows?.[0];
   ok(doc.rows?.length === 1 && JSON.stringify(Object.keys(row ?? {})) === JSON.stringify(['regime', 'truth', 'fitData', 'fitHours', 'satellites', 'windows', 'ffm', 'leads']) && row.regime === 'Laser geodetic' && row.truth === 'ILRS' && row.fitHours === 72 && row.satellites === 5, `the row: ${JSON.stringify(row)?.slice(0, 300)}`);

@@ -25,11 +25,10 @@ export const MIN_BIN = XM.config.scoring.binMinimumEpochs;
 export const MIN_COV = XM.config.fit.minimumCoverage;
 export const LEADS = [1, 2, 3, 5, 7];
 
-// Periods. Nothing dated after 2026-11-10 is ever read. The windows flown (the first pass) also leave out every window whose fit arc or
-// 7-day forecast touches 2026-03-01 to 05-31; those are not flown.
-const SPRING = [Date.parse('2026-03-01T00:00:00Z'), Date.parse('2026-06-01T00:00:00Z')], AFTER = [Date.parse('2026-11-10T00:00:00Z'), Infinity];
+// Passes. Nothing dated after 2026-11-10 is ever read. The first pass is every window whose fit arc and 7-day forecast stay clear of
+// 2026-03-01 to 05-31; the second pass is the windows that touch those months, flown after the first (refly.mjs --second-pass).
+const MARCH_TO_MAY = [Date.parse('2026-03-01T00:00:00Z'), Date.parse('2026-06-01T00:00:00Z')], AFTER = [Date.parse('2026-11-10T00:00:00Z'), Infinity];
 const touches = ([a, b], fromMs, toMs) => fromMs < b && toMs >= a;
-export const reserved = (fromMs, toMs) => touches(SPRING, fromMs, toMs) || touches(AFTER, fromMs, toMs);
 
 /** Each group: its published label, its provider and satellite naming (compare-cells.mjs), its membership store, its fit arcs, vacuum or not. */
 export const GROUPS = {
@@ -57,9 +56,9 @@ export const rowsIn = (dir, re = /^rows(-\d+)?\.jsonl$/) => (fs.existsSync(dir) 
 export const inShard = (key, k, n) => parseInt(crypto.createHash('sha256').update(key).digest('hex').slice(0, 8), 16) % n === k;
 
 /** Every published window of the groups asked for, with the fit arcs its stored row carries: [{ key, group, name, norad, cutoffMs, arcs }].
- *  windows: the ones flown; skipped: the ones touching 2026-03..05 or after 2026-11-10, not read. */
+ *  windows: the first pass; second: the second pass (the windows touching 2026-03..05); after: windows reaching past 2026-11-10, never read. */
 export function windowsOf(groups) {
-  const out = [], skipped = [];
+  const out = [], second = [], after = [];
   for (const g of groups) {
     const G = GROUPS[g];
     if (!G) throw new Error(`group ${g}`);
@@ -70,10 +69,10 @@ export function windowsOf(groups) {
       const arcs = G.arcs ?? [...new Set(Object.keys(r.arms).filter((a) => /^AP\d+$/.test(a)).map((a) => Number(a.slice(2))))].sort((a, b) => a - b);
       const w = { key: r.key, group: g, name: r.name, norad: r.norad ?? null, cutoffMs, arcs };
       const from = cutoffMs - Math.max(...arcs) * HOUR - HOUR, to = cutoffMs + 7 * DAY + HOUR;
-      (reserved(from, to) ? skipped : out).push(w);
+      (touches(AFTER, from, to) ? after : touches(MARCH_TO_MAY, from, to) ? second : out).push(w);
     }
   }
-  return { windows: out, skipped };
+  return { windows: out, second, after };
 }
 
 // ---- truth readers, one object at a time (each kept until the next object of the shard) ----

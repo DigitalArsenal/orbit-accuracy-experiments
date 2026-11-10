@@ -1,9 +1,9 @@
-// The numerical propagator's rows, flown once (they do not change with AP's version; table.mjs reads them). On every first-pass window of the
+// The numerical propagator's rows, flown once (they do not change with AP's version; table.mjs reads them). On every window of the
 // precise-orbit regimes: FFM (propagator/ffm 2.2.0, fitted by analysis/estimation 0.7.0) fitted to the truth arc and flown on the scored epochs,
 // with the truth, windows, fit arcs, coverage rule, scoring grid and as-issued weather of the published harness (all-regimes.mjs, ap-truth.mjs,
 // truth-compare.mjs, ap-all-regimes-suite/run.mjs). Rows go to <store>/f0b8352a43f3/ (lib/arms.mjs NUMERICAL_STORE); a row already there is
-// not flown again.
-//   node experiments/headline-loop/refly.mjs [--shard k/n] [--groups T,P,...] [--keys-file <file of window keys>] [--limit n]
+// not flown again. --second-pass flies the windows touching 2026-03..05 (lib/windows.mjs), each row marked pass: "second".
+//   node experiments/headline-loop/refly.mjs [--second-pass] [--shard k/n] [--groups T,P,...] [--keys-file <file of window keys>] [--limit n]
 //   node experiments/headline-loop/refly.mjs --check
 // Settings per window and fit arc (lib/settings.mjs):
 //   FFMr     the reduced setting (F20 above 8,400 km at the first scored state, L40 below)
@@ -33,12 +33,13 @@ async function run() {
   fs.mkdirSync(outDir, { recursive: true });
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
   const done = new Set(fs.readdirSync(outDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => fs.readFileSync(path.join(outDir, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean).map((r) => `${r.key}|${r.arcH}`)));
-  const outFile = path.join(outDir, `rows-truth-ffm-${K}of${N}.jsonl`);
+  const second = !!args['second-pass'];
+  const outFile = path.join(outDir, `rows-truth-ffm-${second ? 'second-' : ''}${K}of${N}.jsonl`);
   const all = W.windowsOf(groups);
   const only = args['keys-file'] ? new Set(fs.readFileSync(args['keys-file'], 'utf8').split('\n').filter(Boolean)) : null;
-  const mine = all.windows.filter((w) => (!only || only.has(w.key)) && W.inShard(w.key, K, N) && w.arcs.some((a) => !done.has(`${w.key}|${a}`)))
+  const mine = (second ? all.second : all.windows).filter((w) => (!only || only.has(w.key)) && W.inShard(w.key, K, N) && w.arcs.some((a) => !done.has(`${w.key}|${a}`)))
     .sort((a, b) => ORDER.indexOf(a.group) - ORDER.indexOf(b.group) || String(a.name).localeCompare(String(b.name)) || a.cutoffMs - b.cutoffMs).slice(0, Number(args.limit ?? Infinity));
-  console.error(`refly shard ${K}/${N}: ${mine.length} windows to fly (${all.windows.length} in the first pass, ${all.skipped.length} in 2026-03..05 or after 2026-11-10, not read)`);
+  console.error(`refly shard ${K}/${N}: ${mine.length} windows to fly in the ${second ? 'second' : 'first'} pass (${all.windows.length} in the first pass, ${all.second.length} in the second, ${all.after.length} after 2026-11-10, never read)`);
   if (!mine.length) process.exit(0);
   const arms = await A.openArms();
   const env = { ...envRecord(), ffm: arms.ffmProvenance };
@@ -47,7 +48,7 @@ async function run() {
   let n = 0;
   for (const w of mine) {
     const t0 = Date.now(), D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
-    const head = { key: w.key, part: 'truth', group: w.group, regime: G.label, name: w.name, provider: W.providerOf(w.group, w.name), satellite: W.satelliteOf(w.group, w.name), cutoff: W.iso(D0) };
+    const head = { key: w.key, part: 'truth', group: w.group, regime: G.label, name: w.name, provider: W.providerOf(w.group, w.name), satellite: W.satelliteOf(w.group, w.name), cutoff: W.iso(D0), ...(second ? { pass: 'second' } : {}) };
     let ctx;
     try {
       const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
@@ -99,7 +100,9 @@ async function check() {
   ok(r0.code !== 0 && /refused: run `npm ci`/.test(r0.err) && /spacedatastandards\.org 1\.276\.0/.test(r0.err), `stale checkout not refused: ${r0.code} ${r0.err.slice(-200)}`);
   // the first-pass window list, read from the published stores (nothing flown)
   const r1 = E.run('refly.mjs', ['--limit', '0'], env);
-  ok(r1.code === 0 && /0 windows to fly \(2096 in the first pass, 1218 in 2026-03\.\.05 or after 2026-11-10, not read\)/.test(r1.err), `first-pass list: ${r1.err.slice(-300)}`);
+  ok(r1.code === 0 && /0 windows to fly in the first pass \(2096 in the first pass, 1218 in the second, 0 after 2026-11-10, never read\)/.test(r1.err), `first-pass list: ${r1.err.slice(-300)}`);
+  const r2 = E.run('refly.mjs', ['--second-pass', '--limit', '0'], env);
+  ok(r2.code === 0 && /0 windows to fly in the second pass \(2096 in the first pass, 1218 in the second/.test(r2.err), `second-pass list: ${r2.err.slice(-300)}`);
   // one real window
   const key = 'GD|ETALON 1|2025-10-25', keys = path.join(dir, 'keys.txt');
   fs.writeFileSync(keys, `${key}\n`);
@@ -114,5 +117,5 @@ async function check() {
   const r4 = E.run('refly.mjs', ['--keys-file', keys], env);
   ok(r4.code === 0 && /: 0 windows to fly/.test(r4.err), `a second run flies again: ${r4.err.slice(-200)}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('refly.mjs refuses a stale checkout naming npm ci; lists 2,096 first-pass windows; flies one laser geodetic window in four FFM settings and no AP, its reduced arm on the stored FFM row within 1e-4; a second run flies nothing');
+  done('refly.mjs refuses a stale checkout naming npm ci; lists 2,096 first-pass and 1,218 second-pass windows; flies one laser geodetic window in four FFM settings and no AP, its reduced arm on the stored FFM row within 1e-4; a second run flies nothing');
 }
