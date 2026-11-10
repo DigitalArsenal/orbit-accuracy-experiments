@@ -35,7 +35,7 @@ const THEORIES = ['AP', 'SGP4XP', 'USSFXP', 'SGP4'];
 const PASS_LEAD_DAY = 5, PASS_M = 100;
 const STATISTIC = [
   'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it); the median and the 95th percentile (linear interpolation) are taken over the lead\'s windows, those where AP and the numerical propagator were both scored.',
-  'xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module\'s own GCRF output. xpUssf is the Space Force\'s SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module\'s own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is taken over the lead\'s windows where it was scored too, and is null until it is flown on every window of the row. apBeatsXp and apBeatsXpUssf count those windows (windows), the ones where AP\'s error is below that XP\'s (apBetter), and give the median over them of AP\'s error divided by that XP\'s (medianApOverXp).',
+  'xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module\'s own GCRF output. xpUssf is the Space Force\'s SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module\'s own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is null until it has a row on every window of the row; a window where its fit or flight failed counts as flown. Its median and 95th percentile are taken over the lead\'s windows where it was scored (windows); failed counts the lead\'s windows where its fit or flight failed, so a figure with failed above 0 is over the scored windows alone (a file without windows and failed does not state them, and its readers must not take failed as 0). apBeatsXp and apBeatsXpUssf count the lead\'s windows where that XP was scored (windows), the ones where AP\'s error is below that XP\'s (apBetter), and give the median over them of AP\'s error divided by that XP\'s (medianApOverXp); a window where that XP failed is left out of the pair count, never counted as AP closer.',
   'within100mOfFfm counts, at the 120 hour lead, the windows where AP\'s error is less than 100 m above the numerical propagator\'s (AP better than it counts as met); share is met over windows.',
 ].join(' ');
 // linear interpolation between order statistics (R type 7)
@@ -210,16 +210,19 @@ async function main() {
       // per lead: the windows where AP and (where it is measured) the numerical propagator were scored; XP on those of them where it was too
       // an outside theory's column stands only once that theory has a row (flown or failed) on every window of the row
       const flownAll = (t) => ws.every((w) => rowOf(t, w, arc));
-      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day) })).filter((p) => p.a != null && (!label || p.f != null));
+      const failedOn = (t, w) => !!rowOf(t, w, arc)?.apError;
+      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day), xF: failedOn('SGP4XP', w), uF: failedOn('USSFXP', w), sF: failedOn('SGP4', w) })).filter((p) => p.a != null && (!label || p.f != null));
       const leads = LEADS.map(([hours, day]) => {
         const pairs = pairsAt(day), withXp = pairs.filter((p) => p.x != null), withU = pairs.filter((p) => p.u != null), withS = pairs.filter((p) => p.s != null);
+        // a theory's figure over its scored windows, with the count of those and of the lead's windows where its fit or flight failed
+        const column = (scored, values, failed) => (scored.length || failed ? { ...stats(values), windows: scored.length, failed } : null);
         return {
           hours, windows: pairs.length,
           ap: pairs.length ? stats(pairs.map((p) => p.a)) : null,
           ffm: label ? (pairs.length ? stats(pairs.map((p) => p.f)) : null) : null,
-          xp: withXp.length ? stats(withXp.map((p) => p.x)) : null,
-          xpUssf: flownAll('USSFXP') && withU.length ? stats(withU.map((p) => p.u)) : null,
-          sgp4: flownAll('SGP4') && withS.length ? stats(withS.map((p) => p.s)) : null,
+          xp: column(withXp, withXp.map((p) => p.x), pairs.filter((p) => p.xF).length),
+          xpUssf: flownAll('USSFXP') ? column(withU, withU.map((p) => p.u), pairs.filter((p) => p.uF).length) : null,
+          sgp4: flownAll('SGP4') ? column(withS, withS.map((p) => p.s), pairs.filter((p) => p.sF).length) : null,
           apBeatsXp: withXp.length ? { windows: withXp.length, apBetter: withXp.filter((p) => p.a < p.x).length, medianApOverXp: round3(median(withXp.map((p) => p.a / p.x))) } : null,
           apBeatsXpUssf: flownAll('USSFXP') && withU.length ? { windows: withU.length, apBetter: withU.filter((p) => p.a < p.u).length, medianApOverXp: round3(median(withU.map((p) => p.a / p.u))) } : null,
         };
@@ -292,9 +295,9 @@ async function check() {
     const pairs = pairsAt(day), wx = pairs.filter((p) => Number.isFinite(p.x)), wu = pairs.filter((p) => Number.isFinite(p.u)), ws = pairs.filter((p) => Number.isFinite(p.s));
     const l = row?.leads?.find((x) => x.hours === hours);
     ok(l && l.windows === pairs.length && l.ap.medianM === med(pairs.map((p) => p.a * 1000)) && l.ap.p95M === p95(pairs.map((p) => p.a * 1000)) && l.ffm.medianM === med(pairs.map((p) => p.f * 1000)) && l.ffm.p95M === p95(pairs.map((p) => p.f * 1000)), `lead ${hours} h: ${JSON.stringify(l)} against ${pairs.length} windows recomputed`);
-    ok(l && wx.length && l.xp.medianM === med(wx.map((p) => p.x * 1000)) && l.xp.p95M === p95(wx.map((p) => p.x * 1000)) 
+    ok(l && wx.length && l.xp.windows === wx.length && l.xp.failed === 0 && l.xp.medianM === med(wx.map((p) => p.x * 1000)) && l.xp.p95M === p95(wx.map((p) => p.x * 1000)) 
       && l.apBeatsXp.windows === wx.length && l.apBeatsXp.apBetter === wx.filter((p) => p.a < p.x).length && l.apBeatsXp.medianApOverXp === round3(quantile(wx.map((p) => (p.a * 1000) / (p.x * 1000)).sort((a, b) => a - b), 0.5)), `XP at ${hours} h: ${JSON.stringify(l?.xp)} ${JSON.stringify(l?.apBeatsXp)} against ${wx.length} windows recomputed`);
-    ok(l && wu.length && ws.length && l.xpUssf.medianM === med(wu.map((p) => p.u * 1000)) && l.xpUssf.p95M === p95(wu.map((p) => p.u * 1000)) && l.sgp4.medianM === med(ws.map((p) => p.s * 1000)) && l.sgp4.p95M === p95(ws.map((p) => p.s * 1000))
+    ok(l && wu.length && ws.length && l.xpUssf.windows === wu.length && l.xpUssf.failed === 0 && l.sgp4.windows === ws.length && l.sgp4.failed === 0 && l.xpUssf.medianM === med(wu.map((p) => p.u * 1000)) && l.xpUssf.p95M === p95(wu.map((p) => p.u * 1000)) && l.sgp4.medianM === med(ws.map((p) => p.s * 1000)) && l.sgp4.p95M === p95(ws.map((p) => p.s * 1000))
       && l.apBeatsXpUssf.windows === wu.length && l.apBeatsXpUssf.apBetter === wu.filter((p) => p.a < p.u).length && l.apBeatsXpUssf.medianApOverXp === round3(quantile(wu.map((p) => (p.a * 1000) / (p.u * 1000)).sort((a, b) => a - b), 0.5)), `Space Force XP and SGP4 at ${hours} h: ${JSON.stringify(l?.xpUssf)} ${JSON.stringify(l?.sgp4)} ${JSON.stringify(l?.apBeatsXpUssf)} against ${wu.length} and ${ws.length} windows recomputed`);
   }
   const pass = pairsAt('5'), met = pass.filter((p) => p.a * 1000 - p.f * 1000 < 100).length;
@@ -305,15 +308,19 @@ async function check() {
   fs.mkdirSync(path.join(s2, A.NUMERICAL_STORE), { recursive: true });
   fs.writeFileSync(path.join(s2, A.NUMERICAL_STORE, 'rows-truth-0of1.jsonl'), gd.slice(1).map((r) => JSON.stringify(r)).join('\n') + '\n');
   fs.mkdirSync(path.join(s2, 'table', sha12), { recursive: true });
-  const dropU = gd[0].key;
-  fs.writeFileSync(path.join(s2, 'table', sha12, 'rows.jsonl'), moduleRows.map((r) => JSON.stringify(r)).join('\n') + '\n');
-  for (const t of Object.keys(A.OUTSIDE)) { fs.mkdirSync(path.dirname(outsideFile(s2, t)), { recursive: true }); fs.writeFileSync(outsideFile(s2, t), outsideRows.filter((r) => r.theory === t && !(t === 'USSFXP' && r.key === dropU)).map((r) => JSON.stringify(r)).join('\n') + '\n'); }
+  // and one window's XP and SGP4 rows turned into failures: counted as flown (the columns stand), out of the figures and the pair count
+  const dropU = gd[0].key, failK = gd.find((g) => g.key !== dropU && ['1', '3', '5', '7'].every((d) => apRows.get(g.key)?.days?.[d]))?.key;
+  const failed = (r) => (r.key === failK && ['SGP4XP', 'SGP4'].includes(r.theory) ? (({ days, ...rest }) => ({ ...rest, apError: 'made-up failure (the check)' }))(r) : r);
+  fs.writeFileSync(path.join(s2, 'table', sha12, 'rows.jsonl'), moduleRows.map((r) => JSON.stringify(failed(r))).join('\n') + '\n');
+  for (const t of Object.keys(A.OUTSIDE)) { fs.mkdirSync(path.dirname(outsideFile(s2, t)), { recursive: true }); fs.writeFileSync(outsideFile(s2, t), outsideRows.filter((r) => r.theory === t && !(t === 'USSFXP' && r.key === dropU)).map((r) => JSON.stringify(failed(r))).join('\n') + '\n'); }
   const r2 = runIn(s2, out2, ['--theories', 'AP,SGP4XP,SGP4']);
   const b = fs.existsSync(out2) ? E.readJson(out2).rows?.[0] : null;
   ok(r2.code === 0 && /, 0 to fly/.test(r2.err), `the second run flew again: ${r2.err.slice(-200)}`);
+  const nAp = (h) => b?.leads?.find((l) => l.hours === h)?.windows;
+  ok(b && b.leads.every((l) => l.xp.failed === 1 && l.xp.windows === nAp(l.hours) - 1 && l.apBeatsXp.windows === nAp(l.hours) - 1 && l.sgp4.failed === 1 && l.sgp4.windows === nAp(l.hours) - 1), `failed counts: ${JSON.stringify(b?.leads?.map((l) => [l.hours, l.windows, l.xp?.windows, l.xp?.failed, l.apBeatsXp?.windows, l.sgp4?.windows, l.sgp4?.failed]))}`);
   ok(b && b.ffm === null && b.within100mOfFfm === null && b.leads.every((l) => l.ffm === null && l.ap && l.xp && l.sgp4 && l.xpUssf === null && l.apBeatsXpUssf === null) && b.leads[0].ap.medianM === row?.leads?.[0]?.ap?.medianM, `being measured: ${JSON.stringify(b)?.slice(0, 300)}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the numerical arm named in plain words on FFM 2.2.0; with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the numerical arm named in plain words on FFM 2.2.0; with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }
