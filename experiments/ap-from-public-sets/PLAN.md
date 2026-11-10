@@ -1,5 +1,7 @@
 # Registered confirmation: an AP record made from public element sets against the set itself
 
+> **Withdrawn, 2026-11-10.** The project's owner removed this study the day it was registered: it is not part of the project's goal, which is the propagator's own accuracy and speed. Part 2 will not run on 2027-01-12 or on any other day, and nothing is decided from part 1. The text below is kept as a record of what was planned and of what part 1 measured.
+
 Registered 2026-11-10 under [stack issue 230](https://github.com/DigitalArsenal/spacedatanetwork-stack/issues/230), before any set of either part below was fitted or scored by any arm of this construction. `config.json` beside this file holds the same numbers for the code and is frozen with it. `run.mjs`, `lib.mjs` and `table.mjs` are part of the registration: they are committed with this file, and every run's manifest records their SHA-256 and the commit that holds them.
 
 ## Question
