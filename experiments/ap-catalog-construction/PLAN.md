@@ -78,7 +78,12 @@ period A it removed 8,011 sound altimetry states (within 21 m of their neighbors
 affected: its manifest holds only 300 s altimetry files. **Parts 2 and H do not run until a dated amendment fixes the screen** (a
 threshold per step, with a check case), merged before their run day. That amendment also brings to this runner the two lines that
 amendment A4 of ap-from-public-sets adds to its part 2: the figure from the set's creation time (A4 item 5; this plan counts lead from
-the set's epoch) and the line on satellites outside AP's development lists (A4 item 6).
+the set's epoch) and the line on satellites outside AP's development lists (A4 item 6). It also closes C6-11: `table.mjs` accepts
+`--store`, `--out` and `--part1` for every part, so `--part 2 --part1 <any file>` could write the official part 2 table from a part 1
+table of the caller's choosing; the amendment refuses those options for parts 1, 2 and H outside the check, or writes the store path
+and the part 1 table's SHA-256 into the table. And it blanks the secondary bootstrap that `table.mjs` still prints for FEW classes (the
+dry-run tables show it, for example dev-B's HEO 0.78 (0.77 to 0.82) on 2 satellites and LOW_LEO 0.87 on 1) before any registered
+table is written.
 
 ## Build
 
@@ -246,7 +251,10 @@ the set ends below **0.95** (the smallest effect worth serving, shared with amen
 reason: an AP record costs every user 1.4 to 2.6 times SGP4's computation), and it **meets the three tail thresholds**, on at least 6
 satellites and 30 sets; it **fails** otherwise; with fewer satellites or sets the class is **untested**, not holding. Classes part 1
 did not name are "not applicable". A class that holds is served the new construction, for objects of the kinds tested as A4 (item 4)
-defines them; any other class stays with what ap-from-public-sets' part 2 decides.
+defines them; any other class stays with what ap-from-public-sets' part 2 decides. Part 2 holds only if, in addition, the public
+record's figure from the set's creation time (A4 item 5) reads BEATS against the set (review 0, C6-10), so the new record is never
+served on weaker terms than the record it replaces; the code for it (that figure, the condition in `part2Holds`, and a check case that
+returns "fails" when that figure reads TIE) comes with the dated screen amendment, before any registered part starts.
 
 **Orbit-product records** (P13, U2, R3: the served record): reported in every part against the set and the earlier construction, with
 the same rule's reading printed beside; this registration decides nothing about serving them.
