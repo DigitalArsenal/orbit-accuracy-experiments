@@ -17,7 +17,7 @@
 // Lead: the RMS over the 24 h ending at the lead (REF-6, C1-6), not the error at the lead epoch.
 import fs from 'node:fs';
 import path from 'node:path';
-import { LN2, LEAD_DEFINITION, median, quantile, orderInterval, spearman, scoreCells } from './lib/stats.mjs';
+import { LN2, LEAD_DEFINITION, median, quantile, orderInterval, spearman, scoreCells, bootstrap } from './lib/stats.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
@@ -58,6 +58,7 @@ if (args.check) {
 
 const dir = args.rows;
 if (!dir) throw new Error('--rows <store>/<ap sha12>');
+if (args.compare) { compare(dir, args.compare); process.exit(0); }
 const rowsAll = readRows(dir);
 const build = JSON.parse(fs.readFileSync(path.join(dir, 'build.json'), 'utf8'));
 const opts = { ref: args.reference ?? 'FFMq', statistic: args.statistic ?? 'sat-median', interval: args.interval ?? 'two-way', draws: Number(args.draws ?? 2000), leads: [24, 48, 72, 168] };
@@ -115,3 +116,39 @@ const lines = [
 ];
 fs.writeFileSync(path.join(outDir, 'README.md'), `${lines.join('\n')}\n`);
 console.log([...sums(all.summary), ...sums(first.summary)].join('\n'));
+
+/** --compare <rows B>: two AP builds side by side per cell, on all windows: each build's AP median, its ratio of medians and satellite-balanced
+ *  ratio to the same reference with both intervals, its verdict; and the paired ln(E_B / E_A) on the windows both scored (median, 95 % interval
+ *  over time blocks of fit + lead). Writes compare-<A sha12>-<B sha12>.json and .md beside the scoreboard (or --out). */
+function compare(dirA, dirB) {
+  const bA = JSON.parse(fs.readFileSync(path.join(dirA, 'build.json'), 'utf8')), bB = JSON.parse(fs.readFileSync(path.join(dirB, 'build.json'), 'utf8'));
+  const rA = readRows(dirA), rB = readRows(dirB);
+  const o = { ref: args.reference ?? 'FFMq', statistic: args.statistic ?? 'sat-median', interval: args.interval ?? 'two-way', draws: Number(args.draws ?? 2000), leads: [24, 48, 72, 168] };
+  const cA = scoreCells(rA, o), cB = scoreCells(rB, o);
+  const byKey = new Map(rB.filter((r) => !r.error).map((r) => [`${r.key}|${r.arcH}`, r]));
+  const DAY = { 24: '1', 48: '2', 72: '3', 168: '7' };
+  const rows = cA.map((a) => {
+    const b = cB.find((x) => x.group === a.group && x.fit === a.fit && x.lead === a.lead);
+    const day = DAY[a.lead], list = rA.filter((r) => !r.error && r.group === a.group && r.arcH === a.fit && r.arms.AP?.days?.[day] && byKey.get(`${r.key}|${r.arcH}`)?.arms?.AP?.days?.[day]);
+    const t0 = list.length ? Math.min(...list.map((r) => Date.parse(r.cutoff))) : 0;
+    const items = list.map((r) => ({ sat: r.name, block: Math.floor((Date.parse(r.cutoff) - t0) / ((a.fit + a.lead) * 3600000)), value: Math.log(byKey.get(`${r.key}|${r.arcH}`).arms.AP.days[day].e / r.arms.AP.days[day].e) })).filter((x) => Number.isFinite(x.value));
+    const iv = bootstrap(items, 'paired-median', 'block', Math.min(o.draws, 1000));
+    const side = (c) => (c ? { windows: c.windows, satellites: c.satellites, apKm: round(c.medianKm.AP), refKm: round(c.medianKm.ref), ratioOfMedians: round(c.ratioOfMedians), satelliteBalancedRatio: round(c.satelliteBalancedRatio), twoWay: c.bootstrapRatio?.map((x) => round(x)) ?? null, order: c.orderRatio?.map((x) => round(x)) ?? null, verdict: c.verdict, goalPass: c.goalPass } : null);
+    return { regime: a.regime, group: a.group, fit: a.fit, lead: a.lead, A: side(a), B: side(b), pairedBOverA: items.length ? { windows: items.length, ratio: round(Math.exp(median(items.map((x) => x.value)))), interval: iv ? iv.map((x) => round(Math.exp(x))) : null } : null };
+  });
+  const name = `compare-${bA.sha256.slice(0, 12)}-${bB.sha256.slice(0, 12)}`;
+  const outDir = args.out ?? path.join(REPO, 'results/headline-loop', `${bA.version}-${bA.sha256.slice(0, 12)}`);
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, `${name}.json`), `${JSON.stringify({ A: { version: bA.version, sha256: bA.sha256 }, B: { version: bB.version, sha256: bB.sha256 }, options: o, leadDefinition: LEAD_DEFINITION, cells: rows }, null, 1)}\n`);
+  const f = (x, p = 3) => (x === null || x === undefined ? '-' : Number(x).toPrecision(p));
+  const iv = (x) => (x ? `[${x.map((y) => f(y)).join(', ')}]` : '[none]');
+  const lines = [
+    `# AP ${bA.version} (${bA.sha256.slice(0, 12)}, A) and ${bB.version} (${bB.sha256.slice(0, 12)}, B), per cell`, '',
+    `Reference ${o.ref}; ${LEAD_DEFINITION}; the numerical arms are the same rows for both builds. Not a registered result.`, '',
+    '| Regime | fit h | lead h | windows A / B | AP km A / B | ratio of medians A / B | sat-balanced ratio A [two-way] | B [two-way] | verdict A / B | B over A, paired [blocks] |',
+    '|---|--:|--:|---|---|---|---|---|---|---|',
+    ...rows.map((r) => `| ${r.regime} | ${r.fit} | ${r.lead} | ${r.A?.windows ?? '-'} / ${r.B?.windows ?? '-'} | ${f(r.A?.apKm)} / ${f(r.B?.apKm)} | ${f(r.A?.ratioOfMedians)} / ${f(r.B?.ratioOfMedians)} | ${f(r.A?.satelliteBalancedRatio)} ${iv(r.A?.twoWay)} | ${f(r.B?.satelliteBalancedRatio)} ${iv(r.B?.twoWay)} | ${r.A?.verdict ?? '-'} / ${r.B?.verdict ?? '-'} | ${r.pairedBOverA ? `${f(r.pairedBOverA.ratio)} ${iv(r.pairedBOverA.interval)}, n ${r.pairedBOverA.windows}` : '-'} |`),
+  ];
+  fs.writeFileSync(path.join(outDir, `${name}.md`), `${lines.join('\n')}\n`);
+  console.log(`${name}: ${rows.length} cells to ${outDir}`);
+}

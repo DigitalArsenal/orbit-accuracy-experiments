@@ -5,6 +5,8 @@
 //        [--keys-file <file of window keys>] [--half-tolerance-every 12] [--hindcast-every 3] [--floor-every 8] [--period 2026-03..05]
 //   --period 2026-03..05: the second pass, the windows touching March to May 2026 the first pass leaves out, rows flagged `period`, to
 //   rows-truth-spring-<k>of<n>.jsonl in the same store; a window reaching past 2026-11-10 flies in neither pass
+//   node experiments/headline-loop/refly.mjs --ap-only --ap-wasm <file> --base-rows <store>/<base sha12> [--shard k/n]
+//        another AP build on the base run's windows: AP arms only, every numerical arm from the base rows and the FFM cache (runApOnly)
 //   node experiments/headline-loop/refly.mjs --check        made-up inputs: window rules, cache key, statistics helpers (no module, no truth)
 // Arms per window and fit arc (lib/ffm.mjs SETTINGS names the numerical ones):
 //   AP      the theory alone, the published $PCF, on the build given
@@ -33,6 +35,7 @@ const ORDER = ['GD', 'IG', 'GE', 'HX', 'HE', 'LS', 'GN', 'GN_GAL', 'WA', 'DO', '
 const DEFAULT_WASM = path.join(MODULES_ROOT, 'propagator/sdn-ap/dist/isomorphic/module.wasm');
 
 if (args.check) await check();
+else if (args['ap-only']) await runApOnly();
 else await run();
 
 async function run() {
@@ -138,6 +141,84 @@ async function run() {
   }
   await arms.close();
   console.error(`refly shard ${K}/${N}: done, ${n} windows`);
+  process.exit(0);
+}
+
+/** --ap-only --base-rows <store>/<base sha12>: a new AP build on the base run's windows. The AP arms fly again (AP, and where the base row
+ *  holds them APwide, APobs, APfloor); every numerical arm is the base row's, and D reads FFMq's and FFMc's scored states from the FFM cache
+ *  (never fitted again: a missing cache entry is an error in that row). D against FFMr and against the hindcast FFM is not formed (their
+ *  states are not cached). Rows go to <store>/<this build's sha12>/, the base and its period flags carried. */
+async function runApOnly() {
+  usePackages();
+  const W = await import('./lib/windows.mjs');
+  const A = await import('./lib/arms.mjs');
+  const { CONFIGURED, QUALIFIED } = await import('./lib/settings.mjs');
+  const baseDir = args['base-rows'];
+  if (!baseDir || !fs.existsSync(path.join(baseDir, 'build.json'))) throw new Error('--ap-only needs --base-rows <store>/<base sha12>');
+  const [K, N] = (args.shard ?? '0/1').split('/').map(Number);
+  const build = A.apBuildOf(args['ap-wasm'] ?? DEFAULT_WASM, args['ap-version']);
+  const baseBuild = JSON.parse(fs.readFileSync(path.join(baseDir, 'build.json'), 'utf8'));
+  if (build.sha256 === baseBuild.sha256) throw new Error('--ap-only: the build is the base build');
+  const sha12 = build.sha256.slice(0, 12), trajStepS = Number(args['traj-step'] ?? 60);
+  const outDir = path.join(A.STORE_ROOT, sha12);
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'build.json'), JSON.stringify({ ...build, file: path.relative(MODULES_ROOT, build.file), base: { version: baseBuild.version, sha256: baseBuild.sha256 } }, null, 1));
+  const readRows = (d) => fs.readdirSync(d).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => fs.readFileSync(path.join(d, f), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)));
+  const done = new Set(readRows(outDir).map((r) => `${r.key}|${r.arcH}`));
+  const byWindow = new Map();
+  for (const r of readRows(baseDir)) (byWindow.get(r.key) ?? byWindow.set(r.key, []).get(r.key)).push(r);
+  const outFile = path.join(outDir, `rows-truth-ap-${K}of${N}.jsonl`);
+  const listed = W.windowsOf(ALL_GROUPS), winOf = new Map([...listed.windows, ...listed.spring].map((x) => [x.key, x]));
+  const keys = [...byWindow.keys()].filter((k) => winOf.has(k) && W.inShard(k, K, N) && byWindow.get(k).some((r) => !done.has(`${k}|${r.arcH}`))).sort();
+  console.error(`refly --ap-only shard ${K}/${N}: AP ${build.version} (${sha12}) on the windows of ${baseBuild.version} (${baseBuild.sha256.slice(0, 12)}); ${keys.length} windows to fly`);
+  const arms = await A.openArms({ apWasm: build.file });
+  const env = { ...envRecord(), ffm: arms.ffmProvenance };
+  const cacheDir = (arm, step) => path.join(A.STORE_ROOT, 'ffm-cache', A.ffmCacheKey(arm, step).key);
+  const err = (e) => ({ ok: false, error: String(e?.message ?? e).slice(0, 200) });
+  let n = 0;
+  for (const key of keys) {
+    const t0 = Date.now(), bases = byWindow.get(key), w = winOf.get(key), G = W.GROUPS[w.group], D0 = w.cutoffMs;
+    let ctx;
+    try {
+      const truth = await W.truthOf(w, D0 - Math.max(...w.arcs) * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
+      const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
+      ctx = { truth, sc, wx: G.vacuum ? null : W.weatherAt(D0), object: { name: w.name, id: truth.objectId ?? '', norad: truth.norad ?? w.norad ?? 0 } };
+    } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
+    for (const b of bases) {
+      if (done.has(`${key}|${b.arcH}`)) continue;
+      const arc = b.arcH;
+      const row = { ...b, ap: { module: build.module, version: build.version, sha256: build.sha256 }, apOnly: { base: baseBuild.sha256.slice(0, 12) }, env, arms: Object.fromEntries(Object.entries(b.arms ?? {}).filter(([k]) => /^FFM/.test(k))) };
+      delete row.wallS;
+      if (b.error || ctx.error) row.error = b.error ?? ctx.error;
+      else {
+        const thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
+        const { sc, wx } = ctx, base = { thin, D0, sc };
+        const name = `${key.replace(/[^A-Za-z0-9_.-]+/g, '_')}-${arc}`;
+        const configured = CONFIGURED[b.group], qualified = QUALIFIED[b.group];
+        const cached = async (arm, step) => { try { return await arms.ffm({ ...base, arm, rows: null, cacheDir: cacheDir(arm, step), cacheName: name, trajStepS: step, cacheOnly: true }); } catch (e) { return { error: String(e.message) }; } };
+        const fc = await cached(configured, qualified === configured ? trajStepS : null);
+        const fq = qualified === configured ? fc : await cached(qualified, trajStepS);
+        let ap = null;
+        try { ap = await arms.ap({ ...base, object: ctx.object, pcf: G.vacuum ? A.PCF.AP_VACUUM : A.PCF.AP, spw: wx?.spw }); row.arms.AP = { ok: true, rms: ap.rms, days: ap.days, s: ap.s }; } catch (e) { row.arms.AP = err(e); }
+        if (ap && fq.states) row.arms.AP.dVsFFMq = arms.dayRms(ap.states, fq.states, sc); else if (ap) row.arms.AP.dError = fq.error;
+        if (ap && fc.states) row.arms.AP.dVsFFMc = arms.dayRms(ap.states, fc.states, sc);
+        const extra = async (label, fn) => { try { row.arms[label] = await fn(); } catch (e) { row.arms[label] = err(e); } };
+        if (b.arms?.APwide) await extra('APwide', async () => { const x = await arms.ap({ ...base, object: ctx.object, pcf: A.PCF.AP_WIDE, spw: wx?.spw }); return { ok: true, rms: x.rms, days: x.days }; });
+        if (b.arms?.APobs) await extra('APobs', async () => { const x = await arms.ap({ ...base, object: ctx.object, pcf: A.PCF.AP, spw: W.weatherObserved(D0).spw }); return { ok: true, rms: x.rms, days: x.days }; });
+        if (b.arms?.APfloor && fq.product) await extra('APfloor', async () => {
+          const model = await arms.modelOrbit(fq.product, [...thin.map((l) => l.epoch), ...sc.epochs]);
+          const x = await arms.apFitFly({ object: ctx.object, lines: thin.map((l, i) => ({ epoch: l.epoch, r: model[i].r, v: model[i].v })), D0, pcf: A.PCF.AP_FLOOR, epochs: sc.epochs });
+          return { ok: true, model: 'Fcons from the FFMq fit state', rms: x.rms, vsModel: arms.dayRms(x.states, model.slice(thin.length), sc) };
+        });
+      }
+      row.wallS = (Date.now() - t0) / 1000;
+      fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    }
+    n += 1;
+    if (n % 20 === 0 || n === keys.length) console.error(`  ${n}/${keys.length} ${key} ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+  }
+  await arms.close();
+  console.error(`refly --ap-only shard ${K}/${N}: done, ${n} windows`);
   process.exit(0);
 }
 

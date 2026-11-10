@@ -106,13 +106,14 @@ export async function openArms({ apWasm, apcMethod = null }) {
     },
     /** One FFM arm: fitted to the arc, flown on the scored epochs; with cacheDir, cached (json: the product and the scored states) so a later AP
      *  build reads it instead of fitting again, and with trajStepS also flown over the arc plus 7 days at that step (Float64 binary). */
-    async ffm({ arm, thin, D0, rows, sc, cacheDir = null, cacheName = null, trajStepS = null, halfTolerance = false }) {
+    async ffm({ arm, thin, D0, rows, sc, cacheDir = null, cacheName = null, trajStepS = null, halfTolerance = false, cacheOnly = false }) {
       const base = cacheDir ? path.join(cacheDir, cacheName) : null;
       if (base && fs.existsSync(`${base}.json`)) {
         const doc = JSON.parse(fs.readFileSync(`${base}.json`, 'utf8'));
         if (doc.trajectory && !fs.existsSync(path.join(cacheDir, doc.trajectory.file))) throw new Error(`cache ${base}.json has no trajectory file`);
         return { ...doc, states: doc.states.map((r) => ({ r })), cached: true };
       }
+      if (cacheOnly) throw new Error(`no cached ${arm} for ${cacheName}: an AP-only re-flight never fits FFM`);
       const t0 = performance.now();
       const settings = halfTolerance ? { ...SETTINGS[arm], integrator: { ...SETTINGS[arm].integrator, tolerance: SETTINGS[arm].integrator.tolerance / 2 } } : SETTINGS[arm];
       const f = await F.fit(thin, settings, D0, rows);

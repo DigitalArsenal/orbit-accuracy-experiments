@@ -30,7 +30,14 @@ node experiments/headline-loop/cells.mjs  --rows /opt/data/sdn-archive/headline-
 node experiments/headline-loop/closing.mjs --rows /opt/data/sdn-archive/headline-loop/<sha12> --referee <round-0 folder>
 ```
 
-A run refuses a checkout whose installed `spacedatastandards.org`, `space-data-module-sdk`, `flatbuffers` or `flatc-wasm` differs from its lockfile, naming `npm ci`. XM's installed-host guard is answered by one adapter in `lib/env.mjs`, which records the installed host versions in every row (proper fix stated there). A new AP build: `--ap-wasm <file>`; the FFM arms come from the cache (keyed by the FFM and estimation builds, kernel, Earth orientation, setting and trajectory step), so only AP flies again.
+A run refuses a checkout whose installed `spacedatastandards.org`, `space-data-module-sdk`, `flatbuffers` or `flatc-wasm` differs from its lockfile, naming `npm ci`. XM's installed-host guard is answered by one adapter in `lib/env.mjs`, which records the installed host versions in every row (proper fix stated there). A new AP build on the same windows, AP arms only:
+
+```
+node experiments/headline-loop/refly.mjs --ap-only --ap-wasm <module.wasm> --base-rows /opt/data/sdn-archive/headline-loop/<base sha12> [--shard k/n]
+node experiments/headline-loop/score.mjs --rows /opt/data/sdn-archive/headline-loop/<base sha12> --compare /opt/data/sdn-archive/headline-loop/<new sha12>
+```
+
+Rows go to the new build's own folder (its SHA-256, first 12). Every numerical arm is the base row's, and D reads FFMq's and FFMc's scored states from the FFM cache (keyed by the FFM and estimation builds, kernel, Earth orientation, setting and trajectory step), which an AP-only run reads and never writes or refits. D against FFMr and the hindcast FFM is not formed there (their states are not cached). `--compare` writes `compare-<A>-<B>.json` and `.md`: per cell both builds' AP medians, ratios, intervals and verdicts, and the paired B over A ratio with its blocked interval.
 
 Full run on sdn-ap 0.6.5: RUN_PLACEHOLDER
 
