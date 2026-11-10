@@ -27,12 +27,14 @@ const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA',
 // the order windows are handed out: the slowest first (long eccentric arcs), so the last ones to finish are short
 const HEAVY = ['HE', 'HX', 'DO', 'S1', 'P', 'T', 'WA', 'LS', 'GN_GAL', 'GN', 'GE', 'IG', 'GD'];
 const LEADS = [[24, 1], [72, 3], [120, 5], [168, 7]];
-const THEORIES = ['AP', 'SGP4XP'];
+// AP and SGP4XP are the released module's; USSFXP (the Space Force's XP, propagator/sgp4-xp) and SGP4 (analysis/gp-error-model's fit,
+// propagator/sgp4's flight) are outside builds, pinned (lib/arms.mjs OUTSIDE). --theories limits the ones flown in a run.
+const THEORIES = ['AP', 'SGP4XP', 'USSFXP', 'SGP4'];
 // the owner's pass line (2026-11-10): AP within 100 m of the numerical propagator 5 days out
 const PASS_LEAD_DAY = 5, PASS_M = 100;
 const STATISTIC = [
   'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it); the median and the 95th percentile (linear interpolation) are taken over the lead\'s windows, those where AP and the numerical propagator were both scored.',
-  'xp is SGP4-XP, our clean-room build in the same module as AP, fitted to the same arc by the same fit call and flown in the module\'s own GCRF output; its figures and apBeatsXp are taken over the lead\'s windows where it was scored too (apBeatsXp.windows): apBetter counts the windows where AP\'s error is below XP\'s, and medianApOverXp is the median over those windows of AP\'s error divided by XP\'s.',
+  'xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module\'s own GCRF output. xpUssf is the Space Force\'s SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module\'s own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is taken over the lead\'s windows where it was scored too, and is null until it is flown on every window of the row. apBeatsXp and apBeatsXpUssf count those windows (windows), the ones where AP\'s error is below that XP\'s (apBetter), and give the median over them of AP\'s error divided by that XP\'s (medianApOverXp).',
   'within100mOfFfm counts, at the 120 hour lead, the windows where AP\'s error is less than 100 m above the numerical propagator\'s (AP better than it counts as met); share is met over windows.',
 ].join(' ');
 // linear interpolation between order statistics (R type 7)
@@ -61,7 +63,8 @@ async function worker() {
   const groups = args.groups.split(',');
   const all = W.windowsOf(groups);
   const winOf = new Map([...all.windows, ...all.second].map((w) => [w.key, w]));
-  const arms = await A.openArms({ apWasm: args.wasm });
+  const want = args.theories.split(',');
+  const arms = await A.openArms({ apWasm: args.wasm, ussf: want.includes('USSFXP'), sgp4: want.includes('SGP4') });
   const build = { version: args['ap-version'], sha256: args.sha256 }, env = envRecord();
   const fly = async (w, need) => {
     const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs), t0 = performance.now();
@@ -82,7 +85,8 @@ async function worker() {
         else {
           try {
             const pcf = theory === 'SGP4XP' ? A.PCF.XP : G.vacuum ? A.PCF.AP_VACUUM : A.PCF.AP, spw = theory === 'SGP4XP' ? undefined : ctx.wx?.spw;
-            const x = await arms.ap({ thin, D0, sc: ctx.sc, object: ctx.object, pcf, spw });
+            const base = { thin, D0, sc: ctx.sc, object: ctx.object };
+            const x = theory === 'USSFXP' ? await arms.ussf(base) : theory === 'SGP4' ? await arms.sgp4(base) : await arms.ap({ ...base, pcf, spw });
             Object.assign(row, { days: x.days, fitRmsKm: x.rms, fit: x.fit, s: x.s });
           } catch (e) { row.apError = String(e?.message ?? e).slice(0, 200); }
         }
@@ -124,7 +128,9 @@ async function main() {
   const readRows = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean) : []);
   // the numerical propagator's rows (refly.mjs, both passes)
   const baseDir = path.join(A.STORE_ROOT, A.NUMERICAL_STORE);
-  const base = new Map(fs.readdirSync(baseDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(baseDir, f))).map((r) => [`${r.key}|${r.arcH}`, r]));
+  // a row that flew wins over a row that recorded an error for the same window and arc (a window flown again after its truth was found)
+  const base = new Map();
+  for (const r of fs.readdirSync(baseDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(baseDir, f)))) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
   // the windows: the first pass, and a regime's second pass (the windows touching 2026-03..05) once its numerical rows are all in the store
   const all = W.windowsOf(groups);
   const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
@@ -139,7 +145,10 @@ async function main() {
   // a row without a theory is AP's (the version-1 rows)
   const flownRows = new Map(readRows(rowsFile).filter((r) => r.ap?.sha256 === wasmSha).map((r) => [`${r.theory ?? 'AP'}|${r.key}|${r.arcH}`, r]));
   const rowOf = (theory, w, arc) => flownRows.get(`${theory}|${w.key}|${arc}`);
-  const needOf = (w) => THEORIES.flatMap((t) => w.arcs.filter((a) => !rowOf(t, w, a)).map((a) => [t, a]));
+  // --retry-errors: a window whose row recorded an error (no truth, coverage, a failed fit or flight) is flown again; the later row is read in
+  // its place
+  const flying = args.theories ? args.theories.split(',') : THEORIES, retry = !!args['retry-errors'];
+  const needOf = (w) => flying.flatMap((t) => w.arcs.filter((a) => !rowOf(t, w, a) || (retry && (rowOf(t, w, a).error || rowOf(t, w, a).apError))).map((a) => [t, a]));
   const todo = listed.filter((w) => needOf(w).length)
     .sort((a, b) => HEAVY.indexOf(a.group) - HEAVY.indexOf(b.group) || Math.max(...b.arcs) - Math.max(...a.arcs) || a.key.localeCompare(b.key));
   console.error(`table: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${listed.length} windows (${all.windows.length} first pass, ${listed.length - all.windows.length} second), ${todo.length} to fly on ${Math.min(jobs, todo.length)} jobs`);
@@ -147,7 +156,7 @@ async function main() {
   // fly: each worker takes the next window as it finishes one
   let next = 0, flown = 0;
   await Promise.all(Array.from({ length: Math.min(jobs, todo.length) }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, '--sha256', wasmSha, '--groups', groups.join(',')], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, '--sha256', wasmSha, '--groups', groups.join(','), '--theories', flying.join(',')], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => { if (next < todo.length) { const w = todo[next++]; child.send({ key: w.key, need: needOf(w) }); } else child.send({ stop: true }); };
     child.on('message', (m) => {
       if (m.rows) {
@@ -191,17 +200,20 @@ async function main() {
         ffm = { version: b.version, wasmSha256: b.sha256, modulesCommit: FFM_220.modulesCommit, configuration: describe(SETTINGS[settings[0]]) + (SPREAD[`${g}|${arc}|${settings[0]}`] ?? '') };
       }
       // per lead: the windows where AP and (where it is measured) the numerical propagator were scored; XP on those of them where it was too
-      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day) })).filter((p) => p.a != null && (!label || p.f != null));
+      // an outside theory's column stands only once that theory has a row (flown or failed) on every window of the row
+      const flownAll = (t) => ws.every((w) => rowOf(t, w, arc));
+      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day) })).filter((p) => p.a != null && (!label || p.f != null));
       const leads = LEADS.map(([hours, day]) => {
-        const pairs = pairsAt(day), withXp = pairs.filter((p) => p.x != null);
+        const pairs = pairsAt(day), withXp = pairs.filter((p) => p.x != null), withU = pairs.filter((p) => p.u != null), withS = pairs.filter((p) => p.s != null);
         return {
           hours, windows: pairs.length,
           ap: pairs.length ? stats(pairs.map((p) => p.a)) : null,
           ffm: label ? (pairs.length ? stats(pairs.map((p) => p.f)) : null) : null,
           xp: withXp.length ? stats(withXp.map((p) => p.x)) : null,
-          xpUssf: null,
-          sgp4: null,
+          xpUssf: flownAll('USSFXP') && withU.length ? stats(withU.map((p) => p.u)) : null,
+          sgp4: flownAll('SGP4') && withS.length ? stats(withS.map((p) => p.s)) : null,
           apBeatsXp: withXp.length ? { windows: withXp.length, apBetter: withXp.filter((p) => p.a < p.x).length, medianApOverXp: round3(median(withXp.map((p) => p.a / p.x))) } : null,
+          apBeatsXpUssf: flownAll('USSFXP') && withU.length ? { windows: withU.length, apBetter: withU.filter((p) => p.a < p.u).length, medianApOverXp: round3(median(withU.map((p) => p.a / p.u))) } : null,
         };
       });
       const pass = label ? pairsAt(PASS_LEAD_DAY) : [];
@@ -210,7 +222,7 @@ async function main() {
       const scored = ws.filter((w, i) => LEADS.some(([, day]) => meters(rowOf('AP', w, arc), null, day) != null && (!label || meters(bs[i], label, day) != null)));
       rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ffm, within100mOfFfm, leads });
       const failed = (t) => ws.filter((w) => rowOf(t, w, arc)?.apError).length;
-      console.error(`  ${g} ${arc} h: ${scored.length} of ${ws.length} windows scored${failed('AP') ? `, AP failed on ${failed('AP')}` : ''}${failed('SGP4XP') ? `, XP failed on ${failed('SGP4XP')}` : ''}; numerical arm ${label ? `${label} (${ffm.configuration.split(';')[0]})` : complete ? 'none properly configured' : 'being measured'}`);
+      console.error(`  ${g} ${arc} h: ${scored.length} of ${ws.length} windows scored${THEORIES.map((t) => (failed(t) ? `, ${t} failed on ${failed(t)}` : '')).join('')}; numerical arm ${label ? `${label} (${ffm.configuration.split(';')[0]})` : complete ? 'none properly configured' : 'being measured'}`);
     }
   }
   const doc = {
@@ -240,7 +252,7 @@ async function check() {
   const dir = E.tmp('table'), real = path.join(A.STORE_ROOT, A.NUMERICAL_STORE);
   const commit = git(MODULES_ROOT, 'rev-parse', 'HEAD').toString().trim();
   const wasmSha = sha256(git(MODULES_ROOT, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`));
-  const runIn = (store, out) => E.run('table.mjs', ['--modules-commit', commit, '--modules-root', MODULES_ROOT, '--out', out, '--groups', 'GD', '--jobs', '4'], { HEADLINE_LOOP_STORE: store });
+  const runIn = (store, out, more = []) => E.run('table.mjs', ['--modules-commit', commit, '--modules-root', MODULES_ROOT, '--out', out, '--groups', 'GD', '--jobs', '8', ...more], { HEADLINE_LOOP_STORE: store });
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
   const lines = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean);
   const gd = fs.readdirSync(real).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => lines(path.join(real, f))).filter((r) => r.group === 'GD' && !r.period);
@@ -258,31 +270,36 @@ async function check() {
   ok(row?.ffm?.version === '2.2.0' && /^[0-9a-f]{64}$/.test(row.ffm.wasmSha256) && /ocean tides/.test(row.ffm.configuration) && !/Fbest|FFM/.test(row.ffm.configuration), `the numerical arm: ${JSON.stringify(row?.ffm)}`);
   const sha12 = wasmSha.slice(0, 12), flown = lines(path.join(s1, 'table', sha12, 'rows.jsonl'));
   const apRows = new Map(flown.filter((r) => (r.theory ?? 'AP') === 'AP').map((r) => [r.key, r])), xpRows = new Map(flown.filter((r) => r.theory === 'SGP4XP').map((r) => [r.key, r]));
-  ok(xpRows.size === 55 && apRows.size === 55, `rows flown: AP ${apRows.size}, XP ${xpRows.size} (55 windows)`);
+  const uRows = new Map(flown.filter((r) => r.theory === 'USSFXP').map((r) => [r.key, r])), sRows = new Map(flown.filter((r) => r.theory === 'SGP4').map((r) => [r.key, r]));
+  ok([apRows, xpRows, uRows, sRows].every((m) => m.size === 55) && /propagator\/sgp4-xp/.test(doc.statistic) && /analysis\/gp-error-model/.test(doc.statistic), `rows flown: AP ${apRows.size}, XP ${xpRows.size}, Space Force XP ${uRows.size}, SGP4 ${sRows.size} (55 windows); the fitters named`);
   const med = (v) => round(quantile(v.slice().sort((a, b) => a - b), 0.5)), p95 = (v) => round(quantile(v.slice().sort((a, b) => a - b), 0.95));
-  const pairsAt = (day) => gd.map((b) => ({ a: apRows.get(b.key)?.days?.[day]?.e, f: b.arms?.FFMbest?.ok ? b.arms.FFMbest.days?.[day]?.e : undefined, x: xpRows.get(b.key)?.days?.[day]?.e })).filter((p) => Number.isFinite(p.a) && Number.isFinite(p.f));
+  const pairsAt = (day) => gd.map((b) => ({ a: apRows.get(b.key)?.days?.[day]?.e, f: b.arms?.FFMbest?.ok ? b.arms.FFMbest.days?.[day]?.e : undefined, x: xpRows.get(b.key)?.days?.[day]?.e, u: uRows.get(b.key)?.days?.[day]?.e, s: sRows.get(b.key)?.days?.[day]?.e })).filter((p) => Number.isFinite(p.a) && Number.isFinite(p.f));
   ok(JSON.stringify(row?.leads?.map((l) => l.hours)) === '[24,72,120,168]', `leads ${JSON.stringify(row?.leads?.map((l) => l.hours))}`);
   for (const [hours, day] of LEADS) {
-    const pairs = pairsAt(day), wx = pairs.filter((p) => Number.isFinite(p.x));
+    const pairs = pairsAt(day), wx = pairs.filter((p) => Number.isFinite(p.x)), wu = pairs.filter((p) => Number.isFinite(p.u)), ws = pairs.filter((p) => Number.isFinite(p.s));
     const l = row?.leads?.find((x) => x.hours === hours);
     ok(l && l.windows === pairs.length && l.ap.medianM === med(pairs.map((p) => p.a * 1000)) && l.ap.p95M === p95(pairs.map((p) => p.a * 1000)) && l.ffm.medianM === med(pairs.map((p) => p.f * 1000)) && l.ffm.p95M === p95(pairs.map((p) => p.f * 1000)), `lead ${hours} h: ${JSON.stringify(l)} against ${pairs.length} windows recomputed`);
-    ok(l && wx.length && l.xp.medianM === med(wx.map((p) => p.x * 1000)) && l.xp.p95M === p95(wx.map((p) => p.x * 1000)) && l.xpUssf === null && l.sgp4 === null
+    ok(l && wx.length && l.xp.medianM === med(wx.map((p) => p.x * 1000)) && l.xp.p95M === p95(wx.map((p) => p.x * 1000)) 
       && l.apBeatsXp.windows === wx.length && l.apBeatsXp.apBetter === wx.filter((p) => p.a < p.x).length && l.apBeatsXp.medianApOverXp === round3(quantile(wx.map((p) => (p.a * 1000) / (p.x * 1000)).sort((a, b) => a - b), 0.5)), `XP at ${hours} h: ${JSON.stringify(l?.xp)} ${JSON.stringify(l?.apBeatsXp)} against ${wx.length} windows recomputed`);
+    ok(l && wu.length && ws.length && l.xpUssf.medianM === med(wu.map((p) => p.u * 1000)) && l.xpUssf.p95M === p95(wu.map((p) => p.u * 1000)) && l.sgp4.medianM === med(ws.map((p) => p.s * 1000)) && l.sgp4.p95M === p95(ws.map((p) => p.s * 1000))
+      && l.apBeatsXpUssf.windows === wu.length && l.apBeatsXpUssf.apBetter === wu.filter((p) => p.a < p.u).length && l.apBeatsXpUssf.medianApOverXp === round3(quantile(wu.map((p) => (p.a * 1000) / (p.u * 1000)).sort((a, b) => a - b), 0.5)), `Space Force XP and SGP4 at ${hours} h: ${JSON.stringify(l?.xpUssf)} ${JSON.stringify(l?.sgp4)} ${JSON.stringify(l?.apBeatsXpUssf)} against ${wu.length} and ${ws.length} windows recomputed`);
   }
   const pass = pairsAt('5'), met = pass.filter((p) => p.a * 1000 - p.f * 1000 < 100).length;
   ok(row?.within100mOfFfm?.windows === pass.length && row.within100mOfFfm.met === met && row.within100mOfFfm.share === round3(met / pass.length), `pass line: ${JSON.stringify(row?.within100mOfFfm)} against ${met} of ${pass.length} recomputed`);
-  // 2. one window's numerical row taken away: the row is "being measured"; AP's rows are reused, nothing flown
+  // 2. one window's numerical row and one Space Force XP row taken away, the Space Force XP not flown: FFM, the pass line and the Space Force
+  // XP are "being measured"; the other rows are reused, nothing flown
   const s2 = path.join(dir, 's2'), out2 = path.join(dir, 'b.json');
   fs.mkdirSync(path.join(s2, A.NUMERICAL_STORE), { recursive: true });
   fs.writeFileSync(path.join(s2, A.NUMERICAL_STORE, 'rows-truth-0of1.jsonl'), gd.slice(1).map((r) => JSON.stringify(r)).join('\n') + '\n');
   fs.mkdirSync(path.join(s2, 'table', sha12), { recursive: true });
-  fs.copyFileSync(path.join(s1, 'table', sha12, 'rows.jsonl'), path.join(s2, 'table', sha12, 'rows.jsonl'));
-  const r2 = runIn(s2, out2);
+  const dropU = gd[0].key;
+  fs.writeFileSync(path.join(s2, 'table', sha12, 'rows.jsonl'), flown.filter((r) => !(r.theory === 'USSFXP' && r.key === dropU)).map((r) => JSON.stringify(r)).join('\n') + '\n');
+  const r2 = runIn(s2, out2, ['--theories', 'AP,SGP4XP,SGP4']);
   const b = fs.existsSync(out2) ? E.readJson(out2).rows?.[0] : null;
   ok(r2.code === 0 && /, 0 to fly/.test(r2.err), `the second run flew again: ${r2.err.slice(-200)}`);
-  ok(b && b.ffm === null && b.within100mOfFfm === null && b.leads.every((l) => l.ffm === null && l.ap && l.xp) && b.leads[0].ap.medianM === row?.leads?.[0]?.ap?.medianM, `being measured: ${JSON.stringify(b)?.slice(0, 300)}`);
+  ok(b && b.ffm === null && b.within100mOfFfm === null && b.leads.every((l) => l.ffm === null && l.ap && l.xp && l.sgp4 && l.xpUssf === null && l.apBeatsXpUssf === null) && b.leads[0].ap.medianM === row?.leads?.[0]?.ap?.medianM, `being measured: ${JSON.stringify(b)?.slice(0, 300)}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM and SGP4-XP medians and 95th percentiles, AP against XP as counts, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the numerical arm named in plain words on FFM 2.2.0; with one numerical row missing the row is being measured (FFM and the pass line null) and nothing is flown again');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the numerical arm named in plain words on FFM 2.2.0; with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }

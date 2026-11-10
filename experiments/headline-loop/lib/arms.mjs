@@ -12,6 +12,8 @@ import { SETTINGS, openFfm } from './ffm.mjs';
 const OT = path.join(REPO, 'experiments/operator-theory');
 const APL = await import(path.join(OT, 'lib/ap.mjs'));
 const { openAxes } = await import(path.join(OT, 'lib/host.mjs'));
+const { PIN: USSF_PIN } = await import(path.join(OT, 'lib/build.mjs'));
+const XP2 = await import(path.join(OT, 'lib/xp2.mjs'));
 export const S = await import(path.join(root, XP2F.xm.dir, 'lib/sds.mjs'));
 const { openModules } = await import(path.join(root, XP2F.xm.dir, 'lib/modules.mjs'));
 
@@ -29,11 +31,20 @@ export const PCF = {
   XP: APL.fitPcf({ forces: {}, fit: null }),
 };
 
-/** The arms: { axes, ffmProvenance, ap() (when apWasm is given), ffm(), close() }. */
-export async function openArms({ apWasm = null } = {}) {
+/** The builds of the two outside theories (table.mjs names them): the Space Force's XP through propagator/sgp4-xp (its library is the
+ *  unmodified Sgp4Prop 9.1.1.0 XP build, called as a black box), SGP4 fitted by analysis/gp-error-model and flown by propagator/sgp4. */
+export const OUTSIDE = {
+  ussf: { module: 'propagator/sgp4-xp', version: USSF_PIN.versions['propagator/sgp4-xp'], modulesCommit: USSF_PIN.modulesCommit, wasmSha256: USSF_PIN.wasmSha256['propagator/sgp4-xp'] },
+  sgp4Fit: { module: 'analysis/gp-error-model', modulesCommit: XP2.build.modulesCommit, wasmSha256: XP2.build.wasmSha256['analysis/gp-error-model'] },
+};
+
+/** The arms: { axes, ffmProvenance, ap() (when apWasm is given), ussf() and sgp4() (when asked), ffm(), close() }. */
+export async function openArms({ apWasm = null, ussf = false, sgp4 = false } = {}) {
   const m = await openModules();
   const F = await openFfm();
   const axes = await openAxes();
+  const U = ussf ? await APL.standalone('propagator/sgp4-xp') : null;
+  const G = sgp4 ? await XP2.openSgp4Fit() : null;
   let ap = null, invoke = null;
   if (apWasm) {
     const entry = createRequire(path.join(MODULES_ROOT, 'propagator/sdn-ap/package.json')).resolve('space-data-module-sdk/testing/isomorphic');
@@ -77,6 +88,37 @@ export async function openArms({ apWasm = null } = {}) {
         held: { drag: /BTERM held at its prior/.test(odComment), srp: /AGOM held at its prior/.test(odComment) } };
       return { ok: true, rms: info.fitRmsKm, fit, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), s: (performance.now() - t0) / 1000 };
     },
+    /** The Space Force's XP: propagator/sgp4-xp's own fit of the truth arc (GCRF states; its fitter searches two-line-element digits, every
+     *  evaluation running the library), flown by its propagate in its own GCRF output on the scored epochs: { ok, days, s }. */
+    async ussf({ object, thin, D0, sc }) {
+      const t0 = performance.now();
+      const oem = S.oemBytes({ frame: 'GCRF', object, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
+      const f = await U.invoke({ methodId: 'fit', inputs: [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }] });
+      if (f.statusCode !== 0) throw new Error(`sgp4-xp fit: ${f.errorCode}: ${String(f.errorMessage).slice(0, 200)}`);
+      const ocm = new Uint8Array(f.outputs.find((o) => o.portId === 'elements').payload);
+      const grid = S.oemBytes({ frame: 'GCRF', lines: sc.epochs.map((e) => ({ epoch: e, r: [0, 0, 0], v: [0, 0, 0] })) });
+      const r = await U.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'grid', typeRef: S.TYPE('OEM'), payload: grid }] });
+      if (r.statusCode !== 0) throw new Error(`sgp4-xp propagate: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
+      const states = S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload)).map((l) => ({ r: l.r, v: l.v }));
+      if (states.length !== sc.epochs.length) throw new Error(`sgp4-xp propagate returned ${states.length} of ${sc.epochs.length}`);
+      return { ok: true, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), s: (performance.now() - t0) / 1000 };
+    },
+    /** SGP4: analysis/gp-error-model's fit of the truth arc (its own SGP4 in improved mode, the epoch at the arc's first state, B* fitted),
+     *  flown by propagator/sgp4 (AFSPC mode) on the scored epochs, its TEME output turned to GCRF by foundation/frames (the path the fit
+     *  uses): { ok, days, s }. */
+    async sgp4({ object, thin, D0, sc }) {
+      const t0 = performance.now();
+      const oem = S.oemBytes({ frame: 'GCRF', object, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) });
+      const { el } = await G.fit(oem, { from: thin[0].epoch, to: iso(D0), epoch: 'first', fitBstar: true }, { name: object.name, objectId: object.id });
+      // propagate_ephemeris steps from the first scored epoch: at the scored grid's own step (300 s, or the truth's step times the smallest
+      // whole number reaching 300 s), so every scored epoch is one of its steps
+      const t = sc.epochs.map((e) => Date.parse(/Z$/.test(e) ? e : `${e}Z`));
+      const step = Math.min(...t.slice(1).map((x, i) => x - t[i]).filter((d) => d > 0)) / 1000;
+      const fl = await m.propagateSgp4(el, object.norad, t, step);
+      if (fl.some((s) => !s)) throw new Error('propagator/sgp4 returned a gap');
+      const states = await m.toAxes(fl, sc.epochs, 'GCRF');
+      return { ok: true, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), s: (performance.now() - t0) / 1000 };
+    },
     /** One FFM setting: fitted to the arc, flown on the scored epochs: { arm, product, termination, fitOk, weightedRms, iterations, days, s }. */
     async ffm({ arm, thin, D0, rows, sc }) {
       const t0 = performance.now(), settings = SETTINGS[arm];
@@ -86,6 +128,6 @@ export async function openArms({ apWasm = null } = {}) {
       const days = byDay(await m.rtn(scored, sc.truth), sc.entered, sc.sizes);
       return { arm, product, termination: f.termination, fitOk: f.ok, weightedRms: f.weightedRms, iterations: f.iterations, days, s: (performance.now() - t0) / 1000 };
     },
-    async close() { await axes.close(); await F.close(); await m.close(); await ap?.destroy?.(); },
+    async close() { await axes.close(); await F.close(); await m.close(); await ap?.destroy?.(); await U?.destroy?.(); },
   };
 }
