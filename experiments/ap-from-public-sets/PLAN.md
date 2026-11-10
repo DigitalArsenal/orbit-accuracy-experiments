@@ -104,3 +104,17 @@ Part 2 tests that rule. It holds when no class served on AP has the verdict LOSE
 
 - `node experiments/ap-from-public-sets/run.mjs --check`: a made-up set through the real module, end to end (flown on SGP4, fitted as `B3`, flown on AP, scored against its own flight), and the statistic and verdict rule on fixed numbers. It needs the module at the registered bytes and the weather archive; without them it says SKIPPED and fails.
 - `node experiments/ap-from-public-sets/table.mjs --part <N> --check`: the committed table equals the table rebuilt from the store.
+
+## Amendments
+
+### A1, 2026-11-10: the count of states a full day holds
+
+Part 1 ran as registered and scored 2,063 sets. No laser sphere was among them, and two of the four LAGEOS and Etalon satellites were missing.
+
+**Cause.** The runner took a full day to hold 86,400 s divided by the larger of 300 s and the truth's own step. Truth stepped at 120, 180 or 240 s thins to 360, 360 or 480 s, so a full day holds 240 or 180 states. That is under 90 % of the 288 the runner expected, and every set of those satellites failed the first-day test before any arm ran.
+
+**Change.** The rule of this plan is unchanged: a day counts with at least 90 % of the states its grid would hold. The count now uses the spacing the thinning yields: the truth's step times the smallest whole number that reaches 300 s. One line of `run.mjs` changes. `table.mjs` gains a `--label` option so both tables can be built.
+
+**What was known when this was written.** The fault was seen in the list of truth sources of the part 1 table and confirmed by reading epochs only. No error of any arm on the missing satellites had been computed. Sets already scored are not affected: their truth steps (10, 300 and 900 s) give the same count under both forms.
+
+**Reporting.** Part 1 is run again in full with the corrected count. The results carry both tables: `part1-as-registered` and `part1`.

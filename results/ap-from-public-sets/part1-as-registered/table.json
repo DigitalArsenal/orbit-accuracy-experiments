@@ -1,0 +1,4806 @@
+{
+ "experiment": "ap-from-public-sets",
+ "part": 1,
+ "span": {
+  "from": "2026-06-01T00:00:00Z",
+  "to": "2026-08-11T00:00:00Z",
+  "kind": "earlier period, never fitted or scored by this construction"
+ },
+ "build": {
+  "module": "propagator/sdn-ap",
+  "version": "0.6.5",
+  "modulesCommit": "3a3661eaf9caa84fc776a9959494e1ca14358db1",
+  "wasmSha256": "f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7"
+ },
+ "weatherForecasterSha256": "68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73",
+ "configSha256": "51abddeeab2cb4ac0ac95b90a8ce5bbddbcc7afd2aa911986595597f1036a32e",
+ "runnerSha256": "f87b99d947b23725532b5c91b09dbfb48bece9b3700460dd950f3b4002d8b0b2",
+ "libSha256": "bd6fba5c8bd89e0205df2e74f5f9ce29d647fbd988452f2a68b75984a1cd8937",
+ "repositoryCommit": "6831ade8ad6abf6ac2635ce18067cfc5ba2901a0",
+ "modulesCommit": "3a3661eaf9caa84fc776a9959494e1ca14358db1",
+ "wasmSha256": "f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7",
+ "truthFiles": 11216,
+ "truthFilesSha256": "67ce18f857d07c3b4c1e8dbeef3ec2ee08e43e5dbf7f079808ba35f8b503470f",
+ "counts": {
+  "sets": 2063,
+  "satellites": 133,
+  "withoutScoredFirstDay": 2784,
+  "truthStatesScreenedOut": 466,
+  "errors": 0
+ },
+ "classes": {
+  "LOW_LEO": {
+   "sets": 23,
+   "satellites": 1,
+   "errors": 0,
+   "withHistory": 23,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 684,
+     "primary": {
+      "sets": 23,
+      "satellites": 1,
+      "setKm": 1.6108,
+      "armKm": 1.4595,
+      "ratio": 0.906,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 1,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 23,
+       "setKm": 0.6735,
+       "armKm": 0.3833,
+       "ratio": 0.573,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.87
+      },
+      {
+       "day": 2,
+       "sets": 23,
+       "setKm": 1.123,
+       "armKm": 0.8815,
+       "ratio": 0.772,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.87
+      },
+      {
+       "day": 3,
+       "sets": 23,
+       "setKm": 2.5704,
+       "armKm": 2.3923,
+       "ratio": 0.927,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 1
+      },
+      {
+       "day": 4,
+       "sets": 23,
+       "setKm": 3.4705,
+       "armKm": 3.6231,
+       "ratio": 0.968,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.696
+      },
+      {
+       "day": 5,
+       "sets": 23,
+       "setKm": 7.5467,
+       "armKm": 7.098,
+       "ratio": 1,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 6,
+       "sets": 23,
+       "setKm": 12.8937,
+       "armKm": 11.142,
+       "ratio": 1,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 7,
+       "sets": 23,
+       "setKm": 15.5842,
+       "armKm": 17.6174,
+       "ratio": 1,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      }
+     ]
+    },
+    "C5": {
+     "missing": 1,
+     "fitResidualMedianM": 693,
+     "primary": {
+      "sets": 22,
+      "satellites": 1,
+      "setKm": 1.4956,
+      "armKm": 2.107,
+      "ratio": 1.169,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 0.409,
+      "satellitesCloser": 0,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 22,
+       "setKm": 0.6735,
+       "armKm": 0.6849,
+       "ratio": 0.99,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.545
+      },
+      {
+       "day": 2,
+       "sets": 22,
+       "setKm": 1.009,
+       "armKm": 1.7631,
+       "ratio": 1.122,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.455
+      },
+      {
+       "day": 3,
+       "sets": 22,
+       "setKm": 2.2194,
+       "armKm": 3.4244,
+       "ratio": 1.181,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.409
+      },
+      {
+       "day": 4,
+       "sets": 22,
+       "setKm": 3.4183,
+       "armKm": 7.1148,
+       "ratio": 1.114,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.455
+      },
+      {
+       "day": 5,
+       "sets": 22,
+       "setKm": 6.8631,
+       "armKm": 13.3577,
+       "ratio": 1.138,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.455
+      },
+      {
+       "day": 6,
+       "sets": 22,
+       "setKm": 12.6443,
+       "armKm": 15.9635,
+       "ratio": 1.173,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.364
+      },
+      {
+       "day": 7,
+       "sets": 22,
+       "setKm": 15.5156,
+       "armKm": 20.1579,
+       "ratio": 1.412,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.364
+      }
+     ]
+    },
+    "D5": {
+     "missing": 1,
+     "fitResidualMedianM": 792,
+     "primary": {
+      "sets": 22,
+      "satellites": 1,
+      "setKm": 1.4956,
+      "armKm": 1.5491,
+      "ratio": 0.853,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 0.818,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 22,
+       "setKm": 0.6735,
+       "armKm": 0.4874,
+       "ratio": 0.721,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.682
+      },
+      {
+       "day": 2,
+       "sets": 22,
+       "setKm": 1.009,
+       "armKm": 0.8788,
+       "ratio": 0.746,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.773
+      },
+      {
+       "day": 3,
+       "sets": 22,
+       "setKm": 2.2194,
+       "armKm": 2.198,
+       "ratio": 0.829,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.682
+      },
+      {
+       "day": 4,
+       "sets": 22,
+       "setKm": 3.4183,
+       "armKm": 3.051,
+       "ratio": 0.759,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.591
+      },
+      {
+       "day": 5,
+       "sets": 22,
+       "setKm": 6.8631,
+       "armKm": 6.057,
+       "ratio": 0.85,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.5
+      },
+      {
+       "day": 6,
+       "sets": 22,
+       "setKm": 12.6443,
+       "armKm": 8.9491,
+       "ratio": 0.822,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.5
+      },
+      {
+       "day": 7,
+       "sets": 22,
+       "setKm": 15.5156,
+       "armKm": 16.5502,
+       "ratio": 0.888,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.5
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 23,
+      "satellites": 1,
+      "setKm": 1.6108,
+      "armKm": 1.5554,
+      "ratio": 0.858,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 0.826,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 23,
+       "setKm": 0.6735,
+       "armKm": 0.4889,
+       "ratio": 0.726,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.652
+      },
+      {
+       "day": 2,
+       "sets": 23,
+       "setKm": 1.123,
+       "armKm": 0.908,
+       "ratio": 0.757,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.739
+      },
+      {
+       "day": 3,
+       "sets": 23,
+       "setKm": 2.5704,
+       "armKm": 2.2451,
+       "ratio": 0.834,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.696
+      },
+      {
+       "day": 4,
+       "sets": 23,
+       "setKm": 3.4705,
+       "armKm": 3.3608,
+       "ratio": 0.779,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.609
+      },
+      {
+       "day": 5,
+       "sets": 23,
+       "setKm": 7.5467,
+       "armKm": 6.1665,
+       "ratio": 0.949,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 6,
+       "sets": 23,
+       "setKm": 12.8937,
+       "armKm": 9.624,
+       "ratio": 0.925,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 7,
+       "sets": 23,
+       "setKm": 15.5842,
+       "armKm": 18.3013,
+       "ratio": 0.907,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      }
+     ],
+     "servedAs": {
+      "D5": 22,
+      "B3": 1,
+      "A": 0
+     }
+    }
+   }
+  },
+  "MID_LEO": {
+   "sets": 138,
+   "satellites": 9,
+   "errors": 0,
+   "withHistory": 138,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 584,
+     "primary": {
+      "sets": 77,
+      "satellites": 9,
+      "setKm": 0.7377,
+      "armKm": 0.4488,
+      "ratio": 0.643,
+      "lo": 0.473,
+      "hi": 0.748,
+      "shareCloser": 1,
+      "satellitesCloser": 9,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 138,
+       "setKm": 0.5952,
+       "armKm": 0.3043,
+       "ratio": 0.554,
+       "lo": 0.475,
+       "hi": 0.62,
+       "shareCloser": 0.993
+      },
+      {
+       "day": 2,
+       "sets": 100,
+       "setKm": 0.6772,
+       "armKm": 0.3789,
+       "ratio": 0.594,
+       "lo": 0.463,
+       "hi": 0.721,
+       "shareCloser": 0.98
+      },
+      {
+       "day": 3,
+       "sets": 92,
+       "setKm": 0.8721,
+       "armKm": 0.6328,
+       "ratio": 0.728,
+       "lo": 0.514,
+       "hi": 0.801,
+       "shareCloser": 1
+      },
+      {
+       "day": 4,
+       "sets": 90,
+       "setKm": 1.2861,
+       "armKm": 0.9993,
+       "ratio": 0.765,
+       "lo": 0.565,
+       "hi": 0.877,
+       "shareCloser": 0.9
+      },
+      {
+       "day": 5,
+       "sets": 96,
+       "setKm": 1.6923,
+       "armKm": 1.372,
+       "ratio": 0.775,
+       "lo": 0.63,
+       "hi": 0.875,
+       "shareCloser": 0.823
+      },
+      {
+       "day": 6,
+       "sets": 89,
+       "setKm": 1.9834,
+       "armKm": 1.6792,
+       "ratio": 0.815,
+       "lo": 0.72,
+       "hi": 0.875,
+       "shareCloser": 0.775
+      },
+      {
+       "day": 7,
+       "sets": 91,
+       "setKm": 2.749,
+       "armKm": 2.4402,
+       "ratio": 0.883,
+       "lo": 0.762,
+       "hi": 0.924,
+       "shareCloser": 0.67
+      }
+     ]
+    },
+    "C5": {
+     "missing": 0,
+     "fitResidualMedianM": 580,
+     "primary": {
+      "sets": 77,
+      "satellites": 9,
+      "setKm": 0.7377,
+      "armKm": 0.9229,
+      "ratio": 0.987,
+      "lo": 0.449,
+      "hi": 1.385,
+      "shareCloser": 0.519,
+      "satellitesCloser": 3,
+      "verdict": "TIE"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 138,
+       "setKm": 0.5952,
+       "armKm": 0.4246,
+       "ratio": 0.703,
+       "lo": 0.4,
+       "hi": 0.866,
+       "shareCloser": 0.688
+      },
+      {
+       "day": 2,
+       "sets": 100,
+       "setKm": 0.6772,
+       "armKm": 0.7202,
+       "ratio": 0.942,
+       "lo": 0.54,
+       "hi": 1.261,
+       "shareCloser": 0.54
+      },
+      {
+       "day": 3,
+       "sets": 92,
+       "setKm": 0.8721,
+       "armKm": 1.0803,
+       "ratio": 0.932,
+       "lo": 0.586,
+       "hi": 1.202,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 4,
+       "sets": 90,
+       "setKm": 1.2861,
+       "armKm": 1.5795,
+       "ratio": 0.925,
+       "lo": 0.594,
+       "hi": 1.096,
+       "shareCloser": 0.544
+      },
+      {
+       "day": 5,
+       "sets": 96,
+       "setKm": 1.6923,
+       "armKm": 2.3216,
+       "ratio": 1.057,
+       "lo": 0.814,
+       "hi": 1.423,
+       "shareCloser": 0.469
+      },
+      {
+       "day": 6,
+       "sets": 89,
+       "setKm": 1.9834,
+       "armKm": 2.2698,
+       "ratio": 1.041,
+       "lo": 0.797,
+       "hi": 1.244,
+       "shareCloser": 0.472
+      },
+      {
+       "day": 7,
+       "sets": 91,
+       "setKm": 2.749,
+       "armKm": 3.2404,
+       "ratio": 1.003,
+       "lo": 0.859,
+       "hi": 1.275,
+       "shareCloser": 0.495
+      }
+     ]
+    },
+    "D5": {
+     "missing": 1,
+     "fitResidualMedianM": 600,
+     "primary": {
+      "sets": 76,
+      "satellites": 9,
+      "setKm": 0.7322,
+      "armKm": 0.4926,
+      "ratio": 0.63,
+      "lo": 0.375,
+      "hi": 0.758,
+      "shareCloser": 0.947,
+      "satellitesCloser": 8,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 137,
+       "setKm": 0.5955,
+       "armKm": 0.2969,
+       "ratio": 0.494,
+       "lo": 0.405,
+       "hi": 0.582,
+       "shareCloser": 0.912
+      },
+      {
+       "day": 2,
+       "sets": 99,
+       "setKm": 0.6747,
+       "armKm": 0.3468,
+       "ratio": 0.508,
+       "lo": 0.409,
+       "hi": 0.648,
+       "shareCloser": 0.899
+      },
+      {
+       "day": 3,
+       "sets": 91,
+       "setKm": 0.8608,
+       "armKm": 0.6002,
+       "ratio": 0.654,
+       "lo": 0.394,
+       "hi": 0.766,
+       "shareCloser": 0.923
+      },
+      {
+       "day": 4,
+       "sets": 89,
+       "setKm": 1.3082,
+       "armKm": 0.9431,
+       "ratio": 0.672,
+       "lo": 0.427,
+       "hi": 0.762,
+       "shareCloser": 0.809
+      },
+      {
+       "day": 5,
+       "sets": 95,
+       "setKm": 1.6701,
+       "armKm": 1.3212,
+       "ratio": 0.66,
+       "lo": 0.481,
+       "hi": 0.815,
+       "shareCloser": 0.747
+      },
+      {
+       "day": 6,
+       "sets": 89,
+       "setKm": 1.9834,
+       "armKm": 1.7394,
+       "ratio": 0.57,
+       "lo": 0.507,
+       "hi": 0.686,
+       "shareCloser": 0.742
+      },
+      {
+       "day": 7,
+       "sets": 91,
+       "setKm": 2.749,
+       "armKm": 2.1241,
+       "ratio": 0.601,
+       "lo": 0.56,
+       "hi": 0.686,
+       "shareCloser": 0.725
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 77,
+      "satellites": 9,
+      "setKm": 0.7377,
+      "armKm": 0.4938,
+      "ratio": 0.631,
+      "lo": 0.383,
+      "hi": 0.758,
+      "shareCloser": 0.948,
+      "satellitesCloser": 8,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 138,
+       "setKm": 0.5952,
+       "armKm": 0.29,
+       "ratio": 0.492,
+       "lo": 0.395,
+       "hi": 0.582,
+       "shareCloser": 0.913
+      },
+      {
+       "day": 2,
+       "sets": 100,
+       "setKm": 0.6772,
+       "armKm": 0.3451,
+       "ratio": 0.506,
+       "lo": 0.414,
+       "hi": 0.648,
+       "shareCloser": 0.9
+      },
+      {
+       "day": 3,
+       "sets": 92,
+       "setKm": 0.8721,
+       "armKm": 0.6124,
+       "ratio": 0.657,
+       "lo": 0.394,
+       "hi": 0.77,
+       "shareCloser": 0.924
+      },
+      {
+       "day": 4,
+       "sets": 90,
+       "setKm": 1.2861,
+       "armKm": 0.9461,
+       "ratio": 0.674,
+       "lo": 0.427,
+       "hi": 0.762,
+       "shareCloser": 0.811
+      },
+      {
+       "day": 5,
+       "sets": 96,
+       "setKm": 1.6923,
+       "armKm": 1.3355,
+       "ratio": 0.663,
+       "lo": 0.481,
+       "hi": 0.838,
+       "shareCloser": 0.75
+      },
+      {
+       "day": 6,
+       "sets": 89,
+       "setKm": 1.9834,
+       "armKm": 1.7394,
+       "ratio": 0.57,
+       "lo": 0.507,
+       "hi": 0.686,
+       "shareCloser": 0.742
+      },
+      {
+       "day": 7,
+       "sets": 91,
+       "setKm": 2.749,
+       "armKm": 2.1241,
+       "ratio": 0.601,
+       "lo": 0.56,
+       "hi": 0.686,
+       "shareCloser": 0.725
+      }
+     ],
+     "servedAs": {
+      "D5": 137,
+      "B3": 1,
+      "A": 0
+     }
+    }
+   }
+  },
+  "HIGH_LEO": {
+   "sets": 196,
+   "satellites": 9,
+   "errors": 0,
+   "withHistory": 196,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 503,
+     "primary": {
+      "sets": 195,
+      "satellites": 9,
+      "setKm": 0.5989,
+      "armKm": 0.2151,
+      "ratio": 0.444,
+      "lo": 0.33,
+      "hi": 0.653,
+      "shareCloser": 1,
+      "satellitesCloser": 9,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 196,
+       "setKm": 0.5796,
+       "armKm": 0.2,
+       "ratio": 0.42,
+       "lo": 0.318,
+       "hi": 0.734,
+       "shareCloser": 0.99
+      },
+      {
+       "day": 2,
+       "sets": 196,
+       "setKm": 0.5921,
+       "armKm": 0.1869,
+       "ratio": 0.393,
+       "lo": 0.305,
+       "hi": 0.668,
+       "shareCloser": 0.964
+      },
+      {
+       "day": 3,
+       "sets": 195,
+       "setKm": 0.6178,
+       "armKm": 0.2328,
+       "ratio": 0.426,
+       "lo": 0.337,
+       "hi": 0.639,
+       "shareCloser": 0.985
+      },
+      {
+       "day": 4,
+       "sets": 194,
+       "setKm": 0.653,
+       "armKm": 0.3669,
+       "ratio": 0.548,
+       "lo": 0.443,
+       "hi": 0.685,
+       "shareCloser": 0.933
+      },
+      {
+       "day": 5,
+       "sets": 194,
+       "setKm": 0.6888,
+       "armKm": 0.5535,
+       "ratio": 0.672,
+       "lo": 0.539,
+       "hi": 0.824,
+       "shareCloser": 0.82
+      },
+      {
+       "day": 6,
+       "sets": 194,
+       "setKm": 0.7441,
+       "armKm": 0.7254,
+       "ratio": 0.723,
+       "lo": 0.597,
+       "hi": 0.912,
+       "shareCloser": 0.727
+      },
+      {
+       "day": 7,
+       "sets": 192,
+       "setKm": 0.8563,
+       "armKm": 0.9213,
+       "ratio": 0.81,
+       "lo": 0.603,
+       "hi": 0.972,
+       "shareCloser": 0.646
+      }
+     ]
+    },
+    "C5": {
+     "missing": 0,
+     "fitResidualMedianM": 555,
+     "primary": {
+      "sets": 195,
+      "satellites": 9,
+      "setKm": 0.5989,
+      "armKm": 0.3634,
+      "ratio": 0.572,
+      "lo": 0.423,
+      "hi": 0.751,
+      "shareCloser": 0.785,
+      "satellitesCloser": 9,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 196,
+       "setKm": 0.5796,
+       "armKm": 0.2283,
+       "ratio": 0.401,
+       "lo": 0.306,
+       "hi": 0.534,
+       "shareCloser": 0.867
+      },
+      {
+       "day": 2,
+       "sets": 196,
+       "setKm": 0.5921,
+       "armKm": 0.3222,
+       "ratio": 0.523,
+       "lo": 0.424,
+       "hi": 0.712,
+       "shareCloser": 0.801
+      },
+      {
+       "day": 3,
+       "sets": 195,
+       "setKm": 0.6178,
+       "armKm": 0.4889,
+       "ratio": 0.669,
+       "lo": 0.49,
+       "hi": 0.922,
+       "shareCloser": 0.738
+      },
+      {
+       "day": 4,
+       "sets": 194,
+       "setKm": 0.653,
+       "armKm": 0.6633,
+       "ratio": 0.851,
+       "lo": 0.545,
+       "hi": 1.095,
+       "shareCloser": 0.619
+      },
+      {
+       "day": 5,
+       "sets": 194,
+       "setKm": 0.6888,
+       "armKm": 0.9004,
+       "ratio": 0.906,
+       "lo": 0.562,
+       "hi": 1.161,
+       "shareCloser": 0.577
+      },
+      {
+       "day": 6,
+       "sets": 194,
+       "setKm": 0.7441,
+       "armKm": 1.1442,
+       "ratio": 0.967,
+       "lo": 0.615,
+       "hi": 1.244,
+       "shareCloser": 0.546
+      },
+      {
+       "day": 7,
+       "sets": 192,
+       "setKm": 0.8563,
+       "armKm": 1.4546,
+       "ratio": 0.96,
+       "lo": 0.68,
+       "hi": 1.254,
+       "shareCloser": 0.531
+      }
+     ]
+    },
+    "D5": {
+     "missing": 0,
+     "fitResidualMedianM": 564,
+     "primary": {
+      "sets": 195,
+      "satellites": 9,
+      "setKm": 0.5989,
+      "armKm": 0.1605,
+      "ratio": 0.324,
+      "lo": 0.247,
+      "hi": 0.565,
+      "shareCloser": 0.949,
+      "satellitesCloser": 9,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 196,
+       "setKm": 0.5796,
+       "armKm": 0.1215,
+       "ratio": 0.268,
+       "lo": 0.19,
+       "hi": 0.565,
+       "shareCloser": 0.954
+      },
+      {
+       "day": 2,
+       "sets": 196,
+       "setKm": 0.5921,
+       "armKm": 0.1485,
+       "ratio": 0.313,
+       "lo": 0.232,
+       "hi": 0.549,
+       "shareCloser": 0.939
+      },
+      {
+       "day": 3,
+       "sets": 195,
+       "setKm": 0.6178,
+       "armKm": 0.1935,
+       "ratio": 0.353,
+       "lo": 0.276,
+       "hi": 0.589,
+       "shareCloser": 0.949
+      },
+      {
+       "day": 4,
+       "sets": 194,
+       "setKm": 0.653,
+       "armKm": 0.2958,
+       "ratio": 0.461,
+       "lo": 0.324,
+       "hi": 0.598,
+       "shareCloser": 0.871
+      },
+      {
+       "day": 5,
+       "sets": 194,
+       "setKm": 0.6888,
+       "armKm": 0.4265,
+       "ratio": 0.549,
+       "lo": 0.377,
+       "hi": 0.715,
+       "shareCloser": 0.835
+      },
+      {
+       "day": 6,
+       "sets": 194,
+       "setKm": 0.7441,
+       "armKm": 0.6207,
+       "ratio": 0.623,
+       "lo": 0.439,
+       "hi": 0.825,
+       "shareCloser": 0.799
+      },
+      {
+       "day": 7,
+       "sets": 192,
+       "setKm": 0.8563,
+       "armKm": 0.7248,
+       "ratio": 0.632,
+       "lo": 0.471,
+       "hi": 0.877,
+       "shareCloser": 0.745
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 195,
+      "satellites": 9,
+      "setKm": 0.5989,
+      "armKm": 0.1605,
+      "ratio": 0.324,
+      "lo": 0.247,
+      "hi": 0.565,
+      "shareCloser": 0.949,
+      "satellitesCloser": 9,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 196,
+       "setKm": 0.5796,
+       "armKm": 0.1215,
+       "ratio": 0.268,
+       "lo": 0.19,
+       "hi": 0.565,
+       "shareCloser": 0.954
+      },
+      {
+       "day": 2,
+       "sets": 196,
+       "setKm": 0.5921,
+       "armKm": 0.1485,
+       "ratio": 0.313,
+       "lo": 0.232,
+       "hi": 0.549,
+       "shareCloser": 0.939
+      },
+      {
+       "day": 3,
+       "sets": 195,
+       "setKm": 0.6178,
+       "armKm": 0.1935,
+       "ratio": 0.353,
+       "lo": 0.276,
+       "hi": 0.589,
+       "shareCloser": 0.949
+      },
+      {
+       "day": 4,
+       "sets": 194,
+       "setKm": 0.653,
+       "armKm": 0.2958,
+       "ratio": 0.461,
+       "lo": 0.324,
+       "hi": 0.598,
+       "shareCloser": 0.871
+      },
+      {
+       "day": 5,
+       "sets": 194,
+       "setKm": 0.6888,
+       "armKm": 0.4265,
+       "ratio": 0.549,
+       "lo": 0.377,
+       "hi": 0.715,
+       "shareCloser": 0.835
+      },
+      {
+       "day": 6,
+       "sets": 194,
+       "setKm": 0.7441,
+       "armKm": 0.6207,
+       "ratio": 0.623,
+       "lo": 0.439,
+       "hi": 0.825,
+       "shareCloser": 0.799
+      },
+      {
+       "day": 7,
+       "sets": 192,
+       "setKm": 0.8563,
+       "armKm": 0.7248,
+       "ratio": 0.632,
+       "lo": 0.471,
+       "hi": 0.877,
+       "shareCloser": 0.745
+      }
+     ],
+     "servedAs": {
+      "D5": 196,
+      "B3": 0,
+      "A": 0
+     }
+    }
+   }
+  },
+  "MEO": {
+   "sets": 1569,
+   "satellites": 104,
+   "errors": 0,
+   "withHistory": 1500,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 192,
+     "primary": {
+      "sets": 1517,
+      "satellites": 104,
+      "setKm": 1.2775,
+      "armKm": 1.256,
+      "ratio": 0.986,
+      "lo": 0.981,
+      "hi": 0.989,
+      "shareCloser": 1,
+      "satellitesCloser": 104,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1569,
+       "setKm": 1.1504,
+       "armKm": 1.1675,
+       "ratio": 1.005,
+       "lo": 1.003,
+       "hi": 1.006,
+       "shareCloser": 0.42
+      },
+      {
+       "day": 2,
+       "sets": 1545,
+       "setKm": 1.2538,
+       "armKm": 1.2301,
+       "ratio": 0.976,
+       "lo": 0.972,
+       "hi": 0.98,
+       "shareCloser": 0.849
+      },
+      {
+       "day": 3,
+       "sets": 1518,
+       "setKm": 1.3531,
+       "armKm": 1.3168,
+       "ratio": 0.983,
+       "lo": 0.977,
+       "hi": 0.987,
+       "shareCloser": 0.716
+      },
+      {
+       "day": 4,
+       "sets": 1496,
+       "setKm": 1.4128,
+       "armKm": 1.4029,
+       "ratio": 0.989,
+       "lo": 0.973,
+       "hi": 1.002,
+       "shareCloser": 0.536
+      },
+      {
+       "day": 5,
+       "sets": 1466,
+       "setKm": 1.4667,
+       "armKm": 1.4954,
+       "ratio": 0.989,
+       "lo": 0.963,
+       "hi": 1.015,
+       "shareCloser": 0.514
+      },
+      {
+       "day": 6,
+       "sets": 1449,
+       "setKm": 1.5328,
+       "armKm": 1.6513,
+       "ratio": 0.984,
+       "lo": 0.941,
+       "hi": 1.028,
+       "shareCloser": 0.517
+      },
+      {
+       "day": 7,
+       "sets": 1418,
+       "setKm": 1.6235,
+       "armKm": 1.7905,
+       "ratio": 0.964,
+       "lo": 0.913,
+       "hi": 1.009,
+       "shareCloser": 0.539
+      }
+     ]
+    },
+    "C5": {
+     "missing": 69,
+     "fitResidualMedianM": 296,
+     "primary": {
+      "sets": 1450,
+      "satellites": 104,
+      "setKm": 1.282,
+      "armKm": 1.4283,
+      "ratio": 1.126,
+      "lo": 1.109,
+      "hi": 1.154,
+      "shareCloser": 0.372,
+      "satellitesCloser": 15,
+      "verdict": "LOSES"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1500,
+       "setKm": 1.1565,
+       "armKm": 1.3118,
+       "ratio": 1.079,
+       "lo": 1.056,
+       "hi": 1.106,
+       "shareCloser": 0.391
+      },
+      {
+       "day": 2,
+       "sets": 1478,
+       "setKm": 1.2648,
+       "armKm": 1.4091,
+       "ratio": 1.129,
+       "lo": 1.104,
+       "hi": 1.16,
+       "shareCloser": 0.38
+      },
+      {
+       "day": 3,
+       "sets": 1451,
+       "setKm": 1.3615,
+       "armKm": 1.5664,
+       "ratio": 1.19,
+       "lo": 1.157,
+       "hi": 1.235,
+       "shareCloser": 0.374
+      },
+      {
+       "day": 4,
+       "sets": 1431,
+       "setKm": 1.4132,
+       "armKm": 1.733,
+       "ratio": 1.261,
+       "lo": 1.203,
+       "hi": 1.357,
+       "shareCloser": 0.382
+      },
+      {
+       "day": 5,
+       "sets": 1403,
+       "setKm": 1.4647,
+       "armKm": 1.9106,
+       "ratio": 1.277,
+       "lo": 1.194,
+       "hi": 1.398,
+       "shareCloser": 0.376
+      },
+      {
+       "day": 6,
+       "sets": 1387,
+       "setKm": 1.5238,
+       "armKm": 2.11,
+       "ratio": 1.288,
+       "lo": 1.142,
+       "hi": 1.423,
+       "shareCloser": 0.388
+      },
+      {
+       "day": 7,
+       "sets": 1357,
+       "setKm": 1.6193,
+       "armKm": 2.3291,
+       "ratio": 1.236,
+       "lo": 1.109,
+       "hi": 1.397,
+       "shareCloser": 0.405
+      }
+     ]
+    },
+    "D5": {
+     "missing": 69,
+     "fitResidualMedianM": 403,
+     "primary": {
+      "sets": 1450,
+      "satellites": 104,
+      "setKm": 1.282,
+      "armKm": 1.2346,
+      "ratio": 0.962,
+      "lo": 0.95,
+      "hi": 0.974,
+      "shareCloser": 0.668,
+      "satellitesCloser": 92,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1500,
+       "setKm": 1.1565,
+       "armKm": 1.1383,
+       "ratio": 0.948,
+       "lo": 0.932,
+       "hi": 0.97,
+       "shareCloser": 0.61
+      },
+      {
+       "day": 2,
+       "sets": 1478,
+       "setKm": 1.2648,
+       "armKm": 1.2027,
+       "ratio": 0.96,
+       "lo": 0.947,
+       "hi": 0.967,
+       "shareCloser": 0.698
+      },
+      {
+       "day": 3,
+       "sets": 1451,
+       "setKm": 1.3615,
+       "armKm": 1.2979,
+       "ratio": 0.956,
+       "lo": 0.931,
+       "hi": 0.982,
+       "shareCloser": 0.571
+      },
+      {
+       "day": 4,
+       "sets": 1431,
+       "setKm": 1.4132,
+       "armKm": 1.4292,
+       "ratio": 0.943,
+       "lo": 0.897,
+       "hi": 1.006,
+       "shareCloser": 0.543
+      },
+      {
+       "day": 5,
+       "sets": 1403,
+       "setKm": 1.4647,
+       "armKm": 1.5354,
+       "ratio": 0.933,
+       "lo": 0.865,
+       "hi": 1.025,
+       "shareCloser": 0.545
+      },
+      {
+       "day": 6,
+       "sets": 1387,
+       "setKm": 1.5238,
+       "armKm": 1.6954,
+       "ratio": 0.922,
+       "lo": 0.833,
+       "hi": 1.01,
+       "shareCloser": 0.548
+      },
+      {
+       "day": 7,
+       "sets": 1357,
+       "setKm": 1.6193,
+       "armKm": 1.8403,
+       "ratio": 0.892,
+       "lo": 0.797,
+       "hi": 0.995,
+       "shareCloser": 0.559
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 1517,
+      "satellites": 104,
+      "setKm": 1.2775,
+      "armKm": 1.2292,
+      "ratio": 0.964,
+      "lo": 0.952,
+      "hi": 0.975,
+      "shareCloser": 0.682,
+      "satellitesCloser": 93,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1569,
+       "setKm": 1.1504,
+       "armKm": 1.1301,
+       "ratio": 0.954,
+       "lo": 0.939,
+       "hi": 0.975,
+       "shareCloser": 0.604
+      },
+      {
+       "day": 2,
+       "sets": 1545,
+       "setKm": 1.2538,
+       "armKm": 1.1928,
+       "ratio": 0.961,
+       "lo": 0.95,
+       "hi": 0.968,
+       "shareCloser": 0.705
+      },
+      {
+       "day": 3,
+       "sets": 1518,
+       "setKm": 1.3531,
+       "armKm": 1.2913,
+       "ratio": 0.956,
+       "lo": 0.932,
+       "hi": 0.98,
+       "shareCloser": 0.579
+      },
+      {
+       "day": 4,
+       "sets": 1496,
+       "setKm": 1.4128,
+       "armKm": 1.4206,
+       "ratio": 0.943,
+       "lo": 0.904,
+       "hi": 1.002,
+       "shareCloser": 0.548
+      },
+      {
+       "day": 5,
+       "sets": 1466,
+       "setKm": 1.4667,
+       "armKm": 1.5315,
+       "ratio": 0.941,
+       "lo": 0.875,
+       "hi": 1.016,
+       "shareCloser": 0.546
+      },
+      {
+       "day": 6,
+       "sets": 1449,
+       "setKm": 1.5328,
+       "armKm": 1.6942,
+       "ratio": 0.922,
+       "lo": 0.842,
+       "hi": 1.006,
+       "shareCloser": 0.55
+      },
+      {
+       "day": 7,
+       "sets": 1418,
+       "setKm": 1.6235,
+       "armKm": 1.8397,
+       "ratio": 0.893,
+       "lo": 0.805,
+       "hi": 0.983,
+       "shareCloser": 0.56
+      }
+     ],
+     "servedAs": {
+      "D5": 1500,
+      "B3": 69,
+      "A": 0
+     }
+    }
+   }
+  },
+  "GEO": {
+   "sets": 108,
+   "satellites": 8,
+   "errors": 0,
+   "withHistory": 102,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 1115,
+     "primary": {
+      "sets": 100,
+      "satellites": 8,
+      "setKm": 2.7774,
+      "armKm": 2.3786,
+      "ratio": 0.887,
+      "lo": 0.8,
+      "hi": 0.977,
+      "shareCloser": 1,
+      "satellitesCloser": 8,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 108,
+       "setKm": 2.3082,
+       "armKm": 2.5396,
+       "ratio": 0.991,
+       "lo": 0.936,
+       "hi": 1.017,
+       "shareCloser": 0.537
+      },
+      {
+       "day": 2,
+       "sets": 104,
+       "setKm": 2.7161,
+       "armKm": 2.3071,
+       "ratio": 0.905,
+       "lo": 0.808,
+       "hi": 0.971,
+       "shareCloser": 0.971
+      },
+      {
+       "day": 3,
+       "sets": 101,
+       "setKm": 3.1715,
+       "armKm": 2.6251,
+       "ratio": 0.814,
+       "lo": 0.666,
+       "hi": 0.97,
+       "shareCloser": 0.881
+      },
+      {
+       "day": 4,
+       "sets": 99,
+       "setKm": 3.8616,
+       "armKm": 2.8181,
+       "ratio": 0.816,
+       "lo": 0.569,
+       "hi": 0.999,
+       "shareCloser": 0.717
+      },
+      {
+       "day": 5,
+       "sets": 96,
+       "setKm": 4.7141,
+       "armKm": 3.3105,
+       "ratio": 0.88,
+       "lo": 0.516,
+       "hi": 0.995,
+       "shareCloser": 0.698
+      },
+      {
+       "day": 6,
+       "sets": 95,
+       "setKm": 6.146,
+       "armKm": 3.6359,
+       "ratio": 0.842,
+       "lo": 0.458,
+       "hi": 1.045,
+       "shareCloser": 0.621
+      },
+      {
+       "day": 7,
+       "sets": 94,
+       "setKm": 7.3742,
+       "armKm": 3.9787,
+       "ratio": 0.718,
+       "lo": 0.442,
+       "hi": 1.059,
+       "shareCloser": 0.681
+      }
+     ]
+    },
+    "C5": {
+     "missing": 6,
+     "fitResidualMedianM": 1300,
+     "primary": {
+      "sets": 94,
+      "satellites": 7,
+      "setKm": 2.7774,
+      "armKm": 2.9075,
+      "ratio": 0.997,
+      "lo": 0.968,
+      "hi": 1.118,
+      "shareCloser": 0.511,
+      "satellitesCloser": 4,
+      "verdict": "TIE"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 102,
+       "setKm": 2.3663,
+       "armKm": 2.5226,
+       "ratio": 1.007,
+       "lo": 0.937,
+       "hi": 1.045,
+       "shareCloser": 0.48
+      },
+      {
+       "day": 2,
+       "sets": 98,
+       "setKm": 2.7161,
+       "armKm": 2.8274,
+       "ratio": 1.036,
+       "lo": 0.984,
+       "hi": 1.139,
+       "shareCloser": 0.469
+      },
+      {
+       "day": 3,
+       "sets": 95,
+       "setKm": 3.1715,
+       "armKm": 3.3759,
+       "ratio": 1.076,
+       "lo": 0.937,
+       "hi": 1.246,
+       "shareCloser": 0.4
+      },
+      {
+       "day": 4,
+       "sets": 93,
+       "setKm": 3.8616,
+       "armKm": 4.3213,
+       "ratio": 1.067,
+       "lo": 0.898,
+       "hi": 1.409,
+       "shareCloser": 0.462
+      },
+      {
+       "day": 5,
+       "sets": 90,
+       "setKm": 4.7141,
+       "armKm": 6.6694,
+       "ratio": 1.034,
+       "lo": 0.804,
+       "hi": 1.647,
+       "shareCloser": 0.456
+      },
+      {
+       "day": 6,
+       "sets": 89,
+       "setKm": 6.146,
+       "armKm": 7.1471,
+       "ratio": 1.022,
+       "lo": 0.8,
+       "hi": 1.742,
+       "shareCloser": 0.494
+      },
+      {
+       "day": 7,
+       "sets": 89,
+       "setKm": 7.6081,
+       "armKm": 7.6194,
+       "ratio": 0.995,
+       "lo": 0.727,
+       "hi": 1.646,
+       "shareCloser": 0.517
+      }
+     ]
+    },
+    "D5": {
+     "missing": 7,
+     "fitResidualMedianM": 1717,
+     "primary": {
+      "sets": 93,
+      "satellites": 7,
+      "setKm": 2.7926,
+      "armKm": 2.0434,
+      "ratio": 0.802,
+      "lo": 0.689,
+      "hi": 0.976,
+      "shareCloser": 0.785,
+      "satellitesCloser": 7,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 101,
+       "setKm": 2.3984,
+       "armKm": 1.7507,
+       "ratio": 0.768,
+       "lo": 0.671,
+       "hi": 0.897,
+       "shareCloser": 0.802
+      },
+      {
+       "day": 2,
+       "sets": 97,
+       "setKm": 2.7375,
+       "armKm": 1.9765,
+       "ratio": 0.819,
+       "lo": 0.725,
+       "hi": 0.949,
+       "shareCloser": 0.784
+      },
+      {
+       "day": 3,
+       "sets": 94,
+       "setKm": 3.1876,
+       "armKm": 2.4122,
+       "ratio": 0.873,
+       "lo": 0.661,
+       "hi": 1.013,
+       "shareCloser": 0.638
+      },
+      {
+       "day": 4,
+       "sets": 92,
+       "setKm": 3.8722,
+       "armKm": 3.1126,
+       "ratio": 0.804,
+       "lo": 0.613,
+       "hi": 1.05,
+       "shareCloser": 0.63
+      },
+      {
+       "day": 5,
+       "sets": 89,
+       "setKm": 4.7302,
+       "armKm": 3.9951,
+       "ratio": 0.841,
+       "lo": 0.562,
+       "hi": 1.073,
+       "shareCloser": 0.629
+      },
+      {
+       "day": 6,
+       "sets": 88,
+       "setKm": 6.1759,
+       "armKm": 4.7037,
+       "ratio": 0.836,
+       "lo": 0.439,
+       "hi": 1.059,
+       "shareCloser": 0.636
+      },
+      {
+       "day": 7,
+       "sets": 88,
+       "setKm": 7.6324,
+       "armKm": 5.4476,
+       "ratio": 0.775,
+       "lo": 0.443,
+       "hi": 1.032,
+       "shareCloser": 0.648
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 100,
+      "satellites": 8,
+      "setKm": 2.7774,
+      "armKm": 2.0051,
+      "ratio": 0.82,
+      "lo": 0.732,
+      "hi": 0.976,
+      "shareCloser": 0.8,
+      "satellitesCloser": 8,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 108,
+       "setKm": 2.3082,
+       "armKm": 1.7868,
+       "ratio": 0.816,
+       "lo": 0.698,
+       "hi": 0.91,
+       "shareCloser": 0.778
+      },
+      {
+       "day": 2,
+       "sets": 104,
+       "setKm": 2.7161,
+       "armKm": 1.929,
+       "ratio": 0.825,
+       "lo": 0.739,
+       "hi": 0.95,
+       "shareCloser": 0.798
+      },
+      {
+       "day": 3,
+       "sets": 101,
+       "setKm": 3.1715,
+       "armKm": 2.322,
+       "ratio": 0.874,
+       "lo": 0.664,
+       "hi": 0.997,
+       "shareCloser": 0.653
+      },
+      {
+       "day": 4,
+       "sets": 99,
+       "setKm": 3.8616,
+       "armKm": 2.7768,
+       "ratio": 0.812,
+       "lo": 0.613,
+       "hi": 1.032,
+       "shareCloser": 0.636
+      },
+      {
+       "day": 5,
+       "sets": 96,
+       "setKm": 4.7141,
+       "armKm": 3.7879,
+       "ratio": 0.808,
+       "lo": 0.562,
+       "hi": 1.059,
+       "shareCloser": 0.635
+      },
+      {
+       "day": 6,
+       "sets": 95,
+       "setKm": 6.146,
+       "armKm": 4.5487,
+       "ratio": 0.787,
+       "lo": 0.456,
+       "hi": 1.049,
+       "shareCloser": 0.642
+      },
+      {
+       "day": 7,
+       "sets": 94,
+       "setKm": 7.3742,
+       "armKm": 5.2843,
+       "ratio": 0.735,
+       "lo": 0.444,
+       "hi": 1.032,
+       "shareCloser": 0.66
+      }
+     ],
+     "servedAs": {
+      "D5": 101,
+      "B3": 7,
+      "A": 0
+     }
+    }
+   }
+  },
+  "HEO": {
+   "sets": 29,
+   "satellites": 2,
+   "errors": 0,
+   "withHistory": 28,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 288,
+     "primary": {
+      "sets": 28,
+      "satellites": 2,
+      "setKm": 1.7202,
+      "armKm": 1.6753,
+      "ratio": 0.985,
+      "lo": 0.975,
+      "hi": 0.989,
+      "shareCloser": 1,
+      "satellitesCloser": 2,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 29,
+       "setKm": 1.8146,
+       "armKm": 1.8055,
+       "ratio": 0.993,
+       "lo": 0.992,
+       "hi": 0.994,
+       "shareCloser": 0.655
+      },
+      {
+       "day": 2,
+       "sets": 28,
+       "setKm": 1.7502,
+       "armKm": 1.6684,
+       "ratio": 0.98,
+       "lo": 0.977,
+       "hi": 0.981,
+       "shareCloser": 0.786
+      },
+      {
+       "day": 3,
+       "sets": 28,
+       "setKm": 1.7209,
+       "armKm": 1.6776,
+       "ratio": 0.984,
+       "lo": 0.982,
+       "hi": 0.989,
+       "shareCloser": 0.821
+      },
+      {
+       "day": 4,
+       "sets": 28,
+       "setKm": 1.6036,
+       "armKm": 1.666,
+       "ratio": 1.015,
+       "lo": 1.009,
+       "hi": 1.019,
+       "shareCloser": 0.464
+      },
+      {
+       "day": 5,
+       "sets": 28,
+       "setKm": 1.6667,
+       "armKm": 1.7617,
+       "ratio": 1.088,
+       "lo": 1.048,
+       "hi": 1.122,
+       "shareCloser": 0.357
+      },
+      {
+       "day": 6,
+       "sets": 27,
+       "setKm": 1.3646,
+       "armKm": 2.2194,
+       "ratio": 1.185,
+       "lo": 1.177,
+       "hi": 1.185,
+       "shareCloser": 0.185
+      },
+      {
+       "day": 7,
+       "sets": 26,
+       "setKm": 1.9692,
+       "armKm": 2.7497,
+       "ratio": 1.215,
+       "lo": 1.048,
+       "hi": 1.28,
+       "shareCloser": 0.308
+      }
+     ]
+    },
+    "C5": {
+     "missing": 1,
+     "fitResidualMedianM": 481,
+     "primary": {
+      "sets": 27,
+      "satellites": 2,
+      "setKm": 1.8175,
+      "armKm": 2.1393,
+      "ratio": 1.142,
+      "lo": 1.112,
+      "hi": 1.185,
+      "shareCloser": 0.333,
+      "satellitesCloser": 0,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 28,
+       "setKm": 1.9822,
+       "armKm": 1.9436,
+       "ratio": 1.065,
+       "lo": 1.064,
+       "hi": 1.065,
+       "shareCloser": 0.393
+      },
+      {
+       "day": 2,
+       "sets": 27,
+       "setKm": 1.9011,
+       "armKm": 2.1574,
+       "ratio": 1.19,
+       "lo": 1.183,
+       "hi": 1.19,
+       "shareCloser": 0.333
+      },
+      {
+       "day": 3,
+       "sets": 27,
+       "setKm": 1.8051,
+       "armKm": 2.2164,
+       "ratio": 1.237,
+       "lo": 1.146,
+       "hi": 1.325,
+       "shareCloser": 0.37
+      },
+      {
+       "day": 4,
+       "sets": 27,
+       "setKm": 1.7796,
+       "armKm": 2.2797,
+       "ratio": 1.32,
+       "lo": 1.3,
+       "hi": 1.374,
+       "shareCloser": 0.333
+      },
+      {
+       "day": 5,
+       "sets": 27,
+       "setKm": 1.6124,
+       "armKm": 2.6453,
+       "ratio": 1.515,
+       "lo": 1.404,
+       "hi": 1.526,
+       "shareCloser": 0.296
+      },
+      {
+       "day": 6,
+       "sets": 26,
+       "setKm": 1.3595,
+       "armKm": 2.944,
+       "ratio": 1.832,
+       "lo": 1.726,
+       "hi": 2.031,
+       "shareCloser": 0.269
+      },
+      {
+       "day": 7,
+       "sets": 25,
+       "setKm": 1.7871,
+       "armKm": 3.1772,
+       "ratio": 1.896,
+       "lo": 1.615,
+       "hi": 2.818,
+       "shareCloser": 0.2
+      }
+     ]
+    },
+    "D5": {
+     "missing": 1,
+     "fitResidualMedianM": 651,
+     "primary": {
+      "sets": 27,
+      "satellites": 2,
+      "setKm": 1.8175,
+      "armKm": 1.6726,
+      "ratio": 0.961,
+      "lo": 0.934,
+      "hi": 0.973,
+      "shareCloser": 0.667,
+      "satellitesCloser": 2,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 28,
+       "setKm": 1.9822,
+       "armKm": 1.6174,
+       "ratio": 0.851,
+       "lo": 0.843,
+       "hi": 0.874,
+       "shareCloser": 0.714
+      },
+      {
+       "day": 2,
+       "sets": 27,
+       "setKm": 1.9011,
+       "armKm": 1.6048,
+       "ratio": 0.957,
+       "lo": 0.914,
+       "hi": 0.995,
+       "shareCloser": 0.667
+      },
+      {
+       "day": 3,
+       "sets": 27,
+       "setKm": 1.8051,
+       "armKm": 1.964,
+       "ratio": 0.994,
+       "lo": 0.981,
+       "hi": 1.046,
+       "shareCloser": 0.519
+      },
+      {
+       "day": 4,
+       "sets": 27,
+       "setKm": 1.7796,
+       "armKm": 2.1961,
+       "ratio": 1.087,
+       "lo": 1.087,
+       "hi": 1.116,
+       "shareCloser": 0.333
+      },
+      {
+       "day": 5,
+       "sets": 27,
+       "setKm": 1.6124,
+       "armKm": 2.3381,
+       "ratio": 1.202,
+       "lo": 1.169,
+       "hi": 1.303,
+       "shareCloser": 0.259
+      },
+      {
+       "day": 6,
+       "sets": 26,
+       "setKm": 1.3595,
+       "armKm": 2.8739,
+       "ratio": 1.447,
+       "lo": 1.281,
+       "hi": 1.565,
+       "shareCloser": 0.308
+      },
+      {
+       "day": 7,
+       "sets": 25,
+       "setKm": 1.7871,
+       "armKm": 3.322,
+       "ratio": 1.57,
+       "lo": 1.391,
+       "hi": 1.57,
+       "shareCloser": 0.28
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 28,
+      "satellites": 2,
+      "setKm": 1.7202,
+      "armKm": 1.6402,
+      "ratio": 0.954,
+      "lo": 0.92,
+      "hi": 0.973,
+      "shareCloser": 0.679,
+      "satellitesCloser": 2,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 29,
+       "setKm": 1.8146,
+       "armKm": 1.6037,
+       "ratio": 0.86,
+       "lo": 0.843,
+       "hi": 0.879,
+       "shareCloser": 0.69
+      },
+      {
+       "day": 2,
+       "sets": 28,
+       "setKm": 1.7502,
+       "armKm": 1.5963,
+       "ratio": 0.94,
+       "lo": 0.886,
+       "hi": 0.995,
+       "shareCloser": 0.679
+      },
+      {
+       "day": 3,
+       "sets": 28,
+       "setKm": 1.7209,
+       "armKm": 1.9018,
+       "ratio": 0.988,
+       "lo": 0.979,
+       "hi": 1.046,
+       "shareCloser": 0.536
+      },
+      {
+       "day": 4,
+       "sets": 28,
+       "setKm": 1.6036,
+       "armKm": 2.0533,
+       "ratio": 1.071,
+       "lo": 1.059,
+       "hi": 1.116,
+       "shareCloser": 0.357
+      },
+      {
+       "day": 5,
+       "sets": 28,
+       "setKm": 1.6667,
+       "armKm": 2.2487,
+       "ratio": 1.199,
+       "lo": 1.166,
+       "hi": 1.303,
+       "shareCloser": 0.286
+      },
+      {
+       "day": 6,
+       "sets": 27,
+       "setKm": 1.3646,
+       "armKm": 2.8099,
+       "ratio": 1.398,
+       "lo": 1.221,
+       "hi": 1.565,
+       "shareCloser": 0.333
+      },
+      {
+       "day": 7,
+       "sets": 26,
+       "setKm": 1.9692,
+       "armKm": 3.3112,
+       "ratio": 1.519,
+       "lo": 1.192,
+       "hi": 1.57,
+       "shareCloser": 0.308
+      }
+     ],
+     "servedAs": {
+      "D5": 28,
+      "B3": 1,
+      "A": 0
+     }
+    }
+   }
+  }
+ },
+ "families": {
+  "Altimetry satellites (IDS DORIS orbits)": {
+   "sets": 218,
+   "satellites": 10,
+   "errors": 0,
+   "withHistory": 218,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 543,
+     "primary": {
+      "sets": 217,
+      "satellites": 10,
+      "setKm": 0.6069,
+      "armKm": 0.234,
+      "ratio": 0.444,
+      "lo": 0.348,
+      "hi": 0.633,
+      "shareCloser": 1,
+      "satellitesCloser": 10,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 218,
+       "setKm": 0.5804,
+       "armKm": 0.2159,
+       "ratio": 0.44,
+       "lo": 0.33,
+       "hi": 0.555,
+       "shareCloser": 0.991
+      },
+      {
+       "day": 2,
+       "sets": 218,
+       "setKm": 0.5992,
+       "armKm": 0.2078,
+       "ratio": 0.403,
+       "lo": 0.33,
+       "hi": 0.599,
+       "shareCloser": 0.968
+      },
+      {
+       "day": 3,
+       "sets": 217,
+       "setKm": 0.6268,
+       "armKm": 0.2589,
+       "ratio": 0.421,
+       "lo": 0.362,
+       "hi": 0.596,
+       "shareCloser": 0.986
+      },
+      {
+       "day": 4,
+       "sets": 216,
+       "setKm": 0.6612,
+       "armKm": 0.3659,
+       "ratio": 0.542,
+       "lo": 0.431,
+       "hi": 0.664,
+       "shareCloser": 0.935
+      },
+      {
+       "day": 5,
+       "sets": 216,
+       "setKm": 0.7015,
+       "armKm": 0.5511,
+       "ratio": 0.651,
+       "lo": 0.539,
+       "hi": 0.811,
+       "shareCloser": 0.833
+      },
+      {
+       "day": 6,
+       "sets": 216,
+       "setKm": 0.7795,
+       "armKm": 0.7233,
+       "ratio": 0.708,
+       "lo": 0.597,
+       "hi": 0.9,
+       "shareCloser": 0.741
+      },
+      {
+       "day": 7,
+       "sets": 214,
+       "setKm": 0.9305,
+       "armKm": 0.9291,
+       "ratio": 0.801,
+       "lo": 0.609,
+       "hi": 0.958,
+       "shareCloser": 0.654
+      }
+     ]
+    },
+    "C5": {
+     "missing": 0,
+     "fitResidualMedianM": 563,
+     "primary": {
+      "sets": 217,
+      "satellites": 10,
+      "setKm": 0.6069,
+      "armKm": 0.3613,
+      "ratio": 0.558,
+      "lo": 0.423,
+      "hi": 0.726,
+      "shareCloser": 0.783,
+      "satellitesCloser": 10,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 218,
+       "setKm": 0.5804,
+       "armKm": 0.2118,
+       "ratio": 0.392,
+       "lo": 0.296,
+       "hi": 0.509,
+       "shareCloser": 0.862
+      },
+      {
+       "day": 2,
+       "sets": 218,
+       "setKm": 0.5992,
+       "armKm": 0.3182,
+       "ratio": 0.515,
+       "lo": 0.407,
+       "hi": 0.682,
+       "shareCloser": 0.803
+      },
+      {
+       "day": 3,
+       "sets": 217,
+       "setKm": 0.6268,
+       "armKm": 0.4842,
+       "ratio": 0.649,
+       "lo": 0.486,
+       "hi": 0.888,
+       "shareCloser": 0.742
+      },
+      {
+       "day": 4,
+       "sets": 216,
+       "setKm": 0.6612,
+       "armKm": 0.652,
+       "ratio": 0.802,
+       "lo": 0.547,
+       "hi": 1.071,
+       "shareCloser": 0.62
+      },
+      {
+       "day": 5,
+       "sets": 216,
+       "setKm": 0.7015,
+       "armKm": 0.8773,
+       "ratio": 0.863,
+       "lo": 0.581,
+       "hi": 1.133,
+       "shareCloser": 0.583
+      },
+      {
+       "day": 6,
+       "sets": 216,
+       "setKm": 0.7795,
+       "armKm": 1.1442,
+       "ratio": 0.962,
+       "lo": 0.632,
+       "hi": 1.165,
+       "shareCloser": 0.546
+      },
+      {
+       "day": 7,
+       "sets": 214,
+       "setKm": 0.9305,
+       "armKm": 1.4745,
+       "ratio": 0.964,
+       "lo": 0.687,
+       "hi": 1.201,
+       "shareCloser": 0.528
+      }
+     ]
+    },
+    "D5": {
+     "missing": 0,
+     "fitResidualMedianM": 575,
+     "primary": {
+      "sets": 217,
+      "satellites": 10,
+      "setKm": 0.6069,
+      "armKm": 0.1669,
+      "ratio": 0.324,
+      "lo": 0.249,
+      "hi": 0.549,
+      "shareCloser": 0.94,
+      "satellitesCloser": 10,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 218,
+       "setKm": 0.5804,
+       "armKm": 0.1305,
+       "ratio": 0.269,
+       "lo": 0.203,
+       "hi": 0.487,
+       "shareCloser": 0.954
+      },
+      {
+       "day": 2,
+       "sets": 218,
+       "setKm": 0.5992,
+       "armKm": 0.1528,
+       "ratio": 0.311,
+       "lo": 0.236,
+       "hi": 0.518,
+       "shareCloser": 0.931
+      },
+      {
+       "day": 3,
+       "sets": 217,
+       "setKm": 0.6268,
+       "armKm": 0.196,
+       "ratio": 0.352,
+       "lo": 0.281,
+       "hi": 0.543,
+       "shareCloser": 0.94
+      },
+      {
+       "day": 4,
+       "sets": 216,
+       "setKm": 0.6612,
+       "armKm": 0.2973,
+       "ratio": 0.44,
+       "lo": 0.329,
+       "hi": 0.584,
+       "shareCloser": 0.866
+      },
+      {
+       "day": 5,
+       "sets": 216,
+       "setKm": 0.7015,
+       "armKm": 0.4265,
+       "ratio": 0.521,
+       "lo": 0.377,
+       "hi": 0.691,
+       "shareCloser": 0.829
+      },
+      {
+       "day": 6,
+       "sets": 216,
+       "setKm": 0.7795,
+       "armKm": 0.5956,
+       "ratio": 0.603,
+       "lo": 0.439,
+       "hi": 0.817,
+       "shareCloser": 0.792
+      },
+      {
+       "day": 7,
+       "sets": 214,
+       "setKm": 0.9305,
+       "armKm": 0.7217,
+       "ratio": 0.619,
+       "lo": 0.484,
+       "hi": 0.864,
+       "shareCloser": 0.738
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 217,
+      "satellites": 10,
+      "setKm": 0.6069,
+      "armKm": 0.1669,
+      "ratio": 0.324,
+      "lo": 0.249,
+      "hi": 0.549,
+      "shareCloser": 0.94,
+      "satellitesCloser": 10,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 218,
+       "setKm": 0.5804,
+       "armKm": 0.1305,
+       "ratio": 0.269,
+       "lo": 0.203,
+       "hi": 0.487,
+       "shareCloser": 0.954
+      },
+      {
+       "day": 2,
+       "sets": 218,
+       "setKm": 0.5992,
+       "armKm": 0.1528,
+       "ratio": 0.311,
+       "lo": 0.236,
+       "hi": 0.518,
+       "shareCloser": 0.931
+      },
+      {
+       "day": 3,
+       "sets": 217,
+       "setKm": 0.6268,
+       "armKm": 0.196,
+       "ratio": 0.352,
+       "lo": 0.281,
+       "hi": 0.543,
+       "shareCloser": 0.94
+      },
+      {
+       "day": 4,
+       "sets": 216,
+       "setKm": 0.6612,
+       "armKm": 0.2973,
+       "ratio": 0.44,
+       "lo": 0.329,
+       "hi": 0.584,
+       "shareCloser": 0.866
+      },
+      {
+       "day": 5,
+       "sets": 216,
+       "setKm": 0.7015,
+       "armKm": 0.4265,
+       "ratio": 0.521,
+       "lo": 0.377,
+       "hi": 0.691,
+       "shareCloser": 0.829
+      },
+      {
+       "day": 6,
+       "sets": 216,
+       "setKm": 0.7795,
+       "armKm": 0.5956,
+       "ratio": 0.603,
+       "lo": 0.439,
+       "hi": 0.817,
+       "shareCloser": 0.792
+      },
+      {
+       "day": 7,
+       "sets": 214,
+       "setKm": 0.9305,
+       "armKm": 0.7217,
+       "ratio": 0.619,
+       "lo": 0.484,
+       "hi": 0.864,
+       "shareCloser": 0.738
+      }
+     ],
+     "servedAs": {
+      "D5": 218,
+      "B3": 0,
+      "A": 0
+     }
+    }
+   }
+  },
+  "COSMIC-2 (UCAR near-real-time orbits)": {
+   "sets": 67,
+   "satellites": 5,
+   "errors": 0,
+   "withHistory": 67,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 513,
+     "primary": {
+      "sets": 11,
+      "satellites": 5,
+      "setKm": 0.6763,
+      "armKm": 0.4387,
+      "ratio": 0.649,
+      "lo": 0.601,
+      "hi": 0.713,
+      "shareCloser": 1,
+      "satellitesCloser": 5,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 67,
+       "setKm": 0.545,
+       "armKm": 0.3237,
+       "ratio": 0.604,
+       "lo": 0.586,
+       "hi": 0.635,
+       "shareCloser": 1
+      },
+      {
+       "day": 2,
+       "sets": 32,
+       "setKm": 0.6554,
+       "armKm": 0.4346,
+       "ratio": 0.661,
+       "lo": 0.631,
+       "hi": 0.721,
+       "shareCloser": 1
+      },
+      {
+       "day": 3,
+       "sets": 24,
+       "setKm": 0.847,
+       "armKm": 0.6264,
+       "ratio": 0.74,
+       "lo": 0.622,
+       "hi": 0.767,
+       "shareCloser": 1
+      },
+      {
+       "day": 4,
+       "sets": 21,
+       "setKm": 1.5087,
+       "armKm": 1.1684,
+       "ratio": 0.833,
+       "lo": 0.766,
+       "hi": 0.981,
+       "shareCloser": 0.81
+      },
+      {
+       "day": 5,
+       "sets": 28,
+       "setKm": 2.2599,
+       "armKm": 1.8495,
+       "ratio": 0.814,
+       "lo": 0.733,
+       "hi": 1.035,
+       "shareCloser": 0.786
+      },
+      {
+       "day": 6,
+       "sets": 25,
+       "setKm": 3.6871,
+       "armKm": 2.3279,
+       "ratio": 0.868,
+       "lo": 0.784,
+       "hi": 0.886,
+       "shareCloser": 0.72
+      },
+      {
+       "day": 7,
+       "sets": 25,
+       "setKm": 3.9782,
+       "armKm": 4.0553,
+       "ratio": 0.924,
+       "lo": 0.883,
+       "hi": 1.113,
+       "shareCloser": 0.6
+      }
+     ]
+    },
+    "C5": {
+     "missing": 0,
+     "fitResidualMedianM": 521,
+     "primary": {
+      "sets": 11,
+      "satellites": 5,
+      "setKm": 0.6763,
+      "armKm": 1.8517,
+      "ratio": 2.086,
+      "lo": 1.193,
+      "hi": 3.983,
+      "shareCloser": 0.091,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 67,
+       "setKm": 0.545,
+       "armKm": 0.4294,
+       "ratio": 0.774,
+       "lo": 0.662,
+       "hi": 0.945,
+       "shareCloser": 0.627
+      },
+      {
+       "day": 2,
+       "sets": 32,
+       "setKm": 0.6554,
+       "armKm": 0.8642,
+       "ratio": 1.366,
+       "lo": 1.072,
+       "hi": 1.717,
+       "shareCloser": 0.313
+      },
+      {
+       "day": 3,
+       "sets": 24,
+       "setKm": 0.847,
+       "armKm": 1.1768,
+       "ratio": 1.257,
+       "lo": 0.904,
+       "hi": 1.961,
+       "shareCloser": 0.375
+      },
+      {
+       "day": 4,
+       "sets": 21,
+       "setKm": 1.5087,
+       "armKm": 2.3628,
+       "ratio": 0.967,
+       "lo": 0.625,
+       "hi": 1.182,
+       "shareCloser": 0.524
+      },
+      {
+       "day": 5,
+       "sets": 28,
+       "setKm": 2.2599,
+       "armKm": 4.3188,
+       "ratio": 1.52,
+       "lo": 1.33,
+       "hi": 2.024,
+       "shareCloser": 0.286
+      },
+      {
+       "day": 6,
+       "sets": 25,
+       "setKm": 3.6871,
+       "armKm": 2.9332,
+       "ratio": 1.244,
+       "lo": 0.753,
+       "hi": 1.642,
+       "shareCloser": 0.4
+      },
+      {
+       "day": 7,
+       "sets": 25,
+       "setKm": 3.9782,
+       "armKm": 5.6876,
+       "ratio": 1.265,
+       "lo": 0.874,
+       "hi": 1.977,
+       "shareCloser": 0.44
+      }
+     ]
+    },
+    "D5": {
+     "missing": 0,
+     "fitResidualMedianM": 543,
+     "primary": {
+      "sets": 11,
+      "satellites": 5,
+      "setKm": 0.6763,
+      "armKm": 0.4276,
+      "ratio": 0.615,
+      "lo": 0.399,
+      "hi": 0.826,
+      "shareCloser": 0.909,
+      "satellitesCloser": 4,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 67,
+       "setKm": 0.545,
+       "armKm": 0.3298,
+       "ratio": 0.528,
+       "lo": 0.506,
+       "hi": 0.613,
+       "shareCloser": 0.91
+      },
+      {
+       "day": 2,
+       "sets": 32,
+       "setKm": 0.6554,
+       "armKm": 0.3291,
+       "ratio": 0.51,
+       "lo": 0.493,
+       "hi": 0.629,
+       "shareCloser": 0.844
+      },
+      {
+       "day": 3,
+       "sets": 24,
+       "setKm": 0.847,
+       "armKm": 0.5014,
+       "ratio": 0.603,
+       "lo": 0.437,
+       "hi": 0.791,
+       "shareCloser": 0.917
+      },
+      {
+       "day": 4,
+       "sets": 21,
+       "setKm": 1.5087,
+       "armKm": 1.3544,
+       "ratio": 0.693,
+       "lo": 0.597,
+       "hi": 0.795,
+       "shareCloser": 0.762
+      },
+      {
+       "day": 5,
+       "sets": 28,
+       "setKm": 2.2599,
+       "armKm": 1.8061,
+       "ratio": 0.649,
+       "lo": 0.513,
+       "hi": 1.109,
+       "shareCloser": 0.679
+      },
+      {
+       "day": 6,
+       "sets": 25,
+       "setKm": 3.6871,
+       "armKm": 2.1087,
+       "ratio": 0.514,
+       "lo": 0.502,
+       "hi": 0.555,
+       "shareCloser": 0.76
+      },
+      {
+       "day": 7,
+       "sets": 25,
+       "setKm": 3.9782,
+       "armKm": 3.8401,
+       "ratio": 0.592,
+       "lo": 0.556,
+       "hi": 0.801,
+       "shareCloser": 0.68
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 11,
+      "satellites": 5,
+      "setKm": 0.6763,
+      "armKm": 0.4276,
+      "ratio": 0.615,
+      "lo": 0.399,
+      "hi": 0.826,
+      "shareCloser": 0.909,
+      "satellitesCloser": 4,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 67,
+       "setKm": 0.545,
+       "armKm": 0.3298,
+       "ratio": 0.528,
+       "lo": 0.506,
+       "hi": 0.613,
+       "shareCloser": 0.91
+      },
+      {
+       "day": 2,
+       "sets": 32,
+       "setKm": 0.6554,
+       "armKm": 0.3291,
+       "ratio": 0.51,
+       "lo": 0.493,
+       "hi": 0.629,
+       "shareCloser": 0.844
+      },
+      {
+       "day": 3,
+       "sets": 24,
+       "setKm": 0.847,
+       "armKm": 0.5014,
+       "ratio": 0.603,
+       "lo": 0.437,
+       "hi": 0.791,
+       "shareCloser": 0.917
+      },
+      {
+       "day": 4,
+       "sets": 21,
+       "setKm": 1.5087,
+       "armKm": 1.3544,
+       "ratio": 0.693,
+       "lo": 0.597,
+       "hi": 0.795,
+       "shareCloser": 0.762
+      },
+      {
+       "day": 5,
+       "sets": 28,
+       "setKm": 2.2599,
+       "armKm": 1.8061,
+       "ratio": 0.649,
+       "lo": 0.513,
+       "hi": 1.109,
+       "shareCloser": 0.679
+      },
+      {
+       "day": 6,
+       "sets": 25,
+       "setKm": 3.6871,
+       "armKm": 2.1087,
+       "ratio": 0.514,
+       "lo": 0.502,
+       "hi": 0.555,
+       "shareCloser": 0.76
+      },
+      {
+       "day": 7,
+       "sets": 25,
+       "setKm": 3.9782,
+       "armKm": 3.8401,
+       "ratio": 0.592,
+       "lo": 0.556,
+       "hi": 0.801,
+       "shareCloser": 0.68
+      }
+     ],
+     "servedAs": {
+      "D5": 67,
+      "B3": 0,
+      "A": 0
+     }
+    }
+   }
+  },
+  "LAGEOS and Etalon (ILRS combined orbits)": {
+   "sets": 38,
+   "satellites": 2,
+   "errors": 0,
+   "withHistory": 37,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 170,
+     "primary": {
+      "sets": 38,
+      "satellites": 2,
+      "setKm": 1.1874,
+      "armKm": 1.1797,
+      "ratio": 0.987,
+      "lo": 0.985,
+      "hi": 0.99,
+      "shareCloser": 1,
+      "satellitesCloser": 2,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 38,
+       "setKm": 1.1755,
+       "armKm": 1.1891,
+       "ratio": 1.006,
+       "lo": 1.003,
+       "hi": 1.01,
+       "shareCloser": 0.342
+      },
+      {
+       "day": 2,
+       "sets": 38,
+       "setKm": 1.2104,
+       "armKm": 1.161,
+       "ratio": 0.966,
+       "lo": 0.965,
+       "hi": 0.966,
+       "shareCloser": 1
+      },
+      {
+       "day": 3,
+       "sets": 38,
+       "setKm": 1.0938,
+       "armKm": 1.0697,
+       "ratio": 1,
+       "lo": 0.996,
+       "hi": 1.003,
+       "shareCloser": 0.5
+      },
+      {
+       "day": 4,
+       "sets": 38,
+       "setKm": 1.0731,
+       "armKm": 1.1591,
+       "ratio": 1.093,
+       "lo": 1.068,
+       "hi": 1.099,
+       "shareCloser": 0.237
+      },
+      {
+       "day": 5,
+       "sets": 38,
+       "setKm": 0.926,
+       "armKm": 1.1233,
+       "ratio": 1.229,
+       "lo": 1.217,
+       "hi": 1.235,
+       "shareCloser": 0.237
+      },
+      {
+       "day": 6,
+       "sets": 38,
+       "setKm": 0.7962,
+       "armKm": 1.0557,
+       "ratio": 1.378,
+       "lo": 1.32,
+       "hi": 1.519,
+       "shareCloser": 0.263
+      },
+      {
+       "day": 7,
+       "sets": 38,
+       "setKm": 0.6741,
+       "armKm": 0.9991,
+       "ratio": 1.722,
+       "lo": 1.721,
+       "hi": 1.897,
+       "shareCloser": 0.263
+      }
+     ]
+    },
+    "C5": {
+     "missing": 1,
+     "fitResidualMedianM": 227,
+     "primary": {
+      "sets": 37,
+      "satellites": 2,
+      "setKm": 1.1756,
+      "armKm": 1.3496,
+      "ratio": 1.149,
+      "lo": 1.119,
+      "hi": 1.153,
+      "shareCloser": 0.216,
+      "satellitesCloser": 0,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 37,
+       "setKm": 1.1696,
+       "armKm": 1.2375,
+       "ratio": 1.073,
+       "lo": 1.07,
+       "hi": 1.094,
+       "shareCloser": 0.378
+      },
+      {
+       "day": 2,
+       "sets": 37,
+       "setKm": 1.2079,
+       "armKm": 1.3194,
+       "ratio": 1.125,
+       "lo": 1.125,
+       "hi": 1.125,
+       "shareCloser": 0.297
+      },
+      {
+       "day": 3,
+       "sets": 37,
+       "setKm": 1.0891,
+       "armKm": 1.5227,
+       "ratio": 1.317,
+       "lo": 1.301,
+       "hi": 1.355,
+       "shareCloser": 0.216
+      },
+      {
+       "day": 4,
+       "sets": 37,
+       "setKm": 1.072,
+       "armKm": 1.5846,
+       "ratio": 1.686,
+       "lo": 1.625,
+       "hi": 1.748,
+       "shareCloser": 0.135
+      },
+      {
+       "day": 5,
+       "sets": 37,
+       "setKm": 0.9208,
+       "armKm": 1.7913,
+       "ratio": 2.072,
+       "lo": 2.001,
+       "hi": 2.143,
+       "shareCloser": 0.081
+      },
+      {
+       "day": 6,
+       "sets": 37,
+       "setKm": 0.7863,
+       "armKm": 1.8746,
+       "ratio": 2.707,
+       "lo": 2.376,
+       "hi": 2.924,
+       "shareCloser": 0.108
+      },
+      {
+       "day": 7,
+       "sets": 37,
+       "setKm": 0.6707,
+       "armKm": 2.0557,
+       "ratio": 3.187,
+       "lo": 2.89,
+       "hi": 3.548,
+       "shareCloser": 0.108
+      }
+     ]
+    },
+    "D5": {
+     "missing": 1,
+     "fitResidualMedianM": 312,
+     "primary": {
+      "sets": 37,
+      "satellites": 2,
+      "setKm": 1.1756,
+      "armKm": 1.1403,
+      "ratio": 0.98,
+      "lo": 0.978,
+      "hi": 0.98,
+      "shareCloser": 0.622,
+      "satellitesCloser": 2,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 37,
+       "setKm": 1.1696,
+       "armKm": 1.0629,
+       "ratio": 0.896,
+       "lo": 0.879,
+       "hi": 0.903,
+       "shareCloser": 0.946
+      },
+      {
+       "day": 2,
+       "sets": 37,
+       "setKm": 1.2079,
+       "armKm": 1.1348,
+       "ratio": 0.954,
+       "lo": 0.94,
+       "hi": 0.961,
+       "shareCloser": 0.73
+      },
+      {
+       "day": 3,
+       "sets": 37,
+       "setKm": 1.0891,
+       "armKm": 1.1817,
+       "ratio": 1.114,
+       "lo": 1.086,
+       "hi": 1.119,
+       "shareCloser": 0.216
+      },
+      {
+       "day": 4,
+       "sets": 37,
+       "setKm": 1.072,
+       "armKm": 1.3439,
+       "ratio": 1.336,
+       "lo": 1.294,
+       "hi": 1.355,
+       "shareCloser": 0.081
+      },
+      {
+       "day": 5,
+       "sets": 37,
+       "setKm": 0.9208,
+       "armKm": 1.5141,
+       "ratio": 1.583,
+       "lo": 1.573,
+       "hi": 1.735,
+       "shareCloser": 0.108
+      },
+      {
+       "day": 6,
+       "sets": 37,
+       "setKm": 0.7863,
+       "armKm": 1.807,
+       "ratio": 2.022,
+       "lo": 2.022,
+       "hi": 2.057,
+       "shareCloser": 0.189
+      },
+      {
+       "day": 7,
+       "sets": 37,
+       "setKm": 0.6707,
+       "armKm": 1.8933,
+       "ratio": 2.891,
+       "lo": 2.842,
+       "hi": 2.935,
+       "shareCloser": 0.189
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 38,
+      "satellites": 2,
+      "setKm": 1.1874,
+      "armKm": 1.1512,
+      "ratio": 0.981,
+      "lo": 0.98,
+      "hi": 0.992,
+      "shareCloser": 0.632,
+      "satellitesCloser": 2,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 38,
+       "setKm": 1.1755,
+       "armKm": 1.0658,
+       "ratio": 0.898,
+       "lo": 0.879,
+       "hi": 0.905,
+       "shareCloser": 0.921
+      },
+      {
+       "day": 2,
+       "sets": 38,
+       "setKm": 1.2104,
+       "armKm": 1.1396,
+       "ratio": 0.955,
+       "lo": 0.94,
+       "hi": 0.965,
+       "shareCloser": 0.737
+      },
+      {
+       "day": 3,
+       "sets": 38,
+       "setKm": 1.0938,
+       "armKm": 1.1943,
+       "ratio": 1.113,
+       "lo": 1.085,
+       "hi": 1.119,
+       "shareCloser": 0.211
+      },
+      {
+       "day": 4,
+       "sets": 38,
+       "setKm": 1.0731,
+       "armKm": 1.3508,
+       "ratio": 1.326,
+       "lo": 1.275,
+       "hi": 1.355,
+       "shareCloser": 0.079
+      },
+      {
+       "day": 5,
+       "sets": 38,
+       "setKm": 0.926,
+       "armKm": 1.5422,
+       "ratio": 1.58,
+       "lo": 1.568,
+       "hi": 1.735,
+       "shareCloser": 0.105
+      },
+      {
+       "day": 6,
+       "sets": 38,
+       "setKm": 0.7962,
+       "armKm": 1.7109,
+       "ratio": 2.001,
+       "lo": 1.979,
+       "hi": 2.022,
+       "shareCloser": 0.184
+      },
+      {
+       "day": 7,
+       "sets": 38,
+       "setKm": 0.6741,
+       "armKm": 1.8746,
+       "ratio": 2.842,
+       "lo": 2.793,
+       "hi": 2.935,
+       "shareCloser": 0.184
+      }
+     ],
+     "servedAs": {
+      "D5": 37,
+      "B3": 1,
+      "A": 0
+     }
+    }
+   }
+  },
+  "Navigation satellites (ESA final orbits)": {
+   "sets": 1668,
+   "satellites": 112,
+   "errors": 0,
+   "withHistory": 1593,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 199,
+     "primary": {
+      "sets": 1607,
+      "satellites": 112,
+      "setKm": 1.3832,
+      "armKm": 1.3368,
+      "ratio": 0.985,
+      "lo": 0.98,
+      "hi": 0.988,
+      "shareCloser": 1,
+      "satellitesCloser": 112,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1668,
+       "setKm": 1.2454,
+       "armKm": 1.2339,
+       "ratio": 1.004,
+       "lo": 1.002,
+       "hi": 1.006,
+       "shareCloser": 0.433
+      },
+      {
+       "day": 2,
+       "sets": 1639,
+       "setKm": 1.35,
+       "armKm": 1.2954,
+       "ratio": 0.975,
+       "lo": 0.97,
+       "hi": 0.979,
+       "shareCloser": 0.852
+      },
+      {
+       "day": 3,
+       "sets": 1609,
+       "setKm": 1.4601,
+       "armKm": 1.3834,
+       "ratio": 0.981,
+       "lo": 0.973,
+       "hi": 0.986,
+       "shareCloser": 0.733
+      },
+      {
+       "day": 4,
+       "sets": 1585,
+       "setKm": 1.5106,
+       "armKm": 1.4672,
+       "ratio": 0.984,
+       "lo": 0.966,
+       "hi": 0.998,
+       "shareCloser": 0.553
+      },
+      {
+       "day": 5,
+       "sets": 1552,
+       "setKm": 1.6028,
+       "armKm": 1.5976,
+       "ratio": 0.983,
+       "lo": 0.956,
+       "hi": 1.008,
+       "shareCloser": 0.529
+      },
+      {
+       "day": 6,
+       "sets": 1533,
+       "setKm": 1.6397,
+       "armKm": 1.7933,
+       "ratio": 0.977,
+       "lo": 0.938,
+       "hi": 1.022,
+       "shareCloser": 0.524
+      },
+      {
+       "day": 7,
+       "sets": 1500,
+       "setKm": 1.7592,
+       "armKm": 1.9528,
+       "ratio": 0.954,
+       "lo": 0.909,
+       "hi": 0.997,
+       "shareCloser": 0.551
+      }
+     ]
+    },
+    "C5": {
+     "missing": 75,
+     "fitResidualMedianM": 315,
+     "primary": {
+      "sets": 1534,
+      "satellites": 111,
+      "setKm": 1.393,
+      "armKm": 1.5151,
+      "ratio": 1.119,
+      "lo": 1.1,
+      "hi": 1.144,
+      "shareCloser": 0.383,
+      "satellitesCloser": 19,
+      "verdict": "LOSES"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1593,
+       "setKm": 1.2542,
+       "armKm": 1.3636,
+       "ratio": 1.069,
+       "lo": 1.05,
+       "hi": 1.092,
+       "shareCloser": 0.397
+      },
+      {
+       "day": 2,
+       "sets": 1566,
+       "setKm": 1.3525,
+       "armKm": 1.4964,
+       "ratio": 1.124,
+       "lo": 1.1,
+       "hi": 1.156,
+       "shareCloser": 0.387
+      },
+      {
+       "day": 3,
+       "sets": 1536,
+       "setKm": 1.4679,
+       "armKm": 1.6416,
+       "ratio": 1.18,
+       "lo": 1.144,
+       "hi": 1.224,
+       "shareCloser": 0.38
+      },
+      {
+       "day": 4,
+       "sets": 1514,
+       "setKm": 1.5197,
+       "armKm": 1.8395,
+       "ratio": 1.241,
+       "lo": 1.173,
+       "hi": 1.326,
+       "shareCloser": 0.392
+      },
+      {
+       "day": 5,
+       "sets": 1483,
+       "setKm": 1.5975,
+       "armKm": 2.0246,
+       "ratio": 1.249,
+       "lo": 1.155,
+       "hi": 1.361,
+       "shareCloser": 0.387
+      },
+      {
+       "day": 6,
+       "sets": 1465,
+       "setKm": 1.6275,
+       "armKm": 2.2554,
+       "ratio": 1.264,
+       "lo": 1.111,
+       "hi": 1.392,
+       "shareCloser": 0.399
+      },
+      {
+       "day": 7,
+       "sets": 1434,
+       "setKm": 1.7378,
+       "armKm": 2.4752,
+       "ratio": 1.2,
+       "lo": 1.069,
+       "hi": 1.345,
+       "shareCloser": 0.416
+      }
+     ]
+    },
+    "D5": {
+     "missing": 76,
+     "fitResidualMedianM": 423,
+     "primary": {
+      "sets": 1533,
+      "satellites": 111,
+      "setKm": 1.3926,
+      "armKm": 1.2837,
+      "ratio": 0.96,
+      "lo": 0.945,
+      "hi": 0.971,
+      "shareCloser": 0.676,
+      "satellitesCloser": 99,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1592,
+       "setKm": 1.2527,
+       "armKm": 1.2019,
+       "ratio": 0.945,
+       "lo": 0.93,
+       "hi": 0.965,
+       "shareCloser": 0.616
+      },
+      {
+       "day": 2,
+       "sets": 1565,
+       "setKm": 1.3523,
+       "armKm": 1.258,
+       "ratio": 0.957,
+       "lo": 0.943,
+       "hi": 0.963,
+       "shareCloser": 0.702
+      },
+      {
+       "day": 3,
+       "sets": 1535,
+       "setKm": 1.4676,
+       "armKm": 1.3719,
+       "ratio": 0.95,
+       "lo": 0.924,
+       "hi": 0.975,
+       "shareCloser": 0.582
+      },
+      {
+       "day": 4,
+       "sets": 1513,
+       "setKm": 1.5171,
+       "armKm": 1.4888,
+       "ratio": 0.929,
+       "lo": 0.884,
+       "hi": 0.997,
+       "shareCloser": 0.556
+      },
+      {
+       "day": 5,
+       "sets": 1482,
+       "setKm": 1.5953,
+       "armKm": 1.6181,
+       "ratio": 0.914,
+       "lo": 0.859,
+       "hi": 0.999,
+       "shareCloser": 0.556
+      },
+      {
+       "day": 6,
+       "sets": 1464,
+       "setKm": 1.6274,
+       "armKm": 1.7675,
+       "ratio": 0.906,
+       "lo": 0.827,
+       "hi": 0.991,
+       "shareCloser": 0.558
+      },
+      {
+       "day": 7,
+       "sets": 1433,
+       "setKm": 1.7306,
+       "armKm": 1.9455,
+       "ratio": 0.883,
+       "lo": 0.796,
+       "hi": 0.97,
+       "shareCloser": 0.569
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 1607,
+      "satellites": 112,
+      "setKm": 1.3832,
+      "armKm": 1.2834,
+      "ratio": 0.961,
+      "lo": 0.949,
+      "hi": 0.972,
+      "shareCloser": 0.691,
+      "satellitesCloser": 101,
+      "verdict": "BEATS"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 1668,
+       "setKm": 1.2454,
+       "armKm": 1.1978,
+       "ratio": 0.95,
+       "lo": 0.933,
+       "hi": 0.972,
+       "shareCloser": 0.609
+      },
+      {
+       "day": 2,
+       "sets": 1639,
+       "setKm": 1.35,
+       "armKm": 1.2571,
+       "ratio": 0.958,
+       "lo": 0.945,
+       "hi": 0.965,
+       "shareCloser": 0.71
+      },
+      {
+       "day": 3,
+       "sets": 1609,
+       "setKm": 1.4601,
+       "armKm": 1.3574,
+       "ratio": 0.95,
+       "lo": 0.928,
+       "hi": 0.972,
+       "shareCloser": 0.592
+      },
+      {
+       "day": 4,
+       "sets": 1585,
+       "setKm": 1.5106,
+       "armKm": 1.4806,
+       "ratio": 0.931,
+       "lo": 0.896,
+       "hi": 0.99,
+       "shareCloser": 0.562
+      },
+      {
+       "day": 5,
+       "sets": 1552,
+       "setKm": 1.6028,
+       "armKm": 1.6173,
+       "ratio": 0.919,
+       "lo": 0.866,
+       "hi": 0.992,
+       "shareCloser": 0.557
+      },
+      {
+       "day": 6,
+       "sets": 1533,
+       "setKm": 1.6397,
+       "armKm": 1.7721,
+       "ratio": 0.908,
+       "lo": 0.832,
+       "hi": 0.987,
+       "shareCloser": 0.561
+      },
+      {
+       "day": 7,
+       "sets": 1500,
+       "setKm": 1.7592,
+       "armKm": 1.9467,
+       "ratio": 0.883,
+       "lo": 0.804,
+       "hi": 0.964,
+       "shareCloser": 0.571
+      }
+     ],
+     "servedAs": {
+      "D5": 1592,
+      "B3": 76,
+      "A": 0
+     }
+    }
+   }
+  },
+  "Sentinel-1 (Copernicus precise orbits)": {
+   "sets": 49,
+   "satellites": 3,
+   "errors": 0,
+   "withHistory": 49,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 603,
+     "primary": {
+      "sets": 44,
+      "satellites": 3,
+      "setKm": 0.8816,
+      "armKm": 0.6474,
+      "ratio": 0.737,
+      "lo": 0.72,
+      "hi": 0.861,
+      "shareCloser": 1,
+      "satellitesCloser": 3,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 49,
+       "setKm": 0.6668,
+       "armKm": 0.311,
+       "ratio": 0.455,
+       "lo": 0.372,
+       "hi": 0.755,
+       "shareCloser": 0.98
+      },
+      {
+       "day": 2,
+       "sets": 46,
+       "setKm": 0.8547,
+       "armKm": 0.5665,
+       "ratio": 0.709,
+       "lo": 0.464,
+       "hi": 0.816,
+       "shareCloser": 0.957
+      },
+      {
+       "day": 3,
+       "sets": 46,
+       "setKm": 1.0771,
+       "armKm": 0.9107,
+       "ratio": 0.824,
+       "lo": 0.8,
+       "hi": 0.903,
+       "shareCloser": 1
+      },
+      {
+       "day": 4,
+       "sets": 47,
+       "setKm": 1.4335,
+       "armKm": 1.1775,
+       "ratio": 0.832,
+       "lo": 0.778,
+       "hi": 0.868,
+       "shareCloser": 0.915
+      },
+      {
+       "day": 5,
+       "sets": 46,
+       "setKm": 1.8694,
+       "armKm": 1.6018,
+       "ratio": 0.855,
+       "lo": 0.74,
+       "hi": 0.91,
+       "shareCloser": 0.783
+      },
+      {
+       "day": 6,
+       "sets": 42,
+       "setKm": 2.2977,
+       "armKm": 1.9674,
+       "ratio": 0.842,
+       "lo": 0.755,
+       "hi": 0.882,
+       "shareCloser": 0.762
+      },
+      {
+       "day": 7,
+       "sets": 44,
+       "setKm": 3.4175,
+       "armKm": 2.4797,
+       "ratio": 0.852,
+       "lo": 0.755,
+       "hi": 0.903,
+       "shareCloser": 0.682
+      }
+     ]
+    },
+    "C5": {
+     "missing": 0,
+     "fitResidualMedianM": 620,
+     "primary": {
+      "sets": 44,
+      "satellites": 3,
+      "setKm": 0.8816,
+      "armKm": 1.0439,
+      "ratio": 1.012,
+      "lo": 0.401,
+      "hi": 1.108,
+      "shareCloser": 0.5,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 49,
+       "setKm": 0.6668,
+       "armKm": 0.4831,
+       "ratio": 0.759,
+       "lo": 0.521,
+       "hi": 0.9,
+       "shareCloser": 0.714
+      },
+      {
+       "day": 2,
+       "sets": 46,
+       "setKm": 0.8547,
+       "armKm": 0.8426,
+       "ratio": 0.932,
+       "lo": 0.493,
+       "hi": 1.232,
+       "shareCloser": 0.565
+      },
+      {
+       "day": 3,
+       "sets": 46,
+       "setKm": 1.0771,
+       "armKm": 1.218,
+       "ratio": 1.014,
+       "lo": 0.37,
+       "hi": 1.15,
+       "shareCloser": 0.478
+      },
+      {
+       "day": 4,
+       "sets": 47,
+       "setKm": 1.4335,
+       "armKm": 1.5744,
+       "ratio": 0.999,
+       "lo": 0.408,
+       "hi": 1.154,
+       "shareCloser": 0.511
+      },
+      {
+       "day": 5,
+       "sets": 46,
+       "setKm": 1.8694,
+       "armKm": 1.9544,
+       "ratio": 1.011,
+       "lo": 0.464,
+       "hi": 1.318,
+       "shareCloser": 0.5
+      },
+      {
+       "day": 6,
+       "sets": 42,
+       "setKm": 2.2977,
+       "armKm": 2.2132,
+       "ratio": 1.022,
+       "lo": 0.301,
+       "hi": 1.12,
+       "shareCloser": 0.476
+      },
+      {
+       "day": 7,
+       "sets": 44,
+       "setKm": 3.4175,
+       "armKm": 2.6515,
+       "ratio": 0.999,
+       "lo": 0.262,
+       "hi": 1.069,
+       "shareCloser": 0.523
+      }
+     ]
+    },
+    "D5": {
+     "missing": 1,
+     "fitResidualMedianM": 638,
+     "primary": {
+      "sets": 43,
+      "satellites": 3,
+      "setKm": 0.8841,
+      "armKm": 0.6642,
+      "ratio": 0.716,
+      "lo": 0.665,
+      "hi": 0.758,
+      "shareCloser": 1,
+      "satellitesCloser": 3,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 48,
+       "setKm": 0.6674,
+       "armKm": 0.3642,
+       "ratio": 0.519,
+       "lo": 0.394,
+       "hi": 0.763,
+       "shareCloser": 0.896
+      },
+      {
+       "day": 2,
+       "sets": 45,
+       "setKm": 0.8609,
+       "armKm": 0.5257,
+       "ratio": 0.656,
+       "lo": 0.652,
+       "hi": 0.817,
+       "shareCloser": 0.956
+      },
+      {
+       "day": 3,
+       "sets": 45,
+       "setKm": 1.0866,
+       "armKm": 0.9227,
+       "ratio": 0.76,
+       "lo": 0.702,
+       "hi": 0.874,
+       "shareCloser": 0.956
+      },
+      {
+       "day": 4,
+       "sets": 46,
+       "setKm": 1.4625,
+       "armKm": 1.0385,
+       "ratio": 0.759,
+       "lo": 0.645,
+       "hi": 0.795,
+       "shareCloser": 0.826
+      },
+      {
+       "day": 5,
+       "sets": 45,
+       "setKm": 1.8709,
+       "armKm": 1.3548,
+       "ratio": 0.797,
+       "lo": 0.638,
+       "hi": 0.843,
+       "shareCloser": 0.778
+      },
+      {
+       "day": 6,
+       "sets": 42,
+       "setKm": 2.2977,
+       "armKm": 1.76,
+       "ratio": 0.694,
+       "lo": 0.567,
+       "hi": 0.743,
+       "shareCloser": 0.738
+      },
+      {
+       "day": 7,
+       "sets": 44,
+       "setKm": 3.4175,
+       "armKm": 1.7348,
+       "ratio": 0.662,
+       "lo": 0.557,
+       "hi": 0.689,
+       "shareCloser": 0.773
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 44,
+      "satellites": 3,
+      "setKm": 0.8816,
+      "armKm": 0.6604,
+      "ratio": 0.716,
+      "lo": 0.654,
+      "hi": 0.758,
+      "shareCloser": 1,
+      "satellitesCloser": 3,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 49,
+       "setKm": 0.6668,
+       "armKm": 0.3619,
+       "ratio": 0.503,
+       "lo": 0.365,
+       "hi": 0.763,
+       "shareCloser": 0.898
+      },
+      {
+       "day": 2,
+       "sets": 46,
+       "setKm": 0.8547,
+       "armKm": 0.5059,
+       "ratio": 0.652,
+       "lo": 0.648,
+       "hi": 0.817,
+       "shareCloser": 0.957
+      },
+      {
+       "day": 3,
+       "sets": 46,
+       "setKm": 1.0771,
+       "armKm": 0.9187,
+       "ratio": 0.761,
+       "lo": 0.702,
+       "hi": 0.874,
+       "shareCloser": 0.957
+      },
+      {
+       "day": 4,
+       "sets": 47,
+       "setKm": 1.4335,
+       "armKm": 1.0735,
+       "ratio": 0.761,
+       "lo": 0.645,
+       "hi": 0.795,
+       "shareCloser": 0.83
+      },
+      {
+       "day": 5,
+       "sets": 46,
+       "setKm": 1.8694,
+       "armKm": 1.4177,
+       "ratio": 0.808,
+       "lo": 0.638,
+       "hi": 0.846,
+       "shareCloser": 0.783
+      },
+      {
+       "day": 6,
+       "sets": 42,
+       "setKm": 2.2977,
+       "armKm": 1.76,
+       "ratio": 0.694,
+       "lo": 0.567,
+       "hi": 0.743,
+       "shareCloser": 0.738
+      },
+      {
+       "day": 7,
+       "sets": 44,
+       "setKm": 3.4175,
+       "armKm": 1.7348,
+       "ratio": 0.662,
+       "lo": 0.557,
+       "hi": 0.689,
+       "shareCloser": 0.773
+      }
+     ],
+     "servedAs": {
+      "D5": 48,
+      "B3": 1,
+      "A": 0
+     }
+    }
+   }
+  },
+  "Swarm (ESA precise orbits)": {
+   "sets": 23,
+   "satellites": 1,
+   "errors": 0,
+   "withHistory": 23,
+   "arms": {
+    "B3": {
+     "missing": 0,
+     "fitResidualMedianM": 684,
+     "primary": {
+      "sets": 23,
+      "satellites": 1,
+      "setKm": 1.6108,
+      "armKm": 1.4595,
+      "ratio": 0.906,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 1,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 23,
+       "setKm": 0.6735,
+       "armKm": 0.3833,
+       "ratio": 0.573,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.87
+      },
+      {
+       "day": 2,
+       "sets": 23,
+       "setKm": 1.123,
+       "armKm": 0.8815,
+       "ratio": 0.772,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.87
+      },
+      {
+       "day": 3,
+       "sets": 23,
+       "setKm": 2.5704,
+       "armKm": 2.3923,
+       "ratio": 0.927,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 1
+      },
+      {
+       "day": 4,
+       "sets": 23,
+       "setKm": 3.4705,
+       "armKm": 3.6231,
+       "ratio": 0.968,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.696
+      },
+      {
+       "day": 5,
+       "sets": 23,
+       "setKm": 7.5467,
+       "armKm": 7.098,
+       "ratio": 1,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 6,
+       "sets": 23,
+       "setKm": 12.8937,
+       "armKm": 11.142,
+       "ratio": 1,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 7,
+       "sets": 23,
+       "setKm": 15.5842,
+       "armKm": 17.6174,
+       "ratio": 1,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      }
+     ]
+    },
+    "C5": {
+     "missing": 1,
+     "fitResidualMedianM": 693,
+     "primary": {
+      "sets": 22,
+      "satellites": 1,
+      "setKm": 1.4956,
+      "armKm": 2.107,
+      "ratio": 1.169,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 0.409,
+      "satellitesCloser": 0,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 22,
+       "setKm": 0.6735,
+       "armKm": 0.6849,
+       "ratio": 0.99,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.545
+      },
+      {
+       "day": 2,
+       "sets": 22,
+       "setKm": 1.009,
+       "armKm": 1.7631,
+       "ratio": 1.122,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.455
+      },
+      {
+       "day": 3,
+       "sets": 22,
+       "setKm": 2.2194,
+       "armKm": 3.4244,
+       "ratio": 1.181,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.409
+      },
+      {
+       "day": 4,
+       "sets": 22,
+       "setKm": 3.4183,
+       "armKm": 7.1148,
+       "ratio": 1.114,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.455
+      },
+      {
+       "day": 5,
+       "sets": 22,
+       "setKm": 6.8631,
+       "armKm": 13.3577,
+       "ratio": 1.138,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.455
+      },
+      {
+       "day": 6,
+       "sets": 22,
+       "setKm": 12.6443,
+       "armKm": 15.9635,
+       "ratio": 1.173,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.364
+      },
+      {
+       "day": 7,
+       "sets": 22,
+       "setKm": 15.5156,
+       "armKm": 20.1579,
+       "ratio": 1.412,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.364
+      }
+     ]
+    },
+    "D5": {
+     "missing": 1,
+     "fitResidualMedianM": 792,
+     "primary": {
+      "sets": 22,
+      "satellites": 1,
+      "setKm": 1.4956,
+      "armKm": 1.5491,
+      "ratio": 0.853,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 0.818,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 22,
+       "setKm": 0.6735,
+       "armKm": 0.4874,
+       "ratio": 0.721,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.682
+      },
+      {
+       "day": 2,
+       "sets": 22,
+       "setKm": 1.009,
+       "armKm": 0.8788,
+       "ratio": 0.746,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.773
+      },
+      {
+       "day": 3,
+       "sets": 22,
+       "setKm": 2.2194,
+       "armKm": 2.198,
+       "ratio": 0.829,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.682
+      },
+      {
+       "day": 4,
+       "sets": 22,
+       "setKm": 3.4183,
+       "armKm": 3.051,
+       "ratio": 0.759,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.591
+      },
+      {
+       "day": 5,
+       "sets": 22,
+       "setKm": 6.8631,
+       "armKm": 6.057,
+       "ratio": 0.85,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.5
+      },
+      {
+       "day": 6,
+       "sets": 22,
+       "setKm": 12.6443,
+       "armKm": 8.9491,
+       "ratio": 0.822,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.5
+      },
+      {
+       "day": 7,
+       "sets": 22,
+       "setKm": 15.5156,
+       "armKm": 16.5502,
+       "ratio": 0.888,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.5
+      }
+     ]
+    },
+    "S": {
+     "missing": 0,
+     "fitResidualMedianM": null,
+     "primary": {
+      "sets": 23,
+      "satellites": 1,
+      "setKm": 1.6108,
+      "armKm": 1.5554,
+      "ratio": 0.858,
+      "lo": null,
+      "hi": null,
+      "shareCloser": 0.826,
+      "satellitesCloser": 1,
+      "verdict": "FEW"
+     },
+     "days": [
+      {
+       "day": 1,
+       "sets": 23,
+       "setKm": 0.6735,
+       "armKm": 0.4889,
+       "ratio": 0.726,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.652
+      },
+      {
+       "day": 2,
+       "sets": 23,
+       "setKm": 1.123,
+       "armKm": 0.908,
+       "ratio": 0.757,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.739
+      },
+      {
+       "day": 3,
+       "sets": 23,
+       "setKm": 2.5704,
+       "armKm": 2.2451,
+       "ratio": 0.834,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.696
+      },
+      {
+       "day": 4,
+       "sets": 23,
+       "setKm": 3.4705,
+       "armKm": 3.3608,
+       "ratio": 0.779,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.609
+      },
+      {
+       "day": 5,
+       "sets": 23,
+       "setKm": 7.5467,
+       "armKm": 6.1665,
+       "ratio": 0.949,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 6,
+       "sets": 23,
+       "setKm": 12.8937,
+       "armKm": 9.624,
+       "ratio": 0.925,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      },
+      {
+       "day": 7,
+       "sets": 23,
+       "setKm": 15.5842,
+       "armKm": 18.3013,
+       "ratio": 0.907,
+       "lo": null,
+       "hi": null,
+       "shareCloser": 0.522
+      }
+     ],
+     "servedAs": {
+      "D5": 22,
+      "B3": 1,
+      "A": 0
+     }
+    }
+   }
+  }
+ },
+ "all": {
+  "sets": 2063,
+  "satellites": 133,
+  "errors": 0,
+  "withHistory": 1987,
+  "arms": {
+   "B3": {
+    "missing": 0,
+    "fitResidualMedianM": 216,
+    "primary": {
+     "sets": 1940,
+     "satellites": 133,
+     "setKm": 1.1934,
+     "armKm": 1.1534,
+     "ratio": 0.978,
+     "lo": 0.969,
+     "hi": 0.984,
+     "shareCloser": 1,
+     "satellitesCloser": 133,
+     "verdict": "BEATS"
+    },
+    "days": [
+     {
+      "day": 1,
+      "sets": 2063,
+      "setKm": 0.9866,
+      "armKm": 0.9859,
+      "ratio": 0.997,
+      "lo": 0.992,
+      "hi": 1.002,
+      "shareCloser": 0.527
+     },
+     {
+      "day": 2,
+      "sets": 1996,
+      "setKm": 1.1456,
+      "armKm": 1.0796,
+      "ratio": 0.967,
+      "lo": 0.957,
+      "hi": 0.973,
+      "shareCloser": 0.873
+     },
+     {
+      "day": 3,
+      "sets": 1957,
+      "setKm": 1.2921,
+      "armKm": 1.2195,
+      "ratio": 0.968,
+      "lo": 0.953,
+      "hi": 0.978,
+      "shareCloser": 0.77
+     },
+     {
+      "day": 4,
+      "sets": 1930,
+      "setKm": 1.3864,
+      "armKm": 1.3401,
+      "ratio": 0.963,
+      "lo": 0.941,
+      "hi": 0.982,
+      "shareCloser": 0.603
+     },
+     {
+      "day": 5,
+      "sets": 1903,
+      "setKm": 1.4797,
+      "armKm": 1.4515,
+      "ratio": 0.957,
+      "lo": 0.927,
+      "hi": 0.985,
+      "shareCloser": 0.568
+     },
+     {
+      "day": 6,
+      "sets": 1877,
+      "setKm": 1.5594,
+      "armKm": 1.6513,
+      "ratio": 0.953,
+      "lo": 0.915,
+      "hi": 0.993,
+      "shareCloser": 0.551
+     },
+     {
+      "day": 7,
+      "sets": 1844,
+      "setKm": 1.6709,
+      "armKm": 1.8409,
+      "ratio": 0.94,
+      "lo": 0.897,
+      "hi": 0.987,
+      "shareCloser": 0.561
+     }
+    ]
+   },
+   "C5": {
+    "missing": 77,
+    "fitResidualMedianM": 361,
+    "primary": {
+     "sets": 1865,
+     "satellites": 132,
+     "setKm": 1.1949,
+     "armKm": 1.3393,
+     "ratio": 1.081,
+     "lo": 1.038,
+     "hi": 1.115,
+     "shareCloser": 0.428,
+     "satellitesCloser": 31,
+     "verdict": "LOSES"
+    },
+    "days": [
+     {
+      "day": 1,
+      "sets": 1986,
+      "setKm": 0.9844,
+      "armKm": 1.1269,
+      "ratio": 1.025,
+      "lo": 0.999,
+      "hi": 1.056,
+      "shareCloser": 0.465
+     },
+     {
+      "day": 2,
+      "sets": 1921,
+      "setKm": 1.146,
+      "armKm": 1.2903,
+      "ratio": 1.081,
+      "lo": 1.035,
+      "hi": 1.112,
+      "shareCloser": 0.436
+     },
+     {
+      "day": 3,
+      "sets": 1882,
+      "setKm": 1.2933,
+      "armKm": 1.4875,
+      "ratio": 1.132,
+      "lo": 1.07,
+      "hi": 1.177,
+      "shareCloser": 0.421
+     },
+     {
+      "day": 4,
+      "sets": 1857,
+      "setKm": 1.3829,
+      "armKm": 1.6962,
+      "ratio": 1.193,
+      "lo": 1.098,
+      "hi": 1.261,
+      "shareCloser": 0.418
+     },
+     {
+      "day": 5,
+      "sets": 1832,
+      "setKm": 1.474,
+      "armKm": 1.9132,
+      "ratio": 1.222,
+      "lo": 1.117,
+      "hi": 1.318,
+      "shareCloser": 0.406
+     },
+     {
+      "day": 6,
+      "sets": 1807,
+      "setKm": 1.546,
+      "armKm": 2.1675,
+      "ratio": 1.21,
+      "lo": 1.088,
+      "hi": 1.349,
+      "shareCloser": 0.412
+     },
+     {
+      "day": 7,
+      "sets": 1776,
+      "setKm": 1.6538,
+      "armKm": 2.4299,
+      "ratio": 1.169,
+      "lo": 1.062,
+      "hi": 1.318,
+      "shareCloser": 0.425
+     }
+    ]
+   },
+   "D5": {
+    "missing": 79,
+    "fitResidualMedianM": 460,
+    "primary": {
+     "sets": 1863,
+     "satellites": 132,
+     "setKm": 1.1949,
+     "armKm": 1.1141,
+     "ratio": 0.939,
+     "lo": 0.911,
+     "hi": 0.956,
+     "shareCloser": 0.716,
+     "satellitesCloser": 119,
+     "verdict": "BEATS"
+    },
+    "days": [
+     {
+      "day": 1,
+      "sets": 1984,
+      "setKm": 0.9844,
+      "armKm": 0.9495,
+      "ratio": 0.914,
+      "lo": 0.886,
+      "hi": 0.933,
+      "shareCloser": 0.677
+     },
+     {
+      "day": 2,
+      "sets": 1919,
+      "setKm": 1.146,
+      "armKm": 1.0533,
+      "ratio": 0.932,
+      "lo": 0.912,
+      "hi": 0.949,
+      "shareCloser": 0.738
+     },
+     {
+      "day": 3,
+      "sets": 1880,
+      "setKm": 1.2933,
+      "armKm": 1.2069,
+      "ratio": 0.917,
+      "lo": 0.888,
+      "hi": 0.947,
+      "shareCloser": 0.631
+     },
+     {
+      "day": 4,
+      "sets": 1855,
+      "setKm": 1.3829,
+      "armKm": 1.3429,
+      "ratio": 0.895,
+      "lo": 0.844,
+      "hi": 0.943,
+      "shareCloser": 0.592
+     },
+     {
+      "day": 5,
+      "sets": 1830,
+      "setKm": 1.4729,
+      "armKm": 1.5056,
+      "ratio": 0.88,
+      "lo": 0.822,
+      "hi": 0.957,
+      "shareCloser": 0.586
+     },
+     {
+      "day": 6,
+      "sets": 1806,
+      "setKm": 1.5448,
+      "armKm": 1.6915,
+      "ratio": 0.871,
+      "lo": 0.801,
+      "hi": 0.949,
+      "shareCloser": 0.585
+     },
+     {
+      "day": 7,
+      "sets": 1775,
+      "setKm": 1.651,
+      "armKm": 1.8558,
+      "ratio": 0.854,
+      "lo": 0.776,
+      "hi": 0.948,
+      "shareCloser": 0.587
+     }
+    ]
+   },
+   "S": {
+    "missing": 0,
+    "fitResidualMedianM": null,
+    "primary": {
+     "sets": 1940,
+     "satellites": 133,
+     "setKm": 1.1934,
+     "armKm": 1.1141,
+     "ratio": 0.941,
+     "lo": 0.918,
+     "hi": 0.957,
+     "shareCloser": 0.727,
+     "satellitesCloser": 121,
+     "verdict": "BEATS"
+    },
+    "days": [
+     {
+      "day": 1,
+      "sets": 2063,
+      "setKm": 0.9866,
+      "armKm": 0.953,
+      "ratio": 0.921,
+      "lo": 0.895,
+      "hi": 0.941,
+      "shareCloser": 0.668
+     },
+     {
+      "day": 2,
+      "sets": 1996,
+      "setKm": 1.1456,
+      "armKm": 1.0531,
+      "ratio": 0.935,
+      "lo": 0.914,
+      "hi": 0.95,
+      "shareCloser": 0.742
+     },
+     {
+      "day": 3,
+      "sets": 1957,
+      "setKm": 1.2921,
+      "armKm": 1.2046,
+      "ratio": 0.92,
+      "lo": 0.892,
+      "hi": 0.947,
+      "shareCloser": 0.637
+     },
+     {
+      "day": 4,
+      "sets": 1930,
+      "setKm": 1.3864,
+      "armKm": 1.3428,
+      "ratio": 0.9,
+      "lo": 0.854,
+      "hi": 0.943,
+      "shareCloser": 0.595
+     },
+     {
+      "day": 5,
+      "sets": 1903,
+      "setKm": 1.4797,
+      "armKm": 1.5062,
+      "ratio": 0.885,
+      "lo": 0.83,
+      "hi": 0.954,
+      "shareCloser": 0.586
+     },
+     {
+      "day": 6,
+      "sets": 1877,
+      "setKm": 1.5594,
+      "armKm": 1.6942,
+      "ratio": 0.88,
+      "lo": 0.805,
+      "hi": 0.946,
+      "shareCloser": 0.586
+     },
+     {
+      "day": 7,
+      "sets": 1844,
+      "setKm": 1.6709,
+      "armKm": 1.856,
+      "ratio": 0.858,
+      "lo": 0.782,
+      "hi": 0.945,
+      "shareCloser": 0.588
+     }
+    ],
+    "servedAs": {
+     "D5": 1984,
+     "B3": 79,
+     "A": 0
+    }
+   }
+  }
+ },
+ "catalog": {
+  "LOW_LEO": {
+   "verdict": "FEW",
+   "serve": "SGP4"
+  },
+  "MID_LEO": {
+   "verdict": "BEATS",
+   "serve": "AP"
+  },
+  "HIGH_LEO": {
+   "verdict": "BEATS",
+   "serve": "AP"
+  },
+  "MEO": {
+   "verdict": "BEATS",
+   "serve": "AP"
+  },
+  "GEO": {
+   "verdict": "BEATS",
+   "serve": "AP"
+  },
+  "HEO": {
+   "verdict": "FEW",
+   "serve": "SGP4"
+  }
+ }
+}
