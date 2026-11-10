@@ -1,4 +1,4 @@
-// AP: SGP4XP with parts replaced (propagator/sdn-ap SPEC 16), at the pinned build (lib/build.mjs PIN). One $OCM in: `fit` takes the arc's $OEM, the
+// AP: propagator/sdn-ap with THEORY AP (SPEC 16), at the pinned build (lib/build.mjs PIN). One $OCM in: `fit` takes the arc's $OEM, the
 // fit $PCF (FORCES with ATMOSPHERE_MODEL stated, FIT), the arc's $SPW rows and an optional $PVN, and emits one $OCM that carries the rows it flies on;
 // `propagate` takes that $OCM and a $PCF with OUTPUT.EPOCHS, nothing else. Whiteroom XP is the same module with the theory's own forces (stock).
 import fs from 'node:fs';
