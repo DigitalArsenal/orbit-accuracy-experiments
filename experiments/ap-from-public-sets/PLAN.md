@@ -189,7 +189,7 @@ other day and a second run. This replaces "not before 2027-01-12" in A3, item 1.
 class figure is the median of those satellite medians; its interval is the narrowest order-statistic interval [x(k), x(n+1-k)] whose
 coverage 1 - 2 P(Bin(n, 1/2) <= k - 1) is at least 95 % (it exists from 6 satellites on; with 8 satellites it is the smallest and the
 largest). BEATS, LOSES and TIE as before; FEW under 6 satellites or under 30 sets, with no ratio. The bootstrap of this plan (median
-over sets, satellites resampled) is printed beside every figure and decides nothing. This changes the registered statistic, and the
+over sets, satellites resampled) is printed beside every figure and decides nothing. The table also prints, per class, the verdict of A3's item 4 on the bootstrap, as first registered; it decides nothing. This changes the registered statistic, and the
 parameter with it (the median satellite, not the median set), before any part 2 set exists. Why: the sets of one satellite are
 correlated (0.52 in `MID_LEO`, 0.44 in `HIGH_LEO`, A3 item 7), so the satellites are the sample; and on the development rows the
 bootstrap missed a true ratio of 1.00 in 13 %, 8 % and 14 % of simulated parts for classes of 10, 14 and 8 satellites at a nominal 5 %
@@ -205,8 +205,8 @@ at A3's point estimates. A gain that cannot be told from 5 % is about 0.06 km on
 cost. On part 1's period, post hoc (the catalog test's dry run dev-B: this record, A3's reading rules, the satellite unit): `MID_LEO`
 0.55 (0.30 to 0.78), `HIGH_LEO` 0.27 (0.18 to 0.54), `MEO` 0.99 (0.98 to 0.99), `GEO` 0.79 (0.63 to 1.00), all within the tail
 thresholds (`GEO` at T95 1.00); on these epoch-based figures (the creation-time figure was not computed) `MID_LEO` and `HIGH_LEO` would
-pass this item and `MEO` and `GEO` would not, where with "below 1" all four would. Simulated in that world (42 days, 600 parts), a
-true 0.95 at `MEO` passes under "below 1" in 0.99 of parts and under this item in 0.16; a true 0.90 passes in 1.00 under both.
+pass this item and `MEO` and `GEO` would not, where with "below 1" all four would. Read on the catalog test's public record at MEO the same threshold passes its upper end post hoc (0.89 on dev-B, 0.92 on dev-A); those figures were known too. Simulated in that world (42 days, 600 parts), a
+true 0.95 at `MEO` passes under "below 1" in 0.99 of parts and under this item in 0.16; a true 0.90 passes in 1.00 under both. In the same world the review's run (`c3-a4-power.mjs`, the first two conditions only) reads: MID_LEO passes in 0.86 of parts at its part 1 size (0.55), 0.47 at a true 0.60 and 0.01 at 0.70; HIGH_LEO in 0.94 at its part 1 size (0.27) and in none at a true 0.50, because its Trms is 0.99; GEO in 0.03 at its part 1 size (0.79) and 0.99 at a true 0.70. The figure from the creation time is in none of these.
 
 **4. "Satellites of the kinds tested" made operational.** The tested kinds are those of the truth families: ESA final orbits
 (navigation satellites), Copernicus precise orbits (Sentinel-1), IDS DORIS orbits (altimetry satellites), ILRS combined orbits (LAGEOS,
