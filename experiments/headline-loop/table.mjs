@@ -10,7 +10,8 @@
 //   node experiments/headline-loop/table.mjs --check
 //
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm and its package.json), never from a working tree.
-// AP's and XP's rows go to <store>/table/<wasm sha12>/rows.jsonl (theory AP or SGP4XP); a row already there is not flown again. The harness's working tree must be clean
+// AP's and our XP's rows go to <store>/table/<wasm sha12>/rows.jsonl (theory AP or SGP4XP), the Space Force XP's and SGP4's to
+// <store>/outside/<their builds>/rows.jsonl, flown once for every AP build; a row already there is not flown again. The harness's working tree must be clean
 // (the file names the harness commit). The numerical arm of a regime and fit length is the stored arm with the lowest median 3D error at
 // 168 h over that row's windows; among arms within 1 % of it, the fuller setting (Fbest, then the full setting, the configured, the reduced).
 // It is null ("being measured") until the store holds every window of that row, and null where no stored arm is properly
@@ -77,7 +78,7 @@ async function worker() {
     } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
     const truthS = (performance.now() - t0) / 1000, rows = [];
     for (const [theory, arc] of need) {
-      const row = { key: w.key, group: w.group, name: w.name, arcH: arc, theory, ap: build, env, truthS };
+      const row = { key: w.key, group: w.group, name: w.name, arcH: arc, theory, ...(A.OUTSIDE[theory] ? { builds: A.OUTSIDE[theory].builds } : { ap: build }), env, truthS };
       if (ctx.error) row.error = ctx.error;
       else {
         const thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
@@ -143,7 +144,14 @@ async function main() {
     + (all.after.length ? `; ${count(all.after.length)} windows reaching past 2026-11-10 are not read` : '') + '.';
   const rowsFile = path.join(dir, 'rows.jsonl');
   // a row without a theory is AP's (the version-1 rows)
-  const flownRows = new Map(readRows(rowsFile).filter((r) => r.ap?.sha256 === wasmSha).map((r) => [`${r.theory ?? 'AP'}|${r.key}|${r.arcH}`, r]));
+  // AP's and our XP's rows under the AP build's folder; the Space Force XP's and SGP4's under their own builds' (lib/arms.mjs OUTSIDE), flown
+  // once and read by every later run
+  const fileOf = (t) => (A.OUTSIDE[t] ? path.join(A.STORE_ROOT, 'outside', A.OUTSIDE[t].key, 'rows.jsonl') : rowsFile);
+  for (const t of Object.keys(A.OUTSIDE)) fs.mkdirSync(path.dirname(fileOf(t)), { recursive: true });
+  const flownRows = new Map([
+    ...readRows(rowsFile).filter((r) => r.ap?.sha256 === wasmSha && !A.OUTSIDE[r.theory ?? 'AP']),
+    ...Object.keys(A.OUTSIDE).flatMap((t) => readRows(fileOf(t)).filter((r) => r.theory === t)),
+  ].map((r) => [`${r.theory ?? 'AP'}|${r.key}|${r.arcH}`, r]));
   const rowOf = (theory, w, arc) => flownRows.get(`${theory}|${w.key}|${arc}`);
   // --retry-errors: a window whose row recorded an error (no truth, coverage, a failed fit or flight) is flown again; the later row is read in
   // its place
@@ -160,7 +168,7 @@ async function main() {
     const give = () => { if (next < todo.length) { const w = todo[next++]; child.send({ key: w.key, need: needOf(w) }); } else child.send({ stop: true }); };
     child.on('message', (m) => {
       if (m.rows) {
-        for (const r of m.rows) { fs.appendFileSync(rowsFile, `${JSON.stringify(r)}\n`); flownRows.set(`${r.theory ?? 'AP'}|${r.key}|${r.arcH}`, r); }
+        for (const r of m.rows) { fs.appendFileSync(fileOf(r.theory ?? 'AP'), `${JSON.stringify(r)}\n`); flownRows.set(`${r.theory ?? 'AP'}|${r.key}|${r.arcH}`, r); }
         flown += 1;
         if (flown % 50 === 0 || flown === todo.length) console.error(`  ${flown}/${todo.length} windows, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
       }
@@ -268,7 +276,12 @@ async function check() {
   const row = doc.rows?.[0];
   ok(doc.rows?.length === 1 && JSON.stringify(Object.keys(row ?? {})) === JSON.stringify(['regime', 'truth', 'fitData', 'fitHours', 'satellites', 'windows', 'ffm', 'within100mOfFfm', 'leads']) && row.regime === 'Laser geodetic' && row.truth === 'ILRS' && row.fitHours === 72 && row.satellites === 5, `the row: ${JSON.stringify(row)?.slice(0, 300)}`);
   ok(row?.ffm?.version === '2.2.0' && /^[0-9a-f]{64}$/.test(row.ffm.wasmSha256) && /ocean tides/.test(row.ffm.configuration) && !/Fbest|FFM/.test(row.ffm.configuration), `the numerical arm: ${JSON.stringify(row?.ffm)}`);
-  const sha12 = wasmSha.slice(0, 12), flown = lines(path.join(s1, 'table', sha12, 'rows.jsonl'));
+  // AP's and our XP's rows under the AP build, the Space Force XP's and SGP4's under their own builds, none in the other's place
+  const sha12 = wasmSha.slice(0, 12), moduleRows = lines(path.join(s1, 'table', sha12, 'rows.jsonl'));
+  const outsideFile = (store, t) => path.join(store, 'outside', A.OUTSIDE[t].key, 'rows.jsonl');
+  const outsideRows = Object.keys(A.OUTSIDE).flatMap((t) => (fs.existsSync(outsideFile(s1, t)) ? lines(outsideFile(s1, t)) : []));
+  ok(moduleRows.every((r) => ['AP', 'SGP4XP'].includes(r.theory) && r.ap?.sha256 === wasmSha) && outsideRows.every((r) => A.OUTSIDE[r.theory] && JSON.stringify(r.builds) === JSON.stringify(A.OUTSIDE[r.theory].builds)), 'rows in the wrong store or without their builds');
+  const flown = [...moduleRows, ...outsideRows];
   const apRows = new Map(flown.filter((r) => (r.theory ?? 'AP') === 'AP').map((r) => [r.key, r])), xpRows = new Map(flown.filter((r) => r.theory === 'SGP4XP').map((r) => [r.key, r]));
   const uRows = new Map(flown.filter((r) => r.theory === 'USSFXP').map((r) => [r.key, r])), sRows = new Map(flown.filter((r) => r.theory === 'SGP4').map((r) => [r.key, r]));
   ok([apRows, xpRows, uRows, sRows].every((m) => m.size === 55) && /propagator\/sgp4-xp/.test(doc.statistic) && /analysis\/gp-error-model/.test(doc.statistic), `rows flown: AP ${apRows.size}, XP ${xpRows.size}, Space Force XP ${uRows.size}, SGP4 ${sRows.size} (55 windows); the fitters named`);
@@ -293,7 +306,8 @@ async function check() {
   fs.writeFileSync(path.join(s2, A.NUMERICAL_STORE, 'rows-truth-0of1.jsonl'), gd.slice(1).map((r) => JSON.stringify(r)).join('\n') + '\n');
   fs.mkdirSync(path.join(s2, 'table', sha12), { recursive: true });
   const dropU = gd[0].key;
-  fs.writeFileSync(path.join(s2, 'table', sha12, 'rows.jsonl'), flown.filter((r) => !(r.theory === 'USSFXP' && r.key === dropU)).map((r) => JSON.stringify(r)).join('\n') + '\n');
+  fs.writeFileSync(path.join(s2, 'table', sha12, 'rows.jsonl'), moduleRows.map((r) => JSON.stringify(r)).join('\n') + '\n');
+  for (const t of Object.keys(A.OUTSIDE)) { fs.mkdirSync(path.dirname(outsideFile(s2, t)), { recursive: true }); fs.writeFileSync(outsideFile(s2, t), outsideRows.filter((r) => r.theory === t && !(t === 'USSFXP' && r.key === dropU)).map((r) => JSON.stringify(r)).join('\n') + '\n'); }
   const r2 = runIn(s2, out2, ['--theories', 'AP,SGP4XP,SGP4']);
   const b = fs.existsSync(out2) ? E.readJson(out2).rows?.[0] : null;
   ok(r2.code === 0 && /, 0 to fly/.test(r2.err), `the second run flew again: ${r2.err.slice(-200)}`);
