@@ -1,5 +1,7 @@
 # Registered confirmation: the catalog's AP construction, against the public set and against the registered construction
 
+> **Withdrawn, 2026-11-10.** The project's owner removed this study the day it was registered: it is not part of the project's goal, which is the propagator's own accuracy and speed. No registered part (1, 2 or H) will run, on 2027-01-12 or on any other day. This note changes the plan's bytes, so the plan no longer matches the hash in `registration.json` and the runner refuses every registered part, which is the intent. The text below is kept as a record of what was planned.
+
 Registration under [stack issue 312](https://github.com/DigitalArsenal/spacedatanetwork-stack/issues/312), second version, written on
 2026-11-10 after adversarial review 0 (findings C6-1 to C6-7 on the first version, C4-1 to C4-5 on the development rounds, and C6-8
 and C6-9 of its closing review) and aligned
