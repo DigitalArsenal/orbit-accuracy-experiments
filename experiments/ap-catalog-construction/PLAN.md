@@ -55,7 +55,7 @@ construction, including the GNSS inputs, as far as their products are in the arc
   - `dev-H`, part H's protocol on the provider's capture of 2026-10-23: 111 satellites scored from the capture time, of which 103 at
     MEO (98 served from the rapid orbit, 5 from public sets), 5 GEO, 2 HEO, 1 HIGH_LEO: under the rule below only MEO would get a
     statement. Its figures stay local with part H's (stack issue 288); its `table.json` has SHA-256
-    `f175c5a5976e314abc056d6b460c0372f43c933f046b64193615e193be24b055`.
+    `56a775da577f4c3213cb0e0c86fc8bca6da61b335324c637fd6dddd2d1f91915`.
 - Nothing of part 1, part 2 or part H has been read by this construction. The capture folder of part H has not been opened. Part 1's
   archive manifest was made from directory listings and the truth indexes (paths and byte counts); no file of its window was opened
   for its contents.
@@ -272,8 +272,10 @@ A registered part (1, 2, H) refuses to start unless all of these hold, and each 
   forecast by AP. In period B one satellite's CPF files move `MID_LEO` from 0.48 (public sets) to 0.40 (served) on the earlier plan's bootstrap; on the
   registered statistic both read 0.57, since the unit is the satellite.
 - Part 1's months were in AP's own development data (see above); only part 2 is unseen by the propagator.
-- The rounds chose twelve changes on periods A and B; this confirmation exists to see how much of that holds on sets unseen by the construction. The
-  development gains replayed out of sample were 0.3 to 3.2 % smaller than in sample (review 0, C4-5).
+- The rounds chose twelve changes on periods A and B; this confirmation exists to see how much of that holds on sets unseen by the construction. On the
+  rounds whose rows survived, the development gains replayed out of sample were 0.3 to 3.2 % smaller than in sample (review 0, C4-5);
+  the six rounds whose rows were deleted are rerun from their variant files after this plan is merged, and that rerun changes nothing
+  registered here.
 - Truth exists for about 150 satellites, all well-tracked payloads; debris and rocket bodies are not tested. GEO here is navigation
   satellites in inclined geosynchronous orbits; there is no open truth for commercial GEO. LOW_LEO and HEO have one or two satellites and
   receive no verdict.
@@ -297,7 +299,8 @@ level, without head-to-head tables.
   served and public record follows the made-up set's own SGP4 flight within 2 km over 72 h; the history arms see copies of the set at its
   own epoch, since a made-up history needs orbit mathematics this repository does not do); the maneuver cut on a made-up jump; a part
   that lists only CPF leaves a made-up ultra-rapid file closed, which a part that lists it opens; a made-up CPF file named outside the
-  window is never opened; the guards of "What is fixed before the run" tripped one by one; the order-statistic interval, the statistic
+  window is never opened; a made-up snapshot row created after the cutoff is not read, and of two revisions of a set the first created
+  is the set; the guards of "What is fixed before the run" tripped one by one; the order-statistic interval, the statistic
   and verdict, the catalog rule and part 2's rule on fixed numbers. It needs the module at the registered bytes and the weather archive;
   without them it says SKIPPED and fails.
 - `node experiments/ap-catalog-construction/table.mjs --part <N> --check`: the written table equals the table rebuilt from the rows.

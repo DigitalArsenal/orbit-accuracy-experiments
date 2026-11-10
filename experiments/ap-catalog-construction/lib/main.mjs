@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import zlib from 'node:zlib';
 import { execFileSync } from 'node:child_process';
 import { CONFIG, HERE, REPO, MODULES, DAY, sha256, wasmSha, tleMs, grid, classifyOrbitRegime, fitAp, flyAp, flySgp4, score, spwFor, freshHost, setArchiveCheck, archiveRead } from './engine.mjs';
 import { makeWindow, loadPublicSets, truthIndex, truthFor, truthCounts } from './sets.mjs';
@@ -102,6 +103,18 @@ async function check() {
   try { await INPUTS.U2(99901, Date.parse('2026-06-15T04:00:00Z'), guard); } catch { /* a made-up file is not an SP3 product */ }
   if (!opened.has(ult)) problems.push('with U2 listed, the ultra-rapid file was not even tried (the check proves nothing)');
   say(`inputs: made-up ultra-rapid file opened with part 1's list (P13): ${ultOpenedByPart1 ? 'yes' : 'no'}; with U2 listed: ${opened.has(ult) ? 'yes' : 'no'}; made-up CPF file named outside the window opened: ${cpfOutOpened ? 'yes' : 'no'}; inside: ${cpfInOpened ? 'yes' : 'no'}`);
+  // What existed (guard 7): a snapshot row created after the cutoff is not read, and of two revisions of a set the first created is the set.
+  const iso = (ms) => new Date(ms).toISOString().replace(/Z$/, '000'), row = (epochMs, createdMs, gpId) => ({ NORAD_CAT_ID: '99904', EPOCH: iso(epochMs),
+    CREATION_DATE: new Date(createdMs).toISOString().slice(0, 19), MEAN_MOTION: '14.6', ECCENTRICITY: '0.001', INCLINATION: '98.2', RA_OF_ASC_NODE: '120',
+    ARG_OF_PERICENTER: '90', MEAN_ANOMALY: '10', BSTAR: '0.00001', MEAN_MOTION_DOT: '0', MEAN_MOTION_DDOT: '0', GP_ID: String(gpId) });
+  const snapDir = path.join(root, 'spacetrack/gp/2026');
+  fs.mkdirSync(snapDir, { recursive: true });
+  fs.writeFileSync(path.join(snapDir, '2026-06-14.json.gz'), zlib.gzipSync(JSON.stringify([
+    row(t0 - 2 * DAY, t0 - 2 * DAY + 36e5, 2), row(t0 - 2 * DAY + 10e3, t0 - 2 * DAY + 3 * 36e5, 1), row(t0 - DAY, t0 + 36e5, 3)])));
+  const read = loadPublicSets({ fromMs: t0 - 5 * DAY, cutoffMs: t0, norads: [99904], guard: () => {}, archive: root })[0]?.tles ?? [];
+  const existed = read.length === 1 && read[0].gpId === 2;
+  if (!existed) problems.push(`the creation check: ${read.length} sets read (expected 1, GP_ID 2), GP_IDs ${read.map((x) => x.gpId).join(' ')}`);
+  say(`what existed: a snapshot row created after the cutoff read: ${read.some((x) => x.gpId === 3) ? 'yes' : 'no'}; of two revisions the set is the first created: ${read[0]?.gpId === 2 ? 'yes' : 'no'}`);
   setArchiveCheck(() => {});
   configureInputs({ allowed: [], fromMs: 0, toMs: 0 });
 

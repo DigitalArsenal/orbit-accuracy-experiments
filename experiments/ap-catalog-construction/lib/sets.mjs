@@ -28,9 +28,8 @@ export function makeWindow({ from, to, never = [] }) {
  * every row, snapshot or history, must be created by cutoffMs. A decayed object or one with no set in the last 30 days is left out.
  * Each set carries `createdMs`, so an arm's history can be limited to sets created no later than the current one.
  */
-export function loadPublicSets({ fromMs, cutoffMs, norads, guard }) {
+export function loadPublicSets({ fromMs, cutoffMs, norads, guard, archive = CONFIG.archive }) {
   guard(fromMs, cutoffMs, 'public sets');
-  const archive = CONFIG.archive;
   assertAllowedPath(archive);
   const cutoffIso = new Date(cutoffMs).toISOString().replace(/Z$/, '000'), cutoffDay = cutoffIso.slice(0, 10);
   const startDay = dayOf(fromMs), wanted = new Set(norads), byNorad = new Map();

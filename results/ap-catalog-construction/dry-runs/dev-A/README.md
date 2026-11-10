@@ -47,7 +47,7 @@ Error: RMS of 3D position over the 72 hours after the set's epoch, median km. Ra
 | MID_LEO | KM5 59, P13 11 | KM5 70 | D5 69, B3 1 |
 | HIGH_LEO | KH8 60, P13 5 | KH8 65 | D5 65 |
 | MEO | K12 567, U2 415, R3 347, P13 51, B3 3 | K12 1353, B3 27, K10 3 | D5 1034, B3 349 |
-| GEO | KG8c 84, B3 6, R3 23 | KG8c 106, B3 7 | B3 19, D5 94 |
+| GEO | B3 6, KG8c 84, R3 23 | B3 7, KG8c 106 | B3 19, D5 94 |
 | HEO | H5F7 9, P13 4, R3 6 | H5F7 17, B3 2 | D5 11, B3 8 |
 
 ## By day from the set's epoch: served / set and served / earlier (point estimates)

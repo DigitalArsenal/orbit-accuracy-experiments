@@ -51,7 +51,7 @@
   "history": { "priorWindowDays": 21, "lookbackExtraDays": 3, "minimumSets": 3, "minimumGridShare": 0.8 },
   "fit": {
     "atmosphere": "NRLMSISE00",
-    "weather": "observed values through the last full UTC day before the set's epoch (operator-grade arms and part H: before t0, the capture time), the builder's recurrence forecast after it (amendment A3 of ap-from-public-sets, item 5)",
+    "weather": "observed values through the last full UTC day before the set's epoch (orbit-product arms and part H: before t0, the capture time), the builder's recurrence forecast after it (amendment A3 of ap-from-public-sets, item 5)",
     "tesseralDegree": 31,
     "tesseralOffAboveEccentricity": 0.048,
     "zonalDegree": 20,

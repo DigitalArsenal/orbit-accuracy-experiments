@@ -1,4 +1,4 @@
-// The operator-grade inputs of experiments/ap-catalog-construction (PLAN.md, config.json "inputs"): ILRS CPF predictions, ESA
+// The orbit-product inputs of experiments/ap-catalog-construction (PLAN.md, config.json "inputs"): ILRS CPF predictions, ESA
 // ultra-rapid and GFZ rapid GNSS orbits, read from the archive only, each under its issue rule. Every file is read and carried to
 // GCRF by the modules that made the truth: data-source/cpf-source (CPF), files/orbit-products (SP3), data-source/eop-parser (IERS
 // rows) and analysis/reference-states (ITRS to GCRS, time scales). Host side: finding files, reading header dates, framing.
@@ -24,7 +24,7 @@ const { gnssIdentities } = await imp(path.join(REPO, 'experiments/e4-operator-ep
 const typeRef = (code) => ({ schemaName: `${code}.fbs`, fileIdentifier: `$${code}`, rootTypeName: code, wireFormat: 'flatbuffer' });
 const I = CONFIG.inputs;
 
-/** What a run lets this layer read: the operator-grade arms its part lists, the window of dates it may read (a file whose name dates
+/** What a run lets this layer read: the orbit-product arms its part lists, the window of dates it may read (a file whose name dates
  *  it outside is never opened), and the archive root (`run.mjs --check` points it at made-up files). */
 const RUN = { allowed: new Set(), fromMs: -Infinity, toMs: Infinity, root: CONFIG.archive };
 export function configureInputs({ allowed, fromMs, toMs, root = CONFIG.archive }) {
