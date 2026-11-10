@@ -171,7 +171,7 @@ const integrator = { tolerance: 1e-10, maxStep: 120, minStep: 1e-4 };
 const COST_NOTE = { ffm: { integrator: 'RK78', tolerance: integrator.tolerance, maxStepSeconds: integrator.maxStep, gravity: '70x70', outputSeconds: THIN_MS / 1000 }, xp: 'the theory\'s own grid; output at 300 s', sgp4: 'analytic; output at 300 s' };
 
 const M = await openModules();
-// --ap-arms '[{name, tesseral, zonal, atmosphere, noTerms, fit}]': AP (SGP4XP with parts replaced) arms beside X0 and X2.
+// --ap-arms '[{name, tesseral, zonal, atmosphere, noTerms, fit}]': AP arms (propagator/sdn-ap, THEORY AP, with the FORCES and FIT given) beside X0 and X2.
 const AP_ARMS = args['ap-arms'] ? JSON.parse(args['ap-arms']) : null;
 const A = await openAp();
 const G = await openSgp4Fit();

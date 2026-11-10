@@ -2,7 +2,7 @@
 
 ## Reading
 
-AP is SGP4-XP with parts replaced: NRLMSISE-00 for the atmosphere, tesseral gravity, the zonal tail to J20, every first-order tesseral term to degree 12, near-resonant terms, states carried to TEME of their date, and since version 0.4.11 the fit's full precision, half-day tesseral terms to degree 31 and the third bodies' terms to degree 10. Against precise orbits, on forecasts it was never tuned on, its median error at days 1, 2, 3 and 7 is 0.13, 0.59, 1.45 and 11.7 km in low orbit with strong drag, and 0.012, 0.018, 0.025 and 0.069 km in medium Earth orbit.
+AP is an advanced propagator that builds on the entire history of astrodynamics. The models in these builds: NRLMSISE-00 for the atmosphere, tesseral gravity, the zonal tail to J20, every first-order tesseral term to degree 12, near-resonant terms, states carried to TEME of their date, and since version 0.4.11 the fit's full precision, half-day tesseral terms to degree 31 and the third bodies' terms to degree 10. Against precise orbits, on forecasts it was never tuned on, its median error at days 1, 2, 3 and 7 is 0.13, 0.59, 1.45 and 11.7 km in low orbit with strong drag, and 0.012, 0.018, 0.025 and 0.069 km in medium Earth orbit.
 
 What it means: in low orbit AP's gain is largest early. Against AP 0.3.0, 0.4.0 is 21.5 % closer at day 1, 2.2 % at day 2, and level after that, because by then the error is the density forecast. In medium Earth orbit 0.4.0 is 43 % closer at days 1 to 3 and 34 % at day 7, so the gravity terms and the frame now pay there, where 0.3.0 added nothing over XP with solar pressure free.
 
