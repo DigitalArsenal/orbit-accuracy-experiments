@@ -64,8 +64,8 @@
  },
 
  "toRegister": [
-  "The operator-grade arms (U2, R3, P13) can only be tested in the reserved period (sets 2026-03-01 to 05-31) if the archive holds those products then; today it does not (ultra-rapid from 08-01, rapid 10-11 to 10-22, CPF for 4 satellites from 2025-10 and Galileo for one week): see needs-collection.md. Without a back-fill, register the public-set arms and the served rule, and the operator-grade arms as conditional (served only where the product exists), and say which classes they can reach.",
-  "The issue rules of the operator-grade arms read file metadata (CPF H1 production time, CDDIS Last-Modified, ultra-rapid start + 26 h); register them as written here.",
-  "EOP: the input conversions used IERS files of 2026-10-09 (ultra-rapid, CPF) and 2026-11-04 (rapid), i.e. EOP as known after t0; the effect is centimetres, below anything measured, but a registration should name the file or use the one as known at t0."
+  "The orbit-product arms (U2, R3, P13) can only be tested in the reserved period (sets 2026-03-01 to 05-31) if the archive holds those products then; today it does not (ultra-rapid from 08-01, rapid 10-11 to 10-22, CPF for 4 satellites from 2025-10 and Galileo for one week): see needs-collection.md. Without a back-fill, register the public-set arms and the served rule, and the orbit-product arms as conditional (served only where the product exists), and say which classes they can reach.",
+  "The issue rules of the orbit-product arms read file metadata (CPF H1 production time, CDDIS Last-Modified, ultra-rapid start + 26 h). As registered after review 0: ultra-rapid start + 27 h (the IGS schedule; the archive keeps no publication time), CPF files named outside a run's window never opened.",
+  "EOP: the input conversions used IERS files of 2026-10-09 (ultra-rapid, CPF) and 2026-11-04 (rapid), i.e. EOP as known after t0; the effect is decimetres (0.1 to 0.7 m at 0 to 3 days, measured by review 0, C6-7), below anything measured here, but a registration should name the file or use the one as known at t0."
  ]
 }

@@ -22,8 +22,16 @@ const { asLines, sp3Descriptor } = await imp(path.join(REPO, 'experiments/supgp-
 const { unpackOem } = await imp(path.join(REPO, 'experiments/supgp-omm/lib/records.mjs'));
 const { gnssIdentities } = await imp(path.join(REPO, 'experiments/e4-operator-ephemeris-parity/sp3.mjs'));
 const typeRef = (code) => ({ schemaName: `${code}.fbs`, fileIdentifier: `$${code}`, rootTypeName: code, wireFormat: 'flatbuffer' });
-const A = (rel) => path.join(CONFIG.archive, rel);
 const I = CONFIG.inputs;
+
+/** What a run lets this layer read: the operator-grade arms its part lists, the window of dates it may read (a file whose name dates
+ *  it outside is never opened), and the archive root (`run.mjs --check` points it at made-up files). */
+const RUN = { allowed: new Set(), fromMs: -Infinity, toMs: Infinity, root: CONFIG.archive };
+export function configureInputs({ allowed, fromMs, toMs, root = CONFIG.archive }) {
+  Object.assign(RUN, { allowed: new Set(allowed), fromMs, toMs, root });
+  ultList = null; rapList = null; cpfList = null;
+}
+const A = (rel) => path.join(RUN.root, rel);
 
 async function harness(dir, config) {
   return createBrowserModuleHarness({ wasmSource: fs.readFileSync(path.join(MODULES, dir, 'dist/isomorphic/module.wasm')),
@@ -108,14 +116,16 @@ async function productStates(file, args) {
   return converted.get(key);
 }
 
-// ---- ESA ultra-rapid (U2): issue rule start + 26 h <= t0 (and t0 - start <= 32 h) ----
+// ---- ESA ultra-rapid (U2): issue rule start + 27 h <= t0 (and t0 - start <= 33 h); files named outside the window are not opened ----
 let ultList = null;
 const ultFiles = () => {
   ultList ??= (fs.existsSync(A(I.ultraRapid.root)) ? fs.readdirSync(A(I.ultraRapid.root)) : []).map((f) => ({ f, m: new RegExp(I.ultraRapid.pattern).exec(f) })).filter((x) => x.m)
-    .map(({ f, m }) => ({ file: path.join(A(I.ultraRapid.root), f), startMs: Date.UTC(+m[1], 0, 1) + (+m[2] - 1) * DAY + +m[3] * HOUR + +m[4] * 60000 })).sort((a, b) => a.startMs - b.startMs);
+    .map(({ f, m }) => ({ file: path.join(A(I.ultraRapid.root), f), startMs: Date.UTC(+m[1], 0, 1) + (+m[2] - 1) * DAY + +m[3] * HOUR + +m[4] * 60000 }))
+    .filter((x) => x.startMs >= RUN.fromMs && x.startMs + 2 * DAY <= RUN.toMs).sort((a, b) => a.startMs - b.startMs);
   return ultList;
 };
 export async function ultraRapid(norad, t0, guard) {
+  if (!RUN.allowed.has('U2')) return null; // not an input of this part: not even listed
   const usable = ultFiles().filter((f) => f.startMs + I.ultraRapid.issueAfterStartHours * HOUR <= t0);
   const newest = usable.at(-1);
   if (!newest || t0 - newest.startMs > I.ultraRapid.maximumAgeHours * HOUR) return null;
@@ -140,13 +150,16 @@ const rapFiles = () => {
     for (const w of fs.existsSync(root) ? fs.readdirSync(root) : []) for (const f of fs.readdirSync(path.join(root, w))) {
       const m = new RegExp(I.rapid.pattern).exec(f), prov = path.join(root, w, `${f}.provenance.json`);
       if (!m || !fs.existsSync(prov)) continue;
-      rapList.push({ file: path.join(root, w, f), startMs: Date.UTC(+m[1], 0, 1) + (+m[2] - 1) * DAY, issuedMs: Date.parse(JSON.parse(fs.readFileSync(prov, 'utf8')).lastModified) });
+      const startMs = Date.UTC(+m[1], 0, 1) + (+m[2] - 1) * DAY;
+      if (startMs < RUN.fromMs || startMs + DAY > RUN.toMs) continue; // named outside the window: not opened
+      rapList.push({ file: path.join(root, w, f), startMs, issuedMs: Date.parse(JSON.parse(fs.readFileSync(prov, 'utf8')).lastModified) });
     }
     rapList.sort((a, b) => a.startMs - b.startMs);
   }
   return rapList;
 };
 export async function rapid(norad, t0, guard) {
+  if (!RUN.allowed.has('R3')) return null;
   const arm = CONFIG.arms.R3;
   const take = []; // newest first: the files out by t0 that hold the satellite, within arm.days of the newest such file
   for (const f of rapFiles().filter((x) => x.issuedMs <= t0).reverse()) {
@@ -168,7 +181,9 @@ function cpfFiles() {
   if (cpfList) return cpfList;
   cpfList = [];
   const headOf = (file) => { const fd = fs.openSync(file, 'r'), b = Buffer.alloc(512); const n = fs.readSync(fd, b, 0, 512, 0); fs.closeSync(fd); return b.subarray(0, n); };
-  const add = (file, name, retrievedMs, gz) => { // the H1 and H2 header records only
+  const add = (file, name, retrievedMs, gz) => { // the H1 and H2 header records only, of a file named inside the window
+    const dm = /_cpf_(\d\d)(\d\d)(\d\d)_/.exec(name), named = Date.UTC(2000 + +dm[1], +dm[2] - 1, +dm[3]);
+    if (named < RUN.fromMs || named > RUN.toMs) return; // named outside the window: never opened
     const head = (gz ? zlib.gunzipSync(fs.readFileSync(file)) : headOf(file)).toString('latin1').split('\n', 4);
     const h1 = head.find((l) => l.startsWith('H1'))?.trim().split(/\s+/), h2 = head.find((l) => l.startsWith('H2'))?.trim().split(/\s+/);
     if (!h1 || !h2) return;
@@ -204,6 +219,7 @@ async function cpfGcrf(c, t0) {
   return f ? oemStates(f.payload).states : null;
 }
 export async function cpf(norad, t0, guard) {
+  if (!RUN.allowed.has('P13')) return null;
   const arm = CONFIG.arms.P13;
   const cands = cpfFiles().filter((c) => c.norad === norad && c.dayMs <= t0 && c.dayMs >= t0 - arm.nameDateWithinDays * DAY && c.producedMs <= t0 && (c.retrievedMs == null || c.retrievedMs <= t0))
     .sort((a, b) => b.dayMs - a.dayMs || b.name.localeCompare(a.name));
@@ -220,3 +236,5 @@ export async function cpf(norad, t0, guard) {
 }
 
 export const INPUTS = { P13: cpf, U2: ultraRapid, R3: rapid };
+/** Loads the readers' own framing module now (`run.mjs --pin` registers every file a part can execute). */
+export const preloadReaders = () => imp(path.join(MODULES, 'data-source/eop-parser/tests/frames.mjs'));

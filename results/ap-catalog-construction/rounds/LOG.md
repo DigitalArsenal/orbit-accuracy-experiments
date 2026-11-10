@@ -8,6 +8,22 @@ Module `propagator/sdn-ap` 0.6.5 (`f0b8352a43f3`), weather forecaster `68cb063ab
 `experiments/ap-catalog-construction/`. Head-to-head tables against the provider's XP sets were computed locally (statistics only); they
 are left out here and await the owner's decision on publication (stack issue 288).
 
+**Corrections after adversarial review 0 (2026-11-10), findings C4-1 to C4-5.**
+- C4-1. The rounds' head to head has one set per satellite from one capture. Under 6 satellites (mid low orbit: 2; the two eccentric
+  Galileo satellites: 2) no 95 % interval exists, and the inclined-geosynchronous figure's order-statistic interval spans 1. Only two
+  statements stand: navigation satellites at MEO with a GNSS rapid orbit as input (105 satellites), and high low orbit from public sets
+  (6 satellites of one day, all 6 closer). Their figures stay local with the tables.
+- C4-2. "GEO" and "HEO" below are the plan's classes by orbit. In these data GEO is six to eight navigation satellites in inclined
+  geosynchronous orbits (QZSS, BeiDou IGSO; no geostationary satellite), HEO is Galileo 5 and 6, and MEO is navigation satellites plus
+  LAGEOS and Etalon. The largest gains (rounds 1 to 3) are mostly the input, a GNSS analysis-centre orbit, rather than the propagator.
+  The dry run dev-H fits the XP theory to the same rapid-orbit states (`XPsame`) to separate the two; its figures stay local.
+- C4-3. The rounds' head to head was scored from the provider's set epoch, an instant at which no user had that set. The registered
+  protocol scores from the capture time (dry run dev-H of the registered runner on the same capture); from the capture time the
+  public-set-only record at MEO is further behind the provider than the rounds' figure said. Both figures stay local.
+- C4-4. Mid low orbit from public sets is about half the set's error over both development periods (0.51, 0.26 to 0.71; 10
+  satellites, 17 weeks; the ratio by week ranges 0.28 to 0.86). The two-satellite head-to-head figure is not quoted anywhere.
+- C4-5. The rows of rounds 4, 6, 7, 8, 13 and 14 were deleted for disk; they are regenerated from their variant files and the selection test over every variant is reported in the next revision of this log.
+
 Periods by set epoch: A = 2026-09-05 to 10-28 (history from 08-15), B = 2026-06-01 to 08-10 (history from 06-01: the runner refuses any
 set before 06-01, so B's first week has no history arm, unlike the registered run, which read sets back to 05-24). Truth: the registered
 families (PLAN.md) with amendment A1's count. Ratios: the plan's paired ratio to the set on SGP4 (median of logs, 95 % interval from
@@ -37,9 +53,9 @@ most 1.7e-8 relative (floating point); the class table restricted to those sets 
 | LOW_LEO | 0 / 0 | | | | 1 / 23 | 1.611 | 1.555 | 0.87 FEW |
 | MID_LEO | 8 / 40 | 0.685 | 0.527 | 0.65 (0.33-0.88) | 10 / 94 | 0.673 | 0.331 | 0.50 (0.20-0.75) |
 | HIGH_LEO | 8 / 59 | 0.598 | 0.112 | 0.22 (0.18-0.49) | 14 / 284 | 0.592 | 0.136 | 0.29 (0.23-0.41) |
-| MEO | 106 / 1330 | 1.233 | 1.200 | 0.97 (0.96-0.98) | 107 / 1557 | 1.250 | 1.201 | 0.97 (0.96-0.98) |
-| GEO | 8 / 110 | 2.626 | 1.891 | 0.80 (0.72-0.95) | 8 / 100 | 2.777 | 2.248 | 0.84 (0.74-0.98) |
-| HEO | 2 / 18 | 1.618 | 1.480 | 0.96 FEW | 2 / 28 | 1.720 | 1.640 | 0.95 FEW |
+| MEO (navigation satellites, LAGEOS, Etalon) | 106 / 1330 | 1.233 | 1.200 | 0.97 (0.96-0.98) | 107 / 1557 | 1.250 | 1.201 | 0.97 (0.96-0.98) |
+| GEO (navigation satellites, inclined geosynchronous) | 8 / 110 | 2.626 | 1.891 | 0.80 (0.72-0.95) | 8 / 100 | 2.777 | 2.248 | 0.84 (0.74-0.98) |
+| HEO (Galileo 5 and 6) | 2 / 18 | 1.618 | 1.480 | 0.96 FEW | 2 / 28 | 1.720 | 1.640 | 0.95 FEW |
 
 **Head to head against the provider's XP sets (capture of 2026-10-23).** Computed locally, statistics only; the tables exist locally
 and await the owner's decision on publication.
@@ -57,7 +73,7 @@ GCRF by the modules that made the truth (files/orbit-products, data-source/eop-p
 analysis/reference-states). Check: against ESA final truth at the same instants, 1 to 7 cm on the observed half, 6 to 9 cm on the
 predicted half (4 satellites).
 
-**Hypothesis.** Where an operator-grade predicted orbit exists, AP fitted to it beats anything made from public sets.
+**Hypothesis.** Where an precise predicted orbit exists, AP fitted to it beats anything made from public sets.
 
 **Change.** New served arm for MEO, `U2`: AP fitted to the newest ESA ultra-rapid file that could have been had at t0 (its start at
 least 26 h before t0, the operator-theory VENDORS.md rule; at most 32 h), all 48 h of it (24 h solved, 24 h predicted), plus the solved
@@ -130,7 +146,7 @@ and the two eccentric navigation satellites): GEO 0.058 against 0.054 km, HEO 0.
 
 | Class | Sats / sets | Set km | D5 km | R3 km | R3 / set | R3 by day 1 / 3 / 5 / 7 (km) |
 | --- | --: | --: | --: | --: | --- | --- |
-| MEO | 96 / 305 | 1.265 | 1.239 | 0.0341 | 0.028 (0.02-0.04) | 0.021 / 0.047 / 0.084 / 0.128 |
+| MEO (navigation satellites, LAGEOS, Etalon) | 96 / 305 | 1.265 | 1.239 | 0.0341 | 0.028 (0.02-0.04) | 0.021 / 0.047 / 0.084 / 0.128 |
 | GEO (QZSS, BeiDou IGSO) | 7 / 23 | 2.185 | 1.219 | 0.0544 | 0.026 (0.00-0.04) | 0.025 / 0.078 / 0.143 / 0.258 |
 | HEO (two navigation satellites, e 0.16) | 2 / 4 | 1.901 | 1.924 | 0.0790 | 0.049 | 0.056 / 0.103 / 0.173 / 0.299 |
 
@@ -140,7 +156,7 @@ owner's decision on publication.
 **Period B.** No rapid file in the archive for June to August: the arm does not exist there; no B class moves.
 
 **Decision: KEPT, confirmed on period A only** (same reason as round 1). Served ratio to the set on A: MEO 0.88 -> 0.07 (0.702 ->
-0.058 km: with U2, R3 and P13 more than half of A's MEO sets now have an operator-grade input), GEO 0.80 -> 0.73 (1.891 -> 1.538 km),
+0.058 km: with U2, R3 and P13 more than half of A's MEO sets now have an orbit-product input (CPF prediction, GNSS ultra-rapid or rapid orbit)), GEO 0.80 -> 0.73 (1.891 -> 1.538 km),
 HEO 0.86 -> 0.11 (FEW).
 
 **Fit-parameter finding that sets up round 4.** AGOM (radiation area-to-mass) fitted to precise inputs is tight: MEO median 0.023
@@ -420,12 +436,12 @@ in the head to head with every arm it needs, and in an information-matched varia
 | --- | --- | --- |
 | MID_LEO | 0.65 -> 0.55 | 0.50 -> 0.39 |
 | HIGH_LEO | 0.22 -> 0.18 | 0.29 -> 0.24 |
-| MEO | 0.97 -> 0.07 (public sets only 0.89) | 0.97 -> 0.86 |
-| GEO | 0.80 -> 0.56 (public only 0.63) | 0.84 -> 0.72 |
+| MEO (navigation satellites, LAGEOS, Etalon) | 0.97 -> 0.07 (public sets only 0.89) | 0.97 -> 0.86 |
+| GEO (navigation satellites, inclined geosynchronous) | 0.80 -> 0.56 (public only 0.63) | 0.84 -> 0.72 |
 | HEO (FEW) | 0.96 -> 0.11 (public only 0.81) | 0.95 -> 0.78 |
 | LOW_LEO (FEW) | no set | 0.87 -> 0.87 |
 
-The head-to-head tables (round 0 and final, with and without operator-grade inputs, and information matched) exist locally and await
+The head-to-head tables (round 0 and final, with and without orbit-product inputs (CPF predictions, GNSS ultra-rapid and rapid orbits), and information matched) exist locally and await
 the owner's decision on publication.
 
 **Decision.** The construction stands as written in `final-construction.json`, registered as `experiments/ap-catalog-construction`.

@@ -136,9 +136,23 @@ export function score(positions, truth, fromMs, perDay, days = CONFIG.scoring.da
 }
 
 const spwCache = new Map();
-/** The weather table as known on the day of `ms` (the registered builder's window: 45 days before to 50 after). */
+/** The weather table with observed values through the last full UTC day before `ms` and the builder's recurrence forecast after it
+ *  (amendment A3 of ap-from-public-sets, item 5); the builder's window runs 45 days before to 50 after. */
 export function spwFor(ms) {
-  const day = dayOf(ms);
-  if (!spwCache.has(day)) spwCache.set(day, buildSpaceWeather({ firstDate: dayOf(ms - 45 * DAY), lastDate: dayOf(ms + 50 * DAY), cutoffDate: day }).bytes);
-  return spwCache.get(day);
+  const cutoff = dayOf(Math.floor(ms / DAY) * DAY - 1);
+  if (!spwCache.has(cutoff)) spwCache.set(cutoff, buildSpaceWeather({ firstDate: dayOf(ms - 45 * DAY), lastDate: dayOf(ms + 50 * DAY), cutoffDate: cutoff }).bytes);
+  return spwCache.get(cutoff);
 }
+
+// ---- the archive guard: every file read under the archive root passes the part's check first (lib/guards.mjs manifestGuard) ----
+let archiveCheck = () => {}, archiveRoot = CONFIG.archive;
+export const archiveRead = new Set();
+/** `fn(path)` runs before every read of a file under `root` (default: the archive); it throws to refuse the read. */
+export function setArchiveCheck(fn, root = CONFIG.archive) { archiveCheck = fn; archiveRoot = root; }
+const guarded = (fn) => function (p, ...rest) {
+  if (typeof p === 'string' && p.startsWith(`${archiveRoot}/`)) { archiveCheck(p); archiveRead.add(path.relative(archiveRoot, p)); }
+  return fn.call(this, p, ...rest);
+};
+fs.readFileSync = guarded(fs.readFileSync);
+fs.openSync = guarded(fs.openSync);
+(await import('node:module')).syncBuiltinESMExports();

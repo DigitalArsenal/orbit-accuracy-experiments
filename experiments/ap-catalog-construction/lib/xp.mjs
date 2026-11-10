@@ -17,21 +17,22 @@ const flatbuffers = await import(pathToFileURL(req.resolve('flatbuffers')).href)
 const [OEM, OMM, OCM, RFM] = await Promise.all(['OEM', 'OMM', 'OCM', 'RFM'].map((c) => import(pathToFileURL(path.join(standards, `lib/js/${c}/main.js`)).href)));
 const TYPE = (name) => ({ schemaName: `${name}.fbs`, fileIdentifier: `$${name}`, rootTypeName: name, wireFormat: 'flatbuffer' });
 
-/** A grid of explicit epochs as a size-prefixed GCRF $OEM (the module's propagate takes its instants from it). */
-function gridBytes(isoEpochs) {
+/** A size-prefixed GCRF $OEM of lines [{ epoch, r, v }]: a grid of instants for propagate (zero states), or a fit's ephemeris. */
+function oemBytes(lines, norad = 0) {
   const t = Object.assign(new OEM.OEMT(), { CCSDS_OEM_VERS: 2.0, CREATION_DATE: '', ORIGINATOR: 'local' });
   const b = new OEM.ephemerisDataBlockT();
-  b.OBJECT = Object.assign(new OEM.CATT(), { OBJECT_NAME: '', OBJECT_ID: '', NORAD_CAT_ID: 0 });
+  b.OBJECT = Object.assign(new OEM.CATT(), { OBJECT_NAME: '', OBJECT_ID: '', NORAD_CAT_ID: norad });
   b.CENTER_NAME = 'EARTH';
   b.REFERENCE_FRAME = Object.assign(new RFM.RFMT(RFM.RFMUnion.CelestialFrameWrapper, new RFM.CelestialFrameWrapperT(RFM.CelestialFrame.GCRF)), { NAME: 'GCRF' });
   b.TIME_SYSTEM = OEM.timingStandard.UTC;
-  b.START_TIME = isoEpochs[0]; b.STOP_TIME = isoEpochs.at(-1);
-  b.EPHEMERIS_DATA_LINES = isoEpochs.map((epoch) => Object.assign(new OEM.ephemerisDataLineT(), { EPOCH: epoch, X: 0, Y: 0, Z: 0, X_DOT: 0, Y_DOT: 0, Z_DOT: 0 }));
+  b.START_TIME = lines[0].epoch; b.STOP_TIME = lines.at(-1).epoch;
+  b.EPHEMERIS_DATA_LINES = lines.map((l) => Object.assign(new OEM.ephemerisDataLineT(), { EPOCH: l.epoch, X: l.r?.[0] ?? 0, Y: l.r?.[1] ?? 0, Z: l.r?.[2] ?? 0, X_DOT: l.v?.[0] ?? 0, Y_DOT: l.v?.[1] ?? 0, Z_DOT: l.v?.[2] ?? 0 }));
   t.EPHEMERIS_DATA_BLOCK = [b];
-  const builder = new flatbuffers.Builder(1 << 16);
+  const builder = new flatbuffers.Builder(Math.max(1 << 16, lines.length * 128));
   OEM.OEM.finishSizePrefixedOEMBuffer(builder, t.pack(builder));
   return builder.asUint8Array().slice();
 }
+const gridBytes = (isoEpochs) => oemBytes(isoEpochs.map((epoch) => ({ epoch })));
 /** A two-line set's fields (G1 lib/tle.mjs setOf) as the SGP4XP $OMM the module ingests (BTERM in BSTAR, AGOM in MEAN_MOTION_DDOT). */
 function xpOmmBytes(s) {
   const t = Object.assign(new OMM.OMMT(), {
@@ -57,19 +58,29 @@ export async function openXp() {
     if (r.statusCode !== 0) throw new Error(`${X.module} ${methodId}: ${r.errorCode ?? r.statusCode}`);
     return Object.fromEntries(r.outputs.map((o) => [o.portId, Buffer.from(o.payload)]));
   };
+  const flyOcm = async (ocm, msList) => {
+    const eph = (await call('propagate', [{ portId: 'ocm', typeRef: TYPE('OCM'), payload: ocm }, { portId: 'grid', typeRef: TYPE('OEM'), payload: Buffer.from(gridBytes(msList.map((t) => new Date(t).toISOString()))) }])).ephemeris;
+    const e = new Uint8Array(eph);
+    const blk = (String.fromCharCode(...e.slice(8, 12)) === '$OEM' ? OEM.OEM.getSizePrefixedRootAsOEM(new flatbuffers.ByteBuffer(e)) : OEM.OEM.getRootAsOEM(new flatbuffers.ByteBuffer(e))).EPHEMERIS_DATA_BLOCK(0);
+    if (blk.ephemerisDataLinesLength() !== msList.length) throw new Error(`${X.module} propagate returned ${blk.ephemerisDataLinesLength()} of ${msList.length}`);
+    const r = [];
+    for (let i = 0; i < msList.length; i += 1) { const l = blk.EPHEMERIS_DATA_LINES(i); r.push([l.X(), l.Y(), l.Z()]); }
+    return r;
+  };
   return {
+    /** The XP theory fitted by the module's own `fit` to the given GCRF states (the same input our record was fitted to), flown to msList. */
+    async fitAndFly(norad, states, msList) {
+      try {
+        const ocm = (await call('fit', [{ portId: 'ephemeris', typeRef: TYPE('OEM'), payload: Buffer.from(oemBytes(states, norad)) }])).elements;
+        return { r: await flyOcm(ocm, msList) };
+      } catch (error) { return { error: String(error.message).slice(0, 80) }; }
+    },
     async flyXp(s, msList) {
       const ocm = (await call('ingest_omm', [{ portId: 'omm', typeRef: TYPE('OMM'), payload: Buffer.from(xpOmmBytes(s)) }])).ocm;
       const u = new Uint8Array(ocm), prefixed = String.fromCharCode(...u.slice(8, 12)) === '$OCM';
       const me = (prefixed ? OCM.OCM.getSizePrefixedRootAsOCM(new flatbuffers.ByteBuffer(u)) : OCM.OCM.getRootAsOCM(new flatbuffers.ByteBuffer(u))).unpack().MEAN_ELEMENTS;
       const ingestKept = Math.abs(utcMs(me.EPOCH) - s.epochMs) < 1 && me.BTERM === s.bstar && me.AGOM === s.agom;
-      const eph = (await call('propagate', [{ portId: 'ocm', typeRef: TYPE('OCM'), payload: ocm }, { portId: 'grid', typeRef: TYPE('OEM'), payload: Buffer.from(gridBytes(msList.map((t) => new Date(t).toISOString()))) }])).ephemeris;
-      const e = new Uint8Array(eph);
-      const blk = (String.fromCharCode(...e.slice(8, 12)) === '$OEM' ? OEM.OEM.getSizePrefixedRootAsOEM(new flatbuffers.ByteBuffer(e)) : OEM.OEM.getRootAsOEM(new flatbuffers.ByteBuffer(e))).EPHEMERIS_DATA_BLOCK(0);
-      if (blk.ephemerisDataLinesLength() !== msList.length) throw new Error(`${X.module} propagate returned ${blk.ephemerisDataLinesLength()} of ${msList.length}`);
-      const r = [];
-      for (let i = 0; i < msList.length; i += 1) { const l = blk.EPHEMERIS_DATA_LINES(i); r.push([l.X(), l.Y(), l.Z()]); }
-      return { r, ingestKept };
+      return { r: await flyOcm(ocm, msList), ingestKept };
     },
     destroy: () => h.destroy(),
   };

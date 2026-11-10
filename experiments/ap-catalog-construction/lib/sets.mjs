@@ -23,8 +23,10 @@ export function makeWindow({ from, to, never = [] }) {
 
 /**
  * The public sets of the listed objects with epochs in [fromMs, cutoffMs] and created by cutoffMs: Space-Track's daily GP snapshots and
- * gp_history by creation date, as the five-day pipeline's loader reads them (gp-history-loader.mjs), less its hold list. Sets with
- * epochs within 60 s of each other are one set (the higher GP_ID); a decayed object or one with no set in the last 30 days is left out.
+ * gp_history by creation date, as the five-day pipeline's loader reads them (gp-history-loader.mjs), less its hold list, and with
+ * amendment A3's reading rule of ap-from-public-sets: of the revisions of a set (epochs within 60 s), the one created first is the set;
+ * every row, snapshot or history, must be created by cutoffMs. A decayed object or one with no set in the last 30 days is left out.
+ * Each set carries `createdMs`, so an arm's history can be limited to sets created no later than the current one.
  */
 export function loadPublicSets({ fromMs, cutoffMs, norads, guard }) {
   guard(fromMs, cutoffMs, 'public sets');
@@ -32,12 +34,13 @@ export function loadPublicSets({ fromMs, cutoffMs, norads, guard }) {
   assertAllowedPath(archive);
   const cutoffIso = new Date(cutoffMs).toISOString().replace(/Z$/, '000'), cutoffDay = cutoffIso.slice(0, 10);
   const startDay = dayOf(fromMs), wanted = new Set(norads), byNorad = new Map();
-  const ingest = (arr, snapshot) => {
+  const ingest = (arr) => {
     for (const r of arr) {
       const norad = Number(r.NORAD_CAT_ID);
       if (!wanted.has(norad)) continue;
       if (r.DECAY_DATE && r.DECAY_DATE <= cutoffDay) continue;
-      if (!snapshot && r.CREATION_DATE && r.CREATION_DATE > cutoffIso.slice(0, 19)) continue;
+      const createdMs = r.CREATION_DATE ? utcMs(r.CREATION_DATE) : NaN;
+      if (!(createdMs <= cutoffMs)) continue; // no creation time, or created after the cutoff: not out yet
       if (!r.EPOCH || r.EPOCH > cutoffIso) continue;
       const n = Number(r.MEAN_MOTION), e = Number(r.ECCENTRICITY);
       if (!(n > 0.05) || !(e >= 0 && e < 0.995)) continue;
@@ -48,24 +51,25 @@ export function loadPublicSets({ fromMs, cutoffMs, norads, guard }) {
       if (!byNorad.has(norad)) byNorad.set(norad, []);
       byNorad.get(norad).push({ norad, epoch: r.EPOCH, whole: jd.whole, frac: jd.frac, n, e, inc: Number(r.INCLINATION), raan: Number(r.RA_OF_ASC_NODE),
         argp: Number(r.ARG_OF_PERICENTER), ma: Number(r.MEAN_ANOMALY), bstar: Number(r.BSTAR) || 0, ndot: Number(r.MEAN_MOTION_DOT) || 0,
-        nddot: Number(r.MEAN_MOTION_DDOT) || 0, gpId: Number(r.GP_ID) || 0 });
+        nddot: Number(r.MEAN_MOTION_DDOT) || 0, gpId: Number(r.GP_ID) || 0, createdMs });
     }
   };
-  for (const [dir, snapshot] of [['spacetrack/gp', true], ['spacetrack/gp_history/by-creation', false]]) {
+  for (const dir of ['spacetrack/gp', 'spacetrack/gp_history/by-creation']) {
     for (const year of [...new Set([startDay.slice(0, 4), cutoffDay.slice(0, 4)])]) {
       const d = path.join(archive, dir, year);
       if (!fs.existsSync(d)) continue;
       for (const f of fs.readdirSync(d).filter((x) => x.endsWith('.json.gz') && x.slice(0, 10) >= startDay && x.slice(0, 10) <= cutoffDay).sort()) {
-        ingest(JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(d, f))).toString('utf8')), snapshot);
+        ingest(JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(d, f))).toString('utf8')));
       }
     }
   }
   const objects = [];
+  const firstOut = (x, y) => x.createdMs - y.createdMs || x.gpId - y.gpId; // the revision created first, then the lower GP_ID
   for (const [norad, list] of byNorad) {
-    list.sort((a, b) => tleMs(a) - tleMs(b) || a.gpId - b.gpId);
+    list.sort((a, b) => tleMs(a) - tleMs(b) || firstOut(a, b));
     const sets = [];
     for (const x of list) {
-      if (sets.length && Math.abs(tleMs(x) - tleMs(sets.at(-1))) < 60000) { if (x.gpId >= sets.at(-1).gpId) sets[sets.length - 1] = x; } else sets.push(x);
+      if (sets.length && Math.abs(tleMs(x) - tleMs(sets.at(-1))) < 60000) { if (firstOut(x, sets.at(-1)) < 0) sets[sets.length - 1] = x; } else sets.push(x);
     }
     if (cutoffMs - tleMs(sets.at(-1)) > 30 * DAY) continue;
     objects.push({ norad, tles: sets });

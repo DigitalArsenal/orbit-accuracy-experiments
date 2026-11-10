@@ -18,7 +18,7 @@ No module was changed or built. What the development rounds ran into, for issues
 4. **Refusals on long arcs are rare and named.** Over every kept run, `fit-implausible` (RMS above 100 km) on 0.1 to 0.5 % of history
    fits and one `fit-failed` (no convergence, an 11-day HIGH_LEO arc); each is a history across a maneuver. The served chain falls back.
    No defect; the refusals worked as documented.
-5. **Missing input port, not a missing term.** The biggest gains came from operator-grade inputs (rounds 1 to 3); the fit takes any
+5. **Missing input port, not a missing term.** The biggest gains came from orbit-product inputs (CPF predictions, GNSS ultra-rapid and rapid orbits) (rounds 1 to 3); the fit takes any
    GCRF $OEM, so nothing is missing in the module for that. The weight of each state is fixed at the 1 km a priori sigma (SPEC: "unit
    weights"); the rounds reached per-segment weighting only by sampling density (history at 900 to 3,600 s, forecast at 300 s). A
    per-state or per-block sigma on the fit's input (for instance from an $OEM covariance or a block-level stated sigma) would let a

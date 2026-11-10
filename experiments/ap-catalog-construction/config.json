@@ -28,24 +28,30 @@
     "version": "0.2.1",
     "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
     "wasmSha256": "816fd137d76197f2af93501d7d71c527383f7589ab698d5d1d3544782cd2feef",
-    "capture": "hac/comspoc-spacebook/2026/2026-11-10",
     "captureFile": "xp-tle.txt.gz",
     "captureTime": "started_utc of the capture's run.json",
     "setType": 4,
     "publicSetMaximumAgeDays": 3
   },
   "parts": {
-    "1": { "kind": "the reserved period of the rounds: never fitted or scored by any construction of issue 312", "from": "2026-03-01T00:00:00Z", "to": "2026-06-01T00:00:00Z", "readFrom": "2026-02-08T00:00:00Z", "readTo": "2026-06-08T00:00:00Z" },
-    "2": { "kind": "sets published after this registration", "from": "2026-11-11T00:00:00Z", "to": "2026-11-25T00:00:00Z", "readFrom": "2026-10-21T00:00:00Z", "readTo": "2026-12-02T00:00:00Z", "runNotBefore": "2026-12-02T00:00:00Z" },
-    "H": { "kind": "head to head on the provider's XP capture of 2026-11-10", "days": 10, "runNotBefore": "2026-12-02T00:00:00Z" },
-    "dev-B": { "kind": "development period B: the dry run of 2026-11-10, disclosed in PLAN.md; rows under runs/, never results", "from": "2026-06-01T00:00:00Z", "to": "2026-08-11T00:00:00Z", "readFrom": "2026-06-01T00:00:00Z", "readTo": "2026-08-18T00:00:00Z", "never": [["2026-03-01T00:00:00Z", "2026-06-01T00:00:00Z"]] }
+    "1": { "kind": "registered: set epochs never fitted or scored by any construction of issue 312, ending before the sets the earlier study read as history (2026-05-24 on)", "from": "2026-03-01T00:00:00Z", "to": "2026-05-24T00:00:00Z", "readFrom": "2026-02-08T00:00:00Z", "readTo": "2026-05-31T00:00:00Z", "inputs": ["P13"], "manifest": "archive-manifest-part1.json" },
+    "2": { "kind": "registered: the sets of the earlier study's part 2 (amendment A3)", "from": "2026-11-11T00:00:00Z", "to": "2026-12-23T00:00:00Z", "readFrom": "2026-10-21T00:00:00Z", "readTo": "2026-12-30T00:00:00Z", "inputs": ["P13", "U2", "R3"], "runOn": "2027-01-12", "manifest": "archive-manifest-part2.json" },
+    "H": { "kind": "registered: head to head on the provider's XP capture of 2026-11-10", "capture": "hac/comspoc-spacebook/2026/2026-11-10", "days": 10, "inputs": ["P13", "U2", "R3"], "runOn": "2027-01-12", "manifest": "archive-manifest-partH.json" },
+    "dev-A": { "kind": "development period A: dry run, disclosed in PLAN.md; rows under runs/, never results", "from": "2026-09-05T00:00:00Z", "to": "2026-10-29T00:00:00Z", "readFrom": "2026-08-15T00:00:00Z", "readTo": "2026-11-05T00:00:00Z", "inputs": ["P13", "U2", "R3"], "never": [["2026-03-01T00:00:00Z", "2026-05-24T00:00:00Z"], ["2026-11-10T00:00:00Z", "2100-01-01T00:00:00Z"]] },
+    "dev-B": { "kind": "development period B: dry run, disclosed in PLAN.md; rows under runs/, never results", "from": "2026-06-01T00:00:00Z", "to": "2026-08-11T00:00:00Z", "readFrom": "2026-06-01T00:00:00Z", "readTo": "2026-08-18T00:00:00Z", "inputs": ["P13", "U2", "R3"], "never": [["2026-03-01T00:00:00Z", "2026-06-01T00:00:00Z"], ["2026-11-10T00:00:00Z", "2100-01-01T00:00:00Z"]] },
+    "dev-H": { "kind": "part H's protocol on the provider's capture of 2026-10-23: dry run, disclosed in PLAN.md; tables stay local (stack issue 288)", "capture": "hac/comspoc-spacebook/2026/2026-10-23", "days": 10, "inputs": ["P13", "U2", "R3"], "never": [["2026-03-01T00:00:00Z", "2026-05-24T00:00:00Z"], ["2026-11-10T00:00:00Z", "2100-01-01T00:00:00Z"]] }
+  },
+  "registration": {
+    "file": "registration.json",
+    "rule": "a registered part (1, 2, H) refuses to start unless no tracked file of the repository differs from its commit, every file it executes has the SHA-256 registration.json names (checked as each file loads), config.json and PLAN.md match registration.json, the truth gate's ledger matches, its store folder holds no earlier start, rows or manifest, every archive file it reads is listed in its archive manifest with the same byte count, and (parts 2 and H) today is its runOn day; the start record is written before anything is read",
+    "truthGateLedger": { "file": "experiments/truth-gate/flags.json", "sha256": "99aca55803a8ffc51ef84ddea6ae49094e14baca76c6d0d1af383ea4a7581379" }
   },
   "selection": { "spacingDays": 3 },
   "grid": { "stepSeconds": 300 },
   "history": { "priorWindowDays": 21, "lookbackExtraDays": 3, "minimumSets": 3, "minimumGridShare": 0.8 },
   "fit": {
     "atmosphere": "NRLMSISE00",
-    "weather": "records as known on the day of the set's epoch (part H: of the capture time for the operator-grade arms)",
+    "weather": "observed values through the last full UTC day before the set's epoch (operator-grade arms and part H: before t0, the capture time), the builder's recurrence forecast after it (amendment A3 of ap-from-public-sets, item 5)",
     "tesseralDegree": 31,
     "tesseralOffAboveEccentricity": 0.048,
     "zonalDegree": 20,
@@ -74,7 +80,8 @@
     "GEO": ["P13", "U2", "R3", "KG8c", "B3"],
     "HEO": ["P13", "U2", "R3", "H5F7", "H5F5", "D5", "B3"]
   },
-  "earlierConstruction": ["D5", "B3"],
+  "publicChain": "the served chain without P13, U2 and R3 (the public-set record of every set, computed beside the served record)",
+  "earlierConstruction": { "guarded": "D5 when its fit residual is at most guardRatio times B3's for the same set, else B3, else the set (amendment A3 of ap-from-public-sets, item 2)", "guardRatio": 3, "unguarded": ["D5", "B3"] },
   "inputs": {
     "eop": {
       "rule": "the newest IERS finals.all file on or before the day of t0 (part H: of the capture time): the dated folders under dailyRoot, and the snapshot of 2026-10-09, which is also the file for every earlier day",
@@ -97,11 +104,11 @@
       "retrievedRoots": ["release-archive/main-data-e4-cpf"]
     },
     "ultraRapid": {
-      "issue": "the file's start at least issueAfterStartHours before t0, and at most maximumAgeHours",
+      "issue": "the file's start at least issueAfterStartHours before t0 (the IGS ultra-rapid schedule: 3 h after the solved 24 h end; the archive keeps no publication time for these files), and at most maximumAgeHours",
       "root": "reference-states/products",
       "pattern": "^ESA0OPSULT_(\\d{4})(\\d{3})(\\d{2})(\\d{2})_02D_05M_ORB\\.SP3\\.gz$",
-      "issueAfterStartHours": 26,
-      "maximumAgeHours": 32
+      "issueAfterStartHours": 27,
+      "maximumAgeHours": 33
     },
     "rapid": {
       "issue": "the CDDIS Last-Modified time in the file's provenance at or before t0",
@@ -124,6 +131,13 @@
     ]
   },
   "scoring": { "days": 7, "minimumDayCoverage": 0.9, "primaryHours": 72 },
-  "statistics": { "bootstrapResamples": 2000, "seed": 20261110, "interval": 0.95, "minimumSatellites": 5, "minimumSets": 30 },
+  "statistics": {
+    "unit": "satellite: each satellite's sets give one median of ln ratio; the interval is the order-statistic interval for the median of the satellite medians with coverage at least `interval`",
+    "interval": 0.95, "minimumSatellites": 6, "minimumSets": 30,
+    "secondary": "the bootstrap of ap-from-public-sets (pooled median of sets, satellites resampled), printed beside, deciding nothing",
+    "bootstrapResamples": 2000, "seed": 20261110,
+    "tailThresholds": { "T95": 1.0, "Trms": 1.0, "shareBeyondTwice": 0.01 },
+    "part2Margin": 1.05
+  },
   "classes": ["LOW_LEO", "MID_LEO", "HIGH_LEO", "MEO", "GEO", "HEO"]
 }
