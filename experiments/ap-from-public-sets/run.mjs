@@ -224,7 +224,9 @@ const part = CONFIG.parts[partId];
 if (!part) throw new Error('usage: run.mjs --part 1|2 [--shard i/n] | --check');
 const [shardI, shardN] = (arg('--shard') ?? '0/1').split('/').map(Number);
 const p0 = Date.parse(part.from), p1 = Date.parse(part.to);
-const outDir = path.join(CONFIG.store, `part${partId}`);
+const label = arg('--label') ? `-${arg('--label')}` : ''; // amendment A2: a second run of a part keeps the first run's rows
+if (label && !/^-[a-z0-9-]+$/.test(label)) throw new Error('--label takes lower-case letters, digits and hyphens');
+const outDir = path.join(CONFIG.store, `part${partId}${label}`);
 fs.mkdirSync(outDir, { recursive: true });
 const tag = `s${shardI}of${shardN}`;
 const t00 = Date.now();

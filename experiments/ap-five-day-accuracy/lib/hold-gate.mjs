@@ -29,20 +29,12 @@ export function assertAllowedPath(filePath) {
 }
 
 /**
- * Checks whether an object is excluded from external/truth/optical study evaluation.
- * Enforces:
- *  - No Starlink groups
- *  - No Eutelsat (owner 2026-11-03 drop)
- *  - No 6 held Galileo IDs (43567, 37847, 41862, 41174, 43055, 41175)
- *  - No Swarm (39451-39453) or GRACE-FO (43476-43477) after 2026-10-31
+ * Whether an object is excluded from a study. Since 2026-11-10 nothing is: the owner ruled "Drop the 5 November rule and any
+ * rule that says to exclude data" (DigitalArsenal/spacedatanetwork-stack#314). The six Galileo satellites, the Eutelsat
+ * satellite, names containing STARLINK and Swarm and GRACE-FO data after 2026-10-31 were excluded before that; the lists above
+ * are kept so earlier results can be read. A confirmation is kept honest by registering it before its data exist.
  */
 export function isHeldForStudy(norad, name = "", epochIso = "2026-11-08T00:00:00Z") {
-  const id = Number(norad);
-  if (HELD_GALILEO_NORADS.has(id) || HELD_EUTELSAT_NORADS.has(id)) return true;
-  if (SWARM_GRACEFO_NORADS.has(id) && epochIso > SWARM_GRACEFO_CUTOFF_ISO) return true;
-  const upper = String(name || "").toUpperCase();
-  if (upper.includes("STARLINK")) return true;
-  if (/EUTELSAT|\bEUTE\b|\bEUTEL\b/.test(upper)) return true;
   return false;
 }
 

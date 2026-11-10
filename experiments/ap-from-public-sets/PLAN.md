@@ -118,3 +118,12 @@ Part 1 ran as registered and scored 2,063 sets. No laser sphere was among them, 
 **What was known when this was written.** The fault was seen in the list of truth sources of the part 1 table and confirmed by reading epochs only. No error of any arm on the missing satellites had been computed. Sets already scored are not affected: their truth steps (10, 300 and 900 s) give the same count under both forms.
 
 **Reporting.** Part 1 is run again in full with the corrected count. The results carry both tables: `part1-as-registered` and `part1`.
+
+
+### A2, 2026-11-10: no satellite is excluded
+
+The owner ruled on 2026-11-10: "Drop the 5 November rule and any rule that says to exclude data" (stack issue 314). The repository's hold gate, which this plan applied to truth and to sets, excluded six Galileo satellites, one Eutelsat satellite, names containing STARLINK, and Swarm and GRACE-FO data after 2026-10-31. From this amendment on it excludes nothing: `isHeldForStudy` returns false.
+
+**Effect.** Part 1 as published stays as it is. It is run once more with every satellite, as `part1-all-satellites`, and both tables are published. Part 2 runs with every satellite. `run.mjs` gains a `--label` option so the second run keeps the first run's rows.
+
+**What was known when this was written.** The published part 1 tables. No error of any arm on the newly included satellites had been computed.
