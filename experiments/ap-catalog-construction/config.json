@@ -1,0 +1,144 @@
+{
+  "experiment": "ap-catalog-construction",
+  "issue": "DigitalArsenal/spacedatanetwork-stack#312",
+  "title": "The catalog's AP construction from 20 development rounds, against the public set and against the registered construction",
+  "frozen": true,
+  "registeredUtc": "2026-11-10",
+  "store": "/opt/data/sdn-archive/ap-catalog-construction",
+  "archive": "/opt/data/sdn-archive",
+  "modulesRoot": "/Users/tj/software/spacedatanetwork-stack/repos/main-packages/space-data-network-modules",
+  "build": {
+    "module": "propagator/sdn-ap",
+    "version": "0.6.5",
+    "modulesCommit": "3a3661eaf9caa84fc776a9959494e1ca14358db1",
+    "wasmSha256": "f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7"
+  },
+  "weatherForecaster": {
+    "file": "experiments/ap-five-day-accuracy/wasm/tle-astrodynamics-upgrades.wasm",
+    "sha256": "68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73"
+  },
+  "readers": {
+    "data-source/cpf-source": { "version": "1.1.0", "wasmSha256": "4edab160c53d71af0b830cffa424f7193d51d9460080f4f8a60b87fa1338f06f" },
+    "files/orbit-products": { "version": "0.2.1", "wasmSha256": "59008ad7589bdd7ec5a6baf7926a2231f0a668edb9bc5ed6d7a50298ead30404" },
+    "data-source/eop-parser": { "version": "0.2.0", "wasmSha256": "03afedc590707a1d592edd0841f367b835498c97e5508526553e01b0d89997c1" },
+    "analysis/reference-states": { "version": "0.4.0", "wasmSha256": "51477903cb13d877d30342ac5a10a12c5e6fec8a8622ddfe203a73e7dc790c65" }
+  },
+  "xp": {
+    "module": "propagator/sgp4-xp",
+    "version": "0.2.1",
+    "modulesCommit": "ea824356587f54149f876cd3b2b5d8134af682d3",
+    "wasmSha256": "816fd137d76197f2af93501d7d71c527383f7589ab698d5d1d3544782cd2feef",
+    "captureFile": "xp-tle.txt.gz",
+    "captureTime": "started_utc of the capture's run.json",
+    "setType": 4,
+    "publicSetMaximumAgeDays": 3
+  },
+  "parts": {
+    "1": { "kind": "registered: set epochs never fitted or scored by any construction of issue 312, ending before the sets the earlier study read as history (2026-05-24 on)", "from": "2026-03-01T00:00:00Z", "to": "2026-05-24T00:00:00Z", "readFrom": "2026-02-08T00:00:00Z", "readTo": "2026-05-31T00:00:00Z", "inputs": ["P13"], "manifest": "archive-manifest-part1.json" },
+    "2": { "kind": "registered: the sets of the earlier study's part 2 (amendment A3)", "from": "2026-11-11T00:00:00Z", "to": "2026-12-23T00:00:00Z", "readFrom": "2026-10-21T00:00:00Z", "readTo": "2026-12-30T00:00:00Z", "inputs": ["P13", "U2", "R3"], "runOn": "2027-01-12", "manifest": "archive-manifest-part2.json" },
+    "H": { "kind": "registered: head to head on the provider's XP capture of 2026-11-10", "capture": "hac/comspoc-spacebook/2026/2026-11-10", "days": 10, "inputs": ["P13", "U2", "R3"], "runOn": "2027-01-12", "manifest": "archive-manifest-partH.json" },
+    "dev-A": { "kind": "development period A: dry run, disclosed in PLAN.md; rows under runs/, never results", "from": "2026-09-05T00:00:00Z", "to": "2026-10-29T00:00:00Z", "readFrom": "2026-08-15T00:00:00Z", "readTo": "2026-11-05T00:00:00Z", "inputs": ["P13", "U2", "R3"], "never": [["2026-03-01T00:00:00Z", "2026-05-24T00:00:00Z"], ["2026-11-10T00:00:00Z", "2100-01-01T00:00:00Z"]] },
+    "dev-B": { "kind": "development period B: dry run, disclosed in PLAN.md; rows under runs/, never results", "from": "2026-06-01T00:00:00Z", "to": "2026-08-11T00:00:00Z", "readFrom": "2026-06-01T00:00:00Z", "readTo": "2026-08-18T00:00:00Z", "inputs": ["P13", "U2", "R3"], "never": [["2026-03-01T00:00:00Z", "2026-06-01T00:00:00Z"], ["2026-11-10T00:00:00Z", "2100-01-01T00:00:00Z"]] },
+    "dev-H": { "kind": "part H's protocol on the provider's capture of 2026-10-23: dry run, disclosed in PLAN.md; tables stay local (stack issue 288)", "capture": "hac/comspoc-spacebook/2026/2026-10-23", "days": 10, "inputs": ["P13", "U2", "R3"], "never": [["2026-03-01T00:00:00Z", "2026-05-24T00:00:00Z"], ["2026-11-10T00:00:00Z", "2100-01-01T00:00:00Z"]] }
+  },
+  "registration": {
+    "file": "registration.json",
+    "rule": "a registered part (1, 2, H) refuses to start unless no tracked file of the repository differs from its commit, every file it executes has the SHA-256 registration.json names (checked as each file loads), config.json and PLAN.md match registration.json, the truth gate's ledger matches, its store folder holds no earlier start, rows or manifest, every archive file it reads is listed in its archive manifest with the same byte count, and (parts 2 and H) today is its runOn day; the start record is written before anything is read",
+    "truthGateLedger": { "file": "experiments/truth-gate/flags.json", "sha256": "99aca55803a8ffc51ef84ddea6ae49094e14baca76c6d0d1af383ea4a7581379" }
+  },
+  "selection": { "spacingDays": 3 },
+  "grid": { "stepSeconds": 300 },
+  "history": { "priorWindowDays": 21, "lookbackExtraDays": 3, "minimumSets": 3, "minimumGridShare": 0.8 },
+  "fit": {
+    "atmosphere": "NRLMSISE00",
+    "weather": "observed values through the last full UTC day before the set's epoch (orbit-product arms and part H: before t0, the capture time), the builder's recurrence forecast after it (amendment A3 of ap-from-public-sets, item 5)",
+    "tesseralDegree": 31,
+    "tesseralOffAboveEccentricity": 0.048,
+    "zonalDegree": 20,
+    "weatherHorizonDays": 30
+  },
+  "arms": {
+    "P13": { "input": "cpf", "nameDateWithinDays": 3, "daysBefore": 1, "daysAfter": 3, "stepSeconds": 300, "minimumStates": 100, "recordEpoch": "last" },
+    "U2": { "input": "ultraRapid", "earlierDays": 2, "minimumStates": 100, "recordEpoch": "last" },
+    "R3": { "input": "rapid", "days": 3, "maximumAgeDays": 3, "minimumStates": 200, "recordEpoch": "last" },
+    "B3": { "forecastDays": 3, "recordEpoch": "first" },
+    "D5": { "history": { "kind": "piecewise", "H": 5 }, "forecastDays": 3, "recordEpoch": "first" },
+    "H8F3": { "history": { "kind": "piecewise", "H": 8 }, "forecastDays": 3, "recordEpoch": "first" },
+    "H5F5": { "history": { "kind": "piecewise", "H": 5 }, "forecastDays": 5, "recordEpoch": "first" },
+    "H5F7": { "history": { "kind": "piecewise", "H": 5 }, "forecastDays": 7, "recordEpoch": "first" },
+    "K12": { "history": { "kind": "interleaved", "H": 12, "back": 8, "fwd": 0, "stepSeconds": 3600 }, "forecastDays": 5, "recordEpoch": "first" },
+    "K10": { "history": { "kind": "interleaved", "H": 8, "back": 6, "fwd": 0, "stepSeconds": 3600 }, "forecastDays": 5, "recordEpoch": "first" },
+    "KG8c": { "history": { "kind": "interleaved", "H": 8, "back": 6, "fwd": 0, "stepSeconds": 3600, "cutKm": 10 }, "forecastDays": 5, "recordEpoch": "first" },
+    "KH8": { "history": { "kind": "interleaved", "H": 8, "back": 1, "fwd": 1, "stepSeconds": 1800 }, "forecastDays": 3, "recordEpoch": "first" },
+    "KM5": { "history": { "kind": "interleaved", "H": 5, "back": 0.5, "fwd": 0.5, "stepSeconds": 900 }, "forecastDays": 3, "recordEpoch": "first" }
+  },
+  "servedRule": {
+    "LOW_LEO": ["P13", "U2", "R3", "D5", "B3"],
+    "MID_LEO": ["P13", "U2", "R3", "KM5", "D5", "B3"],
+    "HIGH_LEO": ["P13", "U2", "R3", "KH8", "H8F3", "D5", "B3"],
+    "MEO": ["P13", "U2", "R3", "K12", "K10", "D5", "B3"],
+    "GEO": ["P13", "U2", "R3", "KG8c", "B3"],
+    "HEO": ["P13", "U2", "R3", "H5F7", "H5F5", "D5", "B3"]
+  },
+  "publicChain": "the served chain without P13, U2 and R3 (the public-set record of every set, computed beside the served record)",
+  "earlierConstruction": { "guarded": "D5 when its fit residual is at most guardRatio times B3's for the same set, else B3, else the set (amendment A3 of ap-from-public-sets, item 2)", "guardRatio": 3, "unguarded": ["D5", "B3"] },
+  "inputs": {
+    "eop": {
+      "rule": "the newest IERS finals.all file on or before the day of t0 (part H: of the capture time): the dated folders under dailyRoot, and the snapshot of 2026-10-09, which is also the file for every earlier day",
+      "snapshot": "hac/iers-eop/20261009/finals.all.iau2000.txt",
+      "snapshotDay": "2026-10-09",
+      "snapshotSha256": "0baf00f67a39ab362a3e4f07d2a1f084842178523f56bcf5a861e7ac084d411a",
+      "dailyRoot": "hac/iers-eop/2026",
+      "fileName": "finals.all.iau2000.txt"
+    },
+    "identities": {
+      "rule": "the newest IGS satellite metadata SINEX on or before the day of t0, else the snapshot of 2026-10-09; read at the product's middle (PRN validity intervals)",
+      "snapshot": "hac/igs-metadata/20261009/igs_satellite_metadata.snx",
+      "snapshotDay": "2026-10-09",
+      "snapshotSha256": "5ae97c6f65d5c9f238f79565cdd478af9e0da1cc0f0f589bf6c5aad0de5234c2",
+      "stampedRoot": "reference-states/products"
+    },
+    "cpf": {
+      "issue": "the H1 record's production date and hour at or before t0, and, for a file whose archive name carries its retrieval time, that time at or before t0",
+      "targetRoots": ["hac/ilrs-edc/cpf_predicts_v2"],
+      "retrievedRoots": ["release-archive/main-data-e4-cpf"]
+    },
+    "ultraRapid": {
+      "issue": "the file's start at least issueAfterStartHours before t0 (the IGS ultra-rapid schedule: 3 h after the solved 24 h end; the archive keeps no publication time for these files), and at most maximumAgeHours",
+      "root": "reference-states/products",
+      "pattern": "^ESA0OPSULT_(\\d{4})(\\d{3})(\\d{2})(\\d{2})_02D_05M_ORB\\.SP3\\.gz$",
+      "issueAfterStartHours": 27,
+      "maximumAgeHours": 33
+    },
+    "rapid": {
+      "issue": "the CDDIS Last-Modified time in the file's provenance at or before t0",
+      "root": "hac/gfz-gnss-rapid/cddis/gnss/products",
+      "pattern": "^GFZ0MGXRAP_(\\d{4})(\\d{3})0000_01D_05M_ORB\\.SP3\\.gz$"
+    }
+  },
+  "truth": {
+    "roots": ["reference-states/reference", "reference-states/reference-leo-pod-2"],
+    "families": [
+      { "prefix": "ESA0OPSFIN_2026", "family": "Navigation satellites (ESA final orbits)" },
+      { "prefix": "S1A_OPER_AUX_POEORB", "family": "Sentinel-1 (Copernicus precise orbits)" },
+      { "prefix": "S1C_OPER_AUX_POEORB", "family": "Sentinel-1 (Copernicus precise orbits)" },
+      { "prefix": "S1D_OPER_AUX_POEORB", "family": "Sentinel-1 (Copernicus precise orbits)" },
+      { "prefix": "ssa", "family": "Altimetry satellites (IDS DORIS orbits)" },
+      { "prefix": "ilrsa.orb.", "family": "LAGEOS and Etalon (ILRS combined orbits)" },
+      { "prefix": "nsgf.orb.", "family": "Laser spheres (NSGF orbits)" },
+      { "prefix": "SW_OPER_SP3CCOM", "family": "Swarm (ESA precise orbits)" },
+      { "prefix": "leoOrb_", "family": "COSMIC-2 (UCAR near-real-time orbits)" }
+    ]
+  },
+  "scoring": { "days": 7, "minimumDayCoverage": 0.9, "primaryHours": 72 },
+  "statistics": {
+    "unit": "satellite: each satellite's sets give one median of ln ratio; the interval is the order-statistic interval for the median of the satellite medians with coverage at least `interval`",
+    "interval": 0.95, "minimumSatellites": 6, "minimumSets": 30,
+    "secondary": "the bootstrap of ap-from-public-sets (pooled median of sets, satellites resampled), printed beside, deciding nothing",
+    "bootstrapResamples": 2000, "seed": 20261110,
+    "tailThresholds": { "T95": 1.0, "Trms": 1.0, "shareBeyondTwice": 0.01 },
+    "part2Margin": 1.05,
+    "smallestEffect": 0.95
+  },
+  "classes": ["LOW_LEO", "MID_LEO", "HIGH_LEO", "MEO", "GEO", "HEO"]
+}
