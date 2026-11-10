@@ -167,3 +167,81 @@ Notation: for a set, `a` is the 72 h error of the set on SGP4 and `b` that of an
 
 **Also found, and stated here:** the module does not return bit-identical numbers for the same set in two runs that differ in the order of calls on one instance (405 of 2,223 sets differ in an AP arm, largest difference 1.9e-7 in the logarithm of the ratio; the SGP4 arm is identical). No printed figure moves.
 
+
+### A4, 2026-11-10: part 2 on the satellite as the unit, with a smallest effect, a fixed run day and a stated scope
+
+The review's check of A3 ([stack issue 316](https://github.com/DigitalArsenal/spacedatanetwork-stack/issues/316), review 0) listed
+seven attacks that A3 leaves open, and the closing review of the catalog test (experiments `ap-catalog-construction`, review 0, C6-9)
+found one more in this runner. This amendment answers them as rules, so that this study's part 2 and the catalog test's part 2 share
+one design. It is merged before the first set epoch of part 2 (2026-11-11 00:00 UTC) and before any part 2 set is fitted. As in A3,
+item 8, the code follows in one commit, named by the part 2 manifest, before any part 2 row is written.
+
+**What was known when this was written.** The three published part 1 tables (`part1-as-registered`, `part1`,
+`part1-all-satellites`); review 0's figures from the part 1 rows (C3-1 to C3-7) and its check of A3; the catalog test's plan and its
+dry runs (dev-B is this study's part 1 period, 2026-06-01 to 08-10, flown with A3's reading rules; dev-A is 2026-09-05 to 10-28),
+whose figures for this study's guarded record are quoted in item 3; the review's simulations of both rules on the development rows;
+the cost measurements of stack issue 317. The threshold of item 3 was chosen knowing those figures. No part 2 set existed.
+
+**1. The run day is fixed.** Part 2 runs on 2027-01-12 and no other day, on the truth then in the archive. The runner refuses any
+other day and a second run. This replaces "not before 2027-01-12" in A3, item 1.
+
+**2. The registered statistic becomes the satellite's.** For each satellite, the median of ln(`b` / `a`) over its part 2 sets; the
+class figure is the median of those satellite medians; its interval is the narrowest order-statistic interval [x(k), x(n+1-k)] whose
+coverage 1 - 2 P(Bin(n, 1/2) <= k - 1) is at least 95 % (it exists from 6 satellites on; with 8 satellites it is the smallest and the
+largest). BEATS, LOSES and TIE as before; FEW under 6 satellites or under 30 sets, with no ratio. The bootstrap of this plan (median
+over sets, satellites resampled) is printed beside every figure and decides nothing. This changes the registered statistic, and the
+parameter with it (the median satellite, not the median set), before any part 2 set exists. Why: the sets of one satellite are
+correlated (0.52 in `MID_LEO`, 0.44 in `HIGH_LEO`, A3 item 7), so the satellites are the sample; and on the development rows the
+bootstrap missed a true ratio of 1.00 in 13 %, 8 % and 14 % of simulated parts for classes of 10, 14 and 8 satellites at a nominal 5 %
+(review 0, C6-5), where the order-statistic interval missed in 1 % to 6 % (review 0's closing run and the catalog test's simulation,
+on the same rows).
+
+**3. A smallest effect worth serving: the interval's upper end below 0.95.** A3's item 4 is kept with BEATS replaced: a class passes
+when the upper end of its interval is below 0.95 (a median satellite at least 5 % closer to precise orbits than the set, at 95 %
+confidence), AND it meets A3's three tail thresholds, AND item 5's figure from the creation time reads BEATS. Reason, from what serving
+costs: an AP record costs every user 1.4 to 2.6 times SGP4's computation per state on the bare kernel (measured 2026-11-10 at a 300 s
+step: 2.6 and 2.3 in low orbit, 1.4 at MEO, 2.1 at GEO; stack issue 317) and the catalog one fit per set, and its tail is bounded only
+at A3's point estimates. A gain that cannot be told from 5 % is about 0.06 km on a set error of 1.3 km at MEO, and does not repay that
+cost. On part 1's period, post hoc (the catalog test's dry run dev-B: this record, A3's reading rules, the satellite unit): `MID_LEO`
+0.55 (0.30 to 0.78), `HIGH_LEO` 0.27 (0.18 to 0.54), `MEO` 0.99 (0.98 to 0.99), `GEO` 0.79 (0.63 to 1.00), all within the tail
+thresholds (`GEO` at T95 1.00); on these epoch-based figures (the creation-time figure was not computed) `MID_LEO` and `HIGH_LEO` would
+pass this item and `MEO` and `GEO` would not, where with "below 1" all four would. Simulated in that world (42 days, 600 parts), a
+true 0.95 at `MEO` passes under "below 1" in 0.99 of parts and under this item in 0.16; a true 0.90 passes in 1.00 under both.
+
+**4. "Satellites of the kinds tested" made operational.** The tested kinds are those of the truth families: ESA final orbits
+(navigation satellites), Copernicus precise orbits (Sentinel-1), IDS DORIS orbits (altimetry satellites), ILRS combined orbits (LAGEOS,
+Etalon), NSGF orbits (laser spheres), ESA precise orbits (Swarm), UCAR near-real-time orbits (COSMIC-2): payloads whose orbits are
+held steady or not maneuvered at all. A catalog object of a passing class is of a tested kind, and may be served AP, only when, from
+what the catalog holds at the set's creation: (a) its catalog object type is PAYLOAD; (b) its current set's perigee height, apogee
+height and inclination lie inside the ranges spanned by part 2's scored satellites of that class (printed by `table.mjs`); (c) no two
+consecutive sets in the 8 days before `t0` differ by a jump: the earlier set, flown on SGP4 to the later one's epoch, more than 10 km
+from the later set's own position there (the catalog test's maneuver cut). Every other object stays on the set: debris, rocket bodies,
+objects outside the ranges, and objects that maneuvered in the look-back, which is the catalog's measurable stand-in for a
+constellation that maneuvers continually. `table.mjs` prints, per class, the share of part 2's sets whose object meets (a) to (c) and
+the class figure on those sets alone (decides nothing).
+
+**5. Lead from when a user could hold the set.** Every part 2 figure names its start. The primary measure stays the 72 h from the
+set's epoch, on which A3's thresholds were set. Beside it, on the same statistic: the span from the set's creation time (the
+`CREATION_DATE` of its first-published revision) to its epoch + 72 h, the part of the scored window in which a user held it; a set
+created 72 h or more after its epoch has no such span and is counted. Item 3 requires this figure to read BEATS as well.
+
+**6. Satellites outside AP's development lists.** Per class, a second line on the satellites that are not named in
+`experiments/operator-theory/lib/regimes.mjs` (six low laser spheres, ten altimetry satellites, five laser geodetic targets,
+Sentinel-1A and 1C), with its own interval; FEW under 6 satellites. It decides nothing; it is printed wherever the class figure is.
+
+**7. The run is pinned.** As the catalog test's runner does: every file the run loads (this experiment's, `lib.mjs`, the five-day
+pipeline's libraries, the truth reader, the truth gate, the readers, the standards' bindings, the SDK) is hashed into the manifest as it
+loads and must match the commit that the part 2 manifest names; a part with a start record, rows or a manifest already in its store
+refuses to start; the start record is written before anything is read. Its `--check` is end to end, as the project requires: the
+statistic, the verdicts and the rule are checked on made-up rows run through the real `table.mjs`, asserting on the table it writes;
+each refusal is tripped by starting the real `run.mjs` on a made-up part that exists only for the check (its own store, archive root,
+registration and run day), and the check proves that none of that part's freedoms is open to part 2.
+
+**8. The truth screen, per step.** `run.mjs` (line 275) drops every candidate of the truth gate's jump screen. The screen compares
+each state with the trapezoid rule over its step, whose own error grows as the step cubed (about 0.14 km at 60 s and 18 km at 300 s in
+low orbit), against 10 times the series' median residual with a 10 km floor; when a satellite has both 60 s and 300 s files, every 300
+s state is marked. In period A it removed 8,011 sound altimetry states, within 21 m of their neighbors' interpolation, from five
+satellites (review 0, C6-9). Rule: the median, and so the threshold, is taken per step. Code with the runner change, with a check case
+(a made-up clean orbit, 60 s for a day then 300 s for a day, gives no candidate). Part 1 is not affected: in its period every
+altimetry file is at 300 s and the screen dropped no altimetry state.
+
