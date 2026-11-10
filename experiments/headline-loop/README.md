@@ -1,6 +1,8 @@
 # The SDN-AP table (stack #316)
 
-One table per released sdn-ap version: AP against a properly configured numerical propagator, per regime and fit length, on every
+One table per released sdn-ap version (schema `sdn-ap-scoreboard/2`): AP, the theory alone, against a properly configured numerical
+propagator and against SGP4-XP of the same module, with the owner's pass line (AP within 100 m of the numerical propagator at 120 h) and
+AP's margin over XP as counts, per regime and fit length, on every
 precise-orbit window whose numerical rows are in the store, in the module's own GCRF output, errors in meters against the truth. The
 site's release tool reads it (`--scoreboard-result <file>`).
 
@@ -8,7 +10,7 @@ site's release tool reads it (`--scoreboard-result <file>`).
 
 | File | Does |
 |---|---|
-| `table.mjs` | fits and flies AP of a modules commit (its `propagator/sdn-ap/dist/isomorphic/module.wasm` by `git show`) on every window, scores it, reads the numerical propagator's errors on the same windows from the store, and writes the one JSON (`sdn-ap-scoreboard/1`). AP's rows go to `<store>/table/<wasm sha12>/rows.jsonl` |
+| `table.mjs` | fits and flies AP and SGP4-XP of a modules commit (its `propagator/sdn-ap/dist/isomorphic/module.wasm` by `git show`) on every window, scores it, reads the numerical propagator's errors on the same windows from the store, and writes the one JSON (`sdn-ap-scoreboard/1`). AP's rows go to `<store>/table/<wasm sha12>/rows.jsonl` |
 | `refly.mjs` | the numerical propagator's rows, flown once (`--second-pass`: the windows touching March to May 2026): FFM 2.2.0 (fitted by analysis/estimation 0.7.0) in the reduced, configured and full settings (and Fbest on the laser geodetic spheres), to `<store>/f0b8352a43f3/` |
 | `lib/` | `env.mjs` (package and host checks), `windows.mjs` (windows, truth, scoring bins, weather), `settings.mjs` (the FFM settings), `ffm.mjs` (FFM and estimation hosts), `arms.mjs` (AP and FFM flights), `e2e.mjs` (check helpers) |
 
