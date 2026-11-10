@@ -31,8 +31,8 @@ import { pickedSteps } from './lib/steps.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const MODE = args.mode, OUT = args.out;
-// The build the examples' AP and whiteroom XP are flown again on (sdn-ap-site-module-0-6-4-20261106): sdn-ap 0.6.4, named by its canonical module hash (sds.* sections stripped, what the signature covers), opened from its signed dist by the bundle's whole-file hash.
-const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.4', commit: 'cfd750eb8de2f5d7c339173ee674bc7a481da8c2', sha256: 'fd1ef4682edc68836d27fdb1f606a45b22bb3605354c55312287f87771a804b5', bundleSha256: 'e98b63558d84cfd3b8509f4c4c640502e38f81cc05a0e0277fcffa7da97cf51d' };
+// The build the examples' AP and whiteroom XP are flown again on (spacedatanetwork-stack#274, 2026-11-09): sdn-ap 0.6.5, the build the site's demo and the package ship, named by its canonical module hash (sds.* sections stripped, what the signature covers), opened from its signed dist by the bundle's whole-file hash.
+const REFLIGHT_BUILD = { module: 'propagator/sdn-ap', version: '0.6.5', commit: '3a3661eaf9caa84fc776a9959494e1ca14358db1', sha256: 'ca5515048baf7ab43bdecda67cd27173ebef424044233c5e8ff2ac6db85487c6', bundleSha256: 'f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7' };
 // The examples flown again on it: every one but the highly elliptical (TESS) examples, which the site withholds.
 const FLOWN_AGAIN = (d) => d.regime !== 'Highly elliptical';
 if (args.check) {

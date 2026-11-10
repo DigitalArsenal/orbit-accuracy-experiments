@@ -193,3 +193,16 @@ with XP2F_CONTROL=1 for `truth2` and for `providers --only iss`. Every published
 | LAGEOS-2|0.2 | 24.15 then 6.70 | 72.96 then 14.85 | 1.40 then 0.11 | fail (attributed) then undecided (attributed) |
 
 Largest position difference of the seeded in-band sets over the day, 0.6.3 against 0.6.4: Starlette|0.1 89.2 m, Ajisai|0.1 63.1 m, LARES|0.1 51.8 m, Jason-3|0.1 61.8 m, LAGEOS-1|0.1 22.7 m, LAGEOS-1|0.2 51.2 m, LAGEOS-2|0.1 25.4 m, LAGEOS-2|0.2 52.5 m. The two clause misses in that record stand as measured (Amendment 2 of `TESSERAL-SWITCH-BY-CLASS.md`).
+
+## Amendment, 2026-11-09: AP and whiteroom XP flown again on sdn-ap 0.6.5; the cells stay on 0.6.4
+
+Report only (spacedatanetwork-stack#274). The site's demo and the package ship `propagator/sdn-ap` 0.6.5 (modules 3a3661eaf), named by its canonical module ca5515048baf7ab43bdecda67cd27173ebef424044233c5e8ff2ac6db85487c6, its signed bundle f0b8352a43f305fbdd1ad15c9894e2d28f3179528838cae8f967bf1ea5d089b7 beside it. 0.6.5 changes the numerics (SIMD, a faster trigonometry and a stage-cached RK3), so its flights are not byte-identical to 0.6.4's, and a flight's positions move by millimeters with the set of epochs it is asked for.
+
+**The examples, flown again.** `compare-examples.mjs --reflight` fits and flies AP and whiteroom XP alone again on that build, from the signed dist, into `ap/b065/compare-examples-reflight` (log `ap/b065/reflight.log`):
+
+    node experiments/operator-theory/compare-examples.mjs --mode <next|providers|regimes|truth|truth2> [--pick showcase] \
+      --reflight <store>/ap/b0411/compare-examples-full,<store>/ap/b051/compare-examples-regen,<store>/ap/b062/compare-examples-reflight,<store>/ap/b063/compare-examples-reflight,<store>/ap/ffm220/compare-examples,<store>/ap/b064/compare-examples-reflight --out <store>/ap/b065/compare-examples-reflight
+
+with XP2F_CONTROL=1 for `truth2` and for `providers --only iss`, SDN_MODULES_GIT naming a modules clone that holds 3a3661eaf and SDN_MODULES_ROOT one with the registered installs. Every published example but the two highly elliptical (TESS) examples was flown again, 56 of 56, and published with `compare-examples-publish.mjs --in <the folders above>,<store>/ap/b065/compare-examples-reflight` (`--reflown` reports every move). Every reference, Space Force XP, SGP4 and FFM track is the published one byte for byte. Whiteroom XP: 54 of 56 byte-identical, the other two within 1 µm. AP moves on every example: median 4.6 mm, 90th percentile 0.20 m, largest 6.17 m (`next-qss-navigation`, a next-file navigation pair); every other example under 0.7 m. Each example names AP and whiteroom XP on 0.6.5, with `<id>.ocm` (producer sdn-ap-propagator 0.6.5) beside it.
+
+**The cells.** No flight, no relabel. 0.6.5 does not equal 0.6.4 byte for byte, so the identity that carried every earlier relabel does not hold: every AP and whiteroom XP cell of `cells.json` keeps naming 0.6.4 (`propagator/sdn-ap@fd1ef4682edc`), as flown and measured. The zero-exclusion suite on 0.6.5 is `results/ap-all-regimes-suite`.
