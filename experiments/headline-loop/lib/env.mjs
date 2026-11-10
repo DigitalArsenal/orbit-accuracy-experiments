@@ -10,8 +10,8 @@
 //    come from the checkout. Proper fix: a modules checkout whose host packages equal XM's build.json (no checkout on this machine does:
 //    analysis/gp-error-model installs spacedatastandards.org 1.261.0 where XM registered 1.276.0), or XM registered again on today's hosts.
 //    Until then the guard's package.json reads answer with the registered version and the installed versions are recorded in every row
-//    (HOSTS.installed); HEADLINE_LOOP_HOSTS=registered keeps XM's refusal. verify.mjs re-flies the stored published rows: the check that it
-//    changes no number.
+//    (HOSTS.installed); HEADLINE_LOOP_HOSTS=registered keeps XM's refusal. refly.mjs --check flies a stored window again and
+//    matches the stored FFM row within 1e-4: the check that the answer changes no number.
 import fs from 'node:fs';
 import path from 'node:path';
 
