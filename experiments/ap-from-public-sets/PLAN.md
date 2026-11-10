@@ -24,7 +24,7 @@ The weather table comes from the five-day pipeline's builder (`experiments/ap-fi
 
 ## Arms
 
-For a public set with epoch `t0`. Nothing published after `t0` enters any arm.
+For a public set with epoch `t0`. Nothing published after `t0` enters any arm. (Not true as written for part 1; amendment A3 states what each arm read and what part 2 reads.)
 
 | Arm | What flies | Made from |
 | --- | --- | --- |
@@ -45,11 +45,11 @@ For a public set with epoch `t0`. Nothing published after `t0` enters any arm.
 | Part | Set epochs | Kind |
 | --- | --- | --- |
 | 1 | 2026-06-01 to 2026-08-10 | an earlier period, never fitted or scored by this construction |
-| 2 | 2026-11-11 to 2026-11-24 | sets published after this registration |
+| 2 | 2026-11-11 to 2026-12-22 (42 days by amendment A3; first registered as 14 days, to 2026-11-24) | sets published after this registration |
 
 Per satellite: the first set in the part, then each next set at least 3 days after the last one taken. A set counts when truth covers at least 90 % of the first day after its epoch.
 
-Part 2 is run once, when the truth sources have published through 2026-12-01. A class with no truth by then is reported as not scored.
+Part 2 is run once, when the truth sources have published through 2026-12-29 and not before 2027-01-12 (amendment A3; first registered as 2026-12-01). A class with no truth by then is reported as not scored.
 
 ## Truth
 
@@ -88,12 +88,14 @@ After part 1, a class is served on AP when `S` has the verdict BEATS. Every othe
 
 Part 2 tests that rule. It holds when no class served on AP has the verdict LOSES in part 2. It fails for a class that does, and that class goes back to the set.
 
+**Both paragraphs are replaced by amendment A3:** no class is served on AP from part 1, and part 2 has a rule that can fail.
+
 ## What this cannot show
 
 - Truth exists for about 150 satellites, all well-tracked payloads. The verdict for a class speaks for objects like them. Debris and rocket bodies are not tested.
 - `LOW_LEO` has two or three satellites with truth. It will read FEW.
 - The weather table uses final values of the observed indices up to and including the day of `t0`, not the values as first issued, and a recurrence forecast after it. Only AP reads weather.
-- The archive keeps the latest revision of a set at a given epoch.
+- The archive keeps the latest revision of a set at a given epoch. (Wrong: it keeps every revision and the loader takes the newest; see amendment A3.)
 - COSMIC-2's orbits are near-real-time products, good to decimeters; the errors scored here are tens of meters and up.
 
 ## What is published
@@ -118,3 +120,50 @@ Part 1 ran as registered and scored 2,063 sets. No laser sphere was among them, 
 **What was known when this was written.** The fault was seen in the list of truth sources of the part 1 table and confirmed by reading epochs only. No error of any arm on the missing satellites had been computed. Sets already scored are not affected: their truth steps (10, 300 and 900 s) give the same count under both forms.
 
 **Reporting.** Part 1 is run again in full with the corrected count. The results carry both tables: `part1-as-registered` and `part1`.
+
+
+### A2, 2026-11-10: no satellite is excluded
+
+The owner ruled on 2026-11-10: "Drop the 5 November rule and any rule that says to exclude data" (stack issue 314). The repository's hold gate, which this plan applied to truth and to sets, excluded six Galileo satellites, one Eutelsat satellite, names containing STARLINK, and Swarm and GRACE-FO data after 2026-10-31. From this amendment on it excludes nothing: `isHeldForStudy` returns false.
+
+**Effect.** Part 1 as published stays as it is. It is run once more with every satellite, as `part1-all-satellites`, and both tables are published. Part 2 runs with every satellite. `run.mjs` gains a `--label` option so the second run keeps the first run's rows.
+
+**What was known when this was written.** The published part 1 tables. No error of any arm on the newly included satellites had been computed.
+
+
+### A3, 2026-11-10: part 2 is made able to fail, reads the tail, and reads only what existed
+
+An adversarial review of part 1 ([stack issue 316](https://github.com/DigitalArsenal/spacedatanetwork-stack/issues/316), review 0, findings C3-1 to C3-7) recomputed every figure from the part 1 rows and found four things: part 2 as registered could not fail in two of the four classes; the median hides a tail that is worse than the set's; three sentences of this plan were not true as written; and part 1 does not support a rule for a catalog. This amendment is merged before the first set epoch of part 2 (2026-11-11 00:00 UTC) and before any part 2 set is fitted.
+
+**What was known when this was written.** The three published part 1 tables, and the review's figures from the part 1 rows, all quoted below. The guard of item 2 was chosen on part 1. No part 2 set existed.
+
+Notation: for a set, `a` is the 72 h error of the set on SGP4 and `b` that of an AP record, both against truth.
+
+**1. Part 2 is 42 days.** Set epochs 2026-11-11 to 2026-12-22. It is run once, when the truth sources have published through 2026-12-29, and not before 2027-01-12. Reason: in every 14-day window of part 1, `MID_LEO` and `GEO` hold under 30 sets and read FEW, so 14 days could refute nothing there; in every 42-day window of part 1 no class reads FEW.
+
+**2. The served record gets a guard.** In part 2, `S` is `D5` when it exists and its fit residual (`fit.D5.rmsM`, the root mean square of the fit as the module reports it) is at most 3 times `B3`'s (`fit.B3.rmsM`) for the same set; else `B3`; else the set. It is chosen without truth. The unguarded record of part 1 (`D5`, else `B3`, else the set) is scored and printed beside it as `S0`. Reason: in part 1 all 25 sets where `S` was more than twice as far as the set were `D5` records whose fit did not close (residual 1.4 to 73 km, more than 3 times `B3`'s in every one), where the orbit had changed inside the fitted history.
+
+**3. The tail is printed.** For each class and each record, beside the registered median ratio and its interval: `T95`, the 95th percentile of `b` over the 95th percentile of `a`; `Trms`, the square root of the sum of `b` squared over the sum of `a` squared; `Tmean`, the sum of `b` over the sum of `a`; the share of sets with `b` more than twice `a`; and the largest `b / a`. Intervals as the plan's (satellites resampled with replacement, seed 20261110). On part 1 as published, for `MID_LEO`, `HIGH_LEO`, `MEO`, `GEO`: `T95` 1.01, 1.13, 1.04, 1.26; `Trms` 0.88, 0.81, 0.92, 1.30; share beyond twice the set 1.1 %, 1.4 %, 0.8 %, 7.0 %. With the guard, post hoc on part 1: medians 0.45, 0.27, 0.98, 0.83; `T95` 0.90, 0.91, 1.00, 1.00; `Trms` 0.77, 0.99, 1.00, 0.98; no set beyond twice the set.
+
+**4. The rule that part 2 tests.** For each class, the guarded record `S` passes when, in part 2, it reads BEATS on the registered statistic AND meets three thresholds on point estimates: `T95` at most 1.00, `Trms` at most 1.00, and at most 1.0 % of sets with `b` more than twice `a`. A class that passes may be served on AP for satellites of the kinds tested (item 7); nothing here decides for debris, rocket bodies or constellations that maneuver continually. A class that reads BEATS and misses a threshold is reported as "closer at the median, not at the tail" and stays on the set. A class that reads TIE, LOSES or FEW stays on the set. Nothing else counts as holding.
+
+**5. What each arm may read in part 2.** Each set is taken as first published: of the revisions at an epoch, the one created first. The history of `C5` and `D5` holds only sets created no later than that. The weather table holds observed values through the last full UTC day before `t0` and the recurrence forecast after it. Lead is still counted from the set's epoch.
+
+**6. Sentences of this plan that were not true as written, corrected.**
+- "Nothing published after `t0` enters any arm." In part 1 each arm read the newest revision of the current set and of the earlier sets; 41 % of scored sets used a revision whose elements differ from the first one published, created a median 5.2 h later. Sets were created a median 12.3 h after their epochs, 17 % of them more than 24 h after. The weather table held observed indices through the UTC day of `t0`, so up to 24 h of observed geomagnetic activity after `t0` reached the AP fit. Measured effect on part 1 (both arms rebuilt from what existed when the set first appeared, every second set): no class ratio moves in the third digit. Weather cut one day earlier: `HIGH_LEO` unchanged, `MID_LEO` 0.459 to 0.470, the one strong-drag satellite 0.873 to 0.915.
+- "The archive keeps the latest revision of a set at a given epoch." The archive keeps every revision with its creation time; the loader takes the highest `GP_ID`.
+- "Registered ... before any set of either part was fitted or scored by any arm of this construction" is true of this construction's arms. The period of part 1 was in the past, its sets and truth had been on disk for months, and the plan was merged ten seconds before the first run started (13:36:08 and about 13:36:18 UTC).
+- Amendment A1, "What was known": add that a comment on stack issue 230 at 13:15 UTC, twenty minutes before the registration, already recorded that on the low laser spheres a set of this kind sits near 0.48 km and AP near 0.02 to 0.06 km. A1 admitted those spheres (7 satellites, 117 sets, ratio 0.20).
+- Part 1 as registered read `MID_LEO` 0.63 (0.38 to 0.76) and `HIGH_LEO` 0.32 (0.25 to 0.56). The 0.50 and 0.28 of the published table are after A1. Wherever the later pair is quoted, the first is quoted with it.
+- Part 1 used sets with epochs from 2026-05-24 as fit history (129 of the 137 rows with `t0` before 4 June). For these satellites, 2026-05-24 to 05-31 counts as read.
+
+**7. What part 1 shows, restated.**
+- `B3` and `D5` are fitted to the set's own SGP4 flight over the 72 hours they are scored on. The record is closer to precise orbits there because AP does not reproduce SGP4's periodic error: `a` squared less `b` squared is a median 0.62 km (as a length) in `MID_LEO`, 0.55 km in `HIGH_LEO`, 0.28 km in `MEO`, 1.28 km in `GEO`, and AP's fit residual against the SGP4 flight is of the same size. That is not forecast skill. Fitted to the history alone (`C5`), AP reads 0.62 TIE, 0.49 BEATS, 1.13 LOSES and 1.00 TIE in the four classes, and past the fitted 72 hours `MEO` and `GEO` read TIE on each of days 4 to 7.
+- At the 95th percentile the served record of part 1 is not closer than the set in any class, and in `GEO` it is farther in root mean square (1.30).
+- The classes are 139 payloads with precise orbits. `HIGH_LEO` is 14 satellites, all of them in AP's development lists (five low laser spheres, nine altimetry satellites). `MID_LEO` is 10 satellites, 4 in those lists (0.29 on those, 0.72 on the 6 outside). `GEO` is 8 navigation satellites, 6 of them inclined more than 10 degrees: it is not the geostationary belt. No debris and no rocket body is tested. The errors of one satellite's sets are correlated (0.52 in `MID_LEO`, 0.44 in `HIGH_LEO`), so the satellites are the sample, not the sets.
+- The rule "a class is served on AP when `S` has the verdict BEATS" is withdrawn. No class is served on AP from part 1. Part 2 decides class by class under item 4, and its verdict speaks for satellites like those tested.
+
+**8. Code.** `run.mjs`, `lib.mjs`, `table.mjs` and `config.json` are changed to do items 1 to 5 before any part 2 row is written, in one commit that the part 2 manifest names. Part 1's rows and tables are not changed; `table.mjs` gains the tail columns of item 3 for every part.
+
+**Also found, and stated here:** the module does not return bit-identical numbers for the same set in two runs that differ in the order of calls on one instance (405 of 2,223 sets differ in an AP arm, largest difference 1.9e-7 in the logarithm of the ratio; the SGP4 arm is identical). No printed figure moves.
+
