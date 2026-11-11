@@ -82,7 +82,9 @@ async function worker() {
   const arms = await A.openArms({ apWasm: args.wasm, ussf: want.includes('USSFXP'), sgp4: want.includes('SGP4') });
   const build = { version: args['ap-version'], sha256: args.sha256 }, env = envRecord();
   const fly = async (w, need) => {
-    const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs), t0 = performance.now();
+    // a 24 h fit that carries the 72 h fit's terms (A.carry24) reads the 72 h before the cutoff even where the window lists no 72 h arc
+    const carrying = A.carry24(build.version) && w.arcs.includes(24);
+    const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs, carrying ? 72 : 0), t0 = performance.now();
     let ctx;
     try {
       const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
@@ -99,11 +101,15 @@ async function worker() {
         let from = D0 - arc * W.HOUR, hours = arc;
         const lastBeforeCutoff = ctx.truth.lines.filter((l) => W.ms(l.epoch) <= D0).at(-1);
         // (a truth with no state before the cutoff has no arc either: the coverage error below)
-        if (theory === 'AP' && arc === 72 && A.maneuver72(build.version) && args.burns && lastBeforeCutoff) {
+        // the object's maneuvering state at the cutoff (arms.mjs MANEUVER72): the 72 h fit's arc, and whether a 24 h fit carries
+        let m = null;
+        if (theory === 'AP' && A.maneuver72(build.version) && args.burns && lastBeforeCutoff) {
           const last = lastBeforeCutoff, MU = 398600.4418, rr = Math.hypot(...last.r), vv = Math.hypot(...last.v);
           const aKm = 1 / (2 / rr - (vv * vv) / MU), h = [last.r[1] * last.v[2] - last.r[2] * last.v[1], last.r[2] * last.v[0] - last.r[0] * last.v[2], last.r[0] * last.v[1] - last.r[1] * last.v[0]];
           const perigeeKm = aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
-          const m = A.maneuverArc(A.knownBurns(args.burns, w.group, w.name, D0), D0, perigeeKm);
+          m = A.maneuverArc(A.knownBurns(args.burns, w.group, w.name, D0), D0, perigeeKm);
+        }
+        if (m && arc === 72) {
           row.fitProcess = m.maneuvering ? 'maneuvering: the arc after its last burn' : 'the full arc';
           if (m.maneuvering) { from = m.startMs; hours = (D0 - from) / W.HOUR; row.fitArcHours = Math.round(hours * 10) / 10; }
         }
@@ -120,7 +126,19 @@ async function worker() {
             const pcf = theory === 'SGP4XP' ? A.PCF.XP : choice.pcf, spw = theory === 'SGP4XP' ? undefined : ctx.wx?.spw;
             if (theory === 'AP') row.pcf = choice.label;
             const base = { thin, D0, sc: ctx.sc, object: ctx.object };
-            const x = theory === 'USSFXP' ? await arms.ussf(base) : theory === 'SGP4' ? await arms.sgp4(base) : await arms.ap({ ...base, pcf, spw });
+            let x = theory === 'USSFXP' ? await arms.ussf(base) : theory === 'SGP4' ? await arms.sgp4(base) : await arms.ap({ ...base, pcf, spw });
+            // stack issue 496: the 24 h fit's carried terms (arms.mjs, CARRY24_SINCE); fitProcess names what the row's fit did
+            if (theory === 'AP' && arc === 24 && carrying) {
+              const thin72 = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - 72 * W.HOUR && t <= D0; }), 72);
+              // the terms come from the fit of the full 72 h arc, a maneuvering object's too (not its 72 h record, the arc after its burn)
+              row.fitProcess = 'plain, no 72 h arc';
+              if (thin72) {
+                const t72 = A.carriedTerms((await arms.ap({ ...base, thin: thin72, pcf: A.apPcfFor(w.group, build.version, G.vacuum, 72).pcf, spw, record: true })).ocm);
+                const radiation = t72.regime === 'ABOVE', drag = !radiation && (x.fit.sigmaLnB ?? 0) >= A.CARRY24_DRAG_SIGMA;
+                row.fitProcess = (radiation ? 'radiation carried from 72 h' : drag ? 'drag carried from 72 h' : 'plain') + (m?.maneuvering ? ', maneuvering' : '');
+                if (radiation || drag) x = await arms.ap({ ...base, pcf: A.carriedPcf(pcf, t72, { drag, radiation }), spw });
+              }
+            }
             Object.assign(row, { days: x.days, fitRmsKm: x.rms, fit: x.fit, s: x.s });
           } catch (e) { row.apError = String(e?.message ?? e).slice(0, 200); }
         }
@@ -297,11 +315,18 @@ async function main() {
       const pcfLabel = A.apPcfFor(g, version, !!W.GROUPS[g].vacuum, arc).label;
       const stated = [...new Set(ws.map((w) => rowOf('AP', w, arc)?.pcf).filter(Boolean))];
       if (stated.some((x) => x !== pcfLabel)) throw new Error(`${g} ${arc} h: stored AP rows name $PCF ${stated.join(', ')}, the rule gives ${pcfLabel}`);
-      // stack issue 489: a 72 h row flown with the burn lists (--burns) from MANEUVER72_SINCE states its fit process, with the windows each way
-      const maneuvering = scored.filter((w) => rowOf('AP', w, arc)?.fitProcess === 'maneuvering: the arc after its last burn').length;
-      const fitProcess = arc === 72 && A.maneuver72(version) && scored.some((w) => rowOf('AP', w, arc)?.fitProcess)
-        ? `An object with its perigee at ${A.MANEUVER72.perigeeMinKm} km or above whose precise orbit holds a burn known at the cutoff, ending within ${A.MANEUVER72.historyDays} days before it, is fitted on the arc after its last such burn (${A.MANEUVER72.minHours} to ${A.MANEUVER72.capHours} h; the module fits it under its short-arc rule); every other window on the full 72 h. Windows: ${maneuvering} on the arc after a burn, ${scored.length - maneuvering} on the full arc.`
-        : null;
+      // each row states its fit process in plain words, with the windows each way: a 24 h row from CARRY24_SINCE (stack issue 496), a
+      // 72 h row flown with the burn lists (--burns) from MANEUVER72_SINCE (stack issue 489)
+      const processCount = (p) => scored.filter((w) => rowOf('AP', w, arc)?.fitProcess === p).length;
+      const maneuvering = processCount('maneuvering: the arc after its last burn');
+      // a 24 h row's process with or without the maneuvering object's mark
+      const carryCount = (p) => scored.filter((w) => (rowOf('AP', w, arc)?.fitProcess ?? '').replace(/, maneuvering$/, '') === p).length;
+      const carryManeuvering = scored.filter((w) => /, maneuvering$/.test(rowOf('AP', w, arc)?.fitProcess ?? '')).length;
+      const fitProcess = arc === 24 && A.carry24(version)
+        ? `Each 24 h fit first fits the same window's 72 h arc, which ends at the same cutoff, and carries its terms: above the drag the radiation terms (AGOM with its uncertainty, and ECOM2's Y0 where that fit solved it); under the drag the drag term with its uncertainty, only where the 24 h arc alone leaves it undetermined (a stated sigma of ln BTERM of ${A.CARRY24_DRAG_SIGMA} or more). That 72 h fit is of the full arc, for an object that maneuvers (the 72 h rule below) too, not its 72 h record. Windows: ${carryCount('radiation carried from 72 h')} radiation carried, ${carryCount('drag carried from 72 h')} drag carried, ${carryCount('plain')} fitted as before, ${processCount('plain, no 72 h arc')} without a 72 h arc in the truth (fitted as before); ${carryManeuvering} of the first three are of a maneuvering object.`
+        : arc === 72 && A.maneuver72(version) && scored.some((w) => rowOf('AP', w, arc)?.fitProcess)
+          ? `An object with its perigee at ${A.MANEUVER72.perigeeMinKm} km or above whose precise orbit holds a burn known at the cutoff, ending within ${A.MANEUVER72.historyDays} days before it, is fitted on the arc after its last such burn (${A.MANEUVER72.minHours} to ${A.MANEUVER72.capHours} h; the module fits it under its short-arc rule); every other window on the full 72 h. Windows: ${maneuvering} on the arc after a burn, ${scored.length - maneuvering} on the full arc.`
+          : null;
       // --burns with after-burn rows: the numerical arm's fit process in one sentence, with the windows each way (stack issues 462 and 489)
       const ffmRefit = bs.filter((b) => b?.fitProcess === REFIT && !b.burnInArc).length, ffmNone = bs.filter((b) => b?.burnInArc).length;
       const ffmFull = bs.filter((b) => b?.fitProcess && b.fitProcess !== REFIT && !b.burnInArc).length;
