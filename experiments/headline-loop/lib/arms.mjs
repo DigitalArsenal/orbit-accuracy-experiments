@@ -143,6 +143,9 @@ export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMi
 // (NUMERICAL_AFTER_BURN.store), one row per window and fit arc of the rows flown, so the two can be compared. Its perigee floor is AP's
 // (NUMERICAL_AFTER_BURN.perigeeMinKm): same rule, same arc, both arms.
 export const NUMERICAL_AFTER_BURN = { minHours24: 6, perigeeMinKm: MANEUVER72.perigeeMinKm, store: `${NUMERICAL_STORE}-after-burn` };
+// The drag setting flown again at tolerance 1e-13 (stack issue 520), fit and forecast, one row per window and fit arc, stored apart from
+// the 1e-10 rows (which stay as they are): lib/settings.mjs L70S13. A row of the table takes them only when every window of it has one.
+export const NUMERICAL_TIGHT = { from: 'L70S', to: 'L70S13', store: `${NUMERICAL_STORE}-L70S13` };
 /** The numerical arm's fit arc for a fit of arcH hours: { startMs, maneuvering, lastBurnMs?, shortAfterBurn? }. */
 export const numericalArc = (burns, D0, perigeeKm, arcH) => {
   const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
