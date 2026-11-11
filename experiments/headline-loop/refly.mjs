@@ -59,15 +59,20 @@ async function afterBurns() {
   for (const w of mine) {
     const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
     const head = { key: w.key, part: 'after-burn', group: w.group, name: w.name, cutoff: W.iso(D0), burnList: sha(w.group, w.name) };
+    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name);
+    // the decision needs the cutoff's last state alone (its perigee); the window's truth, scored epochs and weather only where a fit moves
     let ctx;
     try {
-      const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
-      const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
-      const last = truth.lines.filter((l) => W.ms(l.epoch) <= D0).at(-1);
-      if (!sc.entered.length || !last) throw new Error('no lead bin or no state before the cutoff');
-      ctx = { truth, sc, wx: G.vacuum ? null : W.weatherAt(D0), perigeeKm: A.perigeeKmOf(last) };
+      const last = (await W.truthOf(w, D0 - 2 * W.HOUR, D0, arms.axes)).lines.at(-1);
+      if (!last) throw new Error('no state before the cutoff');
+      ctx = { perigeeKm: A.perigeeKmOf(last) };
+      if (!thrust && w.arcs.some((arc) => A.numericalArc(burns, D0, ctx.perigeeKm, arc).maneuvering)) {
+        const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
+        const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
+        if (!sc.entered.length) throw new Error('no lead bin');
+        Object.assign(ctx, { truth, sc, wx: G.vacuum ? null : W.weatherAt(D0) });
+      }
     } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
-    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name);
     for (const arc of w.arcs) {
       const b = base.get(`${w.key}|${arc}`);
       if (!b || b.error || done.has(`${w.key}|${arc}`)) continue;

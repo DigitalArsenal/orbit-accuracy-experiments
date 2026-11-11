@@ -20,7 +20,9 @@ takes the arc after it when that arc is at least 6 h long, and otherwise the ful
 (`<store>/f0b8352a43f3-after-burn/`, one row per window and fit arc, with the decision where no refit was needed), so the two can be
 compared. With `--burns`, a regime that has such rows takes the refit where the rule moved the arc and the stored fit everywhere else, and
 names its numerical fit process (`ffmFitProcess`). The commercial geostationary row gets a numerical arm this way on the windows whose
-arc the rule frees of known burns; a window whose every allowed arc still holds one has none.
+arc the rule frees of known burns; a window whose every allowed arc still holds one has none. Neither has an object whose burn list states
+that its orbit is not ballistic between impulses (`notBallistic`): flown from the truth's positions alone, the numerical setting closes
+above the 100 m bar over the detector's pieces, as under continuous low thrust, so no arc of it is burn-free.
 
 ## Tools
 
