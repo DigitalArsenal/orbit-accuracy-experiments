@@ -7,6 +7,7 @@
 // version. Writes one JSON (schema sdn-ap-scoreboard/2) and nothing else. The theory alone: no record that carries a forecast.
 //
 //   node experiments/headline-loop/table.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 14] [--groups GD,IG]
+//     [--previous <the previous release table>: the method line names the rows that gained windows since it]
 //   node experiments/headline-loop/table.mjs --check
 //
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm and its package.json), never from a working tree.
@@ -36,7 +37,7 @@ const PASS_LEAD_DAY = 5, PASS_M = 100;
 const STATISTIC = [
   'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it); the median and the 95th percentile (linear interpolation) are taken over the lead\'s windows, those where AP and the numerical propagator were both scored.',
   'xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module\'s own GCRF output. xpUssf is the Space Force\'s SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module\'s own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is null until it has a row on every window of the row; a window where its fit or flight failed counts as flown. Its median and 95th percentile are taken over the lead\'s windows where it was scored (windows); failed counts the lead\'s windows where its fit or flight failed, so a figure with failed above 0 is over the scored windows alone (a file without windows and failed does not state them, and its readers must not take failed as 0). apBeatsXp and apBeatsXpUssf count the lead\'s windows where that XP was scored (windows), the ones where AP\'s error is below that XP\'s (apBetter), and give the median over them of AP\'s error divided by that XP\'s (medianApOverXp); a window where that XP failed is left out of the pair count, never counted as AP closer.',
-  'From sdn-ap 0.6.15, the two medium Earth orbit rows of navigation satellites (GN and Galileo) with fits of 72 h or more fit AP with $PCF FORCES.ECOM2, which also solves the ECOM2 Y0 radiation term (SDN-AP SPEC 16.13); every other row, and every row of an older build, fits AP with the same $PCF as before. apForces states each row\'s forces and fitted terms.',
+  'From sdn-ap 0.6.15 the two medium Earth orbit rows of navigation satellites (GN and Galileo), and from sdn-ap 0.6.19 the geostationary and inclined geosynchronous rows, fit AP with $PCF FORCES.ECOM2 on fits of 72 h or more, which also solves the ECOM2 Y0 radiation term (SDN-AP SPEC 16.13); every other row (the commercial geostationary rows among them: their fits take the vacuum $PCF), and every row of an older build, fits AP with the same $PCF as before. apForces states each row\'s forces and fitted terms.',
   'within100mOfFfm counts, at the 120 hour lead, the windows where AP\'s error is less than 100 m above the numerical propagator\'s (AP better than it counts as met); share is met over windows. apFfmRank is Spearman\'s rank correlation (average ranks for ties) of AP\'s and the numerical propagator\'s errors over the lead\'s windows (null without a numerical propagator or under 10 windows); near 1, the two order the windows alike, as when both are limited by the same density forecast.',
 ].join(' ');
 // linear interpolation between order statistics (R type 7)
@@ -143,8 +144,10 @@ async function main() {
   const notYet = all.second.filter((w) => !secondIn.has(w.group));
   const day = (t) => new Date(t).toISOString().slice(0, 10), count = (n) => n.toLocaleString('en-US');
   const cutoffs = listed.map((w) => w.cutoffMs);
+  const secondText = [...secondIn].filter((g) => !only || listed.some((w) => w.group === g && all.second.includes(w))).map((g) => `${W.GROUPS[g].label} (${count(all.second.filter((w) => w.group === g).length)} windows)`);
   const windowsText = `The table holds ${count(listed.length)} windows (one satellite and one cutoff each), cutoffs from ${day(Math.min(...cutoffs))} to ${day(Math.max(...cutoffs))}`
-    + (notYet.length ? `; the ${count(notYet.length)} windows whose fit arc or 7-day forecast touches March to May 2026 (the second pass) are not flown yet` : all.second.length ? ', the windows touching March to May 2026 (the second pass) among them' : '')
+    + (notYet.length && secondText.length ? `; the second pass (the windows whose fit arc or 7-day forecast touches March to May 2026) is in for ${secondText.join(', ')}, and its ${count(notYet.length)} windows of the other rows are not flown yet`
+      : notYet.length ? `; the ${count(notYet.length)} windows whose fit arc or 7-day forecast touches March to May 2026 (the second pass) are not flown yet` : all.second.length ? ', the windows touching March to May 2026 (the second pass) among them' : '')
     + (all.after.length ? `; ${count(all.after.length)} windows reaching past 2026-11-10 are not read` : '') + '.';
   const rowsFile = path.join(dir, 'rows.jsonl');
   // a row without a theory is AP's (the version-1 rows)
@@ -194,7 +197,8 @@ async function main() {
     const best = Math.min(...Object.values(med));
     return present.find((a) => med[a] <= best * 1.01);
   };
-  const rows = [];
+  const rows = [], ecom2Rows = [], tally = {};
+  let windowArcs = 0;
   for (const g of ALL.filter((x) => groups.includes(x))) {
     for (const arc of [...new Set(listed.filter((w) => w.group === g).flatMap((w) => w.arcs))].sort((a, b) => a - b)) {
       const ws = listed.filter((w) => w.group === g && w.arcs.includes(arc));
@@ -240,14 +244,33 @@ async function main() {
       const stated = [...new Set(ws.map((w) => rowOf('AP', w, arc)?.pcf).filter(Boolean))];
       if (stated.some((x) => x !== pcfLabel)) throw new Error(`${g} ${arc} h: stored AP rows name $PCF ${stated.join(', ')}, the rule gives ${pcfLabel}`);
       rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, apForces: A.AP_FORCES_TEXT[pcfLabel], ffm, within100mOfFfm, leads });
+      if (pcfLabel === 'AP_ECOM2') ecom2Rows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
+      for (const w of ws) for (const t of THEORIES) { const r = rowOf(t, w, arc), c = (tally[t] ??= { scored: 0, failed: 0, windowError: 0, none: 0 }); if (!r) c.none += 1; else if (r.error) c.windowError += 1; else if (r.apError) c.failed += 1; else c.scored += 1; }
+      windowArcs += ws.length;
       const failed = (t) => ws.filter((w) => rowOf(t, w, arc)?.apError).length;
       console.error(`  ${g} ${arc} h: ${scored.length} of ${ws.length} windows scored${THEORIES.map((t) => (failed(t) ? `, ${t} failed on ${failed(t)}` : '')).join('')}; numerical arm ${label ? `${label} (${ffm.configuration.split(';')[0]})` : complete ? 'none properly configured' : 'being measured'}`);
     }
   }
+  // the method line's last sentences: each column's build, and what each scored over the table's window-arcs (a failure or a window
+  // without truth is counted, never dropped); the rows whose AP fits state FORCES.ECOM2
+  const short = (s) => String(s).slice(0, 12);
+  const builds = { AP: `sdn-ap ${version} (modules ${short(commit)}, wasm ${short(wasmSha)})`,
+    USSFXP: A.OUTSIDE.USSFXP.builds.map((b) => `${b.module} ${b.version} (modules ${short(b.modulesCommit)}, wasm ${short(b.wasmSha256)})`).join(', '),
+    SGP4: A.OUTSIDE.SGP4.builds.map((b) => `${b.module} (modules ${short(b.modulesCommit)}, wasm ${short(b.wasmSha256)})`).join(', ') };
+  const tallyOf = (t) => { const c = tally[t] ?? { scored: 0, failed: 0, windowError: 0, none: 0 }; return `scored ${c.scored.toLocaleString('en-US')} of ${windowArcs.toLocaleString('en-US')}, its fit or flight failed on ${c.failed}, no truth or coverage on ${c.windowError}${c.none ? `, not flown on ${c.none}` : ''}`; };
+  const columns = `Columns by build: ap and xp come from ${builds.AP}, xpUssf from ${builds.USSFXP}, sgp4 from ${builds.SGP4}. Over the table's ${windowArcs.toLocaleString('en-US')} window-arcs (one window and one fit arc each), ap ${tallyOf('AP')}; xp ${tallyOf('SGP4XP')}; xpUssf ${tallyOf('USSFXP')}; sgp4 ${tallyOf('SGP4')}; each is counted in its column, none dropped. `
+    + (ecom2Rows.length ? `The rows whose AP fits state $PCF FORCES.ECOM2 in this table: ${ecom2Rows.join(', ')}.` : 'No row\'s AP fits state $PCF FORCES.ECOM2 in this table.');
+  // --previous <the previous release table>: the rows that gained windows since it (a second pass coming in), so a moved row is not read
+  // as the build's doing
+  const previous = args.previous ? JSON.parse(fs.readFileSync(args.previous, 'utf8')) : null;
+  const gained = previous ? rows.map((r) => ({ r, p: previous.rows.find((x) => x.regime === r.regime && x.fitHours === r.fitHours) })).filter(({ r, p }) => p && r.windows > p.windows) : [];
+  const gainedText = !previous ? '' : gained.length
+    ? ` Against the previous release table (sdn-ap ${previous.module.version}), these rows gained windows in this release, so their figures move with the windows added and not only with the build: ${gained.map(({ r, p }) => `${r.regime} (${r.fitHours} h fit), ${count(p.windows)} to ${count(r.windows)} scored windows`).join('; ')}.`
+    : ` Against the previous release table (sdn-ap ${previous.module.version}), no row gained windows.`;
   const doc = {
     schema: 'sdn-ap-scoreboard/2',
     measured: new Date().toISOString().slice(0, 10),
-    statistic: STATISTIC,
+    statistic: `${STATISTIC} ${columns}${gainedText}`,
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
@@ -348,13 +371,23 @@ async function check() {
     const at = (h) => c.rows.find((x) => x.fitHours === h), pcfAt = (h) => stored.find((x) => x.arcH === h)?.pcf;
     ok(r3.code === 0 && pcfAt(72) === 'AP_ECOM2' && pcfAt(24) === 'AP' && at(72)?.apForces === A.AP_FORCES_TEXT.AP_ECOM2 && at(24)?.apForces === A.AP_FORCES_TEXT.AP, `the ECOM2 case on ${key}: ${r3.err.slice(-200)} 72 h ${pcfAt(72)}, 24 h ${pcfAt(24)}`);
   } else console.log(`TABLE CHECK: the ECOM2 case did not run: the build flown is sdn-ap ${version}, which has no FORCES.ECOM2 term (AP solves it from ${A.ECOM2_SINCE})`);
+  // 4. the same on one geostationary 72 h window, from the build that solves Y0 there (ECOM2_GEO_SINCE)
+  if (A.atLeast(version, A.ECOM2_GEO_SINCE)) {
+    const geRows = fs.readdirSync(real).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => lines(path.join(real, f))).filter((r) => r.group === 'GE' && !r.error && r.arms?.FFMq?.ok);
+    const key = geRows.map((r) => r.key).sort()[0];
+    const s4 = path.join(dir, 's4'), out4 = path.join(dir, 'd.json'), keys = path.join(dir, 'keys-ge.txt');
+    fs.mkdirSync(s4, { recursive: true }); fs.symlinkSync(real, path.join(s4, A.NUMERICAL_STORE)); fs.writeFileSync(keys, `${key}\n`);
+    const r4 = runIn(s4, out4, ['--keys-file', keys, '--theories', 'AP,SGP4XP'], 'GE');
+    const d = fs.existsSync(out4) ? E.readJson(out4) : { rows: [] }, stored = fs.existsSync(path.join(s4, 'table', sha12, 'rows.jsonl')) ? lines(path.join(s4, 'table', sha12, 'rows.jsonl')).filter((r) => r.theory === 'AP') : [];
+    ok(r4.code === 0 && stored.find((x) => x.arcH === 72)?.pcf === 'AP_ECOM2' && d.rows.find((x) => x.fitHours === 72)?.apForces === A.AP_FORCES_TEXT.AP_ECOM2, `the geostationary ECOM2 case on ${key}: ${r4.err.slice(-200)} ${stored.find((x) => x.arcH === 72)?.pcf}`);
+  } else console.log(`TABLE CHECK: the geostationary ECOM2 case did not run: the build flown is sdn-ap ${version}, before ${A.ECOM2_GEO_SINCE}, which solves Y0 on the geostationary and inclined geosynchronous rows`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }
 // the command line the file names, in repository-relative form: without the arguments that are local paths (the modules clone, the output file)
-function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
+function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--previous'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
 function round3(x) { return x == null ? null : Math.round(x * 1000) / 1000; }
 /** Spearman's rank correlation: Pearson's correlation of the ranks, tied values given their average rank. */
 function spearman(x, y) {

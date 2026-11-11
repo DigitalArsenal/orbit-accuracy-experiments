@@ -35,10 +35,13 @@ export const PCF = {
 
 // The published rule (2026-11-10): for navigation satellites in medium Earth orbit AP also solves the ECOM2 Y0 term on fits of 72 h or
 // more. The gate is the group, the fit arc and the AP build's own version (its package.json at the commit flown, compared by its numeric
-// fields, so 0.6.15-rc.1 counts as 0.6.15): from ECOM2_SINCE, GN and GN_GAL fits of ECOM2_MIN_ARC hours or more use PCF.AP_ECOM2; every other
+// fields, so 0.6.15-rc.1 counts as 0.6.15): from ECOM2_SINCE, GN and GN_GAL fits of ECOM2_MIN_ARC hours or more use PCF.AP_ECOM2, and from
+// ECOM2_GEO_SINCE the geostationary (GE) and inclined geosynchronous (IG) fits of that length too; every other
 // fit, and every fit by an older build (which refuses FORCES.ECOM2 by name), uses the same $PCF bytes as before.
-export const ECOM2_GROUPS = ['GN', 'GN_GAL'];
 export const ECOM2_SINCE = '0.6.15';
+// the one-day class's resonant tail (sdn-ap 0.6.19, stack #434), which also solves Y0 on these rows (SDN-AP SPEC 16.13)
+export const ECOM2_GEO_SINCE = '0.6.19';
+export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { groups: ['GE', 'IG'], since: ECOM2_GEO_SINCE }];
 export const ECOM2_MIN_ARC = 72;
 const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
 export const atLeast = (v, w) => {
@@ -49,7 +52,7 @@ export const atLeast = (v, w) => {
 };
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
-  const label = vacuum ? 'AP_VACUUM' : ECOM2_GROUPS.includes(group) && arcH >= ECOM2_MIN_ARC && atLeast(version, ECOM2_SINCE) ? 'AP_ECOM2' : 'AP';
+  const label = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
   return { label, pcf: PCF[label] };
 };
 /** AP's forces and fitted terms for a $PCF label, in one plain sentence (the table's apForces). */
