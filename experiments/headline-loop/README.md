@@ -15,8 +15,10 @@ and each stored row records its own (`fitProcess` in rows.jsonl).
 
 From `MANEUVER72_SINCE` (lib/arms.mjs; stack #489), with `--burns` naming the burn detector's lists (stack #462), AP's 72 h fit of a
 maneuvering object takes the arc after its last burn. That is an object with its perigee at 600 km or above whose precise orbit holds a
-burn known at the cutoff: every detector piece that found the burn ended by then, and the burn ended within 7 days before it. The arc
-after that burn runs 24 to 70 h, so the module fits it under its short-arc rule. Every other window keeps the full 72 h. Each such row
+burn known at the cutoff, and the burn ended within 7 days before it. In a list made as of its burns (`experiments/burn-detector`, stack
+#506) a burn is known from its report time, the time it could first be known from data before it; in an older list, once every
+detector piece that found it had ended. The burn ends at the end of its extent, carried across the rejected candidates that begin within
+60 min after it (the tail of a longer burn). The arc after that burn runs 24 to 70 h, so the module fits it under its short-arc rule. Every other window keeps the full 72 h. Each such row
 names its fit process (`fitProcess`), and each stored row records its own. On such an object a 72 h arc fitted at the data's own sigma
 takes the maintenance thrust into its drag term, as the numerical propagator's does, and lands on the numerical propagator's forecast
 instead of the orbit.
