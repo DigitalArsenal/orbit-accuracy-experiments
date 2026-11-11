@@ -19,7 +19,8 @@
 //             (held: at the truth's value, or at 0 off).  Both sides see constant weather (F10.7 150, Ap 15).
 //   tide      the solid Earth tide.  Truth: IERS 2010 solid tides and the IERS 2010 relativity terms.  AP: SOLID_TIDES.
 //   fit       held: the drag and radiation terms held at the values above (sigma 1e-10); solved: the call's default priors.
-// The truth: FFM from the state at the cutoff - 72 h (the commit's own build flying the case's mean elements, as run.mjs makes it), on a
+// The truth: FFM from the state at the cutoff - 72 h (the commit's own build flying the case's mean elements; run.mjs makes it with
+// its reference build, modules 7ed7cf88, so on that commit the two states are the same), on a
 // 300 s grid to 120 h past the cutoff; DE440s, constant Earth orientation (TAI - UTC 37 s); RK78, tolerance 1e-11, steps 1e-3 to 120 s.
 // AP's builds are built unsigned from the commit's sources, every arm alike, the full arm included (its sha is printed beside the
 // committed dist's). D: the largest 3D distance to the truth over the 1,440 states after the cutoff; with it the signed radial,
