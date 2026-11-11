@@ -1,5 +1,4 @@
-// The bar's table for a released sdn-ap version: the catalog's fit (stack #503, #504; the owner, 2026-11-11: "if we are fitting on FFMs
-// numerical forecast and that gives good results, then use that"). For every window of every row that has a numerical arm, AP's record
+// The bar's table for a released sdn-ap version: the catalog's fit (stack #503, #504). For every window of every row that has a numerical arm, AP's record
 // is fitted to the numerical propagator's forecast over 0 to 120 h after the cutoff (the module's fit, the row's $PCF, the weather known
 // at the cutoff), and the window's figure is the largest 3D distance between that record and the forecast over 0 to 120 h on the
 // forecast's 300 s grid (the bar: at most 100 m). Beside it, the error against the precise orbit at day 5 (the scoreboard's statistic:
@@ -12,8 +11,8 @@
 //   node experiments/headline-loop/bar.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 8]
 //     [--groups LS,DO] [--arcs 72,24]
 //
-// The build is read by git show at the commit, never from a working tree; the harness's working tree must be clean (the file names its
-// commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl and are flown again only when its manifest line changes.
+// The build is read by git show at the commit, never from a working tree; this repository's working tree must be clean (the file names
+// its commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl and are flown again only when its manifest line changes.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -43,7 +42,7 @@ async function main() {
   const t0 = Date.now(), root = args['modules-root'], want = args['modules-commit'], out = args.out;
   if (!root || !want || !out) throw new Error('usage: bar.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 8] [--groups LS,DO] [--arcs 72,24]');
   const dirty = git(REPO, 'status', '--porcelain', '--', 'experiments').toString().trim();
-  if (dirty) throw new Error(`refused: the harness's working tree differs from its commit (the file names the commit):\n${dirty}`);
+  if (dirty) throw new Error(`refused: this repository's working tree differs from its commit (the file names the commit):\n${dirty}`);
   const harnessCommit = git(REPO, 'rev-parse', 'HEAD').toString().trim();
   const commit = git(root, 'rev-parse', '--verify', `${want}^{commit}`).toString().trim();
   const wasm = git(root, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`);
@@ -92,9 +91,10 @@ async function main() {
   const quantile = (v, p) => { const s = v.slice().sort((a, b) => a - b); if (!s.length) return null; const i = (s.length - 1) * p, lo = Math.floor(i); return s[lo] + (s[Math.ceil(i)] - s[lo]) * (i - lo); };
   const r1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
   const cells = (xs) => {
-    const ok = xs.filter((x) => x.r && !x.r.error), D = ok.map((x) => x.r.maxDistanceM), met = D.filter((d) => d <= BAR_M).length;
-    const ap = ok.map((x) => x.r.day5M).filter(Number.isFinite), ffm = ok.map((x) => ffmDay5(x.m)).filter(Number.isFinite);
-    return { flown: ok.length, failed: xs.filter((x) => x.r?.error).length, withinBar: { windows: ok.length, met, share: ok.length ? Math.round((met / ok.length) * 1000) / 1000 : null },
+    // a window whose fit is refused or whose flight fails counts against the share: the bar is met over every window attempted
+    const ok = xs.filter((x) => x.r && !x.r.error), failed = xs.filter((x) => x.r?.error).length, D = ok.map((x) => x.r.maxDistanceM), met = D.filter((d) => d <= BAR_M).length;
+    const ap = ok.map((x) => x.r.day5M).filter(Number.isFinite), ffm = ok.map((x) => ffmDay5(x.m)).filter(Number.isFinite), attempted = ok.length + failed;
+    return { flown: ok.length, failed, withinBar: { windows: attempted, met, share: attempted ? Math.round((met / attempted) * 1000) / 1000 : null },
       maxDistanceM: { median: r1(quantile(D, 0.5)), worst: r1(D.length ? Math.max(...D) : null) },
       truthDay5: { ap: { medianM: r1(quantile(ap, 0.5)), windows: ap.length }, ffm: { medianM: r1(quantile(ffm, 0.5)), windows: ffm.length } } };
   };
@@ -112,14 +112,14 @@ async function main() {
       byGroup.set(g, [...(byGroup.get(g) ?? []), ...xs.filter((x) => x.m && x.m.source !== 'none')]);
     }
   }
-  const groupsOut = GROUPS.map((G) => { const xs = G.regimes.flatMap((g) => byGroup.get(g) ?? []), c = cells(xs); return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label), flown: c.flown, met: c.withinBar.met, truthDay5: c.truthDay5 }; });
+  const groupsOut = GROUPS.map((G) => { const xs = G.regimes.flatMap((g) => byGroup.get(g) ?? []), c = cells(xs); return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5 }; });
   const doc = {
     schema: 'sdn-ap-catalog-fit/1',
     measured: new Date().toISOString().slice(0, 10),
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
     harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/bar.mjs', ...repositoryArgs(process.argv.slice(2))].join(' ') },
     ffm: { version: FFM_220.version, wasmSha256: FFM_220.wasmSha256, modulesCommit: FFM_220.modulesCommit },
-    method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed, never dropped.',
+    method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed and against the share (withinBar.windows is every window attempted, flown and failed), never dropped.',
     bar: { withinM: BAR_M, fromHours: 0, toHours: BAR_H, stepS: STEP_S },
     rows,
     groups: groupsOut,
