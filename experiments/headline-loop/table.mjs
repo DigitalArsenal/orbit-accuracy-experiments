@@ -70,7 +70,7 @@ const PREFER = ['FFMbest', 'FFMq', 'FFMc', 'FFMr'];
 const FFM_SELECTION = 'Each row\'s numerical propagator is its fullest stored FFM setting, named in the row\'s configuration sentence and not chosen on the outcome: on the laser geodetic spheres the full setting with ocean tides and Earth radiation pressure, else the full setting (degree and order 70, solid tides, relativity, RK78 at 1e-10; with drag, at 1e-13 on the rows whose every window has been fitted and flown again at that tolerance, stack issue 520), else the setting the row has. The configuration sentence states each row\'s tolerance, and no row mixes two. The other stored settings (the configured and the reduced) are kept and are not scored against.';
 // stack issue 520: with drag the integration restarts at each change of the weather rows, and at 1e-10 the flight after a restart is
 // meters to tens of meters from the converged orbit; the drag setting fitted and flown again at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT)
-const TIGHT_TEXT = (rows) => ` The numerical arm is fitted and flown at a tolerance of 1e-13 on ${rows.join(', ')} (stack issue 520: with drag, at 1e-10 the integration after each change of the weather rows leaves the flight meters to tens of meters from the converged orbit); every other row's numerical arm at the tolerance its configuration sentence states.`;
+const TIGHT_TEXT = (rows) => ` The numerical arm is fitted and flown at a tolerance of 1e-13 on ${rows.join(', ')} (stack issue 520: with drag, at 1e-10 the integration after each change of the weather rows leaves the flight meters to tens of meters from the converged orbit); on those rows a window whose 1e-10 row recorded no truth or coverage has its 1e-13 row where the truth now covers it. Every other row's numerical arm is at the tolerance its configuration sentence states.`;
 // a window stays in AP's columns whenever AP has a figure for it (it leaves only where AP has none: no truth or coverage); the numerical
 // column, apFfmRank and the pass line are over the windows with a numerical figure, and withoutNumericalFigure counts the others by reason
 const NO_FIGURE_TEXT = ' A window stays in AP\'s, SGP4-XP\'s and the other theories\' columns, and in the row\'s windows and satellites, whenever AP has a figure for it; it leaves them only where AP has none (no truth or coverage). The numerical column (with its own windows where they differ), apFfmRank and the pass line are over the windows with a numerical figure. withoutNumericalFigure counts the row\'s windows that AP scored and the numerical arm did not, with their satellites, by reason: ruleLeavesNoArm (the rule gives no numerical arm: an orbit not ballistic between impulses, or a burn known at the cutoff in every arc the rule allows), fitFailed (the numerical fit or flight failed) and noTruthOrCoverage (the stored numerical row records no truth or coverage). A row with a window that has no stored numerical row at all has no numerical column (null) until it does.';
@@ -302,7 +302,9 @@ async function main() {
       if (label) {
         const withArm = bs.filter((b) => b.arms?.[label]?.ok), tightOf = (b) => tight.get(`${b.key}|${b.arcH}`);
         if (withArm.length && withArm.every((b) => b.arms[label].arm === A.NUMERICAL_TIGHT.from && b.fitProcess !== REFIT && tightOf(b))) {
-          bs = bs.map((b) => (b.arms?.[label]?.ok ? { ...b, env: tightOf(b).env, arms: { ...b.arms, [label]: tightOf(b).arms.FFMq } } : b));
+          // a window whose 1e-10 row records no truth or coverage takes its 1e-13 row where the truth now covers it
+          const lift = (b) => { const { error, ...rest } = b; return { ...rest, env: tightOf(b).env, arms: { ...b.arms, [label]: tightOf(b).arms.FFMq } }; };
+          bs = bs.map((b) => (b.arms?.[label]?.ok || (b.error && tightOf(b)) ? lift(b) : b));
           tightRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
         }
       }
