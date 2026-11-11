@@ -13,8 +13,8 @@
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm and its package.json), never from a working tree.
 // AP's and our XP's rows go to <store>/table/<wasm sha12>/rows.jsonl (theory AP or SGP4XP), the Space Force XP's and SGP4's to
 // <store>/outside/<their builds>/rows.jsonl, flown once for every AP build; a row already there is not flown again. The harness's working tree must be clean
-// (the file names the harness commit). The numerical arm of a regime and fit length is the stored arm with the lowest median 3D error at
-// 168 h over that row's windows; among arms within 1 % of it, the fuller setting (Fbest, then the full setting, the configured, the reduced).
+// (the file names the harness commit). The numerical arm of a regime and fit length is its fullest stored setting, fixed by name and never
+// chosen on the outcome: Fbest where it is stored, else the full setting, else the configured, else the reduced (PREFER).
 // It is null ("being measured") until the store holds every window of that row, and null where no stored arm is properly
 // configured for the truth (NOT_CONFIGURED).
 import fs from 'node:fs';
@@ -46,7 +46,7 @@ const quantile = (sorted, p) => { if (!sorted.length) return null; const x = p *
 // against a truth good to 2 m), so none is a properly configured propagator for it
 const NOT_CONFIGURED = new Set(['WA']);
 const PREFER = ['FFMbest', 'FFMq', 'FFMc', 'FFMr'];
-const FFM_SELECTION = 'Each row\'s numerical propagator is the stored FFM setting (the reduced, the configured and the full setting, and on the laser geodetic spheres the full setting with ocean tides and Earth radiation pressure) with the lowest median 3D error at the 168 hour lead over that row\'s windows; among settings within 1 % of it, the fuller one. The choice is made on the outcome, in FFM\'s favor.';
+const FFM_SELECTION = 'Each row\'s numerical propagator is its fullest stored FFM setting, named in the row\'s configuration sentence and not chosen on the outcome: on the laser geodetic spheres the full setting with ocean tides and Earth radiation pressure, else the full setting (degree and order 70, solid tides, relativity, RK78 at 1e-10), else the setting the row has. The other stored settings (the configured and the reduced) are kept and are not scored against.';
 // The measured spread of the numerical figure itself (stack issue 396): two flights of the same FFM fit that differ only in the integrator's
 // step sequence (the scored epochs against a 60 s trajectory), from the carried-record rows of 2026-11-10 (store 1104598edeeb-apc), by row
 // and setting; appended to that row's configuration sentence. Measured on the full setting; elsewhere it is at most 2 mm, or under 5 % of FFM's own error.
@@ -188,14 +188,11 @@ async function main() {
   const stats = (v) => { const s = v.slice().sort((a, b) => a - b); return { medianM: round(quantile(s, 0.5)), p95M: round(quantile(s, 0.95)) }; };
   const median = (v) => quantile(v.slice().sort((a, b) => a - b), 0.5);
   const truthName = (g, ws) => [...new Set(ws.map((w) => W.providerOf(g, w.name)))].join('; ');
+  // the fullest stored setting by name (owner's rule, a properly configured numerical propagator; 2026-11-11): never chosen on the outcome,
+  // so a row's arm does not change from one table to the next with the errors
   const chooseArm = (g, bs) => {
     if (NOT_CONFIGURED.has(g)) return null;
-    const present = PREFER.filter((a) => bs.some((b) => b.arms?.[a]?.ok));
-    const common = bs.filter((b) => present.every((a) => meters(b, a, '7') != null));
-    if (!common.length) return null;
-    const med = Object.fromEntries(present.map((a) => [a, median(common.map((b) => meters(b, a, '7')))]));
-    const best = Math.min(...Object.values(med));
-    return present.find((a) => med[a] <= best * 1.01);
+    return PREFER.find((a) => bs.some((b) => b.arms?.[a]?.ok)) ?? null;
   };
   const rows = [], ecom2Rows = [], tideRows = [], tally = {};
   let windowArcs = 0;
