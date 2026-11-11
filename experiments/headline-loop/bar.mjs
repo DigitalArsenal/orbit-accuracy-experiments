@@ -17,9 +17,12 @@
 //     [--groups LS,DO] [--arcs 72,24] [--scoreboard <the same build's table.mjs file>: each row's windows are the scoreboard row's]
 //     [--burns <lists> [--after-burn-store <folder>]: the refits after a burn, read as table.mjs reads them with --burns; each refit's list
 //      must be the one --burns gives for its satellite, or the run is refused; without --burns no refit is read]
+//     [--caps T,Z: a study of the record's degrees, not the release's figure: every record fitted at tesseral degree T and zonal
+//      degree Z (FORCES.MAXIMUM_TESSERAL_DEGREE, MAXIMUM_DEGREE), its other forces the row's own $PCF's; the file states the caps]
 //
 // The build is read by git show at the commit, never from a working tree; this repository's working tree must be clean (the file names
-// its commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl and are flown again only when its manifest line changes.
+// its commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl (with --caps T,Z, rows-caps<T>-<Z>.jsonl beside it) and
+// are flown again only when its manifest line changes.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -30,6 +33,9 @@ import { REPO, MODULES_ROOT, usePackages, envRecord } from './lib/env.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = new URL(import.meta.url).pathname;
+// --caps T,Z: the record's tesseral and zonal degrees for every fit (a study; the release's records are the row's $PCF as it is)
+const CAPS = args.caps ? args.caps.split(',').map(Number) : null;
+if (CAPS && !(CAPS.length === 2 && CAPS.every((x) => Number.isInteger(x) && x >= 2 && x <= 70))) throw new Error('--caps T,Z: two degrees, each 2 to 70');
 const HOUR = 3600e3, DAY = 864e5, BAR_M = 100, BAR_H = 120, STEP_S = 300;
 const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA', 'HE', 'HX'];
 // the front page's four groups (the site's)
@@ -60,7 +66,7 @@ async function main() {
   const A = await import('./lib/arms.mjs');
   const { SETTINGS } = await import('./lib/settings.mjs');
   const { FFM_220 } = await import(path.join(REPO, 'experiments/operator-theory/lib/build.mjs'));
-  const dir = path.join(A.STORE_ROOT, 'bar', wasmSha.slice(0, 12)), file = path.join(dir, 'module.wasm'), rowsFile = path.join(dir, 'rows.jsonl');
+  const dir = path.join(A.STORE_ROOT, 'bar', wasmSha.slice(0, 12)), file = path.join(dir, 'module.wasm'), rowsFile = path.join(dir, CAPS ? `rows-caps${CAPS[0]}-${CAPS[1]}.jsonl` : 'rows.jsonl');
   fs.mkdirSync(dir, { recursive: true });
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
   const groups = args.groups ? args.groups.split(',') : ALL, arcs = (args.arcs ?? '72,24').split(',').map(Number);
@@ -219,7 +225,7 @@ async function main() {
   console.error(`bar: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${wanted.length} window-arcs, ${wanted.filter((x) => hasTrajectory(x.m)).length} with a numerical trajectory, ${todo.length} to fly on ${jobs} jobs`);
   let next = 0, flown = 0;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, '--version', version, '--groups', groups.join(',')], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, '--version', version, '--groups', groups.join(','), ...(CAPS ? ['--caps', CAPS.join(',')] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => (next < todo.length ? child.send({ m: todo[next++].m }) : child.send({ stop: true }));
     child.on('message', (msg) => {
       if (msg.row) {
@@ -296,6 +302,7 @@ async function main() {
     burnLists: lists ? { digest: lists.digest, afterBurnStore: afterBurnGroups.size ? lists.afterBurnStore : null } : null,
     // every manifest line the rows read, in row and window order (each row's own in trajectories.manifestLines)
     manifestLines: { lines: manifestUsed.length, sha256: sha256(manifestUsed.join('')).slice(0, 12) },
+    ...(CAPS ? { caps: { tesseral: CAPS[0], zonal: CAPS[1], records: 'every record fitted at these degrees, its other forces the row\'s own $PCF\'s: a study of the record\'s degrees, not the release\'s figure' } } : {}),
     ...(board ? { scoreboard: { schema: board.schema, sha256: sha256(fs.readFileSync(args.scoreboard)), windows: 'each row\'s windows and satellites are the scoreboard row\'s' } } : {}),
     rows,
     groups: groupsOut,
@@ -315,6 +322,10 @@ async function worker() {
   const S = A.S, arms = await A.openArms({}), m = await openModules(), env = envRecord();
   const h = await createStandaloneHarness('browser', args.wasm, { surface: 'direct' });
   const invoke = async (methodId, inputs) => { const r = await h.invoke({ methodId, inputs }); if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`); return r; };
+  // --caps: the row's $PCF (lib/arms.mjs PCF: AP, AP_VACUUM or AP_ECOM2, with _TIDES) with the record's degrees replaced
+  const capsOf = (choice) => (CAPS ? { label: `${choice.label} at ${CAPS[0]}/${CAPS[1]}`, pcf: APL.fitPcf({ forces: {
+    ...APL.apForces({ tesseral: CAPS[0], zonal: CAPS[1], atmosphere: !choice.label.startsWith('AP_VACUUM'), ecom2: choice.label.startsWith('AP_ECOM2') }),
+    ...(choice.label.endsWith('_TIDES') ? { SOLID_TIDES: 1 } : {}) }, fit: null }) } : choice);
   const iso = (t) => new Date(t).toISOString();
   const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
   const fly = async (ocm, epochs) => S.oemLines(new Uint8Array((await invoke('propagate', [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf(epochs) }])).outputs.find((o) => o.portId === 'ephemeris').payload)).map((l) => ({ r: l.r, v: l.v }));
@@ -344,7 +355,7 @@ async function worker() {
       const truth = await W.truthOf(w, D0 - man.arcH * HOUR - HOUR, D0 + 7 * DAY + HOUR, arms.axes);
       const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
       const wx = G.vacuum ? null : W.weatherAt(D0), object = { name: w.name, id: truth.objectId ?? '', norad: truth.norad ?? w.norad ?? 0 };
-      const choice = A.apPcfFor(w.group, args.version, G.vacuum, man.arcH);
+      const choice = capsOf(A.apPcfFor(w.group, args.version, G.vacuum, man.arcH));
       row.pcf = choice.label;
       const lines = span.map(({ epoch, r, v }) => ({ epoch, r, v }));
       const tf = performance.now();
