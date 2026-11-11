@@ -24,11 +24,11 @@
 // <store>/outside/<their builds>/rows.jsonl, flown once for every AP build; a row already there is not flown again. The harness's working tree must be clean
 // (the file names the harness commit). The numerical arm of a regime and fit length is its fullest stored setting, fixed by name and never
 // chosen on the outcome: Fbest where it is stored, else the full setting, else the configured, else the reduced (PREFER).
-// It is null ("being measured") until the store holds every window of that row, and null where no stored arm is properly
-// configured for the truth (NOT_CONFIGURED). A drag row whose every window with an arm has been fitted and flown again at a tolerance
-// of 1e-13 (lib/arms.mjs NUMERICAL_TIGHT, stack issue 520) is scored on those; no row mixes the two tolerances. A window the rule leaves
-// A window stays in AP's columns whenever AP has a figure for it; the numerical column and the pass line are over the windows with a
-// numerical figure, and withoutNumericalFigure counts the others by reason.
+// It is null ("being measured") while the store lacks a numerical row for any window of that row, and null where no stored arm is
+// properly configured for the truth (NOT_CONFIGURED). A drag row whose every window with a numerical arm by the rule has its 1e-13 row
+// (lib/arms.mjs NUMERICAL_TIGHT, stack issue 520) is scored on those, every window at 1e-13; no row mixes the two tolerances.
+// A window stays in AP's columns whenever AP has a figure for it; the numerical column and the pass line are over the windows where
+// both have one, and withoutNumericalFigure counts the others by reason, judged at the row's tolerance.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -53,13 +53,13 @@ const SAME_ALTITUDES = { row: 'S1', from: 'DO', fromKm: 600, toKm: 850, label: '
 const EQUATOR_KM = 6378.137;
 // --burns (stack issue 462): the rows whose burn-free windows get burnFreeScatter, and the method line's sentence for the burn-clean figures
 const STRONG_DRAG = new Set(['T', 'P']);
-const CLEAN_TEXT = ' cleanToLead, on the rows whose satellites all have burn lists (the burn detector, stack issue 462), gives each lead\'s AP, numerical and SGP4-XP figures again over the windows with no burn in the truth between the cutoff and that lead (any burn of the lists, known at the cutoff or not), with their count; the figures over all windows stand beside them and no window leaves any count. laterBurns says how many windows on the pass line hold a burn between the cutoff and day 5, by whether it raises or lowers the orbit, and how AP and the numerical propagator compare on each kind; those windows stay on the pass line and in every figure, though a forecast across a later maneuver measures the maneuver as much as the propagator. burnFreeScatter, on the strong-drag rows, says how many of the windows where AP is more than 100 m closer a burn explains, and how the two compare on the burn-free windows.';
+const CLEAN_TEXT = ' cleanToLead, on the rows whose satellites all have burn lists (the burn detector, stack issue 462), gives each lead\'s AP, numerical and SGP4-XP figures again over the windows with no burn in the truth between the cutoff and that lead (any burn of the lists, known at the cutoff or not), with their count; the figures over all windows stand beside them and no window leaves any count. laterBurns says how many windows on the pass line hold a burn between the cutoff and day 5, by whether it raises or lowers the orbit, and how AP and the numerical propagator compare on each kind; those windows stay on the pass line and in every figure taken over all windows, though a forecast across a later maneuver measures the maneuver as much as the propagator. burnFreeScatter, on the strong-drag rows, says how many of the windows where AP is more than 100 m closer a burn explains, and how the two compare on the burn-free windows.';
 const EITHER_WAY_TEXT = ' within100mEitherWay counts, at the 120 hour lead on the same windows as within100mOfFfm, the windows where AP\'s error and the numerical propagator\'s are within 100 m of each other either way (a window where AP is more than 100 m closer to the truth than the numerical propagator does not count), and within100mEitherWayBurnSplit splits that count by the burn flags into the four parts of burnSplit.';
 const STATISTIC = [
-  'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it); the median and the 95th percentile (linear interpolation) are taken over the lead\'s windows, those where AP and the numerical propagator were both scored.',
+  'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it). The median and the 95th percentile (linear interpolation) of each column are taken over the lead\'s windows where that column has a figure: a lead\'s windows are those where AP was scored, AP\'s column is over all of them, the numerical propagator\'s over those of them where it was scored too (with its own windows where the two differ), and each other theory\'s as stated below.',
   'xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module\'s own GCRF output. xpUssf is the Space Force\'s SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module\'s own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is null until it has a row on every window of the row; a window where its fit or flight failed counts as flown. Its median and 95th percentile are taken over the lead\'s windows where it was scored (windows); failed counts the lead\'s windows where its fit or flight failed, so a figure with failed above 0 is over the scored windows alone (a file without windows and failed does not state them, and its readers must not take failed as 0). apBeatsXp and apBeatsXpUssf count the lead\'s windows where that XP was scored (windows), the ones where AP\'s error is below that XP\'s (apBetter), and give the median over them of AP\'s error divided by that XP\'s (medianApOverXp); a window where that XP failed is left out of the pair count, never counted as AP closer.',
   'From sdn-ap 0.6.15 the two medium Earth orbit rows of navigation satellites (GN and Galileo), and from sdn-ap 0.6.19 the geostationary and inclined geosynchronous rows, fit AP with $PCF FORCES.ECOM2 on fits of 72 h or more, which also solves the ECOM2 Y0 radiation term (SDN-AP SPEC 16.13); every other row (the commercial geostationary rows among them: their fits take the vacuum $PCF), and every row of an older build, fits AP with the same $PCF as before. From sdn-ap 0.6.20 every row\'s AP fit also states the solid Earth tide ($PCF FORCES.SOLID_TIDES IERS 2010), which that build flies only where it is stated. apForces states each row\'s forces and fitted terms.',
-  'within100mOfFfm counts, at the 120 hour lead, the windows where AP\'s error is less than 100 m above the numerical propagator\'s (AP better than it counts as met); share is met over windows. apFfmRank is Spearman\'s rank correlation (average ranks for ties) of AP\'s and the numerical propagator\'s errors over the lead\'s windows (null without a numerical propagator or under 10 windows); near 1, the two order the windows alike, as when both are limited by the same density forecast.',
+  'within100mOfFfm counts, at the 120 hour lead and over the windows where AP and the numerical propagator both have a figure, the windows where AP\'s error is less than 100 m above the numerical propagator\'s (AP better than it counts as met); share is met over windows. apFfmRank is Spearman\'s rank correlation (average ranks for ties) of AP\'s and the numerical propagator\'s errors over the lead\'s windows where both have a figure (null without a numerical propagator or under 10 such windows); near 1, the two order the windows alike, as when both are limited by the same density forecast.',
 ].join(' ');
 // linear interpolation between order statistics (R type 7)
 const quantile = (sorted, p) => { if (!sorted.length) return null; const x = p * (sorted.length - 1), i = Math.floor(x), f = x - i; return i + 1 < sorted.length ? sorted[i] + f * (sorted[i + 1] - sorted[i]) : sorted[i]; };
@@ -67,13 +67,13 @@ const quantile = (sorted, p) => { if (!sorted.length) return null; const x = p *
 // against a truth good to 2 m), so none is a properly configured propagator for it
 const NOT_CONFIGURED = new Set(['WA']);
 const PREFER = ['FFMbest', 'FFMq', 'FFMc', 'FFMr'];
-const FFM_SELECTION = 'Each row\'s numerical propagator is its fullest stored FFM setting, named in the row\'s configuration sentence and not chosen on the outcome: on the laser geodetic spheres the full setting with ocean tides and Earth radiation pressure, else the full setting (degree and order 70, solid tides, relativity, RK78 at 1e-10; with drag, at 1e-13 on the rows whose every window has been fitted and flown again at that tolerance, stack issue 520), else the setting the row has. The configuration sentence states each row\'s tolerance, and no row mixes two. The other stored settings (the configured and the reduced) are kept and are not scored against.';
+const FFM_SELECTION = 'Each row\'s numerical propagator is its fullest stored FFM setting, named in the row\'s configuration sentence and not chosen on the outcome: on the laser geodetic spheres the full setting with ocean tides and Earth radiation pressure, else the full setting (degree and order 70, solid tides, relativity, RK78 at 1e-10, or with drag at 1e-13 on a row where every window with a numerical arm by the rule has been fitted and flown again at that tolerance: stack issue 520), else the setting the row has. The configuration sentence states each row\'s tolerance, and no row mixes two. The other stored settings (the configured and the reduced) are kept and are not scored against.';
 // stack issue 520: with drag the integration restarts at each change of the weather rows, and at 1e-10 the flight after a restart is
 // meters to tens of meters from the converged orbit; the drag setting fitted and flown again at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT)
-const TIGHT_TEXT = (rows) => ` The numerical arm is fitted and flown at a tolerance of 1e-13 on ${rows.join(', ')} (stack issue 520: with drag, at 1e-10 the integration after each change of the weather rows leaves the flight meters to tens of meters from the converged orbit); on those rows a window whose 1e-10 row recorded no truth or coverage has its 1e-13 row where the truth now covers it. Every other row's numerical arm is at the tolerance its configuration sentence states.`;
+const TIGHT_TEXT = (rows) => ` The numerical arm is fitted and flown at a tolerance of 1e-13 on these rows: ${rows.join(', ')}. On each of them every window with a numerical arm by the rule was fitted and flown again at that tolerance, and its figure, or the reason it has none, is the 1e-13 fit's. Stack issue 520 gives the reason: with drag, at 1e-10 the integration after each change of the weather rows leaves the flight meters to tens of meters from the converged orbit. Every other row's numerical arm is at the tolerance its configuration sentence states.`;
 // a window stays in AP's columns whenever AP has a figure for it (it leaves only where AP has none: no truth or coverage); the numerical
-// column, apFfmRank and the pass line are over the windows with a numerical figure, and withoutNumericalFigure counts the others by reason
-const NO_FIGURE_TEXT = ' A window stays in AP\'s, SGP4-XP\'s and the other theories\' columns, and in the row\'s windows and satellites, whenever AP has a figure for it; it leaves them only where AP has none (no truth or coverage). The numerical column (with its own windows where they differ), apFfmRank and the pass line are over the windows with a numerical figure. withoutNumericalFigure counts the row\'s windows that AP scored and the numerical arm did not, with their satellites, by reason: ruleLeavesNoArm (the rule gives no numerical arm: an orbit not ballistic between impulses, or a burn known at the cutoff in every arc the rule allows), fitFailed (the numerical fit or flight failed) and noTruthOrCoverage (the stored numerical row records no truth or coverage). A row with a window that has no stored numerical row at all has no numerical column (null) until it does.';
+// column, apFfmRank and the pass line are over the windows where both have a figure, and withoutNumericalFigure counts the others by reason
+const NO_FIGURE_TEXT = ' A window stays in AP\'s, SGP4-XP\'s and the other theories\' columns, and in the row\'s windows and satellites, whenever AP has a figure for it; it leaves them only where AP has none (no truth or coverage). withoutNumericalFigure counts the row\'s windows that AP scored and the numerical arm scored at no lead, with their satellites, by reason at the row\'s tolerance: ruleLeavesNoArm (the rule gives no numerical arm: an orbit not ballistic between impulses, or a burn known at the cutoff in every arc the rule allows), fitFailed (the numerical fit or flight failed, or gave no figure at a lead where AP has one) and noTruthOrCoverage (the numerical row records no truth or coverage). A row with a window that has no stored numerical row has no numerical column (null).';
 // The measured spread of the numerical figure itself (stack issue 396): two flights of the same FFM fit that differ only in the integrator's
 // step sequence (the scored epochs against a 60 s trajectory), from the carried-record rows of 2026-11-10 (store 1104598edeeb-apc), by row
 // and setting; appended to that row's configuration sentence. Measured on the full setting; elsewhere it is at most 2 mm, or under 5 % of FFM's own error.
@@ -202,23 +202,37 @@ async function main() {
   // (refly.mjs --after-burns, lib/arms.mjs numericalArc), stored apart. A regime with such rows takes, window by window, the refit where the
   // rule moved the arc and the stored fit where it did not; a window of it without a decision row leaves the row's arm being measured.
   const afterBurn = new Map(), afterBurnGroups = new Set();
-  // --after-burn-store <folder>: the refits made on the lists given (refly.mjs --after-burn-store), one folder per set of lists
+  // --after-burn-store <folder>: the refits made on the lists given (refly.mjs --after-burn-store), one folder per set of lists. Each refit
+  // row names its satellite's list (burnList, the first 12 hex digits of its sha256); a row made on a list that is not the one --burns
+  // gives for that satellite is refused, so refits of other lists never stand in for this table's
   const afterBurnStore = args['after-burn-store'] ?? A.NUMERICAL_AFTER_BURN.store;
+  if (!afterBurnStore.startsWith(`${A.NUMERICAL_STORE}-after-burn`) || afterBurnStore.includes('/')) throw new Error(`--after-burn-store ${afterBurnStore}: a folder name beginning ${A.NUMERICAL_STORE}-after-burn`);
   if (args.burns) {
-    const d = path.join(A.STORE_ROOT, afterBurnStore);
+    const d = path.join(A.STORE_ROOT, afterBurnStore), listOf = new Map(), wrong = [];
+    const listSha = (g, name) => { const f = path.join(args.burns, g, `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`); return fs.existsSync(f) ? sha256(fs.readFileSync(f)).slice(0, 12) : null; };
     for (const r of fs.existsSync(d) ? fs.readdirSync(d).filter((f) => /^rows-after-burn-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(d, f))) : []) {
+      const s = `${r.group}|${r.name}`;
+      if (!listOf.has(s)) listOf.set(s, listSha(r.group, r.name));
+      if ((r.burnList ?? null) !== listOf.get(s)) { wrong.push(r); continue; }
       const k = `${r.key}|${r.arcH}`;
       if (!afterBurn.has(k) || (afterBurn.get(k).error && !r.error)) afterBurn.set(k, r);
       afterBurnGroups.add(r.group);
     }
+    if (wrong.length) throw new Error(`refused: ${wrong.length} rows of ${afterBurnStore} were made on burn lists other than --burns gives (${[...new Set(wrong.map((r) => r.group))].join(', ')})`);
   }
   // stack issue 520: the drag setting fitted and flown again at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT), stored apart; a row takes them only
-  // when every window of it with an arm has one (below)
+  // when every window of it with a numerical arm by the rule has one (below)
   const tight = new Map(), tightDir = path.join(A.STORE_ROOT, A.NUMERICAL_TIGHT.store);
-  for (const r of fs.existsSync(tightDir) ? fs.readdirSync(tightDir).filter((f) => /^rows-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(tightDir, f))) : []) if (!r.error && r.arms?.FFMq?.ok) tight.set(`${r.key}|${r.arcH}`, r);
+  // (refly.mjs --tight: one row per window and fit arc whatever the outcome; of two for one window, a fit over a failure over no truth)
+  const tightRank = (r) => (r.error ? 0 : r.arms?.FFMq?.ok ? 2 : 1);
+  for (const r of fs.existsSync(tightDir) ? fs.readdirSync(tightDir).filter((f) => /^rows-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(tightDir, f))) : []) {
+    if (!r.error && r.arms?.FFMq?.arm !== A.NUMERICAL_TIGHT.to) throw new Error(`${A.NUMERICAL_TIGHT.store}: ${r.key} ${r.arcH} h is not of ${A.NUMERICAL_TIGHT.to}`);
+    const k = `${r.key}|${r.arcH}`;
+    if (!tight.has(k) || tightRank(r) > tightRank(tight.get(k))) tight.set(k, r);
+  }
   const tightRows = [];
   const REFIT = 'maneuvering: the arc after its last burn';
-  /** A window's numerical row:the stored one, or under --burns in a regime with after-burn rows, the refit where the rule moved the arc. On
+  /** A window's numerical row: the stored one, or under --burns in a regime with after-burn rows, the refit where the rule moved the arc. On
    *  the commercial geostationary row (NOT_CONFIGURED) a window whose arc still holds a known burn has no numerical arm. */
   const numericalOf = (w, arc) => {
     const k = `${w.key}|${arc}`, b = base.get(k);
@@ -239,8 +253,8 @@ async function main() {
   const cutoffs = listed.map((w) => w.cutoffMs);
   const secondText = [...secondIn].filter((g) => !only || listed.some((w) => w.group === g && all.second.includes(w))).map((g) => `${W.GROUPS[g].label} (${count(all.second.filter((w) => w.group === g).length)} windows)`);
   const windowsText = `The table holds ${count(listed.length)} windows (one satellite and one cutoff each), cutoffs from ${day(Math.min(...cutoffs))} to ${day(Math.max(...cutoffs))}`
-    + (notYet.length && secondText.length ? `; the second pass (the windows whose fit arc or 7-day forecast touches March to May 2026) is in for ${secondText.join(', ')}, and its ${count(notYet.length)} windows of the other rows are not in this table (their numerical rows are not all in the store)`
-      : notYet.length ? `; the ${count(notYet.length)} windows whose fit arc or 7-day forecast touches March to May 2026 (the second pass) are not in this table (their numerical rows are not all in the store)` : all.second.length ? ', the windows touching March to May 2026 (the second pass) among them' : '')
+    + (notYet.length && secondText.length ? `; the second pass (the windows whose fit arc or 7-day forecast touches March to May 2026) is in for ${secondText.join(', ')}, and its ${count(notYet.length)} windows of the other rows are not in this table (a regime's second pass is listed, and AP flown on it, once its numerical rows are all in the store)`
+      : notYet.length ? `; the ${count(notYet.length)} windows whose fit arc or 7-day forecast touches March to May 2026 (the second pass) are not in this table (a regime's second pass is listed, and AP flown on it, once its numerical rows are all in the store)` : all.second.length ? ', the windows touching March to May 2026 (the second pass) among them' : '')
     + (all.after.length ? `; ${count(all.after.length)} windows reaching past 2026-11-10 are not read` : '') + '.';
   const rowsFile = path.join(dir, 'rows.jsonl');
   // a row without a theory is AP's (the version-1 rows)
@@ -298,18 +312,19 @@ async function main() {
       let bs = ws.map((w) => numericalOf(w, arc));
       const complete = bs.every(Boolean);
       const label = complete ? chooseArm(g, bs) : null;
-      // stack issue 520: the row's drag setting at 1e-13 where every window with an arm has its 1e-13 row; else every window at 1e-10
+      // stack issue 520: the row at 1e-13 where every window the rule gives a numerical arm has its 1e-13 row (whatever its outcome), no
+      // window is a refit on the arc after a burn (the 1e-13 rows are of the full arc) and every stored arm of the row is the full drag
+      // setting. Then every such window takes its 1e-13 row: its figure, or the reason it has none, is the 1e-13 fit's. Else all at 1e-10.
       if (label) {
-        const withArm = bs.filter((b) => b.arms?.[label]?.ok), tightOf = (b) => tight.get(`${b.key}|${b.arcH}`);
-        if (withArm.length && withArm.every((b) => b.arms[label].arm === A.NUMERICAL_TIGHT.from && b.fitProcess !== REFIT && tightOf(b))) {
-          // a window whose 1e-10 row records no truth or coverage takes its 1e-13 row where the truth now covers it
-          const lift = (b) => { const { error, ...rest } = b; return { ...rest, env: tightOf(b).env, arms: { ...b.arms, [label]: tightOf(b).arms.FFMq } }; };
-          bs = bs.map((b) => (b.arms?.[label]?.ok || (b.error && tightOf(b)) ? lift(b) : b));
+        const tightOf = (b) => tight.get(`${b.key}|${b.arcH}`), armed = bs.filter((b) => !b.burnInArc);
+        if (armed.length && bs.every((b) => b.fitProcess !== REFIT) && armed.every((b) => (b.error || b.arms?.[label]?.arm === A.NUMERICAL_TIGHT.from) && tightOf(b))) {
+          const lift = (b) => { const t = tightOf(b), { error, ...rest } = b; return t.error ? { ...rest, env: t.env, arms: {}, error: t.error } : { ...rest, env: t.env, arms: { ...b.arms, [label]: t.arms.FFMq } }; };
+          bs = bs.map((b) => (b.burnInArc ? b : lift(b)));
           tightRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
         }
       }
-      // why a window has no numerical figure (with an arm on the row): the rule gives it none (numericalOf: burnInArc), its stored row
-      // records no truth or coverage, or the fit or flight failed
+      // why a window has no numerical figure (with an arm on the row), at the row's tolerance: the rule gives it none (numericalOf:
+      // burnInArc), its numerical row records no truth or coverage, or the fit or flight failed (or gave no figure at a lead AP has)
       const noFigureWhy = (i) => (!label ? null : bs[i]?.burnInArc ? 'ruleLeavesNoArm' : !bs[i] || bs[i].error ? 'noTruthOrCoverage' : 'fitFailed');
       let ffm = null;
       if (label) {
@@ -373,7 +388,7 @@ async function main() {
         const of = (c) => pass.filter((p) => classOf(p) === c);
         const apBelow = (s) => s.filter((p) => p.a < p.f - PASS_M).length, ffmBelow = (s) => s.filter((p) => p.f < p.a - PASS_M).length;
         const [up, down, cross, mixed, none] = ['raise', 'lower', 'cross', 'mixed', 'none'].map(of), later = pass.length - none.length;
-        if (later) laterBurns = `Between the cutoff and day 5 a burn falls in ${later} of the ${pass.length} windows on the pass line (in ${up.length} every such burn raises the orbit, in ${down.length} every one lowers it, in ${cross.length} every one is mainly out of the orbit's plane, in ${mixed.length} a mix). These windows stay on the pass line and in every figure of the row, though a forecast across a later maneuver measures the maneuver as much as the propagator. AP's error is more than 100 m below the numerical propagator's in ${apBelow(up)} of the ${up.length} windows whose later burns all raise the orbit, ${apBelow(down)} of the ${down.length} whose later burns all lower it, ${apBelow(cross)} of the ${cross.length} whose later burns are mainly out of the plane, ${apBelow(mixed)} of the ${mixed.length} with a mix, and ${apBelow(none)} of the ${none.length} with no later burn, where the numerical propagator's is more than 100 m below AP's in ${ffmBelow(none)}.`;
+        if (later) laterBurns = `Between the cutoff and day 5 a burn falls in ${later} of the ${pass.length} windows on the pass line (in ${up.length} every such burn raises the orbit, in ${down.length} every one lowers it, in ${cross.length} every one is mainly out of the orbit's plane, in ${mixed.length} a mix). These windows stay on the pass line and in every figure taken over all windows, though a forecast across a later maneuver measures the maneuver as much as the propagator. AP's error is more than 100 m below the numerical propagator's in ${apBelow(up)} of the ${up.length} windows whose later burns all raise the orbit, ${apBelow(down)} of the ${down.length} whose later burns all lower it, ${apBelow(cross)} of the ${cross.length} whose later burns are mainly out of the plane, ${apBelow(mixed)} of the ${mixed.length} with a mix, and ${apBelow(none)} of the ${none.length} with no later burn, where the numerical propagator's is more than 100 m below AP's in ${ffmBelow(none)}.`;
         if (STRONG_DRAG.has(g)) {
           const inArc = (p) => burnsIn(p.w, p.w.cutoffMs - arc * W.HOUR, p.w.cutoffMs).length > 0;
           const closer = pass.filter((p) => p.a < p.f - PASS_M), explained = closer.filter((p) => inArc(p) || classOf(p) !== 'none'), free = pass.filter((p) => !inArc(p) && classOf(p) === 'none');
@@ -453,7 +468,7 @@ async function main() {
   for (const r of rows.filter((x) => x.burnSplit || x.sameAltitudes)) console.error(`  ${r.regime} ${r.fitHours} h: ${r.burnSplit?.label ?? 'no burn flags'}${r.sameAltitudes ? ` ${r.sameAltitudes.label}: ${r.sameAltitudes.within100mOfFfm?.met} of ${r.sameAltitudes.within100mOfFfm?.windows}; ${r.sameAltitudes.burnSplit?.label ?? 'no burn flags'}` : ''}`);
   const burnText = !flags ? '' : ` burnSplit, on the rows with burn flags (stack issue 462), splits the windows of the pass line (within100mOfFfm) by the burns that a detector reading the truth alone finds: velocity steps that the full numerical setting, flown from the truth's own states, does not explain, localized by halving (planted steps found down to 0.5 mm/s at 700 km; on the altimetry satellites, every burn of the IDS maneuver lists that falls where the truth covers it, and none that is not listed). burnInFitArc holds the windows with a burn in the fit arc; burnCutoffToDay5Only those with none there and one between the cutoff and day 5; noBurn those with neither; unflagged those the detector did not run on. The four are a partition: their windows and met add up to the pass line's. partlyCovered counts the windows where a span counted without a burn has hours without truth, which the detector cannot see; label states the counts in words. Neither fit solves a delta-v (the numerical fit has no such term), so a burn after the cutoff is missed by both and one in the fit arc is taken up by each fit's other terms.${rows.some((r) => r.sameAltitudes) ? ` sameAltitudes, under the ${W.GROUPS[SAME_ALTITUDES.row].label} rows, is the ${W.GROUPS[SAME_ALTITUDES.from].label} row's pass line at the same fit length on its satellites at ${SAME_ALTITUDES.fromKm} to ${SAME_ALTITUDES.toKm} km (mean geocentric distance less the equatorial radius over the truth's 3 h before each satellite's first scored cutoff), with its own burnSplit.` : ''} The flags cover ${count(flags.size)} window-arcs and are kept outside this repository (the first 12 hex digits of the sha256 of their files in name order, as for the builds: ${flags.sha256.slice(0, 12)}).`;
   // --burns: which lists and which store of refits after a burn the table read (one store per set of lists)
-  const listsText = !args.burns ? '' : ` The burn lists read (--burns) are kept outside this repository (the first 12 hex digits of the sha256 of their files in path order, as for the builds: ${listsDigest(args.burns).slice(0, 12)})${afterBurnGroups.size ? `; the numerical arm's refits on the arc after a burn are the store folder ${afterBurnStore}'s` : ''}.`;
+  const listsText = !args.burns ? '' : ` The burn lists read (--burns) are kept outside this repository (the first 12 hex digits of the sha256 of their relative paths and contents in path order, as for the builds: ${listsDigest(args.burns).slice(0, 12)})${afterBurnGroups.size ? `; the numerical arm's refits on the arc after a burn are read from the store folder ${afterBurnStore}, every one of them made on these lists` : ''}.`;
   // the method line's last sentences: each column's build, and what each scored over the table's window-arcs (a failure or a window
   // without truth is counted, never dropped); the rows whose AP fits state FORCES.ECOM2
   const short = (s) => String(s).slice(0, 12);
@@ -477,7 +492,7 @@ async function main() {
   const tolerance = (c) => /at a tolerance of ([^ ]+)/.exec(String(c ?? ''))?.[1] ?? null;
   const armChanged = previous ? rows.map((r) => ({ r, p: previous.rows.find((x) => x.regime === r.regime && x.fitHours === r.fitHours) })).filter(({ r, p }) => p && (p.ffm?.configuration ?? null) !== (r.ffm?.configuration ?? null)) : [];
   const armText = armChanged.length
-    ? ` These rows are scored against a different numerical setting than in that table: ${armChanged.map(({ r, p }) => `${r.regime} (${r.fitHours} h fit), ${field(p.ffm?.configuration) !== field(r.ffm?.configuration) ? `${field(p.ffm?.configuration) || 'none'} to ${field(r.ffm?.configuration) || 'none'}` : tolerance(p.ffm?.configuration) !== tolerance(r.ffm?.configuration) ? `the same setting fitted and flown at a tolerance of ${tolerance(r.ffm?.configuration)}, not ${tolerance(p.ffm?.configuration)}` : 'its configuration sentence changed'}`).join('; ')}.`
+    ? ` These rows are scored against a different numerical setting than in that table: ${armChanged.map(({ r, p }) => `${r.regime} (${r.fitHours} h fit), ${field(p.ffm?.configuration) !== field(r.ffm?.configuration) ? `${field(p.ffm?.configuration) || 'none'} to ${field(r.ffm?.configuration) || 'none'}` : tolerance(p.ffm?.configuration) !== tolerance(r.ffm?.configuration) ? `the same setting fitted and flown at a tolerance of ${tolerance(r.ffm?.configuration) ?? 'none stated'}, where that table's was ${tolerance(p.ffm?.configuration) ?? 'not stated'}` : 'its configuration sentence changed'}`).join('; ')}.`
     : '';
   const doc = {
     schema: 'sdn-ap-scoreboard/2',
@@ -715,20 +730,45 @@ async function check() {
   }
   const pass9 = gd.map((b) => ({ a: apRows.get(b.key)?.days?.['5']?.e, f: best9(b, '5') })).filter((p) => Number.isFinite(p.a) && Number.isFinite(p.f));
   ok(row9?.windows === row?.windows && row9.satellites === row?.satellites && row9.within100mOfFfm?.windows === pass9.length && row9.within100mOfFfm.met === pass9.filter((p) => p.a * 1000 - p.f * 1000 < 100).length
-    && JSON.stringify(row9.withoutNumericalFigure) === JSON.stringify({ windows: 1, satellites: 1, ruleLeavesNoArm: 0, fitFailed: 1, noTruthOrCoverage: 0 }) && /withoutNumericalFigure counts/.test(i9.statistic ?? ''),
-  `a failed numerical fit, the row: ${JSON.stringify({ windows: row9?.windows, satellites: row9?.satellites, pass: row9?.within100mOfFfm, without: row9?.withoutNumericalFigure })} against ${pass9.length} on the pass line`);
+    && JSON.stringify(row9.withoutNumericalFigure) === JSON.stringify({ windows: 1, satellites: 1, ruleLeavesNoArm: 0, fitFailed: 1, noTruthOrCoverage: 0 }) && /withoutNumericalFigure counts/.test(i9.statistic ?? '')
+    && row9.within100mEitherWay?.windows === pass9.length && row9.within100mEitherWay.met === pass9.filter((p) => Math.abs(p.a * 1000 - p.f * 1000) <= 100).length,
+  `a failed numerical fit, the row: ${JSON.stringify({ windows: row9?.windows, satellites: row9?.satellites, pass: row9?.within100mOfFfm, either: row9?.within100mEitherWay, without: row9?.withoutNumericalFigure })} against ${pass9.length} on the pass line`);
+  // 10. the reasons judged at the row's tolerance: the altimetry rows of case 6's store with the first window's 1e-10 fit at 24 h made a
+  // failure, and 1e-13 rows for both windows at both arcs, the second window's 72 h one a failure. Both rows are at 1e-13: at 24 h the
+  // first window takes its 1e-13 figure (no window without one); at 72 h the second window's 1e-13 failure is counted as fitFailed and
+  // the numerical column and the pass line are over the first alone; nothing is flown
+  const s10 = path.join(dir, 's10'), out10 = path.join(dir, 'j.json');
+  const do10 = real6.filter((r) => [k6.in, k6.out].includes(r.key) && [24, 72].includes(r.arcH));
+  fs.mkdirSync(path.join(s10, A.NUMERICAL_STORE), { recursive: true });
+  fs.writeFileSync(path.join(s10, A.NUMERICAL_STORE, 'rows-truth-0of1.jsonl'), real6.filter((r) => r.key === k6.S1).concat(do10.map((r) => (r.key === k6.in && r.arcH === 24 ? { ...r, arms: { ...r.arms, FFMq: { ok: false, arm: r.arms.FFMq.arm, error: 'made-up failure (the check)' } } } : r))).map((r) => JSON.stringify(r)).join('\n') + '\n');
+  fs.mkdirSync(path.join(s10, A.NUMERICAL_TIGHT.store), { recursive: true });
+  fs.writeFileSync(path.join(s10, A.NUMERICAL_TIGHT.store, 'rows-tight-0of1.jsonl'), do10.map((r) => (r.key === k6.out && r.arcH === 72 ? { ...r, tolerance: 1e-13, arms: { FFMq: { ok: false, arm: A.NUMERICAL_TIGHT.to, error: 'made-up failure (the check)' } } } : madeTight(r))).map((r) => JSON.stringify(r)).join('\n') + '\n');
+  fs.mkdirSync(path.join(s10, 'table', sha12), { recursive: true });
+  fs.copyFileSync(path.join(s6, 'table', sha12, 'rows.jsonl'), path.join(s10, 'table', sha12, 'rows.jsonl'));
+  const r10 = runIn(s10, out10, ['--keys-file', keys6, '--theories', 'AP'], 'S1,DO');
+  const j10 = fs.existsSync(out10) ? E.readJson(out10) : { rows: [] };
+  const alt24 = j10.rows.find((r) => r.regime === 'Low orbit, altimetry' && r.fitHours === 24), alt72 = j10.rows.find((r) => r.regime === 'Low orbit, altimetry' && r.fitHours === 72);
+  const t10 = (k, a, d) => { const r = do10.find((x) => x.key === k && x.arcH === a); return Number.isFinite(r?.arms?.FFMq?.days?.[d]?.e) ? r.arms.FFMq.days[d].e * 1.5 * 1000 : null; };
+  const want24 = LEADS.map(([, d]) => { const v = [t10(k6.in, 24, d), t10(k6.out, 24, d)].filter((x) => x != null); return v.length ? med(v) : null; });
+  const want72 = LEADS.map(([, d]) => (t10(k6.in, 72, d) == null ? null : round(t10(k6.in, 72, d))));
+  ok(r10.code === 0 && /, 0 to fly/.test(r10.err) && /at a tolerance of 1e-13 /.test(alt24?.ffm?.configuration ?? '') && /at a tolerance of 1e-13 /.test(alt72?.ffm?.configuration ?? '')
+    && JSON.stringify(alt24.leads.map((l) => l.ffm?.medianM ?? null)) === JSON.stringify(want24) && !alt24.withoutNumericalFigure
+    && JSON.stringify(alt72.leads.map((l) => l.ffm?.medianM ?? null)) === JSON.stringify(want72) && alt72.leads.every((l) => l.ffm == null || l.ffm.windows === 1)
+    && JSON.stringify(alt72.withoutNumericalFigure) === JSON.stringify({ windows: 1, satellites: 1, ruleLeavesNoArm: 0, fitFailed: 1, noTruthOrCoverage: 0 }) && alt72.within100mOfFfm?.windows === 1 && alt72.within100mEitherWay?.windows === 1,
+  `the reasons at 1e-13: ${r10.err.slice(-200)} 24 h ${JSON.stringify(alt24?.leads?.map((l) => l.ffm?.medianM))} against ${JSON.stringify(want24)}, ${JSON.stringify(alt24?.withoutNumericalFigure)}; 72 h ${JSON.stringify(alt72?.leads?.map((l) => [l.ffm?.medianM, l.ffm?.windows]))} against ${JSON.stringify(want72)}, ${JSON.stringify(alt72?.withoutNumericalFigure)}`);
   fs.rmSync(dir, { recursive: true, force: true });
   done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, one-sided and either way, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count; with made-up burn flags the row is the same row with burnSplit and the two-sided split, whose four parts each add up to their pass line and equal the ones recomputed, the flags not named in the file; under each Near 700 km row the altimetry row\'s pass line on its satellite at 600 to 850 km alone, recomputed, with its own split; with made-up burn lists every lead keeps its figures over all windows and gains cleanToLead for AP, the numerical propagator and SGP4-XP, recomputed over the windows with no burn from the cutoff to the lead (a rejected candidate not a burn), and laterBurns counts each kind of later burn; with made-up 1e-13 rows a row whose every window has one is scored on them, its configuration at 1e-13 and named in the method line, and a row with one window of two stays at 1e-10 with its figures; a window whose numerical fit failed stays in AP\'s columns and the row\'s windows, the numerical column and the pass line are over the others with their own counts, and withoutNumericalFigure counts it as fitFailed');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }
-/** The sha256 of every *.burns.json under a burn-list directory, read in path order (relative paths, sorted). */
+/** The sha256 over every *.burns.json under a burn-list directory, in path order: each file's relative path, a zero byte, its length and
+ *  its contents, so a list moved to another satellite's name changes it. */
 function listsDigest(dir) {
   const files = [];
   const walk = (d, rel) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const r = rel ? `${rel}/${e.name}` : e.name; if (e.isDirectory()) walk(path.join(d, e.name), r); else if (e.name.endsWith('.burns.json')) files.push(r); } };
   walk(dir, '');
   const hash = crypto.createHash('sha256');
-  for (const f of files.sort()) hash.update(fs.readFileSync(path.join(dir, f)));
+  for (const f of files.sort()) { const b = fs.readFileSync(path.join(dir, f)); hash.update(`${f}\0${b.length}\0`); hash.update(b); }
   return hash.digest('hex');
 }
 // the command line the file names, in repository-relative form: without the arguments that are local paths (the modules clone, the output file)
@@ -774,7 +814,7 @@ function splitByBurns(flags, pass, arc) {
   if (out.unflagged.windows === pass.length) return null;
   const { burnInFitArc: a, burnCutoffToDay5Only: b, noBurn: c, unflagged: u } = out;
   out.partlyCovered = partlyCovered;
-  out.label = `Of the ${pass.length} windows on the pass line, a burn is found in the truth in the fit arc on ${a.windows} (AP's error at day 5 less than 100 m above the numerical propagator's, or below it, on ${a.met} of them), between the cutoff and day 5 alone on ${b.windows} (on ${b.met}) and in neither on ${c.windows} (on ${c.met})`
+  out.label = `Of the ${pass.length} windows on the pass line, a burn is found in the truth in the fit arc on ${a.windows} (AP's error at day 5 below the numerical propagator's or less than 100 m above it on ${a.met} of them), between the cutoff and day 5 alone on ${b.windows} (on ${b.met}) and in neither on ${c.windows} (on ${c.met})`
     + (u.windows ? `; the burn detector did not run on ${u.windows} (on ${u.met})` : '')
     + (partlyCovered ? `; on ${partlyCovered} of them a span counted without a burn has hours without truth, which the detector cannot see` : '') + '.';
   return out;
