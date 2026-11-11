@@ -243,7 +243,7 @@ async function main() {
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
-    harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/table.mjs', ...process.argv.slice(2)].join(' ') },
+    harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/table.mjs', ...repositoryArgs(process.argv.slice(2))].join(' ') },
     frame: 'GCRF, the module\'s own output',
     rows,
   };
@@ -276,6 +276,7 @@ async function check() {
   const doc = fs.existsSync(out1) ? E.readJson(out1) : {};
   ok(JSON.stringify(Object.keys(doc)) === JSON.stringify(['schema', 'measured', 'statistic', 'ffmSelection', 'windows', 'module', 'harness', 'frame', 'rows']) && doc.windows === 'The table holds 55 windows (one satellite and one cutoff each), cutoffs from 2025-10-11 to 2025-12-20.' && doc.schema === 'sdn-ap-scoreboard/2' && doc.frame === 'GCRF, the module\'s own output', `top-level fields: ${Object.keys(doc)}`);
   ok(doc.module?.modulesCommit === commit && doc.module?.wasmSha256 === wasmSha && /^[0-9a-f]{40}$/.test(doc.harness?.commit ?? ''), `module and harness: ${JSON.stringify(doc.module)} ${doc.harness?.commit}`);
+  ok(doc.harness?.command === `node experiments/headline-loop/table.mjs --modules-commit ${commit} --groups GD --jobs 8` && !doc.harness.command.includes(dir), `the command, repository-relative: ${doc.harness?.command}`);
   const row = doc.rows?.[0];
   ok(doc.rows?.length === 1 && JSON.stringify(Object.keys(row ?? {})) === JSON.stringify(['regime', 'truth', 'fitData', 'fitHours', 'satellites', 'windows', 'ffm', 'within100mOfFfm', 'leads']) && row.regime === 'Laser geodetic' && row.truth === 'ILRS' && row.fitHours === 72 && row.satellites === 5, `the row: ${JSON.stringify(row)?.slice(0, 300)}`);
   ok(row?.ffm?.version === '2.2.0' && /^[0-9a-f]{64}$/.test(row.ffm.wasmSha256) && /ocean tides/.test(row.ffm.configuration) && !/Fbest|FFM/.test(row.ffm.configuration), `the numerical arm: ${JSON.stringify(row?.ffm)}`);
@@ -320,10 +321,12 @@ async function check() {
   ok(b && b.leads.every((l) => l.xp.failed === 1 && l.xp.windows === nAp(l.hours) - 1 && l.apBeatsXp.windows === nAp(l.hours) - 1 && l.sgp4.failed === 1 && l.sgp4.windows === nAp(l.hours) - 1), `failed counts: ${JSON.stringify(b?.leads?.map((l) => [l.hours, l.windows, l.xp?.windows, l.xp?.failed, l.apBeatsXp?.windows, l.sgp4?.windows, l.sgp4?.failed]))}`);
   ok(b && b.ffm === null && b.within100mOfFfm === null && b.leads.every((l) => l.ffm === null && l.ap && l.xp && l.sgp4 && l.xpUssf === null && l.apBeatsXpUssf === null) && b.leads[0].ap.medianM === row?.leads?.[0]?.ap?.medianM, `being measured: ${JSON.stringify(b)?.slice(0, 300)}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the numerical arm named in plain words on FFM 2.2.0; with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }
+// the command line the file names, in repository-relative form: without the arguments that are local paths (the modules clone, the output file)
+function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
 function round3(x) { return x == null ? null : Math.round(x * 1000) / 1000; }
 
 /** A setting in one plain sentence: gravity, drag and its weather, radiation pressure, third bodies, tides, relativity, what is fitted, the integrator. */
