@@ -30,7 +30,7 @@ export const PCF = {
   AP_VACUUM: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null }),
   // AP with FORCES.ECOM2 (empty: Y0 starts at 0): sdn-ap solves the ECOM2 Y0 term on fits of 72 h or more (SPEC 16.13)
   AP_ECOM2: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), fit: null }),
-  // the same three with FORCES.SOLID_TIDES = IERS_2010 (sdn-ap 0.6.19 and later fly the solid Earth tide only where the $PCF states it)
+  // the same three with FORCES.SOLID_TIDES = IERS_2010 (sdn-ap 0.6.20 and later fly the solid Earth tide only where the $PCF states it)
   AP_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20 }), SOLID_TIDES: 1 }, fit: null }),
   AP_VACUUM_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: null }),
   AP_ECOM2_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), SOLID_TIDES: 1 }, fit: null }),
@@ -39,13 +39,16 @@ export const PCF = {
 
 // The published rule (2026-11-10): for navigation satellites in medium Earth orbit AP also solves the ECOM2 Y0 term on fits of 72 h or
 // more. The gate is the group, the fit arc and the AP build's own version (its package.json at the commit flown, compared by its numeric
-// fields, so 0.6.15-rc.1 counts as 0.6.15): from ECOM2_SINCE, GN and GN_GAL fits of ECOM2_MIN_ARC hours or more use PCF.AP_ECOM2; every other
+// fields, so 0.6.15-rc.1 counts as 0.6.15): from ECOM2_SINCE, GN and GN_GAL fits of ECOM2_MIN_ARC hours or more use PCF.AP_ECOM2, and from
+// ECOM2_GEO_SINCE the geostationary (GE) and inclined geosynchronous (IG) fits of that length too; every other
 // fit, and every fit by an older build (which refuses FORCES.ECOM2 by name), uses the same $PCF bytes as before.
-export const ECOM2_GROUPS = ['GN', 'GN_GAL'];
 export const ECOM2_SINCE = '0.6.15';
+// the one-day class's resonant tail (sdn-ap 0.6.19, stack #434), which also solves Y0 on these rows (SDN-AP SPEC 16.13)
+export const ECOM2_GEO_SINCE = '0.6.19';
+export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { groups: ['GE', 'IG'], since: ECOM2_GEO_SINCE }];
 export const ECOM2_MIN_ARC = 72;
-// The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row
-export const TIDES_SINCE = '0.6.19';
+// The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row (sdn-ap 0.6.20, stack #449)
+export const TIDES_SINCE = '0.6.20';
 const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
 export const atLeast = (v, w) => {
   const a = numeric(v), b = numeric(w);
@@ -53,9 +56,9 @@ export const atLeast = (v, w) => {
   for (let i = 0; i < 3; i += 1) if (a[i] !== b[i]) return a[i] > b[i];
   return true;
 };
-/** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', pcf }. */
+/** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
-  const base = vacuum ? 'AP_VACUUM' : ECOM2_GROUPS.includes(group) && arcH >= ECOM2_MIN_ARC && atLeast(version, ECOM2_SINCE) ? 'AP_ECOM2' : 'AP';
+  const base = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
   const label = atLeast(version, TIDES_SINCE) ? `${base}_TIDES` : base;
   return { label, pcf: PCF[label] };
 };
