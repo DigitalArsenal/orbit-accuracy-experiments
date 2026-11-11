@@ -6,6 +6,12 @@ with the owner's pass line (AP within 100 m of the numerical propagator at 120 h
 length, on every precise-orbit window whose numerical rows are in the store, in GCRF, errors in meters against the truth. Each theory is
 fitted to the same arc by its own fitter. The site's release tool reads it (`--scoreboard-result <file>`).
 
+From `CARRY24_SINCE` (lib/arms.mjs; stack #496) AP's 24 h fit carries terms from the same window's 72 h fit, which ends at the same
+cutoff, so only data before the cutoff is used. Above the drag it carries the radiation terms: AGOM with its uncertainty, and ECOM2's Y0
+where that fit solved it. Under the drag it carries the drag term with its uncertainty, and only where the 24 h arc alone leaves it
+undetermined (a stated sigma of ln BTERM of 1 or more). Each such row names its fit process (`fitProcess`) with the count of windows each
+way, and each stored row records its own (`fitProcess` in rows.jsonl).
+
 ## Tools
 
 | File | Does |

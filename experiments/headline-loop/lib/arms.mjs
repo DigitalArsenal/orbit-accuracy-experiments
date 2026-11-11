@@ -56,6 +56,46 @@ export const atLeast = (v, w) => {
   for (let i = 0; i < 3; i += 1) if (a[i] !== b[i]) return a[i] > b[i];
   return true;
 };
+// The 24 h fit's carried terms (stack issue 496; owner, 2026-11-11: how an $OCM is made is free, and only data before the cutoff is
+// used). From CARRY24_SINCE a 24 h AP fit first fits the window's 72 h arc, which ends at the same cutoff, and carries its terms:
+// - above the drag (the 72 h record's regime ABOVE), the radiation terms: AGOM with its stated sigma (FIT.SRP_PRIOR GAUSSIAN_SIGNED) and,
+//   where the 72 h fit solved it, ECOM2's Y0 (FORCES.ECOM2 Y0_M_S2, held on a 24 h arc);
+// - under the drag, the drag term only, and only where the plain 24 h fit states a sigma of ln BTERM of CARRY24_DRAG_SIGMA or more (the
+//   arc does not see it): BTERM with the 72 h record's stated sigma of ln B (FIT.DRAG_PRIOR LOG_NORMAL).
+// Elsewhere, and where the truth holds no 72 h arc before the cutoff, the 24 h fit is the plain one. Measured on 0.6.26 against the
+// precise orbits (stack issue 496): carrying the drag term where the 24 h arc does see it lost on the near-700 km and strong-drag
+// rows, and carrying the radiation terms under the drag changed nothing.
+export const CARRY24_SINCE = '0.6.27';
+export const CARRY24_DRAG_SIGMA = 1;
+export const carry24 = (version) => atLeast(version, CARRY24_SINCE);
+/** The terms a fitted $OCM carries into a later fit: { b, sLnB, agom, sAgom, y0, regime } (regime: the record's COV_REALISM REGIME). */
+export const carriedTerms = (ocm) => {
+  const info = APL.readOcm(ocm), o = info.o, kinds = o.COV_PARAMETER_KINDS ?? [], cv = o.COVARIANCE_DATA ?? [];
+  const at = 6 + kinds.indexOf(S.OCM.prwDynamicParameter.SRP_AREA_OVER_MASS), varS = at >= 6 ? cv[(at * (at + 1)) / 2 + at] : null;
+  const y0 = (o.ORBIT_DETERMINATION?.OD_DYNAMIC_PARAMETERS ?? []).find((p) => p.NAME === 'ECOM2_Y0' && p.SOLVED_FOR);
+  return { b: info.bterm, sLnB: info.sigmaLnB, agom: info.agom, sAgom: Number.isFinite(varS) && varS > 0 ? Math.sqrt(varS) : null, y0: y0 ? y0.VALUE : null,
+    regime: (o.COV_REALISM ?? [])[0]?.REGIME ?? null };
+};
+/** A $PCF's bytes with the carried terms stated: `drag` FIT.DRAG_PRIOR at the term and its sigma of ln B, `radiation` FIT.SRP_PRIOR at
+ *  AGOM and its sigma and FORCES.ECOM2 Y0_M_S2 where the terms name a Y0. FORCES is packed with its defaults, as the table's own. */
+export const carriedPcf = (bytes, t, { drag, radiation }) => {
+  const P = S.PCF, x = P.PCF.getRootAsPCF(new S.flatbuffers.ByteBuffer(bytes)).unpack();
+  const prior = (mean, sigma) => Object.assign(new P.PCFGaussianPriorT(), { MEAN: mean, SIGMA: sigma, HAS_SIGMA: true });
+  x.FIT = Object.assign(x.FIT ?? new P.PCFFitPolicyT(), {
+    ...(drag && t.b > 0 && t.sLnB > 0 ? { DRAG_PRIOR: prior(t.b, t.sLnB), DRAG_PRIOR_FORM: P.pcfPriorForm.LOG_NORMAL } : {}),
+    ...(radiation && t.sAgom > 0 ? { SRP_PRIOR: prior(t.agom, t.sAgom), SRP_PRIOR_FORM: P.pcfPriorForm.GAUSSIAN_SIGNED } : {}) });
+  if (radiation && t.y0 != null) x.FORCES.ECOM2 = Object.assign(new P.PCFEcom2T(), { Y0_M_S2: t.y0 });
+  const f = x.FORCES, pack = f.pack.bind(f);
+  f.pack = (b) => {
+    const offset = b.addFieldOffset;
+    b.addFieldOffset = function (slot, value, d) { if (value !== d) offset.call(this, slot, value, d); };
+    b.forceDefaults(true);
+    try { return pack(b); } finally { b.forceDefaults(false); b.addFieldOffset = offset; }
+  };
+  const b = new S.flatbuffers.Builder(1024);
+  P.PCF.finishPCFBuffer(b, x.pack(b));
+  return b.asUint8Array().slice();
+};
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
   const base = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
@@ -126,9 +166,10 @@ export async function openArms({ apWasm = null, ussf = false, sgp4 = false } = {
     axes,
     ffmProvenance: F.provenance,
     /** AP: fitted to the truth arc (GCRF states), the record flown on the scored epochs in GCRF: { ok, rms (km), fit, days, s }. */
-    async ap({ object, thin, D0, pcf, spw, sc }) {
+    async ap({ object, thin, D0, pcf, spw, sc, record = false }) {
       const t0 = performance.now();
       const ocm = await fitAp(S.oemBytes({ frame: 'GCRF', object, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }), pcf, spw);
+      if (record) return { ocm };  // the fitted record alone (a carried fit's source, stack issue 496): not flown
       const info = APL.readOcm(ocm);
       const states = await flyAp(ocm, sc.epochs);
       // held: the hold rule's outcome as the record states it in OD COMMENT (SPEC 12.1: "prior-limited: BTERM held at its prior ...")
