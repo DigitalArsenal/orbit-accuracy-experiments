@@ -40,8 +40,27 @@ const ladder = async (ctx) => {
   throw last;
 };
 
-/** AP's $PCF with the drag and radiation terms held at the truth's values (headline-loop's carriedPcf, sigmas near zero). */
-const held = (ctx) => ctx.A.carriedPcf(ctx.fitPcf, { b: ctx.terms.dragAreaOverMass, sLnB: 1e-6, agom: ctx.terms.srpAreaOverMass, sAgom: 1e-9 }, { drag: ctx.drag, radiation: !/radiation term held at 0/.test(ctx.label) });
+/** AP's $PCF with the drag and radiation terms held at the truth's values: FIT.DRAG_PRIOR LOG_NORMAL at the true term, sigma of ln B
+ *  1e-6, where the truth has drag; FIT.SRP_PRIOR GAUSSIAN_SIGNED at the true term, sigma 1e-9 m^2/kg, where it has radiation. FORCES is
+ *  packed with its defaults written, as the table packs it. */
+const held = (ctx) => {
+  const P = ctx.S.PCF, x = P.PCF.getRootAsPCF(new ctx.S.flatbuffers.ByteBuffer(ctx.fitPcf)).unpack();
+  const prior = (mean, sigma) => Object.assign(new P.PCFGaussianPriorT(), { MEAN: mean, SIGMA: sigma, HAS_SIGMA: true });
+  const radiation = !/radiation term held at 0/.test(ctx.label);
+  x.FIT = Object.assign(x.FIT ?? new P.PCFFitPolicyT(), {
+    ...(ctx.drag ? { DRAG_PRIOR: prior(ctx.terms.dragAreaOverMass, 1e-6), DRAG_PRIOR_FORM: P.pcfPriorForm.LOG_NORMAL } : {}),
+    ...(radiation ? { SRP_PRIOR: prior(ctx.terms.srpAreaOverMass, 1e-9), SRP_PRIOR_FORM: P.pcfPriorForm.GAUSSIAN_SIGNED } : {}) });
+  const f = x.FORCES, pack = f.pack.bind(f);
+  f.pack = (b) => {
+    const offset = b.addFieldOffset;
+    b.addFieldOffset = function (slot, value, d) { if (value !== d) offset.call(this, slot, value, d); };
+    b.forceDefaults(true);
+    try { return pack(b); } finally { b.forceDefaults(false); b.addFieldOffset = offset; }
+  };
+  const b = new ctx.S.flatbuffers.Builder(1024);
+  P.PCF.finishPCFBuffer(b, x.pack(b));
+  return b.asUint8Array().slice();
+};
 
 export const FITS = {
   cutoff72: { truthStartH: 72, fit: span(-72, 0) },
