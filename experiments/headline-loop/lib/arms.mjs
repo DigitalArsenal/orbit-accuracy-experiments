@@ -30,6 +30,10 @@ export const PCF = {
   AP_VACUUM: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null }),
   // AP with FORCES.ECOM2 (empty: Y0 starts at 0): sdn-ap solves the ECOM2 Y0 term on fits of 72 h or more (SPEC 16.13)
   AP_ECOM2: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), fit: null }),
+  // the same three with FORCES.SOLID_TIDES = IERS_2010 (sdn-ap 0.6.19 and later fly the solid Earth tide only where the $PCF states it)
+  AP_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20 }), SOLID_TIDES: 1 }, fit: null }),
+  AP_VACUUM_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: null }),
+  AP_ECOM2_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), SOLID_TIDES: 1 }, fit: null }),
   XP: APL.fitPcf({ forces: {}, fit: null }),
 };
 
@@ -40,6 +44,8 @@ export const PCF = {
 export const ECOM2_GROUPS = ['GN', 'GN_GAL'];
 export const ECOM2_SINCE = '0.6.15';
 export const ECOM2_MIN_ARC = 72;
+// The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row
+export const TIDES_SINCE = '0.6.19';
 const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
 export const atLeast = (v, w) => {
   const a = numeric(v), b = numeric(w);
@@ -49,7 +55,8 @@ export const atLeast = (v, w) => {
 };
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
-  const label = vacuum ? 'AP_VACUUM' : ECOM2_GROUPS.includes(group) && arcH >= ECOM2_MIN_ARC && atLeast(version, ECOM2_SINCE) ? 'AP_ECOM2' : 'AP';
+  const base = vacuum ? 'AP_VACUUM' : ECOM2_GROUPS.includes(group) && arcH >= ECOM2_MIN_ARC && atLeast(version, ECOM2_SINCE) ? 'AP_ECOM2' : 'AP';
+  const label = atLeast(version, TIDES_SINCE) ? `${base}_TIDES` : base;
   return { label, pcf: PCF[label] };
 };
 /** AP's forces and fitted terms for a $PCF label, in one plain sentence (the table's apForces). */
@@ -58,6 +65,8 @@ export const AP_FORCES_TEXT = {
   AP_VACUUM: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by the theory\'s own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors.',
   AP_ECOM2: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors, and the ECOM2 Y0 radiation term solved as well.',
 };
+for (const label of ['AP', 'AP_VACUUM', 'AP_ECOM2']) AP_FORCES_TEXT[`${label}_TIDES`] = AP_FORCES_TEXT[label].replace('31 in the tesseral terms;', '31 in the tesseral terms; the solid Earth tide (IERS 2010);');
+
 
 /** The builds of the two outside theories (table.mjs names them): the Space Force's XP through propagator/sgp4-xp (its library is the
  *  unmodified Sgp4Prop 9.1.1.0 XP build, called as a black box), SGP4 fitted by analysis/gp-error-model and flown by propagator/sgp4. */
