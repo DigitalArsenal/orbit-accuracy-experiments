@@ -47,8 +47,10 @@ export function fittedTerms(g, name) {
 const median = (v) => { const s = v.slice().sort((a, b) => a - b); if (!s.length) return null; const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 /** The force terms as of t: per term, the median over the object's fits whose cutoff lies in the `days` up to t (a drag term at its lower
  *  bound left out: that fit absorbed something the dynamics do not hold); with none there, the most recent such fit before t; with none at
- *  all, the setting's own starting values. Nothing from after t. */
-export const TERMS_DAYS = 3;
+ *  all, the setting's own starting values. Nothing from after t. Fourteen days hold several fits of every row, so one fit that took a
+ *  station-keeping burn into its radiation terms does not set them (a 3-day pool held one or two such fits on the commercial geostationary
+ *  row, and its flights left hundreds of unlocalized intervals). */
+export const TERMS_DAYS = 14;
 export function termsAsOf(terms, settings, t, days = TERMS_DAYS) {
   const okFit = (x) => x.cutoffMs <= t && !x.parameters.some((p) => p.kind === 'DRAG_AREA_OVER_MASS' && p.value <= 1e-9);
   const near = terms.filter((x) => okFit(x) && x.cutoffMs >= t - days * DAY);
