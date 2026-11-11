@@ -195,9 +195,10 @@ export function arcOf(lines, hours) {
   const coverage = lines.length > 1 ? lines.length / ((hours * 3600) / ((ms(lines[1].epoch) - ms(lines[0].epoch)) / 1000)) : 0;
   return coverage >= MIN_COV ? T.thinned(lines).chosen : null;
 }
-/** As-issued weather at the cutoff (O condition): the AP fit's $SPW rows through the record's horizon and FFM's driver rows to D0 + 8 d. */
-export function weatherAt(D0) {
-  const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
+/** As-issued weather at the cutoff (O condition): the AP fit's $SPW rows through the record's horizon and FFM's driver rows to D0 + 8 d,
+ *  from `arcH` hours before the cutoff (and the margin) on. */
+export function weatherAt(D0, arcH = 72) {
+  const O = W.rowsO(D0 - arcH * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
   if (O.excluded) throw new Error(O.excluded);
   return { rows: O.rows, spw: APL.fitWeather(O.rows, APL.horizonOf(D0)), ffm: driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap })) };
 }
