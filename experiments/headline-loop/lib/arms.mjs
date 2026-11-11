@@ -84,6 +84,29 @@ export const maneuverArc = (burns, D0, perigeeKm) => {
   const last = Math.max(...ends);
   return { startMs: Math.min(D0 - MANEUVER72.minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000)), maneuvering: true, lastBurnMs: last };
 };
+// The numerical arm's fit of a maneuvering object (stack issues 462 and 489): the numerical propagator has no thrust term either, so a fit
+// through a burn takes the thrust into its drag and radiation terms and its forecast leaves the orbit. With the burn lists (refly.mjs
+// --after-burns) it is fitted on the same arc as AP, by the same rule and the same lists: a 72 h fit by maneuverArc; a 24 h fit, where the
+// last burn known at the cutoff ends inside its 24 h, on the arc after it (its end plus MANEUVER72.afterBurnMin) when that arc is at least
+// NUMERICAL_AFTER_BURN.minHours24 long, else on the full 24 h. Every other fit is the stored full-arc fit. The refits are stored apart
+// (NUMERICAL_AFTER_BURN.store), one row per window and fit arc of the rows flown, so the two can be compared.
+export const NUMERICAL_AFTER_BURN = { minHours24: 6, store: `${NUMERICAL_STORE}-after-burn` };
+/** The numerical arm's fit arc for a fit of arcH hours: { startMs, maneuvering, lastBurnMs?, shortAfterBurn? }. */
+export const numericalArc = (burns, D0, perigeeKm, arcH) => {
+  const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
+  if (arcH === 72) return maneuverArc(burns, D0, perigeeKm);
+  if (arcH !== 24 || !(perigeeKm >= MANEUVER72.perigeeMinKm)) return full;
+  const ends = burns.map((b) => Date.parse(b.to)).filter((t) => t <= D0 && t > D0 - arcH * H);
+  if (!ends.length) return full;
+  const last = Math.max(...ends), startMs = last + MANEUVER72.afterBurnMin * 60000;
+  return D0 - startMs >= NUMERICAL_AFTER_BURN.minHours24 * H ? { startMs, maneuvering: true, lastBurnMs: last } : { ...full, shortAfterBurn: true, lastBurnMs: last };
+};
+/** The perigee height (km above the equatorial radius) of an osculating state { r km, v km/s } about the Earth. */
+export const perigeeKmOf = ({ r, v }) => {
+  const MU = 398600.4418, rr = Math.hypot(...r), vv = Math.hypot(...v), aKm = 1 / (2 / rr - (vv * vv) / MU);
+  const h = [r[1] * v[2] - r[2] * v[1], r[2] * v[0] - r[0] * v[2], r[0] * v[1] - r[1] * v[0]];
+  return aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
+};
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
   const base = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
