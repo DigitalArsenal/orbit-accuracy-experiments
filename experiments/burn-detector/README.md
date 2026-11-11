@@ -17,6 +17,10 @@ before D0.
    10 min of each other are one burn. It is known at R, the later of the end of the earliest piece that localizes it and the end of its
    extent plus 20 min, when its velocity change from both sides of the extent (truth states no later than R) holds from states 10 and
    20 min further out; otherwise each later piece that finds it tries again, and a burn that never holds stays a rejected candidate.
+   With `--flag-vel` (off by default) a piece is also flagged when its velocity closure exceeds the same rule over the velocity
+   closures of the pieces before it, and a calibration piece must be quiet in both. On a long-period orbit a firing shows in the
+   velocity closure long before it grows in position (on TESS, 5 to 19 mm/s against about 1 mm/s over a 24 h piece); without the flag
+   such a piece can pass the position test, enter the calibration and raise the levels the search needs.
 3. `ballistic.mjs`: on burn-free pieces after the object's first fit, the same flight from a state fitted to the truth's positions over
    the piece's first hour. `notBallistic` reads the verdict as of a
    cutoff from the pairs that ended by then: an orbit whose positions-only closure stays above 100 m (median) holds thrust between
@@ -38,6 +42,8 @@ node experiments/burn-detector/burns.mjs --group S1 --satellite "Sentinel-1A" --
 node experiments/burn-detector/pieces.mjs --group T --satellite "Swarm A" --out <dir> --length 2 --stride 1
 node experiments/burn-detector/burns.mjs --group T --satellite "Swarm A" --out <dir> --floor 5 --tag .L2
 node experiments/burn-detector/ballistic.mjs --group WA --satellite "SES-15" --out <dir>
+node experiments/burn-detector/pieces.mjs --group HE --satellite TESS --out <dir> --length 24 --stride 12 --lead 12
+node experiments/burn-detector/burns.mjs --group HE --satellite TESS --out <dir> --floor 50 --tag .L24 --flag-vel
 ```
 
 `SDN_MODULES_ROOT` names the modules checkout, as for `experiments/headline-loop`; the stored fits are read from its store

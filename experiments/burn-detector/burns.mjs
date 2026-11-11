@@ -13,7 +13,7 @@
 //      later piece that finds it, and stays a rejected candidate if it never holds.
 // Writes <out>/<group>/<satellite>.burns.json (every candidate, with its report time; the list's own rule: asOf) and <satellite>.mnv (one
 // size-prefixed $MNV per burn, STATUS DETECTED). The lists stay outside this repository.
-//   node experiments/burn-detector/burns.mjs --group S1 --satellite "Sentinel-1A" --out <dir> --floor 10 [--tag .L2] [--calib 30] [--vfloor 0.2]
+//   node experiments/burn-detector/burns.mjs --group S1 --satellite "Sentinel-1A" --out <dir> --floor 10 [--tag .L2] [--calib 30] [--vfloor 0.2] [--flag-vel]
 import fs from 'node:fs';
 import path from 'node:path';
 const D = await import('./lib/detector.mjs');
@@ -26,14 +26,17 @@ const byNominal = new Map();
 for (const r of fs.readFileSync(path.join(dir, piecesFile), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))) if (!byNominal.has(r.nominal) || (byNominal.get(r.nominal).error && !r.error)) byNominal.set(r.nominal, r);
 const all = [...byNominal.values()], ok = all.filter((r) => !r.gap && !r.error).map((r) => ({ ...r, E: Date.parse(r.end) })).sort((a, b) => a.E - b.E);
 const median = (v) => { const s = v.slice().sort((a, b) => a - b); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
-// 1. the position flag as of each piece's end
+// 1. the position flag as of each piece's end; with --flag-vel the same rule on the piece's velocity closure as well (an orbit far from
+//    the Earth, where a firing shows in the velocity long before it grows in position), and a calibration piece quiet in both
+const flagVel = args['flag-vel'] === 'true';
+const madRule = (v) => { const med = median(v); return med + 10 * 1.4826 * median(v.map((x) => Math.abs(x - med))); };
 for (let i = 0; i < ok.length; i += 1) {
-  const prior = ok.filter((p) => p.E < ok[i].E).map((p) => p.posM);
+  const prior = ok.filter((p) => p.E < ok[i].E);
   ok[i].judged = prior.length >= minPrior;
   if (!ok[i].judged) continue;
-  const med = median(prior), mad = median(prior.map((x) => Math.abs(x - med)));
-  ok[i].thr = Math.max(floor, med + 10 * 1.4826 * mad);
-  ok[i].flagged = ok[i].posM > ok[i].thr;
+  ok[i].thr = Math.max(floor, madRule(prior.map((p) => p.posM)));
+  ok[i].vthr = flagVel ? Math.max(vFloor, madRule(prior.map((p) => p.velMmS))) : Infinity;
+  ok[i].flagged = ok[i].posM > ok[i].thr || ok[i].velMmS > ok[i].vthr;
 }
 const ws = D.windowsOf(g, { second: true }).filter((w) => w.name === name), norad = ws.find((w) => w.norad)?.norad ?? null;
 // the force terms' pool: the pieces' own (--terms-days at pieces.mjs), so the search flies what the flag flew
@@ -42,7 +45,7 @@ const arm = D.FULL_SETTING[g], ctx = { ffm: await D.F.openFfm(), settings: D.SET
 const axes = await D.openAxesFor(g);
 const truthAround = async (fromMs, toMs) => D.indexTruth(await D.truthSeries(g, name, norad, fromMs - D.HOUR, toMs + D.HOUR, axes));
 // 2. the calibration pieces: burn-free as of their own end, the first six and the rest spread over the span
-const quiet = ok.filter((p) => p.judged && p.posM < p.thr / 2);
+const quiet = ok.filter((p) => p.judged && p.posM < p.thr / 2 && p.velMmS < p.vthr / 2);
 const spread = quiet.slice(6).filter((_, i, s) => i % Math.max(1, Math.floor(s.length / Math.max(1, nCalib - 6))) === 0).slice(0, Math.max(0, nCalib - 6));
 const calib = [];
 for (const p of [...quiet.slice(0, 6), ...spread]) {
@@ -88,7 +91,7 @@ const record = (ev) => {
 const burns = events.filter((e) => e.attempts.length).map(record).sort((a, b) => a.burn.localeCompare(b.burn));
 const doc = { group: g, name, norad, arm, asOf: 'each burn is known at its reportTime, made from nothing later', piecesFile, lengthH: ok[0]?.lengthH ?? 6, strideH: ok[0]?.strideH ?? 3,
   pieces: all.length, flown: ok.length, gapPieces: all.filter((r) => r.gap).length, errorPieces: all.filter((r) => r.error).length, unjudged,
-  rule: { floorM: floor, termsDays, minPrior, minCalib, vFloorMmS: vFloor, calibrationPieces: calib.length }, flaggedPieces: ok.filter((p) => p.flagged).map((p) => p.nominal), burns, unlocalized };
+  rule: { floorM: floor, flagVelocity: flagVel, termsDays, minPrior, minCalib, vFloorMmS: vFloor, calibrationPieces: calib.length }, flaggedPieces: ok.filter((p) => p.flagged).map((p) => p.nominal), burns, unlocalized };
 fs.writeFileSync(path.join(dir, `${slug}.burns.json`), `${JSON.stringify(doc, null, 1)}\n`);
 // the typed records: one $MNV per burn that holds
 const algorithm = 'burn detector (stack issue 462): pieces of the precise orbit flown by the full numerical setting from its own states, as of each piece\'s end; flagged pieces halved by flights to about 90 s; velocity change from both sides of the extent';
