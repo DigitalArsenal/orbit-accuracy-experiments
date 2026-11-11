@@ -13,7 +13,10 @@
 //     [--burns <dir of the burn detector's lists (stack issue 462), <group>/<name>.burns.json>: from MANEUVER72_SINCE, AP's 72 h fit of a maneuvering
 //      object takes the arc after its last burn known at the cutoff (lib/arms.mjs MANEUVER72; stack issue 489); each such row says so. The
 //      numerical arm, in a regime refitted by refly.mjs --after-burns, takes the refit on the same arc (lib/arms.mjs numericalArc), and the
-//      commercial geostationary row gets an arm on the windows whose arcs it frees of known burns; each such row says so (ffmFitProcess)]
+//      commercial geostationary row gets an arm on the windows whose arcs it frees of known burns; each such row says so (ffmFitProcess). On
+//      a row whose satellites all have lists, each lead's AP, numerical and SGP4-XP figures are also given over the windows with no burn from
+//      the cutoff to that lead (cleanToLead), and the row reads its later burns (laterBurns) and, on the strong-drag rows, its burn-free
+//      windows (burnFreeScatter); nothing is removed]
 //   node experiments/headline-loop/table.mjs --check
 //
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm and its package.json), never from a working tree.
@@ -45,6 +48,9 @@ const passes = (p) => p.a - p.f < PASS_M;
 // satellite's altitude is its mean geocentric distance less the equatorial radius over the truth's 3 h before its first scored cutoff
 const SAME_ALTITUDES = { row: 'S1', from: 'DO', fromKm: 600, toKm: 850, label: 'the same altitudes on satellites that seldom burn' };
 const EQUATOR_KM = 6378.137;
+// --burns (stack issue 462): the rows whose burn-free windows get burnFreeScatter, and the method line's sentence for the burn-clean figures
+const STRONG_DRAG = new Set(['T', 'P']);
+const CLEAN_TEXT = ' cleanToLead, on the rows whose satellites all have burn lists (the burn detector, stack issue 462), gives each lead\'s AP, numerical and SGP4-XP figures again over the windows with no burn in the truth between the cutoff and that lead (any burn of the lists, known at the cutoff or not), with their count; the figures over all windows stand beside them and no window leaves any count. laterBurns says how many windows on the pass line hold a burn between the cutoff and day 5, by whether it raises or lowers the orbit, and how AP and the numerical propagator compare on each kind: a forecast across a later maneuver is not scored as accuracy. burnFreeScatter, on the strong-drag rows, says how many of the windows where AP is more than 100 m closer a burn explains, and how the two compare on the burn-free windows.';
 const EITHER_WAY_TEXT = ' within100mEitherWay counts, at the 120 hour lead on the same windows as within100mOfFfm, the windows where AP\'s error and the numerical propagator\'s are within 100 m of each other either way (a window where AP is more than 100 m closer to the truth than the numerical propagator does not count), and within100mEitherWayBurnSplit splits that count by the burn flags into the four parts of burnSplit.';
 const STATISTIC = [
   'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it); the median and the 95th percentile (linear interpolation) are taken over the lead\'s windows, those where AP and the numerical propagator were both scored.',
@@ -291,11 +297,17 @@ async function main() {
       const flownAll = (t) => ws.every((w) => rowOf(t, w, arc));
       const failedOn = (t, w) => !!rowOf(t, w, arc)?.apError;
       const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day), xF: failedOn('SGP4XP', w), uF: failedOn('USSFXP', w), sF: failedOn('SGP4', w) })).filter((p) => p.a != null && (!label || p.f != null));
+      // --burns (stack issue 462): the burns in the truth, every one of the burn detector's lists that it does not reject, known at the cutoff
+      // or not. On a row whose satellites all have lists, each lead's AP, numerical and SGP4-XP figures are also given over the windows with no
+      // burn between the cutoff and that lead (cleanToLead), beside the figures over all windows; no window leaves any count
+      const listsOf = new Map(args.burns ? ws.map((w) => [w.name, A.listedBurns(args.burns, w.group, w.name)]) : []);
+      const withLists = !!args.burns && ws.length > 0 && ws.every((w) => listsOf.get(w.name));
+      const burnsIn = (w, fromMs, toMs) => listsOf.get(w.name).filter((b) => b.t > fromMs && b.t <= toMs);
       const leads = LEADS.map(([hours, day]) => {
         const pairs = pairsAt(day), withXp = pairs.filter((p) => p.x != null), withU = pairs.filter((p) => p.u != null), withS = pairs.filter((p) => p.s != null);
         // a theory's figure over its scored windows, with the count of those and of the lead's windows where its fit or flight failed
         const column = (scored, values, failed) => (scored.length || failed ? { ...stats(values), windows: scored.length, failed } : null);
-        return {
+        const lead = {
           hours, windows: pairs.length,
           ap: pairs.length ? stats(pairs.map((p) => p.a)) : null,
           ffm: label ? (pairs.length ? stats(pairs.map((p) => p.f)) : null) : null,
@@ -306,11 +318,37 @@ async function main() {
           apBeatsXpUssf: flownAll('USSFXP') && withU.length ? { windows: withU.length, apBetter: withU.filter((p) => p.a < p.u).length, medianApOverXp: round3(median(withU.map((p) => p.a / p.u))) } : null,
           apFfmRank: label && pairs.length >= 10 ? { windows: pairs.length, rho: round3(spearman(pairs.map((p) => p.a), pairs.map((p) => p.f))) } : null,
         };
+        if (withLists) {
+          const clean = pairs.filter((p) => !burnsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length);
+          const fig = (v) => ({ windows: v.length, ...stats(v) });
+          if (lead.ap) lead.ap.cleanToLead = fig(clean.map((p) => p.a));
+          if (lead.ffm) lead.ffm.cleanToLead = fig(clean.map((p) => p.f));
+          if (lead.xp) lead.xp.cleanToLead = fig(clean.filter((p) => p.x != null).map((p) => p.x));
+        }
+        return lead;
       });
       const pass = label ? pairsAt(PASS_LEAD_DAY) : [];
       const met = pass.filter(passes).length;
       const within100mOfFfm = label && pass.length ? { windows: pass.length, met, share: round3(met / pass.length) } : null;
       const burnSplit = within100mOfFfm ? splitByBurns(flags, pass, arc) : null;
+      // --burns: the row's later burns in words (laterBurns), and on the strong-drag rows its burn-free windows (burnFreeScatter), on the pass
+      // line's windows at day 5 (stack issue 462)
+      let laterBurns = null, burnFreeScatter = null;
+      if (withLists && label && pass.length) {
+        const after = (p) => burnsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + PASS_LEAD_DAY * W.DAY);
+        // a burn raises or lowers the orbit where its along-track part is at least half its size; else it is mainly out of the orbit's plane or radial
+        const kind = (x) => (Math.abs(x.alongTrackMmS) < 0.5 * x.sizeMmS ? 'cross' : x.alongTrackMmS > 0 ? 'raise' : 'lower');
+        const classOf = (p) => { const k = [...new Set(after(p).map(kind))]; return !k.length ? 'none' : k.length > 1 ? 'mixed' : k[0]; };
+        const of = (c) => pass.filter((p) => classOf(p) === c);
+        const apBelow = (s) => s.filter((p) => p.a < p.f - PASS_M).length, ffmBelow = (s) => s.filter((p) => p.f < p.a - PASS_M).length;
+        const [up, down, cross, mixed, none] = ['raise', 'lower', 'cross', 'mixed', 'none'].map(of), later = pass.length - none.length;
+        if (later) laterBurns = `Between the cutoff and day 5 a burn falls in ${later} of the ${pass.length} windows on the pass line (in ${up.length} every such burn raises the orbit, in ${down.length} every one lowers it, in ${cross.length} every one is mainly out of the orbit's plane, in ${mixed.length} a mix). A forecast across a later maneuver is not scored as accuracy: its error measures the maneuver as much as the propagator. AP's error is more than 100 m below the numerical propagator's in ${apBelow(up)} of the ${up.length} windows whose later burns all raise the orbit, ${apBelow(down)} of the ${down.length} whose later burns all lower it, ${apBelow(cross)} of the ${cross.length} whose later burns are mainly out of the plane, ${apBelow(mixed)} of the ${mixed.length} with a mix, and ${apBelow(none)} of the ${none.length} with no later burn, where the numerical propagator's is more than 100 m below AP's in ${ffmBelow(none)}.`;
+        if (STRONG_DRAG.has(g)) {
+          const inArc = (p) => burnsIn(p.w, p.w.cutoffMs - arc * W.HOUR, p.w.cutoffMs).length > 0;
+          const closer = pass.filter((p) => p.a < p.f - PASS_M), explained = closer.filter((p) => inArc(p) || classOf(p) !== 'none'), free = pass.filter((p) => !inArc(p) && classOf(p) === 'none');
+          burnFreeScatter = `The burn lists explain ${explained.length} of the ${closer.length} windows where AP's error is more than 100 m below the numerical propagator's at day 5 (a burn in the fit arc or between the cutoff and day 5). On the ${free.length} burn-free windows AP is the closer one by more than 100 m in ${apBelow(free)} and the numerical propagator in ${ffmBelow(free)}: two fits of the drag term scattering about each other under a density forecast ${(Math.round(median(free.map((p) => p.f)) / 100) / 10).toLocaleString('en-US')} km off at day 5 (the numerical propagator's median there), not a difference in accuracy.`;
+        }
+      }
       const scored = ws.filter((w, i) => LEADS.some(([, day]) => meters(rowOf('AP', w, arc), null, day) != null && (!label || meters(bs[i], label, day) != null)));
       const pcfLabel = A.apPcfFor(g, version, !!W.GROUPS[g].vacuum, arc).label;
       const stated = [...new Set(ws.map((w) => rowOf('AP', w, arc)?.pcf).filter(Boolean))];
@@ -339,7 +377,7 @@ async function main() {
         ? `The numerical arm's fit of an object with its perigee at ${A.MANEUVER72.perigeeMinKm} km or above whose precise orbit holds a burn known at the cutoff is on the arc after its last such burn, by AP's rule${arc === 72 ? '' : ` (here: where that burn ends inside the 24 h arc and the arc after it is at least ${A.NUMERICAL_AFTER_BURN.minHours24} h)`}; every other window keeps its full-arc fit. Windows: ${ffmRefit} refitted on the arc after a burn, ${ffmFull} on the full arc${ffmNone ? `, ${ffmNone} without a numerical arm: ${noneText}` : ''}${ws.length - ffmRefit - ffmFull - ffmNone ? `, ${ws.length - ffmRefit - ffmFull - ffmNone} without a numerical fit (no truth or coverage)` : ''}.`
         : null;
       rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
-      passOf.push({ g, arc, row: rows.at(-1), pass: within100mOfFfm ? pass : [] });
+      passOf.push({ g, arc, row: rows.at(-1), pass: within100mOfFfm ? pass : [], laterBurns, burnFreeScatter });
       if (/^AP_ECOM2/.test(pcfLabel)) ecom2Rows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
       if (/_TIDES$/.test(pcfLabel)) tideRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
       for (const w of ws) for (const t of THEORIES) { const r = rowOf(t, w, arc), c = (tally[t] ??= { scored: 0, failed: 0, windowError: 0, none: 0 }); if (!r) c.none += 1; else if (r.error) c.windowError += 1; else if (r.apError) c.failed += 1; else c.scored += 1; }
@@ -373,6 +411,9 @@ async function main() {
     const met = m.pass.filter(eitherWay).length;
     m.row.within100mEitherWay = { windows: m.pass.length, met, share: round3(met / m.pass.length) };
     if (m.row.burnSplit) m.row.within100mEitherWayBurnSplit = partsByBurns(flags, m.pass, m.arc, eitherWay);
+    // --burns: the row's reading of its later burns and, on the strong-drag rows, of its burn-free windows, last
+    if (m.laterBurns) m.row.laterBurns = m.laterBurns;
+    if (m.burnFreeScatter) m.row.burnFreeScatter = m.burnFreeScatter;
   }
   for (const r of rows.filter((x) => x.burnSplit || x.sameAltitudes)) console.error(`  ${r.regime} ${r.fitHours} h: ${r.burnSplit?.label ?? 'no burn flags'}${r.sameAltitudes ? ` ${r.sameAltitudes.label}: ${r.sameAltitudes.within100mOfFfm?.met} of ${r.sameAltitudes.within100mOfFfm?.windows}; ${r.sameAltitudes.burnSplit?.label ?? 'no burn flags'}` : ''}`);
   const burnText = !flags ? '' : ` burnSplit, on the rows with burn flags (stack issue 462), splits the windows of the pass line (within100mOfFfm) by the burns that a detector reading the truth alone finds: velocity steps that the full numerical setting, flown from the truth's own states, does not explain, localized by halving (planted steps found down to 0.5 mm/s at 700 km; on the altimetry satellites, every burn of the IDS maneuver lists that falls where the truth covers it, and none that is not listed). burnInFitArc holds the windows with a burn in the fit arc; burnCutoffToDay5Only those with none there and one between the cutoff and day 5; noBurn those with neither; unflagged those the detector did not run on. The four are a partition: their windows and met add up to the pass line's. partlyCovered counts the windows where a span counted without a burn has hours without truth, which the detector cannot see; label states the counts in words. Neither fit solves a delta-v (the numerical fit has no such term), so a burn after the cutoff is missed by both and one in the fit arc is taken up by each fit's other terms.${rows.some((r) => r.sameAltitudes) ? ` sameAltitudes, under the ${W.GROUPS[SAME_ALTITUDES.row].label} rows, is the ${W.GROUPS[SAME_ALTITUDES.from].label} row's pass line at the same fit length on its satellites at ${SAME_ALTITUDES.fromKm} to ${SAME_ALTITUDES.toKm} km (mean geocentric distance less the equatorial radius over the truth's 3 h before each satellite's first scored cutoff), with its own burnSplit.` : ''} The flags cover ${count(flags.size)} window-arcs and are kept outside this repository (the first 12 hex digits of the sha256 of their files in name order, as for the builds: ${flags.sha256.slice(0, 12)}).`;
@@ -403,7 +444,7 @@ async function main() {
   const doc = {
     schema: 'sdn-ap-scoreboard/2',
     measured: new Date().toISOString().slice(0, 10),
-    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}`,
+    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}${rows.some((r) => r.leads.some((l) => l.ap?.cleanToLead)) ? CLEAN_TEXT : ''}`,
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
@@ -568,8 +609,41 @@ async function check() {
       && s.within100mOfFfm?.windows === 1 && s.within100mOfFfm.met === metIn && JSON.stringify(s.burnSplit && [s.burnSplit.burnCutoffToDay5Only, s.burnSplit.noBurn.windows, s.burnSplit.burnInFitArc.windows, s.burnSplit.unflagged.windows]) === JSON.stringify([{ windows: 1, met: metIn }, 0, 0, 0]) && /sameAltitudes/.test(f6.statistic),
     `the same altitudes at ${a} h on ${Object.values(k6).join(', ')}: ${r6.err.slice(-300)} ${JSON.stringify(s)}`);
   }
+  // 7. made-up burn lists for the laser geodetic satellites (--burns, stack issue 462): on one satellite a raising burn 12 h after its first
+  // cutoff and a lowering one 100 h after its third, on another a raising and an out-of-plane burn 50 and 51 h after its second, on a third
+  // a candidate its list rejects. Every lead keeps its figures over all windows and gains cleanToLead for AP, the numerical propagator and
+  // SGP4-XP, each equal to the one recomputed here over the windows with no burn from the cutoff to that lead (the rejected candidate not a
+  // burn); laterBurns counts each kind on the pass line's windows; no burnFreeScatter (not a strong-drag row); nothing is flown
+  const bdir = path.join(dir, 'burns-7'), out7 = path.join(dir, 'g.json'), HR = 3600e3;
+  const gd7 = [...new Map(gd.map((b) => [b.key, b])).values()], sats = [...new Set(gd7.map((b) => b.name))].sort();
+  const cutoffsOf = (n) => [...new Set(gd7.filter((b) => b.name === n).map((b) => Date.parse(b.cutoff)))].sort((x, y) => x - y);
+  const mk = (t, dv, consistent = true) => ({ burn: new Date(t).toISOString(), from: new Date(t - 45e3).toISOString(), to: new Date(t + 45e3).toISOString(), dvRtnMmS: dv.map((x) => -x), refined: { consistent, dvRtnMmS: dv } });
+  const plan = { [sats[0]]: [mk(cutoffsOf(sats[0])[0] + 12 * HR, [0, 2, 0]), mk(cutoffsOf(sats[0])[2] + 100 * HR, [0, -3, 0])],
+    [sats[1]]: [mk(cutoffsOf(sats[1])[1] + 50 * HR, [0, 1, 0]), mk(cutoffsOf(sats[1])[1] + 51 * HR, [0, 0.1, 5])], [sats[2]]: [mk(cutoffsOf(sats[2])[0] + 30 * HR, [0, 1, 0], false)] };
+  fs.mkdirSync(path.join(bdir, 'GD'), { recursive: true });
+  for (const n of sats) fs.writeFileSync(path.join(bdir, 'GD', `${n.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`), JSON.stringify({ lengthH: 6, burns: plan[n] ?? [] }));
+  const r7 = runIn(s1, out7, ['--burns', bdir]);
+  const g7 = fs.existsSync(out7) ? E.readJson(out7) : {}, gr = g7.rows?.[0];
+  ok(r7.code === 0 && /, 0 to fly/.test(r7.err) && g7.harness?.command === doc.harness?.command && !JSON.stringify(g7).includes(bdir) && /cleanToLead/.test(g7.statistic ?? ''), `the run with burn lists: ${r7.err.slice(-200)}`);
+  ok(gr && JSON.stringify(Object.keys(gr)) === JSON.stringify([...Object.keys(row ?? {}), 'laterBurns']) && Object.keys(row ?? {}).filter((k) => k !== 'leads').every((k) => JSON.stringify(gr[k]) === JSON.stringify(row[k])), `with burn lists the row is the same row and laterBurns: ${JSON.stringify(Object.keys(gr ?? {}))}`);
+  const strip = (l) => JSON.parse(JSON.stringify(l, (k, v) => (k === 'cleanToLead' ? undefined : v)));
+  ok(gr && JSON.stringify(gr.leads.map(strip)) === JSON.stringify(row?.leads), 'with burn lists every lead keeps its figures over all windows');
+  const burnsOf7 = (n) => (plan[n] ?? []).filter((b) => b.refined.consistent).map((b) => ({ t: Date.parse(b.burn), dv: b.refined.dvRtnMmS }));
+  const pairs7 = (day) => gd7.map((b) => ({ name: b.name, D0: Date.parse(b.cutoff), a: apRows.get(b.key)?.days?.[day]?.e, f: b.arms?.FFMbest?.ok ? b.arms.FFMbest.days?.[day]?.e : undefined, x: xpRows.get(b.key)?.days?.[day]?.e })).filter((p) => Number.isFinite(p.a) && Number.isFinite(p.f));
+  const fig7 = (v) => ({ windows: v.length, medianM: med(v), p95M: p95(v) });
+  for (const [hours, day] of LEADS) {
+    const l = gr?.leads?.find((x) => x.hours === hours), clean = pairs7(day).filter((p) => !burnsOf7(p.name).some((b) => b.t > p.D0 && b.t <= p.D0 + hours * HR));
+    const want = { ap: fig7(clean.map((p) => p.a * 1000)), ffm: fig7(clean.map((p) => p.f * 1000)), xp: fig7(clean.filter((p) => Number.isFinite(p.x)).map((p) => p.x * 1000)) };
+    ok(l && ['ap', 'ffm', 'xp'].every((k) => JSON.stringify(l[k]?.cleanToLead) === JSON.stringify(want[k])) && want.ap.windows < l.windows, `cleanToLead at ${hours} h: ${JSON.stringify(['ap', 'ffm', 'xp'].map((k) => l?.[k]?.cleanToLead))} against ${JSON.stringify(want)}`);
+  }
+  const kind7 = (dv) => (Math.abs(dv[1]) < 0.5 * Math.hypot(...dv) ? 'cross' : dv[1] > 0 ? 'raise' : 'lower');
+  const class7 = (p) => { const k = [...new Set(burnsOf7(p.name).filter((b) => b.t > p.D0 && b.t <= p.D0 + 5 * 24 * HR).map((b) => kind7(b.dv)))]; return !k.length ? 'none' : k.length > 1 ? 'mixed' : k[0]; };
+  const p5 = pairs7('5'), n7 = (c) => p5.filter((p) => class7(p) === c), below7 = (s) => s.filter((p) => p.a * 1000 < p.f * 1000 - 100).length;
+  const [u7, d7, c7, m7, z7] = ['raise', 'lower', 'cross', 'mixed', 'none'].map(n7);
+  ok(gr?.laterBurns?.startsWith(`Between the cutoff and day 5 a burn falls in ${p5.length - z7.length} of the ${p5.length} windows on the pass line (in ${u7.length} every such burn raises the orbit, in ${d7.length} every one lowers it, in ${c7.length} every one is mainly out of the orbit's plane, in ${m7.length} a mix).`)
+    && gr.laterBurns.includes(`in ${below7(u7)} of the ${u7.length} windows whose later burns all raise the orbit`) && gr.laterBurns.includes(`${below7(z7)} of the ${z7.length} with no later burn`) && u7.length && d7.length && m7.length && !gr.burnFreeScatter, `laterBurns: ${gr?.laterBurns}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, one-sided and either way, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count; with made-up burn flags the row is the same row with burnSplit and the two-sided split, whose four parts each add up to their pass line and equal the ones recomputed, the flags not named in the file; under each Near 700 km row the altimetry row\'s pass line on its satellite at 600 to 850 km alone, recomputed, with its own split');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, one-sided and either way, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count; with made-up burn flags the row is the same row with burnSplit and the two-sided split, whose four parts each add up to their pass line and equal the ones recomputed, the flags not named in the file; under each Near 700 km row the altimetry row\'s pass line on its satellite at 600 to 850 km alone, recomputed, with its own split; with made-up burn lists every lead keeps its figures over all windows and gains cleanToLead for AP, the numerical propagator and SGP4-XP, recomputed over the windows with no burn from the cutoff to the lead (a rejected candidate not a burn), and laterBurns counts each kind of later burn');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }

@@ -31,6 +31,14 @@ arc the rule frees of known burns; a window whose every allowed arc still holds 
 that its orbit is not ballistic between impulses (`notBallistic`): flown from the truth's positions alone, the numerical setting closes
 above the 100 m bar over the detector's pieces, as under continuous low thrust, so no arc of it is burn-free.
 
+A forecast across a later maneuver is not scored as accuracy: no fit sees a burn after its cutoff, so the error there measures the
+maneuver as much as the propagator. With `--burns`, on a row whose satellites all have burn lists, each lead's AP, numerical and SGP4-XP
+figures are also given over the windows with no burn in the truth from the cutoff to that lead (`cleanToLead: { windows, medianM, p95M }`
+under `ap`, `ffm` and `xp`), beside the figures over all windows. Nothing is removed. `laterBurns` says in words how many windows on the pass
+line hold a burn between the cutoff and day 5, whether it raises the orbit, lowers it or is mainly out of its plane, and how AP and the
+numerical propagator compare on each kind. On the strong-drag rows `burnFreeScatter` says how many of the windows where AP is more than
+100 m closer a burn explains, and how the two compare on the burn-free windows.
+
 ## Tools
 
 | File | Does |

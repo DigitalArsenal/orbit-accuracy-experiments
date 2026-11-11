@@ -157,6 +157,16 @@ export const perigeeKmOf = ({ r, v }) => {
   const h = [r[1] * v[2] - r[2] * v[1], r[2] * v[0] - r[0] * v[2], r[0] * v[1] - r[1] * v[0]];
   return aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
 };
+/** Every burn in an object's burn list, known at a cutoff or not (what the truth holds): [{ t (ms), sizeMmS, alongTrackMmS (+ raises the
+ *  orbit) }], or null without a list. A candidate the list rejects (refined.consistent false) is left out. */
+export const listedBurns = (dir, group, name) => {
+  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+  if (!fs.existsSync(f)) return null;
+  return JSON.parse(fs.readFileSync(f, 'utf8')).burns.filter((b) => b.refined?.consistent !== false).map((b) => {
+    const dv = b.refined?.dvRtnMmS ?? b.dvRtnMmS.map((x) => -x);
+    return { t: Date.parse(b.burn), sizeMmS: Math.hypot(...dv), alongTrackMmS: dv[1] };
+  });
+};
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
   const base = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
