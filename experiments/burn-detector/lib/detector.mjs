@@ -45,12 +45,13 @@ export function fittedTerms(g, name) {
   return out.sort((a, b) => a.cutoffMs - b.cutoffMs);
 }
 const median = (v) => { const s = v.slice().sort((a, b) => a - b); if (!s.length) return null; const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
-/** The force terms as of t: per term, the median over the object's fits whose cutoff lies in the 3 days up to t (a drag term at its lower
+/** The force terms as of t: per term, the median over the object's fits whose cutoff lies in the `days` up to t (a drag term at its lower
  *  bound left out: that fit absorbed something the dynamics do not hold); with none there, the most recent such fit before t; with none at
  *  all, the setting's own starting values. Nothing from after t. */
-export function termsAsOf(terms, settings, t) {
+export const TERMS_DAYS = 3;
+export function termsAsOf(terms, settings, t, days = TERMS_DAYS) {
   const okFit = (x) => x.cutoffMs <= t && !x.parameters.some((p) => p.kind === 'DRAG_AREA_OVER_MASS' && p.value <= 1e-9);
-  const near = terms.filter((x) => okFit(x) && x.cutoffMs >= t - 3 * DAY);
+  const near = terms.filter((x) => okFit(x) && x.cutoffMs >= t - days * DAY);
   const pool = near.length ? near : terms.filter(okFit).slice(-1);
   if (!pool.length) return settings.parameters.map((p) => ({ kind: p.kind, value: p.value }));
   return settings.parameters.map((p) => ({ kind: p.kind, value: median(pool.map((x) => x.parameters.find((q) => q.kind === p.kind)?.value).filter(Number.isFinite)) ?? p.value }));
@@ -97,7 +98,7 @@ const midOf = (T, lo, hi) => { const m = firstAtOrAfter(T, (T.s[lo].t + T.s[hi].
 
 /** The detector's flights: { ffm (openFfm), settings, terms (fittedTerms) }. One flight of the full setting from a truth state, judged as of asOfMs. */
 async function flyStates(ctx, from, epochs, asOfMs) {
-  const params = termsAsOf(ctx.terms, ctx.settings, asOfMs), rows = ctx.settings.forces.drag ? weatherAsOf(asOfMs) : null;
+  const params = termsAsOf(ctx.terms, ctx.settings, asOfMs, ctx.termsDays), rows = ctx.settings.forces.drag ? weatherAsOf(asOfMs) : null;
   const product = { epoch: iso(from.t), state: [...from.r, ...from.v].map((x) => x * 1000), parameters: params };
   return { params, out: await ctx.ffm.forecast(product, epochs.map(iso), ctx.settings, rows) };
 }

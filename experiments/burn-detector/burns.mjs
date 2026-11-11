@@ -36,7 +36,9 @@ for (let i = 0; i < ok.length; i += 1) {
   ok[i].flagged = ok[i].posM > ok[i].thr;
 }
 const ws = D.windowsOf(g, { second: true }).filter((w) => w.name === name), norad = ws.find((w) => w.norad)?.norad ?? null;
-const arm = D.FULL_SETTING[g], ctx = { ffm: await D.F.openFfm(), settings: D.SETTINGS[arm], terms: D.fittedTerms(g, name) };
+// the force terms' pool: the pieces' own (--terms-days at pieces.mjs), so the search flies what the flag flew
+const termsDays = ok[0]?.termsDays ?? D.TERMS_DAYS;
+const arm = D.FULL_SETTING[g], ctx = { ffm: await D.F.openFfm(), settings: D.SETTINGS[arm], terms: D.fittedTerms(g, name), termsDays };
 const axes = await D.openAxesFor(g);
 const truthAround = async (fromMs, toMs) => D.indexTruth(await D.truthSeries(g, name, norad, fromMs - D.HOUR, toMs + D.HOUR, axes));
 // 2. the calibration pieces: burn-free as of their own end, the first six and the rest spread over the span
@@ -86,7 +88,7 @@ const record = (ev) => {
 const burns = events.filter((e) => e.attempts.length).map(record).sort((a, b) => a.burn.localeCompare(b.burn));
 const doc = { group: g, name, norad, arm, asOf: 'each burn is known at its reportTime, made from nothing later', piecesFile, lengthH: ok[0]?.lengthH ?? 6, strideH: ok[0]?.strideH ?? 3,
   pieces: all.length, flown: ok.length, gapPieces: all.filter((r) => r.gap).length, errorPieces: all.filter((r) => r.error).length, unjudged,
-  rule: { floorM: floor, minPrior, minCalib, vFloorMmS: vFloor, calibrationPieces: calib.length }, flaggedPieces: ok.filter((p) => p.flagged).map((p) => p.nominal), burns, unlocalized };
+  rule: { floorM: floor, termsDays, minPrior, minCalib, vFloorMmS: vFloor, calibrationPieces: calib.length }, flaggedPieces: ok.filter((p) => p.flagged).map((p) => p.nominal), burns, unlocalized };
 fs.writeFileSync(path.join(dir, `${slug}.burns.json`), `${JSON.stringify(doc, null, 1)}\n`);
 // the typed records: one $MNV per burn that holds
 const algorithm = 'burn detector (stack issue 462): pieces of the precise orbit flown by the full numerical setting from its own states, as of each piece\'s end; flagged pieces halved by flights to about 90 s; velocity change from both sides of the extent';

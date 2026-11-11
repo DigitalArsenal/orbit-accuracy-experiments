@@ -1,11 +1,11 @@
 // The burn detector, step 3 for one satellite (after burns.mjs): whether its orbit is ballistic between impulses, strictly as of each
 // cutoff. On pieces burn-free by its list (judged, not flagged as of their own end, and clear of every burn and candidate), the first six
-// and the rest spread over the span (--n in all, default 12), each piece is flown again from the positions alone: the start velocity fitted
-// by analysis/estimation to the truth's first position and the first one at least 300 s later (the force terms as of the piece's end held
-// by a tight prior), flown over the piece, the closure taken in position. Where a truth's velocities are noisier than its positions this
+// and the rest spread over the span (--n in all, default 12), each piece is flown again from the positions alone: the start state fitted
+// by analysis/estimation to the truth's positions over the piece's first hour (the force terms as of the piece's end held by a tight
+// prior), flown over the piece, the closure taken in position. Where a truth's velocities are noisier than its positions this
 // closure is the orbit's own; where it stays far above the bar, the orbit holds thrust between impulses. The list keeps each pair with its
 // end (positionsOnly); lib/arms.mjs notBallistic reads the verdict as of a cutoff from the pairs that ended by then.
-//   node experiments/burn-detector/ballistic.mjs --group WA --satellite "SES-15" --out <dir> [--tag .L2] [--n 12]
+//   node experiments/burn-detector/ballistic.mjs --group WA --satellite "SES-15" --out <dir> [--tag .L2] [--n 12] [--fit-minutes 60]
 import fs from 'node:fs';
 import path from 'node:path';
 const D = await import('./lib/detector.mjs');
@@ -19,22 +19,26 @@ const byNominal = new Map();
 for (const r of fs.readFileSync(path.join(dir, `${slug}${tag}.pieces.jsonl`), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))) if (!byNominal.has(r.nominal) || (byNominal.get(r.nominal).error && !r.error)) byNominal.set(r.nominal, r);
 const ok = [...byNominal.values()].filter((r) => !r.gap && !r.error).sort((a, b) => Date.parse(a.end) - Date.parse(b.end));
 const flagged = new Set(L.flaggedPieces), spans = L.burns.map((b) => [Date.parse(b.extentFrom ?? b.from), Date.parse(b.extentTo ?? b.to)]);
-const clear = ok.filter((p, i) => i >= L.rule.minPrior && !flagged.has(p.nominal) && !spans.some(([a, b]) => a < Date.parse(p.end) && b > Date.parse(p.start)));
-const rest = clear.slice(6), pick = [...clear.slice(0, 6), ...rest.filter((_, i) => i % Math.max(1, Math.floor(rest.length / Math.max(1, n - 6))) === 0).slice(0, Math.max(0, n - 6))];
 const ws = D.windowsOf(g, { second: true }).filter((w) => w.name === name), norad = ws.find((w) => w.norad)?.norad ?? null;
 const arm = D.FULL_SETTING[g], base = D.SETTINGS[arm], terms = D.fittedTerms(g, name), ffm = await D.F.openFfm(), axes = await D.openAxesFor(g);
+// only pieces that start after the object's first fit: before it the flights carry the setting's starting terms, and the test would judge
+// those terms, not the orbit
+const firstFit = terms[0]?.cutoffMs ?? Infinity;
+const clear = ok.filter((p, i) => i >= L.rule.minPrior && Date.parse(p.start) >= firstFit && !flagged.has(p.nominal) && !spans.some(([a, b]) => a < Date.parse(p.end) && b > Date.parse(p.start)));
+const rest = clear.slice(6), pick = [...clear.slice(0, 6), ...rest.filter((_, i) => i % Math.max(1, Math.floor(rest.length / Math.max(1, n - 6))) === 0).slice(0, Math.max(0, n - 6))];
 const pairs = [];
 for (const p of pick) {
   const s0 = Date.parse(p.start), e0 = Date.parse(p.end);
   const T = D.indexTruth(await D.truthSeries(g, name, norad, s0 - D.HOUR, e0 + D.HOUR, axes));
   const i0 = T.at.get(s0), i1 = T.at.get(e0);
   if (i0 === undefined || i1 === undefined) continue;
-  const params = D.termsAsOf(terms, base, e0), rows = base.forces.drag ? D.weatherAsOf(e0) : null;
+  const params = D.termsAsOf(terms, base, e0, L.rule.termsDays ?? D.TERMS_DAYS), rows = base.forces.drag ? D.weatherAsOf(e0) : null;
   const settings = { ...base, parameters: params, apriori: apriori(params.map((q) => Math.max(Math.abs(q.value), 1e-9) * 1e-6)), maximumIterations: 20, correctionTolerance: 1e-4, sigmaM: 0.01 };
-  // two positions on the scoring grid: the piece's first state and the first at least 300 s later (10 s apart would leave the velocity to
-  // the positions' centimeter noise over 10 s)
-  const j = (() => { for (let k = i0 + 1; k < T.s.length; k += 1) if (T.s[k].t - T.s[i0].t >= 300e3) return k; return i0 + 1; })();
-  const lines = [T.s[i0], T.s[j]].map((l) => ({ epoch: D.iso(l.t), r: l.r, v: l.v }));
+  // the positions over the piece's first --fit-minutes (default 60), one every 300 s or more: two positions 300 s apart leave the start
+  // velocity to a broadcast truth's meter-level position noise (about 3 mm/s, 60 m over 6 h, the size of the bar itself)
+  const fitMin = Number(args['fit-minutes'] ?? 60), pts = [i0];
+  for (let k = i0 + 1; k < T.s.length && T.s[k].t - T.s[i0].t <= fitMin * 60e3; k += 1) if (T.s[k].t - T.s[pts.at(-1)].t >= 300e3) pts.push(k);
+  const j = pts.at(-1), lines = pts.map((k) => ({ epoch: D.iso(T.s[k].t), r: T.s[k].r, v: T.s[k].v }));
   try {
     const f = await ffm.fit(lines, settings, T.s[j].t, rows);
     const product = { epoch: D.iso(s0), state: f.state.slice(0, 6), parameters: params };

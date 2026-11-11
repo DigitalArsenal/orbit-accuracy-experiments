@@ -17,7 +17,7 @@ const norad = ws.find((w) => w.norad)?.norad ?? null;
 fs.mkdirSync(path.join(out, g), { recursive: true });
 const file = path.join(out, g, `${D.slugOf(name)}${lengthH === 6 && strideH === 3 ? '' : `.L${lengthH}`}.pieces.jsonl`);
 const done = new Set(fs.existsSync(file) ? fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => !r.error).map((r) => r.nominal) : []);
-const arm = D.FULL_SETTING[g], ctx = { ffm: await D.F.openFfm(), settings: D.SETTINGS[arm], terms: D.fittedTerms(g, name) };
+const arm = D.FULL_SETTING[g], termsDays = Number(args['terms-days'] ?? D.TERMS_DAYS), ctx = { ffm: await D.F.openFfm(), settings: D.SETTINGS[arm], terms: D.fittedTerms(g, name), termsDays };
 const axes = await D.openAxesFor(g);
 const t0 = Date.now();
 let n = 0;
@@ -25,7 +25,7 @@ for (const [a, b] of D.spansOf(ws.map((w) => ({ ...w, arcs: [Math.max(...w.arcs)
   const all = D.startsFor(a, b, strideH).filter((s) => !done.has(D.iso(s))), per = Math.round(240 / strideH);
   for (let k = 0; k < all.length; k += per) {
     const starts = all.slice(k, k + per);
-    const write = (row) => { fs.appendFileSync(file, `${JSON.stringify({ group: g, name, norad, arm, asOf: 'piece end', lengthH, strideH, ...row })}\n`); n += 1; };
+    const write = (row) => { fs.appendFileSync(file, `${JSON.stringify({ group: g, name, norad, arm, asOf: 'piece end', lengthH, strideH, termsDays, ...row })}\n`); n += 1; };
     const truthOf = async (s0, s1) => { try { return await D.truthSeries(g, name, norad, s0 - D.HOUR, s1 + lengthH * D.HOUR + D.HOUR, axes); } catch (e) { return { error: String(e?.message ?? e).slice(0, 160) }; } };
     // a stretch the truth's reader refuses (a day not stored) is read again piece by piece, so only the pieces it touches are gaps
     const whole = await truthOf(starts[0], starts.at(-1));
