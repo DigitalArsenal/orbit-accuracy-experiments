@@ -1,6 +1,11 @@
 // Synthetic orbits over the whole orbit regime, each scored against the numerical propagator (stack #498). For every case of cases.mjs
-// (seeded): the module makes the state at D0 - 72 h from the case's mean elements; the numerical propagator (FFM 2.2.0) flies it through
-// the 72 h fit arc and 7 days past it on a 300 s grid, and that flight is the truth; AP and our SGP4-XP (the same module) are fitted to
+// (seeded): the state at the truth's start (D0 - 72 h) is made from the case's mean elements by ONE named reference build, sdn-ap 0.6.26
+// (modules 7ed7cf88, wasm 9119284b8f97), whatever build is under test, so a case's truth is a function of the case alone; the numerical
+// propagator (FFM 2.2.0) flies it through the fit arc and 7 days past it on a 300 s grid, and that flight is the truth. The truth is
+// cached in <store>/synthetic/truth/ by the hash of everything it depends on (the starting state, FFM's, the kernel's and the Earth
+// orientation's builds, the setting, the force terms, the weather rows and the span), shared by every clone and process: a run reads it
+// when it is there and flies it once when it is not (a lock file; a second process waits for the first). Each row names its truth's hash
+// and whether it was read or flown; a run prints its hit rate. AP and our SGP4-XP (the build under test) are fitted to
 // the truth before the cutoff D0 and flown; both see the same space weather (the weather known at the cutoff, on the truth too). Scored:
 // D, the largest 3D distance to the truth over 0 to 120 h on the 300 s grid, with the hour it occurs and the first hour the distance
 // passes 100 m (the owner's bar, 2026-11-11: "never more than 100m between 0-5 days"; pass: D <= 100 m); the same largest distance over
@@ -54,11 +59,17 @@ const FITS = FIT === 'arc72' ? null : (await import('./fits.mjs')).FITS;
 for (const f of FITS ? FIT_LIST : []) if (!FITS[f]) throw new Error(`--fit ${f}: not a way fits.mjs names (${Object.keys(FITS).join(', ')})`);
 const TRUTH_START_H = Math.max(Number(args['truth-start-h'] ?? ARC_H), ...FIT_LIST.map((f) => FITS?.[f]?.truthStartH ?? ARC_H));
 const suffixOf = (f) => `${MODE === 'full' ? '' : `-${MODE}`}${f === 'arc72' && TRUTH_START_H === ARC_H ? '' : `-fit-${f}-ts${TRUTH_START_H}`}`;
+// the reference build that makes every case's starting state (rows before it made the state with the build under test, and are not
+// comparable with rows after it: a row of the shared truth names truth.hash)
+const REFERENCE = { version: '0.6.26', modulesCommit: '7ed7cf887b37', wasmSha256: '9119284b8f972799' };
+const TRUTH_CACHE_V = 1;
 const ROWS_SUFFIX = suffixOf(FIT);
 
 if (args.worker) await worker();
 else if (args.report) await (await import('./report.mjs')).report(await setup(), args);
 else await main();
+
+function referenceWasmPath(A) { return path.join(A.STORE_ROOT, 'synthetic', 'reference', `${REFERENCE.wasmSha256}.wasm`); }
 
 /** The build at the commit, its store folder and the cases. */
 async function setup() {
@@ -73,6 +84,15 @@ async function setup() {
   fs.mkdirSync(dir, { recursive: true });
   const file = path.join(dir, 'module.wasm');
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
+  // the reference build, placed once in the store for every worker (read by git show from the modules clone given)
+  const refFile = referenceWasmPath(A);
+  if (!fs.existsSync(refFile)) {
+    let ref;
+    try { ref = git(root, 'show', `${REFERENCE.modulesCommit}:propagator/sdn-ap/dist/isomorphic/module.wasm`); } catch { throw new Error(`the reference build (modules ${REFERENCE.modulesCommit}, sdn-ap ${REFERENCE.version}) is not in ${root}: fetch it, or run once from a clone that has it`); }
+    if (!sha256(ref).startsWith(REFERENCE.wasmSha256)) throw new Error('the reference build\'s wasm is not the named one');
+    fs.mkdirSync(path.dirname(refFile), { recursive: true });
+    fs.writeFileSync(`${refFile}.${process.pid}`, ref); fs.renameSync(`${refFile}.${process.pid}`, refFile);
+  }
   const seed = Number(args.seed ?? 498), gridStep = Number(args['grid-step'] ?? 1);
   const all = makeCases(seed, { gridStep });
   if (args.guard) all.cases = guardOf(all.cases);
@@ -88,7 +108,9 @@ async function main() {
   const only = args.only ? new Set(args.only.split(',')) : null;
   const read = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : []);
   // per way, the cases its file holds; a case flies the ways that lack it
-  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha).map((r) => r.caseHash))]));
+  // (a row counts only if it is of the shared truth, truth.hash; rows from before the reference state are flown again)
+  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha && r.truth?.hash).map((r) => r.caseHash))]));
+  const cache = { read: 0, flown: 0, waited: 0, none: 0 };
   const fitsOf = (c) => FIT_LIST.filter((f) => !doneOf[f].has(caseHash(c)));
   const todo = all.cases.filter((c) => (!only || only.has(c.id)) && fitsOf(c).length);
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
@@ -105,6 +127,7 @@ async function main() {
       if (m.rows) {
         for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...row, caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness })}\n`);
         flown += 1;
+        cache[Object.values(m.rows)[0]?.truth?.cache ?? 'none'] += 1;
         const D = (r) => r.ap?.maxDistance?.maxM ?? r.ap?.error ?? r.error;
         const rs = Object.entries(m.rows), one = rs.length === 1 ? rs[0][1] : null;
         console.error(`  ${flown}/${todo.length} ${m.c.id}: ${one ? `D AP ${D(one)} m, XP ${one.xp?.maxDistance?.maxM ?? one.xp?.error ?? '-'} m; ${one.wallS} s` : `D ${rs.map(([f, r]) => `${f} ${D(r)}`).join(', ')} m; ${rs[0][1].wallS} s`}`);
@@ -113,7 +136,7 @@ async function main() {
     });
     child.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`worker exited ${code}`))));
   })));
-  console.error(`synthetic: ${flown} flown in ${((Date.now() - t0) / 1000).toFixed(0)} s${stopped ? `; stopped: ${stopped}` : ''}`);
+  console.error(`synthetic: ${flown} flown in ${((Date.now() - t0) / 1000).toFixed(0)} s${stopped ? `; stopped: ${stopped}` : ''}; truths read from the cache ${cache.read}, flown ${cache.flown}, waited for another process ${cache.waited}${cache.none ? `, none (the case ended before its truth) ${cache.none}` : ''}; hit rate ${flown ? Math.round(((cache.read + cache.waited) / flown) * 1000) / 10 : 0} %`);
   process.exit(stopped ? 2 : 0);
 }
 
@@ -138,15 +161,49 @@ async function worker() {
   const fit = async (oem, pcf, spw) => new Uint8Array((await invoke('fit', [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(spw ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: spw }] : [])])).outputs.find((o) => o.portId === 'elements').payload);
   const r1 = (x) => (Number.isFinite(x) ? Math.round(x * 10) / 10 : null);
   const median = (v) => v.slice().sort((a, b) => a - b)[Math.floor(v.length / 2)];
+  // the reference build, which makes every case's starting state (never the build under test)
+  const refFile = args['ref-wasm'] ?? referenceWasmPath(A);
+  if (!fs.existsSync(refFile)) throw new Error(`the reference build ${refFile} is missing: run run.mjs once (it places it from a modules clone that has ${REFERENCE.modulesCommit})`);
+  const refH = await createStandaloneHarness('browser', refFile, { surface: 'direct' });
+  const refFly = async (ocm, epochs) => { const r = await refH.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf(epochs) }] }); if (r.statusCode !== 0) throw new Error(`reference propagate: ${String(r.errorMessage).slice(0, 200)}`); return S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload)).map((l) => ({ r: l.r, v: l.v })); };
+  // the truth cache: <store>/synthetic/truth/<hash>.json (what it holds) and .bin (Float64 x, y, z km, vx, vy, vz km/s per state)
+  const TRUTH_DIR = path.join(A.STORE_ROOT, 'synthetic', 'truth');
+  fs.mkdirSync(TRUTH_DIR, { recursive: true });
+  const ffmBuild = { ffm: F.provenance.ffm.sha256, kernel: F.provenance.kernelSha256, eop: F.provenance.eopSha256 };
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  /** The truth of a key: read when cached, else flown by `flyIt` (once across processes: a lock, the others wait). */
+  const truthOf = async (hash, flyIt) => {
+    const meta = path.join(TRUTH_DIR, `${hash}.json`), bin = path.join(TRUTH_DIR, `${hash}.bin`), lock = path.join(TRUTH_DIR, `${hash}.lock`);
+    const load = () => { const j = JSON.parse(fs.readFileSync(meta, 'utf8')); if (!j.count) return { ...j, states: null }; const b = fs.readFileSync(bin), f = new Float64Array(b.buffer, b.byteOffset, b.length / 8); return { ...j, states: Array.from({ length: j.count }, (_, k) => ({ r: [f[6 * k], f[6 * k + 1], f[6 * k + 2]], v: [f[6 * k + 3], f[6 * k + 4], f[6 * k + 5]] })) }; };
+    if (fs.existsSync(meta)) return { ...load(), cache: 'read' };
+    let waited = false;
+    for (;;) {
+      let fd = null;
+      try { fd = fs.openSync(lock, 'wx'); } catch (e) { if (e.code !== 'EEXIST') throw e; }
+      if (fd != null) {
+        try {
+          if (fs.existsSync(meta)) return { ...load(), cache: 'read' };
+          const t = await flyIt();
+          if (t.states) { const tmp = `${bin}.${process.pid}`; fs.writeFileSync(tmp, Buffer.from(new Float64Array(t.states.flatMap((s) => [...s.r, ...s.v])).buffer)); fs.renameSync(tmp, bin); }
+          const tmp = `${meta}.${process.pid}`; fs.writeFileSync(tmp, JSON.stringify({ v: TRUTH_CACHE_V, count: t.states?.length ?? 0, flownToDay: t.flownToDay ?? null, error: t.error ?? null, flightS: t.flightS })); fs.renameSync(tmp, meta);
+          return { ...t, cache: 'flown' };
+        } finally { fs.closeSync(fd); fs.rmSync(lock, { force: true }); }
+      }
+      // another process flies it: wait for its file (a lock older than an hour is a dead process's, taken over)
+      waited = true;
+      for (let k = 0; k < 1800 && !fs.existsSync(meta); k += 1) { await sleep(2000); try { if (Date.now() - fs.statSync(lock).mtimeMs > 3600e3) { fs.rmSync(lock, { force: true }); break; } } catch { break; } }
+      if (fs.existsSync(meta)) return { ...load(), cache: waited ? 'waited' : 'read' };
+    }
+  };
   // one case on one truth: { [way]: row } for each way of `fits` (each row as a single --fit's)
   const flyCase = async (c, fits) => {
     const t1 = performance.now(), D0 = Date.parse(`${c.cutoff}T00:00:00Z`), tStart = D0 - TRUTH_START_H * HOUR, epoch = iso(tStart);
     const terms = termsOf(c.am), row = { id: c.id, kind: c.kind, name: c.name ?? null, am: c.am, elements: { n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, hpKm: c.hpKm, haKm: c.haKm, cutoff: c.cutoff }, env };
     const out = {};
     try {
-      // the state at the truth's start (D0 - 72 h, or --truth-start-h), made by the module from the case's mean elements
+      // the state at the truth's start (D0 - 72 h, or --truth-start-h), made from the case's mean elements by the reference build
       const seed = seedOcm({ epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, norad: 99498, tesseral: 31, zonal: 20 });
-      const [s0] = await fly(seed, [epoch]);
+      const [s0] = await refFly(seed, [epoch]);
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
       // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
       const drag = MODE === 'full' && c.hpKm < DRAG_BELOW_KM, radiation = MODE !== 'no-drag-no-radiation', wx = drag ? W.weatherAt(D0) : null;
@@ -156,16 +213,26 @@ async function worker() {
       const parameters = [...(drag ? [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }] : []), ...(radiation ? [{ kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }] : [])];
       row.mode = MODE;
       row.truth = { setting, dragAreaOverMass: drag ? terms.dragAreaOverMass : 0, srpAreaOverMass: radiation ? terms.srpAreaOverMass : 0 };
+      // the truth's key: everything the flight depends on
+      const start = { epoch, r: s0.r, v: s0.v };
+      row.truth.stateFrom = `sdn-ap ${REFERENCE.version} (modules ${REFERENCE.modulesCommit}, wasm ${REFERENCE.wasmSha256})`;
+      row.truth.stateHash = sha256(JSON.stringify(start)).slice(0, 16);
+      row.truth.hash = sha256(JSON.stringify({ v: TRUTH_CACHE_V, start, ffmBuild, setting, forces: settings.forces, integrator: settings.integrator, fixed: settings.fixed ?? {}, parameters, weather: wx?.ffm ?? null, span: { from: epochs[0], stepS: STEP / 1000, count: epochs.length } })).slice(0, 32);
       // a truth that cannot be flown to day 7 (a decay) is flown to the last whole day it reaches, and scored to there
-      let states;
-      const tt = performance.now();
-      for (const days of [LEAD_DAYS, 5, 3, 2, 1, 0]) {
-        const upTo = epochs.slice(0, epochs.length - ((LEAD_DAYS - days) * DAY) / STEP);
-        try { states = await F.forecast({ epoch, state: [...s0.r, ...s0.v].map((x) => x * 1000), parameters }, upTo, settings, wx?.ffm ?? null); if (days < LEAD_DAYS) row.truth.flownToDay = days; break; } catch (e) { row.truth.error = String(e?.message ?? e).slice(0, 200); }
-      }
-      if (!states || row.truth.flownToDay === 0) throw new Error('truth');
-      delete row.truth.error;
-      row.truth.flightS = r1((performance.now() - tt) / 1000);
+      const got = await truthOf(row.truth.hash, async () => {
+        const tt = performance.now(), t = {};
+        for (const days of [LEAD_DAYS, 5, 3, 2, 1, 0]) {
+          const upTo = epochs.slice(0, epochs.length - ((LEAD_DAYS - days) * DAY) / STEP);
+          try { t.states = await F.forecast({ epoch, state: [...s0.r, ...s0.v].map((x) => x * 1000), parameters }, upTo, settings, wx?.ffm ?? null); if (days < LEAD_DAYS) t.flownToDay = days; delete t.error; break; } catch (e) { t.error = String(e?.message ?? e).slice(0, 200); }
+        }
+        t.flightS = r1((performance.now() - tt) / 1000);
+        return t;
+      });
+      row.truth.cache = got.cache;
+      if (got.flownToDay != null) row.truth.flownToDay = got.flownToDay;
+      if (got.cache === 'flown') row.truth.flightS = got.flightS;
+      if (!got.states || got.flownToDay === 0) { row.truth.error = got.error ?? 'no state'; throw new Error('truth'); }
+      const states = got.states;
       epochs.length = states.length;
       const lines = epochs.map((t, k) => ({ epoch: t, r: states[k].r, v: states[k].v }));
       const alt = lines.map((l) => Math.hypot(...l.r) - RE), low = alt.findIndex((x) => x < 100);
