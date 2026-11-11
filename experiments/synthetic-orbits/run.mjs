@@ -179,7 +179,7 @@ async function worker() {
     let waited = false;
     for (;;) {
       let fd = null;
-      try { fd = fs.openSync(lock, 'wx'); } catch (e) { if (e.code !== 'EEXIST') throw e; }
+      try { fd = fs.openSync(lock, 'wx'); fs.writeSync(fd, String(process.pid)); } catch (e) { if (e.code !== 'EEXIST') throw e; }
       if (fd != null) {
         try {
           if (fs.existsSync(meta)) return { ...load(), cache: 'read' };
@@ -189,9 +189,11 @@ async function worker() {
           return { ...t, cache: 'flown' };
         } finally { fs.closeSync(fd); fs.rmSync(lock, { force: true }); }
       }
-      // another process flies it: wait for its file (a lock older than an hour is a dead process's, taken over)
+      // another process flies it: wait for its file. The lock holds the holder's process id: a lock whose holder is gone (stopped or
+      // killed), or older than an hour, is taken over.
       waited = true;
-      for (let k = 0; k < 1800 && !fs.existsSync(meta); k += 1) { await sleep(2000); try { if (Date.now() - fs.statSync(lock).mtimeMs > 3600e3) { fs.rmSync(lock, { force: true }); break; } } catch { break; } }
+      const holderGone = () => { try { const pid = Number(fs.readFileSync(lock, 'utf8')); if (!pid) return Date.now() - fs.statSync(lock).mtimeMs > 60e3; process.kill(pid, 0); return false; } catch (e) { return e.code === 'ESRCH' || e.code === 'ENOENT'; } };
+      for (let k = 0; k < 1800 && !fs.existsSync(meta); k += 1) { await sleep(2000); try { if (holderGone() || Date.now() - fs.statSync(lock).mtimeMs > 3600e3) { fs.rmSync(lock, { force: true }); break; } } catch { break; } }
       if (fs.existsSync(meta)) return { ...load(), cache: waited ? 'waited' : 'read' };
     }
   };
