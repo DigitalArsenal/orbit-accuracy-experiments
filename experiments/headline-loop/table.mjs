@@ -479,7 +479,7 @@ async function main() {
   for (const r of rows.filter((x) => x.burnSplit || x.sameAltitudes)) console.error(`  ${r.regime} ${r.fitHours} h: ${r.burnSplit?.label ?? 'no burn flags'}${r.sameAltitudes ? ` ${r.sameAltitudes.label}: ${r.sameAltitudes.within100mOfFfm?.met} of ${r.sameAltitudes.within100mOfFfm?.windows}; ${r.sameAltitudes.burnSplit?.label ?? 'no burn flags'}` : ''}`);
   const burnText = !flags ? '' : ` burnSplit, on the rows with burn flags (stack issue 462), splits the windows of the pass line (within100mOfFfm) by the burns that a detector reading the truth alone finds: velocity steps that the full numerical setting, flown from the truth's own states, does not explain, localized by halving (planted steps found down to 0.5 mm/s at 700 km; on the altimetry satellites, every burn of the IDS maneuver lists that falls where the truth covers it, and none that is not listed). burnInFitArc holds the windows with a burn in the fit arc; burnCutoffToDay5Only those with none there and one between the cutoff and day 5; noBurn those with neither; unflagged those the detector did not run on. The four are a partition: their windows and met add up to the pass line's. partlyCovered counts the windows where a span counted without a burn has hours without truth, which the detector cannot see; label states the counts in words. Neither fit solves a delta-v (the numerical fit has no such term), so a burn after the cutoff is missed by both and one in the fit arc is taken up by each fit's other terms.${rows.some((r) => r.sameAltitudes) ? ` sameAltitudes, under the ${W.GROUPS[SAME_ALTITUDES.row].label} rows, is the ${W.GROUPS[SAME_ALTITUDES.from].label} row's pass line at the same fit length on its satellites at ${SAME_ALTITUDES.fromKm} to ${SAME_ALTITUDES.toKm} km (mean geocentric distance less the equatorial radius over the truth's 3 h before each satellite's first scored cutoff), with its own burnSplit.` : ''} The flags cover ${count(flags.size)} window-arcs and are kept outside this repository (the first 12 hex digits of the sha256 of their files in name order, as for the builds: ${flags.sha256.slice(0, 12)}).`;
   // --burns: which lists and which store of refits after a burn the table read (one store per set of lists)
-  const listsText = !args.burns ? '' : ` The burn lists read (--burns) are kept outside this repository (the first 12 hex digits of the sha256 of their relative paths and contents in path order, as for the builds: ${listsDigest(args.burns).slice(0, 12)})${afterBurnGroups.size ? `; the numerical arm's refits on the arc after a burn are read from the store folder ${afterBurnStore}, every one of them made on these lists` : ''}.`;
+  const listsText = !args.burns ? '' : ` The burn lists read (--burns) are kept outside this repository (the first 12 hex digits of the sha256 of their relative paths and contents in path order, as for the builds: ${A.listsDigest(args.burns).slice(0, 12)})${afterBurnGroups.size ? `; the numerical arm's refits on the arc after a burn are read from the store folder ${afterBurnStore}, every one of them made on these lists` : ''}.`;
   // the method line's last sentences: each column's build, and what each scored over the table's window-arcs (a failure or a window
   // without truth is counted, never dropped); the rows whose AP fits state FORCES.ECOM2
   const short = (s) => String(s).slice(0, 12);
@@ -774,16 +774,6 @@ async function check() {
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }
-/** The sha256 over every *.burns.json under a burn-list directory, in path order: each file's relative path, a zero byte, its length, a
- *  zero byte and its contents, so a list moved to another satellite's name changes it. */
-function listsDigest(dir) {
-  const files = [];
-  const walk = (d, rel) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const r = rel ? `${rel}/${e.name}` : e.name; if (e.isDirectory()) walk(path.join(d, e.name), r); else if (e.name.endsWith('.burns.json')) files.push(r); } };
-  walk(dir, '');
-  const hash = crypto.createHash('sha256');
-  for (const f of files.sort()) { const b = fs.readFileSync(path.join(dir, f)); hash.update(`${f}\0${b.length}\0`); hash.update(b); }
-  return hash.digest('hex');
-}
 // the command line the file names, in repository-relative form: without the arguments that are local paths (the modules clone, the output file)
 function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--previous', '--burn-flags', '--burns'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
 /** --burn-flags <dir>: every flags-*.json there ({ windows: [{ key, arcH, detector, fit: { burn, uncoveredH }, before5: { burn, uncoveredH } }] }),

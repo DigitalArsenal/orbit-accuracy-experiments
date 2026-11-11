@@ -162,6 +162,16 @@ export const NUMERICAL_AFTER_BURN = { minHours24: 6, perigeeMinKm: MANEUVER72.pe
 // the outcome, stored apart from the 1e-10 rows (which stay as they are): lib/settings.mjs L70S13. A row of the table takes them only when
 // every window of it with a numerical arm by the rule has one, and then every such window takes its own.
 export const NUMERICAL_TIGHT = { from: 'L70S', to: 'L70S13', store: `${NUMERICAL_STORE}-L70S13` };
+/** The sha256 over every *.burns.json under a burn-list directory, in path order: each file's relative path, a zero byte, its length, a
+ *  zero byte and its contents, so a list moved to another satellite's name changes it (table.mjs and bar.mjs state its first 12 hex). */
+export function listsDigest(dir) {
+  const files = [];
+  const walk = (d, rel) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const r = rel ? `${rel}/${e.name}` : e.name; if (e.isDirectory()) walk(path.join(d, e.name), r); else if (e.name.endsWith('.burns.json')) files.push(r); } };
+  walk(dir, '');
+  const hash = crypto.createHash('sha256');
+  for (const f of files.sort()) { const b = fs.readFileSync(path.join(dir, f)); hash.update(`${f}\0${b.length}\0`); hash.update(b); }
+  return hash.digest('hex');
+}
 /** The numerical arm's fit arc for a fit of arcH hours: { startMs, maneuvering, lastBurnMs?, shortAfterBurn? }. */
 export const numericalArc = (burns, D0, perigeeKm, arcH) => {
   const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
