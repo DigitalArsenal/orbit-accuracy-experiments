@@ -37,13 +37,13 @@ const SELF = new URL(import.meta.url).pathname;
 const CAPS = args.caps ? args.caps.split(',').map(Number) : null;
 if (CAPS && !(CAPS.length === 2 && CAPS.every((x) => Number.isInteger(x) && x >= 2 && x <= 70))) throw new Error('--caps T,Z: two degrees, each 2 to 70');
 const HOUR = 3600e3, DAY = 864e5, BAR_M = 100, BAR_H = 120, STEP_S = 300;
-const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA', 'HE', 'HX'];
+const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA', 'HE72', 'HE', 'HX'];
 // the front page's four groups (the site's)
 const GROUPS = [
   { key: 'leo', name: 'Low Earth orbit', regimes: ['LS', 'DO', 'S1', 'P', 'T'] },
   { key: 'meo', name: 'Medium Earth orbit', regimes: ['GD', 'GN', 'GN_GAL'] },
   { key: 'geo', name: 'Geosynchronous', regimes: ['IG', 'GE', 'WA'] },
-  { key: 'heo', name: 'Highly elliptical', regimes: ['HE', 'HX'] },
+  { key: 'heo', name: 'Highly elliptical', regimes: ['HE72', 'HE', 'HX'] },
 ];
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { maxBuffer: 1 << 28 });
@@ -126,7 +126,7 @@ async function main() {
   }
   if (args.burns) {
     const listOf = new Map(), wrong = [];
-    const listSha = (g, name) => { const f = path.join(args.burns, g, `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`); return fs.existsSync(f) ? sha256(fs.readFileSync(f)).slice(0, 12) : null; };
+    const listSha = (g, name) => A.listSha(args.burns, g, name);
     for (const f of fs.existsSync(abDir) ? fs.readdirSync(abDir).filter((x) => /^rows-after-burn-.*\.jsonl$/.test(x)) : [])
       for (const r of readRows(path.join(abDir, f))) {
         const s = `${r.group}|${r.name}`;

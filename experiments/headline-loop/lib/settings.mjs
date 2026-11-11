@@ -35,6 +35,6 @@ export const SETTINGS = {
   Fbest: { forces: { ...FULL, oceanTides: true, earthRadiation: true }, integrator: I10, ...COMMON, ...cannon },
 };
 /** The settings flown per regime beside the reduced one (refly.mjs): CONFIGURED as FFMc, FULL as FFMq (where it is the configured one, FFMc's row). */
-export const CONFIGURED = { T: 'L40S', P: 'L40S', S1: 'L40S', LS: 'L40S', DO: 'L40S', GD: 'Ffull', GN: 'E5', GN_GAL: 'E5', IG: 'E5', GE: 'E5', WA: 'E5', HX: 'Ffull', HE: 'Ffull' };
-export const FULL_SETTING = { T: 'L70S', P: 'L70S', S1: 'L70S', LS: 'L70S', DO: 'L70S', GD: 'Ffull', GN: 'E5F', GN_GAL: 'E5F', IG: 'E5F', GE: 'E5F', WA: 'E5F', HX: 'Ffull', HE: 'Ffull' };
+export const CONFIGURED = { T: 'L40S', P: 'L40S', S1: 'L40S', LS: 'L40S', DO: 'L40S', GD: 'Ffull', GN: 'E5', GN_GAL: 'E5', IG: 'E5', GE: 'E5', WA: 'E5', HX: 'Ffull', HE: 'Ffull', HE72: 'Ffull' };
+export const FULL_SETTING = { T: 'L70S', P: 'L70S', S1: 'L70S', LS: 'L70S', DO: 'L70S', GD: 'Ffull', GN: 'E5F', GN_GAL: 'E5F', IG: 'E5F', GE: 'E5F', WA: 'E5F', HX: 'Ffull', HE: 'Ffull', HE72: 'Ffull' };
 export const reducedFor = (high) => (high ? 'F20' : 'L40');

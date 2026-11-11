@@ -41,9 +41,9 @@ import path from 'node:path';
 import { envRecord, usePackages } from './lib/env.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
-export const ALL_GROUPS = ['T', 'P', 'S1', 'GN', 'GN_GAL', 'LS', 'DO', 'GD', 'IG', 'GE', 'HE', 'HX', 'WA'];
+export const ALL_GROUPS = ['T', 'P', 'S1', 'GN', 'GN_GAL', 'LS', 'DO', 'GD', 'IG', 'GE', 'HE72', 'HE', 'HX', 'WA'];
 // the order a shard flies its windows: the small groups first, so a run stopped early leaves whole groups
-const ORDER = ['GD', 'IG', 'GE', 'HX', 'HE', 'LS', 'GN', 'GN_GAL', 'WA', 'DO', 'S1', 'P', 'T'];
+const ORDER = ['GD', 'IG', 'GE', 'HX', 'HE72', 'HE', 'LS', 'GN', 'GN_GAL', 'WA', 'DO', 'S1', 'P', 'T'];
 
 if (args.check) await check();
 else if (args['after-burns']) await afterBurns();
@@ -184,19 +184,19 @@ async function afterBurns() {
   if (!mine.length) process.exit(0);
   const arms = await A.openArms();
   const env = { ...envRecord(), ffm: arms.ffmProvenance };
-  const sha = (g, name) => { const f = path.join(burnsDir, g, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`); return fs.existsSync(f) ? A.sha256(fs.readFileSync(f)).slice(0, 12) : null; };
+  const sha = (g, name) => A.listSha(burnsDir, g, name);
   let n = 0, refit = 0;
   for (const w of mine) {
     const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
     const head = { key: w.key, part: 'after-burn', group: w.group, name: w.name, cutoff: W.iso(D0), burnList: sha(w.group, w.name) };
-    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name, D0);
+    const burns = A.arcBreaks(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name, D0), minH = A.minHoursOf(w.group);
     // the decision needs the cutoff's last state alone (its perigee); the window's truth, scored epochs and weather only where a fit moves
     let ctx;
     try {
       const last = (await W.truthOf(w, D0 - 2 * W.HOUR, D0, arms.axes)).lines.at(-1);
       if (!last) throw new Error('no state before the cutoff');
       ctx = { perigeeKm: A.perigeeKmOf(last) };
-      if (!thrust && w.arcs.some((arc) => A.numericalArc(burns, D0, ctx.perigeeKm, arc).maneuvering)) {
+      if (!thrust && w.arcs.some((arc) => A.numericalArc(burns, D0, ctx.perigeeKm, arc, minH).maneuvering)) {
         const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
         const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
         if (!sc.entered.length) throw new Error('no lead bin');
@@ -213,7 +213,7 @@ async function afterBurns() {
         row.burnInArc = true;
         row.fitProcess = `not ballistic: the truth flown from its positions alone closes to ${Math.round(thrust.positionsOnlyMedianM)} m over ${thrust.pieceHours} h (median); the stored fit`;
       } else {
-        const m = A.numericalArc(burns, D0, ctx.perigeeKm, arc);
+        const m = A.numericalArc(burns, D0, ctx.perigeeKm, arc, minH);
         const hours = (D0 - m.startMs) / W.HOUR;
         // a known burn still inside the arc the rule gives (a burn in the last 24 h of a 72 h arc, or a 24 h arc after it too short)
         row.burnInArc = burns.some((x) => A.burnEndMs(x) > m.startMs && Date.parse(x.extentFrom ?? x.from) <= D0);
@@ -322,9 +322,9 @@ async function check() {
   ok(r0.code !== 0 && /refused: run `npm ci`/.test(r0.err) && /spacedatastandards\.org 1\.276\.0/.test(r0.err), `stale checkout not refused: ${r0.code} ${r0.err.slice(-200)}`);
   // the first-pass window list, read from the published stores (nothing flown)
   const r1 = E.run('refly.mjs', ['--limit', '0'], env);
-  ok(r1.code === 0 && /0 windows to fly in the first pass \(2096 in the first pass, 1218 in the second, 0 after 2026-11-10, never read\)/.test(r1.err), `first-pass list: ${r1.err.slice(-300)}`);
+  ok(r1.code === 0 && /0 windows to fly in the first pass \(2103 in the first pass, 1218 in the second, 0 after 2026-11-10, never read\)/.test(r1.err), `first-pass list: ${r1.err.slice(-300)}`);
   const r2 = E.run('refly.mjs', ['--second-pass', '--limit', '0'], env);
-  ok(r2.code === 0 && /0 windows to fly in the second pass \(2096 in the first pass, 1218 in the second/.test(r2.err), `second-pass list: ${r2.err.slice(-300)}`);
+  ok(r2.code === 0 && /0 windows to fly in the second pass \(2103 in the first pass, 1218 in the second/.test(r2.err), `second-pass list: ${r2.err.slice(-300)}`);
   // one real window
   const key = 'GD|ETALON 1|2025-10-25', keys = path.join(dir, 'keys.txt');
   fs.writeFileSync(keys, `${key}\n`);
@@ -339,5 +339,5 @@ async function check() {
   const r4 = E.run('refly.mjs', ['--keys-file', keys], env);
   ok(r4.code === 0 && /: 0 windows to fly/.test(r4.err), `a second run flies again: ${r4.err.slice(-200)}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('refly.mjs refuses a stale checkout naming npm ci; lists 2,096 first-pass and 1,218 second-pass windows; flies one laser geodetic window in four FFM settings and no AP, its reduced arm on the stored FFM row within 1e-4; a second run flies nothing');
+  done('refly.mjs refuses a stale checkout naming npm ci; lists 2,103 first-pass and 1,218 second-pass windows (the check\'s store holds no added windows); flies one laser geodetic window in four FFM settings and no AP, its reduced arm on the stored FFM row within 1e-4; a second run flies nothing');
 }
