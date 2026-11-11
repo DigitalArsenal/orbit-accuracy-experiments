@@ -266,10 +266,17 @@ async function main() {
   const gainedText = !previous ? '' : gained.length
     ? ` Against the previous release table (sdn-ap ${previous.module.version}), these rows gained windows in this release, so their figures move with the windows added and not only with the build: ${gained.map(({ r, p }) => `${r.regime} (${r.fitHours} h fit), ${count(p.windows)} to ${count(r.windows)} scored windows`).join('; ')}.`
     : ` Against the previous release table (sdn-ap ${previous.module.version}), no row gained windows.`;
+  // and the rows scored against a different numerical setting than in the previous table (its configuration sentence's field clause, or
+  // the sentence where the field is the same), so a count that moved with the arm is not read as the build's doing either
+  const field = (c) => String(c ?? '').split(';')[0].replace(/^Earth gravity to /, '');
+  const armChanged = previous ? rows.map((r) => ({ r, p: previous.rows.find((x) => x.regime === r.regime && x.fitHours === r.fitHours) })).filter(({ r, p }) => p && (p.ffm?.configuration ?? null) !== (r.ffm?.configuration ?? null)) : [];
+  const armText = armChanged.length
+    ? ` These rows are scored against a different numerical setting than in that table: ${armChanged.map(({ r, p }) => `${r.regime} (${r.fitHours} h fit), ${field(p.ffm?.configuration) === field(r.ffm?.configuration) ? 'its configuration sentence changed' : `${field(p.ffm?.configuration) || 'none'} to ${field(r.ffm?.configuration) || 'none'}`}`).join('; ')}.`
+    : '';
   const doc = {
     schema: 'sdn-ap-scoreboard/2',
     measured: new Date().toISOString().slice(0, 10),
-    statistic: `${STATISTIC} ${columns}${gainedText}`,
+    statistic: `${STATISTIC} ${columns}${gainedText}${armText}`,
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
