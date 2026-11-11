@@ -9,8 +9,17 @@ fitted to the same arc by its own fitter. The site's release tool reads it (`--s
 From `CARRY24_SINCE` (lib/arms.mjs; stack #496) AP's 24 h fit carries terms from the same window's 72 h fit, which ends at the same
 cutoff, so only data before the cutoff is used. Above the drag it carries the radiation terms: AGOM with its uncertainty, and ECOM2's Y0
 where that fit solved it. Under the drag it carries the drag term with its uncertainty, and only where the 24 h arc alone leaves it
-undetermined (a stated sigma of ln BTERM of 1 or more). Each such row names its fit process (`fitProcess`) with the count of windows each
-way, and each stored row records its own (`fitProcess` in rows.jsonl).
+undetermined (a stated sigma of ln BTERM of 1 or more). An object that maneuvers (below) carries nothing: its own 72 h fit is the arc
+after its burn, whose drag term its prior holds. Each such row names its fit process (`fitProcess`) with the count of windows each way,
+and each stored row records its own (`fitProcess` in rows.jsonl).
+
+From `MANEUVER72_SINCE` (lib/arms.mjs; stack #489), with `--burns` naming the burn detector's lists (stack #462), AP's 72 h fit of a
+maneuvering object takes the arc after its last burn. That is an object with its perigee at 600 km or above whose precise orbit holds a
+burn known at the cutoff: every detector piece that found the burn ended by then, and the burn ended within 7 days before it. The arc
+after that burn runs 24 to 70 h, so the module fits it under its short-arc rule. Every other window keeps the full 72 h. Each such row
+names its fit process (`fitProcess`), and each stored row records its own. On such an object a 72 h arc fitted at the data's own sigma
+takes the maintenance thrust into its drag term, as the numerical propagator's does, and lands on the numerical propagator's forecast
+instead of the orbit.
 
 ## Tools
 
