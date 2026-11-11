@@ -7,9 +7,16 @@
 // row's numerical arm (the scoreboard's, by name) fitted to the precise orbit over the fit arc before the cutoff, and over the arc after
 // the last burn known at the cutoff where that rule moved its arc, then flown 7 days past the cutoff. Writes one JSON
 // (schema sdn-ap-catalog-fit/1) of aggregates only: per row and per front-page group, nothing per window.
+// Each row reads one tolerance (stack issue 520): a drag row whose every window with a numerical arm by the rule has its 1e-13 row
+// (lib/arms.mjs NUMERICAL_TIGHT, table.mjs's rule) and its 1e-13 manifest line (setting NUMERICAL_TIGHT.to) reads those, the numerical
+// day-5 figures with them; every other row the manifest's other lines and the stored rows, at their setting's tolerance. Each row and
+// group states it. With --scoreboard, a row whose tolerance is not the scoreboard row's, or a store of refits after a burn other than the
+// one it names, stops the run before anything is flown.
 //
 //   node experiments/headline-loop/bar.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 8]
 //     [--groups LS,DO] [--arcs 72,24] [--scoreboard <the same build's table.mjs file>: each row's windows are the scoreboard row's]
+//     [--burns <lists> [--after-burn-store <folder>]: the refits after a burn, read as table.mjs reads them with --burns; each refit's list
+//      must be the one --burns gives for its satellite, or the run is refused; without --burns no refit is read]
 //     [--caps T,Z: a study of the record's degrees, not the release's figure: every record fitted at tesseral degree T and zonal
 //      degree Z (FORCES.MAXIMUM_TESSERAL_DEGREE, MAXIMUM_DEGREE), its other forces the row's own $PCF's; the file states the caps]
 //
@@ -57,13 +64,41 @@ async function main() {
   usePackages();
   const W = await import('./lib/windows.mjs');
   const A = await import('./lib/arms.mjs');
+  const { SETTINGS } = await import('./lib/settings.mjs');
   const { FFM_220 } = await import(path.join(REPO, 'experiments/operator-theory/lib/build.mjs'));
   const dir = path.join(A.STORE_ROOT, 'bar', wasmSha.slice(0, 12)), file = path.join(dir, 'module.wasm'), rowsFile = path.join(dir, CAPS ? `rows-caps${CAPS[0]}-${CAPS[1]}.jsonl` : 'rows.jsonl');
   fs.mkdirSync(dir, { recursive: true });
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
   const groups = args.groups ? args.groups.split(',') : ALL, arcs = (args.arcs ?? '72,24').split(',').map(Number);
-  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), manifest = new Map();
-  for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); manifest.set(`${r.key}|${r.arcH}`, r); }
+  // Each manifest line flies one fit, and a window's trajectory is the line of the fit whose figures the row reads, never the last line of
+  // the window. A line's fit identity (setting, process: 'full arc' or 'after burn', arc start, first state) is its own where it names it
+  // (fit, refly.mjs --tight); for an older line it is derived only where nothing leaves doubt: the setting and first state are the
+  // line's, the process its source's (a refit after the burn, or a full-arc source, whose arc starts at the cutoff less the fit arc). A
+  // line whose trajectory file a later line wrote again (a refit made at the same path) has no identity, nor a line without a trajectory.
+  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), H = 3600e3, isoOf = (t) => new Date(Date.parse(/Z$/.test(t) ? t : `${t}Z`)).toISOString();
+  const allLines = fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)), lastWriter = new Map();
+  allLines.forEach((x, i) => { if (x.file) lastWriter.set(x.file, i); });
+  const fitOfLine = (x, i) => (x.fit ? { ...x.fit, firstState: isoOf(x.fit.firstState) } : x.source === 'none' || x.source === 'failed' || !x.file || lastWriter.get(x.file) !== i ? null
+    : /after the burn/.test(x.source) ? { setting: x.setting, process: 'after burn', firstState: isoOf(x.from) }
+      : { setting: x.setting, process: 'full arc', arcStart: new Date(Date.parse(x.cutoff) - x.arcH * H).toISOString(), firstState: isoOf(x.from) });
+  const linesOf = new Map();
+  allLines.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!linesOf.has(k)) linesOf.set(k, []); linesOf.get(k).push({ x, fit: fitOfLine(x, i) }); });
+  // a numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by the arc the rule gives from its last burn; a
+  // stored full-arc fit by its setting and the full arc
+  const rowFitOf = (b, label, D0, a) => {
+    const arm = label ? b?.arms?.[label] : null;
+    if (!arm?.ok) return null;
+    if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
+    if (b.fitProcess === 'maneuvering: the arc after its last burn') return { setting: arm.arm, process: 'after burn', arcStart: new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a).startMs).toISOString() };
+    return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
+  };
+  const sameFit = (f, r) => f && r && f.setting === r.setting && f.process === r.process && (r.firstState ? f.firstState === r.firstState
+    : r.process === 'full arc' ? f.arcStart === r.arcStart : Date.parse(f.firstState) >= Date.parse(r.arcStart) && Date.parse(f.firstState) < Date.parse(r.arcStart) + H);
+  // the last line of the row's fit for a window, or why there is none: lines of other fits only, or lines whose fit is not known
+  const lineFor = (key, a, rf) => {
+    const ls = linesOf.get(`${key}|${a}`) ?? [], hit = ls.filter((l) => sameFit(l.fit, rf)).at(-1);
+    return hit ? { m: hit.x } : { m: null, why: !rf ? null : ls.some((l) => l.fit) ? 'otherFitOnly' : ls.some((l) => l.x.file) ? 'fitUnknown' : 'noLine' };
+  };
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
   const readRows = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean) : []);
   // The windows each row scores, as table.mjs scores them with --burns: its listing (the first pass, and a regime's second pass once its
@@ -73,18 +108,46 @@ async function main() {
   const base = new Map();
   for (const f of fs.readdirSync(path.join(A.STORE_ROOT, A.NUMERICAL_STORE)).filter((x) => /^rows-truth-.*\.jsonl$/.test(x)))
     for (const r of readRows(path.join(A.STORE_ROOT, A.NUMERICAL_STORE, f))) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
-  const afterBurn = new Map(), afterBurnGroups = new Set(), abDir = path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store);
-  for (const f of fs.existsSync(abDir) ? fs.readdirSync(abDir).filter((x) => /^rows-after-burn-.*\.jsonl$/.test(x)) : [])
-    for (const r of readRows(path.join(abDir, f))) { const k = `${r.key}|${r.arcH}`; if (!afterBurn.has(k) || (afterBurn.get(k).error && !r.error)) afterBurn.set(k, r); afterBurnGroups.add(r.group); }
+  // --burns <lists> [--after-burn-store <folder>]: the refits after a burn, read as table.mjs reads them with --burns: from the folder
+  // (lib/arms.mjs NUMERICAL_AFTER_BURN.store unless given), each row's list (burnList) the one --burns gives for its satellite, or the run
+  // is refused; without --burns no refit is read. The result names the lists' digest and the folder; with --scoreboard both must be the
+  // scoreboard's
+  const abStore = args['after-burn-store'] ?? A.NUMERICAL_AFTER_BURN.store;
+  if (!abStore.startsWith(`${A.NUMERICAL_STORE}-after-burn`) || abStore.includes('/')) throw new Error(`--after-burn-store ${abStore}: a folder name beginning ${A.NUMERICAL_STORE}-after-burn`);
+  const afterBurn = new Map(), afterBurnGroups = new Set(), abDir = path.join(A.STORE_ROOT, abStore);
+  const lists = args.burns ? { digest: A.listsDigest(args.burns).slice(0, 12), afterBurnStore: abStore } : null;
+  // the drag setting fitted and flown again at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT, stack issue 520), as table.mjs reads it: one row per
+  // window and fit arc whatever the outcome; of two for one window, a fit over a failure over no truth
+  const tight = new Map(), tightDir = path.join(A.STORE_ROOT, A.NUMERICAL_TIGHT.store), tightRank = (r) => (r.error ? 0 : r.arms?.FFMq?.ok ? 2 : 1);
+  for (const r of fs.existsSync(tightDir) ? fs.readdirSync(tightDir).filter((f) => /^rows-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(tightDir, f))) : []) {
+    if (!r.error && r.arms?.FFMq?.arm !== A.NUMERICAL_TIGHT.to) throw new Error(`${A.NUMERICAL_TIGHT.store}: ${r.key} ${r.arcH} h is not of ${A.NUMERICAL_TIGHT.to}`);
+    const k = `${r.key}|${r.arcH}`;
+    if (!tight.has(k) || tightRank(r) > tightRank(tight.get(k))) tight.set(k, r);
+  }
+  if (args.burns) {
+    const listOf = new Map(), wrong = [];
+    const listSha = (g, name) => { const f = path.join(args.burns, g, `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`); return fs.existsSync(f) ? sha256(fs.readFileSync(f)).slice(0, 12) : null; };
+    for (const f of fs.existsSync(abDir) ? fs.readdirSync(abDir).filter((x) => /^rows-after-burn-.*\.jsonl$/.test(x)) : [])
+      for (const r of readRows(path.join(abDir, f))) {
+        const s = `${r.group}|${r.name}`;
+        if (!listOf.has(s)) listOf.set(s, listSha(r.group, r.name));
+        if ((r.burnList ?? null) !== listOf.get(s) || ((r.lastBurn || r.burnInArc) && !r.burnList)) { wrong.push(r); continue; }
+        const k = `${r.key}|${r.arcH}`;
+        if (!afterBurn.has(k) || (afterBurn.get(k).error && !r.error)) afterBurn.set(k, r);
+        afterBurnGroups.add(r.group);
+      }
+    if (wrong.length) throw new Error(`refused: ${wrong.length} rows of ${abStore} were made on burn lists other than --burns gives (${[...new Set(wrong.map((r) => r.group))].join(', ')})`);
+  }
   const REFIT = 'maneuvering: the arc after its last burn', NOT_CONFIGURED = new Set(['WA']), PREFER = ['FFMbest', 'FFMq', 'FFMc', 'FFMr'];
+  // table.mjs's numericalOf: the stored row, or the refit after a burn where the rule moved the arc, with its fit process
   const numericalOf = (w, arc) => {
     const k = `${w.key}|${arc}`, b = base.get(k);
     if (!b || !afterBurnGroups.has(w.group)) return b;
     const r = afterBurn.get(k);
     if (!r || r.error) return b?.error ? b : null;
-    if (NOT_CONFIGURED.has(w.group) && r.burnInArc) return { ...b, arms: {}, burnInArc: true };
-    if (r.fitProcess === REFIT) return { ...b, arms: { FFMq: r.arms?.FFMq ?? { ok: false } } };
-    return b;
+    if (NOT_CONFIGURED.has(w.group) && r.burnInArc) return { ...b, arms: {}, fitProcess: r.fitProcess, burnInArc: true };
+    if (r.fitProcess === REFIT) return { ...b, arms: { FFMq: r.arms?.FFMq ?? { ok: false } }, fitProcess: r.fitProcess, lastBurn: r.lastBurn };
+    return { ...b, fitProcess: r.fitProcess };
   };
   const chooseArm = (g, bs) => (NOT_CONFIGURED.has(g) && !afterBurnGroups.has(g) ? null : PREFER.find((a) => bs.some((b) => b.arms?.[a]?.ok)) ?? null);
   const meters = (row, arm, day) => { const e = arm ? row?.arms?.[arm]?.ok && row.arms[arm].days?.[day]?.e : row?.days?.[day]?.e; return Number.isFinite(e) ? e * 1000 : null; };
@@ -92,25 +155,74 @@ async function main() {
   const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
   const listed = [...all.windows, ...all.second.filter((w) => secondIn.has(w.group))];
   const apRows = new Map(readRows(path.join(A.STORE_ROOT, 'table', wasmSha.slice(0, 12), 'rows.jsonl')).filter((r) => (r.theory ?? 'AP') === 'AP' && r.ap?.sha256 === wasmSha).map((r) => [`${r.key}|${r.arcH}`, r]));
-  const rowArm = new Map(), numDay5 = new Map(), scoredKeys = new Set();
+  const rowArm = new Map(), numDay5 = new Map(), scoredKeys = new Set(), rowTight = new Set(), rowTolerance = new Map(), rowAp = new Map(), rowWithout = new Map(), rowFit = new Map();
   for (const g of groups) for (const a of arcs) {
     const ws = listed.filter((w) => w.group === g && w.arcs.includes(a));
     if (!ws.length) continue;
-    const bs = ws.map((w) => numericalOf(w, a)), label = bs.every(Boolean) ? chooseArm(g, bs) : null;
+    let bs = ws.map((w) => numericalOf(w, a));
+    const label = bs.every(Boolean) ? chooseArm(g, bs) : null;
+    // stack issue 520, table.mjs's rule: the row at 1e-13 where every stored arm is the full drag setting, every window the rule gives a
+    // numerical arm has a 1e-13 row (its fit, its failed fit or its record of no truth or coverage), and no window is a refit on the arc
+    // after a burn or, in a regime with after-burn rows, lacks its decision row; here also every such window's 1e-13 manifest line, with a
+    // trajectory where its 1e-13 fit holds one. Then every such window takes its 1e-13 row and line. Else every window at its stored
+    // setting, rows and trajectories both: no row mixes two tolerances.
+    if (label) {
+      const tightOf = (b) => tight.get(`${b.key}|${b.arcH}`), armed = bs.filter((b) => !b.burnInArc);
+      // a 1e-13 fit's trajectory: a manifest line of that fit (a 1e-13 row recording a failed fit or no truth needs none)
+      const line13 = (b) => !tightOf(b)?.arms?.FFMq?.ok || !!lineFor(b.key, a, rowFitOf({ arms: { [label]: tightOf(b).arms.FFMq } }, label, Date.parse(b.cutoff), a)).m;
+      const decided = !afterBurnGroups.has(g) || armed.every((b) => b.fitProcess);
+      if (armed.length && decided && bs.every((b) => b.fitProcess !== REFIT) && armed.every((b) => (b.error || b.arms?.[label]?.arm === A.NUMERICAL_TIGHT.from) && tightOf(b) && line13(b))) {
+        const lift = (b) => { const t = tightOf(b), { error, ...rest } = b; return t.error ? { ...rest, env: t.env, arms: {}, error: t.error } : { ...rest, env: t.env, arms: { ...b.arms, [label]: t.arms.FFMq } }; };
+        bs = bs.map((b) => (b.burnInArc ? b : lift(b)));
+        rowTight.add(`${g}|${a}`);
+      }
+      // the row's numerical tolerance, as its configuration sentence states it (the setting of its arm)
+      const setting = bs.find((b) => b.arms?.[label]?.ok)?.arms[label].arm;
+      rowTolerance.set(`${g}|${a}`, setting ? String(SETTINGS[setting].integrator.tolerance) : null);
+    }
     rowArm.set(`${g}|${a}`, label);
+    // the row's windows as the scoreboard counts them (every window AP scored at one lead at least); of them, those with a numerical
+    // figure are the ones the bar can fly (a forecast to fit AP's record to), and the others are counted by reason, as table.mjs does
+    const apScored = ws.filter((w) => W.LEADS.some((d) => meters(apRows.get(`${w.key}|${a}`), null, d) != null)), why = { ruleLeavesNoArm: 0, fitFailed: 0, noTruthOrCoverage: 0 }, none = [];
+    rowAp.set(`${g}|${a}`, { windows: apScored.length, satellites: new Set(apScored.map((w) => w.name)).size });
     ws.forEach((w, i) => {
-      if (W.LEADS.some((d) => meters(apRows.get(`${w.key}|${a}`), null, d) != null && (!label || meters(bs[i], label, d) != null))) scoredKeys.add(`${w.key}|${a}`);
-      if (label) numDay5.set(`${w.key}|${a}`, meters(bs[i], label, 5));
+      if (!apScored.includes(w)) return;
+      if (!label || W.LEADS.some((d) => meters(bs[i], label, d) != null)) scoredKeys.add(`${w.key}|${a}`);
+      else { why[bs[i]?.burnInArc ? 'ruleLeavesNoArm' : !bs[i] || bs[i].error ? 'noTruthOrCoverage' : 'fitFailed'] += 1; none.push(w); }
+      if (label) { numDay5.set(`${w.key}|${a}`, meters(bs[i], label, 5)); rowFit.set(`${w.key}|${a}`, rowFitOf(bs[i], label, w.cutoffMs, a)); }
     });
+    if (none.length) rowWithout.set(`${g}|${a}`, { windows: none.length, satellites: new Set(none.map((w) => w.name)).size, ...why });
+  }
+  // --scoreboard <the same build's scoreboard file>: each row's windows and satellites are the scoreboard row's own (the windows it scores),
+  // so "flown on N of M" reads against the scoreboard; without it, the windows listed for the row. Before anything is flown: each row's
+  // numerical tolerance here must be the scoreboard row's (its configuration sentence), and the store of refits after a burn the one the
+  // scoreboard names, or nothing is flown or written
+  const board = args.scoreboard ? JSON.parse(fs.readFileSync(args.scoreboard, 'utf8')) : null;
+  if (board && board.module?.wasmSha256 !== wasmSha) throw new Error(`--scoreboard is of wasm ${board.module?.wasmSha256}, not ${wasmSha}`);
+  const boardRow = (g, a) => board?.rows.find((r) => r.regime === W.GROUPS[g].label && r.fitHours === a) ?? null;
+  const toleranceOf = (c) => /at a tolerance of ([^ ]+)/.exec(String(c ?? ''))?.[1] ?? null;
+  if (board) {
+    // the scoreboard's burn lists and refit folder (its method line, with --burns) against this run's: both the same, or both none
+    const named = /read from the store folder ([^ ,]+)/.exec(board.statistic ?? '')?.[1] ?? null, digest = /The burn lists read \(--burns\)[^:]*: ([0-9a-f]{12})\)/.exec(board.statistic ?? '')?.[1] ?? null;
+    if ((digest ?? null) !== (lists?.digest ?? null)) throw new Error(`the scoreboard read the burn lists ${digest ?? 'none'}, this run ${lists?.digest ?? 'none'} (--burns)`);
+    if ((named ?? null) !== (lists && afterBurnGroups.size ? abStore : null)) throw new Error(`the scoreboard read the refits after a burn from ${named ?? 'no folder'}, this run from ${lists && afterBurnGroups.size ? abStore : 'no folder'}`);
+    for (const [k, label] of rowArm) {
+      const [g, a] = k.split('|'), b = boardRow(g, Number(a));
+      if (!b?.ffm || !label) continue;
+      if (toleranceOf(b.ffm.configuration) !== rowTolerance.get(k)) throw new Error(`${W.GROUPS[g].label} ${a} h: the scoreboard's numerical arm is at ${toleranceOf(b.ffm.configuration)}, this store's at ${rowTolerance.get(k)}`);
+    }
   }
   const stored = new Map();
   if (fs.existsSync(rowsFile)) for (const r of readRows(rowsFile)) if (r.wasmSha256 === wasmSha) stored.set(doneKey(r), r);
-  // every window each row scores (with --scoreboard; else every listed window) at its fit arcs; flown where its manifest line holds a trajectory
-  const exact = !!args.scoreboard;
-  const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a) && (!exact || scoredKeys.has(`${w.key}|${a}`))).map((a) => ({ w, a, m: manifest.get(`${w.key}|${a}`) })));
-  const todo = wanted.filter((x) => x.m && x.m.source !== 'none' && x.m.file && !stored.has(doneKey(x.m)));
+  // every window each row scores with a numerical figure (with --scoreboard; else every listed window) at its fit arcs; flown where its
+  // manifest line holds a trajectory (a line of a failed fit or of no truth holds none)
+  const exact = !!args.scoreboard, hasTrajectory = (m) => m && m.source !== 'none' && m.source !== 'failed' && m.file;
+  // each window's line is the last line of the numerical row's own fit (lineFor); a window whose row has no fit, or whose lines are of
+  // other fits or of no known fit, gets none and is counted by why
+  const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a) && (!exact || scoredKeys.has(`${w.key}|${a}`))).map((a) => ({ w, a, ...lineFor(w.key, a, rowFit.get(`${w.key}|${a}`) ?? null) })));
+  const todo = wanted.filter((x) => hasTrajectory(x.m) && !stored.has(doneKey(x.m)));
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
-  console.error(`bar: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${wanted.length} window-arcs, ${wanted.filter((x) => x.m && x.m.source !== 'none').length} with a numerical trajectory, ${todo.length} to fly on ${jobs} jobs`);
+  console.error(`bar: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${wanted.length} window-arcs, ${wanted.filter((x) => hasTrajectory(x.m)).length} with a numerical trajectory, ${todo.length} to fly on ${jobs} jobs`);
   let next = 0, flown = 0;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
     const child = fork(SELF, ['--worker', '--wasm', file, '--version', version, '--groups', groups.join(','), ...(CAPS ? ['--caps', CAPS.join(',')] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
@@ -141,27 +253,31 @@ async function main() {
       truthDay5: { windows: paired.length, unpaired: pairs.filter(([a, f]) => Number.isFinite(a) && !Number.isFinite(f)).length,
         ap: { medianM: r1(quantile(paired.map(([a]) => a), 0.5)) }, ffm: { medianM: r1(quantile(paired.map(([, f]) => f), 0.5)) } } };
   };
-  // --scoreboard <the same build's scoreboard file>: each row's windows and satellites are the scoreboard row's own (the windows it scores),
-  // so "flown on N of M" reads against the scoreboard; without it, the windows listed for the row
-  const board = args.scoreboard ? JSON.parse(fs.readFileSync(args.scoreboard, 'utf8')) : null;
-  if (board && board.module?.wasmSha256 !== wasmSha) throw new Error(`--scoreboard is of wasm ${board.module?.wasmSha256}, not ${wasmSha}`);
-  const boardRow = (g, a) => board?.rows.find((r) => r.regime === W.GROUPS[g].label && r.fitHours === a) ?? null;
-  const rows = [], byGroup = new Map();
+  const rows = [], byGroup = new Map(), manifestUsed = [];
   for (const g of ALL.filter((x) => groups.includes(x))) {
     for (const a of arcs) {
-      const xs = wanted.filter((x) => x.w.group === g && x.a === a).map((x) => ({ ...x, r: x.m && x.m.source !== 'none' ? stored.get(doneKey(x.m)) : null }));
+      const xs = wanted.filter((x) => x.w.group === g && x.a === a).map((x) => ({ ...x, r: hasTrajectory(x.m) ? stored.get(doneKey(x.m)) : null }));
       if (!xs.length) continue;
-      const written = xs.filter((x) => x.m && x.m.source !== 'none').length, b = boardRow(g, a);
+      const written = xs.filter((x) => hasTrajectory(x.m)).length, b = boardRow(g, a);
       if (board && !b) continue;
-      const windows = b ? b.windows : xs.length;
-      // the set flown is the scoreboard's own: its count must be the scoreboard row's
-      if (b && xs.length !== b.windows) console.error(`bar: ${W.GROUPS[g].label} ${a} h: ${xs.length} windows scored here against the scoreboard's ${b.windows}`);
-      const head = { regime: W.GROUPS[g].label, fitHours: a, satellites: b ? b.satellites : new Set(xs.map((x) => x.w.name)).size, windows, ...(b && xs.length !== b.windows ? { note: `${xs.length} windows scored by this file's reading of the store against the scoreboard's ${b.windows}` } : {}) };
+      // with --scoreboard the row's windows are the scoreboard row's (every window AP scored); of them the bar flies those with a numerical
+      // figure, withoutNumericalFigure counts the others by reason, and a count that differs from the scoreboard's is a note
+      const windows = b ? b.windows : xs.length, without = exact ? rowWithout.get(`${g}|${a}`) ?? null : null, mine = rowAp.get(`${g}|${a}`);
+      const differs = b && mine && mine.windows !== b.windows;
+      if (differs) console.error(`bar: ${W.GROUPS[g].label} ${a} h: ${mine.windows} windows AP scored here against the scoreboard's ${b.windows}`);
+      const head = { regime: W.GROUPS[g].label, fitHours: a, numericalTolerance: rowTolerance.get(`${g}|${a}`) ?? null, satellites: b ? b.satellites : new Set(xs.map((x) => x.w.name)).size, windows, ...(without ? { withoutNumericalFigure: without } : {}), ...(differs ? { note: `${mine.windows} windows AP scored by this file's reading of the store against the scoreboard's ${b.windows}` } : {}) };
       if (!written) { rows.push({ ...head, noNumericalArm: true }); continue; }
-      const c = cells(xs.filter((x) => x.m && x.m.source !== 'none'));
-      const refitAfterBurn = xs.filter((x) => /after the burn/.test(x.m?.source ?? '')).length;
-      rows.push({ ...head, ...c, trajectories: { written, missing: Math.max(0, windows - written), refitAfterBurn } });
-      byGroup.set(`${g}|${a}`, xs.filter((x) => x.m && x.m.source !== 'none'));
+      const c = cells(xs.filter((x) => hasTrajectory(x.m)));
+      const refitAfterBurn = xs.filter((x) => x.m && (x.m.fit?.process === 'after burn' || /after the burn/.test(x.m.source ?? ''))).length;
+      // of the windows without a trajectory, those whose lines are all of other fits, and those whose lines' fit is not known (a file
+      // written again by a later line)
+      const notOfThisFit = { otherFitOnly: xs.filter((x) => x.why === 'otherFitOnly').length, fitUnknown: xs.filter((x) => x.why === 'fitUnknown').length };
+      // the manifest lines the row read (each as stored, in window order): their count and the first 12 hex of their sha256, so a bar file
+      // says what it was cut from and a re-run on a grown manifest can be compared
+      const used = xs.filter((x) => x.m).sort((p, q) => p.w.key.localeCompare(q.w.key)).map((x) => `${JSON.stringify(x.m)}\n`);
+      manifestUsed.push(...used);
+      rows.push({ ...head, ...c, trajectories: { written, missing: Math.max(0, xs.length - written), ...(notOfThisFit.otherFitOnly || notOfThisFit.fitUnknown ? { notOfThisFit } : {}), refitAfterBurn, manifestLines: { lines: used.length, sha256: sha256(used.join('')).slice(0, 12) } } });
+      byGroup.set(`${g}|${a}`, xs.filter((x) => hasTrajectory(x.m)));
     }
   }
   // a front-page group pools each of its rows once, at the row's longest fit arc here (72 h where the row has one, else 24 h), so no
@@ -170,8 +286,10 @@ async function main() {
   const groupsOut = GROUPS.map((G) => {
     const parts = G.regimes.filter((g) => groups.includes(g)).map((g) => ({ g, a: pooledArc(g) })).filter((p) => p.a != null);
     const c = cells(parts.flatMap((p) => byGroup.get(`${p.g}|${p.a}`)));
+    const tol = (p) => rowTolerance.get(`${p.g}|${p.a}`) ?? null, tols = [...new Set(parts.map(tol).filter((x) => x != null))];
     return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label),
-      rows: parts.map((p) => ({ regime: W.GROUPS[p.g].label, fitHours: p.a })), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5 };
+      rows: parts.map((p) => ({ regime: W.GROUPS[p.g].label, fitHours: p.a, numericalTolerance: tol(p) })), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5,
+      ...(tols.length > 1 ? { toleranceNote: `pools rows whose numerical arms are fitted and flown at different tolerances (${parts.map((p) => `${W.GROUPS[p.g].label} ${p.a} h ${tol(p) ? `at ${tol(p)}` : 'without a numerical arm'}`).join(', ')})` } : {}) };
   });
   const doc = {
     schema: 'sdn-ap-catalog-fit/1',
@@ -179,8 +297,11 @@ async function main() {
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
     harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/bar.mjs', ...repositoryArgs(process.argv.slice(2))].join(' ') },
     ffm: { version: FFM_220.version, wasmSha256: FFM_220.wasmSha256, modulesCommit: FFM_220.modulesCommit },
-    method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast; both medians are over the same windows, those where both figures exist (truthDay5.windows), and truthDay5.unpaired counts the flown windows with AP\'s figure and no numerical figure in the store. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed and against the share (withinBar.windows is every window attempted, flown and failed), never dropped.',
+    method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (with --burns, on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast; both medians are over the same windows, those where both figures exist (truthDay5.windows), and truthDay5.unpaired counts the flown windows with AP\'s figure and no numerical figure in the store. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed and against the share (withinBar.windows is every window attempted, flown and failed), never dropped. Each row states its numerical arm\'s integrator tolerance (numericalTolerance): with drag, 1e-13 on a row where every stored arm is that setting, every window with a numerical arm by the rule has a 1e-13 row (its fit, its failed fit, or its record of no truth or coverage) and its 1e-13 trajectory line (with a trajectory where the fit holds one), and no window is a refit on the arc after a burn or lacks the after-burn decision (stack issue 520); every other row the tolerance of its stored setting. A row never mixes two, and a front-page group that pools rows of different tolerances says so (toleranceNote). With --scoreboard, a row\'s windows are the scoreboard row\'s, every window AP scored; the bar flies those with a numerical figure (a forecast to fit AP\'s record to), and withoutNumericalFigure counts the others by reason as the scoreboard does (ruleLeavesNoArm, fitFailed, noTruthOrCoverage), apart from trajectories.missing (windows with a numerical figure and no stored trajectory). burnLists names the burn lists read for the refits after a burn (the first 12 hex digits of their digest, as the scoreboard states it) and the store folder of those refits, or is null where none was read. A window\'s trajectory is the manifest line of the fit whose figures the row reads (its setting, its process, the full arc or the arc after a burn, and the arc\'s start), never another fit\'s; trajectories.notOfThisFit counts the windows whose lines are all of other fits (otherFitOnly) or of no known fit (fitUnknown: a trajectory file written again by a later line). trajectories.manifestLines gives, per row, the count of the trajectory manifest lines it read and the first 12 hex digits of their sha256 (each line as stored, in window order); manifestLines gives the same over every row. Two bar files cut from the same lines have the same digests; the trajectory files themselves are not hashed.',
     bar: { withinM: BAR_M, fromHours: 0, toHours: BAR_H, stepS: STEP_S },
+    burnLists: lists ? { digest: lists.digest, afterBurnStore: afterBurnGroups.size ? lists.afterBurnStore : null } : null,
+    // every manifest line the rows read, in row and window order (each row's own in trajectories.manifestLines)
+    manifestLines: { lines: manifestUsed.length, sha256: sha256(manifestUsed.join('')).slice(0, 12) },
     ...(CAPS ? { caps: { tesseral: CAPS[0], zonal: CAPS[1], records: 'every record fitted at these degrees, its other forces the row\'s own $PCF\'s: a study of the record\'s degrees, not the release\'s figure' } } : {}),
     ...(board ? { scoreboard: { schema: board.schema, sha256: sha256(fs.readFileSync(args.scoreboard)), windows: 'each row\'s windows and satellites are the scoreboard row\'s' } } : {}),
     rows,
@@ -212,16 +333,19 @@ async function worker() {
   const r1 = (x) => (Number.isFinite(x) ? Math.round(x * 10) / 10 : null);
   const all = W.windowsOf(args.groups.split(',')), winOf = new Map([...all.windows, ...all.second].map((w) => [w.key, w]));
   const traj = path.join(A.STORE_ROOT, 'numerical-trajectories');
-  const lastLine = (key, arcH) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); if (r.key === key && r.arcH === arcH) last = r; } return last; };
+  // the last line of the same tolerance (a 1e-13 line beside a 1e-10 one is not a change of the 1e-10 trajectory)
+  // the manifest's last line that wrote the trajectory file this line names: a later line writing the same file means the file is no
+  // longer this line's fit
+  const lastLine = (file) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); if (r.file === file) last = r; } return last; };
   const flyOne = async (man) => {
     const t1 = performance.now(), row = { key: man.key, group: man.group, arcH: man.arcH, arm: man.arm, source: man.source, from: man.from, env };
     try {
       const w = winOf.get(man.key);
       if (!w) throw new Error('not a listed window');
       const D0 = w.cutoffMs, G = W.GROUPS[w.group];
-      // the manifest's line as it is now: a refit overwrites the trajectory and appends a line
-      const now = lastLine(man.key, man.arcH);
-      if (!now || now.source !== man.source || now.from !== man.from || now.count !== man.count) throw new Error('trajectory changed since the manifest was read');
+      // the file is still this line's: no later line wrote it again since the manifest was read
+      const now = lastLine(man.file);
+      if (!now || now.key !== man.key || now.arcH !== man.arcH || now.source !== man.source || now.from !== man.from || now.count !== man.count) throw new Error('trajectory changed since the manifest was read');
       const buf = fs.readFileSync(path.join(traj, man.file));
       if (buf.byteLength !== man.count * 48) throw new Error(`trajectory file holds ${buf.byteLength / 48} states, the manifest ${man.count}`);
       const f64 = new Float64Array(buf.buffer, buf.byteOffset, buf.byteLength / 8), from = Date.parse(man.from), step = man.stepS * 1000;
@@ -251,4 +375,4 @@ async function worker() {
   process.send({ ready: true });
 }
 
-function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--scoreboard'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
+function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--scoreboard', '--burns'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }

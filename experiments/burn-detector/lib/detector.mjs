@@ -179,6 +179,17 @@ export async function refineAsOf(ctx, T, a0, a1, reportMs) {
     alsoFrom: est.slice(1).map((x) => ({ offMin: x.off, sizeMmS: +norm(x.dv).toFixed(3) })), spread: +spread.toFixed(3), consistent: est.length === 3 && spread < 0.3 };
 }
 export const lastTruthAtOrBefore = lastAtOrBefore;
+/** A discontinuity of the truth, not a burn (a seam where two orbit solutions are joined): the two sides of the extent disagree in
+ *  position by more than SEAM.floorM, and by more than SEAM.ratio times the most a velocity change of the refined size over the extent can
+ *  account for (|dv| x extent / 2). Every burn that holds on the scoreboard's rows is at most 0.81 of that bound. The test's figures, or
+ *  null. */
+export const SEAM = { floorM: 10, ratio: 2 };
+export function seamOf(refined) {
+  if (!refined || refined.error || !Number.isFinite(refined.positionMismatchM)) return null;
+  const boundM = refined.sizeMmS * 1e-3 * refined.overS / 2;
+  if (!(refined.positionMismatchM > SEAM.floorM && refined.positionMismatchM > SEAM.ratio * boundM)) return null;
+  return { positionMismatchM: refined.positionMismatchM, boundM: +boundM.toFixed(2), ratio: +(refined.positionMismatchM / Math.max(boundM, 1e-9)).toFixed(1) };
+}
 
 // ---- the typed record: one $MNV per burn, by the standards' own generated code ----
 const flatbuffers = await import('flatbuffers');
