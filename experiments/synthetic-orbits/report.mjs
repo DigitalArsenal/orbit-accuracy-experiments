@@ -23,7 +23,7 @@ const modeTextOf = (mode, rung) => {
   return `Gravity, the solid tide, relativity and the Sun and Moon only: the truth without drag or radiation pressure; ${noDrag}${rung === 'xp' ? '' : ', and the radiation term is held at 0'}.`;
 };
 const DRAG_TERM_TEXT = 'Each row records AP\'s fitted drag term (bterm), so a fit where the truth has no drag can be read with the term it solved.';
-const TOLERANCE = 'A drag case\'s truth is flown at tolerance 1e-10 (the L70S setting of headline-loop/lib/settings.mjs), which that file records as meters to tens of meters from the converged orbit with drag.';
+const TOLERANCE = 'A drag case\'s truth is flown at tolerance 1e-13 (the L70S13 setting of headline-loop/lib/settings.mjs). At 1e-10 the integration after each change of the weather rows leaves a drag truth meters to hundreds of meters from the converged orbit; at 1e-13 a tenfold tighter flight moves it under 4 m, except where the perigee falls under 150 km (15 to 34 m). A truth without drag is flown at 1e-10, exact there to the meter. A drag case is read only from rows on the 1e-13 truth.';
 const fitTextOf = (fit, withXp) => (fit === 'arc72' ? ARC72_TEXT : `${FITS[fit].text} ${withXp ? xpTextOf(fit) : NO_XP_TEXT}`);
 /** What the slot holds: AP's headline record, or one rung's record (a rung-xp slot holds SGP4-XP's record). */
 const slotOf = (rung) => (!rung ? { name: 'AP', short: 'AP' } : rung === 'xp' ? { name: 'the slot\'s SGP4-XP record (rung xp)', short: 'SGP4-XP (rung xp)' } : { name: `the slot (rung ${rung})`, short: `Slot (rung ${rung})` });
@@ -45,9 +45,9 @@ const statisticOf = (fit, truthStartH, rung = null, withXp = false, perigeeScan 
   TOLERANCE,
 ].join(' ');
 const TRUTH = {
-  L70S: 'FFM 2.2.0: Earth gravity to degree and order 70, NRLMSISE-00 drag on the weather known at the cutoff, sphere radiation pressure with conical shadow, the Sun and Moon, solid Earth tides, general relativity; RK78 at 1e-10 with steps up to 120 s. For orbits with perigee under 2,500 km, all forces on.',
-  Ffull: 'FFM 2.2.0: as L70S without drag.',
-  'Ffull without radiation pressure': 'FFM 2.2.0: as L70S without drag or radiation pressure.',
+  L70S13: 'FFM 2.2.0: Earth gravity to degree and order 70, NRLMSISE-00 drag on the weather known at the cutoff, sphere radiation pressure with conical shadow, the Sun and Moon, solid Earth tides, general relativity; RK78 at 1e-13 with steps up to 120 s. For orbits with perigee under 2,500 km, all forces on.',
+  Ffull: 'FFM 2.2.0: as L70S13 without drag, RK78 at 1e-10 with steps up to 120 s.',
+  'Ffull without radiation pressure': 'FFM 2.2.0: as Ffull without radiation pressure.',
 };
 const regimeOf = (c) => (c.e >= 0.3 ? 'highly elliptical (e 0.3 and above)' : c.n >= 6.4 ? 'low orbit (period under 225 min)' : c.n >= 1.2033 ? 'medium Earth orbit' : c.n >= 0.8022 ? 'geosynchronous (0.8 to 1.2 rev/day)' : 'beyond geosynchronous');
 const fmt = (x) => (x == null ? '-' : x >= 10000 ? `${Math.round(x / 1000).toLocaleString('en-US')} km` : x >= 1000 ? `${(x / 1000).toFixed(1)} km` : `${Math.round(x)} m`);
@@ -104,8 +104,10 @@ export async function report(ctx, args) {
   if (!out) throw new Error('--report needs --out <dir>');
   // the rows of this build flown from the reference state (truth.hash), and the rows of cases that failed before their truth existed;
   // with the perigee scan, only rows of this scan definition (scanDigest), so rows flown under another are not reported as this one's
+  // (stack #520: a row whose truth has drag is read only on the drag truth at 1e-13, L70S13; rows on the 1e-10 drag truth are not
+  // comparable with it, and a case with no such row is reported as not covered, never read from the older truth)
   const allRows = fs.existsSync(rowsFile) ? fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : [];
-  const ofBuild = allRows.filter((r) => r.wasmSha256 === wasmSha && (r.truth?.hash || !r.truth));
+  const ofBuild = allRows.filter((r) => r.wasmSha256 === wasmSha && (!r.truth || (r.truth.hash && (!r.truth.dragAreaOverMass || r.truth.setting === 'L70S13'))));
   const kept = perigeeScan ? ofBuild.filter((r) => r.scanDigest === scanDigest) : ofBuild;
   const otherDefinitions = perigeeScan ? [...new Set(ofBuild.filter((r) => r.scanDigest !== scanDigest).map((r) => r.scanDigest ?? 'none recorded'))] : [];
   const byHash = new Map(kept.map((r) => [r.caseHash, r]));
