@@ -25,11 +25,16 @@ for (const [a, b] of D.spansOf(ws.map((w) => ({ ...w, arcs: [Math.max(...w.arcs)
   const all = D.startsFor(a, b, strideH).filter((s) => !done.has(D.iso(s))), per = Math.round(240 / strideH);
   for (let k = 0; k < all.length; k += per) {
     const starts = all.slice(k, k + per);
-    const lines = await D.truthSeries(g, name, norad, starts[0] - D.HOUR, starts.at(-1) + lengthH * D.HOUR + D.HOUR, axes);
     const write = (row) => { fs.appendFileSync(file, `${JSON.stringify({ group: g, name, norad, arm, asOf: 'piece end', lengthH, strideH, ...row })}\n`); n += 1; };
-    if (!lines.length) { for (const s of starts) write({ nominal: D.iso(s), gap: true, note: 'no truth in this stretch' }); continue; }
-    const T = D.indexTruth(lines);
-    await D.pieces(ctx, T, starts, { lengthH, onRow: (row) => write({ truthStepS: T.stepMs / 1000, ...row }) });
+    const truthOf = async (s0, s1) => { try { return await D.truthSeries(g, name, norad, s0 - D.HOUR, s1 + lengthH * D.HOUR + D.HOUR, axes); } catch (e) { return { error: String(e?.message ?? e).slice(0, 160) }; } };
+    // a stretch the truth's reader refuses (a day not stored) is read again piece by piece, so only the pieces it touches are gaps
+    const whole = await truthOf(starts[0], starts.at(-1));
+    for (const part of whole.error ? starts.map((s) => [s]) : [starts]) {
+      const lines = whole.error ? await truthOf(part[0], part[0]) : whole;
+      if (lines.error || !lines.length) { for (const s of part) write({ nominal: D.iso(s), gap: true, note: lines.error ?? 'no truth in this stretch' }); continue; }
+      const T = D.indexTruth(lines);
+      await D.pieces(ctx, T, part, { lengthH, onRow: (row) => write({ truthStepS: T.stepMs / 1000, ...row }) });
+    }
     console.error(`${g} ${name}: through ${D.iso(starts.at(-1))}, ${n} pieces, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   }
 }
