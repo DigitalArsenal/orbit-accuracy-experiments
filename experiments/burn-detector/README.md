@@ -24,7 +24,7 @@ before D0.
    A candidate whose two sides disagree in position beyond what its velocity change can explain is a seam of the truth, where two orbit
    solutions are joined, and never a burn (`seamOf`). A burn of size |dv| over an extent of t seconds moves the two sides' meeting point
    by at most |dv| x t / 2. A seam is a candidate whose two-sided position mismatch exceeds both 10 m and twice that bound. Every burn
-   that holds on the scoreboard's rows is at most 0.81 of the bound; the seams found so far are 94 to 281 times it. Seams go to a field
+   that holds on the scoreboard's rows is at most 0.81 of the bound; the seams found so far (the joins of two long-period references) are 60 to 293 times it. Seams go to a field
    of their own (`seams`), with their report time and the test's figures, so that a window crossing one can be flagged without calling it
    a burn. `knownBurns` never reads them, and they get no `$MNV`.
 3. `ballistic.mjs`: on burn-free pieces after the object's first fit, the same flight from a state fitted to the truth's positions over
