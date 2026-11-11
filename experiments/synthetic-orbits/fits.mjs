@@ -1,11 +1,11 @@
-// Ways of making AP's record for the synthetic orbits (stack #504; the owner, 2026-11-11: "I do not care HOW the OCMs are created,
-// just that once they are created the propagator hits our goals", and 12:25Z: "if we are fitting on FFMs numerical forecast and that
-// gives good results, then use that"). run.mjs names one with --fit <name>; each is FITS[name] = { truthStartH, fit(ctx) -> { ocm, note } }
-// and its record is scored exactly as AP's 72 h fit is: D over 0 to 120 h after the cutoff against the truth.
+// Ways of making AP's record for the synthetic orbits (stack #504). How a record is made is free; the goal is what the theory does
+// from it. run.mjs names one with --fit <name>; each is FITS[name] = { truthStartH, after, text, fit(ctx) -> { ocm, note } }, and
+// its record is scored exactly as AP's 72 h fit is: D over 0 to 120 h after the cutoff against the truth. `after` marks a way that
+// fits states after the cutoff; `text` is the sentence the report prints for the way.
 //
 // ctx (run.mjs): lines (every truth state, 300 s), D0 (the cutoff, ms), drag (the truth has drag), wx (the weather known at the cutoff),
 // terms (the case's true drag and radiation terms, m^2/kg), label and fitPcf (AP's $PCF for the case: its forces as the truth's),
-// oemOf(fromMs, toMs) (the truth's states over that span as an $OEM, its useable span the same), fitOf(oem, pcf, spw) (the module's fit),
+// oemOf(fromMs, toMs) (the truth's states over that span as an $OEM, its usable span the same), fitOf(oem, pcf, spw) (the module's fit),
 // and S, A (headline-loop lib/arms.mjs), APL (operator-theory lib/ap.mjs).
 //
 // The ways:
@@ -20,8 +20,10 @@
 // - forecast-7d: the forecast from the cutoff to 7 days (0 to 168 h), the same terms;
 // - forecast-span-ladder: forecast-span, and where the module refuses that span as one set (fit-implausible, a branch limit), the longest
 //   of 96, 72, 48 and 24 h from the cutoff it fits.
-// The forecast ways read the truth after the cutoff, which on a real window is the numerical propagator's forecast from its own fit
-// before the cutoff: the record is made after that forecast exists, and every input to it is data before the cutoff.
+// The forecast ways read the truth after the cutoff. On a real window that span is the numerical propagator's forecast from its own
+// fit before the cutoff: the record is made after that forecast exists, and every input to it is data before the cutoff. On a
+// made-up case the fit reads the same numerical flight it is then scored on, so D is how well one record can follow that flight
+// over the span, not a forecast from data before the cutoff.
 const H = 3600e3;
 
 /** The truth's states from fromH to toH hours after the cutoff, fitted with the $PCF pcf(ctx) (default AP's own). */
@@ -62,14 +64,19 @@ const held = (ctx) => {
   return b.asUint8Array().slice();
 };
 
+const before = (h) => `AP is fitted to the truth's states over the ${h} h before the cutoff and flown; SGP4-XP is not flown on this way.`;
+const AFTER = 'On a made-up case this fit reads the same numerical flight it is then scored on, so D is how well one record can follow that flight over the span, not a forecast from data before the cutoff. (On a real window the span after the cutoff is the numerical propagator\'s forecast from its own fit before the cutoff, so every input to the record is data before the cutoff.)';
+const after = (what) => `AP is fitted to the truth's states ${what} and flown; SGP4-XP is not flown on this way. ${AFTER}`;
 export const FITS = {
-  cutoff72: { truthStartH: 72, fit: span(-72, 0) },
-  arc24: { truthStartH: 24, fit: span(-24, 0) },
-  arc120: { truthStartH: 120, fit: span(-120, 0) },
-  arc168: { truthStartH: 168, fit: span(-168, 0) },
-  'held-terms': { truthStartH: 72, fit: span(-72, 0, held) },
-  'forecast-span': { truthStartH: 0, fit: span(0, 120) },
-  'forecast-span-ladder': { truthStartH: 0, fit: ladder },
-  'arc-plus-forecast': { truthStartH: 72, fit: span(-72, 120) },
-  'forecast-7d': { truthStartH: 0, fit: span(0, 168) },
+  cutoff72: { truthStartH: 72, after: false, text: before(72), fit: span(-72, 0) },
+  arc24: { truthStartH: 24, after: false, text: before(24), fit: span(-24, 0) },
+  arc120: { truthStartH: 120, after: false, text: before(120), fit: span(-120, 0) },
+  arc168: { truthStartH: 168, after: false, text: before(168), fit: span(-168, 0) },
+  'held-terms': { truthStartH: 72, after: false, text: 'AP is fitted to the truth\'s states over the 72 h before the cutoff with its drag and radiation terms held at the truth\'s own values (the state solved) and flown; SGP4-XP is not flown on this way.', fit: span(-72, 0, held) },
+  'forecast-span': { truthStartH: 0, after: true, text: after('from the cutoff to 120 h after it'), fit: span(0, 120) },
+  'forecast-span-ladder': { truthStartH: 0, after: true, text: after('from the cutoff to 120 h after it, or, where the module refuses that span as one set, the longest of 96, 72, 48 and 24 h from the cutoff it fits (the row\'s fitNote names it)'), fit: ladder },
+  'arc-plus-forecast': { truthStartH: 72, after: true, text: after('from 72 h before the cutoff to 120 h after it'), fit: span(-72, 120) },
+  'forecast-7d': { truthStartH: 0, after: true, text: after('from the cutoff to 168 h after it'), fit: span(0, 168) },
 };
+/** The report's sentence for arc72, run.mjs's default (not a FITS way). */
+export const ARC72_TEXT = 'AP and SGP4-XP (THEORY SGP4XP, the same module) are fitted to the truth\'s states over the 72 h before the cutoff and flown.';

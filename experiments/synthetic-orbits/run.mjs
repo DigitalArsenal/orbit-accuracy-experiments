@@ -1,14 +1,17 @@
 // Synthetic orbits over the whole orbit regime, each scored against the numerical propagator (stack #498). For every case of cases.mjs
-// (seeded): the state at the truth's start (D0 - 72 h) is made from the case's mean elements by ONE named reference build, sdn-ap 0.6.26
-// (modules 7ed7cf88, wasm 9119284b8f97), whatever build is under test, so a case's truth is a function of the case alone; the numerical
-// propagator (FFM 2.2.0) flies it through the fit arc and 7 days past it on a 300 s grid, and that flight is the truth. The truth is
+// (seeded): the state at the truth's start (D0 - 72 h) is made from the case's mean elements (the record seed.mjs writes) by ONE named
+// reference build, sdn-ap 0.6.26 (modules 7ed7cf88, wasm 9119284b8f97), whatever build is under test, so a case's starting state is a
+// function of the case and that build alone; the numerical propagator (FFM 2.2.0, pinned by hash in headline-loop/lib/ffm.mjs) flies it
+// through the fit arc and 7 days past it on a 300 s grid, and that flight is the truth. A drag case's truth is flown at tolerance 1e-10
+// (headline-loop/lib/settings.mjs L70S), which that file records as meters to tens of meters from the converged orbit with drag. The truth is
 // cached in <store>/synthetic/truth/ by the hash of everything it depends on (the starting state, FFM's, the kernel's and the Earth
 // orientation's builds, the setting, the force terms, the weather rows and the span), shared by every clone and process: a run reads it
 // when it is there and flies it once when it is not (a lock file; a second process waits for the first). Each row names its truth's hash
 // and whether it was read or flown; a run prints its hit rate. AP and our SGP4-XP (the build under test) are fitted to
 // the truth before the cutoff D0 and flown; both see the same space weather (the weather known at the cutoff, on the truth too). Scored:
 // D, the largest 3D distance to the truth over 0 to 120 h on the 300 s grid, with the hour it occurs and the first hour the distance
-// passes 100 m (the owner's bar, 2026-11-11: "never more than 100m between 0-5 days"; pass: D <= 100 m); the same largest distance over
+// passes 100 m (the bar: AP's forecast never more than 100 m from the numerical propagator at any time from 0 to 5 days; pass: D <= 100 m
+// over the whole 0 to 120 h, so a truth that ends before 120 h is never a pass); the same largest distance over
 // 120 h to 7 days (pastBar: a record used past its 5 days, reported, not a criterion); the fit's and the truth's wall time; the root mean square of the 3D
 // distance over the 24 h ending at each day 1 to 7; AP against SGP4-XP; and with --cost each one's cost per state (a warm set flown 7 days
 // at 300 s, the median of three timed flights). Nothing here is any real satellite's data.
@@ -22,10 +25,21 @@
 //     [--jobs 8] [--only <id,id,...>] [--guard] [--no-drag [--no-radiation]] [--fit <way>[,<way>...]] [--truth-start-h <h>] [--scratch]
 //                                         rows to <store>/synthetic/<wasm sha12>/rows[-<mode>].jsonl (a row there is not flown again)
 //   node experiments/synthetic-orbits/run.mjs --report --modules-commit <sha> --modules-root <modules checkout> [--seed 498] [--grid-step 1]
-//     [--guard] [--no-drag [--no-radiation]] --out <dir>       the result file and the maps (report.mjs)
+//     [--guard] [--no-drag [--no-radiation]] [--fit <way>] [--truth-start-h <h>] --out <dir>   the result file and the maps (report.mjs)
 //
-// The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm), never from a working tree. Without
-// --scratch the harness's working tree must be clean (the rows name its commit). Free disk under 35 GiB stops the run.
+// The build under test is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm), never from a working tree;
+// so is the reference build. Without --scratch this repository's working tree (experiments/synthetic-orbits and
+// experiments/headline-loop) must be clean, since the rows name its commit; with it a run goes ahead and its rows' harness ends in
+// "+scratch". Free disk under 35 GiB stops the run.
+//
+// What a run needs:
+// - SDN_MODULES_ROOT: a modules checkout with its packages installed (the SDS bindings, the module SDK's test harness, FFM 2.2.0 and
+//   foundation/frames as headline-loop/lib/ffm.mjs and env.mjs require them); the module harness is loaded from it.
+// - --modules-root: a modules clone that holds --modules-commit and the reference commit 7ed7cf88 (both read by git show).
+// - The DE440s kernel and the Earth orientation file registered in headline-loop/lib/ffm.mjs, checked by hash.
+// - The as-issued space weather for the cutoffs' span (2025-11-15 to 2026-09-25) in the archive headline-loop/lib/windows.mjs reads.
+// - HEADLINE_LOOP_STORE (default /opt/data/sdn-archive/headline-loop): the rows, the truth cache and the reference build go under
+//   <store>/synthetic/.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -34,6 +48,7 @@ import { pathToFileURL } from 'node:url';
 import { fork, execFileSync } from 'node:child_process';
 import { REPO, MODULES_ROOT, usePackages, envRecord } from '../headline-loop/lib/env.mjs';
 import { cases as makeCases, termsOf, guardOf } from './cases.mjs';
+import { seedRecord } from './seed.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = new URL(import.meta.url).pathname;
@@ -48,9 +63,10 @@ const caseHash = (c) => sha256(JSON.stringify(c)).slice(0, 16);
 const MODE = args['no-radiation'] ? (args['no-drag'] ? 'no-drag-no-radiation' : null) : args['no-drag'] ? 'no-drag' : 'full';
 if (!MODE) throw new Error('--no-radiation goes with --no-drag');
 const PASS_M = 100, BAR_H = 120;
-// --fit <name>: a way of making AP's record (fits.mjs FITS[name]: { truthStartH, fit(ctx) -> { ocm, note } }); arc72, the default, is
-// the 72 h fit of today. --truth-start-h <h>: the truth (and the module-made state) begins h hours before the cutoff (default 72; at least
-// the way's own truthStartH), so ways can be scored against one truth. A way other than arc72, or another start, has its own rows file.
+// --fit <name>: a way of making AP's record (fits.mjs FITS[name]: { truthStartH, after, text, fit(ctx) -> { ocm, note } }); arc72, the
+// default, is AP's and SGP4-XP's 72 h fit before the cutoff. --truth-start-h <h>: the truth (and the reference-made state) begins h hours
+// before the cutoff (default 72; at least the way's own truthStartH), so ways can be scored against one truth. A way other than arc72, or
+// another start, has its own rows file.
 // --fit <name>,<name>,...: several ways (not arc72; cutoff72 is its fit) on one truth per case, each row to its way's own file.
 const FIT_LIST = String(args.fit ?? 'arc72').split(',');
 const FIT = FIT_LIST[0];
@@ -59,8 +75,8 @@ const FITS = FIT === 'arc72' ? null : (await import('./fits.mjs')).FITS;
 for (const f of FITS ? FIT_LIST : []) if (!FITS[f]) throw new Error(`--fit ${f}: not a way fits.mjs names (${Object.keys(FITS).join(', ')})`);
 const TRUTH_START_H = Math.max(Number(args['truth-start-h'] ?? ARC_H), ...FIT_LIST.map((f) => FITS?.[f]?.truthStartH ?? ARC_H));
 const suffixOf = (f) => `${MODE === 'full' ? '' : `-${MODE}`}${f === 'arc72' && TRUTH_START_H === ARC_H ? '' : `-fit-${f}-ts${TRUTH_START_H}`}`;
-// the reference build that makes every case's starting state (rows before it made the state with the build under test, and are not
-// comparable with rows after it: a row of the shared truth names truth.hash)
+// the reference build that makes every case's starting state; a row whose truth names a hash (truth.hash) was flown from that state,
+// and the resume and the report read only such rows (and the rows of cases that failed before their truth existed)
 const REFERENCE = { version: '0.6.26', modulesCommit: '7ed7cf887b37', wasmSha256: '9119284b8f972799' };
 const TRUTH_CACHE_V = 1;
 const ROWS_SUFFIX = suffixOf(FIT);
@@ -102,7 +118,7 @@ async function setup() {
 async function main() {
   const t0 = Date.now();
   const dirty = git(REPO, 'status', '--porcelain', '--', 'experiments/synthetic-orbits', 'experiments/headline-loop').toString().trim();
-  if (dirty && !args.scratch) throw new Error(`refused: the harness's working tree differs from its commit (the rows name the commit):\n${dirty}`);
+  if (dirty && !args.scratch) throw new Error(`refused: this repository's working tree differs from its commit (the rows name the commit):\n${dirty}`);
   const harness = git(REPO, 'rev-parse', 'HEAD').toString().trim() + (dirty ? '+scratch' : '');
   const { commit, version, wasmSha, file, rowsFile, rowsFiles, all } = await setup();
   const only = args.only ? new Set(args.only.split(',')) : null;
@@ -149,7 +165,6 @@ async function worker() {
   const { openFfm } = await import(path.join(REPO, 'experiments/headline-loop/lib/ffm.mjs'));
   const { SETTINGS } = await import(path.join(REPO, 'experiments/headline-loop/lib/settings.mjs'));
   const { openModules } = await import(path.join(W.root, W.XP2F.xm.dir, 'lib/modules.mjs'));
-  const { seedOcm } = await import(pathToFileURL(path.join(MODULES_ROOT, 'propagator/sdn-ap/test/lib/ocm.mjs')).href);
   const entry = createRequire(path.join(MODULES_ROOT, 'propagator/sdn-ap/package.json')).resolve('space-data-module-sdk/testing/isomorphic');
   const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
   const S = A.S, F = await openFfm(), m = await openModules(), env = envRecord();
@@ -203,8 +218,9 @@ async function worker() {
     const terms = termsOf(c.am), row = { id: c.id, kind: c.kind, name: c.name ?? null, am: c.am, elements: { n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, hpKm: c.hpKm, haKm: c.haKm, cutoff: c.cutoff }, env };
     const out = {};
     try {
-      // the state at the truth's start (D0 - 72 h, or --truth-start-h), made from the case's mean elements by the reference build
-      const seed = seedOcm({ epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, norad: 99498, tesseral: 31, zonal: 20 });
+      // the state at the truth's start (D0 - 72 h, or --truth-start-h), made from the case's mean elements (seed.mjs's record) by the
+      // reference build
+      const seed = seedRecord(S, { epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma });
       const [s0] = await refFly(seed, [epoch]);
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
       // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
