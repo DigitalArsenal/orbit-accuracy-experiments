@@ -42,6 +42,14 @@ const caseHash = (c) => sha256(JSON.stringify(c)).slice(0, 16);
 const MODE = args['no-radiation'] ? (args['no-drag'] ? 'no-drag-no-radiation' : null) : args['no-drag'] ? 'no-drag' : 'full';
 if (!MODE) throw new Error('--no-radiation goes with --no-drag');
 const PASS_M = 100, BAR_H = 120;
+// --fit <name>: a way of making AP's record (fits.mjs FITS[name]: { truthStartH, fit(ctx) -> { ocm, note } }); arc72, the default, is
+// the 72 h fit of today. --truth-start-h <h>: the truth (and the module-made state) begins h hours before the cutoff (default 72; at least
+// the way's own truthStartH), so ways can be scored against one truth. A way other than arc72, or another start, has its own rows file.
+const FIT = args.fit ?? 'arc72';
+const FITS = FIT === 'arc72' ? null : (await import('./fits.mjs')).FITS;
+if (FITS && !FITS[FIT]) throw new Error(`--fit ${FIT}: not a way fits.mjs names (${Object.keys(FITS).join(', ')})`);
+const TRUTH_START_H = Math.max(Number(args['truth-start-h'] ?? ARC_H), FITS?.[FIT]?.truthStartH ?? ARC_H);
+const ROWS_SUFFIX = `${MODE === 'full' ? '' : `-${MODE}`}${FIT === 'arc72' && TRUTH_START_H === ARC_H ? '' : `-fit-${FIT}-ts${TRUTH_START_H}`}`;
 
 if (args.worker) await worker();
 else if (args.report) await (await import('./report.mjs')).report(await setup(), args);
@@ -63,7 +71,7 @@ async function setup() {
   const seed = Number(args.seed ?? 498), gridStep = Number(args['grid-step'] ?? 1);
   const all = makeCases(seed, { gridStep });
   if (args.guard) all.cases = guardOf(all.cases);
-  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, MODE === 'full' ? 'rows.jsonl' : `rows-${MODE}.jsonl`), seed, gridStep, all, A, mode: MODE, guard: !!args.guard };
+  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, `rows${ROWS_SUFFIX}.jsonl`), seed, gridStep, all, A, mode: MODE, guard: !!args.guard, fit: FIT, truthStartH: TRUTH_START_H };
 }
 
 async function main() {
@@ -81,7 +89,7 @@ async function main() {
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), '--fit', FIT, '--truth-start-h', String(TRUTH_START_H)], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
       if (!stopped && freeGiB() < MIN_FREE_GIB) stopped = `free disk under ${MIN_FREE_GIB} GiB`;
       if (!stopped && next < todo.length) child.send({ c: todo[next++] }); else child.send({ stop: true });
@@ -122,10 +130,10 @@ async function worker() {
   const r1 = (x) => (Number.isFinite(x) ? Math.round(x * 10) / 10 : null);
   const median = (v) => v.slice().sort((a, b) => a - b)[Math.floor(v.length / 2)];
   const flyCase = async (c) => {
-    const t1 = performance.now(), D0 = Date.parse(`${c.cutoff}T00:00:00Z`), tStart = D0 - ARC_H * HOUR, epoch = iso(tStart);
+    const t1 = performance.now(), D0 = Date.parse(`${c.cutoff}T00:00:00Z`), tStart = D0 - TRUTH_START_H * HOUR, epoch = iso(tStart);
     const terms = termsOf(c.am), row = { id: c.id, kind: c.kind, name: c.name ?? null, am: c.am, elements: { n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, hpKm: c.hpKm, haKm: c.haKm, cutoff: c.cutoff }, env };
     try {
-      // the state at D0 - 72 h, made by the module from the case's mean elements
+      // the state at the truth's start (D0 - 72 h, or --truth-start-h), made by the module from the case's mean elements
       const seed = seedOcm({ epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, norad: 99498, tesseral: 31, zonal: 20 });
       const [s0] = await fly(seed, [epoch]);
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
@@ -133,7 +141,7 @@ async function worker() {
       const drag = MODE === 'full' && c.hpKm < DRAG_BELOW_KM, radiation = MODE !== 'no-drag-no-radiation', wx = drag ? W.weatherAt(D0) : null;
       const setting = drag ? 'L70S' : radiation ? 'Ffull' : 'Ffull without radiation pressure';
       const settings = radiation ? SETTINGS[setting] : { ...SETTINGS.Ffull, forces: { ...SETTINGS.Ffull.forces, srp: false }, parameters: [], apriori: [] };
-      const epochs = Array.from({ length: ((ARC_H + LEAD_DAYS * 24) * HOUR) / STEP + 1 }, (_, k) => iso(tStart + k * STEP));
+      const epochs = Array.from({ length: ((TRUTH_START_H + LEAD_DAYS * 24) * HOUR) / STEP + 1 }, (_, k) => iso(tStart + k * STEP));
       const parameters = [...(drag ? [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }] : []), ...(radiation ? [{ kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }] : [])];
       row.mode = MODE;
       row.truth = { setting, dragAreaOverMass: drag ? terms.dragAreaOverMass : 0, srpAreaOverMass: radiation ? terms.srpAreaOverMass : 0 };
@@ -149,9 +157,9 @@ async function worker() {
       const lines = epochs.map((t, k) => ({ epoch: t, r: states[k].r, v: states[k].v }));
       const alt = lines.map((l) => Math.hypot(...l.r) - RE), low = alt.findIndex((x) => x < 100);
       row.truth.minAltitudeKm = r1(Math.min(...alt));
-      if (low >= 0) { row.truth.decayedAtH = r1((Date.parse(lines[low].epoch) - D0) / HOUR); if (low <= (ARC_H * HOUR) / STEP) throw new Error('truth'); }
-      if (states.length <= (ARC_H * HOUR) / STEP + DAY / STEP) throw new Error('truth');
-      const fitLines = lines.filter((l) => Date.parse(l.epoch) <= D0), after = lines.filter((l) => Date.parse(l.epoch) > D0 && (low < 0 || Date.parse(l.epoch) < Date.parse(lines[low].epoch)));
+      if (low >= 0) { row.truth.decayedAtH = r1((Date.parse(lines[low].epoch) - D0) / HOUR); if (Date.parse(lines[low].epoch) <= D0) throw new Error('truth'); }
+      if (Date.parse(lines.at(-1).epoch) <= D0 + DAY) throw new Error('truth');
+      const fitLines = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 - ARC_H * HOUR && t <= D0; }), after = lines.filter((l) => Date.parse(l.epoch) > D0 && (low < 0 || Date.parse(l.epoch) < Date.parse(lines[low].epoch)));
       const sc = W.scoredOf(after, D0);
       const oem = S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: fitLines, useableStart: fitLines[0].epoch, useableStop: iso(D0) });
       const costEpochs = Array.from({ length: COST_STATES }, (_, k) => iso(D0 + (k + 1) * STEP));
@@ -160,10 +168,16 @@ async function worker() {
       // AP (its forces as the truth's: drag and the weather where the truth has them; the solid tide; radiation held at 0 where the truth
       // has none) and our SGP4-XP, fitted the same way
       const apPcf = radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } });
-      const theories = { ap: { label: drag ? 'AP_TIDES' : radiation ? 'AP_VACUUM_TIDES' : 'AP_VACUUM_TIDES, radiation term held at 0', pcf: apPcf, spw: wx?.spw }, xp: { label: 'XP', pcf: A.PCF.XP, spw: undefined } };
+      const apLabel = drag ? 'AP_TIDES' : radiation ? 'AP_VACUUM_TIDES' : 'AP_VACUUM_TIDES, radiation term held at 0';
+      // another way of making AP's record (--fit, fits.mjs): its record is scored as AP's; SGP4-XP and the cost flights only on arc72
+      const theories = FIT === 'arc72' ? { ap: { label: apLabel, pcf: apPcf, spw: wx?.spw }, xp: { label: 'XP', pcf: A.PCF.XP, spw: undefined } } : { ap: { label: `${apLabel}, fit ${FIT}`, pcf: apPcf, spw: wx?.spw, way: FITS[FIT] } };
+      row.fit = FIT; row.truthStartH = TRUTH_START_H;
+      const oemOf = (fromMs, toMs) => { const ls = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= fromMs && t <= toMs && (low < 0 || t < Date.parse(lines[low].epoch)); }); return S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: ls, useableStart: ls[0].epoch, useableStop: ls.at(-1).epoch }); };
       for (const [t, x] of Object.entries(theories)) {
         try {
-          const ocm = await fit(oem, x.pcf, x.spw), info = APL.readOcm(ocm);
+          const made = x.way ? await x.way.fit({ lines, D0, drag, wx, terms, label: apLabel, fitPcf: apPcf, oemOf, fitOf: fit, S, A, APL }) : null;
+          if (made?.note) row.fitNote = made.note;
+          const ocm = made ? made.ocm : await fit(oem, x.pcf, x.spw), info = APL.readOcm(ocm);
           const d = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes);
           // D: the largest 3D distance to the truth over the span, its hour, and the first hour above 100 m
           const flown = await fly(ocm, span.map((l) => l.epoch));
