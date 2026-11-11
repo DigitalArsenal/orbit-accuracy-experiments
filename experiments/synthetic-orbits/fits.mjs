@@ -17,7 +17,9 @@
 // - forecast-span: the numerical propagator's forecast from the cutoff to 5 days (0 to 120 h), AP's $PCF: the state, BTERM where the
 //   truth has drag and AGOM solved, with AP's default priors;
 // - arc-plus-forecast: the 72 h arc before the cutoff and the forecast to 5 days (-72 to 120 h), the same terms;
-// - forecast-7d: the forecast from the cutoff to 7 days (0 to 168 h), the same terms.
+// - forecast-7d: the forecast from the cutoff to 7 days (0 to 168 h), the same terms;
+// - forecast-span-ladder: forecast-span, and where the module refuses that span as one set (fit-implausible, a branch limit), the longest
+//   of 96, 72, 48 and 24 h from the cutoff it fits.
 // The forecast ways read the truth after the cutoff, which on a real window is the numerical propagator's forecast from its own fit
 // before the cutoff: the record is made after that forecast exists, and every input to it is data before the cutoff.
 const H = 3600e3;
@@ -27,6 +29,15 @@ const span = (fromH, toH, pcf = null) => async (ctx) => {
   const t = performance.now();
   const ocm = await ctx.fitOf(ctx.oemOf(ctx.D0 + fromH * H, ctx.D0 + toH * H), pcf ? pcf(ctx) : ctx.fitPcf, ctx.wx?.spw);
   return { ocm, note: `fit ${fromH} h to ${toH} h after the cutoff; ${((performance.now() - t) / 1000).toFixed(2)} s` };
+};
+
+/** The forecast from the cutoff to 5 days; where the module refuses that span as one set, the longest of 96, 72, 48 and 24 h it fits. */
+const ladder = async (ctx) => {
+  let last;
+  for (const h of [120, 96, 72, 48, 24]) {
+    try { const made = await span(0, h)(ctx); return h === 120 ? made : { ocm: made.ocm, note: `${made.note}; the module refused the longer spans (${String(last?.message ?? last).slice(0, 80)})` }; } catch (e) { last = e; }
+  }
+  throw last;
 };
 
 /** AP's $PCF with the drag and radiation terms held at the truth's values (headline-loop's carriedPcf, sigmas near zero). */
@@ -39,6 +50,7 @@ export const FITS = {
   arc168: { truthStartH: 168, fit: span(-168, 0) },
   'held-terms': { truthStartH: 72, fit: span(-72, 0, held) },
   'forecast-span': { truthStartH: 0, fit: span(0, 120) },
+  'forecast-span-ladder': { truthStartH: 0, fit: ladder },
   'arc-plus-forecast': { truthStartH: 72, fit: span(-72, 120) },
   'forecast-7d': { truthStartH: 0, fit: span(0, 168) },
 };
