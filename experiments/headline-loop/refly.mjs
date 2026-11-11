@@ -7,6 +7,25 @@
 //   --retry-errors: a window whose rows all recorded an error (no truth, coverage) is flown again; table.mjs reads a row that flew in its place
 //   node experiments/headline-loop/refly.mjs --check
 //   node experiments/headline-loop/refly.mjs --after-burns <dir of the burn detector's lists, <group>/<name>.burns.json> [--groups S1,DO,WA] [--shard k/n]
+//     [--after-burn-store <store folder>: where the rows go (lib/arms.mjs NUMERICAL_AFTER_BURN.store unless given), one folder per set of
+//      lists; each row names its satellite's list (burnList), and table.mjs refuses a row whose list is not the one it was given]
+//   node experiments/headline-loop/refly.mjs --tight [--groups T,P] [--arcs 24,72] [--shard k/n] [--retry-errors]
+//   --tight (stack issue 520): the full drag setting fitted and flown again at tolerance 1e-13 (lib/arms.mjs NUMERICAL_TIGHT: L70S as
+//     L70S13), on every window and fit arc of the groups' rows as table.mjs lists them (the first pass, and a regime's second pass once its
+//     numerical rows are all in the store) whose stored numerical row exists and whose full setting is L70S: the window's truth as the
+//     first pass reads it, the arc's fit, flown once on the scored epochs and on a 300 s grid from the fit's first state to 7 days after
+//     the cutoff together (at 1e-13 the requested epochs move the flight by under 0.2 m). One row per window and fit arc, whatever the
+//     outcome (the fit failed: arms.FFMq.ok false; no truth or coverage: error), goes to <store>/<NUMERICAL_TIGHT.store>/rows-tight-<k>of<n>.jsonl
+//     with the fitted state (arms.FFMq.product); the trajectory to <store>/numerical-trajectories/<NUMERICAL_TIGHT.to>/<group>/<key>-<arc>.bin,
+//     and its manifest line to numerical-trajectories/staged-<NUMERICAL_TIGHT.to>.jsonl. A row already there is not flown again (with
+//     --retry-errors, one recording no truth or a failed fit is; table.mjs reads the best of a window's rows, a fit over a failed fit over no
+//     truth, and --tight-switch appends that row's line); nothing stored is overwritten. Each line names its fit (fit: setting, process, arc
+//     start, first state), so bar.mjs flies the trajectory of the fit whose figures it reads.
+//     The fit is of the full arc, with no burn rule: table.mjs keeps a row with a refit after a burn, or in a regime with after-burn rows
+//     a window without its decision row, at 1e-10.
+//   node experiments/headline-loop/refly.mjs --tight-switch G:arc[,G:arc]: when every window of the row has its staged line, the lines
+//     of its windows not in the manifest at 1e-13 (all of them, or the windows that joined the row since) appended in one write (recorded
+//     in numerical-trajectories/switched-<NUMERICAL_TIGHT.to>.jsonl)
 //   --after-burns (stack issues 462 and 489): the numerical arm's fit of a maneuvering object on the arc after its last burn known at the
 //     cutoff (lib/arms.mjs numericalArc: the rule of AP's 72 h fit, and on 24 h fits where that burn lies inside the 24 h). One row per window
 //     and fit arc of the groups goes to <store>/<NUMERICAL_AFTER_BURN.store>/: where the rule moves the arc, the full setting (FFMq) fitted
@@ -28,7 +47,116 @@ const ORDER = ['GD', 'IG', 'GE', 'HX', 'HE', 'LS', 'GN', 'GN_GAL', 'WA', 'DO', '
 
 if (args.check) await check();
 else if (args['after-burns']) await afterBurns();
+else if (args.tight || args['tight-switch']) await tight();
 else await run();
+
+/** --tight and --tight-switch (stack issue 520): the full drag setting at 1e-13, rows and trajectories, beside the stored 1e-10 ones. */
+async function tight() {
+  usePackages();
+  const W = await import('./lib/windows.mjs');
+  const A = await import('./lib/arms.mjs');
+  const { SETTINGS, FULL_SETTING } = await import('./lib/settings.mjs');
+  const T = A.NUMERICAL_TIGHT, STEP_S = 300, LEAD_D = 7;
+  if (JSON.stringify(SETTINGS[T.to]) !== JSON.stringify({ ...SETTINGS[T.from], integrator: { ...SETTINGS[T.from].integrator, tolerance: 1e-13 } })) throw new Error(`${T.to} is not ${T.from} at 1e-13`);
+  const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
+  const read = (dir, re) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => re.test(f)).flatMap((f) => fs.readFileSync(path.join(dir, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)) : []);
+  const TRAJ = path.join(A.STORE_ROOT, 'numerical-trajectories'), ROWS = path.join(A.STORE_ROOT, T.store);
+  const STAGED = path.join(TRAJ, `staged-${T.to}.jsonl`), MANIFEST = path.join(TRAJ, 'manifest.jsonl'), SWITCHED = path.join(TRAJ, `switched-${T.to}.jsonl`);
+  const SOURCE = `a refit of the row's setting at tolerance 1e-13 on the window's truth (setting ${T.to}: ${T.from} with the integrator's tolerance 1e-13)`;
+  const groups = (args.groups ?? 'T,P').split(',').filter((g) => FULL_SETTING[g] === T.from);
+  const arcsAsked = args.arcs ? args.arcs.split(',').map(Number) : null;
+  const base = new Map();
+  for (const r of read(path.join(A.STORE_ROOT, A.NUMERICAL_STORE), /^rows-truth-.*\.jsonl$/)) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
+  // the windows of each row as table.mjs lists them: the first pass, and a regime's second pass once its numerical rows are all in the store
+  const all = W.windowsOf(groups);
+  const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
+  const listed = [...all.windows, ...all.second.filter((w) => secondIn.has(w.group))];
+  const items = listed.flatMap((w) => w.arcs.filter((a) => (!arcsAsked || arcsAsked.includes(a)) && base.has(`${w.key}|${a}`)).map((a) => ({ w, arc: a })));
+  const nameOf = (key, arc) => `${key.replace(/[| ]/g, '_')}-${arc}`;
+  if (args['tight-switch']) {
+    // a row is switched when every window of it has its staged line. A window's line is the one table.mjs reads the row of (a fit over a
+    // failed fit over no truth; of equal rank the later, as a retry gives); it is appended wherever it differs from the window's last 1e-13
+    // line in the manifest (none yet, a window that joined the row since, or a retry that replaced a failure), all in one write
+    const rank = (x) => (x.source === 'none' ? 0 : x.source === 'failed' ? 1 : 2), staged = new Map();
+    for (const x of read(TRAJ, new RegExp(`^staged-${T.to}\\.jsonl$`))) { const k = `${x.key}|${x.arcH}`; if (!staged.has(k) || rank(x) >= rank(staged.get(k))) staged.set(k, x); }
+    const inManifest = new Map(read(TRAJ, /^manifest\.jsonl$/).filter((x) => x.setting === T.to).map((x) => [`${x.key}|${x.arcH}`, x]));
+    const same = (p, q) => p && q && p.source === q.source && (p.file ?? null) === (q.file ?? null) && (p.from ?? null) === (q.from ?? null);
+    for (const ga of [...new Set(args['tight-switch'].split(','))]) {
+      const [g, a] = ga.split(':'), rowItems = items.filter((x) => x.w.group === g && x.arc === Number(a)), lines = rowItems.map((x) => staged.get(`${x.w.key}|${x.arc}`));
+      if (!rowItems.length || lines.some((l) => !l)) { console.error(`${ga}: ${lines.filter(Boolean).length} of ${rowItems.length} windows staged, not switched (--groups names the rows' groups)`); continue; }
+      const add = lines.filter((l) => !same(l, inManifest.get(`${l.key}|${l.arcH}`)));
+      if (!add.length) { console.error(`${ga}: every window's line in the manifest is its staged line`); continue; }
+      fs.appendFileSync(MANIFEST, add.map((l) => `${JSON.stringify(l)}\n`).join(''));
+      fs.appendFileSync(SWITCHED, `${JSON.stringify({ group: g, arcH: Number(a), windows: lines.length, appended: add.length, setting: T.to, at: new Date().toISOString() })}\n`);
+      console.error(`${ga}: switched, ${add.length} of ${lines.length} windows' lines appended`);
+    }
+    process.exit(0);
+  }
+  const [K, N] = (args.shard ?? '0/1').split('/').map(Number);
+  // a window-arc with a row is not flown again; with --retry-errors, one whose rows all record no truth or a failed fit is
+  const retry = !!args['retry-errors'], rowsSoFar = read(ROWS, /^rows-.*\.jsonl$/);
+  const done = new Set(rowsSoFar.filter((r) => !retry || (!r.error && r.arms?.FFMq?.ok)).map((r) => `${r.key}|${r.arcH}`));
+  const mine = items.filter((x) => W.inShard(x.w.key, K, N) && !done.has(`${x.w.key}|${x.arc}`))
+    .sort((p, q) => groups.indexOf(p.w.group) - groups.indexOf(q.w.group) || String(p.w.name).localeCompare(String(q.w.name)) || p.w.cutoffMs - q.w.cutoffMs || p.arc - q.arc);
+  console.error(`refly --tight shard ${K}/${N}: ${mine.length} window-arcs to fly (${items.length} in the rows of ${groups.join(', ')})`);
+  if (!mine.length || args.limit === '0') process.exit(0);
+  const { openFfm } = await import('./lib/ffm.mjs');
+  const { openModules } = await import(path.join(W.root, W.XP2F.xm.dir, 'lib/modules.mjs'));
+  const F = await openFfm(), m = await openModules(), env = { ...envRecord(), ffm: F.provenance }, settings = SETTINGS[T.to];
+  fs.mkdirSync(ROWS, { recursive: true });
+  const outFile = path.join(ROWS, `rows-tight-${K}of${N}.jsonl`), iso = (t) => new Date(t).toISOString();
+  let n = 0, truthKey = null, ctx = null;
+  for (const { w, arc } of mine) {
+    const t0 = performance.now(), D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
+    const row = { key: w.key, part: 'truth', group: w.group, regime: G.label, name: w.name, provider: W.providerOf(w.group, w.name), satellite: W.satelliteOf(w.group, w.name), cutoff: W.iso(D0), arcH: arc, env, tolerance: 1e-13, arms: {} };
+    const line = { key: w.key, arcH: arc, group: w.group, arm: 'FFMq', setting: T.to, tolerance: 1e-13, stepS: STEP_S, frame: 'GCRF', layout: 'Float64 x, y, z km, vx, vy, vz km/s per state' };
+    try {
+      if (truthKey !== w.key) {
+        truthKey = w.key;
+        try {
+          const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, null);
+          const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
+          ctx = sc.entered.length ? { truth, sc, rows: G.vacuum ? null : W.weatherAt(D0).ffm } : { error: 'no lead bin' };
+        } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
+      }
+      if (ctx.error) throw Object.assign(new Error(ctx.error), { window: true });
+      const thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
+      if (!thin) throw Object.assign(new Error('coverage'), { window: true });
+      row.high = Math.hypot(...ctx.sc.truth[0].r) >= 8400;
+      try {
+        const f = await F.fit(thin, settings, D0, ctx.rows);
+        const product = { epoch: f.epoch, state: f.state, parameters: f.parameters };
+        const from = W.ms(product.epoch), count = Math.floor((D0 + LEAD_D * W.DAY - from) / (STEP_S * 1000)) + 1;
+        const grid = Array.from({ length: count }, (_, k) => from + k * STEP_S * 1000), scoredMs = ctx.sc.epochs.map(W.ms);
+        const union = [...new Set([...grid, ...scoredMs])].sort((a, b) => a - b), at = new Map(union.map((t, k) => [t, k]));
+        const states = await F.forecast(product, union.map(iso), settings, ctx.rows);
+        const days = W.byDay(await m.rtn(scoredMs.map((t) => states[at.get(t)]), ctx.sc.truth), ctx.sc.entered, ctx.sc.sizes);
+        const dir = path.join(TRAJ, T.to, w.group), file = path.join(dir, `${nameOf(w.key, arc)}.bin`);
+        fs.mkdirSync(dir, { recursive: true });
+        fs.writeFileSync(file, Buffer.from(new Float64Array(grid.flatMap((t) => { const s = states[at.get(t)]; return [...s.r, ...s.v]; })).buffer));
+        // the identity of the fit the trajectory flies (bar.mjs takes, for each window, the line whose fit is the numerical row's)
+        Object.assign(line, { source: SOURCE, file: path.relative(TRAJ, file), from: iso(from), cutoff: iso(D0), count, parameters: product.parameters, flight: 'one flight on the scored epochs and the 300 s grid together',
+          fit: { setting: T.to, process: 'full arc', arcStart: iso(D0 - arc * W.HOUR), firstState: iso(from), burnList: null } });
+        row.arms.FFMq = { ok: true, arm: T.to, days, termination: f.termination, fitOk: f.ok, weightedRms: f.weightedRms, iterations: f.iterations, parameters: product.parameters, product: { epoch: product.epoch, state: product.state }, s: (performance.now() - t0) / 1000 };
+      } catch (e) {
+        row.arms.FFMq = { ok: false, arm: T.to, error: String(e?.message ?? e).slice(0, 200) };
+        Object.assign(line, { source: 'failed', error: row.arms.FFMq.error });
+      }
+    } catch (e) {
+      if (!e.window) throw e;
+      row.error = e.message;
+      Object.assign(line, { source: 'none', why: `no truth or coverage (${e.message})` });
+    }
+    row.wallS = (performance.now() - t0) / 1000;
+    fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    fs.appendFileSync(STAGED, `${JSON.stringify(line)}\n`);
+    n += 1;
+    if (n % 10 === 0 || n === mine.length) console.error(`  ${n}/${mine.length} ${w.key} ${arc} h ${row.wallS.toFixed(0)} s`);
+  }
+  await F.close(); await m.close();
+  console.error(`refly --tight shard ${K}/${N}: done, ${n} window-arcs`);
+  process.exit(0);
+}
 
 async function afterBurns() {
   usePackages();
@@ -42,7 +170,9 @@ async function afterBurns() {
   // the stored fits (a flown row over an error row, as table.mjs reads them)
   const base = new Map();
   for (const r of read(path.join(A.STORE_ROOT, A.NUMERICAL_STORE), /^rows-truth-.*\.jsonl$/)) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
-  const outDir = path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store);
+  const store = args['after-burn-store'] ?? A.NUMERICAL_AFTER_BURN.store;
+  if (!store.startsWith(`${A.NUMERICAL_STORE}-after-burn`) || store.includes('/')) throw new Error(`--after-burn-store ${store}: a folder name beginning ${A.NUMERICAL_STORE}-after-burn`);
+  const outDir = path.join(A.STORE_ROOT, store);
   fs.mkdirSync(outDir, { recursive: true });
   const done = new Set(read(outDir, /^rows-after-burn-.*\.jsonl$/).filter((r) => !r.error).map((r) => `${r.key}|${r.arcH}`));
   const outFile = path.join(outDir, `rows-after-burn-${K}of${N}.jsonl`);
@@ -59,7 +189,7 @@ async function afterBurns() {
   for (const w of mine) {
     const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
     const head = { key: w.key, part: 'after-burn', group: w.group, name: w.name, cutoff: W.iso(D0), burnList: sha(w.group, w.name) };
-    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name);
+    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name, D0);
     // the decision needs the cutoff's last state alone (its perigee); the window's truth, scored epochs and weather only where a fit moves
     let ctx;
     try {
@@ -86,7 +216,7 @@ async function afterBurns() {
         const m = A.numericalArc(burns, D0, ctx.perigeeKm, arc);
         const hours = (D0 - m.startMs) / W.HOUR;
         // a known burn still inside the arc the rule gives (a burn in the last 24 h of a 72 h arc, or a 24 h arc after it too short)
-        row.burnInArc = burns.some((x) => Date.parse(x.to) > m.startMs && Date.parse(x.from) <= D0);
+        row.burnInArc = burns.some((x) => A.burnEndMs(x) > m.startMs && Date.parse(x.extentFrom ?? x.from) <= D0);
         if (m.lastBurnMs) row.lastBurn = W.iso(m.lastBurnMs);
         const thin = m.maneuvering ? W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= m.startMs && t <= D0; }), hours) : null;
         if (!m.maneuvering) row.fitProcess = m.shortAfterBurn ? `maneuvering, the arc after its last burn under ${A.NUMERICAL_AFTER_BURN.minHours24} h: the stored full-arc fit` : 'the full arc: the stored fit';

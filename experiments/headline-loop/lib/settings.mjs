@@ -10,6 +10,7 @@ const FULL = { degree: 70, order: 70, thirdBodies: [10, 301], srp: true, drag: f
 const LOW40 = { degree: 40, order: 40, thirdBodies: [10, 301], srp: true, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: undefined };
 const LOW70 = { degree: 70, order: 70, thirdBodies: [10, 301], srp: true, drag: true, atmosphere: 'NRLMSISE00', solidTides: true, relativity: 'IERS_2010' };
 const I8_300 = { tolerance: 1e-8, maxStep: 300, minStep: 1e-3 }, I8_120 = { tolerance: 1e-8, maxStep: 120, minStep: 1e-3 }, I10 = { tolerance: 1e-10, maxStep: 120, minStep: 1e-4 };
+const I13 = { tolerance: 1e-13, maxStep: 120, minStep: 1e-4 };
 const COMMON = { sigmaM: 10, sigmaEditThreshold: 0, maximumIterations: 40, correctionTolerance: 0.01 };
 const cannon = { parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixed: {}, apriori: apriori([0.2]) };
 const ecom = (terms) => ({ parameters: terms.map((t) => ({ kind: `ECOM2_${t}`, value: 0 })), fixed: { agom: 0 }, apriori: apriori(terms.map((t) => (t === 'D0' ? 1e-6 : 1e-7))) });
@@ -23,6 +24,9 @@ export const SETTINGS = {
   // drag and radiation coefficient fitted, below 8,400 km
   L40S: { forces: LOW40, integrator: I8_120, ...COMMON, ...dragSrp() },
   L70S: { forces: LOW70, integrator: I10, ...COMMON, ...dragSrp() },
+  // L70S at tolerance 1e-13 (stack #520): with drag, the integration restarts at each change of the weather rows, and at 1e-10 the steps
+  // after a restart leave the flight meters to tens of meters from the converged orbit; at 1e-13 under 1 m
+  L70S13: { forces: LOW70, integrator: I13, ...COMMON, ...dragSrp() },
   // ECOM2 radiation, navigation and geosynchronous buses
   E5: { forces: LITE, integrator: I8_300, ...COMMON, ...ecom(E5) },
   E5F: { forces: FULL, integrator: I10, ...COMMON, ...ecom(E5) },
