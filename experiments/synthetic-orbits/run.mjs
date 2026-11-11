@@ -3,7 +3,8 @@
 // the 72 h fit arc and 7 days past it on a 300 s grid, and that flight is the truth; AP and our SGP4-XP (the same module) are fitted to
 // the truth before the cutoff D0 and flown; both see the same space weather (the weather known at the cutoff, on the truth too). Scored:
 // D, the largest 3D distance to the truth over 0 to 120 h on the 300 s grid, with the hour it occurs and the first hour the distance
-// passes 100 m (the owner's bar, 2026-11-11: "never more than 100m between 0-5 days"; pass: D <= 100 m); the root mean square of the 3D
+// passes 100 m (the owner's bar, 2026-11-11: "never more than 100m between 0-5 days"; pass: D <= 100 m); the same largest distance over
+// 120 h to 7 days (pastBar: a record used past its 5 days, reported, not a criterion); the fit's and the truth's wall time; the root mean square of the 3D
 // distance over the 24 h ending at each day 1 to 7; AP against SGP4-XP; and with --cost each one's cost per state (a warm set flown 7 days
 // at 300 s, the median of three timed flights). Nothing here is any real satellite's data.
 //
@@ -147,12 +148,14 @@ async function worker() {
       row.truth = { setting, dragAreaOverMass: drag ? terms.dragAreaOverMass : 0, srpAreaOverMass: radiation ? terms.srpAreaOverMass : 0 };
       // a truth that cannot be flown to day 7 (a decay) is flown to the last whole day it reaches, and scored to there
       let states;
+      const tt = performance.now();
       for (const days of [LEAD_DAYS, 5, 3, 2, 1, 0]) {
         const upTo = epochs.slice(0, epochs.length - ((LEAD_DAYS - days) * DAY) / STEP);
         try { states = await F.forecast({ epoch, state: [...s0.r, ...s0.v].map((x) => x * 1000), parameters }, upTo, settings, wx?.ffm ?? null); if (days < LEAD_DAYS) row.truth.flownToDay = days; break; } catch (e) { row.truth.error = String(e?.message ?? e).slice(0, 200); }
       }
       if (!states || row.truth.flownToDay === 0) throw new Error('truth');
       delete row.truth.error;
+      row.truth.flightS = r1((performance.now() - tt) / 1000);
       epochs.length = states.length;
       const lines = epochs.map((t, k) => ({ epoch: t, r: states[k].r, v: states[k].v }));
       const alt = lines.map((l) => Math.hypot(...l.r) - RE), low = alt.findIndex((x) => x < 100);
@@ -165,6 +168,8 @@ async function worker() {
       const costEpochs = Array.from({ length: COST_STATES }, (_, k) => iso(D0 + (k + 1) * STEP));
       // the bar's span: the cutoff and every truth state to 120 h after it (as far as the truth reaches)
       const span = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 && t <= D0 + BAR_H * HOUR && (low < 0 || t < Date.parse(lines[low].epoch)); });
+      // past the bar: the same distance over 120 h to 7 days (a record used past its 5 days; reported, not a criterion)
+      const late = lines.filter((l) => { const t = Date.parse(l.epoch); return t > D0 + BAR_H * HOUR && t <= D0 + LEAD_DAYS * DAY && (low < 0 || t < Date.parse(lines[low].epoch)); });
       // AP (its forces as the truth's: drag and the weather where the truth has them; the solid tide; radiation held at 0 where the truth
       // has none) and our SGP4-XP, fitted the same way
       const apPcf = radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } });
@@ -175,17 +180,23 @@ async function worker() {
       const oemOf = (fromMs, toMs) => { const ls = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= fromMs && t <= toMs && (low < 0 || t < Date.parse(lines[low].epoch)); }); return S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: ls, useableStart: ls[0].epoch, useableStop: ls.at(-1).epoch }); };
       for (const [t, x] of Object.entries(theories)) {
         try {
+          const tf = performance.now();
           const made = x.way ? await x.way.fit({ lines, D0, drag, wx, terms, label: apLabel, fitPcf: apPcf, oemOf, fitOf: fit, S, A, APL }) : null;
           if (made?.note) row.fitNote = made.note;
-          const ocm = made ? made.ocm : await fit(oem, x.pcf, x.spw), info = APL.readOcm(ocm);
+          const ocm = made ? made.ocm : await fit(oem, x.pcf, x.spw), info = APL.readOcm(ocm), fitS = r1((performance.now() - tf) / 1000);
           const d = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes);
           // D: the largest 3D distance to the truth over the span, its hour, and the first hour above 100 m
           const flown = await fly(ocm, span.map((l) => l.epoch));
           const dist = flown.map((s, k) => Math.hypot(s.r[0] - span[k].r[0], s.r[1] - span[k].r[1], s.r[2] - span[k].r[2]) * 1000);
           const at = dist.indexOf(Math.max(...dist)), over = dist.findIndex((x) => x > PASS_M), hourOf = (k) => r1((Date.parse(span[k].epoch) - D0) / HOUR);
           x.ocm = ocm;
-          row[t] = { pcf: x.label, fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])),
+          row[t] = { pcf: x.label, fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, fitS, epoch: info.epoch ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])),
             maxDistance: { maxM: r1(dist[at]), atH: hourOf(at), firstOver100mH: over < 0 ? null : hourOf(over), spanH: hourOf(dist.length - 1), pass: dist[at] <= PASS_M } };
+          if (late.length) {
+            const dl = (await fly(ocm, late.map((l) => l.epoch))).map((s, k) => Math.hypot(s.r[0] - late[k].r[0], s.r[1] - late[k].r[1], s.r[2] - late[k].r[2]) * 1000);
+            const k = dl.indexOf(Math.max(...dl));
+            row[t].pastBar = { maxM: r1(dl[k]), atH: r1((Date.parse(late[k].epoch) - D0) / HOUR), spanH: r1((Date.parse(late.at(-1).epoch) - D0) / HOUR) };
+          }
         } catch (e) { row[t] = { pcf: x.label, error: String(e?.message ?? e).slice(0, 200) }; }
       }
       // cost per state (--cost only): each set warm (flown once), then three timed 7-day flights at 300 s, interleaved; the median
