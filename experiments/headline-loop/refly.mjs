@@ -7,6 +7,8 @@
 //   --retry-errors: a window whose rows all recorded an error (no truth, coverage) is flown again; table.mjs reads a row that flew in its place
 //   node experiments/headline-loop/refly.mjs --check
 //   node experiments/headline-loop/refly.mjs --after-burns <dir of the burn detector's lists, <group>/<name>.burns.json> [--groups S1,DO,WA] [--shard k/n]
+//     [--after-burn-store <store folder>: where the rows go (lib/arms.mjs NUMERICAL_AFTER_BURN.store unless given); one folder per set of
+//      lists, so rows made on other lists never stand in for, or replace, the rows a table read]
 //   --after-burns (stack issues 462 and 489): the numerical arm's fit of a maneuvering object on the arc after its last burn known at the
 //     cutoff (lib/arms.mjs numericalArc: the rule of AP's 72 h fit, and on 24 h fits where that burn lies inside the 24 h). One row per window
 //     and fit arc of the groups goes to <store>/<NUMERICAL_AFTER_BURN.store>/: where the rule moves the arc, the full setting (FFMq) fitted
@@ -42,7 +44,9 @@ async function afterBurns() {
   // the stored fits (a flown row over an error row, as table.mjs reads them)
   const base = new Map();
   for (const r of read(path.join(A.STORE_ROOT, A.NUMERICAL_STORE), /^rows-truth-.*\.jsonl$/)) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
-  const outDir = path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store);
+  const store = args['after-burn-store'] ?? A.NUMERICAL_AFTER_BURN.store;
+  if (!store.startsWith(`${A.NUMERICAL_STORE}-after-burn`) || store.includes('/')) throw new Error(`--after-burn-store ${store}: a folder name beginning ${A.NUMERICAL_STORE}-after-burn`);
+  const outDir = path.join(A.STORE_ROOT, store);
   fs.mkdirSync(outDir, { recursive: true });
   const done = new Set(read(outDir, /^rows-after-burn-.*\.jsonl$/).filter((r) => !r.error).map((r) => `${r.key}|${r.arcH}`));
   const outFile = path.join(outDir, `rows-after-burn-${K}of${N}.jsonl`);
