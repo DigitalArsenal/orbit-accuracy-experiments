@@ -67,13 +67,17 @@ async function afterBurns() {
       if (!sc.entered.length || !last) throw new Error('no lead bin or no state before the cutoff');
       ctx = { truth, sc, wx: G.vacuum ? null : W.weatherAt(D0), perigeeKm: A.perigeeKmOf(last) };
     } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
-    const burns = A.knownBurns(burnsDir, w.group, w.name, D0);
+    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name);
     for (const arc of w.arcs) {
       const b = base.get(`${w.key}|${arc}`);
       if (!b || b.error || done.has(`${w.key}|${arc}`)) continue;
       const row = { ...head, arcH: arc };
       if (ctx.error) row.error = ctx.error;
-      else {
+      else if (thrust) {
+        // an orbit that is not ballistic between impulses has no burn-free arc: the stored fit, marked as holding thrust
+        row.burnInArc = true;
+        row.fitProcess = `not ballistic: the truth flown from its positions alone closes to ${Math.round(thrust.positionsOnlyMedianM)} m over ${thrust.pieceHours} h (median); the stored fit`;
+      } else {
         const m = A.numericalArc(burns, D0, ctx.perigeeKm, arc);
         const hours = (D0 - m.startMs) / W.HOUR;
         // a known burn still inside the arc the rule gives (a burn in the last 24 h of a 72 h arc, or a 24 h arc after it too short)

@@ -101,6 +101,13 @@ export const numericalArc = (burns, D0, perigeeKm, arcH) => {
   const last = Math.max(...ends), startMs = last + MANEUVER72.afterBurnMin * 60000;
   return D0 - startMs >= NUMERICAL_AFTER_BURN.minHours24 * H ? { startMs, maneuvering: true, lastBurnMs: last } : { ...full, shortAfterBurn: true, lastBurnMs: last };
 };
+/** The burn list's verdict that an object's orbit is not ballistic between impulses ({ positionsOnlyMedianM, pieceHours } or null): the
+ *  numerical setting flown over its pieces from the truth's positions alone closes above the 100 m bar, as under continuous low thrust, so
+ *  no arc of it is burn-free and its numerical fit is not a properly configured one. */
+export const notBallistic = (dir, group, name) => {
+  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+  return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')).notBallistic ?? null : null;
+};
 /** The perigee height (km above the equatorial radius) of an osculating state { r km, v km/s } about the Earth. */
 export const perigeeKmOf = ({ r, v }) => {
   const MU = 398600.4418, rr = Math.hypot(...r), vv = Math.hypot(...v), aKm = 1 / (2 / rr - (vv * vv) / MU);
