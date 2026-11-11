@@ -1,7 +1,8 @@
 // The claim set (stack #505, Tier 1): for each band of the bar's table, n independent random orbits drawn inside the band's box, each
-// flown exactly as run.mjs flies a case (run.mjs's own worker: the same module-made state, the same truth, the same way of making AP's
-// record, the same D = the largest 3D distance to the truth over 0 to 120 h on the 300 s grid). Only this set carries a pass rate.
-// The grid and the named cases of cases.mjs stay as they are: they are lists of cases to work on, not a sample.
+// flown exactly as run.mjs flies a case (run.mjs's own worker: the same starting state, seed.mjs's record flown by the reference build;
+// the same truth; the same way of making AP's record; the same D = the largest 3D distance to the truth over 0 to 120 h at the truth's
+// own 300 s epochs). Only this set carries a pass rate. The grid and the named cases of cases.mjs stay as they are: they are lists of
+// cases to work on, not a sample.
 //
 // The draw, per case (independent, from one seed that is recorded with every row; a fresh seed by default, so each release draws anew):
 //   perigee height: log-uniform inside the band's range;  eccentricity: uniform inside the band's range;
@@ -11,10 +12,12 @@
 //   an orbit whose apogee lies beyond the Moon's mean distance is drawn again (cases.mjs leaves such cells out as well).
 // Mean motion from perigee and eccentricity, two-body, as cases.mjs makes its grid.
 //
-// Per band: k failures in n, where a failure is D > 100 m or a record that could not be made (a refused fit); the exact one-sided 95 %
-// upper bound on the failure share (Clopper-Pearson); the largest D and the 95th percentile of D. An orbit that reenters before the
-// cutoff or inside the 120 h after it has no 120 h to score: it is counted on its own line, not in n, with how its forecast did over
-// the whole days its truth reaches. A case with no truth is counted on its own line as well.
+// Per band, by the rules of report.mjs (statusOf): n counts every case that has a truth; k counts those in n that are not within the
+// bar, that is D > 100 m over the whole 0 to 120 h, a truth that ends before 120 h (a decay or the numerical flight ending early,
+// never within, counted with its span), a refused fit, a failed flight or another failure after the truth existed. A case without a
+// truth (it failed before its truth existed, or the numerical flight failed outright) is not in n and is counted on its own line with
+// its reason. Then the exact one-sided 95 % upper bound on the failure share k / n (Clopper-Pearson), and the median, 95th percentile
+// and largest D over the scored cases (those with a D over the whole 0 to 120 h), with their count.
 //
 //   node experiments/synthetic-orbits/claim.mjs --modules-commit <sha> --modules-root <modules checkout> [--per-band 256] [--seed <s>]
 //     [--fit forecast-span] [--jobs 6] [--bands 0,1,...] [--out <dir>]      flies the set; rows to <dir>/rows.jsonl (resumes)
@@ -86,35 +89,47 @@ export function upperBound(k, n, level = 0.95) {
 const percentile = (v, q) => { if (!v.length) return null; const s = v.slice().sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.ceil(q * s.length) - 1)]; };
 const read = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : []);
 
-/** Whether the orbit reenters before the bar's 120 h are over: 'before' the cutoff (no forecast exists to score), 'inside' the
- *  120 h after it, or null. The truth stops at a reentry (FFM's error names its time), and run.mjs then flies it to the last whole
- *  day it reaches of 7, 5, 3, 2, 1, 0 (truth.flownToDay): a truth flown to fewer than 5 days ends inside the bar's span. */
-export function decayOf(r) {
-  const t = r.truth ?? {}, D0 = Date.parse(`${r.elements?.cutoff}T00:00:00Z`);
-  const m = /reentry[^]*? at (\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?)\d* UTC/.exec(String(t.error ?? r.error ?? ''));
-  if (m) { const at = Date.parse(`${m[1]}Z`); return at <= D0 ? 'before' : at <= D0 + BAR_H * 3600e3 ? 'inside' : null; }
-  if (t.decayedAtH != null) return t.decayedAtH <= 0 ? 'before' : t.decayedAtH <= BAR_H ? 'inside' : null;
-  if (t.flownToDay != null && t.flownToDay * 24 < BAR_H) return 'inside';
-  return null;
+/**
+ * What became of a case, from its row: the rule of report.mjs statusOf, kept the same here. not-flown; no-truth (it failed before
+ * its truth existed, or the numerical flight failed outright); and with a truth (in n): within or over (D over the whole 0 to 120 h),
+ * short (the truth ends before 120 h: never within; spanH the hours it reaches), refused (AP's fit refused), flight-failed, failed.
+ */
+export function statusOf(r) {
+  if (!r) return { status: 'not-flown', reason: 'not flown' };
+  const t = r.truth, ap = r.ap ?? null;
+  if (!t) return { status: 'no-truth', reason: `failed before its truth existed: ${r.error ?? 'no truth'}` };
+  const shortSpan = () => {
+    if (t.decayedAtH != null) return { spanH: Math.max(0, t.decayedAtH), why: t.decayedAtH <= 0 ? `decays below 100 km at ${t.decayedAtH} h, before the cutoff` : `decays below 100 km at ${t.decayedAtH} h` };
+    if (t.flownToDay != null) return { spanH: t.flownToDay * 24, why: `the numerical flight ends at day ${t.flownToDay}${t.error ? ` (${t.error})` : ''}` };
+    return null;
+  };
+  if (!ap) {
+    if (t.error && t.flownToDay == null) return { status: 'no-truth', reason: `the numerical flight failed: ${t.error}` };
+    const s = shortSpan();
+    if (s) return { status: 'short', spanH: s.spanH, reason: s.why };
+    return { status: 'failed', reason: `failed after its truth existed: ${r.error ?? 'no result'}` };
+  }
+  if (ap.error) return /^fit\b/.test(ap.error) ? { status: 'refused', reason: `AP's fit refused: ${ap.error}` } : { status: 'flight-failed', reason: `AP's fit or flight failed: ${ap.error}` };
+  const md = ap.maxDistance;
+  if (md.spanH < BAR_H) { const s = shortSpan(); return { status: 'short', spanH: md.spanH, reason: s?.why ?? `the truth ends at ${md.spanH} h` }; }
+  return { status: md.maxM <= PASS_M ? 'within' : 'over' };
 }
+const IN_N = new Set(['within', 'over', 'short', 'refused', 'flight-failed', 'failed']);
 
-/** The per-band table from the rows. n: the cases whose orbit lasts the bar's 120 h; a reentry before the cutoff or inside the
- *  120 h is counted on its own line (with, for the second, how the forecast did over the whole days the truth reaches). */
+/** The per-band table from the rows: k of n not within the bar (n every case with a truth), the bound on k / n, D over the scored
+ *  cases, and the counts of each way a case is not within, and of the cases without a truth. */
 export function table(rows) {
   return BOXES.map((box) => {
-    const rs = rows.filter((r) => r.band === box.band);
-    const before = rs.filter((r) => decayOf(r) === 'before'), inside = rs.filter((r) => decayOf(r) === 'inside');
-    const live = rs.filter((r) => !decayOf(r));
-    const noTruth = live.filter((r) => !r.ap && !r.error), errors = live.filter((r) => r.error && !r.ap);
-    const scored = live.filter((r) => r.ap);
-    const refused = scored.filter((r) => r.ap.error), Ds = scored.filter((r) => r.ap.maxDistance).map((r) => r.ap.maxDistance.maxM);
-    const k = refused.length + Ds.filter((d) => d > PASS_M).length, n = scored.length;
-    const worst = scored.filter((r) => r.ap.maxDistance).sort((a, b) => b.ap.maxDistance.maxM - a.ap.maxDistance.maxM)[0];
-    const insideScored = inside.filter((r) => r.ap), insideOver = insideScored.filter((r) => r.ap.error || r.ap.maxDistance?.maxM > PASS_M);
-    return { band: box.band, box: { perigeeKm: box.hp, eccentricity: box.e }, drawn: rs.length, n, k, refused: refused.length, upper95: n ? upperBound(k, n) : null,
-      medianM: percentile(Ds, 0.5), p95M: percentile(Ds, 0.95), maxM: Ds.length ? Math.max(...Ds) : null, worst: worst ? worst.id : null,
-      reenteredBeforeCutoff: before.length, reenteredInside: inside.length, reenteredInsideScored: insideScored.length, reenteredInsideOver: insideOver.length,
-      noTruth: noTruth.length, otherErrors: errors.length };
+    const rs = rows.filter((r) => r.band === box.band).map((r) => ({ r, ...statusOf(r) }));
+    const of = (s) => rs.filter((x) => x.status === s);
+    const inN = rs.filter((x) => IN_N.has(x.status)), within = of('within').length, n = inN.length, k = n - within;
+    const scored = rs.filter((x) => x.status === 'within' || x.status === 'over'), Ds = scored.map((x) => x.r.ap.maxDistance.maxM);
+    const worst = scored.sort((a, b) => b.r.ap.maxDistance.maxM - a.r.ap.maxDistance.maxM)[0];
+    const short = of('short');
+    return { band: box.band, box: { perigeeKm: box.hp, eccentricity: box.e }, drawn: rs.length, n, k, within, over: of('over').length,
+      short: short.length, shortSpansH: short.map((x) => x.spanH).sort((a, b) => a - b), refused: of('refused').length, flightFailed: of('flight-failed').length, failed: of('failed').length,
+      noTruth: of('no-truth').length, noTruthReasons: [...new Set(of('no-truth').map((x) => x.reason.replace(/ at \d{4}-\d\d-\d\dT[\d:.]+ UTC.*$/, '')))],
+      upper95: n ? upperBound(k, n) : null, scored: Ds.length, medianM: percentile(Ds, 0.5), p95M: percentile(Ds, 0.95), maxM: Ds.length ? Math.max(...Ds) : null, worst: worst ? worst.r.id : null };
   });
 }
 
@@ -132,7 +147,7 @@ if (!isMain) { /* imported */ } else if (args['check-bound']) {
   fs.writeFileSync(path.join(args.out, 'claim.json'), JSON.stringify({ ...meta, bands: t }, null, 1));
   const f = (x) => (x == null ? '-' : x >= 1000 ? `${(x / 1000).toFixed(2)} km` : `${x.toFixed(1)} m`);
   console.log(`seed ${meta.seed}, fit ${meta.fit}, sdn-ap ${meta.version} (${(meta.wasmSha256 ?? '').slice(0, 12)})`);
-  for (const b of t) console.log(`${b.band} (perigee ${b.box.perigeeKm.join(' to ')} km, e ${b.box.eccentricity.join(' to ')}): ${b.k} of ${b.n} fail (${b.refused} refused fits), bound ${b.upper95 == null ? '-' : (100 * b.upper95).toFixed(2)} %; median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}; reentered before the cutoff ${b.reenteredBeforeCutoff}, inside the 120 h ${b.reenteredInside} (${b.reenteredInsideOver} of ${b.reenteredInsideScored} scored over 100 m or refused, over the days the truth reaches); no truth ${b.noTruth}, other errors ${b.otherErrors}`);
+  for (const b of t) console.log(`${b.band} (perigee ${b.box.perigeeKm.join(' to ')} km, e ${b.box.eccentricity.join(' to ')}): ${b.k} of ${b.n} not within 100 m (over ${b.over}, truth short of 120 h ${b.short}${b.short ? ` [${b.shortSpansH.join(', ')} h]` : ''}, refused fits ${b.refused}, failed flights ${b.flightFailed}, other ${b.failed}), bound ${b.upper95 == null ? '-' : (100 * b.upper95).toFixed(2)} %; over the ${b.scored} scored: median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}; without a truth ${b.noTruth}${b.noTruth ? ` (${b.noTruthReasons.join('; ').slice(0, 160)})` : ''}`);
 } else await fly();
 
 async function fly() {

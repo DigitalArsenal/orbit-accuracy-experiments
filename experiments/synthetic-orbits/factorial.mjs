@@ -1,9 +1,10 @@
 // The factorial attribution (stack #505, Tier 3): for one case, every on/off combination of the listed force components, each set the
 // same way on both sides (the numerical propagator's truth and AP), with AP's record fitted over the forecast span (the truth's own 0 to
-// 120 h after the cutoff, the best record the theory can make) and, as one more factor, the drag and radiation terms held at the truth's
-// values or solved. Switching forces off one at a time walks a single path through these combinations and credits an interaction to
-// whichever force is removed first; the full table gives every main effect, every two-factor interaction and each component's Shapley
-// share.
+// 120 h after the cutoff, as fits.mjs forecast-span) and, as one more factor, the drag and radiation terms held at the truth's values or
+// solved. The fit reads the same numerical flight it is then scored on, so D is how well one record can follow that flight over the
+// span, not a forecast from data before the cutoff. Switching forces off one at a time walks a single path through these combinations
+// and credits an interaction to whichever force is removed first; the full table gives every main effect, every two-factor interaction
+// and each component's Shapley share.
 //
 // The components, and how each is set on each side (as the elimination flights of stack #497 set them):
 //   zonal     the zonal field above J2.  Truth: EGM96 to degree 20 (order 0), or J2 alone.  AP: MAXIMUM_DEGREE 20 and its J3 to J5, or a
@@ -19,12 +20,14 @@
 //             (held: at the truth's value, or at 0 off).  Both sides see constant weather (F10.7 150, Ap 15).
 //   tide      the solid Earth tide.  Truth: IERS 2010 solid tides and the IERS 2010 relativity terms.  AP: SOLID_TIDES.
 //   fit       held: the drag and radiation terms held at the values above (sigma 1e-10); solved: the call's default priors.
-// The truth: FFM from the state at the cutoff - 72 h (the commit's own build flying the case's mean elements; run.mjs makes it with
-// its reference build, modules 7ed7cf88, so on that commit the two states are the same), on a
-// 300 s grid to 120 h past the cutoff; DE440s, constant Earth orientation (TAI - UTC 37 s); RK78, tolerance 1e-11, steps 1e-3 to 120 s.
+// The truth: FFM from the state at the cutoff - 72 h, made as run.mjs makes it (seed.mjs's record of the case's mean elements, flown
+// by the reference build, sdn-ap 0.6.26 at modules 7ed7cf88, whatever commit is under test), on a 300 s grid to 120 h past the cutoff;
+// DE440s, constant Earth orientation (TAI - UTC 37 s); RK78, tolerance 1e-11, steps 1e-3 to 120 s.
 // AP's builds are built unsigned from the commit's sources, every arm alike, the full arm included (its sha is printed beside the
-// committed dist's). D: the largest 3D distance to the truth over the 1,440 states after the cutoff; with it the signed radial,
-// along-track and cross-track differences at that time.
+// committed dist's). D: the largest 3D distance to the truth over the 1,440 states after the cutoff (0 to 120 h at the truth's own
+// epochs); with it the signed radial, along-track and cross-track differences at that time. A cell has no D when its fit is refused
+// or its truth ends before 120 h after the cutoff (a decay, or the numerical flight ending early): such a cell is never within, its
+// reason is printed, and the analysis is refused, since main effects and Shapley shares need every cell of the table.
 //
 //   node experiments/synthetic-orbits/factorial.mjs --case <id> --modules-commit <sha> --modules-root <modules checkout>
 //     [--factors zonal,tesseral,moon,sun,radiation,drag,tide,fit] [--jobs 6] [--seed 498] [--out <dir>]
@@ -35,8 +38,12 @@ import crypto from 'node:crypto';
 import { fork, execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { pathToFileURL, fileURLToPath } from 'node:url';
-import { cases as makeCases, termsOf } from './cases.mjs';
+import { cases as makeCases, termsOf, labelOf } from './cases.mjs';
 import { draw } from './claim.mjs';
+import { seedRecord } from './seed.mjs';
+
+// the reference build that makes every case's starting state (as run.mjs REFERENCE), read by git show and checked by its sha256
+const REFERENCE = { version: '0.6.26', modulesCommit: '7ed7cf887b37', wasmSha256: '9119284b8f972799' };
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = fileURLToPath(import.meta.url);
@@ -86,6 +93,29 @@ const harnessOf = async (L, wasm) => {
 };
 const linesOf = (L, out) => L.OEM.OEM.getRootAsOEM(new L.fb.ByteBuffer(out.find((v) => v.portId === 'ephemeris').payload)).unpack().EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES;
 
+/** The case's state at tStart (GCRF, km and km/s): seed.mjs's record flown by the reference build, as run.mjs's worker makes it. The
+ *  reference wasm is the one run.mjs places in <store>/synthetic/reference, or read by git show from the modules clone. */
+async function startState(A, L, root, c, tStart) {
+  const S = A.S, file = path.join(A.STORE_ROOT, 'synthetic', 'reference', `${REFERENCE.wasmSha256}.wasm`);
+  if (!fs.existsSync(file)) {
+    const ref = execFileSync('git', ['-C', root, 'show', `${REFERENCE.modulesCommit}:propagator/sdn-ap/dist/isomorphic/module.wasm`], { maxBuffer: 1 << 28 });
+    if (!sha256(ref).startsWith(REFERENCE.wasmSha256)) throw new Error('the reference build\'s wasm is not the named one');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(`${file}.${process.pid}`, ref); fs.renameSync(`${file}.${process.pid}`, file);
+  }
+  if (!sha256(fs.readFileSync(file)).startsWith(REFERENCE.wasmSha256)) throw new Error(`${file} is not the reference build`);
+  const epoch = new Date(tStart).toISOString();
+  const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: [epoch] });
+  const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b));
+  const h = await L.sdk.createStandaloneHarness('browser', file, { surface: 'direct' });
+  const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: seedRecord(S, { epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma }) },
+    { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: b.asUint8Array().slice() }] });
+  if (r.statusCode !== 0) throw new Error(`reference propagate: ${String(r.errorMessage).slice(0, 200)}`);
+  const [p] = S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload));
+  await h.close?.();
+  return [...p.r, ...p.v];
+}
+
 /** An AP build of the commit's sources with the named patches, built unsigned once into <store>/factorial/builds. */
 function build(root, commit, name, store) {
   const tree = path.join(store, 'builds', `${commit.slice(0, 12)}-${name}`), wasm = path.join(tree, 'dist/isomorphic/module.wasm');
@@ -127,11 +157,9 @@ async function main() {
   for (const n of Object.keys(builds)) { console.error(`factorial: build ${n}`); builds[n] = build(root, commit, n, store); }
   const committed = sha256(execFileSync('git', ['-C', root, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`], { maxBuffer: 1 << 28 }));
   const L = await libs(root), D0 = Date.parse(`${c.cutoff}T00:00:00Z`), tStart = D0 - 3 * DAY;
-  const base = await harnessOf(L, builds.base ?? build(root, commit, 'base', store));
-  const seed = L.O.seedOcm({ epoch: iso(tStart), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, norad: 99498, tesseral: 31, zonal: 20 });
-  const [s0] = linesOf(L, await base.call('propagate', L.O.flight([seed], { output: { EPOCHS: [iso(tStart)], FRAME: L.Out.pcfOutputFrame.GCRF } })));
-  await base.h.close?.();
-  const job = { case: c, D0, tStart, s0: [s0.X, s0.Y, s0.Z, s0.X_DOT, s0.Y_DOT, s0.Z_DOT], root, store, terms: termsOf(c.am) };
+  // the starting state as run.mjs makes it: seed.mjs's record flown by the reference build to the truth's start, in GCRF
+  const s0 = await startState(A, L, root, c, tStart);
+  const job = { case: c, D0, tStart, s0, root, store, terms: termsOf(c.am) };
   // phase 1 the truths (one per truth-side combination), phase 2 AP's arms; each a child process, --jobs at a time
   const runAll = async (items, jobs) => {
     let next = 0; const res = new Array(items.length);
@@ -163,7 +191,7 @@ async function main() {
 /** Main effects and two-factor interactions of log10 D (+1/-1 contrasts over the full table), and each force component's Shapley share. */
 function analyse(rows, factors) {
   const refused = rows.filter((r) => !Number.isFinite(r.D));
-  if (refused.length) return { analysisRefused: `${refused.length} of ${rows.length} cells have no record (a refused fit): ${refused.slice(0, 3).map((r) => r.error).join('; ')}` };
+  if (refused.length) return { analysisRefused: `${refused.length} of ${rows.length} cells have no D (a refused fit, or a truth that ends before 120 h): ${refused.slice(0, 3).map((r) => r.error).join('; ')}` };
   const y = rows.map((r) => Math.log10(r.D)), sgn = (r, f) => (r.cell[f] ? 1 : -1), half = rows.length / 2;
   const effect = (fs_) => rows.reduce((s, r, k) => s + fs_.reduce((p, f) => p * sgn(r, f), 1) * y[k], 0) / half;
   const main = Object.fromEntries(factors.map((f) => [f, effect([f])]));
@@ -193,7 +221,7 @@ function analyse(rows, factors) {
 
 function print(r) {
   const f = (x) => (x >= 1000 ? `${(x / 1000).toFixed(2)} km` : `${x.toFixed(1)} m`);
-  console.log(`${r.case.id}: perigee ${r.case.hpKm} km, e ${r.case.e}, i ${r.case.i}, cutoff ${r.case.cutoff}; ${r.rows.length} cells (factors ${r.factors.join(', ')})`);
+  console.log(`${r.case.id}${r.case.name ? ` (${labelOf(r.case)})` : ''}: perigee ${r.case.hpKm} km, e ${r.case.e}, i ${r.case.i}, cutoff ${r.case.cutoff}; ${r.rows.length} cells (factors ${r.factors.join(', ')})`);
   const label = (row) => r.factors.map((x) => (x === 'fit' ? (row.cell.fit ? 'held' : 'solved') : row.cell[x] ? x : `-${x}`)).join(' ');
   for (const row of r.rows) console.log(`  ${label(row)}:${Number.isFinite(row.D) ? `D ${f(row.D)} at ${row.at.h} h (R ${row.at.r}, T ${row.at.t}, N ${row.at.n} m)` : `no record: ${row.error}`}`);
   if (r.analysisRefused) { console.log(`  ${r.analysisRefused}`); return; }
@@ -222,17 +250,19 @@ async function cell(job) {
   for (const i of req.inputs) hash.update(i.portId).update(Buffer.from(i.payload));
   const dir = path.join(job.store, 'truth'), file = path.join(dir, `${hash.digest('hex')}.json`);
   fs.mkdirSync(dir, { recursive: true });
+  // a cell without a whole truth (the numerical flight failed, or ended before 120 h after the cutoff) has no D, with its reason
+  const noD = (error) => { process.send({ D: Infinity, at: { h: null, r: null, t: null, n: null }, error }); process.exit(0); };
   let truth;
   if (fs.existsSync(file)) truth = JSON.parse(fs.readFileSync(file, 'utf8'));
   else {
     const hf = await L.sdk.createStandaloneHarness('browser', L.T.ffmPath, { surface: 'command' });
     const r = await hf.invoke(req);
-    if (r.statusCode !== 0) throw new Error(`FFM ${r.errorCode}: ${r.errorMessage}`);
-    truth = L.C.decodeResult(r).samples.map((s) => [...s.position, ...s.velocity]);
-    const tmp = `${file}.${process.pid}.tmp`; fs.writeFileSync(tmp, JSON.stringify(truth)); fs.renameSync(tmp, file);
     await hf.close?.();
+    if (r.statusCode !== 0) noD(`the numerical flight failed: FFM ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
+    truth = L.C.decodeResult(r).samples.map((s) => [...s.position, ...s.velocity]);
+    if (truth.length === N) { const tmp = `${file}.${process.pid}.tmp`; fs.writeFileSync(tmp, JSON.stringify(truth)); fs.renameSync(tmp, file); }
   }
-  if (truth.length !== N) throw new Error(`truth ${truth.length} samples against ${N}`);
+  if (truth.length !== N) noD(`the truth ends at ${(((truth.length - 1 - NA) * STEP) / 36e5).toFixed(2)} h after the cutoff (${truth.length} of ${N} states)`);
   if (job.truthOnly) { process.send({ truth: path.basename(file) }); process.exit(0); }
   // AP: fitted over the forecast span (D0 to D0 + 120 h), flown over the same 1,440 states
   const lines = truth.slice(NA).map((s, k) => Object.assign(new L.Line.ephemerisDataLineT(), { EPOCH: iso(D0 + k * STEP), X: s[0], Y: s[1], Z: s[2], X_DOT: s[3], Y_DOT: s[4], Z_DOT: s[5] }));
