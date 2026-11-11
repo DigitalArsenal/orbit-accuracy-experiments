@@ -60,14 +60,16 @@ guard with the registered versions and record the installed ones in every row (`
 The store is `/opt/data/sdn-archive/headline-loop` (`HEADLINE_LOOP_STORE`). Each tool's `--check` runs the tool itself as its own process on a
 small real slice and asserts on what it writes.
 
-The numerical column of a row is its fullest stored setting, fixed by name and never chosen on the outcome (table.mjs `PREFER`). It is null
-("being measured") while the store lacks a numerical row for any window of the row. For commercial geostationary, whose truth holds
-station-keeping burns that every stored fit runs through, it is null unless the after-burn rows exist (above).
+The numerical column of a row is its fullest stored setting with a fit, fixed by name and never chosen on its accuracy (table.mjs
+`PREFER`). It is null ("being measured") while the store lacks a numerical row for any window of the row. For commercial geostationary,
+whose truth holds station-keeping burns that every stored fit runs through, it is null unless the after-burn rows are read (`--burns`).
 
 The numerical trajectories (`<store>/numerical-trajectories/manifest.jsonl`, one line per trajectory, Float64 x, y, z km and vx, vy, vz km/s
-per state at the line's `stepS` from its `from`) are selected by key AND fit arc (`arcH`) AND setting: a window has a line per fit arc
-(the highly elliptical rows have two, 72 h and 336 h or 168 h), and a drag window may have one per tolerance (`setting` L70S at 1e-10,
-L70S13 at 1e-13). The last line of a key alone is the wrong trajectory on any window with two fit arcs.
+per state at the line's `stepS` from its `from`) are selected by key, fit arc (`arcH`) and the identity of the fit the line flies:
+setting, process (the full arc, or the arc after a burn), the arc's start and the fit's first state. A line names it (`fit`), or for an
+older line it is derived from the line where nothing leaves doubt. A line whose trajectory file a later line wrote again (a refit made
+at the same path) has none. bar.mjs flies, for each window, the line of the fit whose figures the row reads, and never the last line of
+a key or of a key and arc, which on a window with two fit arcs, two tolerances or a refit after a burn is another fit.
 
 ## Run
 
