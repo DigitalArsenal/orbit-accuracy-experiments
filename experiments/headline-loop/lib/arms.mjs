@@ -59,7 +59,7 @@ export const atLeast = (v, w) => {
 };
 // The 72 h fit of a maneuvering object (stack issue 489; owner, 2026-11-11: "do not get worse against truth just to match FFM", and the
 // OD process is free). From MANEUVER72_SINCE the table's 72 h AP fit of an object with its perigee at MANEUVER72.perigeeMinKm or above,
-// whose precise orbit holds a burn known at the cutoff (the burn lane's detector, stack issue 462: every piece that found it ended at or
+// whose precise orbit holds a burn known at the cutoff (the burn detector, stack issue 462: every piece that found it ended at or
 // before the cutoff) ending within MANEUVER72.historyDays before the cutoff, is fitted on the arc after its last such burn (its end plus
 // afterBurnMin), at most capHours and at least 24 h. Such an arc is under 71 h, so the module fits it under its short-arc rule. Every
 // other 72 h fit is the full arc. On such an object a 72 h arc fitted at the data's own sigma takes the maintenance thrust into its drag
