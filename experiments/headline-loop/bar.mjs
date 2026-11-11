@@ -7,9 +7,14 @@
 // row's numerical arm (the scoreboard's, by name) fitted to the precise orbit over the fit arc before the cutoff, and over the arc after
 // the last burn known at the cutoff where that rule moved its arc, then flown 7 days past the cutoff. Writes one JSON
 // (schema sdn-ap-catalog-fit/1) of aggregates only: per row and per front-page group, nothing per window.
+// Each row reads one tolerance (stack issue 520): a drag row whose every window with an arm has its 1e-13 row (lib/arms.mjs
+// NUMERICAL_TIGHT, the rule of table.mjs) and its 1e-13 manifest line (setting NUMERICAL_TIGHT.to) reads those, the numerical day-5
+// figures with them; every other row the manifest's other lines and the 1e-10 rows. With --scoreboard, a row whose tolerance is not the
+// scoreboard row's stops the run.
 //
 //   node experiments/headline-loop/bar.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 8]
 //     [--groups LS,DO] [--arcs 72,24] [--scoreboard <the same build's table.mjs file>: each row's windows are the scoreboard row's]
+//     [--after-burn-store <folder>: the refits after a burn the scoreboard read (table.mjs --after-burn-store)]
 //
 // The build is read by git show at the commit, never from a working tree; this repository's working tree must be clean (the file names
 // its commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl and are flown again only when its manifest line changes.
@@ -51,13 +56,17 @@ async function main() {
   usePackages();
   const W = await import('./lib/windows.mjs');
   const A = await import('./lib/arms.mjs');
+  const { SETTINGS } = await import('./lib/settings.mjs');
   const { FFM_220 } = await import(path.join(REPO, 'experiments/operator-theory/lib/build.mjs'));
   const dir = path.join(A.STORE_ROOT, 'bar', wasmSha.slice(0, 12)), file = path.join(dir, 'module.wasm'), rowsFile = path.join(dir, 'rows.jsonl');
   fs.mkdirSync(dir, { recursive: true });
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
   const groups = args.groups ? args.groups.split(',') : ALL, arcs = (args.arcs ?? '72,24').split(',').map(Number);
-  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), manifest = new Map();
-  for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); manifest.set(`${r.key}|${r.arcH}`, r); }
+  // the manifest's last line per window and fit arc, apart for each tolerance: a line of the drag setting at 1e-13 (lib/arms.mjs
+  // NUMERICAL_TIGHT.to, stack issue 520) and every other line; a row reads the lines of its own tolerance only (below)
+  const isTight = (r) => r.setting === A.NUMERICAL_TIGHT.to;
+  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), manifest10 = new Map(), manifest13 = new Map();
+  for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); (isTight(r) ? manifest13 : manifest10).set(`${r.key}|${r.arcH}`, r); }
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
   const readRows = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean) : []);
   // The windows each row scores, as table.mjs scores them with --burns: its listing (the first pass, and a regime's second pass once its
@@ -67,7 +76,11 @@ async function main() {
   const base = new Map();
   for (const f of fs.readdirSync(path.join(A.STORE_ROOT, A.NUMERICAL_STORE)).filter((x) => /^rows-truth-.*\.jsonl$/.test(x)))
     for (const r of readRows(path.join(A.STORE_ROOT, A.NUMERICAL_STORE, f))) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
-  const afterBurn = new Map(), afterBurnGroups = new Set(), abDir = path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store);
+  // --after-burn-store <folder>: the refits after a burn made on the lists the scoreboard read (table.mjs --after-burn-store)
+  const afterBurn = new Map(), afterBurnGroups = new Set(), abDir = path.join(A.STORE_ROOT, args['after-burn-store'] ?? A.NUMERICAL_AFTER_BURN.store);
+  // the drag setting fitted and flown again at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT, stack issue 520), as table.mjs reads it
+  const tight = new Map(), tightDir = path.join(A.STORE_ROOT, A.NUMERICAL_TIGHT.store);
+  for (const r of fs.existsSync(tightDir) ? fs.readdirSync(tightDir).filter((f) => /^rows-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(tightDir, f))) : []) if (!r.error && r.arms?.FFMq?.ok) tight.set(`${r.key}|${r.arcH}`, r);
   for (const f of fs.existsSync(abDir) ? fs.readdirSync(abDir).filter((x) => /^rows-after-burn-.*\.jsonl$/.test(x)) : [])
     for (const r of readRows(path.join(abDir, f))) { const k = `${r.key}|${r.arcH}`; if (!afterBurn.has(k) || (afterBurn.get(k).error && !r.error)) afterBurn.set(k, r); afterBurnGroups.add(r.group); }
   const REFIT = 'maneuvering: the arc after its last burn', NOT_CONFIGURED = new Set(['WA']), PREFER = ['FFMbest', 'FFMq', 'FFMc', 'FFMr'];
@@ -86,11 +99,23 @@ async function main() {
   const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
   const listed = [...all.windows, ...all.second.filter((w) => secondIn.has(w.group))];
   const apRows = new Map(readRows(path.join(A.STORE_ROOT, 'table', wasmSha.slice(0, 12), 'rows.jsonl')).filter((r) => (r.theory ?? 'AP') === 'AP' && r.ap?.sha256 === wasmSha).map((r) => [`${r.key}|${r.arcH}`, r]));
-  const rowArm = new Map(), numDay5 = new Map(), scoredKeys = new Set();
+  const rowArm = new Map(), numDay5 = new Map(), scoredKeys = new Set(), rowTight = new Set();
   for (const g of groups) for (const a of arcs) {
     const ws = listed.filter((w) => w.group === g && w.arcs.includes(a));
     if (!ws.length) continue;
-    const bs = ws.map((w) => numericalOf(w, a)), label = bs.every(Boolean) ? chooseArm(g, bs) : null;
+    let bs = ws.map((w) => numericalOf(w, a));
+    const label = bs.every(Boolean) ? chooseArm(g, bs) : null;
+    // stack issue 520: the row at 1e-13 where every window with an arm has its 1e-13 row (table.mjs's rule) and its 1e-13 manifest line;
+    // else every window at 1e-10, rows and trajectories both: no row mixes the two tolerances
+    if (label) {
+      const withArm = bs.filter((b) => b.arms?.[label]?.ok), tightOf = (b) => tight.get(`${b.key}|${b.arcH}`);
+      if (withArm.length && withArm.every((b) => b.arms[label].arm === A.NUMERICAL_TIGHT.from && b.fitProcess !== REFIT && tightOf(b))
+        && bs.every((b) => !tightOf(b) || manifest13.has(`${b.key}|${b.arcH}`))) {
+        const lift = (b) => { const { error, ...rest } = b; return { ...rest, arms: { ...b.arms, [label]: tightOf(b).arms.FFMq } }; };
+        bs = bs.map((b) => (b.arms?.[label]?.ok || (b.error && tightOf(b)) ? lift(b) : b));
+        rowTight.add(`${g}|${a}`);
+      }
+    }
     rowArm.set(`${g}|${a}`, label);
     ws.forEach((w, i) => {
       if (W.LEADS.some((d) => meters(apRows.get(`${w.key}|${a}`), null, d) != null && (!label || meters(bs[i], label, d) != null))) scoredKeys.add(`${w.key}|${a}`);
@@ -101,7 +126,7 @@ async function main() {
   if (fs.existsSync(rowsFile)) for (const r of readRows(rowsFile)) if (r.wasmSha256 === wasmSha) stored.set(doneKey(r), r);
   // every window each row scores (with --scoreboard; else every listed window) at its fit arcs; flown where its manifest line holds a trajectory
   const exact = !!args.scoreboard;
-  const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a) && (!exact || scoredKeys.has(`${w.key}|${a}`))).map((a) => ({ w, a, m: manifest.get(`${w.key}|${a}`) })));
+  const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a) && (!exact || scoredKeys.has(`${w.key}|${a}`))).map((a) => ({ w, a, m: (rowTight.has(`${w.group}|${a}`) ? manifest13 : manifest10).get(`${w.key}|${a}`) })));
   const todo = wanted.filter((x) => x.m && x.m.source !== 'none' && x.m.file && !stored.has(doneKey(x.m)));
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
   console.error(`bar: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${wanted.length} window-arcs, ${wanted.filter((x) => x.m && x.m.source !== 'none').length} with a numerical trajectory, ${todo.length} to fly on ${jobs} jobs`);
@@ -140,6 +165,13 @@ async function main() {
   const board = args.scoreboard ? JSON.parse(fs.readFileSync(args.scoreboard, 'utf8')) : null;
   if (board && board.module?.wasmSha256 !== wasmSha) throw new Error(`--scoreboard is of wasm ${board.module?.wasmSha256}, not ${wasmSha}`);
   const boardRow = (g, a) => board?.rows.find((r) => r.regime === W.GROUPS[g].label && r.fitHours === a) ?? null;
+  // the scoreboard row's numerical tolerance (its configuration sentence) is the one read here, or the file is not written
+  const toleranceOf = (c) => /at a tolerance of ([^ ]+)/.exec(String(c ?? ''))?.[1] ?? null;
+  if (board) for (const [k, label] of rowArm) {
+    const [g, a] = k.split('|'), b = boardRow(g, Number(a)), here = rowTight.has(k) ? String(SETTINGS[A.NUMERICAL_TIGHT.to].integrator.tolerance) : null;
+    if (b?.ffm && label && here && toleranceOf(b.ffm.configuration) !== here) throw new Error(`${W.GROUPS[g].label} ${a} h: the scoreboard's numerical arm is at ${toleranceOf(b.ffm.configuration)}, this store's at ${here}`);
+    if (b?.ffm && label && !here && toleranceOf(b.ffm.configuration) === String(SETTINGS[A.NUMERICAL_TIGHT.to].integrator.tolerance)) throw new Error(`${W.GROUPS[g].label} ${a} h: the scoreboard's numerical arm is at ${toleranceOf(b.ffm.configuration)}; its 1e-13 rows or manifest lines are not all in this store`);
+  }
   const rows = [], byGroup = new Map();
   for (const g of ALL.filter((x) => groups.includes(x))) {
     for (const a of arcs) {
@@ -201,7 +233,9 @@ async function worker() {
   const r1 = (x) => (Number.isFinite(x) ? Math.round(x * 10) / 10 : null);
   const all = W.windowsOf(args.groups.split(',')), winOf = new Map([...all.windows, ...all.second].map((w) => [w.key, w]));
   const traj = path.join(A.STORE_ROOT, 'numerical-trajectories');
-  const lastLine = (key, arcH) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); if (r.key === key && r.arcH === arcH) last = r; } return last; };
+  // the last line of the same tolerance (a 1e-13 line beside a 1e-10 one is not a change of the 1e-10 trajectory)
+  const tightLine = (r) => r.setting === A.NUMERICAL_TIGHT.to;
+  const lastLine = (key, arcH, tightOne) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); if (r.key === key && r.arcH === arcH && tightLine(r) === tightOne) last = r; } return last; };
   const flyOne = async (man) => {
     const t1 = performance.now(), row = { key: man.key, group: man.group, arcH: man.arcH, arm: man.arm, source: man.source, from: man.from, env };
     try {
@@ -209,7 +243,7 @@ async function worker() {
       if (!w) throw new Error('not a listed window');
       const D0 = w.cutoffMs, G = W.GROUPS[w.group];
       // the manifest's line as it is now: a refit overwrites the trajectory and appends a line
-      const now = lastLine(man.key, man.arcH);
+      const now = lastLine(man.key, man.arcH, tightLine(man));
       if (!now || now.source !== man.source || now.from !== man.from || now.count !== man.count) throw new Error('trajectory changed since the manifest was read');
       const buf = fs.readFileSync(path.join(traj, man.file));
       if (buf.byteLength !== man.count * 48) throw new Error(`trajectory file holds ${buf.byteLength / 48} states, the manifest ${man.count}`);
