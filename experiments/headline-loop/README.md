@@ -15,8 +15,7 @@ takes the maintenance thrust into its drag term, as the numerical propagator's d
 instead of the orbit.
 
 The numerical arm's fit of such an object follows the same rule with the same lists (`refly.mjs --after-burns`, lib/arms.mjs
-`numericalArc`), at any perigee (its own floor, `NUMERICAL_AFTER_BURN.perigeeMinKm`, is 0: the strong-drag rows' burns are rare, 1.5 to
-11 mm/s, and the rule touches only the window-arcs whose fit arc holds one). Above 600 km its 72 h fit takes the same arc as AP's. Its 24 h fit, where the last burn known at the cutoff ends inside the 24 h,
+`numericalArc`), with the same 600 km perigee floor. Its 72 h fit takes the same arc as AP's. Its 24 h fit, where the last burn known at the cutoff ends inside the 24 h,
 takes the arc after it when that arc is at least 6 h long, and otherwise the full 24 h. The refits are stored apart from the full-arc fits
 (`<store>/f0b8352a43f3-after-burn/`, one row per window and fit arc, with the decision where no refit was needed), so the two can be
 compared. With `--burns`, a regime that has such rows takes the refit where the rule moved the arc and the stored fit everywhere else, and
