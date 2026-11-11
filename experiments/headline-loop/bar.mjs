@@ -29,7 +29,7 @@ const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA',
 const GROUPS = [
   { key: 'leo', name: 'Low Earth orbit', regimes: ['LS', 'DO', 'S1', 'P', 'T'] },
   { key: 'meo', name: 'Medium Earth orbit', regimes: ['GD', 'GN', 'GN_GAL'] },
-  { key: 'geo', name: 'Geosynchronous', regimes: ['IG', 'GE'] },
+  { key: 'geo', name: 'Geosynchronous', regimes: ['IG', 'GE', 'WA'] },
   { key: 'heo', name: 'Highly elliptical', regimes: ['HE', 'HX'] },
 ];
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
@@ -58,12 +58,50 @@ async function main() {
   const groups = args.groups ? args.groups.split(',') : ALL, arcs = (args.arcs ?? '72,24').split(',').map(Number);
   const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), manifest = new Map();
   for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); manifest.set(`${r.key}|${r.arcH}`, r); }
-  const all = W.windowsOf(groups), listed = [...all.windows, ...all.second];
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
+  const readRows = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean) : []);
+  // The windows each row scores, as table.mjs scores them with --burns: its listing (the first pass, and a regime's second pass once its
+  // numerical rows are all in the store), its numerical row (the refit after the burn where the rule moved the arc), its arm (the
+  // fullest stored setting by name), and a window counted where AP's row of this build (the table's, <store>/table/<wasm sha12>) and that
+  // arm both have a figure at one lead at least. The numerical day-5 figure is the same row's.
+  const base = new Map();
+  for (const f of fs.readdirSync(path.join(A.STORE_ROOT, A.NUMERICAL_STORE)).filter((x) => /^rows-truth-.*\.jsonl$/.test(x)))
+    for (const r of readRows(path.join(A.STORE_ROOT, A.NUMERICAL_STORE, f))) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
+  const afterBurn = new Map(), afterBurnGroups = new Set(), abDir = path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store);
+  for (const f of fs.existsSync(abDir) ? fs.readdirSync(abDir).filter((x) => /^rows-after-burn-.*\.jsonl$/.test(x)) : [])
+    for (const r of readRows(path.join(abDir, f))) { const k = `${r.key}|${r.arcH}`; if (!afterBurn.has(k) || (afterBurn.get(k).error && !r.error)) afterBurn.set(k, r); afterBurnGroups.add(r.group); }
+  const REFIT = 'maneuvering: the arc after its last burn', NOT_CONFIGURED = new Set(['WA']), PREFER = ['FFMbest', 'FFMq', 'FFMc', 'FFMr'];
+  const numericalOf = (w, arc) => {
+    const k = `${w.key}|${arc}`, b = base.get(k);
+    if (!b || !afterBurnGroups.has(w.group)) return b;
+    const r = afterBurn.get(k);
+    if (!r || r.error) return b?.error ? b : null;
+    if (NOT_CONFIGURED.has(w.group) && r.burnInArc) return { ...b, arms: {}, burnInArc: true };
+    if (r.fitProcess === REFIT) return { ...b, arms: { FFMq: r.arms?.FFMq ?? { ok: false } } };
+    return b;
+  };
+  const chooseArm = (g, bs) => (NOT_CONFIGURED.has(g) && !afterBurnGroups.has(g) ? null : PREFER.find((a) => bs.some((b) => b.arms?.[a]?.ok)) ?? null);
+  const meters = (row, arm, day) => { const e = arm ? row?.arms?.[arm]?.ok && row.arms[arm].days?.[day]?.e : row?.days?.[day]?.e; return Number.isFinite(e) ? e * 1000 : null; };
+  const all = W.windowsOf(groups);
+  const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
+  const listed = [...all.windows, ...all.second.filter((w) => secondIn.has(w.group))];
+  const apRows = new Map(readRows(path.join(A.STORE_ROOT, 'table', wasmSha.slice(0, 12), 'rows.jsonl')).filter((r) => (r.theory ?? 'AP') === 'AP' && r.ap?.sha256 === wasmSha).map((r) => [`${r.key}|${r.arcH}`, r]));
+  const rowArm = new Map(), numDay5 = new Map(), scoredKeys = new Set();
+  for (const g of groups) for (const a of arcs) {
+    const ws = listed.filter((w) => w.group === g && w.arcs.includes(a));
+    if (!ws.length) continue;
+    const bs = ws.map((w) => numericalOf(w, a)), label = bs.every(Boolean) ? chooseArm(g, bs) : null;
+    rowArm.set(`${g}|${a}`, label);
+    ws.forEach((w, i) => {
+      if (W.LEADS.some((d) => meters(apRows.get(`${w.key}|${a}`), null, d) != null && (!label || meters(bs[i], label, d) != null))) scoredKeys.add(`${w.key}|${a}`);
+      if (label) numDay5.set(`${w.key}|${a}`, meters(bs[i], label, 5));
+    });
+  }
   const stored = new Map();
-  if (fs.existsSync(rowsFile)) for (const r of fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)) if (r.wasmSha256 === wasmSha) stored.set(doneKey(r), r);
-  // every window of every row at its fit arcs; flown where its manifest line holds a trajectory
-  const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a)).map((a) => ({ w, a, m: manifest.get(`${w.key}|${a}`) })));
+  if (fs.existsSync(rowsFile)) for (const r of readRows(rowsFile)) if (r.wasmSha256 === wasmSha) stored.set(doneKey(r), r);
+  // every window each row scores (with --scoreboard; else every listed window) at its fit arcs; flown where its manifest line holds a trajectory
+  const exact = !!args.scoreboard;
+  const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a) && (!exact || scoredKeys.has(`${w.key}|${a}`))).map((a) => ({ w, a, m: manifest.get(`${w.key}|${a}`) })));
   const todo = wanted.filter((x) => x.m && x.m.source !== 'none' && x.m.file && !stored.has(doneKey(x.m)));
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
   console.error(`bar: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${wanted.length} window-arcs, ${wanted.filter((x) => x.m && x.m.source !== 'none').length} with a numerical trajectory, ${todo.length} to fly on ${jobs} jobs`);
@@ -82,12 +120,8 @@ async function main() {
     child.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`worker exited ${code}`))));
   })));
 
-  // the numerical arm's day-5 error against the precise orbit, from the store (the after-burn refits where the trajectory is one)
-  const numRows = new Map();
-  const readDir = (d, pattern) => { if (!fs.existsSync(d)) return; for (const f of fs.readdirSync(d).filter((x) => pattern.test(x))) for (const r of fs.readFileSync(path.join(d, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)) if (r.arms) numRows.set(`${f.startsWith('rows-after-burn') ? 'after' : 'stored'}|${r.key}|${r.arcH}`, r); };
-  readDir(path.join(A.STORE_ROOT, A.NUMERICAL_STORE), /^rows-truth-.*\.jsonl$/);
-  readDir(path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store), /^rows-after-burn-.*\.jsonl$/);
-  const ffmDay5 = (m) => { const b = numRows.get(`${/after the burn/.test(m.source) ? 'after' : 'stored'}|${m.key}|${m.arcH}`) ?? numRows.get(`stored|${m.key}|${m.arcH}`); const e = b?.arms?.[m.arm]?.days?.['5']?.e; return Number.isFinite(e) ? e * 1000 : null; };
+  // the numerical arm's day-5 error against the precise orbit: the scoreboard's own figure for the window (its numerical row and arm)
+  const ffmDay5 = (m) => numDay5.get(`${m.key}|${m.arcH}`) ?? null;
   const quantile = (v, p) => { const s = v.slice().sort((a, b) => a - b); if (!s.length) return null; const i = (s.length - 1) * p, lo = Math.floor(i); return s[lo] + (s[Math.ceil(i)] - s[lo]) * (i - lo); };
   const r1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
   const cells = (xs) => {
@@ -114,15 +148,25 @@ async function main() {
       const written = xs.filter((x) => x.m && x.m.source !== 'none').length, b = boardRow(g, a);
       if (board && !b) continue;
       const windows = b ? b.windows : xs.length;
-      const base = { regime: W.GROUPS[g].label, fitHours: a, satellites: b ? b.satellites : new Set(xs.map((x) => x.w.name)).size, windows };
-      if (!written) { rows.push({ ...base, noNumericalArm: true }); continue; }
+      // the set flown is the scoreboard's own: its count must be the scoreboard row's
+      if (b && xs.length !== b.windows) console.error(`bar: ${W.GROUPS[g].label} ${a} h: ${xs.length} windows scored here against the scoreboard's ${b.windows}`);
+      const head = { regime: W.GROUPS[g].label, fitHours: a, satellites: b ? b.satellites : new Set(xs.map((x) => x.w.name)).size, windows, ...(b && xs.length !== b.windows ? { note: `${xs.length} windows scored by this file's reading of the store against the scoreboard's ${b.windows}` } : {}) };
+      if (!written) { rows.push({ ...head, noNumericalArm: true }); continue; }
       const c = cells(xs.filter((x) => x.m && x.m.source !== 'none'));
       const refitAfterBurn = xs.filter((x) => /after the burn/.test(x.m?.source ?? '')).length;
-      rows.push({ ...base, ...c, trajectories: { written, missing: Math.max(0, windows - written), refitAfterBurn } });
-      byGroup.set(g, [...(byGroup.get(g) ?? []), ...xs.filter((x) => x.m && x.m.source !== 'none')]);
+      rows.push({ ...head, ...c, trajectories: { written, missing: Math.max(0, windows - written), refitAfterBurn } });
+      byGroup.set(`${g}|${a}`, xs.filter((x) => x.m && x.m.source !== 'none'));
     }
   }
-  const groupsOut = GROUPS.map((G) => { const xs = G.regimes.flatMap((g) => byGroup.get(g) ?? []), c = cells(xs); return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5 }; });
+  // a front-page group pools each of its rows once, at the row's longest fit arc here (72 h where the row has one, else 24 h), so no
+  // window counts under two arcs; groups[].rows names the arc each row contributes
+  const pooledArc = (g) => [...arcs].sort((p, q) => q - p).find((a) => byGroup.has(`${g}|${a}`)) ?? null;
+  const groupsOut = GROUPS.map((G) => {
+    const parts = G.regimes.filter((g) => groups.includes(g)).map((g) => ({ g, a: pooledArc(g) })).filter((p) => p.a != null);
+    const c = cells(parts.flatMap((p) => byGroup.get(`${p.g}|${p.a}`)));
+    return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label),
+      rows: parts.map((p) => ({ regime: W.GROUPS[p.g].label, fitHours: p.a })), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5 };
+  });
   const doc = {
     schema: 'sdn-ap-catalog-fit/1',
     measured: new Date().toISOString().slice(0, 10),
