@@ -6,6 +6,12 @@
 //   node experiments/headline-loop/refly.mjs [--second-pass] [--retry-errors] [--shard k/n] [--groups T,P,...] [--keys-file <file of window keys>] [--limit n]
 //   --retry-errors: a window whose rows all recorded an error (no truth, coverage) is flown again; table.mjs reads a row that flew in its place
 //   node experiments/headline-loop/refly.mjs --check
+//   node experiments/headline-loop/refly.mjs --after-burns <dir of the burn detector's lists, <group>/<name>.burns.json> [--groups S1,DO,WA] [--shard k/n]
+//   --after-burns (stack issues 462 and 489): the numerical arm's fit of a maneuvering object on the arc after its last burn known at the
+//     cutoff (lib/arms.mjs numericalArc: the rule of AP's 72 h fit, and on 24 h fits where that burn lies inside the 24 h). One row per window
+//     and fit arc of the groups goes to <store>/<NUMERICAL_AFTER_BURN.store>/: where the rule moves the arc, the full setting (FFMq) fitted
+//     on it and flown on the same scored epochs; elsewhere the decision alone (the stored fit stands). Windows without a stored numerical
+//     row are not read.
 // Settings per window and fit arc (lib/settings.mjs):
 //   FFMr     the reduced setting (F20 above 8,400 km at the first scored state, L40 below)
 //   FFMc     CONFIGURED
@@ -21,7 +27,91 @@ export const ALL_GROUPS = ['T', 'P', 'S1', 'GN', 'GN_GAL', 'LS', 'DO', 'GD', 'IG
 const ORDER = ['GD', 'IG', 'GE', 'HX', 'HE', 'LS', 'GN', 'GN_GAL', 'WA', 'DO', 'S1', 'P', 'T'];
 
 if (args.check) await check();
+else if (args['after-burns']) await afterBurns();
 else await run();
+
+async function afterBurns() {
+  usePackages();
+  const W = await import('./lib/windows.mjs');
+  const A = await import('./lib/arms.mjs');
+  const { FULL_SETTING } = await import('./lib/settings.mjs');
+  const burnsDir = args['after-burns'], [K, N] = (args.shard ?? '0/1').split('/').map(Number);
+  const groups = (args.groups ?? 'S1,DO,WA').split(',');
+  const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
+  const read = (dir, re) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => re.test(f)).flatMap((f) => fs.readFileSync(path.join(dir, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)) : []);
+  // the stored fits (a flown row over an error row, as table.mjs reads them)
+  const base = new Map();
+  for (const r of read(path.join(A.STORE_ROOT, A.NUMERICAL_STORE), /^rows-truth-.*\.jsonl$/)) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
+  const outDir = path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store);
+  fs.mkdirSync(outDir, { recursive: true });
+  const done = new Set(read(outDir, /^rows-after-burn-.*\.jsonl$/).filter((r) => !r.error).map((r) => `${r.key}|${r.arcH}`));
+  const outFile = path.join(outDir, `rows-after-burn-${K}of${N}.jsonl`);
+  const all = W.windowsOf(groups);
+  const mine = [...all.windows, ...all.second].filter((w) => W.inShard(w.key, K, N) && w.arcs.some((a) => base.has(`${w.key}|${a}`) && !base.get(`${w.key}|${a}`).error && !done.has(`${w.key}|${a}`)))
+    .sort((a, b) => ORDER.indexOf(a.group) - ORDER.indexOf(b.group) || String(a.name).localeCompare(String(b.name)) || a.cutoffMs - b.cutoffMs)
+    .slice(0, Number(args.limit ?? Infinity));
+  console.error(`refly --after-burns shard ${K}/${N}: ${mine.length} windows to decide`);
+  if (!mine.length) process.exit(0);
+  const arms = await A.openArms();
+  const env = { ...envRecord(), ffm: arms.ffmProvenance };
+  const sha = (g, name) => { const f = path.join(burnsDir, g, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`); return fs.existsSync(f) ? A.sha256(fs.readFileSync(f)).slice(0, 12) : null; };
+  let n = 0, refit = 0;
+  for (const w of mine) {
+    const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
+    const head = { key: w.key, part: 'after-burn', group: w.group, name: w.name, cutoff: W.iso(D0), burnList: sha(w.group, w.name) };
+    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name);
+    // the decision needs the cutoff's last state alone (its perigee); the window's truth, scored epochs and weather only where a fit moves
+    let ctx;
+    try {
+      const last = (await W.truthOf(w, D0 - 2 * W.HOUR, D0, arms.axes)).lines.at(-1);
+      if (!last) throw new Error('no state before the cutoff');
+      ctx = { perigeeKm: A.perigeeKmOf(last) };
+      if (!thrust && w.arcs.some((arc) => A.numericalArc(burns, D0, ctx.perigeeKm, arc).maneuvering)) {
+        const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
+        const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
+        if (!sc.entered.length) throw new Error('no lead bin');
+        Object.assign(ctx, { truth, sc, wx: G.vacuum ? null : W.weatherAt(D0) });
+      }
+    } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
+    for (const arc of w.arcs) {
+      const b = base.get(`${w.key}|${arc}`);
+      if (!b || b.error || done.has(`${w.key}|${arc}`)) continue;
+      const row = { ...head, arcH: arc };
+      if (ctx.error) row.error = ctx.error;
+      else if (thrust) {
+        // an orbit that is not ballistic between impulses has no burn-free arc: the stored fit, marked as holding thrust
+        row.burnInArc = true;
+        row.fitProcess = `not ballistic: the truth flown from its positions alone closes to ${Math.round(thrust.positionsOnlyMedianM)} m over ${thrust.pieceHours} h (median); the stored fit`;
+      } else {
+        const m = A.numericalArc(burns, D0, ctx.perigeeKm, arc);
+        const hours = (D0 - m.startMs) / W.HOUR;
+        // a known burn still inside the arc the rule gives (a burn in the last 24 h of a 72 h arc, or a 24 h arc after it too short)
+        row.burnInArc = burns.some((x) => Date.parse(x.to) > m.startMs && Date.parse(x.from) <= D0);
+        if (m.lastBurnMs) row.lastBurn = W.iso(m.lastBurnMs);
+        const thin = m.maneuvering ? W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= m.startMs && t <= D0; }), hours) : null;
+        if (!m.maneuvering) row.fitProcess = m.shortAfterBurn ? `maneuvering, the arc after its last burn under ${A.NUMERICAL_AFTER_BURN.minHours24} h: the stored full-arc fit` : 'the full arc: the stored fit';
+        else if (!thin) row.fitProcess = 'maneuvering, the arc after its last burn short of coverage: the stored full-arc fit';
+        else {
+          row.fitProcess = 'maneuvering: the arc after its last burn';
+          row.fitArcHours = Math.round(hours * 10) / 10;
+          row.env = env;
+          const arm = FULL_SETTING[w.group];
+          try {
+            const f = await arms.ffm({ thin, D0, rows: ctx.wx?.ffm, sc: ctx.sc, arm });
+            row.arms = { FFMq: { ok: true, arm: f.arm, days: f.days, termination: f.termination, fitOk: f.fitOk, weightedRms: f.weightedRms, parameters: f.product.parameters, s: f.s } };
+          } catch (e) { row.arms = { FFMq: { ok: false, arm, error: String(e?.message ?? e).slice(0, 200) } }; }
+          refit += 1;
+        }
+      }
+      fs.appendFileSync(outFile, `${JSON.stringify(row)}\n`);
+    }
+    n += 1;
+    if (n % 10 === 0 || n === mine.length) console.error(`  ${n}/${mine.length} windows, ${refit} fits refitted`);
+  }
+  await arms.close();
+  console.error(`refly --after-burns shard ${K}/${N}: done, ${n} windows, ${refit} fits refitted`);
+  process.exit(0);
+}
 
 async function run() {
   usePackages(); // refuse unless the lockfile's packages are what the modules below read
