@@ -9,7 +9,7 @@
 // (schema sdn-ap-catalog-fit/1) of aggregates only: per row and per front-page group, nothing per window.
 //
 //   node experiments/headline-loop/bar.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 8]
-//     [--groups LS,DO] [--arcs 72,24]
+//     [--groups LS,DO] [--arcs 72,24] [--scoreboard <the same build's table.mjs file>: each row's windows are the scoreboard row's]
 //
 // The build is read by git show at the commit, never from a working tree; this repository's working tree must be clean (the file names
 // its commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl and are flown again only when its manifest line changes.
@@ -101,17 +101,24 @@ async function main() {
       truthDay5: { windows: paired.length, unpaired: pairs.filter(([a, f]) => Number.isFinite(a) && !Number.isFinite(f)).length,
         ap: { medianM: r1(quantile(paired.map(([a]) => a), 0.5)) }, ffm: { medianM: r1(quantile(paired.map(([, f]) => f), 0.5)) } } };
   };
+  // --scoreboard <the same build's scoreboard file>: each row's windows and satellites are the scoreboard row's own (the windows it scores),
+  // so "flown on N of M" reads against the scoreboard; without it, the windows listed for the row
+  const board = args.scoreboard ? JSON.parse(fs.readFileSync(args.scoreboard, 'utf8')) : null;
+  if (board && board.module?.wasmSha256 !== wasmSha) throw new Error(`--scoreboard is of wasm ${board.module?.wasmSha256}, not ${wasmSha}`);
+  const boardRow = (g, a) => board?.rows.find((r) => r.regime === W.GROUPS[g].label && r.fitHours === a) ?? null;
   const rows = [], byGroup = new Map();
   for (const g of ALL.filter((x) => groups.includes(x))) {
     for (const a of arcs) {
       const xs = wanted.filter((x) => x.w.group === g && x.a === a).map((x) => ({ ...x, r: x.m && x.m.source !== 'none' ? stored.get(doneKey(x.m)) : null }));
       if (!xs.length) continue;
-      const written = xs.filter((x) => x.m && x.m.source !== 'none').length;
-      const base = { regime: W.GROUPS[g].label, fitHours: a, satellites: new Set(xs.map((x) => x.w.name)).size, windows: xs.length };
+      const written = xs.filter((x) => x.m && x.m.source !== 'none').length, b = boardRow(g, a);
+      if (board && !b) continue;
+      const windows = b ? b.windows : xs.length;
+      const base = { regime: W.GROUPS[g].label, fitHours: a, satellites: b ? b.satellites : new Set(xs.map((x) => x.w.name)).size, windows };
       if (!written) { rows.push({ ...base, noNumericalArm: true }); continue; }
       const c = cells(xs.filter((x) => x.m && x.m.source !== 'none'));
       const refitAfterBurn = xs.filter((x) => /after the burn/.test(x.m?.source ?? '')).length;
-      rows.push({ ...base, ...c, trajectories: { written, missing: xs.length - written, refitAfterBurn } });
+      rows.push({ ...base, ...c, trajectories: { written, missing: Math.max(0, windows - written), refitAfterBurn } });
       byGroup.set(g, [...(byGroup.get(g) ?? []), ...xs.filter((x) => x.m && x.m.source !== 'none')]);
     }
   }
@@ -124,6 +131,7 @@ async function main() {
     ffm: { version: FFM_220.version, wasmSha256: FFM_220.wasmSha256, modulesCommit: FFM_220.modulesCommit },
     method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast; both medians are over the same windows, those where both figures exist (truthDay5.windows), and truthDay5.unpaired counts the flown windows with AP\'s figure and no numerical figure in the store. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed and against the share (withinBar.windows is every window attempted, flown and failed), never dropped.',
     bar: { withinM: BAR_M, fromHours: 0, toHours: BAR_H, stepS: STEP_S },
+    ...(board ? { scoreboard: { schema: board.schema, sha256: sha256(fs.readFileSync(args.scoreboard)), windows: 'each row\'s windows and satellites are the scoreboard row\'s' } } : {}),
     rows,
     groups: groupsOut,
   };
@@ -188,4 +196,4 @@ async function worker() {
   process.send({ ready: true });
 }
 
-function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
+function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--scoreboard'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
