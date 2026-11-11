@@ -36,6 +36,7 @@ const PASS_LEAD_DAY = 5, PASS_M = 100;
 const STATISTIC = [
   'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it); the median and the 95th percentile (linear interpolation) are taken over the lead\'s windows, those where AP and the numerical propagator were both scored.',
   'xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module\'s own GCRF output. xpUssf is the Space Force\'s SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module\'s own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is null until it has a row on every window of the row; a window where its fit or flight failed counts as flown. Its median and 95th percentile are taken over the lead\'s windows where it was scored (windows); failed counts the lead\'s windows where its fit or flight failed, so a figure with failed above 0 is over the scored windows alone (a file without windows and failed does not state them, and its readers must not take failed as 0). apBeatsXp and apBeatsXpUssf count the lead\'s windows where that XP was scored (windows), the ones where AP\'s error is below that XP\'s (apBetter), and give the median over them of AP\'s error divided by that XP\'s (medianApOverXp); a window where that XP failed is left out of the pair count, never counted as AP closer.',
+  'From sdn-ap 0.6.15, the two medium Earth orbit rows of navigation satellites (GN and Galileo) with fits of 72 h or more fit AP with $PCF FORCES.ECOM2, which also solves the ECOM2 Y0 radiation term (SDN-AP SPEC 16.13); every other row, and every row of an older build, fits AP with the same $PCF as before. apForces states each row\'s forces and fitted terms.',
   'within100mOfFfm counts, at the 120 hour lead, the windows where AP\'s error is less than 100 m above the numerical propagator\'s (AP better than it counts as met); share is met over windows. apFfmRank is Spearman\'s rank correlation (average ranks for ties) of AP\'s and the numerical propagator\'s errors over the lead\'s windows (null without a numerical propagator or under 10 windows); near 1, the two order the windows alike, as when both are limited by the same density forecast.',
 ].join(' ');
 // linear interpolation between order statistics (R type 7)
@@ -85,7 +86,9 @@ async function worker() {
         if (!thin) row.error = 'coverage';
         else {
           try {
-            const pcf = theory === 'SGP4XP' ? A.PCF.XP : G.vacuum ? A.PCF.AP_VACUUM : A.PCF.AP, spw = theory === 'SGP4XP' ? undefined : ctx.wx?.spw;
+            const choice = A.apPcfFor(w.group, build.version, G.vacuum, arc);
+            const pcf = theory === 'SGP4XP' ? A.PCF.XP : choice.pcf, spw = theory === 'SGP4XP' ? undefined : ctx.wx?.spw;
+            if (theory === 'AP') row.pcf = choice.label;
             const base = { thin, D0, sc: ctx.sc, object: ctx.object };
             const x = theory === 'USSFXP' ? await arms.ussf(base) : theory === 'SGP4' ? await arms.sgp4(base) : await arms.ap({ ...base, pcf, spw });
             Object.assign(row, { days: x.days, fitRmsKm: x.rms, fit: x.fit, s: x.s });
@@ -135,7 +138,8 @@ async function main() {
   // the windows: the first pass, and a regime's second pass (the windows touching 2026-03..05) once its numerical rows are all in the store
   const all = W.windowsOf(groups);
   const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
-  const listed = [...all.windows, ...all.second.filter((w) => secondIn.has(w.group))];
+  const only = args['keys-file'] ? new Set(fs.readFileSync(args['keys-file'], 'utf8').split('\n').filter(Boolean)) : null;
+  const listed = [...all.windows, ...all.second.filter((w) => secondIn.has(w.group))].filter((w) => !only || only.has(w.key));
   const notYet = all.second.filter((w) => !secondIn.has(w.group));
   const day = (t) => new Date(t).toISOString().slice(0, 10), count = (n) => n.toLocaleString('en-US');
   const cutoffs = listed.map((w) => w.cutoffMs);
@@ -232,7 +236,10 @@ async function main() {
       const met = pass.filter((p) => p.a - p.f < PASS_M).length;
       const within100mOfFfm = label && pass.length ? { windows: pass.length, met, share: round3(met / pass.length) } : null;
       const scored = ws.filter((w, i) => LEADS.some(([, day]) => meters(rowOf('AP', w, arc), null, day) != null && (!label || meters(bs[i], label, day) != null)));
-      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ffm, within100mOfFfm, leads });
+      const pcfLabel = A.apPcfFor(g, version, !!W.GROUPS[g].vacuum, arc).label;
+      const stated = [...new Set(ws.map((w) => rowOf('AP', w, arc)?.pcf).filter(Boolean))];
+      if (stated.some((x) => x !== pcfLabel)) throw new Error(`${g} ${arc} h: stored AP rows name $PCF ${stated.join(', ')}, the rule gives ${pcfLabel}`);
+      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, apForces: A.AP_FORCES_TEXT[pcfLabel], ffm, within100mOfFfm, leads });
       const failed = (t) => ws.filter((w) => rowOf(t, w, arc)?.apError).length;
       console.error(`  ${g} ${arc} h: ${scored.length} of ${ws.length} windows scored${THEORIES.map((t) => (failed(t) ? `, ${t} failed on ${failed(t)}` : '')).join('')}; numerical arm ${label ? `${label} (${ffm.configuration.split(';')[0]})` : complete ? 'none properly configured' : 'being measured'}`);
     }
@@ -262,9 +269,12 @@ async function check() {
   const A = await import('./lib/arms.mjs');
   const { check: ok, done } = E.checker('TABLE');
   const dir = E.tmp('table'), real = path.join(A.STORE_ROOT, A.NUMERICAL_STORE);
-  const commit = git(MODULES_ROOT, 'rev-parse', 'HEAD').toString().trim();
-  const wasmSha = sha256(git(MODULES_ROOT, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`));
-  const runIn = (store, out, more = []) => E.run('table.mjs', ['--modules-commit', commit, '--modules-root', MODULES_ROOT, '--out', out, '--groups', 'GD', '--jobs', '8', ...more], { HEADLINE_LOOP_STORE: store });
+  // the modules build the check flies: HEADLINE_LOOP_CHECK_MODULES_ROOT and _COMMIT, or this repository's modules checkout at HEAD
+  const modulesRoot = process.env.HEADLINE_LOOP_CHECK_MODULES_ROOT ?? MODULES_ROOT;
+  const commit = git(modulesRoot, 'rev-parse', '--verify', `${process.env.HEADLINE_LOOP_CHECK_MODULES_COMMIT ?? 'HEAD'}^{commit}`).toString().trim();
+  const wasmSha = sha256(git(modulesRoot, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`));
+  const version = JSON.parse(git(modulesRoot, 'show', `${commit}:propagator/sdn-ap/package.json`).toString()).version;
+  const runIn = (store, out, more = [], groups = 'GD') => E.run('table.mjs', ['--modules-commit', commit, '--modules-root', modulesRoot, '--out', out, '--groups', groups, '--jobs', '8', ...more], { HEADLINE_LOOP_STORE: store });
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
   const lines = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean);
   const gd = fs.readdirSync(real).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => lines(path.join(real, f))).filter((r) => r.group === 'GD' && !r.period);
@@ -279,7 +289,8 @@ async function check() {
   ok(doc.module?.modulesCommit === commit && doc.module?.wasmSha256 === wasmSha && /^[0-9a-f]{40}$/.test(doc.harness?.commit ?? ''), `module and harness: ${JSON.stringify(doc.module)} ${doc.harness?.commit}`);
   ok(doc.harness?.command === `node experiments/headline-loop/table.mjs --modules-commit ${commit} --groups GD --jobs 8` && !doc.harness.command.includes(dir), `the command, repository-relative: ${doc.harness?.command}`);
   const row = doc.rows?.[0];
-  ok(doc.rows?.length === 1 && JSON.stringify(Object.keys(row ?? {})) === JSON.stringify(['regime', 'truth', 'fitData', 'fitHours', 'satellites', 'windows', 'ffm', 'within100mOfFfm', 'leads']) && row.regime === 'Laser geodetic' && row.truth === 'ILRS' && row.fitHours === 72 && row.satellites === 5, `the row: ${JSON.stringify(row)?.slice(0, 300)}`);
+  ok(doc.rows?.length === 1 && JSON.stringify(Object.keys(row ?? {})) === JSON.stringify(['regime', 'truth', 'fitData', 'fitHours', 'satellites', 'windows', 'apForces', 'ffm', 'within100mOfFfm', 'leads']) && row.regime === 'Laser geodetic' && row.truth === 'ILRS' && row.fitHours === 72 && row.satellites === 5, `the row: ${JSON.stringify(row)?.slice(0, 300)}`);
+  ok(row?.apForces === A.AP_FORCES_TEXT.AP, `the laser geodetic row's forces: ${row?.apForces}`);
   ok(row?.ffm?.version === '2.2.0' && /^[0-9a-f]{64}$/.test(row.ffm.wasmSha256) && /ocean tides/.test(row.ffm.configuration) && !/Fbest|FFM/.test(row.ffm.configuration), `the numerical arm: ${JSON.stringify(row?.ffm)}`);
   // AP's and our XP's rows under the AP build, the Space Force XP's and SGP4's under their own builds, none in the other's place
   const sha12 = wasmSha.slice(0, 12), moduleRows = lines(path.join(s1, 'table', sha12, 'rows.jsonl'));
@@ -287,6 +298,7 @@ async function check() {
   const outsideRows = Object.keys(A.OUTSIDE).flatMap((t) => (fs.existsSync(outsideFile(s1, t)) ? lines(outsideFile(s1, t)) : []));
   ok(moduleRows.every((r) => ['AP', 'SGP4XP'].includes(r.theory) && r.ap?.sha256 === wasmSha) && outsideRows.every((r) => A.OUTSIDE[r.theory] && JSON.stringify(r.builds) === JSON.stringify(A.OUTSIDE[r.theory].builds)), 'rows in the wrong store or without their builds');
   const flown = [...moduleRows, ...outsideRows];
+  ok(moduleRows.filter((r) => r.theory === 'AP' && (r.days || r.apError)).every((r) => r.pcf === 'AP'), 'the laser geodetic AP rows name $PCF AP');
   const apRows = new Map(flown.filter((r) => (r.theory ?? 'AP') === 'AP').map((r) => [r.key, r])), xpRows = new Map(flown.filter((r) => r.theory === 'SGP4XP').map((r) => [r.key, r]));
   const uRows = new Map(flown.filter((r) => r.theory === 'USSFXP').map((r) => [r.key, r])), sRows = new Map(flown.filter((r) => r.theory === 'SGP4').map((r) => [r.key, r]));
   ok([apRows, xpRows, uRows, sRows].every((m) => m.size === 55) && /propagator\/sgp4-xp/.test(doc.statistic) && /analysis\/gp-error-model/.test(doc.statistic), `rows flown: AP ${apRows.size}, XP ${xpRows.size}, Space Force XP ${uRows.size}, SGP4 ${sRows.size} (55 windows); the fitters named`);
@@ -325,8 +337,19 @@ async function check() {
   const nAp = (h) => b?.leads?.find((l) => l.hours === h)?.windows;
   ok(b && b.leads.every((l) => l.xp.failed === 1 && l.xp.windows === nAp(l.hours) - 1 && l.apBeatsXp.windows === nAp(l.hours) - 1 && l.sgp4.failed === 1 && l.sgp4.windows === nAp(l.hours) - 1), `failed counts: ${JSON.stringify(b?.leads?.map((l) => [l.hours, l.windows, l.xp?.windows, l.xp?.failed, l.apBeatsXp?.windows, l.sgp4?.windows, l.sgp4?.failed]))}`);
   ok(b && b.ffm === null && b.within100mOfFfm === null && b.leads.every((l) => l.ffm === null && l.apFfmRank === null && l.ap && l.xp && l.sgp4 && l.xpUssf === null && l.apBeatsXpUssf === null) && b.leads[0].ap.medianM === row?.leads?.[0]?.ap?.medianM, `being measured: ${JSON.stringify(b)?.slice(0, 300)}`);
+  // 3. the ECOM2 case: one medium Earth orbit window with both fit arcs; from 0.6.15 its 72 h fit names AP_ECOM2 and its 24 h fit AP
+  if (A.atLeast(version, A.ECOM2_SINCE)) {
+    const gnRows = fs.readdirSync(real).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => lines(path.join(real, f))).filter((r) => r.group === 'GN' && !r.error && r.arms?.FFMq?.ok);
+    const key = [...new Set(gnRows.map((r) => r.key))].sort().find((k) => [24, 72].every((a) => gnRows.some((r) => r.key === k && r.arcH === a)));
+    const s3 = path.join(dir, 's3'), out3 = path.join(dir, 'c.json'), keys = path.join(dir, 'keys.txt');
+    fs.mkdirSync(s3, { recursive: true }); fs.symlinkSync(real, path.join(s3, A.NUMERICAL_STORE)); fs.writeFileSync(keys, `${key}\n`);
+    const r3 = runIn(s3, out3, ['--keys-file', keys, '--theories', 'AP,SGP4XP'], 'GN');
+    const c = fs.existsSync(out3) ? E.readJson(out3) : { rows: [] }, stored = fs.existsSync(path.join(s3, 'table', sha12, 'rows.jsonl')) ? lines(path.join(s3, 'table', sha12, 'rows.jsonl')).filter((r) => r.theory === 'AP') : [];
+    const at = (h) => c.rows.find((x) => x.fitHours === h), pcfAt = (h) => stored.find((x) => x.arcH === h)?.pcf;
+    ok(r3.code === 0 && pcfAt(72) === 'AP_ECOM2' && pcfAt(24) === 'AP' && at(72)?.apForces === A.AP_FORCES_TEXT.AP_ECOM2 && at(24)?.apForces === A.AP_FORCES_TEXT.AP, `the ECOM2 case on ${key}: ${r3.err.slice(-200)} 72 h ${pcfAt(72)}, 24 h ${pcfAt(24)}`);
+  } else console.log(`TABLE CHECK: the ECOM2 case did not run: the build flown is sdn-ap ${version}, which has no FORCES.ECOM2 term (AP solves it from ${A.ECOM2_SINCE})`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }

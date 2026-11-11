@@ -9,7 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { modulesRoot } from '../../xp-atmosphere-merit/common.mjs';
-import { TYPE, oemLines, flightPcfBytes, pcfBytes, spwBytes, readFitOcm } from '../../xp-atmosphere-merit/lib/sds.mjs';
+import { TYPE, oemLines, flightPcfBytes, pcfBytes, spwBytes, readFitOcm, PCF } from '../../xp-atmosphere-merit/lib/sds.mjs';
 import { PIN } from './build.mjs';
 
 const DAY = 86400000;
@@ -39,8 +39,9 @@ export async function standalone(rel, build) {
 
 /** AP's drag atmosphere: NRLMSISE-00 on $SPW rows. */
 export const MSIS = { ATMOSPHERE_MODEL: 'NRLMSISE00', WEATHER_SOURCE: 'RECORDS' };
-/** One arm's FORCES: the drag atmosphere unless `atmosphere` is false, and the gravity terms by degree. */
-export const apForces = ({ tesseral = 0, zonal = 0, atmosphere: drag = true, noTerms = false } = {}) => ({
+/** One arm's FORCES: the drag atmosphere unless `atmosphere` is false, the gravity terms by degree, and with `ecom2` an empty
+ *  FORCES.ECOM2 (sdn-ap 0.6.15 and later: the fit solves the ECOM2 Y0 term on arcs of 72 h or more; an older build refuses it). */
+export const apForces = ({ tesseral = 0, zonal = 0, atmosphere: drag = true, noTerms = false, ecom2 = false } = {}) => ({ ...(ecom2 ? { ECOM2: new PCF.PCFEcom2T() } : {}),
   ...(drag ? MSIS : {}),
   ...(noTerms ? {} : { HAS_MAXIMUM_TESSERAL_DEGREE: true, MAXIMUM_TESSERAL_DEGREE: tesseral, HAS_MAXIMUM_DEGREE: true, MAXIMUM_DEGREE: zonal }),
 });

@@ -28,7 +28,35 @@ export const NUMERICAL_STORE = 'f0b8352a43f3';
 export const PCF = {
   AP: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20 }), fit: null }),
   AP_VACUUM: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null }),
+  // AP with FORCES.ECOM2 (empty: Y0 starts at 0): sdn-ap solves the ECOM2 Y0 term on fits of 72 h or more (SPEC 16.13)
+  AP_ECOM2: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), fit: null }),
   XP: APL.fitPcf({ forces: {}, fit: null }),
+};
+
+// The published rule (2026-11-10): for navigation satellites in medium Earth orbit AP also solves the ECOM2 Y0 term on fits of 72 h or
+// more. The gate is the group, the fit arc and the AP build's own version (its package.json at the commit flown, compared by its numeric
+// fields, so 0.6.15-rc.1 counts as 0.6.15): from ECOM2_SINCE, GN and GN_GAL fits of ECOM2_MIN_ARC hours or more use PCF.AP_ECOM2; every other
+// fit, and every fit by an older build (which refuses FORCES.ECOM2 by name), uses the same $PCF bytes as before.
+export const ECOM2_GROUPS = ['GN', 'GN_GAL'];
+export const ECOM2_SINCE = '0.6.15';
+export const ECOM2_MIN_ARC = 72;
+const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
+export const atLeast = (v, w) => {
+  const a = numeric(v), b = numeric(w);
+  if (!a || !b) return false;
+  for (let i = 0; i < 3; i += 1) if (a[i] !== b[i]) return a[i] > b[i];
+  return true;
+};
+/** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', pcf }. */
+export const apPcfFor = (group, version, vacuum, arcH) => {
+  const label = vacuum ? 'AP_VACUUM' : ECOM2_GROUPS.includes(group) && arcH >= ECOM2_MIN_ARC && atLeast(version, ECOM2_SINCE) ? 'AP_ECOM2' : 'AP';
+  return { label, pcf: PCF[label] };
+};
+/** AP's forces and fitted terms for a $PCF label, in one plain sentence (the table's apForces). */
+export const AP_FORCES_TEXT = {
+  AP: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors.',
+  AP_VACUUM: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by the theory\'s own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors.',
+  AP_ECOM2: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors, and the ECOM2 Y0 radiation term solved as well.',
 };
 
 /** The builds of the two outside theories (table.mjs names them): the Space Force's XP through propagator/sgp4-xp (its library is the
