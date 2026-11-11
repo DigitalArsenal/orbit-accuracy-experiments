@@ -709,7 +709,7 @@ async function check() {
     const n8 = real6.find((r) => r.key === k6.S1 && r.arcH === a), want8 = LEADS.map(([, d]) => (Number.isFinite(n8?.arms?.FFMq?.days?.[d]?.e) ? round(n8.arms.FFMq.days[d].e * 1.5 * 1000) : null));
     ok(r8.code === 0 && /, 0 to fly/.test(r8.err) && /at a tolerance of 1e-13 /.test(near?.ffm?.configuration ?? '') && JSON.stringify(near.leads.map((l) => l.ffm?.medianM ?? null)) === JSON.stringify(want8)
       && /at a tolerance of 1e-10 /.test(alt?.ffm?.configuration ?? '') && JSON.stringify(alt.leads) === JSON.stringify(was?.leads)
-      && h8.statistic.includes(`fitted and flown at a tolerance of 1e-13 on Near 700 km (24 h fit), Near 700 km (72 h fit) (stack issue 520`), `the 1e-13 rows at ${a} h: ${r8.err.slice(-200)} ${near?.ffm?.configuration} ${JSON.stringify(near?.leads?.map((l) => l.ffm?.medianM))} against ${JSON.stringify(want8)}; ${alt?.ffm?.configuration}`);
+      && h8.statistic.includes('fitted and flown at a tolerance of 1e-13 on these rows: Near 700 km (24 h fit), Near 700 km (72 h fit). On each of them every window with a numerical arm by the rule'), `the 1e-13 rows at ${a} h: ${r8.err.slice(-200)} ${near?.ffm?.configuration} ${JSON.stringify(near?.leads?.map((l) => l.ffm?.medianM))} against ${JSON.stringify(want8)}; ${alt?.ffm?.configuration}`);
   }
   // 9. one laser geodetic window's numerical fit made a failure: the window stays in AP's columns (the row's and each lead's windows, AP's
   // medians over all of them), the numerical column and the pass line are over the others with their own counts, and
