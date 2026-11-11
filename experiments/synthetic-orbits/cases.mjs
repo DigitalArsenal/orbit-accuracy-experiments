@@ -97,3 +97,15 @@ export function cases(seed = 498, { gridStep = 1 } = {}) {
   return { seed, gridStep, cases: out, notCovered };
 }
 export const bandOf = (i) => BANDS.findIndex(([lo, hi]) => i >= lo && i < hi);
+/** The guard subset: every 8th grid and every 8th area-to-mass case in the generator's order, and every named edge case. */
+export const guardOf = (list) => { const k = {}; return list.filter((c) => { k[c.kind] = (k[c.kind] ?? -1) + 1; return c.kind === 'edge' || k[c.kind] % 8 === 0; }); };
+/** The bar's bands (stack #503): near-circular (e at most 0.01) by perigee, then by eccentricity, then the named edge cases. */
+export const BAR_BANDS = ['Near-circular, perigee under 400 km', 'Near-circular, 400 to 600 km', 'Near-circular, 650 to 2,000 km', 'Near-circular, 5,000 to 20,200 km', 'Near-circular, geosynchronous', 'e 0.05 to 0.1', 'e 0.3', 'e 0.5 to 0.9, perigee under 2,500 km', 'e 0.5 to 0.9, perigee 5,000 km and above', 'Named edge cases'];
+export function barBandOf(c) {
+  if (c.kind === 'edge') return BAR_BANDS[9];
+  const { e, hpKm: hp } = c;
+  if (e <= 0.01) return BAR_BANDS[hp < 400 ? 0 : hp <= 600 ? 1 : hp <= 2000 ? 2 : hp <= 20200 ? 3 : 4];
+  if (e <= 0.1) return BAR_BANDS[5];
+  if (e <= 0.3) return BAR_BANDS[6];
+  return BAR_BANDS[hp < 2500 ? 7 : 8];
+}

@@ -2,14 +2,21 @@
 // (seeded): the module makes the state at D0 - 72 h from the case's mean elements; the numerical propagator (FFM 2.2.0) flies it through
 // the 72 h fit arc and 7 days past it on a 300 s grid, and that flight is the truth; AP and our SGP4-XP (the same module) are fitted to
 // the truth before the cutoff D0 and flown; both see the same space weather (the weather known at the cutoff, on the truth too). Scored:
-// the distance to the truth at 1 to 7 days (the root mean square of the 3D distance over the 24 h ending at the day), the pass at 100 m
-// at day 5, AP against SGP4-XP, and each one's cost per state (a warm set flown 7 days at 300 s, the median of three timed flights).
-// Nothing here is any real satellite's data.
+// D, the largest 3D distance to the truth over 0 to 120 h on the 300 s grid, with the hour it occurs and the first hour the distance
+// passes 100 m (the owner's bar, 2026-11-11: "never more than 100m between 0-5 days"; pass: D <= 100 m); the root mean square of the 3D
+// distance over the 24 h ending at each day 1 to 7; AP against SGP4-XP; and with --cost each one's cost per state (a warm set flown 7 days
+// at 300 s, the median of three timed flights). Nothing here is any real satellite's data.
+//
+// Force switches, on both sides at once (the truth and AP; SGP4-XP is flown as it is), each stored apart from the full rows:
+//   --no-drag                   the truth without drag; AP without its atmosphere
+//   --no-drag --no-radiation    gravity, the solid tide, relativity and the Sun and Moon only; AP with its radiation term held at 0
+// --guard flies a fixed subset that spans every band (every 8th grid and area-to-mass case and every named edge case), for pull requests.
 //
 //   node experiments/synthetic-orbits/run.mjs --modules-commit <sha> --modules-root <modules checkout> [--seed 498] [--grid-step 1]
-//     [--jobs 8] [--only <id,id,...>] [--scratch]          rows to <store>/synthetic/<wasm sha12>/rows.jsonl (a row there is not flown again)
+//     [--jobs 8] [--only <id,id,...>] [--guard] [--no-drag [--no-radiation]] [--scratch]
+//                                         rows to <store>/synthetic/<wasm sha12>/rows[-<mode>].jsonl (a row there is not flown again)
 //   node experiments/synthetic-orbits/run.mjs --report --modules-commit <sha> --modules-root <modules checkout> [--seed 498] [--grid-step 1]
-//     --out <dir>                                           the result file and the maps (report.mjs)
+//     [--guard] [--no-drag [--no-radiation]] --out <dir>       the result file and the maps (report.mjs)
 //
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm), never from a working tree. Without
 // --scratch the harness's working tree must be clean (the rows name its commit). Free disk under 35 GiB stops the run.
@@ -20,7 +27,7 @@ import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { fork, execFileSync } from 'node:child_process';
 import { REPO, MODULES_ROOT, usePackages, envRecord } from '../headline-loop/lib/env.mjs';
-import { cases as makeCases, termsOf } from './cases.mjs';
+import { cases as makeCases, termsOf, guardOf } from './cases.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = new URL(import.meta.url).pathname;
@@ -31,6 +38,10 @@ const DRAG_BELOW_KM = 2500;
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { maxBuffer: 1 << 28 });
 const caseHash = (c) => sha256(JSON.stringify(c)).slice(0, 16);
+// the force mode, both sides: full, no-drag, no-drag-no-radiation
+const MODE = args['no-radiation'] ? (args['no-drag'] ? 'no-drag-no-radiation' : null) : args['no-drag'] ? 'no-drag' : 'full';
+if (!MODE) throw new Error('--no-radiation goes with --no-drag');
+const PASS_M = 100, BAR_H = 120;
 
 if (args.worker) await worker();
 else if (args.report) await (await import('./report.mjs')).report(await setup(), args);
@@ -51,7 +62,8 @@ async function setup() {
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
   const seed = Number(args.seed ?? 498), gridStep = Number(args['grid-step'] ?? 1);
   const all = makeCases(seed, { gridStep });
-  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, 'rows.jsonl'), seed, gridStep, all, A };
+  if (args.guard) all.cases = guardOf(all.cases);
+  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, MODE === 'full' ? 'rows.jsonl' : `rows-${MODE}.jsonl`), seed, gridStep, all, A, mode: MODE, guard: !!args.guard };
 }
 
 async function main() {
@@ -65,11 +77,11 @@ async function main() {
   const done = new Set(read().filter((r) => r.wasmSha256 === wasmSha).map((r) => r.caseHash));
   const todo = all.cases.filter((c) => (!only || only.has(c.id)) && !done.has(caseHash(c)));
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
-  console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
+  console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
       if (!stopped && freeGiB() < MIN_FREE_GIB) stopped = `free disk under ${MIN_FREE_GIB} GiB`;
       if (!stopped && next < todo.length) child.send({ c: todo[next++] }); else child.send({ stop: true });
@@ -78,7 +90,7 @@ async function main() {
       if (m.row) {
         fs.appendFileSync(rowsFile, `${JSON.stringify({ ...m.row, caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness })}\n`);
         flown += 1;
-        console.error(`  ${flown}/${todo.length} ${m.c.id}: AP ${m.row.ap?.days?.[5] ?? m.row.ap?.error ?? m.row.error} m, XP ${m.row.xp?.days?.[5] ?? m.row.xp?.error ?? '-'} m at day 5; ${m.row.wallS} s`);
+        console.error(`  ${flown}/${todo.length} ${m.c.id}: D AP ${m.row.ap?.maxDistance?.maxM ?? m.row.ap?.error ?? m.row.error} m, XP ${m.row.xp?.maxDistance?.maxM ?? m.row.xp?.error ?? '-'} m; ${m.row.wallS} s`);
       }
       give();
     });
@@ -117,15 +129,19 @@ async function worker() {
       const seed = seedOcm({ epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, norad: 99498, tesseral: 31, zonal: 20 });
       const [s0] = await fly(seed, [epoch]);
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
-      const drag = c.hpKm < DRAG_BELOW_KM, setting = drag ? 'L70S' : 'Ffull', wx = drag ? W.weatherAt(D0) : null;
+      // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
+      const drag = MODE === 'full' && c.hpKm < DRAG_BELOW_KM, radiation = MODE !== 'no-drag-no-radiation', wx = drag ? W.weatherAt(D0) : null;
+      const setting = drag ? 'L70S' : radiation ? 'Ffull' : 'Ffull without radiation pressure';
+      const settings = radiation ? SETTINGS[setting] : { ...SETTINGS.Ffull, forces: { ...SETTINGS.Ffull.forces, srp: false }, parameters: [], apriori: [] };
       const epochs = Array.from({ length: ((ARC_H + LEAD_DAYS * 24) * HOUR) / STEP + 1 }, (_, k) => iso(tStart + k * STEP));
-      const parameters = [...(drag ? [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }] : []), { kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }];
-      row.truth = { setting, dragAreaOverMass: drag ? terms.dragAreaOverMass : 0, srpAreaOverMass: terms.srpAreaOverMass };
+      const parameters = [...(drag ? [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }] : []), ...(radiation ? [{ kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }] : [])];
+      row.mode = MODE;
+      row.truth = { setting, dragAreaOverMass: drag ? terms.dragAreaOverMass : 0, srpAreaOverMass: radiation ? terms.srpAreaOverMass : 0 };
       // a truth that cannot be flown to day 7 (a decay) is flown to the last whole day it reaches, and scored to there
       let states;
       for (const days of [LEAD_DAYS, 5, 3, 2, 1, 0]) {
         const upTo = epochs.slice(0, epochs.length - ((LEAD_DAYS - days) * DAY) / STEP);
-        try { states = await F.forecast({ epoch, state: [...s0.r, ...s0.v].map((x) => x * 1000), parameters }, upTo, SETTINGS[setting], wx?.ffm ?? null); if (days < LEAD_DAYS) row.truth.flownToDay = days; break; } catch (e) { row.truth.error = String(e?.message ?? e).slice(0, 200); }
+        try { states = await F.forecast({ epoch, state: [...s0.r, ...s0.v].map((x) => x * 1000), parameters }, upTo, settings, wx?.ffm ?? null); if (days < LEAD_DAYS) row.truth.flownToDay = days; break; } catch (e) { row.truth.error = String(e?.message ?? e).slice(0, 200); }
       }
       if (!states || row.truth.flownToDay === 0) throw new Error('truth');
       delete row.truth.error;
@@ -139,18 +155,27 @@ async function worker() {
       const sc = W.scoredOf(after, D0);
       const oem = S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: fitLines, useableStart: fitLines[0].epoch, useableStop: iso(D0) });
       const costEpochs = Array.from({ length: COST_STATES }, (_, k) => iso(D0 + (k + 1) * STEP));
-      // AP (its forces as the truth's: drag and the weather where the truth has them; the solid tide) and our SGP4-XP, fitted the same way
-      const theories = { ap: { label: drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES', spw: wx?.spw }, xp: { label: 'XP', spw: undefined } };
+      // the bar's span: the cutoff and every truth state to 120 h after it (as far as the truth reaches)
+      const span = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 && t <= D0 + BAR_H * HOUR && (low < 0 || t < Date.parse(lines[low].epoch)); });
+      // AP (its forces as the truth's: drag and the weather where the truth has them; the solid tide; radiation held at 0 where the truth
+      // has none) and our SGP4-XP, fitted the same way
+      const apPcf = radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } });
+      const theories = { ap: { label: drag ? 'AP_TIDES' : radiation ? 'AP_VACUUM_TIDES' : 'AP_VACUUM_TIDES, radiation term held at 0', pcf: apPcf, spw: wx?.spw }, xp: { label: 'XP', pcf: A.PCF.XP, spw: undefined } };
       for (const [t, x] of Object.entries(theories)) {
         try {
-          const ocm = await fit(oem, A.PCF[x.label], x.spw), info = APL.readOcm(ocm);
+          const ocm = await fit(oem, x.pcf, x.spw), info = APL.readOcm(ocm);
           const d = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes);
+          // D: the largest 3D distance to the truth over the span, its hour, and the first hour above 100 m
+          const flown = await fly(ocm, span.map((l) => l.epoch));
+          const dist = flown.map((s, k) => Math.hypot(s.r[0] - span[k].r[0], s.r[1] - span[k].r[1], s.r[2] - span[k].r[2]) * 1000);
+          const at = dist.indexOf(Math.max(...dist)), over = dist.findIndex((x) => x > PASS_M), hourOf = (k) => r1((Date.parse(span[k].epoch) - D0) / HOUR);
           x.ocm = ocm;
-          row[t] = { pcf: x.label, fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])) };
+          row[t] = { pcf: x.label, fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])),
+            maxDistance: { maxM: r1(dist[at]), atH: hourOf(at), firstOver100mH: over < 0 ? null : hourOf(over), spanH: hourOf(dist.length - 1), pass: dist[at] <= PASS_M } };
         } catch (e) { row[t] = { pcf: x.label, error: String(e?.message ?? e).slice(0, 200) }; }
       }
-      // cost per state: each set warm (flown once), then three timed 7-day flights at 300 s, interleaved; the median
-      if (theories.ap.ocm && theories.xp.ocm) {
+      // cost per state (--cost only): each set warm (flown once), then three timed 7-day flights at 300 s, interleaved; the median
+      if (args.cost && theories.ap.ocm && theories.xp.ocm) {
         const times = { ap: [], xp: [] };
         for (const t of ['ap', 'xp']) await fly(theories[t].ocm, costEpochs);
         for (let k = 0; k < 3; k += 1) for (const t of ['ap', 'xp']) { const a = performance.now(); await fly(theories[t].ocm, costEpochs); times[t].push(performance.now() - a); }
