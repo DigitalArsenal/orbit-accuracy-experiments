@@ -116,21 +116,36 @@ export const MANEUVER72 = { historyDays: 7, capHours: 70, minHours: 24, afterBur
 /** The rule's perigee clause in words ('' without a floor). */
 export const perigeeClause = (km) => (km > 0 ? ` with its perigee at ${km} km or above` : '');
 export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
-/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms). A
- *  candidate whose delta-v does not hold from truth states 10 and 20 min further out (refined.consistent false: a truth state with a bad
- *  velocity, or a fragment beside a longer burn) is not a burn. */
+/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms), each
+ *  with endMs, the end of its arc-breaking span. A candidate whose delta-v does not hold from truth states 10 and 20 min further out
+ *  (refined.consistent false: a truth state with a bad velocity, or a fragment beside a longer burn) is not a burn.
+ *  Known at D0: in a list made as of its burns (asOf, the burn detector of experiments/burn-detector, stack issue 506), a burn whose
+ *  reportTime is at or before D0; in an older list, one every piece of which had ended by D0.
+ *  endMs: the end of the burn's extent (extentTo), carried across the rejected candidates known by D0 that begin within 60 min after it
+ *  (the tail of a longer burn), so an arc after the burn starts after all of it. */
 export const knownBurns = (dir, group, name, D0) => {
   const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
   if (!fs.existsSync(f)) return [];
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
-  return d.burns.filter((b) => b.refined?.consistent !== false && Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0) <= D0);
+  const knownAt = (b) => (d.asOf ? Date.parse(b.reportTime) : Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0));
+  const seen = d.burns.filter((b) => knownAt(b) <= D0), rejected = seen.filter((b) => b.refined?.consistent === false);
+  return seen.filter((b) => b.refined?.consistent !== false).map((b) => {
+    let endMs = Date.parse(b.extentTo ?? b.to);
+    for (let more = true; more;) {
+      more = false;
+      for (const x of rejected) { const s = Date.parse(x.extentFrom ?? x.from), e = Date.parse(x.extentTo ?? x.to); if (s <= endMs + 60 * 60000 && e > endMs) { endMs = e; more = true; } }
+    }
+    return { ...b, endMs };
+  });
 };
+/** A known burn's end (ms): endMs (knownBurns), else its extent's end. */
+export const burnEndMs = (b) => b.endMs ?? Date.parse(b.extentTo ?? b.to);
 /** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason.
  *  floorKm: the perigee floor (MANEUVER72.perigeeMinKm unless given; the numerical arm passes NUMERICAL_AFTER_BURN.perigeeMinKm, the same). */
 export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMinKm) => {
   const H = 3600000, full = { startMs: D0 - 72 * H, maneuvering: false };
   if (!(perigeeKm >= floorKm)) return full;
-  const ends = burns.map((b) => Date.parse(b.to)).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
+  const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
   if (!ends.length) return full;
   const last = Math.max(...ends);
   return { startMs: Math.min(D0 - MANEUVER72.minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000)), maneuvering: true, lastBurnMs: last };
@@ -148,17 +163,24 @@ export const numericalArc = (burns, D0, perigeeKm, arcH) => {
   const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
   if (arcH === 72) return maneuverArc(burns, D0, perigeeKm, NUMERICAL_AFTER_BURN.perigeeMinKm);
   if (arcH !== 24 || !(perigeeKm >= NUMERICAL_AFTER_BURN.perigeeMinKm)) return full;
-  const ends = burns.map((b) => Date.parse(b.to)).filter((t) => t <= D0 && t > D0 - arcH * H);
+  const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t > D0 - arcH * H);
   if (!ends.length) return full;
   const last = Math.max(...ends), startMs = last + MANEUVER72.afterBurnMin * 60000;
   return D0 - startMs >= NUMERICAL_AFTER_BURN.minHours24 * H ? { startMs, maneuvering: true, lastBurnMs: last } : { ...full, shortAfterBurn: true, lastBurnMs: last };
 };
 /** The burn list's verdict that an object's orbit is not ballistic between impulses ({ positionsOnlyMedianM, pieceHours } or null): the
  *  numerical setting flown over its pieces from the truth's positions alone closes above the 100 m bar, as under continuous low thrust, so
- *  no arc of it is burn-free and its numerical fit is not a properly configured one. */
-export const notBallistic = (dir, group, name) => {
+ *  no arc of it is burn-free and its numerical fit is not a properly configured one. In a list with positionsOnly (the burn detector's
+ *  ballistic.mjs, stack issue 506) the verdict is as of D0: from the pairs that ended by then, with at least minPairs of them. */
+export const notBallistic = (dir, group, name, D0 = Infinity) => {
   const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
-  return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')).notBallistic ?? null : null;
+  if (!fs.existsSync(f)) return null;
+  const d = JSON.parse(fs.readFileSync(f, 'utf8')), po = d.positionsOnly;
+  if (!po) return d.notBallistic ?? null;
+  const v = po.pairs.filter((p) => !p.error && Date.parse(p.end) <= D0).map((p) => p.positionsOnlyM).sort((a, b) => a - b);
+  if (v.length < po.minPairs) return null;
+  const m = v.length % 2 ? v[v.length >> 1] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
+  return m > po.barM ? { positionsOnlyMedianM: m, pairs: v.length, pieceHours: po.pieceHours } : null;
 };
 /** The perigee height (km above the equatorial radius) of an osculating state { r km, v km/s } about the Earth. */
 export const perigeeKmOf = ({ r, v }) => {

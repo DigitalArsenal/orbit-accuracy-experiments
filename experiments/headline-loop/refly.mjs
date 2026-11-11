@@ -59,7 +59,7 @@ async function afterBurns() {
   for (const w of mine) {
     const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
     const head = { key: w.key, part: 'after-burn', group: w.group, name: w.name, cutoff: W.iso(D0), burnList: sha(w.group, w.name) };
-    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name);
+    const burns = A.knownBurns(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name, D0);
     // the decision needs the cutoff's last state alone (its perigee); the window's truth, scored epochs and weather only where a fit moves
     let ctx;
     try {
@@ -86,7 +86,7 @@ async function afterBurns() {
         const m = A.numericalArc(burns, D0, ctx.perigeeKm, arc);
         const hours = (D0 - m.startMs) / W.HOUR;
         // a known burn still inside the arc the rule gives (a burn in the last 24 h of a 72 h arc, or a 24 h arc after it too short)
-        row.burnInArc = burns.some((x) => Date.parse(x.to) > m.startMs && Date.parse(x.from) <= D0);
+        row.burnInArc = burns.some((x) => A.burnEndMs(x) > m.startMs && Date.parse(x.extentFrom ?? x.from) <= D0);
         if (m.lastBurnMs) row.lastBurn = W.iso(m.lastBurnMs);
         const thin = m.maneuvering ? W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= m.startMs && t <= D0; }), hours) : null;
         if (!m.maneuvering) row.fitProcess = m.shortAfterBurn ? `maneuvering, the arc after its last burn under ${A.NUMERICAL_AFTER_BURN.minHours24} h: the stored full-arc fit` : 'the full arc: the stored fit';
