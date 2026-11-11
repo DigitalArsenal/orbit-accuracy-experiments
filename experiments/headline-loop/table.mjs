@@ -27,7 +27,8 @@
 // It is null ("being measured") until the store holds every window of that row, and null where no stored arm is properly
 // configured for the truth (NOT_CONFIGURED). A drag row whose every window with an arm has been fitted and flown again at a tolerance
 // of 1e-13 (lib/arms.mjs NUMERICAL_TIGHT, stack issue 520) is scored on those; no row mixes the two tolerances. A window the rule leaves
-// without a numerical arm keeps AP's columns (withoutNumericalArm).
+// A window stays in AP's columns whenever AP has a figure for it; the numerical column and the pass line are over the windows with a
+// numerical figure, and withoutNumericalFigure counts the others by reason.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -70,10 +71,9 @@ const FFM_SELECTION = 'Each row\'s numerical propagator is its fullest stored FF
 // stack issue 520: with drag the integration restarts at each change of the weather rows, and at 1e-10 the flight after a restart is
 // meters to tens of meters from the converged orbit; the drag setting fitted and flown again at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT)
 const TIGHT_TEXT = (rows) => ` The numerical arm is fitted and flown at a tolerance of 1e-13 on ${rows.join(', ')} (stack issue 520: with drag, at 1e-10 the integration after each change of the weather rows leaves the flight meters to tens of meters from the converged orbit); every other row's numerical arm at the tolerance its configuration sentence states.`;
-// a window whose numerical arm the rule leaves out (the commercial geostationary satellites whose orbit is not ballistic between impulses,
-// or a burn known at the cutoff in every arc the rule allows) keeps AP's and the outside theories' columns; the numerical columns and the
-// pass line are over the windows with an arm, and withoutNumericalArm counts the others
-const NO_ARM_TEXT = ' On a row with withoutNumericalArm, the windows the rule leaves without a numerical arm (counted there, with their satellites) stay in AP\'s, SGP4-XP\'s and the other theories\' columns and in the row\'s windows and satellites; the numerical column (with its own windows), apFfmRank and the pass line are over the windows with an arm.';
+// a window stays in AP's columns whenever AP has a figure for it (it leaves only where AP has none: no truth or coverage); the numerical
+// column, apFfmRank and the pass line are over the windows with a numerical figure, and withoutNumericalFigure counts the others by reason
+const NO_FIGURE_TEXT = ' A window stays in AP\'s, SGP4-XP\'s and the other theories\' columns, and in the row\'s windows and satellites, whenever AP has a figure for it; it leaves them only where AP has none (no truth or coverage). The numerical column (with its own windows where they differ), apFfmRank and the pass line are over the windows with a numerical figure. withoutNumericalFigure counts the row\'s windows that AP scored and the numerical arm did not, with their satellites, by reason: ruleLeavesNoArm (the rule gives no numerical arm: an orbit not ballistic between impulses, or a burn known at the cutoff in every arc the rule allows), fitFailed (the numerical fit or flight failed) and noTruthOrCoverage (the stored numerical row records no truth or coverage). A row with a window that has no stored numerical row at all has no numerical column (null) until it does.';
 // The measured spread of the numerical figure itself (stack issue 396): two flights of the same FFM fit that differ only in the integrator's
 // step sequence (the scored epochs against a 60 s trajectory), from the carried-record rows of 2026-11-10 (store 1104598edeeb-apc), by row
 // and setting; appended to that row's configuration sentence. Measured on the full setting; elsewhere it is at most 2 mm, or under 5 % of FFM's own error.
@@ -306,8 +306,9 @@ async function main() {
           tightRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
         }
       }
-      // the windows the rule leaves without a numerical arm (numericalOf: burnInArc) keep AP's columns
-      const noArm = (i) => !!(label && bs[i]?.burnInArc);
+      // why a window has no numerical figure (with an arm on the row): the rule gives it none (numericalOf: burnInArc), its stored row
+      // records no truth or coverage, or the fit or flight failed
+      const noFigureWhy = (i) => (!label ? null : bs[i]?.burnInArc ? 'ruleLeavesNoArm' : !bs[i] || bs[i].error ? 'noTruthOrCoverage' : 'fitFailed');
       let ffm = null;
       if (label) {
         const used = bs.filter((b) => b.arms[label]?.ok);
@@ -322,7 +323,7 @@ async function main() {
       // an outside theory's column stands only once that theory has a row (flown or failed) on every window of the row
       const flownAll = (t) => ws.every((w) => rowOf(t, w, arc));
       const failedOn = (t, w) => !!rowOf(t, w, arc)?.apError;
-      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day), xF: failedOn('SGP4XP', w), uF: failedOn('USSFXP', w), sF: failedOn('SGP4', w) })).filter((p, i) => p.a != null && (!label || p.f != null || noArm(i)));
+      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day), xF: failedOn('SGP4XP', w), uF: failedOn('USSFXP', w), sF: failedOn('SGP4', w) })).filter((p) => p.a != null);
       // --burns (stack issue 462): the burns in the truth, every one of the burn detector's lists that it does not reject, known at the cutoff
       // or not. On a row whose satellites all have lists, each lead's AP, numerical and SGP4-XP figures are also given over the windows with no
       // burn between the cutoff and that lead (cleanToLead), beside the figures over all windows; no window leaves any count
@@ -377,9 +378,11 @@ async function main() {
           burnFreeScatter = `The burn lists explain ${explained.length} of the ${closer.length} windows where AP's error is more than 100 m below the numerical propagator's at day 5 (a burn in the fit arc or between the cutoff and day 5). On the ${free.length} burn-free windows AP is the closer one by more than 100 m in ${apBelow(free)} and the numerical propagator in ${ffmBelow(free)}: two fits of the drag term scattering about each other under a density forecast ${(Math.round(median(free.map((p) => p.f)) / 100) / 10).toLocaleString('en-US')} km off at day 5 (the numerical propagator's median there), not a difference in accuracy.`;
         }
       }
-      const scored = ws.filter((w, i) => LEADS.some(([, day]) => meters(rowOf('AP', w, arc), null, day) != null && (!label || meters(bs[i], label, day) != null || noArm(i))));
-      const unarmed = scored.filter((w) => noArm(ws.indexOf(w)));
-      const withoutNumericalArm = unarmed.length ? { windows: unarmed.length, satellites: new Set(unarmed.map((w) => w.name)).size } : null;
+      // the row's windows: every one AP scored at one lead at least; of them, those the numerical arm scored at none, by reason
+      const scored = ws.filter((w) => LEADS.some(([, day]) => meters(rowOf('AP', w, arc), null, day) != null));
+      const unscored = label ? scored.filter((w) => { const i = ws.indexOf(w); return !LEADS.some(([, day]) => meters(bs[i], label, day) != null); }) : [];
+      const byReason = (why) => unscored.filter((w) => noFigureWhy(ws.indexOf(w)) === why).length;
+      const withoutNumericalFigure = unscored.length ? { windows: unscored.length, satellites: new Set(unscored.map((w) => w.name)).size, ruleLeavesNoArm: byReason('ruleLeavesNoArm'), fitFailed: byReason('fitFailed'), noTruthOrCoverage: byReason('noTruthOrCoverage') } : null;
       const pcfLabel = A.apPcfFor(g, version, !!W.GROUPS[g].vacuum, arc).label;
       const stated = [...new Set(ws.map((w) => rowOf('AP', w, arc)?.pcf).filter(Boolean))];
       if (stated.some((x) => x !== pcfLabel)) throw new Error(`${g} ${arc} h: stored AP rows name $PCF ${stated.join(', ')}, the rule gives ${pcfLabel}`);
@@ -402,11 +405,11 @@ async function main() {
       const thrusting = ws.filter((w, i) => bs[i]?.burnInArc && /^not ballistic/.test(bs[i].fitProcess ?? ''));
       const thrustingSats = new Set(thrusting.map((w) => w.name)).size, burnLeft = ffmNone - thrusting.length;
       const noneText = [thrusting.length ? `${thrusting.length} on the ${thrustingSats === 1 ? 'satellite' : `${thrustingSats} satellites`} whose orbit is not ballistic between impulses (flown from the truth's positions alone, the numerical setting closes above 100 m over the burn detector's pieces, as under continuous low thrust), left without an arm` : null,
-        burnLeft ? `${burnLeft} where a burn known at the cutoff remains in every arc the rule allows` : null].filter(Boolean).join(', and ') + (ffmNone ? ' (those AP scored stay in AP\'s and the other theories\' columns, counted in withoutNumericalArm)' : '');
+        burnLeft ? `${burnLeft} where a burn known at the cutoff remains in every arc the rule allows` : null].filter(Boolean).join(', and ') + (ffmNone ? ' (those AP scored stay in AP\'s and the other theories\' columns, counted in withoutNumericalFigure)' : '');
       const ffmFitProcess = label && afterBurnGroups.has(g)
         ? `The numerical arm's fit of an object${A.perigeeClause(A.NUMERICAL_AFTER_BURN.perigeeMinKm)} whose precise orbit holds a burn known at the cutoff is on the arc after its last such burn, by AP's rule${arc === 72 ? '' : ` (here: where that burn ends inside the 24 h arc and the arc after it is at least ${A.NUMERICAL_AFTER_BURN.minHours24} h)`}; every other window keeps its full-arc fit. Windows: ${ffmRefit} refitted on the arc after a burn, ${ffmFull} on the full arc${ffmNone ? `, ${ffmNone} without a numerical arm: ${noneText}` : ''}${ws.length - ffmRefit - ffmFull - ffmNone ? `, ${ws.length - ffmRefit - ffmFull - ffmNone} without a numerical fit (no truth or coverage)` : ''}.`
         : null;
-      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ...(withoutNumericalArm ? { withoutNumericalArm } : {}), apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
+      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ...(withoutNumericalFigure ? { withoutNumericalFigure } : {}), apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
       passOf.push({ g, arc, row: rows.at(-1), pass: within100mOfFfm ? pass : [], laterBurns, burnFreeScatter });
       if (/^AP_ECOM2/.test(pcfLabel)) ecom2Rows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
       if (/_TIDES$/.test(pcfLabel)) tideRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
@@ -477,7 +480,7 @@ async function main() {
   const doc = {
     schema: 'sdn-ap-scoreboard/2',
     measured: new Date().toISOString().slice(0, 10),
-    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${tightRows.length ? TIGHT_TEXT(tightRows) : ''}${rows.some((r) => r.withoutNumericalArm) ? NO_ARM_TEXT : ''}${listsText}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}${rows.some((r) => r.leads.some((l) => l.ap?.cleanToLead)) ? CLEAN_TEXT : ''}`,
+    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${tightRows.length ? TIGHT_TEXT(tightRows) : ''}${rows.some((r) => r.withoutNumericalFigure) ? NO_FIGURE_TEXT : ''}${listsText}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}${rows.some((r) => r.leads.some((l) => l.ap?.cleanToLead)) ? CLEAN_TEXT : ''}`,
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
@@ -691,8 +694,29 @@ async function check() {
       && /at a tolerance of 1e-10 /.test(alt?.ffm?.configuration ?? '') && JSON.stringify(alt.leads) === JSON.stringify(was?.leads)
       && h8.statistic.includes(`fitted and flown at a tolerance of 1e-13 on Near 700 km (24 h fit), Near 700 km (72 h fit) (stack issue 520`), `the 1e-13 rows at ${a} h: ${r8.err.slice(-200)} ${near?.ffm?.configuration} ${JSON.stringify(near?.leads?.map((l) => l.ffm?.medianM))} against ${JSON.stringify(want8)}; ${alt?.ffm?.configuration}`);
   }
+  // 9. one laser geodetic window's numerical fit made a failure: the window stays in AP's columns (the row's and each lead's windows, AP's
+  // medians over all of them), the numerical column and the pass line are over the others with their own counts, and
+  // withoutNumericalFigure counts it as fitFailed; nothing is flown
+  const s9 = path.join(dir, 's9'), out9 = path.join(dir, 'i.json'), failF = failK;
+  fs.mkdirSync(path.join(s9, A.NUMERICAL_STORE), { recursive: true });
+  fs.writeFileSync(path.join(s9, A.NUMERICAL_STORE, 'rows-truth-0of1.jsonl'), gd.map((r) => JSON.stringify(r.key === failF ? { ...r, arms: { ...r.arms, FFMbest: { ok: false, arm: 'Fbest', error: 'made-up failure (the check)' } } } : r)).join('\n') + '\n');
+  fs.mkdirSync(path.join(s9, 'table', sha12), { recursive: true });
+  fs.writeFileSync(path.join(s9, 'table', sha12, 'rows.jsonl'), moduleRows.map((r) => JSON.stringify(r)).join('\n') + '\n');
+  for (const t of Object.keys(A.OUTSIDE)) { fs.mkdirSync(path.dirname(outsideFile(s9, t)), { recursive: true }); fs.writeFileSync(outsideFile(s9, t), outsideRows.filter((r) => r.theory === t).map((r) => JSON.stringify(r)).join('\n') + '\n'); }
+  const r9 = runIn(s9, out9);
+  const i9 = fs.existsSync(out9) ? E.readJson(out9) : { rows: [] }, row9 = i9.rows?.[0];
+  const best9 = (b, day) => (b.key !== failF && b.arms?.FFMbest?.ok ? b.arms.FFMbest.days?.[day]?.e : undefined);
+  for (const [hours, day] of LEADS) {
+    const l = row9?.leads?.find((x) => x.hours === hours), all9 = gd.map((b) => ({ a: apRows.get(b.key)?.days?.[day]?.e, f: best9(b, day) })).filter((p) => Number.isFinite(p.a)), withF = all9.filter((p) => Number.isFinite(p.f));
+    ok(r9.code === 0 && /, 0 to fly/.test(r9.err) && l && l.windows === all9.length && l.ap.medianM === med(all9.map((p) => p.a * 1000)) && l.ffm.windows === withF.length && withF.length === all9.length - 1 && l.ffm.medianM === med(withF.map((p) => p.f * 1000)) && l.apFfmRank.windows === withF.length,
+      `a failed numerical fit at ${hours} h: ${r9.err.slice(-200)} ${JSON.stringify(l)?.slice(0, 300)} against ${all9.length} AP windows, ${withF.length} numerical`);
+  }
+  const pass9 = gd.map((b) => ({ a: apRows.get(b.key)?.days?.['5']?.e, f: best9(b, '5') })).filter((p) => Number.isFinite(p.a) && Number.isFinite(p.f));
+  ok(row9?.windows === row?.windows && row9.satellites === row?.satellites && row9.within100mOfFfm?.windows === pass9.length && row9.within100mOfFfm.met === pass9.filter((p) => p.a * 1000 - p.f * 1000 < 100).length
+    && JSON.stringify(row9.withoutNumericalFigure) === JSON.stringify({ windows: 1, satellites: 1, ruleLeavesNoArm: 0, fitFailed: 1, noTruthOrCoverage: 0 }) && /withoutNumericalFigure counts/.test(i9.statistic ?? ''),
+  `a failed numerical fit, the row: ${JSON.stringify({ windows: row9?.windows, satellites: row9?.satellites, pass: row9?.within100mOfFfm, without: row9?.withoutNumericalFigure })} against ${pass9.length} on the pass line`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, one-sided and either way, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count; with made-up burn flags the row is the same row with burnSplit and the two-sided split, whose four parts each add up to their pass line and equal the ones recomputed, the flags not named in the file; under each Near 700 km row the altimetry row\'s pass line on its satellite at 600 to 850 km alone, recomputed, with its own split; with made-up burn lists every lead keeps its figures over all windows and gains cleanToLead for AP, the numerical propagator and SGP4-XP, recomputed over the windows with no burn from the cutoff to the lead (a rejected candidate not a burn), and laterBurns counts each kind of later burn; with made-up 1e-13 rows a row whose every window has one is scored on them, its configuration at 1e-13 and named in the method line, and a row with one window of two stays at 1e-10 with its figures');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, one-sided and either way, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count; with made-up burn flags the row is the same row with burnSplit and the two-sided split, whose four parts each add up to their pass line and equal the ones recomputed, the flags not named in the file; under each Near 700 km row the altimetry row\'s pass line on its satellite at 600 to 850 km alone, recomputed, with its own split; with made-up burn lists every lead keeps its figures over all windows and gains cleanToLead for AP, the numerical propagator and SGP4-XP, recomputed over the windows with no burn from the cutoff to the lead (a rejected candidate not a burn), and laterBurns counts each kind of later burn; with made-up 1e-13 rows a row whose every window has one is scored on them, its configuration at 1e-13 and named in the method line, and a row with one window of two stays at 1e-10 with its figures; a window whose numerical fit failed stays in AP\'s columns and the row\'s windows, the numerical column and the pass line are over the others with their own counts, and withoutNumericalFigure counts it as fitFailed');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }
