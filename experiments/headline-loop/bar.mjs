@@ -93,10 +93,13 @@ async function main() {
   const cells = (xs) => {
     // a window whose fit is refused or whose flight fails counts against the share: the bar is met over every window attempted
     const ok = xs.filter((x) => x.r && !x.r.error), failed = xs.filter((x) => x.r?.error).length, D = ok.map((x) => x.r.maxDistanceM), met = D.filter((d) => d <= BAR_M).length;
-    const ap = ok.map((x) => x.r.day5M).filter(Number.isFinite), ffm = ok.map((x) => ffmDay5(x.m)).filter(Number.isFinite), attempted = ok.length + failed;
+    // the day-5 medians are paired: both over the windows where AP's figure and the numerical propagator's stored figure both exist;
+    // unpaired counts the flown windows with AP's figure and no numerical figure in the store
+    const pairs = ok.map((x) => [x.r.day5M, ffmDay5(x.m)]), paired = pairs.filter(([a, f]) => Number.isFinite(a) && Number.isFinite(f)), attempted = ok.length + failed;
     return { flown: ok.length, failed, withinBar: { windows: attempted, met, share: attempted ? Math.round((met / attempted) * 1000) / 1000 : null },
       maxDistanceM: { median: r1(quantile(D, 0.5)), worst: r1(D.length ? Math.max(...D) : null) },
-      truthDay5: { ap: { medianM: r1(quantile(ap, 0.5)), windows: ap.length }, ffm: { medianM: r1(quantile(ffm, 0.5)), windows: ffm.length } } };
+      truthDay5: { windows: paired.length, unpaired: pairs.filter(([a, f]) => Number.isFinite(a) && !Number.isFinite(f)).length,
+        ap: { medianM: r1(quantile(paired.map(([a]) => a), 0.5)) }, ffm: { medianM: r1(quantile(paired.map(([, f]) => f), 0.5)) } } };
   };
   const rows = [], byGroup = new Map();
   for (const g of ALL.filter((x) => groups.includes(x))) {
@@ -119,7 +122,7 @@ async function main() {
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
     harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/bar.mjs', ...repositoryArgs(process.argv.slice(2))].join(' ') },
     ffm: { version: FFM_220.version, wasmSha256: FFM_220.wasmSha256, modulesCommit: FFM_220.modulesCommit },
-    method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed and against the share (withinBar.windows is every window attempted, flown and failed), never dropped.',
+    method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast; both medians are over the same windows, those where both figures exist (truthDay5.windows), and truthDay5.unpaired counts the flown windows with AP\'s figure and no numerical figure in the store. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed and against the share (withinBar.windows is every window attempted, flown and failed), never dropped.',
     bar: { withinM: BAR_M, fromHours: 0, toHours: BAR_H, stepS: STEP_S },
     rows,
     groups: groupsOut,
