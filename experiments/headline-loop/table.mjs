@@ -11,7 +11,9 @@
 //     [--burn-flags <dir of the burn lane's flags-*.json>: each flagged row's pass line split by burns (burnSplit), and under Near 700 km the
 //      altimetry row's line at the same altitudes (sameAltitudes); stack issue 462]
 //     [--burns <dir of the burn detector's lists (stack issue 462), <group>/<name>.burns.json>: from MANEUVER72_SINCE, AP's 72 h fit of a maneuvering
-//      object takes the arc after its last burn known at the cutoff (lib/arms.mjs MANEUVER72; stack issue 489); each such row says so]
+//      object takes the arc after its last burn known at the cutoff (lib/arms.mjs MANEUVER72; stack issue 489); each such row says so. The
+//      numerical arm, in a regime refitted by refly.mjs --after-burns, takes the refit on the same arc (lib/arms.mjs numericalArc), and the
+//      commercial geostationary row gets an arm on the windows whose arcs it frees of known burns; each such row says so (ffmFitProcess)]
 //   node experiments/headline-loop/table.mjs --check
 //
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm and its package.json), never from a working tree.
@@ -181,6 +183,30 @@ async function main() {
   // a row that flew wins over a row that recorded an error for the same window and arc (a window flown again after its truth was found)
   const base = new Map();
   for (const r of fs.readdirSync(baseDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(baseDir, f)))) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
+  // --burns (stack issues 462 and 489): the numerical arm's fit of a maneuvering object on the arc after its last burn known at the cutoff
+  // (refly.mjs --after-burns, lib/arms.mjs numericalArc), stored apart. A regime with such rows takes, window by window, the refit where the
+  // rule moved the arc and the stored fit where it did not; a window of it without a decision row leaves the row's arm being measured.
+  const afterBurn = new Map(), afterBurnGroups = new Set();
+  if (args.burns) {
+    const d = path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store);
+    for (const r of fs.existsSync(d) ? fs.readdirSync(d).filter((f) => /^rows-after-burn-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(d, f))) : []) {
+      const k = `${r.key}|${r.arcH}`;
+      if (!afterBurn.has(k) || (afterBurn.get(k).error && !r.error)) afterBurn.set(k, r);
+      afterBurnGroups.add(r.group);
+    }
+  }
+  const REFIT = 'maneuvering: the arc after its last burn';
+  /** A window's numerical row: the stored one, or under --burns in a regime with after-burn rows, the refit where the rule moved the arc. On
+   *  the commercial geostationary row (NOT_CONFIGURED) a window whose arc still holds a known burn has no numerical arm. */
+  const numericalOf = (w, arc) => {
+    const k = `${w.key}|${arc}`, b = base.get(k);
+    if (!b || !afterBurnGroups.has(w.group)) return b;
+    const r = afterBurn.get(k);
+    if (!r || r.error) return b?.error ? b : null;
+    if (NOT_CONFIGURED.has(w.group) && r.burnInArc) return { ...b, arms: {}, fitProcess: r.fitProcess, burnInArc: true };
+    if (r.fitProcess === REFIT) return { ...b, env: r.env, arms: { FFMq: r.arms?.FFMq ?? { ok: false } }, fitProcess: r.fitProcess, fitArcHours: r.fitArcHours };
+    return { ...b, fitProcess: r.fitProcess };
+  };
   // the windows: the first pass, and a regime's second pass (the windows touching 2026-03..05) once its numerical rows are all in the store
   const all = W.windowsOf(groups);
   const secondIn = new Set(groups.filter((g) => { const sec = all.second.filter((w) => w.group === g); return sec.length && sec.every((w) => w.arcs.every((a) => base.has(`${w.key}|${a}`))); }));
@@ -236,7 +262,8 @@ async function main() {
   // the fullest stored setting by name (owner's rule, a properly configured numerical propagator; 2026-11-11): never chosen on the outcome,
   // so a row's arm does not change from one table to the next with the errors
   const chooseArm = (g, bs) => {
-    if (NOT_CONFIGURED.has(g)) return null;
+    // the commercial geostationary row has an arm where its fits are on arcs after the last burn (--burns with its after-burn rows)
+    if (NOT_CONFIGURED.has(g) && !afterBurnGroups.has(g)) return null;
     return PREFER.find((a) => bs.some((b) => b.arms?.[a]?.ok)) ?? null;
   };
   const rows = [], ecom2Rows = [], tideRows = [], tally = {}, passOf = [];
@@ -246,7 +273,7 @@ async function main() {
   for (const g of ALL.filter((x) => groups.includes(x))) {
     for (const arc of [...new Set(listed.filter((w) => w.group === g).flatMap((w) => w.arcs))].sort((a, b) => a - b)) {
       const ws = listed.filter((w) => w.group === g && w.arcs.includes(arc));
-      const bs = ws.map((w) => base.get(`${w.key}|${arc}`));
+      const bs = ws.map((w) => numericalOf(w, arc));
       const complete = bs.every(Boolean);
       const label = complete ? chooseArm(g, bs) : null;
       let ffm = null;
@@ -300,7 +327,18 @@ async function main() {
         : arc === 72 && A.maneuver72(version) && scored.some((w) => rowOf('AP', w, arc)?.fitProcess)
           ? `An object with its perigee at ${A.MANEUVER72.perigeeMinKm} km or above whose precise orbit holds a burn known at the cutoff, ending within ${A.MANEUVER72.historyDays} days before it, is fitted on the arc after its last such burn (${A.MANEUVER72.minHours} to ${A.MANEUVER72.capHours} h; the module fits it under its short-arc rule); every other window on the full 72 h. Windows: ${maneuvering} on the arc after a burn, ${scored.length - maneuvering} on the full arc.`
           : null;
-      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
+      // --burns with after-burn rows: the numerical arm's fit process in one sentence, with the windows each way (stack issues 462 and 489)
+      const ffmRefit = bs.filter((b) => b?.fitProcess === REFIT && !b.burnInArc).length, ffmNone = bs.filter((b) => b?.burnInArc).length;
+      const ffmFull = bs.filter((b) => b?.fitProcess && b.fitProcess !== REFIT && !b.burnInArc).length;
+      // of those without an arm: the objects whose orbit is not ballistic between impulses (their burn lists' notBallistic), and the rest
+      const thrusting = ws.filter((w, i) => bs[i]?.burnInArc && /^not ballistic/.test(bs[i].fitProcess ?? ''));
+      const thrustingSats = new Set(thrusting.map((w) => w.name)).size, burnLeft = ffmNone - thrusting.length;
+      const noneText = [thrusting.length ? `${thrusting.length} on the ${thrustingSats === 1 ? 'satellite' : `${thrustingSats} satellites`} whose orbit is not ballistic between impulses (flown from the truth's positions alone, the numerical setting closes above 100 m over the burn detector's pieces, as under continuous low thrust), left without an arm` : null,
+        burnLeft ? `${burnLeft} where a burn known at the cutoff remains in every arc the rule allows` : null].filter(Boolean).join(', and ');
+      const ffmFitProcess = label && afterBurnGroups.has(g)
+        ? `The numerical arm's fit of an object with its perigee at ${A.MANEUVER72.perigeeMinKm} km or above whose precise orbit holds a burn known at the cutoff is on the arc after its last such burn, by AP's rule${arc === 72 ? '' : ` (here: where that burn ends inside the 24 h arc and the arc after it is at least ${A.NUMERICAL_AFTER_BURN.minHours24} h)`}; every other window keeps its full-arc fit. Windows: ${ffmRefit} refitted on the arc after a burn, ${ffmFull} on the full arc${ffmNone ? `, ${ffmNone} without a numerical arm: ${noneText}` : ''}${ws.length - ffmRefit - ffmFull - ffmNone ? `, ${ws.length - ffmRefit - ffmFull - ffmNone} without a numerical fit (no truth or coverage)` : ''}.`
+        : null;
+      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
       passOf.push({ g, arc, row: rows.at(-1), pass: within100mOfFfm ? pass : [] });
       if (/^AP_ECOM2/.test(pcfLabel)) ecom2Rows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
       if (/_TIDES$/.test(pcfLabel)) tideRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
