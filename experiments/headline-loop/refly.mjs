@@ -9,7 +9,7 @@
 //   node experiments/headline-loop/refly.mjs --after-burns <dir of the burn detector's lists, <group>/<name>.burns.json> [--groups S1,DO,WA] [--shard k/n]
 //     [--after-burn-store <store folder>: where the rows go (lib/arms.mjs NUMERICAL_AFTER_BURN.store unless given), one folder per set of
 //      lists; each row names its satellite's list (burnList), and table.mjs refuses a row whose list is not the one it was given]
-//   node experiments/headline-loop/refly.mjs --tight [--groups T,P] [--arcs 24,72] [--shard k/n]
+//   node experiments/headline-loop/refly.mjs --tight [--groups T,P] [--arcs 24,72] [--shard k/n] [--retry-errors]
 //   --tight (stack issue 520): the full drag setting fitted and flown again at tolerance 1e-13 (lib/arms.mjs NUMERICAL_TIGHT: L70S as
 //     L70S13), on every window and fit arc of the groups' rows as table.mjs lists them (the first pass, and a regime's second pass once its
 //     numerical rows are all in the store) whose stored numerical row exists and whose full setting is L70S: the window's truth as the
@@ -17,10 +17,13 @@
 //     the cutoff together (at 1e-13 the requested epochs move the flight by under 0.2 m). One row per window and fit arc, whatever the
 //     outcome (the fit failed: arms.FFMq.ok false; no truth or coverage: error), goes to <store>/<NUMERICAL_TIGHT.store>/rows-tight-<k>of<n>.jsonl
 //     with the fitted state (arms.FFMq.product); the trajectory to <store>/numerical-trajectories/<NUMERICAL_TIGHT.to>/<group>/<key>-<arc>.bin,
-//     and its manifest line to numerical-trajectories/staged-<NUMERICAL_TIGHT.to>.jsonl. A row already there is not flown again; nothing
-//     stored is overwritten.
-//   node experiments/headline-loop/refly.mjs --tight-switch G:arc[,G:arc]: a row's staged lines appended to the manifest in one write, only
-//     when every window of the row has its staged line (recorded in numerical-trajectories/switched-<NUMERICAL_TIGHT.to>.jsonl)
+//     and its manifest line to numerical-trajectories/staged-<NUMERICAL_TIGHT.to>.jsonl. A row already there is not flown again (with
+//     --retry-errors, one recording no truth or a failed fit is, and the later row is read in its place); nothing stored is overwritten.
+//     The fit is of the full arc, with no burn rule: table.mjs keeps a row with a refit after a burn, or in a regime with after-burn rows
+//     a window without its decision row, at 1e-10.
+//   node experiments/headline-loop/refly.mjs --tight-switch G:arc[,G:arc]: when every window of the row has its staged line, the lines
+//     of its windows not in the manifest at 1e-13 (all of them, or the windows that joined the row since) appended in one write (recorded
+//     in numerical-trajectories/switched-<NUMERICAL_TIGHT.to>.jsonl)
 //   --after-burns (stack issues 462 and 489): the numerical arm's fit of a maneuvering object on the arc after its last burn known at the
 //     cutoff (lib/arms.mjs numericalArc: the rule of AP's 72 h fit, and on 24 h fits where that burn lies inside the 24 h). One row per window
 //     and fit arc of the groups goes to <store>/<NUMERICAL_AFTER_BURN.store>/: where the rule moves the arc, the full setting (FFMq) fitted
@@ -69,20 +72,25 @@ async function tight() {
   const items = listed.flatMap((w) => w.arcs.filter((a) => (!arcsAsked || arcsAsked.includes(a)) && base.has(`${w.key}|${a}`)).map((a) => ({ w, arc: a })));
   const nameOf = (key, arc) => `${key.replace(/[| ]/g, '_')}-${arc}`;
   if (args['tight-switch']) {
+    // a row is switched when every window of it has its staged line; the lines of its windows that have no 1e-13 line in the manifest yet
+    // (all of them, or the windows that joined the row since, as a second pass) are appended in one write
     const staged = new Map(read(TRAJ, new RegExp(`^staged-${T.to}\\.jsonl$`)).map((x) => [`${x.key}|${x.arcH}`, x]));
-    const switched = new Set(read(TRAJ, new RegExp(`^switched-${T.to}\\.jsonl$`)).map((x) => `${x.group}:${x.arcH}`));
+    const inManifest = new Set(read(TRAJ, /^manifest\.jsonl$/).filter((x) => x.setting === T.to).map((x) => `${x.key}|${x.arcH}`));
     for (const ga of args['tight-switch'].split(',')) {
       const [g, a] = ga.split(':'), rowItems = items.filter((x) => x.w.group === g && x.arc === Number(a)), lines = rowItems.map((x) => staged.get(`${x.w.key}|${x.arc}`));
-      if (switched.has(ga)) { console.error(`${ga}: switched already`); continue; }
       if (!rowItems.length || lines.some((l) => !l)) { console.error(`${ga}: ${lines.filter(Boolean).length} of ${rowItems.length} windows staged, not switched`); continue; }
-      fs.appendFileSync(MANIFEST, lines.map((l) => `${JSON.stringify(l)}\n`).join(''));
-      fs.appendFileSync(SWITCHED, `${JSON.stringify({ group: g, arcH: Number(a), windows: lines.length, setting: T.to, at: new Date().toISOString() })}\n`);
-      console.error(`${ga}: switched, ${lines.length} windows`);
+      const add = lines.filter((l) => !inManifest.has(`${l.key}|${l.arcH}`));
+      if (!add.length) { console.error(`${ga}: every window's line is in the manifest`); continue; }
+      fs.appendFileSync(MANIFEST, add.map((l) => `${JSON.stringify(l)}\n`).join(''));
+      fs.appendFileSync(SWITCHED, `${JSON.stringify({ group: g, arcH: Number(a), windows: lines.length, appended: add.length, setting: T.to, at: new Date().toISOString() })}\n`);
+      console.error(`${ga}: switched, ${add.length} of ${lines.length} windows' lines appended`);
     }
     process.exit(0);
   }
   const [K, N] = (args.shard ?? '0/1').split('/').map(Number);
-  const done = new Set(read(ROWS, /^rows-.*\.jsonl$/).map((r) => `${r.key}|${r.arcH}`));
+  // a window-arc with a row is not flown again; with --retry-errors, one whose rows all record no truth or a failed fit is
+  const retry = !!args['retry-errors'], rowsSoFar = read(ROWS, /^rows-.*\.jsonl$/);
+  const done = new Set(rowsSoFar.filter((r) => !retry || (!r.error && r.arms?.FFMq?.ok)).map((r) => `${r.key}|${r.arcH}`));
   const mine = items.filter((x) => W.inShard(x.w.key, K, N) && !done.has(`${x.w.key}|${x.arc}`))
     .sort((p, q) => groups.indexOf(p.w.group) - groups.indexOf(q.w.group) || String(p.w.name).localeCompare(String(q.w.name)) || p.w.cutoffMs - q.w.cutoffMs || p.arc - q.arc);
   console.error(`refly --tight shard ${K}/${N}: ${mine.length} window-arcs to fly (${items.length} in the rows of ${groups.join(', ')})`);
