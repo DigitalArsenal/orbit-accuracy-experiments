@@ -29,7 +29,7 @@ const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA',
 const GROUPS = [
   { key: 'leo', name: 'Low Earth orbit', regimes: ['LS', 'DO', 'S1', 'P', 'T'] },
   { key: 'meo', name: 'Medium Earth orbit', regimes: ['GD', 'GN', 'GN_GAL'] },
-  { key: 'geo', name: 'Geosynchronous', regimes: ['IG', 'GE'] },
+  { key: 'geo', name: 'Geosynchronous', regimes: ['IG', 'GE', 'WA'] },
   { key: 'heo', name: 'Highly elliptical', regimes: ['HE', 'HX'] },
 ];
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
@@ -119,10 +119,18 @@ async function main() {
       const c = cells(xs.filter((x) => x.m && x.m.source !== 'none'));
       const refitAfterBurn = xs.filter((x) => /after the burn/.test(x.m?.source ?? '')).length;
       rows.push({ ...base, ...c, trajectories: { written, missing: Math.max(0, windows - written), refitAfterBurn } });
-      byGroup.set(g, [...(byGroup.get(g) ?? []), ...xs.filter((x) => x.m && x.m.source !== 'none')]);
+      byGroup.set(`${g}|${a}`, xs.filter((x) => x.m && x.m.source !== 'none'));
     }
   }
-  const groupsOut = GROUPS.map((G) => { const xs = G.regimes.flatMap((g) => byGroup.get(g) ?? []), c = cells(xs); return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5 }; });
+  // a front-page group pools each of its rows once, at the row's longest fit arc here (72 h where the row has one, else 24 h), so no
+  // window counts under two arcs; groups[].rows names the arc each row contributes
+  const pooledArc = (g) => [...arcs].sort((p, q) => q - p).find((a) => byGroup.has(`${g}|${a}`)) ?? null;
+  const groupsOut = GROUPS.map((G) => {
+    const parts = G.regimes.filter((g) => groups.includes(g)).map((g) => ({ g, a: pooledArc(g) })).filter((p) => p.a != null);
+    const c = cells(parts.flatMap((p) => byGroup.get(`${p.g}|${p.a}`)));
+    return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label),
+      rows: parts.map((p) => ({ regime: W.GROUPS[p.g].label, fitHours: p.a })), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5 };
+  });
   const doc = {
     schema: 'sdn-ap-catalog-fit/1',
     measured: new Date().toISOString().slice(0, 10),
