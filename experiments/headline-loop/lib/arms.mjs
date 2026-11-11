@@ -40,7 +40,7 @@ export const PCF = {
 // fit, and every fit by an older build (which refuses FORCES.ECOM2 by name), uses the same $PCF bytes as before.
 export const ECOM2_SINCE = '0.6.15';
 // the geostationary tail's release, which also solves Y0 on these rows (the number is set when that build is fixed)
-export const ECOM2_GEO_SINCE = '0.6.19';
+export const ECOM2_GEO_SINCE = '0.6.20';
 export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { groups: ['GE', 'IG'], since: ECOM2_GEO_SINCE }];
 export const ECOM2_MIN_ARC = 72;
 const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
