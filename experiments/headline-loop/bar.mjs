@@ -1,0 +1,188 @@
+// The bar's table for a released sdn-ap version: the catalog's fit (stack #503, #504; the owner, 2026-11-11: "if we are fitting on FFMs
+// numerical forecast and that gives good results, then use that"). For every window of every row that has a numerical arm, AP's record
+// is fitted to the numerical propagator's forecast over 0 to 120 h after the cutoff (the module's fit, the row's $PCF, the weather known
+// at the cutoff), and the window's figure is the largest 3D distance between that record and the forecast over 0 to 120 h on the
+// forecast's 300 s grid (the bar: at most 100 m). Beside it, the error against the precise orbit at day 5 (the scoreboard's statistic:
+// the RMS of the 3D error over the 24 h ending at 120 h, on the table's scored epochs) of AP's record and of the numerical forecast.
+// The numerical trajectories are the stored ones (<store>/numerical-trajectories, its manifest's last line per window and fit arc): the
+// row's numerical arm (the scoreboard's, by name) fitted to the precise orbit over the fit arc before the cutoff, and over the arc after
+// the last burn known at the cutoff where that rule moved its arc, then flown 7 days past the cutoff. Writes one JSON
+// (schema sdn-ap-catalog-fit/1) of aggregates only: per row and per front-page group, nothing per window.
+//
+//   node experiments/headline-loop/bar.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 8]
+//     [--groups LS,DO] [--arcs 72,24]
+//
+// The build is read by git show at the commit, never from a working tree; the harness's working tree must be clean (the file names its
+// commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl and are flown again only when its manifest line changes.
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { fork, execFileSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { REPO, MODULES_ROOT, usePackages, envRecord } from './lib/env.mjs';
+
+const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
+const SELF = new URL(import.meta.url).pathname;
+const HOUR = 3600e3, DAY = 864e5, BAR_M = 100, BAR_H = 120, STEP_S = 300;
+const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA', 'HE', 'HX'];
+// the front page's four groups (the site's)
+const GROUPS = [
+  { key: 'leo', name: 'Low Earth orbit', regimes: ['LS', 'DO', 'S1', 'P', 'T'] },
+  { key: 'meo', name: 'Medium Earth orbit', regimes: ['GD', 'GN', 'GN_GAL'] },
+  { key: 'geo', name: 'Geosynchronous', regimes: ['IG', 'GE'] },
+  { key: 'heo', name: 'Highly elliptical', regimes: ['HE', 'HX'] },
+];
+const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
+const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { maxBuffer: 1 << 28 });
+const doneKey = (r) => `${r.key}|${r.arcH}|${r.source}|${r.from}`;
+
+if (args.worker) await worker(); else await main();
+
+async function main() {
+  const t0 = Date.now(), root = args['modules-root'], want = args['modules-commit'], out = args.out;
+  if (!root || !want || !out) throw new Error('usage: bar.mjs --modules-commit <sha> --modules-root <modules checkout> --out <file> [--jobs 8] [--groups LS,DO] [--arcs 72,24]');
+  const dirty = git(REPO, 'status', '--porcelain', '--', 'experiments').toString().trim();
+  if (dirty) throw new Error(`refused: the harness's working tree differs from its commit (the file names the commit):\n${dirty}`);
+  const harnessCommit = git(REPO, 'rev-parse', 'HEAD').toString().trim();
+  const commit = git(root, 'rev-parse', '--verify', `${want}^{commit}`).toString().trim();
+  const wasm = git(root, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`);
+  const version = JSON.parse(git(root, 'show', `${commit}:propagator/sdn-ap/package.json`).toString()).version;
+  const wasmSha = sha256(wasm);
+  usePackages();
+  const W = await import('./lib/windows.mjs');
+  const A = await import('./lib/arms.mjs');
+  const { FFM_220 } = await import(path.join(REPO, 'experiments/operator-theory/lib/build.mjs'));
+  const dir = path.join(A.STORE_ROOT, 'bar', wasmSha.slice(0, 12)), file = path.join(dir, 'module.wasm'), rowsFile = path.join(dir, 'rows.jsonl');
+  fs.mkdirSync(dir, { recursive: true });
+  if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
+  const groups = args.groups ? args.groups.split(',') : ALL, arcs = (args.arcs ?? '72,24').split(',').map(Number);
+  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), manifest = new Map();
+  for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); manifest.set(`${r.key}|${r.arcH}`, r); }
+  const all = W.windowsOf(groups), listed = [...all.windows, ...all.second];
+  const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
+  const stored = new Map();
+  if (fs.existsSync(rowsFile)) for (const r of fs.readFileSync(rowsFile, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)) if (r.wasmSha256 === wasmSha) stored.set(doneKey(r), r);
+  // every window of every row at its fit arcs; flown where its manifest line holds a trajectory
+  const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a)).map((a) => ({ w, a, m: manifest.get(`${w.key}|${a}`) })));
+  const todo = wanted.filter((x) => x.m && x.m.source !== 'none' && x.m.file && !stored.has(doneKey(x.m)));
+  const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
+  console.error(`bar: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${wanted.length} window-arcs, ${wanted.filter((x) => x.m && x.m.source !== 'none').length} with a numerical trajectory, ${todo.length} to fly on ${jobs} jobs`);
+  let next = 0, flown = 0;
+  await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
+    const child = fork(SELF, ['--worker', '--wasm', file, '--version', version, '--groups', groups.join(',')], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const give = () => (next < todo.length ? child.send({ m: todo[next++].m }) : child.send({ stop: true }));
+    child.on('message', (msg) => {
+      if (msg.row) {
+        const row = { ...msg.row, version, modulesCommit: commit, wasmSha256: wasmSha, harness: harnessCommit };
+        fs.appendFileSync(rowsFile, `${JSON.stringify(row)}\n`); stored.set(doneKey(row), row);
+        flown += 1; if (flown % 25 === 0 || flown === todo.length) console.error(`  ${flown}/${todo.length}, ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+      }
+      give();
+    });
+    child.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`worker exited ${code}`))));
+  })));
+
+  // the numerical arm's day-5 error against the precise orbit, from the store (the after-burn refits where the trajectory is one)
+  const numRows = new Map();
+  const readDir = (d, pattern) => { if (!fs.existsSync(d)) return; for (const f of fs.readdirSync(d).filter((x) => pattern.test(x))) for (const r of fs.readFileSync(path.join(d, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)) if (r.arms) numRows.set(`${f.startsWith('rows-after-burn') ? 'after' : 'stored'}|${r.key}|${r.arcH}`, r); };
+  readDir(path.join(A.STORE_ROOT, A.NUMERICAL_STORE), /^rows-truth-.*\.jsonl$/);
+  readDir(path.join(A.STORE_ROOT, A.NUMERICAL_AFTER_BURN.store), /^rows-after-burn-.*\.jsonl$/);
+  const ffmDay5 = (m) => { const b = numRows.get(`${/after the burn/.test(m.source) ? 'after' : 'stored'}|${m.key}|${m.arcH}`) ?? numRows.get(`stored|${m.key}|${m.arcH}`); const e = b?.arms?.[m.arm]?.days?.['5']?.e; return Number.isFinite(e) ? e * 1000 : null; };
+  const quantile = (v, p) => { const s = v.slice().sort((a, b) => a - b); if (!s.length) return null; const i = (s.length - 1) * p, lo = Math.floor(i); return s[lo] + (s[Math.ceil(i)] - s[lo]) * (i - lo); };
+  const r1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
+  const cells = (xs) => {
+    const ok = xs.filter((x) => x.r && !x.r.error), D = ok.map((x) => x.r.maxDistanceM), met = D.filter((d) => d <= BAR_M).length;
+    const ap = ok.map((x) => x.r.day5M).filter(Number.isFinite), ffm = ok.map((x) => ffmDay5(x.m)).filter(Number.isFinite);
+    return { flown: ok.length, failed: xs.filter((x) => x.r?.error).length, withinBar: { windows: ok.length, met, share: ok.length ? Math.round((met / ok.length) * 1000) / 1000 : null },
+      maxDistanceM: { median: r1(quantile(D, 0.5)), worst: r1(D.length ? Math.max(...D) : null) },
+      truthDay5: { ap: { medianM: r1(quantile(ap, 0.5)), windows: ap.length }, ffm: { medianM: r1(quantile(ffm, 0.5)), windows: ffm.length } } };
+  };
+  const rows = [], byGroup = new Map();
+  for (const g of ALL.filter((x) => groups.includes(x))) {
+    for (const a of arcs) {
+      const xs = wanted.filter((x) => x.w.group === g && x.a === a).map((x) => ({ ...x, r: x.m && x.m.source !== 'none' ? stored.get(doneKey(x.m)) : null }));
+      if (!xs.length) continue;
+      const written = xs.filter((x) => x.m && x.m.source !== 'none').length;
+      const base = { regime: W.GROUPS[g].label, fitHours: a, satellites: new Set(xs.map((x) => x.w.name)).size, windows: xs.length };
+      if (!written) { rows.push({ ...base, noNumericalArm: true }); continue; }
+      const c = cells(xs.filter((x) => x.m && x.m.source !== 'none'));
+      const refitAfterBurn = xs.filter((x) => /after the burn/.test(x.m?.source ?? '')).length;
+      rows.push({ ...base, ...c, trajectories: { written, missing: xs.length - written, refitAfterBurn } });
+      byGroup.set(g, [...(byGroup.get(g) ?? []), ...xs.filter((x) => x.m && x.m.source !== 'none')]);
+    }
+  }
+  const groupsOut = GROUPS.map((G) => { const xs = G.regimes.flatMap((g) => byGroup.get(g) ?? []), c = cells(xs); return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label), flown: c.flown, met: c.withinBar.met, truthDay5: c.truthDay5 }; });
+  const doc = {
+    schema: 'sdn-ap-catalog-fit/1',
+    measured: new Date().toISOString().slice(0, 10),
+    module: { version, modulesCommit: commit, wasmSha256: wasmSha },
+    harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/bar.mjs', ...repositoryArgs(process.argv.slice(2))].join(' ') },
+    ffm: { version: FFM_220.version, wasmSha256: FFM_220.wasmSha256, modulesCommit: FFM_220.modulesCommit },
+    method: 'The numerical propagator (FFM, the row\'s numerical arm as the scoreboard names it) is fitted to the precise orbit over the fit arc before the cutoff, data before the cutoff only (on the arc after the last burn known at the cutoff where that rule moves the arc), and flown 7 days past the cutoff. AP\'s record is fitted, by the module\'s fit with the row\'s $PCF and the space weather known at the cutoff, to that forecast\'s states from the cutoff to 120 h after it, one every 300 s; the fit is one per window. A window\'s figure is the largest 3D distance between AP\'s record and the numerical forecast over 0 to 120 h on the forecast\'s 300 s grid (the bar: at most 100 m). The day-5 figures are the root mean square of the 3D error against the precise orbit over the 24 h ending at 120 h, for AP\'s record and for the numerical forecast. A window without a stored numerical trajectory is neither flown nor failed (trajectories.missing); a fit or flight that fails is counted in failed, never dropped.',
+    bar: { withinM: BAR_M, fromHours: 0, toHours: BAR_H, stepS: STEP_S },
+    rows,
+    groups: groupsOut,
+  };
+  fs.writeFileSync(out, `${JSON.stringify(doc, null, 2)}\n`);
+  console.error(`bar: wrote ${out} in ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+}
+
+async function worker() {
+  usePackages();
+  const W = await import('./lib/windows.mjs');
+  const A = await import('./lib/arms.mjs');
+  const APL = await import(path.join(REPO, 'experiments/operator-theory/lib/ap.mjs'));
+  const { openModules } = await import(path.join(W.root, W.XP2F.xm.dir, 'lib/modules.mjs'));
+  const entry = createRequire(path.join(MODULES_ROOT, 'propagator/sdn-ap/package.json')).resolve('space-data-module-sdk/testing/isomorphic');
+  const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
+  const S = A.S, arms = await A.openArms({}), m = await openModules(), env = envRecord();
+  const h = await createStandaloneHarness('browser', args.wasm, { surface: 'direct' });
+  const invoke = async (methodId, inputs) => { const r = await h.invoke({ methodId, inputs }); if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`); return r; };
+  const iso = (t) => new Date(t).toISOString();
+  const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
+  const fly = async (ocm, epochs) => S.oemLines(new Uint8Array((await invoke('propagate', [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf(epochs) }])).outputs.find((o) => o.portId === 'ephemeris').payload)).map((l) => ({ r: l.r, v: l.v }));
+  const fit = async (oem, pcf, spw) => new Uint8Array((await invoke('fit', [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(spw ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: spw }] : [])])).outputs.find((o) => o.portId === 'elements').payload);
+  const r1 = (x) => (Number.isFinite(x) ? Math.round(x * 10) / 10 : null);
+  const all = W.windowsOf(args.groups.split(',')), winOf = new Map([...all.windows, ...all.second].map((w) => [w.key, w]));
+  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories');
+  const lastLine = (key, arcH) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); if (r.key === key && r.arcH === arcH) last = r; } return last; };
+  const flyOne = async (man) => {
+    const t1 = performance.now(), row = { key: man.key, group: man.group, arcH: man.arcH, arm: man.arm, source: man.source, from: man.from, env };
+    try {
+      const w = winOf.get(man.key);
+      if (!w) throw new Error('not a listed window');
+      const D0 = w.cutoffMs, G = W.GROUPS[w.group];
+      // the manifest's line as it is now: a refit overwrites the trajectory and appends a line
+      const now = lastLine(man.key, man.arcH);
+      if (!now || now.source !== man.source || now.from !== man.from || now.count !== man.count) throw new Error('trajectory changed since the manifest was read');
+      const buf = fs.readFileSync(path.join(traj, man.file));
+      if (buf.byteLength !== man.count * 48) throw new Error(`trajectory file holds ${buf.byteLength / 48} states, the manifest ${man.count}`);
+      const f64 = new Float64Array(buf.buffer, buf.byteOffset, buf.byteLength / 8), from = Date.parse(man.from), step = man.stepS * 1000;
+      const num = Array.from({ length: man.count }, (_, k) => ({ t: from + k * step, epoch: iso(from + k * step), r: [f64[6 * k], f64[6 * k + 1], f64[6 * k + 2]], v: [f64[6 * k + 3], f64[6 * k + 4], f64[6 * k + 5]] }));
+      const span = num.filter((l) => l.t >= D0 && l.t <= D0 + BAR_H * HOUR);
+      if (span.length < 2) throw new Error('no forecast span');
+      const truth = await W.truthOf(w, D0 - man.arcH * HOUR - HOUR, D0 + 7 * DAY + HOUR, arms.axes);
+      const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
+      const wx = G.vacuum ? null : W.weatherAt(D0), object = { name: w.name, id: truth.objectId ?? '', norad: truth.norad ?? w.norad ?? 0 };
+      const choice = A.apPcfFor(w.group, args.version, G.vacuum, man.arcH);
+      row.pcf = choice.label;
+      const lines = span.map(({ epoch, r, v }) => ({ epoch, r, v }));
+      const tf = performance.now();
+      const ocm = await fit(S.oemBytes({ frame: 'GCRF', object, lines, useableStart: lines[0].epoch, useableStop: lines.at(-1).epoch }), choice.pcf, wx?.spw);
+      row.fitS = r1((performance.now() - tf) / 1000);
+      const info = APL.readOcm(ocm);
+      const flown = await fly(ocm, span.map((l) => l.epoch));
+      const d = flown.map((s, k) => Math.hypot(s.r[0] - span[k].r[0], s.r[1] - span[k].r[1], s.r[2] - span[k].r[2]) * 1000);
+      const at = d.indexOf(Math.max(...d));
+      Object.assign(row, { maxDistanceM: r1(d[at]), atH: r1((span[at].t - D0) / HOUR), fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null });
+      if (sc.entered.includes(5)) { const days = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes); row.day5M = r1(days[5].e * 1000); }
+    } catch (e) { row.error = String(e?.message ?? e).slice(0, 200); }
+    row.wallS = r1((performance.now() - t1) / 1000);
+    return row;
+  };
+  process.on('message', async (msg) => { if (msg.stop) process.exit(0); process.send({ row: await flyOne(msg.m) }); });
+  process.send({ ready: true });
+}
+
+function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
