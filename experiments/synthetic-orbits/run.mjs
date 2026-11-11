@@ -41,6 +41,19 @@ const caseHash = (c) => sha256(JSON.stringify(c)).slice(0, 16);
 // the force mode, both sides: full, no-drag, no-drag-no-radiation
 const MODE = args['no-radiation'] ? (args['no-drag'] ? 'no-drag-no-radiation' : null) : args['no-drag'] ? 'no-drag' : 'full';
 if (!MODE) throw new Error('--no-radiation goes with --no-drag');
+// drag study variants, stored apart: --fit-span forecast (AP fitted over the scored 0 to 120 h itself, the best one record
+// does), --hold-drag (AP's drag term held at the truth's), --xp-off (our SGP4-XP not flown)
+// --ap-degree N: AP's tesseral and zonal caps both N (default 31 and 20); --ap-tesseral, --ap-zonal one each; --ap-no-tides
+// Field cuts on the truth (with --no-drag --no-radiation): --truth-degree N [--truth-order M], --truth-no-tides,
+// --truth-no-relativity. --dump <dir>: AP's residual against the truth over the scored span, R T N (m), one file per case.
+const STUDY = ['fit-span', 'hold-drag', 'xp-off', 'ap-degree', 'ap-tesseral', 'ap-zonal', 'ap-no-tides', 'ap-slow-cap', 'truth-degree', 'truth-order', 'truth-no-tides', 'truth-no-relativity', 'dump'];
+const tagOf = (k) => (k === 'fit-span' ? (args[k] === 'forecast' ? 'fitspan' : null) : k === 'dump' ? 'dump' : args[k] === 'true' ? k.replace(/-/g, '') : `${k.replace(/-/g, '')}${args[k]}`);
+const VARIANT = STUDY.filter((k) => args[k]).map(tagOf).filter(Boolean).join('-');
+const VARIANT_ARGS = STUDY.filter((k) => args[k]).flatMap((k) => (args[k] === 'true' ? [`--${k}`] : [`--${k}`, args[k]]));
+const AP_TESS = Number(args['ap-tesseral'] ?? args['ap-degree'] ?? 31), AP_ZON = Number(args['ap-zonal'] ?? args['ap-degree'] ?? 20);
+const AP_TIDES = args['ap-no-tides'] ? 0 : 1;
+const TRUTH_CUT = { ...(args['truth-degree'] ? { degree: Number(args['truth-degree']), order: Number(args['truth-order'] ?? args['truth-degree']) } : {}),
+  ...(args['truth-no-tides'] ? { solidTides: false } : {}), ...(args['truth-no-relativity'] ? { relativity: undefined } : {}) };
 const PASS_M = 100, BAR_H = 120;
 
 if (args.worker) await worker();
@@ -52,7 +65,8 @@ async function setup() {
   const root = args['modules-root'], want = args['modules-commit'];
   if (!root || !want) throw new Error('usage: run.mjs --modules-commit <sha> --modules-root <modules checkout> [...]');
   const commit = git(root, 'rev-parse', '--verify', `${want}^{commit}`).toString().trim();
-  const wasm = git(root, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`);
+  // --wasm-file: a study build of the commit's sources (its rows go to its own folder, by its SHA-256)
+  const wasm = args['wasm-file'] ? fs.readFileSync(args['wasm-file']) : git(root, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`);
   const version = JSON.parse(git(root, 'show', `${commit}:propagator/sdn-ap/package.json`).toString()).version;
   usePackages();
   const A = await import(path.join(REPO, 'experiments/headline-loop/lib/arms.mjs'));
@@ -63,7 +77,7 @@ async function setup() {
   const seed = Number(args.seed ?? 498), gridStep = Number(args['grid-step'] ?? 1);
   const all = makeCases(seed, { gridStep });
   if (args.guard) all.cases = guardOf(all.cases);
-  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, MODE === 'full' ? 'rows.jsonl' : `rows-${MODE}.jsonl`), seed, gridStep, all, A, mode: MODE, guard: !!args.guard };
+  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, VARIANT ? `rows-drag-study-${MODE}-${VARIANT}.jsonl` : MODE === 'full' ? 'rows.jsonl' : `rows-${MODE}.jsonl`), seed, gridStep, all, A, mode: MODE, guard: !!args.guard };
 }
 
 async function main() {
@@ -81,7 +95,7 @@ async function main() {
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...VARIANT_ARGS], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
       if (!stopped && freeGiB() < MIN_FREE_GIB) stopped = `free disk under ${MIN_FREE_GIB} GiB`;
       if (!stopped && next < todo.length) child.send({ c: todo[next++] }); else child.send({ stop: true });
@@ -114,6 +128,8 @@ async function worker() {
   const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
   const S = A.S, F = await openFfm(), m = await openModules(), env = envRecord();
   const h = await createStandaloneHarness('browser', args.wasm, { surface: 'direct' });
+  // --ap-slow-cap N: AP's slow set to degree N (the module's test export), like with like against a truth cut to N
+  if (args['ap-slow-cap']) h.instance.exports.sdnap_slow_degree_cap(Number(args['ap-slow-cap']));
   const invoke = async (methodId, inputs) => { const r = await h.invoke({ methodId, inputs }); if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`); return r; };
   const iso = (t) => new Date(t).toISOString();
   const flightPcf = (epochs, frame = 'GCRF') => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame[frame], EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
@@ -132,7 +148,8 @@ async function worker() {
       // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
       const drag = MODE === 'full' && c.hpKm < DRAG_BELOW_KM, radiation = MODE !== 'no-drag-no-radiation', wx = drag ? W.weatherAt(D0) : null;
       const setting = drag ? 'L70S' : radiation ? 'Ffull' : 'Ffull without radiation pressure';
-      const settings = radiation ? SETTINGS[setting] : { ...SETTINGS.Ffull, forces: { ...SETTINGS.Ffull.forces, srp: false }, parameters: [], apriori: [] };
+      const settings = radiation ? SETTINGS[setting] : { ...SETTINGS.Ffull, forces: { ...SETTINGS.Ffull.forces, srp: false, ...TRUTH_CUT }, parameters: [], apriori: [] };
+      if (Object.keys(TRUTH_CUT).length && radiation) throw new Error('the truth cuts go with --no-drag --no-radiation');
       const epochs = Array.from({ length: ((ARC_H + LEAD_DAYS * 24) * HOUR) / STEP + 1 }, (_, k) => iso(tStart + k * STEP));
       const parameters = [...(drag ? [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }] : []), ...(radiation ? [{ kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }] : [])];
       row.mode = MODE;
@@ -151,17 +168,21 @@ async function worker() {
       row.truth.minAltitudeKm = r1(Math.min(...alt));
       if (low >= 0) { row.truth.decayedAtH = r1((Date.parse(lines[low].epoch) - D0) / HOUR); if (low <= (ARC_H * HOUR) / STEP) throw new Error('truth'); }
       if (states.length <= (ARC_H * HOUR) / STEP + DAY / STEP) throw new Error('truth');
-      const fitLines = lines.filter((l) => Date.parse(l.epoch) <= D0), after = lines.filter((l) => Date.parse(l.epoch) > D0 && (low < 0 || Date.parse(l.epoch) < Date.parse(lines[low].epoch)));
+      const fitLines = args['fit-span'] === 'forecast'
+        ? lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 && t <= D0 + BAR_H * HOUR && (low < 0 || t < Date.parse(lines[low].epoch)); })
+        : lines.filter((l) => Date.parse(l.epoch) <= D0), after = lines.filter((l) => Date.parse(l.epoch) > D0 && (low < 0 || Date.parse(l.epoch) < Date.parse(lines[low].epoch)));
       const sc = W.scoredOf(after, D0);
-      const oem = S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: fitLines, useableStart: fitLines[0].epoch, useableStop: iso(D0) });
+      const oem = S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: fitLines, useableStart: fitLines[0].epoch, useableStop: fitLines.at(-1).epoch });
       const costEpochs = Array.from({ length: COST_STATES }, (_, k) => iso(D0 + (k + 1) * STEP));
       // the bar's span: the cutoff and every truth state to 120 h after it (as far as the truth reaches)
       const span = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 && t <= D0 + BAR_H * HOUR && (low < 0 || t < Date.parse(lines[low].epoch)); });
       // AP (its forces as the truth's: drag and the weather where the truth has them; the solid tide; radiation held at 0 where the truth
       // has none) and our SGP4-XP, fitted the same way
-      const apPcf = radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } });
+      const apPcf = args['hold-drag'] && drag ? APL.fitPcf({ forces: { ...APL.apForces({ tesseral: AP_TESS, zonal: AP_ZON }), SOLID_TIDES: 1 }, fit: { dragPrior: { mean: terms.dragAreaOverMass, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } })
+        : args['ap-degree'] && radiation ? APL.fitPcf({ forces: { ...APL.apForces({ tesseral: AP_TESS, zonal: AP_ZON, atmosphere: drag }), SOLID_TIDES: 1 }, fit: null })
+        : radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: AP_TESS, zonal: AP_ZON, atmosphere: false }), SOLID_TIDES: AP_TIDES }, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } });
       const theories = { ap: { label: drag ? 'AP_TIDES' : radiation ? 'AP_VACUUM_TIDES' : 'AP_VACUUM_TIDES, radiation term held at 0', pcf: apPcf, spw: wx?.spw }, xp: { label: 'XP', pcf: A.PCF.XP, spw: undefined } };
-      for (const [t, x] of Object.entries(theories)) {
+      for (const [t, x] of Object.entries(theories).filter(([t]) => !(args['xp-off'] && t === 'xp'))) {
         try {
           const ocm = await fit(oem, x.pcf, x.spw), info = APL.readOcm(ocm);
           const d = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes);
@@ -170,6 +191,19 @@ async function worker() {
           const dist = flown.map((s, k) => Math.hypot(s.r[0] - span[k].r[0], s.r[1] - span[k].r[1], s.r[2] - span[k].r[2]) * 1000);
           const at = dist.indexOf(Math.max(...dist)), over = dist.findIndex((x) => x > PASS_M), hourOf = (k) => r1((Date.parse(span[k].epoch) - D0) / HOUR);
           x.ocm = ocm;
+          // --dump: the residual (AP minus the truth) in the truth's radial, along-track and cross-track axes, m, at each span state
+          if (args.dump && t === 'ap') {
+            const unit = (v) => { const s = Math.hypot(...v); return v.map((c) => c / s); };
+            const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+            const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+            const rtn = flown.map((s, k) => {
+              const R = unit(span[k].r), N = unit(cross(span[k].r, span[k].v)), T = cross(N, R);
+              const d = [0, 1, 2].map((c) => (s.r[c] - span[k].r[c]) * 1000);
+              return [dot(d, R), dot(d, T), dot(d, N)].map((q) => Math.round(q * 1000) / 1000);
+            });
+            fs.mkdirSync(args.dump, { recursive: true });
+            fs.writeFileSync(path.join(args.dump, `${c.id}.json`), JSON.stringify({ id: c.id, n: c.n, stepS: STEP / 1000, t0: span[0].epoch, rtn }));
+          }
           row[t] = { pcf: x.label, fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])),
             maxDistance: { maxM: r1(dist[at]), atH: hourOf(at), firstOver100mH: over < 0 ? null : hourOf(over), spanH: hourOf(dist.length - 1), pass: dist[at] <= PASS_M } };
         } catch (e) { row[t] = { pcf: x.label, error: String(e?.message ?? e).slice(0, 200) }; }
