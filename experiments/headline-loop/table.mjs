@@ -95,8 +95,10 @@ async function worker() {
       else {
         // stack issue 489: AP's 72 h fit of a maneuvering object takes the arc after its last burn known at the cutoff (arms.mjs MANEUVER72)
         let from = D0 - arc * W.HOUR, hours = arc;
-        if (theory === 'AP' && arc === 72 && A.maneuver72(build.version) && args.burns) {
-          const last = ctx.truth.lines.filter((l) => W.ms(l.epoch) <= D0).at(-1), MU = 398600.4418, rr = Math.hypot(...last.r), vv = Math.hypot(...last.v);
+        const lastBeforeCutoff = ctx.truth.lines.filter((l) => W.ms(l.epoch) <= D0).at(-1);
+        // (a truth with no state before the cutoff has no arc either: the coverage error below)
+        if (theory === 'AP' && arc === 72 && A.maneuver72(build.version) && args.burns && lastBeforeCutoff) {
+          const last = lastBeforeCutoff, MU = 398600.4418, rr = Math.hypot(...last.r), vv = Math.hypot(...last.v);
           const aKm = 1 / (2 / rr - (vv * vv) / MU), h = [last.r[1] * last.v[2] - last.r[2] * last.v[1], last.r[2] * last.v[0] - last.r[0] * last.v[2], last.r[0] * last.v[1] - last.r[1] * last.v[0]];
           const perigeeKm = aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
           const m = A.maneuverArc(A.knownBurns(args.burns, w.group, w.name, D0), D0, perigeeKm);
