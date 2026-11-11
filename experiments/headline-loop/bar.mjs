@@ -63,8 +63,9 @@ async function main() {
   fs.mkdirSync(dir, { recursive: true });
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
   const groups = args.groups ? args.groups.split(',') : ALL, arcs = (args.arcs ?? '72,24').split(',').map(Number);
-  // the manifest's last line per window and fit arc, apart for each tolerance: a line of the drag setting at 1e-13 (lib/arms.mjs
-  // NUMERICAL_TIGHT.to, stack issue 520) and every other line; a row reads the lines of its own tolerance only (below)
+  // the manifest's last line per window AND fit arc AND tolerance (the README: a key alone is the wrong trajectory on a window with two fit
+  // arcs): a line of the drag setting at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT.to, stack issue 520) and every other line, kept apart; a
+  // row reads the lines of its own tolerance only (below)
   const isTight = (r) => r.setting === A.NUMERICAL_TIGHT.to;
   const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), manifest10 = new Map(), manifest13 = new Map();
   for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); (isTight(r) ? manifest13 : manifest10).set(`${r.key}|${r.arcH}`, r); }

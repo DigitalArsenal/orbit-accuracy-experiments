@@ -46,7 +46,8 @@ numerical propagator compare on each kind. On the strong-drag rows `burnFreeScat
 | File | Does |
 |---|---|
 | `table.mjs` | fits and flies AP and SGP4-XP of a modules commit (its `propagator/sdn-ap/dist/isomorphic/module.wasm` by `git show`), the Space Force's XP (propagator/sgp4-xp, called as a black box) and SGP4 (analysis/gp-error-model, propagator/sgp4) on every window, scores them, reads the numerical propagator's errors on the same windows from the store, and writes the one JSON (`sdn-ap-scoreboard/2`). AP's and our XP's rows go to `<store>/table/<wasm sha12>/rows.jsonl`; the Space Force XP's and SGP4's, which do not depend on AP's build, to `<store>/outside/<their builds>/rows.jsonl`, flown once and read by every later run, so a release's run flies AP and our XP only; `--theories` limits the ones flown, `--retry-errors` flies again a window whose row recorded an error |
-| `refly.mjs` | the numerical propagator's rows, flown once (`--second-pass`: the windows touching March to May 2026): FFM 2.2.0 (fitted by analysis/estimation 0.7.0) in the reduced, configured and full settings (and Fbest on the laser geodetic spheres), to `<store>/f0b8352a43f3/`; `--after-burns <lists>` refits the full setting of a maneuvering object on the arc after its last burn, to `<store>/f0b8352a43f3-after-burn/` |
+| `refly.mjs` | the numerical propagator's rows, flown once (`--second-pass`: the windows touching March to May 2026): FFM 2.2.0 (fitted by analysis/estimation 0.7.0) in the reduced, configured and full settings (and Fbest on the laser geodetic spheres), to `<store>/f0b8352a43f3/`; `--after-burns <lists>` refits the full setting of a maneuvering object on the arc after its last burn, to `<store>/f0b8352a43f3-after-burn/` or the folder `--after-burn-store` names (one per set of lists); `--tight` fits and flies the full drag setting again at tolerance 1e-13 (stack #520), rows to `<store>/f0b8352a43f3-L70S13/`, trajectories to `<store>/numerical-trajectories/L70S13/` with staged manifest lines, and `--tight-switch` appends a whole row's lines to the manifest |
+| `bar.mjs` | the bar's table for a released build: AP's record fitted to each window's numerical forecast and its largest distance from it over 0 to 120 h, from the stored numerical trajectories, each row at one numerical tolerance |
 | `lib/` | `env.mjs` (package and host checks), `windows.mjs` (windows, truth, scoring bins, weather), `settings.mjs` (the FFM settings), `ffm.mjs` (FFM and estimation hosts), `arms.mjs` (AP and FFM flights), `e2e.mjs` (check helpers) |
 
 Windows come in two passes: the first is every window whose fit arc and 7-day forecast stay clear of March to May 2026; the second is the
@@ -59,10 +60,14 @@ guard with the registered versions and record the installed ones in every row (`
 The store is `/opt/data/sdn-archive/headline-loop` (`HEADLINE_LOOP_STORE`). Each tool's `--check` runs the tool itself as its own process on a
 small real slice and asserts on what it writes.
 
-The numerical column of a row is the stored setting with the lowest median 3D error at 168 h over that row's windows; among settings within
-1 % of it, the fuller one. It is null ("being measured") until the store holds every window of the row. For commercial
-geostationary, whose truth holds station-keeping burns that every stored fit runs through, it is null unless the after-burn rows exist
-(above).
+The numerical column of a row is its fullest stored setting, fixed by name and never chosen on the outcome (table.mjs `PREFER`). It is null
+("being measured") while the store lacks a numerical row for any window of the row. For commercial geostationary, whose truth holds
+station-keeping burns that every stored fit runs through, it is null unless the after-burn rows exist (above).
+
+The numerical trajectories (`<store>/numerical-trajectories/manifest.jsonl`, one line per trajectory, Float64 x, y, z km and vx, vy, vz km/s
+per state at the line's `stepS` from its `from`) are selected by key AND fit arc (`arcH`) AND setting: a window has a line per fit arc
+(the highly elliptical rows have two, 72 h and 336 h or 168 h), and a drag window may have one per tolerance (`setting` L70S at 1e-10,
+L70S13 at 1e-13). The last line of a key alone is the wrong trajectory on any window with two fit arcs.
 
 ## Run
 
