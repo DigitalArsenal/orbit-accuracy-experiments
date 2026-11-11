@@ -100,7 +100,9 @@ export function table(rows) {
   });
 }
 
-if (args['check-bound']) {
+// run only as the program itself, not when another script imports draw or table
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (!isMain) { /* imported */ } else if (args['check-bound']) {
   // the report's table (stack #505): one-sided 95 % bounds, k of n
   const want = [[0, 100, 2.95], [1, 100, 4.66], [3, 100, 7.57], [0, 128, 2.31], [1, 128, 3.65], [3, 128, 5.95], [0, 256, 1.16], [1, 256, 1.84], [3, 256, 3.0], [0, 512, 0.58], [1, 512, 0.92], [3, 512, 1.51], [0, 1024, 0.29], [1, 1024, 0.46], [3, 1024, 0.76]];
   let bad = 0;
