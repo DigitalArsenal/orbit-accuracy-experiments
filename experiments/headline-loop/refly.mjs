@@ -339,5 +339,5 @@ async function check() {
   const r4 = E.run('refly.mjs', ['--keys-file', keys], env);
   ok(r4.code === 0 && /: 0 windows to fly/.test(r4.err), `a second run flies again: ${r4.err.slice(-200)}`);
   fs.rmSync(dir, { recursive: true, force: true });
-  done('refly.mjs refuses a stale checkout naming npm ci; lists 2,103 first-pass and 1,218 second-pass windows (the check\'s store holds no added windows); flies one laser geodetic window in four FFM settings and no AP, its reduced arm on the stored FFM row within 1e-4; a second run flies nothing');
+  done('refly.mjs refuses a stale checkout naming npm ci; lists 2,103 first-pass and 1,218 second-pass keys (window and row: the 72 h TESS row has its own keys over the 336 h row\'s cutoffs; the check\'s store holds no added windows); flies one laser geodetic window in four FFM settings and no AP, its reduced arm on the stored FFM row within 1e-4; a second run flies nothing');
 }

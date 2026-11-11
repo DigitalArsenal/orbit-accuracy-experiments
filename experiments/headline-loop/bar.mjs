@@ -83,13 +83,14 @@ async function main() {
       : { setting: x.setting, process: 'full arc', arcStart: new Date(Date.parse(x.cutoff) - x.arcH * H).toISOString(), firstState: isoOf(x.from) });
   const linesOf = new Map();
   allLines.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!linesOf.has(k)) linesOf.set(k, []); linesOf.get(k).push({ x, fit: fitOfLine(x, i) }); });
-  // a numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by the arc the rule gives from its last burn; a
+  // a numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by the arc the rule gives from its last burn (with
+  // the row's own minimum arc, lib/arms.mjs minHoursOf: 9 h on the long-period rows); a
   // stored full-arc fit by its setting and the full arc
   const rowFitOf = (b, label, D0, a) => {
     const arm = label ? b?.arms?.[label] : null;
     if (!arm?.ok) return null;
     if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
-    if (b.fitProcess === 'maneuvering: the arc after its last burn') return { setting: arm.arm, process: 'after burn', arcStart: new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a).startMs).toISOString() };
+    if (b.fitProcess === 'maneuvering: the arc after its last burn') return { setting: arm.arm, process: 'after burn', arcStart: new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString() };
     return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
   };
   const sameFit = (f, r) => f && r && f.setting === r.setting && f.process === r.process && (r.firstState ? f.firstState === r.firstState
