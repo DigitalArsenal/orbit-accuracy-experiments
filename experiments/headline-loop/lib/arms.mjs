@@ -1,6 +1,7 @@
 // The two propagators the table compares. AP: the theory alone, fitted to the truth arc with the published $PCF and flown in the module's
 // own GCRF output (stack #386: the module's TEME turned to GCRF by foundation/frames is the GMST06 TEME, not the module's). FFM: a named
 // setting (lib/settings.mjs), fitted to the same arc by analysis/estimation and flown. Module calls only; JavaScript moves bytes.
+import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
@@ -55,6 +56,33 @@ export const atLeast = (v, w) => {
   if (!a || !b) return false;
   for (let i = 0; i < 3; i += 1) if (a[i] !== b[i]) return a[i] > b[i];
   return true;
+};
+// The 72 h fit of a maneuvering object (stack issue 489; owner, 2026-11-11: "do not get worse against truth just to match FFM", and the
+// OD process is free). From MANEUVER72_SINCE the table's 72 h AP fit of an object with its perigee at MANEUVER72.perigeeMinKm or above,
+// whose precise orbit holds a burn known at the cutoff (the burn detector, stack issue 462: every piece that found it ended at or
+// before the cutoff) ending within MANEUVER72.historyDays before the cutoff, is fitted on the arc after its last such burn (its end plus
+// afterBurnMin), at most capHours and at least 24 h. Such an arc is under 71 h, so the module fits it under its short-arc rule. Every
+// other 72 h fit is the full arc. On such an object a 72 h arc fitted at the data's own sigma takes the maintenance thrust into its drag
+// term, as the numerical propagator's does, and lands on the numerical propagator's forecast instead of the orbit (measured on 0.6.26
+// against the precise orbits, paired against 0.6.25: stack issue 489).
+export const MANEUVER72_SINCE = '0.6.26';
+export const MANEUVER72 = { historyDays: 7, capHours: 70, minHours: 24, afterBurnMin: 10, perigeeMinKm: 600 };
+export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
+/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms). */
+export const knownBurns = (dir, group, name, D0) => {
+  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+  if (!fs.existsSync(f)) return [];
+  const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
+  return d.burns.filter((b) => Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0) <= D0);
+};
+/** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason. */
+export const maneuverArc = (burns, D0, perigeeKm) => {
+  const H = 3600000, full = { startMs: D0 - 72 * H, maneuvering: false };
+  if (!(perigeeKm >= MANEUVER72.perigeeMinKm)) return full;
+  const ends = burns.map((b) => Date.parse(b.to)).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
+  if (!ends.length) return full;
+  const last = Math.max(...ends);
+  return { startMs: Math.min(D0 - MANEUVER72.minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000)), maneuvering: true, lastBurnMs: last };
 };
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {

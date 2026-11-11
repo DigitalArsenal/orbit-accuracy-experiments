@@ -10,6 +10,8 @@
 //     [--previous <the previous release table>: the method line names the rows that gained windows since it]
 //     [--burn-flags <dir of the burn lane's flags-*.json>: each flagged row's pass line split by burns (burnSplit), and under Near 700 km the
 //      altimetry row's line at the same altitudes (sameAltitudes); stack issue 462]
+//     [--burns <dir of the burn detector's lists (stack issue 462), <group>/<name>.burns.json>: from MANEUVER72_SINCE, AP's 72 h fit of a maneuvering
+//      object takes the arc after its last burn known at the cutoff (lib/arms.mjs MANEUVER72; stack issue 489); each such row says so]
 //   node experiments/headline-loop/table.mjs --check
 //
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm and its package.json), never from a working tree.
@@ -91,7 +93,24 @@ async function worker() {
       const row = { key: w.key, group: w.group, name: w.name, arcH: arc, theory, ...(A.OUTSIDE[theory] ? { builds: A.OUTSIDE[theory].builds } : { ap: build }), env, truthS };
       if (ctx.error) row.error = ctx.error;
       else {
-        const thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
+        // stack issue 489: AP's 72 h fit of a maneuvering object takes the arc after its last burn known at the cutoff (arms.mjs MANEUVER72)
+        let from = D0 - arc * W.HOUR, hours = arc;
+        const lastBeforeCutoff = ctx.truth.lines.filter((l) => W.ms(l.epoch) <= D0).at(-1);
+        // (a truth with no state before the cutoff has no arc either: the coverage error below)
+        if (theory === 'AP' && arc === 72 && A.maneuver72(build.version) && args.burns && lastBeforeCutoff) {
+          const last = lastBeforeCutoff, MU = 398600.4418, rr = Math.hypot(...last.r), vv = Math.hypot(...last.v);
+          const aKm = 1 / (2 / rr - (vv * vv) / MU), h = [last.r[1] * last.v[2] - last.r[2] * last.v[1], last.r[2] * last.v[0] - last.r[0] * last.v[2], last.r[0] * last.v[1] - last.r[1] * last.v[0]];
+          const perigeeKm = aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
+          const m = A.maneuverArc(A.knownBurns(args.burns, w.group, w.name, D0), D0, perigeeKm);
+          row.fitProcess = m.maneuvering ? 'maneuvering: the arc after its last burn' : 'the full arc';
+          if (m.maneuvering) { from = m.startMs; hours = (D0 - from) / W.HOUR; row.fitArcHours = Math.round(hours * 10) / 10; }
+        }
+        let thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= from && t <= D0; }), hours);
+        // the arc after the burn short of coverage: the full arc, so no window leaves the row
+        if (!thin && hours !== arc) {
+          thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
+          row.fitProcess = 'maneuvering, the arc after its last burn short of coverage: the full arc'; delete row.fitArcHours;
+        }
         if (!thin) row.error = 'coverage';
         else {
           try {
@@ -179,7 +198,7 @@ async function main() {
   // fly: each worker takes the next window as it finishes one
   let next = 0, flown = 0;
   await Promise.all(Array.from({ length: Math.min(jobs, todo.length) }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, '--sha256', wasmSha, '--groups', groups.join(','), '--theories', flying.join(',')], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, '--sha256', wasmSha, '--groups', groups.join(','), '--theories', flying.join(','), ...(args.burns ? ['--burns', args.burns] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => { if (next < todo.length) { const w = todo[next++]; child.send({ key: w.key, need: needOf(w) }); } else child.send({ stop: true }); };
     child.on('message', (m) => {
       if (m.rows) {
@@ -251,7 +270,12 @@ async function main() {
       const pcfLabel = A.apPcfFor(g, version, !!W.GROUPS[g].vacuum, arc).label;
       const stated = [...new Set(ws.map((w) => rowOf('AP', w, arc)?.pcf).filter(Boolean))];
       if (stated.some((x) => x !== pcfLabel)) throw new Error(`${g} ${arc} h: stored AP rows name $PCF ${stated.join(', ')}, the rule gives ${pcfLabel}`);
-      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, apForces: A.AP_FORCES_TEXT[pcfLabel], ffm, within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
+      // stack issue 489: a 72 h row flown with the burn lists (--burns) from MANEUVER72_SINCE states its fit process, with the windows each way
+      const maneuvering = scored.filter((w) => rowOf('AP', w, arc)?.fitProcess === 'maneuvering: the arc after its last burn').length;
+      const fitProcess = arc === 72 && A.maneuver72(version) && scored.some((w) => rowOf('AP', w, arc)?.fitProcess)
+        ? `An object with its perigee at ${A.MANEUVER72.perigeeMinKm} km or above whose precise orbit holds a burn known at the cutoff, ending within ${A.MANEUVER72.historyDays} days before it, is fitted on the arc after its last such burn (${A.MANEUVER72.minHours} to ${A.MANEUVER72.capHours} h; the module fits it under its short-arc rule); every other window on the full 72 h. Windows: ${maneuvering} on the arc after a burn, ${scored.length - maneuvering} on the full arc.`
+        : null;
+      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
       passOf.push({ g, arc, row: rows.at(-1), pass: within100mOfFfm ? pass : [] });
       if (/^AP_ECOM2/.test(pcfLabel)) ecom2Rows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
       if (/_TIDES$/.test(pcfLabel)) tideRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
@@ -487,7 +511,7 @@ async function check() {
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }
 // the command line the file names, in repository-relative form: without the arguments that are local paths (the modules clone, the output file)
-function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--previous', '--burn-flags'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
+function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--previous', '--burn-flags', '--burns'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
 /** --burn-flags <dir>: every flags-*.json there ({ windows: [{ key, arcH, detector, fit: { burn, uncoveredH }, before5: { burn, uncoveredH } }] }),
  *  the window-arcs the detector ran on (an entry with both spans and without detector false), by "<key>|<arcH>", and the sha256 of the files in name order; null without the option. Two files
  *  that give one window-arc different verdicts are refused; of two that agree, the one with fewer hours without truth is kept. */
