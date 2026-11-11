@@ -7,15 +7,16 @@ length, on every precise-orbit window whose numerical rows are in the store, in 
 fitted to the same arc by its own fitter. The site's release tool reads it (`--scoreboard-result <file>`).
 
 From `MANEUVER72_SINCE` (lib/arms.mjs; stack #489), with `--burns` naming the burn detector's lists (stack #462), AP's 72 h fit of a
-maneuvering object takes the arc after its last burn. That is an object whose precise orbit holds a burn known at the cutoff, at any
-perigee (a 600 km floor until stack #462 lifted it for both arms; the strong-drag rows' burns are rare, 1.5 to 11 mm/s): every detector piece that found the burn ended by then, and the burn ended within 7 days before it. The arc
+maneuvering object takes the arc after its last burn. That is an object with its perigee at 600 km or above whose precise orbit holds a
+burn known at the cutoff: every detector piece that found the burn ended by then, and the burn ended within 7 days before it. The arc
 after that burn runs 24 to 70 h, so the module fits it under its short-arc rule. Every other window keeps the full 72 h. Each such row
 names its fit process (`fitProcess`), and each stored row records its own. On such an object a 72 h arc fitted at the data's own sigma
 takes the maintenance thrust into its drag term, as the numerical propagator's does, and lands on the numerical propagator's forecast
 instead of the orbit.
 
 The numerical arm's fit of such an object follows the same rule with the same lists (`refly.mjs --after-burns`, lib/arms.mjs
-`numericalArc`). Its 72 h fit takes the same arc as AP's. Its 24 h fit, where the last burn known at the cutoff ends inside the 24 h,
+`numericalArc`), at any perigee (its own floor, `NUMERICAL_AFTER_BURN.perigeeMinKm`, is 0: the strong-drag rows' burns are rare, 1.5 to
+11 mm/s, and the rule touches only the window-arcs whose fit arc holds one). Above 600 km its 72 h fit takes the same arc as AP's. Its 24 h fit, where the last burn known at the cutoff ends inside the 24 h,
 takes the arc after it when that arc is at least 6 h long, and otherwise the full 24 h. The refits are stored apart from the full-arc fits
 (`<store>/f0b8352a43f3-after-burn/`, one row per window and fit arc, with the decision where no refit was needed), so the two can be
 compared. With `--burns`, a regime that has such rows takes the refit where the rule moved the arc and the stored fit everywhere else, and

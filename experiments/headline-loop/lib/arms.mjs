@@ -58,7 +58,7 @@ export const atLeast = (v, w) => {
   return true;
 };
 // The 72 h fit of a maneuvering object (stack issue 489; owner, 2026-11-11: "do not get worse against truth just to match FFM", and the
-// OD process is free). From MANEUVER72_SINCE the table's 72 h AP fit of an object with its perigee at MANEUVER72.perigeeMinKm or above (no floor since stack issue 462),
+// OD process is free). From MANEUVER72_SINCE the table's 72 h AP fit of an object with its perigee at MANEUVER72.perigeeMinKm or above,
 // whose precise orbit holds a burn known at the cutoff (the burn detector, stack issue 462: every piece that found it ended at or
 // before the cutoff) ending within MANEUVER72.historyDays before the cutoff, is fitted on the arc after its last such burn (its end plus
 // afterBurnMin), at most capHours and at least 24 h. Such an arc is under 71 h, so the module fits it under its short-arc rule. Every
@@ -66,9 +66,10 @@ export const atLeast = (v, w) => {
 // term, as the numerical propagator's does, and lands on the numerical propagator's forecast instead of the orbit (measured on 0.6.26
 // against the precise orbits, paired against 0.6.25: stack issue 489).
 export const MANEUVER72_SINCE = '0.6.26';
-// perigeeMinKm: 0 from stack issue 462 (no floor): below 600 km the burn lists hold rare burns of 1.5 to 11 mm/s (the strong-drag rows), and
-// on those few window-arcs the arc after the burn is the one to fit (measured against the precise orbits, both arms)
-export const MANEUVER72 = { historyDays: 7, capHours: 70, minHours: 24, afterBurnMin: 10, perigeeMinKm: 0 };
+// perigeeMinKm stays 600 for AP (stack issue 462): on the two strong-drag 72 h window-arcs that lifting it would touch, AP fitted on the arc
+// after the burn was better against the precise orbits on one and three times worse at day 5 on the other (a 27 h arc at 460 km), so the
+// floor holds until the short arcs after a burn carry their terms. The numerical arm's rule has its own floor (NUMERICAL_AFTER_BURN).
+export const MANEUVER72 = { historyDays: 7, capHours: 70, minHours: 24, afterBurnMin: 10, perigeeMinKm: 600 };
 /** The rule's perigee clause in words ('' without a floor). */
 export const perigeeClause = (km) => (km > 0 ? ` with its perigee at ${km} km or above` : '');
 export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
