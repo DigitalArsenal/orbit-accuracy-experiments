@@ -28,8 +28,25 @@ export const NUMERICAL_STORE = 'f0b8352a43f3';
 export const PCF = {
   AP: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20 }), fit: null }),
   AP_VACUUM: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), fit: null }),
+  // AP with FORCES.ECOM2 (empty: Y0 starts at 0): sdn-ap solves the ECOM2 Y0 term on fits of 72 h or more (SPEC 16.13)
+  AP_ECOM2: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), fit: null }),
   XP: APL.fitPcf({ forces: {}, fit: null }),
 };
+
+// The published rule (2026-11-10): for navigation satellites in medium Earth orbit AP also solves the ECOM2 Y0 term on fits
+// of 72 h or more. The gate is the AP build's own version, read from its package.json at the commit flown: from ECOM2_SINCE
+// the medium Earth orbit groups fit with PCF.AP_ECOM2; an older build, which refuses FORCES.ECOM2 by name, and every other
+// group fit exactly as before.
+export const ECOM2_GROUPS = ['GN', 'GN_GAL'];
+export const ECOM2_SINCE = '0.6.15';
+const atLeast = (v, w) => {
+  const a = String(v).split('.').map(Number), b = w.split('.').map(Number);
+  for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] > b[i];
+  return true;
+};
+/** The AP $PCF of a group for an AP build version. */
+export const apPcfFor = (group, version, vacuum) =>
+  (vacuum ? PCF.AP_VACUUM : ECOM2_GROUPS.includes(group) && atLeast(version, ECOM2_SINCE) ? PCF.AP_ECOM2 : PCF.AP);
 
 /** The builds of the two outside theories (table.mjs names them): the Space Force's XP through propagator/sgp4-xp (its library is the
  *  unmodified Sgp4Prop 9.1.1.0 XP build, called as a black box), SGP4 fitted by analysis/gp-error-model and flown by propagator/sgp4. */
