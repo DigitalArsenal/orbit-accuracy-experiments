@@ -4,8 +4,7 @@
 // cutoff is at or before E, the space weather as issued at E (the table's as-issued rows of E's day), and thresholds from the pieces that
 // ended before E. A flagged piece is halved by flights from the truth down to about 90 s; a burn is known once the earliest piece that
 // localizes it has ended and its delta-v, estimated from both sides with truth states no later than that time, holds from states 10 and
-// 20 min further out. Module calls fly every state; JavaScript takes the differences and the frame axes (to move into
-// analysis/maneuver-detection, stack issue 506 step 3).
+// 20 min further out. Module calls fly every state; JavaScript takes the differences and the frame axes.
 import fs from 'node:fs';
 import path from 'node:path';
 const HL = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../headline-loop');
@@ -73,7 +72,7 @@ export async function truthSeries(g, name, norad, fromMs, toMs, axes) {
 }
 export const openAxesFor = async (g) => (g === 'HE' || g === 'HX' ? (await import(path.join(W.root, 'experiments/operator-theory/lib/host.mjs'))).openAxes() : null);
 
-// ---- vectors and the R, T, N frame (the detector's own arithmetic; stack issue 506 step 3 moves it into a module) ----
+// ---- vectors and the R, T, N frame (the detector's own arithmetic) ----
 const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 const sub = (a, b) => a.map((x, i) => x - b[i]);
 const norm = (a) => Math.hypot(...a);

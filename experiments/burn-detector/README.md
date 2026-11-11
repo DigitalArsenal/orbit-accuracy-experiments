@@ -27,8 +27,8 @@ Each list (`<group>/<satellite>.burns.json`) keeps every candidate with its repo
 EVENT_START_TIME and EVENT_END_TIME its extent, DELTA_VEL_U, _V and _W the refined velocity change in the pre-burn U, V, W axes), built
 with the standards' generated code. The lists and pieces describe real satellites window by window and stay outside this repository.
 
-The frame arithmetic (R, T, N axes, the rotating-frame velocity term, the two-sided difference) is JavaScript in `lib/detector.mjs` for
-now; it moves into `analysis/maneuver-detection` (stack issue 506, step 3).
+The frame arithmetic (R, T, N axes, the rotating-frame velocity term, the two-sided difference) is JavaScript in `lib/detector.mjs`;
+every state is flown by the module.
 
 ## Run
 
