@@ -109,19 +109,27 @@ export const carriedPcf = (bytes, t, { drag, radiation }) => {
 // term, as the numerical propagator's does, and lands on the numerical propagator's forecast instead of the orbit (measured on 0.6.26
 // against the precise orbits, paired against 0.6.25: stack issue 489).
 export const MANEUVER72_SINCE = '0.6.26';
+// perigeeMinKm stays 600 for both arms (stack issue 462): on the six strong-drag window-arcs that lifting it would touch, the arc after the
+// burn moved each arm against the precise orbits as often one way as the other (AP: better on one 72 h arc, three times worse at day 5 on the
+// other), so there is no measured gain, and two arms fitted on different arcs of one window would add a difference that is only the arc.
 export const MANEUVER72 = { historyDays: 7, capHours: 70, minHours: 24, afterBurnMin: 10, perigeeMinKm: 600 };
+/** The rule's perigee clause in words ('' without a floor). */
+export const perigeeClause = (km) => (km > 0 ? ` with its perigee at ${km} km or above` : '');
 export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
-/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms). */
+/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms). A
+ *  candidate whose delta-v does not hold from truth states 10 and 20 min further out (refined.consistent false: a truth state with a bad
+ *  velocity, or a fragment beside a longer burn) is not a burn. */
 export const knownBurns = (dir, group, name, D0) => {
   const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
   if (!fs.existsSync(f)) return [];
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
-  return d.burns.filter((b) => Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0) <= D0);
+  return d.burns.filter((b) => b.refined?.consistent !== false && Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0) <= D0);
 };
-/** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason. */
-export const maneuverArc = (burns, D0, perigeeKm) => {
+/** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason.
+ *  floorKm: the perigee floor (MANEUVER72.perigeeMinKm unless given; the numerical arm passes NUMERICAL_AFTER_BURN.perigeeMinKm, the same). */
+export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMinKm) => {
   const H = 3600000, full = { startMs: D0 - 72 * H, maneuvering: false };
-  if (!(perigeeKm >= MANEUVER72.perigeeMinKm)) return full;
+  if (!(perigeeKm >= floorKm)) return full;
   const ends = burns.map((b) => Date.parse(b.to)).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
   if (!ends.length) return full;
   const last = Math.max(...ends);
@@ -132,13 +140,14 @@ export const maneuverArc = (burns, D0, perigeeKm) => {
 // --after-burns) it is fitted on the same arc as AP, by the same rule and the same lists: a 72 h fit by maneuverArc; a 24 h fit, where the
 // last burn known at the cutoff ends inside its 24 h, on the arc after it (its end plus MANEUVER72.afterBurnMin) when that arc is at least
 // NUMERICAL_AFTER_BURN.minHours24 long, else on the full 24 h. Every other fit is the stored full-arc fit. The refits are stored apart
-// (NUMERICAL_AFTER_BURN.store), one row per window and fit arc of the rows flown, so the two can be compared.
-export const NUMERICAL_AFTER_BURN = { minHours24: 6, store: `${NUMERICAL_STORE}-after-burn` };
+// (NUMERICAL_AFTER_BURN.store), one row per window and fit arc of the rows flown, so the two can be compared. Its perigee floor is AP's
+// (NUMERICAL_AFTER_BURN.perigeeMinKm): same rule, same arc, both arms.
+export const NUMERICAL_AFTER_BURN = { minHours24: 6, perigeeMinKm: MANEUVER72.perigeeMinKm, store: `${NUMERICAL_STORE}-after-burn` };
 /** The numerical arm's fit arc for a fit of arcH hours: { startMs, maneuvering, lastBurnMs?, shortAfterBurn? }. */
 export const numericalArc = (burns, D0, perigeeKm, arcH) => {
   const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
-  if (arcH === 72) return maneuverArc(burns, D0, perigeeKm);
-  if (arcH !== 24 || !(perigeeKm >= MANEUVER72.perigeeMinKm)) return full;
+  if (arcH === 72) return maneuverArc(burns, D0, perigeeKm, NUMERICAL_AFTER_BURN.perigeeMinKm);
+  if (arcH !== 24 || !(perigeeKm >= NUMERICAL_AFTER_BURN.perigeeMinKm)) return full;
   const ends = burns.map((b) => Date.parse(b.to)).filter((t) => t <= D0 && t > D0 - arcH * H);
   if (!ends.length) return full;
   const last = Math.max(...ends), startMs = last + MANEUVER72.afterBurnMin * 60000;
