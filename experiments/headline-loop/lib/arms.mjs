@@ -1,6 +1,7 @@
 // The two propagators the table compares. AP: the theory alone, fitted to the truth arc with the published $PCF and flown in the module's
 // own GCRF output (stack #386: the module's TEME turned to GCRF by foundation/frames is the GMST06 TEME, not the module's). FFM: a named
 // setting (lib/settings.mjs), fitted to the same arc by analysis/estimation and flown. Module calls only; JavaScript moves bytes.
+import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
@@ -55,6 +56,147 @@ export const atLeast = (v, w) => {
   if (!a || !b) return false;
   for (let i = 0; i < 3; i += 1) if (a[i] !== b[i]) return a[i] > b[i];
   return true;
+};
+// The 24 h fit's carried terms (stack issue 496; owner, 2026-11-11: how an $OCM is made is free, and only data before the cutoff is
+// used). From CARRY24_SINCE a 24 h AP fit first fits the window's 72 h arc, which ends at the same cutoff, and carries its terms:
+// - above the drag (the 72 h record's regime ABOVE), the radiation terms: AGOM with its stated sigma (FIT.SRP_PRIOR GAUSSIAN_SIGNED) and,
+//   where the 72 h fit solved it, ECOM2's Y0 (FORCES.ECOM2 Y0_M_S2, held on a 24 h arc);
+// - under the drag, the drag term only, and only where the plain 24 h fit states a sigma of ln BTERM of CARRY24_DRAG_SIGMA or more (the
+//   arc does not see it): BTERM with the 72 h record's stated sigma of ln B (FIT.DRAG_PRIOR LOG_NORMAL).
+// The 72 h fit is of the full 72 h arc, for an object that maneuvers (MANEUVER72, below) too: not its 72 h record, which is the arc after
+// its burn. Where the truth holds no 72 h arc before the cutoff, the 24 h fit is the plain one.
+// Measured on 0.6.26 against the precise orbits (stack issue 496): carrying the drag term where the 24 h arc does see it lost on the
+// near-700 km and strong-drag rows, and carrying the radiation terms under the drag changed nothing. On the maneuvering windows the full
+// arc's drag term, carried under the rule, gained over carrying nothing on altimetry (14 better, 2 worse of 34; the median at day 5 2,049
+// to 950 m) and moved one near-700 km window of 266 (worse).
+export const CARRY24_SINCE = '0.6.26';
+export const CARRY24_DRAG_SIGMA = 1;
+export const carry24 = (version) => atLeast(version, CARRY24_SINCE);
+/** The terms a fitted $OCM carries into a later fit: { b, sLnB, agom, sAgom, y0, regime } (regime: the record's COV_REALISM REGIME). */
+export const carriedTerms = (ocm) => {
+  const info = APL.readOcm(ocm), o = info.o, kinds = o.COV_PARAMETER_KINDS ?? [], cv = o.COVARIANCE_DATA ?? [];
+  const at = 6 + kinds.indexOf(S.OCM.prwDynamicParameter.SRP_AREA_OVER_MASS), varS = at >= 6 ? cv[(at * (at + 1)) / 2 + at] : null;
+  const y0 = (o.ORBIT_DETERMINATION?.OD_DYNAMIC_PARAMETERS ?? []).find((p) => p.NAME === 'ECOM2_Y0' && p.SOLVED_FOR);
+  return { b: info.bterm, sLnB: info.sigmaLnB, agom: info.agom, sAgom: Number.isFinite(varS) && varS > 0 ? Math.sqrt(varS) : null, y0: y0 ? y0.VALUE : null,
+    regime: (o.COV_REALISM ?? [])[0]?.REGIME ?? null };
+};
+/** A $PCF's bytes with the carried terms stated: `drag` FIT.DRAG_PRIOR at the term and its sigma of ln B, `radiation` FIT.SRP_PRIOR at
+ *  AGOM and its sigma and FORCES.ECOM2 Y0_M_S2 where the terms name a Y0. FORCES is packed with its defaults, as the table's own. */
+export const carriedPcf = (bytes, t, { drag, radiation }) => {
+  const P = S.PCF, x = P.PCF.getRootAsPCF(new S.flatbuffers.ByteBuffer(bytes)).unpack();
+  const prior = (mean, sigma) => Object.assign(new P.PCFGaussianPriorT(), { MEAN: mean, SIGMA: sigma, HAS_SIGMA: true });
+  x.FIT = Object.assign(x.FIT ?? new P.PCFFitPolicyT(), {
+    ...(drag && t.b > 0 && t.sLnB > 0 ? { DRAG_PRIOR: prior(t.b, t.sLnB), DRAG_PRIOR_FORM: P.pcfPriorForm.LOG_NORMAL } : {}),
+    ...(radiation && t.sAgom > 0 ? { SRP_PRIOR: prior(t.agom, t.sAgom), SRP_PRIOR_FORM: P.pcfPriorForm.GAUSSIAN_SIGNED } : {}) });
+  if (radiation && t.y0 != null) x.FORCES.ECOM2 = Object.assign(new P.PCFEcom2T(), { Y0_M_S2: t.y0 });
+  const f = x.FORCES, pack = f.pack.bind(f);
+  f.pack = (b) => {
+    const offset = b.addFieldOffset;
+    b.addFieldOffset = function (slot, value, d) { if (value !== d) offset.call(this, slot, value, d); };
+    b.forceDefaults(true);
+    try { return pack(b); } finally { b.forceDefaults(false); b.addFieldOffset = offset; }
+  };
+  const b = new S.flatbuffers.Builder(1024);
+  P.PCF.finishPCFBuffer(b, x.pack(b));
+  return b.asUint8Array().slice();
+};
+// The 72 h fit of a maneuvering object (stack issue 489; owner, 2026-11-11: "do not get worse against truth just to match FFM", and the
+// OD process is free). From MANEUVER72_SINCE the table's 72 h AP fit of an object with its perigee at MANEUVER72.perigeeMinKm or above,
+// whose precise orbit holds a burn known at the cutoff (the burn detector, stack issue 462: every piece that found it ended at or
+// before the cutoff) ending within MANEUVER72.historyDays before the cutoff, is fitted on the arc after its last such burn (its end plus
+// afterBurnMin), at most capHours and at least 24 h. Such an arc is under 71 h, so the module fits it under its short-arc rule. Every
+// other 72 h fit is the full arc. On such an object a 72 h arc fitted at the data's own sigma takes the maintenance thrust into its drag
+// term, as the numerical propagator's does, and lands on the numerical propagator's forecast instead of the orbit (measured on 0.6.26
+// against the precise orbits, paired against 0.6.25: stack issue 489).
+export const MANEUVER72_SINCE = '0.6.26';
+// perigeeMinKm stays 600 for both arms (stack issue 462): on the six strong-drag window-arcs that lifting it would touch, the arc after the
+// burn moved each arm against the precise orbits as often one way as the other (AP: better on one 72 h arc, three times worse at day 5 on the
+// other), so there is no measured gain, and two arms fitted on different arcs of one window would add a difference that is only the arc.
+export const MANEUVER72 = { historyDays: 7, capHours: 70, minHours: 24, afterBurnMin: 10, perigeeMinKm: 600 };
+/** The rule's perigee clause in words ('' without a floor). */
+export const perigeeClause = (km) => (km > 0 ? ` with its perigee at ${km} km or above` : '');
+export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
+/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms), each
+ *  with endMs, the end of its arc-breaking span. A candidate whose delta-v does not hold from truth states 10 and 20 min further out
+ *  (refined.consistent false: a truth state with a bad velocity, or a fragment beside a longer burn) is not a burn.
+ *  Known at D0: in a list made as of its burns (asOf, the burn detector of experiments/burn-detector, stack issue 506), a burn whose
+ *  reportTime is at or before D0; in an older list, one every piece of which had ended by D0.
+ *  endMs: the end of the burn's extent (extentTo), carried across the rejected candidates known by D0 that begin within 60 min after it
+ *  (the tail of a longer burn), so an arc after the burn starts after all of it. */
+export const knownBurns = (dir, group, name, D0) => {
+  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+  if (!fs.existsSync(f)) return [];
+  const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
+  const knownAt = (b) => (d.asOf ? Date.parse(b.reportTime) : Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0));
+  const seen = d.burns.filter((b) => knownAt(b) <= D0), rejected = seen.filter((b) => b.refined?.consistent === false);
+  return seen.filter((b) => b.refined?.consistent !== false).map((b) => {
+    let endMs = Date.parse(b.extentTo ?? b.to);
+    for (let more = true; more;) {
+      more = false;
+      for (const x of rejected) { const s = Date.parse(x.extentFrom ?? x.from), e = Date.parse(x.extentTo ?? x.to); if (s <= endMs + 60 * 60000 && e > endMs) { endMs = e; more = true; } }
+    }
+    return { ...b, endMs };
+  });
+};
+/** A known burn's end (ms): endMs (knownBurns), else its extent's end. */
+export const burnEndMs = (b) => b.endMs ?? Date.parse(b.extentTo ?? b.to);
+/** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason.
+ *  floorKm: the perigee floor (MANEUVER72.perigeeMinKm unless given; the numerical arm passes NUMERICAL_AFTER_BURN.perigeeMinKm, the same). */
+export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMinKm) => {
+  const H = 3600000, full = { startMs: D0 - 72 * H, maneuvering: false };
+  if (!(perigeeKm >= floorKm)) return full;
+  const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
+  if (!ends.length) return full;
+  const last = Math.max(...ends);
+  return { startMs: Math.min(D0 - MANEUVER72.minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000)), maneuvering: true, lastBurnMs: last };
+};
+// The numerical arm's fit of a maneuvering object (stack issues 462 and 489): the numerical propagator has no thrust term either, so a fit
+// through a burn takes the thrust into its drag and radiation terms and its forecast leaves the orbit. With the burn lists (refly.mjs
+// --after-burns) it is fitted on the same arc as AP, by the same rule and the same lists: a 72 h fit by maneuverArc; a 24 h fit, where the
+// last burn known at the cutoff ends inside its 24 h, on the arc after it (its end plus MANEUVER72.afterBurnMin) when that arc is at least
+// NUMERICAL_AFTER_BURN.minHours24 long, else on the full 24 h. Every other fit is the stored full-arc fit. The refits are stored apart
+// (NUMERICAL_AFTER_BURN.store), one row per window and fit arc of the rows flown, so the two can be compared. Its perigee floor is AP's
+// (NUMERICAL_AFTER_BURN.perigeeMinKm): same rule, same arc, both arms.
+export const NUMERICAL_AFTER_BURN = { minHours24: 6, perigeeMinKm: MANEUVER72.perigeeMinKm, store: `${NUMERICAL_STORE}-after-burn` };
+/** The numerical arm's fit arc for a fit of arcH hours: { startMs, maneuvering, lastBurnMs?, shortAfterBurn? }. */
+export const numericalArc = (burns, D0, perigeeKm, arcH) => {
+  const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
+  if (arcH === 72) return maneuverArc(burns, D0, perigeeKm, NUMERICAL_AFTER_BURN.perigeeMinKm);
+  if (arcH !== 24 || !(perigeeKm >= NUMERICAL_AFTER_BURN.perigeeMinKm)) return full;
+  const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t > D0 - arcH * H);
+  if (!ends.length) return full;
+  const last = Math.max(...ends), startMs = last + MANEUVER72.afterBurnMin * 60000;
+  return D0 - startMs >= NUMERICAL_AFTER_BURN.minHours24 * H ? { startMs, maneuvering: true, lastBurnMs: last } : { ...full, shortAfterBurn: true, lastBurnMs: last };
+};
+/** The burn list's verdict that an object's orbit is not ballistic between impulses ({ positionsOnlyMedianM, pieceHours } or null): the
+ *  numerical setting flown over its pieces from the truth's positions alone closes above the 100 m bar, as under continuous low thrust, so
+ *  no arc of it is burn-free and its numerical fit is not a properly configured one. In a list with positionsOnly (the burn detector's
+ *  ballistic.mjs, stack issue 506) the verdict is as of D0: from the pairs that ended by then, with at least minPairs of them. */
+export const notBallistic = (dir, group, name, D0 = Infinity) => {
+  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+  if (!fs.existsSync(f)) return null;
+  const d = JSON.parse(fs.readFileSync(f, 'utf8')), po = d.positionsOnly;
+  if (!po) return d.notBallistic ?? null;
+  const v = po.pairs.filter((p) => !p.error && Date.parse(p.end) <= D0).map((p) => p.positionsOnlyM).sort((a, b) => a - b);
+  if (v.length < po.minPairs) return null;
+  const m = v.length % 2 ? v[v.length >> 1] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2;
+  return m > po.barM ? { positionsOnlyMedianM: m, pairs: v.length, pieceHours: po.pieceHours } : null;
+};
+/** The perigee height (km above the equatorial radius) of an osculating state { r km, v km/s } about the Earth. */
+export const perigeeKmOf = ({ r, v }) => {
+  const MU = 398600.4418, rr = Math.hypot(...r), vv = Math.hypot(...v), aKm = 1 / (2 / rr - (vv * vv) / MU);
+  const h = [r[1] * v[2] - r[2] * v[1], r[2] * v[0] - r[0] * v[2], r[0] * v[1] - r[1] * v[0]];
+  return aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
+};
+/** Every burn in an object's burn list, known at a cutoff or not (what the truth holds): [{ t (ms), sizeMmS, alongTrackMmS (+ raises the
+ *  orbit) }], or null without a list. A candidate the list rejects (refined.consistent false) is left out. */
+export const listedBurns = (dir, group, name) => {
+  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+  if (!fs.existsSync(f)) return null;
+  return JSON.parse(fs.readFileSync(f, 'utf8')).burns.filter((b) => b.refined?.consistent !== false).map((b) => {
+    const dv = b.refined?.dvRtnMmS ?? b.dvRtnMmS.map((x) => -x);
+    return { t: Date.parse(b.burn), sizeMmS: Math.hypot(...dv), alongTrackMmS: dv[1] };
+  });
 };
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
@@ -126,9 +268,10 @@ export async function openArms({ apWasm = null, ussf = false, sgp4 = false } = {
     axes,
     ffmProvenance: F.provenance,
     /** AP: fitted to the truth arc (GCRF states), the record flown on the scored epochs in GCRF: { ok, rms (km), fit, days, s }. */
-    async ap({ object, thin, D0, pcf, spw, sc }) {
+    async ap({ object, thin, D0, pcf, spw, sc, record = false }) {
       const t0 = performance.now();
       const ocm = await fitAp(S.oemBytes({ frame: 'GCRF', object, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }), pcf, spw);
+      if (record) return { ocm };  // the fitted record alone (a carried fit's source, stack issue 496): not flown
       const info = APL.readOcm(ocm);
       const states = await flyAp(ocm, sc.epochs);
       // held: the hold rule's outcome as the record states it in OD COMMENT (SPEC 12.1: "prior-limited: BTERM held at its prior ...")
