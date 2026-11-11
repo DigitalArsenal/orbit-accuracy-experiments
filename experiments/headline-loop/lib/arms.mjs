@@ -63,10 +63,12 @@ export const atLeast = (v, w) => {
 //   where the 72 h fit solved it, ECOM2's Y0 (FORCES.ECOM2 Y0_M_S2, held on a 24 h arc);
 // - under the drag, the drag term only, and only where the plain 24 h fit states a sigma of ln BTERM of CARRY24_DRAG_SIGMA or more (the
 //   arc does not see it): BTERM with the 72 h record's stated sigma of ln B (FIT.DRAG_PRIOR LOG_NORMAL).
-// Elsewhere, where the truth holds no 72 h arc before the cutoff, and for an object that maneuvers (MANEUVER72, below: its own 72 h fit
-// is the arc after its burn, whose drag term its prior holds, so there is no measured term to carry), the 24 h fit is the plain one.
+// The 72 h fit is of the full 72 h arc, for an object that maneuvers (MANEUVER72, below) too: not its 72 h record, which is the arc after
+// its burn. Where the truth holds no 72 h arc before the cutoff, the 24 h fit is the plain one.
 // Measured on 0.6.26 against the precise orbits (stack issue 496): carrying the drag term where the 24 h arc does see it lost on the
-// near-700 km and strong-drag rows, and carrying the radiation terms under the drag changed nothing.
+// near-700 km and strong-drag rows, and carrying the radiation terms under the drag changed nothing. On the maneuvering windows the full
+// arc's drag term, carried under the rule, gained over carrying nothing on altimetry (14 better, 2 worse of 34; the median at day 5 2,049
+// to 950 m) and moved one near-700 km window of 266 (worse).
 export const CARRY24_SINCE = '0.6.26';
 export const CARRY24_DRAG_SIGMA = 1;
 export const carry24 = (version) => atLeast(version, CARRY24_SINCE);

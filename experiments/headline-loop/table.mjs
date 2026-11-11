@@ -128,12 +128,12 @@ async function worker() {
             // stack issue 496: the 24 h fit's carried terms (arms.mjs, CARRY24_SINCE); fitProcess names what the row's fit did
             if (theory === 'AP' && arc === 24 && carrying) {
               const thin72 = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - 72 * W.HOUR && t <= D0; }), 72);
-              // an object that maneuvers carries nothing: its 72 h fit is the arc after its burn, whose drag term its prior holds
-              row.fitProcess = m?.maneuvering ? 'plain, maneuvering' : 'plain, no 72 h arc';
-              if (thin72 && !m?.maneuvering) {
+              // the terms come from the fit of the full 72 h arc, a maneuvering object's too (not its 72 h record, the arc after its burn)
+              row.fitProcess = 'plain, no 72 h arc';
+              if (thin72) {
                 const t72 = A.carriedTerms((await arms.ap({ ...base, thin: thin72, pcf: A.apPcfFor(w.group, build.version, G.vacuum, 72).pcf, spw, record: true })).ocm);
                 const radiation = t72.regime === 'ABOVE', drag = !radiation && (x.fit.sigmaLnB ?? 0) >= A.CARRY24_DRAG_SIGMA;
-                row.fitProcess = radiation ? 'radiation carried from 72 h' : drag ? 'drag carried from 72 h' : 'plain';
+                row.fitProcess = (radiation ? 'radiation carried from 72 h' : drag ? 'drag carried from 72 h' : 'plain') + (m?.maneuvering ? ', maneuvering' : '');
                 if (radiation || drag) x = await arms.ap({ ...base, pcf: A.carriedPcf(pcf, t72, { drag, radiation }), spw });
               }
             }
