@@ -149,7 +149,7 @@ async function worker() {
       const [s0] = await fly(seed, [epoch]);
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
       // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
-      const drag = MODE === 'full' && c.hpKm < DRAG_BELOW_KM, radiation = MODE !== 'no-drag-no-radiation', wx = drag ? W.weatherAt(D0) : null;
+      const drag = MODE === 'full' && c.hpKm < DRAG_BELOW_KM, radiation = MODE !== 'no-drag-no-radiation', wx = drag ? W.weatherAt(D0, Math.max(ARC_H, TRUTH_START_H)) : null;
       const setting = drag ? 'L70S' : radiation ? 'Ffull' : 'Ffull without radiation pressure';
       const settings = radiation ? SETTINGS[setting] : { ...SETTINGS.Ffull, forces: { ...SETTINGS.Ffull.forces, srp: false }, parameters: [], apriori: [] };
       const epochs = Array.from({ length: ((TRUTH_START_H + LEAD_DAYS * 24) * HOUR) / STEP + 1 }, (_, k) => iso(tStart + k * STEP));
