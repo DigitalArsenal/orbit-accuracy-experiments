@@ -6,6 +6,13 @@ with the owner's pass line (AP within 100 m of the numerical propagator at 120 h
 length, on every precise-orbit window whose numerical rows are in the store, in GCRF, errors in meters against the truth. Each theory is
 fitted to the same arc by its own fitter. The site's release tool reads it (`--scoreboard-result <file>`).
 
+From `CARRY24_SINCE` (lib/arms.mjs; stack #496) AP's 24 h fit carries terms from the same window's 72 h fit, which ends at the same
+cutoff, so only data before the cutoff is used. Above the drag it carries the radiation terms: AGOM with its uncertainty, and ECOM2's Y0
+where that fit solved it. Under the drag it carries the drag term with its uncertainty, and only where the 24 h arc alone leaves it
+undetermined (a stated sigma of ln BTERM of 1 or more). The 72 h fit is of the full 72 h arc, for an object that maneuvers (below) too,
+not its 72 h record (the arc after its burn). Each such row names its fit process (`fitProcess`) with the count of windows each way,
+and each stored row records its own (`fitProcess` in rows.jsonl).
+
 From `MANEUVER72_SINCE` (lib/arms.mjs; stack #489), with `--burns` naming the burn detector's lists (stack #462), AP's 72 h fit of a
 maneuvering object takes the arc after its last burn. That is an object with its perigee at 600 km or above whose precise orbit holds a
 burn known at the cutoff: every detector piece that found the burn ended by then, and the burn ended within 7 days before it. The arc
@@ -23,6 +30,14 @@ names its numerical fit process (`ffmFitProcess`). The commercial geostationary 
 arc the rule frees of known burns; a window whose every allowed arc still holds one has none. Neither has an object whose burn list states
 that its orbit is not ballistic between impulses (`notBallistic`): flown from the truth's positions alone, the numerical setting closes
 above the 100 m bar over the detector's pieces, as under continuous low thrust, so no arc of it is burn-free.
+
+A forecast across a later maneuver is not scored as accuracy: no fit sees a burn after its cutoff, so the error there measures the
+maneuver as much as the propagator. With `--burns`, on a row whose satellites all have burn lists, each lead's AP, numerical and SGP4-XP
+figures are also given over the windows with no burn in the truth from the cutoff to that lead (`cleanToLead: { windows, medianM, p95M }`
+under `ap`, `ffm` and `xp`), beside the figures over all windows. Nothing is removed. `laterBurns` says in words how many windows on the pass
+line hold a burn between the cutoff and day 5, whether it raises the orbit, lowers it or is mainly out of its plane, and how AP and the
+numerical propagator compare on each kind. On the strong-drag rows `burnFreeScatter` says how many of the windows where AP is more than
+100 m closer a burn explains, and how the two compare on the burn-free windows.
 
 ## Tools
 
