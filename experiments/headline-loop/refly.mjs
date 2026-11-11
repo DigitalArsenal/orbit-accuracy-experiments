@@ -18,7 +18,9 @@
 //     outcome (the fit failed: arms.FFMq.ok false; no truth or coverage: error), goes to <store>/<NUMERICAL_TIGHT.store>/rows-tight-<k>of<n>.jsonl
 //     with the fitted state (arms.FFMq.product); the trajectory to <store>/numerical-trajectories/<NUMERICAL_TIGHT.to>/<group>/<key>-<arc>.bin,
 //     and its manifest line to numerical-trajectories/staged-<NUMERICAL_TIGHT.to>.jsonl. A row already there is not flown again (with
-//     --retry-errors, one recording no truth or a failed fit is, and the later row is read in its place); nothing stored is overwritten.
+//     --retry-errors, one recording no truth or a failed fit is; table.mjs reads the best of a window's rows, a fit over a failed fit over no
+//     truth, and --tight-switch appends that row's line); nothing stored is overwritten. Each line names its fit (fit: setting, process, arc
+//     start, first state), so bar.mjs flies the trajectory of the fit whose figures it reads.
 //     The fit is of the full arc, with no burn rule: table.mjs keeps a row with a refit after a burn, or in a regime with after-burn rows
 //     a window without its decision row, at 1e-10.
 //   node experiments/headline-loop/refly.mjs --tight-switch G:arc[,G:arc]: when every window of the row has its staged line, the lines
@@ -72,15 +74,18 @@ async function tight() {
   const items = listed.flatMap((w) => w.arcs.filter((a) => (!arcsAsked || arcsAsked.includes(a)) && base.has(`${w.key}|${a}`)).map((a) => ({ w, arc: a })));
   const nameOf = (key, arc) => `${key.replace(/[| ]/g, '_')}-${arc}`;
   if (args['tight-switch']) {
-    // a row is switched when every window of it has its staged line; the lines of its windows that have no 1e-13 line in the manifest yet
-    // (all of them, or the windows that joined the row since, as a second pass) are appended in one write
-    const staged = new Map(read(TRAJ, new RegExp(`^staged-${T.to}\\.jsonl$`)).map((x) => [`${x.key}|${x.arcH}`, x]));
-    const inManifest = new Set(read(TRAJ, /^manifest\.jsonl$/).filter((x) => x.setting === T.to).map((x) => `${x.key}|${x.arcH}`));
-    for (const ga of args['tight-switch'].split(',')) {
+    // a row is switched when every window of it has its staged line. A window's line is the one table.mjs reads the row of (a fit over a
+    // failed fit over no truth; of equal rank the later, as a retry gives); it is appended wherever it differs from the window's last 1e-13
+    // line in the manifest (none yet, a window that joined the row since, or a retry that replaced a failure), all in one write
+    const rank = (x) => (x.source === 'none' ? 0 : x.source === 'failed' ? 1 : 2), staged = new Map();
+    for (const x of read(TRAJ, new RegExp(`^staged-${T.to}\\.jsonl$`))) { const k = `${x.key}|${x.arcH}`; if (!staged.has(k) || rank(x) >= rank(staged.get(k))) staged.set(k, x); }
+    const inManifest = new Map(read(TRAJ, /^manifest\.jsonl$/).filter((x) => x.setting === T.to).map((x) => [`${x.key}|${x.arcH}`, x]));
+    const same = (p, q) => p && q && p.source === q.source && (p.file ?? null) === (q.file ?? null) && (p.from ?? null) === (q.from ?? null);
+    for (const ga of [...new Set(args['tight-switch'].split(','))]) {
       const [g, a] = ga.split(':'), rowItems = items.filter((x) => x.w.group === g && x.arc === Number(a)), lines = rowItems.map((x) => staged.get(`${x.w.key}|${x.arc}`));
-      if (!rowItems.length || lines.some((l) => !l)) { console.error(`${ga}: ${lines.filter(Boolean).length} of ${rowItems.length} windows staged, not switched`); continue; }
-      const add = lines.filter((l) => !inManifest.has(`${l.key}|${l.arcH}`));
-      if (!add.length) { console.error(`${ga}: every window's line is in the manifest`); continue; }
+      if (!rowItems.length || lines.some((l) => !l)) { console.error(`${ga}: ${lines.filter(Boolean).length} of ${rowItems.length} windows staged, not switched (--groups names the rows' groups)`); continue; }
+      const add = lines.filter((l) => !same(l, inManifest.get(`${l.key}|${l.arcH}`)));
+      if (!add.length) { console.error(`${ga}: every window's line in the manifest is its staged line`); continue; }
       fs.appendFileSync(MANIFEST, add.map((l) => `${JSON.stringify(l)}\n`).join(''));
       fs.appendFileSync(SWITCHED, `${JSON.stringify({ group: g, arcH: Number(a), windows: lines.length, appended: add.length, setting: T.to, at: new Date().toISOString() })}\n`);
       console.error(`${ga}: switched, ${add.length} of ${lines.length} windows' lines appended`);
@@ -129,7 +134,9 @@ async function tight() {
         const dir = path.join(TRAJ, T.to, w.group), file = path.join(dir, `${nameOf(w.key, arc)}.bin`);
         fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(file, Buffer.from(new Float64Array(grid.flatMap((t) => { const s = states[at.get(t)]; return [...s.r, ...s.v]; })).buffer));
-        Object.assign(line, { source: SOURCE, file: path.relative(TRAJ, file), from: iso(from), cutoff: iso(D0), count, parameters: product.parameters, flight: 'one flight on the scored epochs and the 300 s grid together' });
+        // the identity of the fit the trajectory flies (bar.mjs takes, for each window, the line whose fit is the numerical row's)
+        Object.assign(line, { source: SOURCE, file: path.relative(TRAJ, file), from: iso(from), cutoff: iso(D0), count, parameters: product.parameters, flight: 'one flight on the scored epochs and the 300 s grid together',
+          fit: { setting: T.to, process: 'full arc', arcStart: iso(D0 - arc * W.HOUR), firstState: iso(from), burnList: null } });
         row.arms.FFMq = { ok: true, arm: T.to, days, termination: f.termination, fitOk: f.ok, weightedRms: f.weightedRms, iterations: f.iterations, parameters: product.parameters, product: { epoch: product.epoch, state: product.state }, s: (performance.now() - t0) / 1000 };
       } catch (e) {
         row.arms.FFMq = { ok: false, arm: T.to, error: String(e?.message ?? e).slice(0, 200) };
