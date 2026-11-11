@@ -12,8 +12,9 @@
 // Mean motion from perigee and eccentricity, two-body, as cases.mjs makes its grid.
 //
 // Per band: k failures in n, where a failure is D > 100 m or a record that could not be made (a refused fit); the exact one-sided 95 %
-// upper bound on the failure share (Clopper-Pearson); the largest D and the 95th percentile of D. An orbit that decays below 100 km
-// inside the truth's flight, and a case with no truth, are counted on their own lines and are not in n.
+// upper bound on the failure share (Clopper-Pearson); the largest D and the 95th percentile of D. An orbit that reenters before the
+// cutoff or inside the 120 h after it has no 120 h to score: it is counted on its own line, not in n, with how its forecast did over
+// the whole days its truth reaches. A case with no truth is counted on its own line as well.
 //
 //   node experiments/synthetic-orbits/claim.mjs --modules-commit <sha> --modules-root <modules checkout> [--per-band 256] [--seed <s>]
 //     [--fit forecast-span] [--jobs 6] [--bands 0,1,...] [--out <dir>]      flies the set; rows to <dir>/rows.jsonl (resumes)
@@ -29,7 +30,7 @@ import { random, AM, BAR_BANDS } from './cases.mjs';
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const RUN = path.join(HERE, 'run.mjs');
-const MU = 398600.4418, RE = 6378.137, DAY_S = 86400, MOON_KM = 384400, PASS_M = 100;
+const MU = 398600.4418, RE = 6378.137, DAY_S = 86400, MOON_KM = 384400, PASS_M = 100, BAR_H = 120;
 const FIRST = Date.parse('2025-11-15T00:00:00Z'), LAST = Date.parse('2026-09-25T00:00:00Z');
 const revPerDay = (hpKm, e) => { const a = (RE + hpKm) / (1 - e); return (DAY_S / (2 * Math.PI)) * Math.sqrt(MU / a ** 3); };
 
@@ -85,18 +86,35 @@ export function upperBound(k, n, level = 0.95) {
 const percentile = (v, q) => { if (!v.length) return null; const s = v.slice().sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.ceil(q * s.length) - 1)]; };
 const read = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : []);
 
-/** The per-band table from the rows. */
+/** Whether the orbit reenters before the bar's 120 h are over: 'before' the cutoff (no forecast exists to score), 'inside' the
+ *  120 h after it, or null. The truth stops at a reentry (FFM's error names its time), and run.mjs then flies it to the last whole
+ *  day it reaches of 7, 5, 3, 2, 1, 0 (truth.flownToDay): a truth flown to fewer than 5 days ends inside the bar's span. */
+export function decayOf(r) {
+  const t = r.truth ?? {}, D0 = Date.parse(`${r.elements?.cutoff}T00:00:00Z`);
+  const m = /reentry[^]*? at (\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?)\d* UTC/.exec(String(t.error ?? r.error ?? ''));
+  if (m) { const at = Date.parse(`${m[1]}Z`); return at <= D0 ? 'before' : at <= D0 + BAR_H * 3600e3 ? 'inside' : null; }
+  if (t.decayedAtH != null) return t.decayedAtH <= 0 ? 'before' : t.decayedAtH <= BAR_H ? 'inside' : null;
+  if (t.flownToDay != null && t.flownToDay * 24 < BAR_H) return 'inside';
+  return null;
+}
+
+/** The per-band table from the rows. n: the cases whose orbit lasts the bar's 120 h; a reentry before the cutoff or inside the
+ *  120 h is counted on its own line (with, for the second, how the forecast did over the whole days the truth reaches). */
 export function table(rows) {
   return BOXES.map((box) => {
     const rs = rows.filter((r) => r.band === box.band);
-    const noTruth = rs.filter((r) => !r.ap && !r.error), decayed = rs.filter((r) => r.truth?.decayedAtH != null), errors = rs.filter((r) => r.error && !r.ap);
-    const scored = rs.filter((r) => r.ap && r.truth?.decayedAtH == null);
+    const before = rs.filter((r) => decayOf(r) === 'before'), inside = rs.filter((r) => decayOf(r) === 'inside');
+    const live = rs.filter((r) => !decayOf(r));
+    const noTruth = live.filter((r) => !r.ap && !r.error), errors = live.filter((r) => r.error && !r.ap);
+    const scored = live.filter((r) => r.ap);
     const refused = scored.filter((r) => r.ap.error), Ds = scored.filter((r) => r.ap.maxDistance).map((r) => r.ap.maxDistance.maxM);
     const k = refused.length + Ds.filter((d) => d > PASS_M).length, n = scored.length;
     const worst = scored.filter((r) => r.ap.maxDistance).sort((a, b) => b.ap.maxDistance.maxM - a.ap.maxDistance.maxM)[0];
+    const insideScored = inside.filter((r) => r.ap), insideOver = insideScored.filter((r) => r.ap.error || r.ap.maxDistance?.maxM > PASS_M);
     return { band: box.band, box: { perigeeKm: box.hp, eccentricity: box.e }, drawn: rs.length, n, k, refused: refused.length, upper95: n ? upperBound(k, n) : null,
       medianM: percentile(Ds, 0.5), p95M: percentile(Ds, 0.95), maxM: Ds.length ? Math.max(...Ds) : null, worst: worst ? worst.id : null,
-      decayed: decayed.length, noTruth: noTruth.length, otherErrors: errors.length };
+      reenteredBeforeCutoff: before.length, reenteredInside: inside.length, reenteredInsideScored: insideScored.length, reenteredInsideOver: insideOver.length,
+      noTruth: noTruth.length, otherErrors: errors.length };
   });
 }
 
@@ -114,7 +132,7 @@ if (!isMain) { /* imported */ } else if (args['check-bound']) {
   fs.writeFileSync(path.join(args.out, 'claim.json'), JSON.stringify({ ...meta, bands: t }, null, 1));
   const f = (x) => (x == null ? '-' : x >= 1000 ? `${(x / 1000).toFixed(2)} km` : `${x.toFixed(1)} m`);
   console.log(`seed ${meta.seed}, fit ${meta.fit}, sdn-ap ${meta.version} (${(meta.wasmSha256 ?? '').slice(0, 12)})`);
-  for (const b of t) console.log(`${b.band} (perigee ${b.box.perigeeKm.join(' to ')} km, e ${b.box.eccentricity.join(' to ')}): ${b.k} of ${b.n} fail (${b.refused} refused fits), bound ${b.upper95 == null ? '-' : (100 * b.upper95).toFixed(2)} %; median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}; decayed ${b.decayed}, no truth ${b.noTruth}, other errors ${b.otherErrors}`);
+  for (const b of t) console.log(`${b.band} (perigee ${b.box.perigeeKm.join(' to ')} km, e ${b.box.eccentricity.join(' to ')}): ${b.k} of ${b.n} fail (${b.refused} refused fits), bound ${b.upper95 == null ? '-' : (100 * b.upper95).toFixed(2)} %; median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}; reentered before the cutoff ${b.reenteredBeforeCutoff}, inside the 120 h ${b.reenteredInside} (${b.reenteredInsideOver} of ${b.reenteredInsideScored} scored over 100 m or refused, over the days the truth reaches); no truth ${b.noTruth}, other errors ${b.otherErrors}`);
 } else await fly();
 
 async function fly() {
