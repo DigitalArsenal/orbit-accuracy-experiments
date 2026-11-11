@@ -72,12 +72,14 @@ export const MANEUVER72 = { historyDays: 7, capHours: 70, minHours: 24, afterBur
 /** The rule's perigee clause in words ('' without a floor). */
 export const perigeeClause = (km) => (km > 0 ? ` with its perigee at ${km} km or above` : '');
 export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
-/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms). */
+/** The burns the detector found in an object's precise orbit (<dir>/<group>/<name>.burns.json) that are known at the cutoff D0 (ms). A
+ *  candidate whose delta-v does not hold from truth states 10 and 20 min further out (refined.consistent false: a truth state with a bad
+ *  velocity, or a fragment beside a longer burn) is not a burn. */
 export const knownBurns = (dir, group, name, D0) => {
   const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
   if (!fs.existsSync(f)) return [];
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
-  return d.burns.filter((b) => Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0) <= D0);
+  return d.burns.filter((b) => b.refined?.consistent !== false && Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0) <= D0);
 };
 /** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason.
  *  floorKm: the perigee floor (AP's MANEUVER72.perigeeMinKm unless given; the numerical arm passes its own). */
