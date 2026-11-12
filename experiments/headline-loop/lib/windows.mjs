@@ -169,8 +169,9 @@ export async function truthOf(w, fromMs, toMs, axes) {
     return { lines: cut(lines), norad: sat.norad, objectId: '' };
   }
   // HE and HX: NAIF kernels on the 300 s grid (all-regimes.mjs objects())
-  // the 72 h TESS row: the newest one of the definitive files that covers the span asked for (the window's arc and 7 days; the margins of
-  // an hour either side need not be covered), read alone
+  // the 72 h TESS row: the newest one of the definitive files that covers the window's own span (its longest arc and 7 days, whatever span
+  // the caller asks; the margins of an hour either side need not be covered), read alone; the file's name is returned (file), and every
+  // row made from it records it (truthFile)
   if (GROUPS[w.group]?.oneFile) {
     const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
     const readOne = async (f) => {
@@ -181,12 +182,13 @@ export async function truthOf(w, fromMs, toMs, axes) {
       return tessFileCache.get(f);
     };
     const files = fs.readdirSync(R.TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(R.TESS.dir, f));
+    const spanFrom = w.cutoffMs - Math.max(...(GROUPS[w.group].arcs ?? w.arcs)) * HOUR - HOUR, spanTo = w.cutoffMs + 7 * DAY + HOUR;
     let chosen = null;
     for (const f of files.slice().reverse()) {
       const s = await readOne(f), first = ms(s.lines[0].epoch), last = ms(s.lines.at(-1).epoch);
-      if (first <= fromMs + HOUR && last >= toMs - HOUR) { chosen = { f, s }; break; }
+      if (first <= spanFrom + HOUR && last >= spanTo - HOUR) { chosen = { f, s }; break; }
     }
-    if (!chosen) throw new Error(`no single definitive file covers ${new Date(fromMs + HOUR).toISOString()} to ${new Date(toMs - HOUR).toISOString()}`);
+    if (!chosen) throw new Error(`no single definitive file covers ${new Date(spanFrom + HOUR).toISOString()} to ${new Date(spanTo - HOUR).toISOString()}`);
     return { lines: cut(chosen.s.lines), norad: R.TESS.norad, objectId: R.TESS.objectId, file: path.basename(chosen.f) };
   }
   if (!spkCache.has(w.name)) {

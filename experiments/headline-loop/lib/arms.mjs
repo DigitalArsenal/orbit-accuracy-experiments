@@ -131,6 +131,9 @@ export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
 export const LONG_PERIOD = { groups: ['HE72', 'HE', 'HX'], minHours: 9 };
 export const minHoursOf = (group) => (LONG_PERIOD.groups.includes(group) ? LONG_PERIOD.minHours : MANEUVER72.minHours);
 export const SEAMS_BREAK_ARC = ['HX'];
+/** Of two stored rows for one window and fit arc, whether the later (r) takes the earlier's place: a row that flew over one that recorded an
+ *  error, and on a one-file row (windows.mjs oneFile) a row that names its reference file (truthFile) over one that names none. */
+export const laterWins = (old, r, oneFile) => !old || (!!old.error && !r.error) || (!!oneFile && !r.error && !!r.truthFile && !old.truthFile);
 /** The rule of the windows placed after a firing (the 72 h TESS row, stack #479): one cutoff per firing of the object's list (a burn the
  *  list does not reject), at the first midnight (UTC) at least LONG_PERIOD.minHours after the firing's report time; ISO dates, one per
  *  firing, sorted. The row's windows at those cutoffs are placed by the rule; a cutoff the row already has is not added again. */

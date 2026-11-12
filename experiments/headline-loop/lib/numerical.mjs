@@ -21,7 +21,7 @@ export function numericalOf({ w, arc, base, afterBurn, afterBurnGroups }) {
   const r = afterBurn.get(k);
   if (!r || r.error) return b?.error ? b : null;
   if (NOT_CONFIGURED.has(w.group) && r.burnInArc) return { ...b, arms: {}, fitProcess: r.fitProcess, burnInArc: true };
-  if (r.fitProcess === REFIT) return { ...b, env: r.env, arms: { FFMq: r.arms?.FFMq ?? { ok: false } }, fitProcess: r.fitProcess, fitArcHours: r.fitArcHours, lastBurn: r.lastBurn, ...(r.fitArcStart ? { fitArcStart: r.fitArcStart } : {}) };
+  if (r.fitProcess === REFIT) return { ...b, env: r.env, arms: { FFMq: r.arms?.FFMq ?? { ok: false } }, fitProcess: r.fitProcess, fitArcHours: r.fitArcHours, lastBurn: r.lastBurn, ...(r.fitArcStart ? { fitArcStart: r.fitArcStart } : {}), truthFile: r.truthFile };
   return { ...b, fitProcess: r.fitProcess };
 }
 
@@ -121,8 +121,9 @@ export function listedOf(groups, base) {
 }
 /** The refits after a burn: with burn lists (burns), from the store folder named (store, else lib/arms.mjs NUMERICAL_AFTER_BURN.store; a
  *  folder name beginning NUMERICAL_STORE-after-burn), which must be in the store; every row's list (burnList) the one the lists give for its
- *  satellite, a row a burn moved or withheld naming one, or the run is refused; of a window-arc's rows the first, or the first without an
- *  error after one that has one. Without lists none is read, and a folder named is refused. A folder that is not in the store is refused
+ *  satellite, a row a burn moved or withheld naming one, or the run is refused; of a window-arc's rows the first, or a later one that flew
+ *  over one that recorded an error, or on a one-file row one that names its reference file over one that names none (lib/arms.mjs laterWins).
+ *  Without lists none is read, and a folder named is refused. A folder that is not in the store is refused
  *  (required, bar.mjs and trajectories.mjs: their numerical arm read with lists and without the refits made on them would stand a stored
  *  fit where the rule moved the arc); table.mjs reads it as none (required false), since its --burns also sets AP's 72 h rule, which runs
  *  where no refit was made, and its file names the folder it read (burnLists.afterBurnStore, null where none). */
@@ -144,7 +145,7 @@ export function readAfterBurn({ burns, store, readRows, required = true }) {
     if (!listOf.has(s)) listOf.set(s, A.listSha(burns, r.group, r.name));
     if ((r.burnList ?? null) !== listOf.get(s) || ((r.lastBurn || r.burnInArc) && !r.burnList)) { wrong.push(r); continue; }
     const k = `${r.key}|${r.arcH}`;
-    if (!afterBurn.has(k) || (afterBurn.get(k).error && !r.error)) afterBurn.set(k, r);
+    if (A.laterWins(afterBurn.get(k), r, W.GROUPS[r.group]?.oneFile)) afterBurn.set(k, r);
     afterBurnGroups.add(r.group);
   }
   if (wrong.length) throw new Error(`refused: ${wrong.length} rows of ${abStore} were made on burn lists other than --burns gives (${[...new Set(wrong.map((r) => r.group))].join(', ')})`);

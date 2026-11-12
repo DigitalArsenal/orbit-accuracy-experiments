@@ -93,9 +93,11 @@ async function tight() {
     process.exit(0);
   }
   const [K, N] = (args.shard ?? '0/1').split('/').map(Number);
+  // (a one-file window's row, windows.mjs oneFile, that names no reference file, truthFile, was made before rows named it: flown again)
+  const named = (r) => !W.GROUPS[r.group]?.oneFile || !!r.truthFile || !!r.error;
   // a window-arc with a row is not flown again; with --retry-errors, one whose rows all record no truth or a failed fit is
   const retry = !!args['retry-errors'], rowsSoFar = read(ROWS, /^rows-.*\.jsonl$/);
-  const done = new Set(rowsSoFar.filter((r) => !retry || (!r.error && r.arms?.FFMq?.ok)).map((r) => `${r.key}|${r.arcH}`));
+  const done = new Set(rowsSoFar.filter((r) => named(r) && (!retry || (!r.error && r.arms?.FFMq?.ok))).map((r) => `${r.key}|${r.arcH}`));
   const mine = items.filter((x) => W.inShard(x.w.key, K, N) && !done.has(`${x.w.key}|${x.arc}`))
     .sort((p, q) => groups.indexOf(p.w.group) - groups.indexOf(q.w.group) || String(p.w.name).localeCompare(String(q.w.name)) || p.w.cutoffMs - q.w.cutoffMs || p.arc - q.arc);
   console.error(`refly --tight shard ${K}/${N}: ${mine.length} window-arcs to fly (${items.length} in the rows of ${groups.join(', ')})`);
@@ -120,6 +122,7 @@ async function tight() {
         } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
       }
       if (ctx.error) throw Object.assign(new Error(ctx.error), { window: true });
+      if (ctx.truth.file) { row.truthFile = ctx.truth.file; line.truthFile = ctx.truth.file; }
       const thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
       if (!thin) throw Object.assign(new Error('coverage'), { window: true });
       row.high = Math.hypot(...ctx.sc.truth[0].r) >= 8400;
@@ -174,7 +177,8 @@ async function afterBurns() {
   if (!store.startsWith(`${A.NUMERICAL_STORE}-after-burn`) || store.includes('/')) throw new Error(`--after-burn-store ${store}: a folder name beginning ${A.NUMERICAL_STORE}-after-burn`);
   const outDir = path.join(A.STORE_ROOT, store);
   fs.mkdirSync(outDir, { recursive: true });
-  const done = new Set(read(outDir, /^rows-after-burn-.*\.jsonl$/).filter((r) => !r.error).map((r) => `${r.key}|${r.arcH}`));
+  const named = (r) => !W.GROUPS[r.group]?.oneFile || !!r.truthFile;
+  const done = new Set(read(outDir, /^rows-after-burn-.*\.jsonl$/).filter((r) => !r.error && named(r)).map((r) => `${r.key}|${r.arcH}`));
   const outFile = path.join(outDir, `rows-after-burn-${K}of${N}.jsonl`);
   const all = W.windowsOf(groups);
   const mine = [...all.windows, ...all.second].filter((w) => W.inShard(w.key, K, N) && w.arcs.some((a) => base.has(`${w.key}|${a}`) && !base.get(`${w.key}|${a}`).error && !done.has(`${w.key}|${a}`)))
@@ -193,9 +197,9 @@ async function afterBurns() {
     // the decision needs the cutoff's last state alone (its perigee); the window's truth, scored epochs and weather only where a fit moves
     let ctx;
     try {
-      const last = (await W.truthOf(w, D0 - 2 * W.HOUR, D0, arms.axes)).lines.at(-1);
+      const lastRead = await W.truthOf(w, D0 - 2 * W.HOUR, D0, arms.axes), last = lastRead.lines.at(-1);
       if (!last) throw new Error('no state before the cutoff');
-      ctx = { perigeeKm: A.perigeeKmOf(last) };
+      ctx = { perigeeKm: A.perigeeKmOf(lastRead.lines.at(-1)), truthFile: lastRead.file };
       if (!thrust && w.arcs.some((arc) => A.numericalArc(burns, D0, ctx.perigeeKm, arc, minH).maneuvering)) {
         const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
         const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
@@ -206,7 +210,7 @@ async function afterBurns() {
     for (const arc of w.arcs) {
       const b = base.get(`${w.key}|${arc}`);
       if (!b || b.error || done.has(`${w.key}|${arc}`)) continue;
-      const row = { ...head, arcH: arc };
+      const row = { ...head, arcH: arc, ...(ctx.truthFile ? { truthFile: ctx.truthFile } : {}) };
       if (ctx.error) row.error = ctx.error;
       else if (thrust) {
         // an orbit that is not ballistic between impulses has no burn-free arc: the stored fit, marked as holding thrust
@@ -255,7 +259,7 @@ async function run() {
   fs.mkdirSync(outDir, { recursive: true });
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
   const retry = !!args['retry-errors'];
-  const done = new Set(fs.readdirSync(outDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => fs.readFileSync(path.join(outDir, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)).filter((r) => !retry || !r.error).map((r) => `${r.key}|${r.arcH}`));
+  const done = new Set(fs.readdirSync(outDir).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => fs.readFileSync(path.join(outDir, f), 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean)).filter((r) => (!retry || !r.error) && (!W.GROUPS[r.group]?.oneFile || !!r.truthFile || !!r.error)).map((r) => `${r.key}|${r.arcH}`));
   const second = !!args['second-pass'];
   const outFile = path.join(outDir, `rows-truth-ffm-${second ? 'second-' : ''}${K}of${N}.jsonl`);
   const all = W.windowsOf(groups);
@@ -281,7 +285,7 @@ async function run() {
     } catch (e) { ctx = { error: String(e?.message ?? e).slice(0, 200) }; }
     for (const arc of w.arcs) {
       if (done.has(`${w.key}|${arc}`)) continue;
-      const row = { ...head, arcH: arc, env, arms: {} };
+      const row = { ...head, arcH: arc, env, arms: {}, ...(ctx.truth?.file ? { truthFile: ctx.truth.file } : {}) };
       if (ctx.error) row.error = ctx.error;
       else {
         const thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - arc * W.HOUR && t <= D0; }), arc);
