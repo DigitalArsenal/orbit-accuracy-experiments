@@ -38,13 +38,13 @@ const SELF = new URL(import.meta.url).pathname;
 const CAPS = args.caps ? args.caps.split(',').map(Number) : null;
 if (CAPS && !(CAPS.length === 2 && CAPS.every((x) => Number.isInteger(x) && x >= 2 && x <= 70))) throw new Error('--caps T,Z: two degrees, each 2 to 70');
 const HOUR = 3600e3, DAY = 864e5, BAR_M = 100, BAR_H = 120, STEP_S = 300;
-const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA', 'HE', 'HX'];
+const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA', 'HE72', 'HE', 'HX'];
 // the front page's four groups (the site's), and strong drag (both strong-drag rows) with the heights its windows' forecasts span
 const GROUPS = [
   { key: 'leo', name: 'Low Earth orbit', regimes: ['LS', 'DO', 'S1', 'P', 'T'] },
   { key: 'meo', name: 'Medium Earth orbit', regimes: ['GD', 'GN', 'GN_GAL'] },
   { key: 'geo', name: 'Geosynchronous', regimes: ['IG', 'GE', 'WA'] },
-  { key: 'heo', name: 'Highly elliptical', regimes: ['HE', 'HX'] },
+  { key: 'heo', name: 'Highly elliptical', regimes: ['HE72', 'HE', 'HX'] },
   { key: 'drag', name: 'Strong drag', regimes: ['T', 'P'], heights: true },
 ];
 // a state's height above the WGS-84 ellipsoid, km, to about 0.1 km (the ellipsoid's radius at the state's geocentric latitude in the
@@ -90,13 +90,14 @@ async function main() {
       : { setting: x.setting, process: 'full arc', arcStart: new Date(Date.parse(x.cutoff) - x.arcH * H).toISOString(), firstState: isoOf(x.from) });
   const linesOf = new Map();
   allLines.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!linesOf.has(k)) linesOf.set(k, []); linesOf.get(k).push({ x, fit: fitOfLine(x, i) }); });
-  // a numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by the arc the rule gives from its last burn; a
+  // a numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by the arc the rule gives from its last burn (with
+  // the row's own minimum arc, lib/arms.mjs minHoursOf: 9 h on the long-period rows); a
   // stored full-arc fit by its setting and the full arc
   const rowFitOf = (b, label, D0, a) => {
     const arm = label ? b?.arms?.[label] : null;
     if (!arm?.ok) return null;
     if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
-    if (b.fitProcess === 'maneuvering: the arc after its last burn') return { setting: arm.arm, process: 'after burn', arcStart: new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a).startMs).toISOString() };
+    if (b.fitProcess === 'maneuvering: the arc after its last burn') return { setting: arm.arm, process: 'after burn', arcStart: new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString() };
     return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
   };
   const sameFit = (f, r) => f && r && f.setting === r.setting && f.process === r.process && (r.firstState ? f.firstState === r.firstState
@@ -133,7 +134,7 @@ async function main() {
   }
   if (args.burns) {
     const listOf = new Map(), wrong = [];
-    const listSha = (g, name) => { const f = path.join(args.burns, g, `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`); return fs.existsSync(f) ? sha256(fs.readFileSync(f)).slice(0, 12) : null; };
+    const listSha = (g, name) => A.listSha(args.burns, g, name);
     for (const f of fs.existsSync(abDir) ? fs.readdirSync(abDir).filter((x) => /^rows-after-burn-.*\.jsonl$/.test(x)) : [])
       for (const r of readRows(path.join(abDir, f))) {
         const s = `${r.group}|${r.name}`;

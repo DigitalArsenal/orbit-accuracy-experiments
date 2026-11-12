@@ -123,13 +123,35 @@ export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
  *  reportTime is at or before D0; in an older list, one every piece of which had ended by D0.
  *  endMs: the end of the burn's extent (extentTo), carried across the rejected candidates known by D0 that begin within 60 min after it
  *  (the tail of a longer burn), so an arc after the burn starts after all of it. */
-export const knownBurns = (dir, group, name, D0) => {
-  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+// The long-period rows (stack #479): the highly elliptical rows' arc after a firing is at least LONG_PERIOD.minHours (both arms, cap
+// MANEUVER72.capHours); a firing less than that before the cutoff stays inside the arc (burnInArc), never dropped. Every other row keeps
+// MANEUVER72.minHours. On the rows of SEAMS_BREAK_ARC, whose truth is weekly solutions joined inside the windows (Chandra), a join known
+// before the cutoff (the lists' seams) moves the arc as a firing does; elsewhere a join is flagged only. A list is read from the folder of
+// listsGroup(group) (the 72 h TESS row reads TESS's list).
+export const LONG_PERIOD = { groups: ['HE72', 'HE', 'HX'], minHours: 9 };
+export const minHoursOf = (group) => (LONG_PERIOD.groups.includes(group) ? LONG_PERIOD.minHours : MANEUVER72.minHours);
+export const SEAMS_BREAK_ARC = ['HX'];
+/** The rule of the windows placed after a firing (the 72 h TESS row, stack #479): one cutoff per firing of the object's list (a burn the
+ *  list does not reject), at the first midnight (UTC) at least LONG_PERIOD.minHours after the firing's report time; ISO dates, one per
+ *  firing, sorted. The row's windows at those cutoffs are placed by the rule; a cutoff the row already has is not added again. */
+export const firingCutoffs = (dir, group, name) => {
+  const f = listFile(dir, group, name);
+  if (!fs.existsSync(f)) return [];
+  const DAY = 864e5, burns = (JSON.parse(fs.readFileSync(f, 'utf8')).burns ?? []).filter((b) => b.refined?.consistent !== false && b.reportTime);
+  return burns.map((b) => new Date(Math.ceil((Date.parse(b.reportTime) + LONG_PERIOD.minHours * 3600e3) / DAY) * DAY).toISOString().slice(0, 10)).sort();
+};
+export const listsGroup = (group) => (group === 'HE72' ? 'HE' : group);
+const listFile = (dir, group, name) => path.join(dir, listsGroup(group), `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+/** An object's burn list's sha256, first 12 hex (refly.mjs --after-burns writes it as burnList, table.mjs on AP's 72 h rows), or null. */
+export const listSha = (dir, group, name) => { const f = listFile(dir, group, name); return fs.existsSync(f) ? sha256(fs.readFileSync(f)).slice(0, 12) : null; };
+export const knownBurns = (dir, group, name, D0, field = 'burns') => {
+  const f = listFile(dir, group, name);
   if (!fs.existsSync(f)) return [];
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
   const knownAt = (b) => (d.asOf ? Date.parse(b.reportTime) : Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0));
-  const seen = d.burns.filter((b) => knownAt(b) <= D0), rejected = seen.filter((b) => b.refined?.consistent === false);
-  return seen.filter((b) => b.refined?.consistent !== false).map((b) => {
+  // a join of the truth's solutions (seams) is a join whatever its delta-v test says: only burns pass the consistency filter
+  const seen = (d[field] ?? []).filter((b) => knownAt(b) <= D0), rejected = field === 'seams' ? [] : seen.filter((b) => b.refined?.consistent === false);
+  return seen.filter((b) => field === 'seams' || b.refined?.consistent !== false).map((b) => {
     let endMs = Date.parse(b.extentTo ?? b.to);
     for (let more = true; more;) {
       more = false;
@@ -138,17 +160,23 @@ export const knownBurns = (dir, group, name, D0) => {
     return { ...b, endMs };
   });
 };
+/** The joins of the truth's solutions in an object's list (seams, never burns) known at D0, as knownBurns gives burns. */
+export const knownSeams = (dir, group, name, D0) => knownBurns(dir, group, name, D0, 'seams');
+/** What moves a fit arc on a row: its known burns, and on SEAMS_BREAK_ARC rows its known joins too. */
+export const arcBreaks = (dir, group, name, D0) => [...knownBurns(dir, group, name, D0), ...(SEAMS_BREAK_ARC.includes(group) ? knownSeams(dir, group, name, D0) : [])];
 /** A known burn's end (ms): endMs (knownBurns), else its extent's end. */
 export const burnEndMs = (b) => b.endMs ?? Date.parse(b.extentTo ?? b.to);
 /** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason.
  *  floorKm: the perigee floor (MANEUVER72.perigeeMinKm unless given; the numerical arm passes NUMERICAL_AFTER_BURN.perigeeMinKm, the same). */
-export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMinKm) => {
+export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMinKm, minHours = MANEUVER72.minHours) => {
   const H = 3600000, full = { startMs: D0 - 72 * H, maneuvering: false };
   if (!(perigeeKm >= floorKm)) return full;
   const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
   if (!ends.length) return full;
-  const last = Math.max(...ends);
-  return { startMs: Math.min(D0 - MANEUVER72.minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000)), maneuvering: true, lastBurnMs: last };
+  const last = Math.max(...ends), startMs = Math.min(D0 - minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000));
+  // burnInArc: the last burn ends after the arc's start (it ended less than the minimum arc before the cutoff), so the arc holds it; the
+  // numerical arm's rows (refly.mjs --after-burns) say the same of their arc
+  return { startMs, maneuvering: true, lastBurnMs: last, burnInArc: last > startMs };
 };
 // The numerical arm's fit of a maneuvering object (stack issues 462 and 489): the numerical propagator has no thrust term either, so a fit
 // through a burn takes the thrust into its drag and radiation terms and its forecast leaves the orbit. With the burn lists (refly.mjs
@@ -173,9 +201,9 @@ export function listsDigest(dir) {
   return hash.digest('hex');
 }
 /** The numerical arm's fit arc for a fit of arcH hours: { startMs, maneuvering, lastBurnMs?, shortAfterBurn? }. */
-export const numericalArc = (burns, D0, perigeeKm, arcH) => {
+export const numericalArc = (burns, D0, perigeeKm, arcH, minHours = MANEUVER72.minHours) => {
   const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
-  if (arcH === 72) return maneuverArc(burns, D0, perigeeKm, NUMERICAL_AFTER_BURN.perigeeMinKm);
+  if (arcH === 72) return maneuverArc(burns, D0, perigeeKm, NUMERICAL_AFTER_BURN.perigeeMinKm, minHours);
   if (arcH !== 24 || !(perigeeKm >= NUMERICAL_AFTER_BURN.perigeeMinKm)) return full;
   const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t > D0 - arcH * H);
   if (!ends.length) return full;
@@ -187,7 +215,7 @@ export const numericalArc = (burns, D0, perigeeKm, arcH) => {
  *  no arc of it is burn-free and its numerical fit is not a properly configured one. In a list with positionsOnly (the burn detector's
  *  ballistic.mjs, stack issue 506) the verdict is as of D0: from the pairs that ended by then, with at least minPairs of them. */
 export const notBallistic = (dir, group, name, D0 = Infinity) => {
-  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+  const f = listFile(dir, group, name);
   if (!fs.existsSync(f)) return null;
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), po = d.positionsOnly;
   if (!po) return d.notBallistic ?? null;
@@ -204,12 +232,12 @@ export const perigeeKmOf = ({ r, v }) => {
 };
 /** Every burn in an object's burn list, known at a cutoff or not (what the truth holds): [{ t (ms), sizeMmS, alongTrackMmS (+ raises the
  *  orbit) }], or null without a list. A candidate the list rejects (refined.consistent false) is left out. */
-export const listedBurns = (dir, group, name) => {
-  const f = path.join(dir, group, `${name.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
+export const listedBurns = (dir, group, name, field = 'burns') => {
+  const f = listFile(dir, group, name);
   if (!fs.existsSync(f)) return null;
-  return JSON.parse(fs.readFileSync(f, 'utf8')).burns.filter((b) => b.refined?.consistent !== false).map((b) => {
+  return (JSON.parse(fs.readFileSync(f, 'utf8'))[field] ?? []).filter((b) => field === 'seams' || b.refined?.consistent !== false).map((b) => {
     const dv = b.refined?.dvRtnMmS ?? b.dvRtnMmS.map((x) => -x);
-    return { t: Date.parse(b.burn), sizeMmS: Math.hypot(...dv), alongTrackMmS: dv[1] };
+    return { t: Date.parse(b.burn ?? b.at), sizeMmS: Math.hypot(...dv), alongTrackMmS: dv[1] };
   });
 };
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
