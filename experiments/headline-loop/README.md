@@ -53,6 +53,7 @@ numerical propagator compare on each kind. On the strong-drag rows `burnFreeScat
 | `table.mjs` | fits and flies AP and SGP4-XP of a modules commit (its `propagator/sdn-ap/dist/isomorphic/module.wasm` by `git show`), the Space Force's XP (propagator/sgp4-xp, called as a black box) and SGP4 (analysis/gp-error-model, propagator/sgp4) on every window, scores them, reads the numerical propagator's errors on the same windows from the store, and writes the one JSON (`sdn-ap-scoreboard/2`). AP's and our XP's rows go to `<store>/table/<wasm sha12>/rows.jsonl`; the Space Force XP's and SGP4's, which do not depend on AP's build, to `<store>/outside/<their builds>/rows.jsonl`, flown once and read by every later run, so a release's run flies AP and our XP only; `--theories` limits the ones flown, `--retry-errors` flies again a window whose row recorded an error |
 | `refly.mjs` | the numerical propagator's rows, flown once (`--second-pass`: the windows touching March to May 2026): FFM 2.2.0 (fitted by analysis/estimation 0.7.0) in the reduced, configured and full settings (and Fbest on the laser geodetic spheres), to `<store>/f0b8352a43f3/`; `--after-burns <lists>` refits the full setting of a maneuvering object on the arc after its last burn, to `<store>/f0b8352a43f3-after-burn/` or the folder `--after-burn-store` names (one per set of lists); `--tight` fits and flies the full drag setting again at tolerance 1e-13 (stack #520), rows to `<store>/f0b8352a43f3-L70S13/`, trajectories to `<store>/numerical-trajectories/L70S13/` with staged manifest lines, and `--tight-switch` appends a whole row's lines to the manifest |
 | `bar.mjs` | the bar's table for a released build: AP's record fitted to each window's numerical forecast and its largest distance from it over 0 to 120 h, from the stored numerical trajectories, each row at one numerical tolerance; per group, the front page's four and strong drag with the heights its forecasts span |
+| `before-next-event.mjs` | the numerical arm's error against the reference at the last whole 12 h lead before the next burn or break test event, per setting |
 | `lib/` | `env.mjs` (package and host checks), `windows.mjs` (windows, truth, scoring bins, weather), `settings.mjs` (the FFM settings), `ffm.mjs` (FFM and estimation hosts), `arms.mjs` (AP and FFM flights), `e2e.mjs` (check helpers) |
 
 Windows come in two passes: the first is every window whose fit arc and 7-day forecast stay clear of March to May 2026; the second is the
@@ -68,6 +69,38 @@ small real slice and asserts on what it writes.
 The numerical column of a row is its fullest stored setting with a fit, fixed by name and never chosen on its accuracy (table.mjs
 `PREFER`). It is null ("being measured") while the store lacks a numerical row for any window of the row. For commercial geostationary,
 whose truth holds station-keeping burns that every stored fit runs through, it is null unless the after-burn rows are read (`--burns`).
+
+## Weights, priors, the break test, the judge before the next event
+
+**Weight.** The numerical arm weighs the positions of a reference at sigma = max(10 m, the object's median piece closure), fixed before the
+fit (`lib/arms.mjs` `objectSigmaM`, `lib/settings.mjs` `OBSERVATION_SIGMA_FLOOR_M`). The median piece closure is the `positionClosure.medianM`
+of the object's burn list (`burn-detector/pieces.mjs` and `burns.mjs`): the full setting flown over 6 h pieces from the reference's own states
+closes to that distance, which is the reference's noise where the object is not thrusting. Every precise orbit measured so far closes within
+the floor except four of the six laser geodetic satellites' (up to 111 m) and the WAAS broadcast ephemeris of the commercial geostationary row
+(127 to 572 m), so those two rows' sigma changes and every other row's is the floor. Without a list, or with a list that records no median (the
+long-period rows'), the sigma is the floor. `refly.mjs --after-burns <lists>` fits again every window of an object whose sigma is above the floor
+(on the arc after its last known burn, else the full arc) with `sigmaM` recorded on the fit.
+
+**Prior.** The five-term arms (E5, E5F: navigation, geostationary, inclined geosynchronous and the commercial geostationary row) carry an a
+priori sigma on Y0, B0, B1cos and B1sin of three times the 95th percentile of the absolute value over 115 fits of the geostationary and inclined
+geosynchronous rows with the terms free (95 of 72 h, 20 of 24 h): 6.78e-9, 4.25e-9, 3.59e-8 and 6.98e-9 m/s^2 (`ECOM2_PRIOR_SIGMA`); D0 stays free
+at 1e-6. The 95th percentiles are 2.26e-9, 1.42e-9, 1.20e-8 and 2.33e-9 and the largest 3.12e-9, 1.99e-9, 2.59e-8 and 4.20e-9. Before the rule the
+four terms had 1e-7.
+
+**Break test.** `burn-detector/breaks.mjs` is the burn detector's second detector: the sphere fitted to every 24 h arc at a 12 h stride at the floor
+sigma, an arc closing at a weighted RMS of 1.5 or less; an arc that closes on both sides of a time and not across it holds an event there. The
+position test of `burns.mjs` cannot see a step of 11 to 51 mm/s on an object whose reference closes to 100 m (its threshold is about 700 m). An
+event is known at the end of the first arc that failed and joins the object's burns in `knownBurns` through `<satellite>.breaks.json` beside the
+list, so the arc rule reads it as a burn and the lists' digest covers it.
+
+**Judge before the next event.** A maneuvering satellite's reference holds its maneuvers, so the day-5 error judges nothing. `before-next-event.mjs`
+fits each setting named on the window's arc and gives the 3D distance to the reference at the last whole 12 h lead before the next event (a burn
+of the list or an event of the break test), and the largest from 12 h on.
+
+**An arc with no forecast.** A window whose arc holds an event of the list (a burn or a break test event) and has no arc of the rule's minimum after
+it, or whose fit does not close, has no numerical figure: the row lists it as "the numerical propagator has no forecast of this arc"
+(`ruleLeavesNoArm`, in `withoutNumericalFigure` beside the windows flown), and it stays in the row's window total. The count within the bar reads
+against that total as well as against the windows flown.
 
 The numerical trajectories (`<store>/numerical-trajectories/manifest.jsonl`, one line per trajectory, Float64 x, y, z km and vx, vy, vz km/s
 per state at the line's `stepS` from its `from`) are selected by key, fit arc (`arcH`) and the identity of the fit the line flies:

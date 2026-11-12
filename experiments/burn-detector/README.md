@@ -32,6 +32,15 @@ before D0.
    cutoff from the pairs that ended by then: an orbit whose positions-only closure stays above 100 m (median) holds thrust between
    impulses and has no burn-free arc.
 
+4. `breaks.mjs`: the second detector, a break test on the fit. The position test of step 2 has a threshold set by the object's own closure
+   (about 700 m on the commercial geostationary satellite, whose reference closes to about 100 m over a 6 h piece), below which a step of 11 to
+   51 mm/s passes. The break test fits the sphere (`Ffull`, no empirical term) to every 24 h arc at a 12 h stride at the floor sigma of 10 m; an arc
+   closes at a weighted RMS of 1.5 or less. A run of failing arcs after an arc that closes holds an event between the end of that arc and the
+   start of the first arc that closed after the run, inside every failing arc; it is known at the end of the first arc that failed. A run of more
+   than 3 arcs is a drift (continuous thrust or a model that does not fit), listed apart in `drifts` and never an event. The events are written
+   to `<group>/<satellite>.breaks.json` beside the list; `lib/arms.mjs` `knownBurns` reads them as burns known at their report time, so the arc
+   rule moves a fit's arc after one, and `listsDigest` covers the file.
+
 Each list (`<group>/<satellite>.burns.json`) keeps every candidate with its report time, its extent and its velocity change; beside it,
 `<satellite>.mnv` holds one size-prefixed `$MNV` per burn that holds (STATUS DETECTED, REPORT_TIME the time it became known,
 EVENT_START_TIME and EVENT_END_TIME its extent, DELTA_VEL_U, _V and _W the refined velocity change in the pre-burn U, V, W axes), built

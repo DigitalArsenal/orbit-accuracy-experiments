@@ -9,6 +9,7 @@ import { pathToFileURL } from 'node:url';
 import { REPO, MODULES_ROOT } from './env.mjs';
 import { root, XP2F, iso, byDay } from './windows.mjs';
 import { SETTINGS, openFfm } from './ffm.mjs';
+import { OBSERVATION_SIGMA_FLOOR_M } from './settings.mjs';
 
 const OT = path.join(REPO, 'experiments/operator-theory');
 const APL = await import(path.join(OT, 'lib/ap.mjs'));
@@ -35,6 +36,9 @@ export const PCF = {
   AP_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20 }), SOLID_TIDES: 1 }, fit: null }),
   AP_VACUUM_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: null }),
   AP_ECOM2_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), SOLID_TIDES: 1 }, fit: null }),
+  // the vacuum row's (the commercial geostationary row) with the Y0 term: ECOM2_RULES names it from ECOM2_GEO_SINCE
+  AP_VACUUM_ECOM2: APL.fitPcf({ forces: APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false, ecom2: true }), fit: null }),
+  AP_VACUUM_ECOM2_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false, ecom2: true }), SOLID_TIDES: 1 }, fit: null }),
   // the low table's rows from ZONAL70_SINCE: zonal degree 70, whose terms of degree 21 to 70 move a low orbit's node (stack #531)
   AP_Z70_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 70 }), SOLID_TIDES: 1 }, fit: null }),
   // the strong-drag rows from TESSERAL70_SINCE: tesseral degree 70 as well, which carries the terms of degree 32 to 70 near 1.2 to 1.6 cycles a day
@@ -50,7 +54,9 @@ export const PCF = {
 export const ECOM2_SINCE = '0.6.15';
 // the one-day class's resonant tail (sdn-ap 0.6.19, stack #434), which also solves Y0 on these rows (SDN-AP SPEC 16.13)
 export const ECOM2_GEO_SINCE = '0.6.19';
-export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { groups: ['GE', 'IG'], since: ECOM2_GEO_SINCE }];
+// The commercial geostationary row (WA) joins the geostationary and inclined geosynchronous rows: its numerical fits carry a Y0 of the same
+// kind (the five-term fits under the prior); with Y0 in AP's record 21 of the 22 closing 72 h windows are within 100 m of the forecast, 20 without.
+export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { groups: ['GE', 'IG', 'WA'], since: ECOM2_GEO_SINCE }];
 export const ECOM2_MIN_ARC = 72;
 // The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row (sdn-ap 0.6.20, stack #449)
 export const TIDES_SINCE = '0.6.20';
@@ -173,13 +179,25 @@ export const listsGroup = (group) => (group === 'HE72' ? 'HE' : group);
 const listFile = (dir, group, name) => path.join(dir, listsGroup(group), `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
 /** An object's burn list's sha256, first 12 hex (refly.mjs --after-burns writes it as burnList, table.mjs on AP's 72 h rows), or null. */
 export const listSha = (dir, group, name) => { const f = listFile(dir, group, name); return fs.existsSync(f) ? sha256(fs.readFileSync(f)).slice(0, 12) : null; };
+/** The break test's events for an object (experiments/burn-detector/breaks.mjs): [{ from, to (the event lies between), extentFrom, extentTo,
+ *  reportTime (the end of the first arc that failed to close), source: 'break test' }], or none without a file. They join the burns of the
+ *  object's list in knownBurns: an event is a break in the arc whatever its size, and the detector's position test cannot see a small step. */
+const breaksFile = (dir, group, name) => path.join(dir, listsGroup(group), `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.breaks.json`);
+const breakEvents = (dir, group, name) => { const f = breaksFile(dir, group, name); return fs.existsSync(f) ? (JSON.parse(fs.readFileSync(f, 'utf8')).events ?? []) : []; };
+/** An object's sigma for a fit (m): max(OBSERVATION_SIGMA_FLOOR_M, the median piece closure of its burn list), the floor without a list or
+ *  where the list records no median (the long-period rows' lists). The median is the list's positionClosure.medianM: the closure of the
+ *  numerical setting flown over 6 h pieces from the reference's own states, which is the reference's noise where the object is not thrusting. */
+export const objectSigmaM = (dir, group, name) => {
+  const f = dir ? listFile(dir, group, name) : null, m = f && fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')).positionClosure?.medianM : null;
+  return Math.max(OBSERVATION_SIGMA_FLOOR_M, Number.isFinite(m) ? m : 0);
+};
 export const knownBurns = (dir, group, name, D0, field = 'burns') => {
   const f = listFile(dir, group, name);
   if (!fs.existsSync(f)) return [];
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
-  const knownAt = (b) => (d.asOf ? Date.parse(b.reportTime) : Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0));
+  const knownAt = (b) => (d.asOf || b.source === 'break test' ? Date.parse(b.reportTime) : Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0));
   // a join of the truth's solutions (seams) is a join whatever its delta-v test says: only burns pass the consistency filter
-  const seen = (d[field] ?? []).filter((b) => knownAt(b) <= D0), rejected = field === 'seams' ? [] : seen.filter((b) => b.refined?.consistent === false);
+  const seen = [...(d[field] ?? []), ...(field === 'burns' ? breakEvents(dir, group, name) : [])].filter((b) => knownAt(b) <= D0), rejected = field === 'seams' ? [] : seen.filter((b) => b.refined?.consistent === false);
   return seen.filter((b) => field === 'seams' || b.refined?.consistent !== false).map((b) => {
     let endMs = Date.parse(b.extentTo ?? b.to);
     for (let more = true; more;) {
@@ -225,7 +243,7 @@ export const NUMERICAL_TIGHT = { from: 'L70S', to: 'L70S13', store: `${NUMERICAL
  *  zero byte and its contents, so a list moved to another satellite's name changes it (table.mjs and bar.mjs state its first 12 hex). */
 export function listsDigest(dir) {
   const files = [];
-  const walk = (d, rel) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const r = rel ? `${rel}/${e.name}` : e.name; if (e.isDirectory()) walk(path.join(d, e.name), r); else if (e.name.endsWith('.burns.json')) files.push(r); } };
+  const walk = (d, rel) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const r = rel ? `${rel}/${e.name}` : e.name; if (e.isDirectory()) walk(path.join(d, e.name), r); else if (e.name.endsWith('.burns.json') || e.name.endsWith('.breaks.json')) files.push(r); } };
   walk(dir, '');
   const hash = crypto.createHash('sha256');
   for (const f of files.sort()) { const b = fs.readFileSync(path.join(dir, f)); hash.update(`${f}\0${b.length}\0`); hash.update(b); }
@@ -274,7 +292,8 @@ export const listedBurns = (dir, group, name, field = 'burns') => {
 };
 /** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, AP_Z70_TIDES on a low-table row from ZONAL70_SINCE, or AP_T70_Z70_TIDES from TESSERAL70_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
-  const base = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
+  const ecom2 = arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since));
+  const base = vacuum ? (ecom2 ? 'AP_VACUUM_ECOM2' : 'AP_VACUUM') : ecom2 ? 'AP_ECOM2' : 'AP';
   const label = base === 'AP' && TESSERAL70_GROUPS.includes(group) && atLeast(version, TESSERAL70_SINCE) ? 'AP_T70_Z70_TIDES'
     : base === 'AP' && ZONAL70_GROUPS.includes(group) && atLeast(version, ZONAL70_SINCE) ? 'AP_Z70_TIDES'
     : atLeast(version, TIDES_SINCE) ? `${base}_TIDES` : base;
@@ -286,7 +305,8 @@ export const AP_FORCES_TEXT = {
   AP_VACUUM: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by the theory\'s own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors.',
   AP_ECOM2: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors, and the ECOM2 Y0 radiation term solved as well.',
 };
-for (const label of ['AP', 'AP_VACUUM', 'AP_ECOM2']) AP_FORCES_TEXT[`${label}_TIDES`] = AP_FORCES_TEXT[label].replace('31 in the tesseral terms;', '31 in the tesseral terms; the solid Earth tide (IERS 2010);');
+AP_FORCES_TEXT.AP_VACUUM_ECOM2 = AP_FORCES_TEXT.AP_VACUUM.replace(/\.$/, ', and the ECOM2 Y0 radiation term solved as well.');
+for (const label of ['AP', 'AP_VACUUM', 'AP_ECOM2', 'AP_VACUUM_ECOM2']) AP_FORCES_TEXT[`${label}_TIDES`] = AP_FORCES_TEXT[label].replace('31 in the tesseral terms;', '31 in the tesseral terms; the solid Earth tide (IERS 2010);');
 AP_FORCES_TEXT.AP_Z70_TIDES = AP_FORCES_TEXT.AP_TIDES.replace('Gravity to degree 20 in the zonal terms', 'Gravity to degree 70 in the zonal terms');
 AP_FORCES_TEXT.AP_T70_Z70_TIDES = AP_FORCES_TEXT.AP_Z70_TIDES.replace('31 in the tesseral terms', '70 in the tesseral terms');
 
@@ -416,8 +436,8 @@ export async function openArms({ apWasm = null, ussf = false, sgp4 = false } = {
       return { ok: true, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), s: (performance.now() - t0) / 1000 };
     },
     /** One FFM setting: fitted to the arc, flown on the scored epochs: { arm, product, termination, fitOk, weightedRms, iterations, days, s }. */
-    async ffm({ arm, thin, D0, rows, sc }) {
-      const t0 = performance.now(), settings = SETTINGS[arm];
+    async ffm({ arm, thin, D0, rows, sc, sigmaM }) {
+      const t0 = performance.now(), settings = sigmaM ? { ...SETTINGS[arm], sigmaM } : SETTINGS[arm];
       const f = await F.fit(thin, settings, D0, rows);
       const product = { epoch: f.epoch, state: f.state, parameters: f.parameters };
       const scored = await F.forecast(product, sc.epochs, settings, rows);
