@@ -83,6 +83,9 @@ row's is the floor. The lists of the long-period rows were made before the field
 `table.mjs --check` reads over the store's lists: no other list may lack it), and an object without a list or a median is weighed at the floor.
 `refly.mjs --after-burns <lists>` fits again every window of an object whose sigma is above the floor, on the arc after its last known burn or,
 where none moves it, on the full arc (fit process `REFIT_FULL`, `lib/numerical.mjs`), with `sigmaM` recorded on the fit and in its identity.
+That path is the only one that reads the lists, and it runs over the groups it is given (S1, DO and WA unless `--groups` says otherwise): of the
+objects above the floor, those of the commercial geostationary row are fitted at their sigma by it; the four laser spheres are not, since the
+low-orbit laser-sphere row is not among its groups and the main `refly.mjs` run reads no list, so their stored fits stay weighed at 10 m.
 
 **Prior.** Of the rows fitted with the four empirical terms (the E5 settings), one whose reference's own noise is above the 10 m floor takes the
 prior sized from the precise-reference geosynchronous rows, because its data cannot determine Y0, B0, B1cos and B1sin; a row with a precise
