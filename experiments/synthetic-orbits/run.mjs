@@ -95,7 +95,8 @@ const PASS_M = 100, BAR_H = 120;
 // --fit <name>,<name>,...: several ways (not arc72; cutoff72 is its fit) on one truth per case, each row to its way's own file.
 // --rung <name>: the slot flown at one of the rungs between SGP4-XP's record and AP's headline record (fits.mjs RUNGS): xp, SGP4-XP's
 // own record with no space weather, or the settings at the rung's tesseral and zonal degrees; each rung's rows to their own file, so no
-// rung is read back as another. Without it the slot is AP's headline settings (degrees 31 and 20), as before. Each theory's row records
+// rung is read back as another. Without it the slot is AP's headline settings: tesseral 31 and zonal 20, and from sdn-ap 0.6.42 zonal 70 on a case in the
+// class of the low table (e at or below 0.05 and the perigee under 2,500 km; headline-loop lib/arms.mjs inLowTableClass, syntheticZonalDegree). Each theory's row records
 // the THEORY field and the forces read from the $PCF actually sent (settings), and its label is built from them.
 // --xp: on a way other than arc72, SGP4-XP is also fitted over the way's span (its own record, no space weather) and flown beside AP;
 // those rows go to their own file. (arc72 flies SGP4-XP already.) A way that holds AP's terms at the truth's (held-terms) is refused
@@ -128,8 +129,37 @@ const TRUTH_CACHE_V = 1;
 const ROWS_SUFFIX = suffixOf(FIT);
 
 if (args.worker) await worker();
+else if (args.check) await check();
 else if (args.report) await (await import('./report.mjs')).report(await setup(), args);
 else await main();
+
+/**
+ * --check (no store, no flight): the rule for the slot's zonal degree (headline-loop lib/arms.mjs syntheticZonalDegree): a case each side of
+ * both limits (e at 0.05 and above it; the perigee at 2,499 and 2,500 km) and of the build's version (0.6.41, 0.6.42), the $PCF the slot is
+ * given in each (fits.mjs headlinePcf), and the seeded set's cases in the class.
+ *   node experiments/synthetic-orbits/run.mjs --check
+ */
+async function check() {
+  usePackages();
+  const A = await import(path.join(REPO, 'experiments/headline-loop/lib/arms.mjs'));
+  const APL = await import(path.join(REPO, 'experiments/operator-theory/lib/ap.mjs'));
+  const P = A.S.PCF, degreesOf = (pcf) => { const f = P.PCF.getRootAsPCF(new A.S.flatbuffers.ByteBuffer(pcf)).unpack().FORCES; return [f.MAXIMUM_TESSERAL_DEGREE, f.MAXIMUM_DEGREE]; };
+  const fails = [], ok = (cond, what) => { if (!cond) fails.push(what); console.error(`${cond ? 'ok  ' : 'FAIL'} ${what}`); };
+  const z = (e, hpKm, v = '0.6.47') => A.syntheticZonalDegree({ e, hpKm }, v);
+  ok(z(0.05, 500) === 70 && z(0, 200) === 70 && z(0.0501, 500) === 20 && z(0.1, 500) === 20, 'the eccentricity limit: 0 and 0.05 are in the class, 0.0501 and 0.1 are not');
+  ok(z(0.01, 2499) === 70 && z(0.01, 2500) === 20 && z(0.01, 35786) === 20, 'the perigee limit: 2,499 km is in the class, 2,500 km and above are not');
+  ok(z(0.01, 500, '0.6.41') === 20 && z(0.01, 500, '0.6.42') === 70 && z(0.01, 500, '0.6.47-rc.1') === 70, 'the build: zonal 70 from sdn-ap 0.6.42, zonal 20 before it');
+  const mk = (c, version, drag, radiation) => WAYS.headlinePcf({ A, APL, c, version, drag, radiation });
+  const same = (a, b) => Buffer.compare(Buffer.from(a), Buffer.from(b)) === 0;
+  const inside = { e: 0.01, hpKm: 500 }, hot = { e: 0.1, hpKm: 500 }, far = { e: 0.01, hpKm: 5000 };
+  ok(same(mk(inside, '0.6.47', true, true), A.PCF.AP_Z70_TIDES) && JSON.stringify(degreesOf(A.PCF.AP_Z70_TIDES)) === '[31,70]', 'a case in the class with drag: the slot\'s $PCF is AP_Z70_TIDES, tesseral 31 and zonal 70');
+  ok(same(mk(hot, '0.6.47', true, true), A.PCF.AP_TIDES) && same(mk(far, '0.6.47', false, true), A.PCF.AP_VACUUM_TIDES) && same(mk(inside, '0.6.41', true, true), A.PCF.AP_TIDES), 'a case off the class, or a build before 0.6.42: the $PCF the tool always used');
+  ok(JSON.stringify(degreesOf(mk(inside, '0.6.47', false, true))) === '[31,70]' && JSON.stringify(degreesOf(mk(inside, '0.6.47', false, false))) === '[31,70]' && JSON.stringify(degreesOf(mk(hot, '0.6.47', false, false))) === '[31,20]', 'without drag or without radiation the degrees follow the rule');
+  const all = makeCases(498, { gridStep: 1 }).cases, inClass = all.filter((c) => A.inLowTableClass(c));
+  ok(inClass.length > 0 && inClass.every((c) => c.e <= 0.05 && c.hpKm < 2500) && all.filter((c) => c.e >= 0.1 && c.e <= 0.1 && c.hpKm < 2500).every((c) => !A.inLowTableClass(c)), `seed 498: ${inClass.length} of ${all.cases?.length ?? all.length} cases are in the class, none above e 0.05 or at 2,500 km and above, none of the e 0.1 cases`);
+  console.log(fails.length ? `SYNTHETIC CHECK: FAIL (${fails.join('; ')})` : 'SYNTHETIC CHECK: PASS');
+  process.exit(fails.length ? 1 : 0);
+}
 
 function referenceWasmPath(A) { return path.join(A.STORE_ROOT, 'synthetic', 'reference', `${REFERENCE.wasmSha256}.wasm`); }
 
@@ -166,7 +196,7 @@ async function main() {
   const dirty = git(REPO, 'status', '--porcelain', '--', 'experiments/synthetic-orbits', 'experiments/headline-loop').toString().trim();
   if (dirty && !args.scratch) throw new Error(`refused: this repository's working tree differs from its commit (the rows name the commit):\n${dirty}`);
   const harness = git(REPO, 'rev-parse', 'HEAD').toString().trim() + (dirty ? '+scratch' : '');
-  const { commit, version, wasmSha, file, rowsFile, rowsFiles, all } = await setup();
+  const { commit, version, wasmSha, file, rowsFile, rowsFiles, all, A } = await setup();
   const only = args.only ? new Set(args.only.split(',')) : null;
   const read = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : []);
   // per way, the cases its file holds; a case flies the ways that lack it
@@ -175,7 +205,11 @@ async function main() {
   // (and, stack #520, a row whose truth has drag counts only on the drag truth at 1e-13, DRAG_TRUTH; rows on the 1e-10 drag truth are
   // flown again, the truth read from the cache once it is warm)
   const current = (r) => r.truth?.hash && (!r.truth.dragAreaOverMass || r.truth.setting === DRAG_TRUTH);
-  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha && current(r) && (!PERIGEE_SCAN || r.scanDigest === SCAN_DIGEST)).map((r) => r.caseHash))]));
+  // (and a row of the slot's headline settings counts only where its AP record's zonal degree is the one the rule gives its case now,
+  // arms.mjs syntheticZonalDegree: a row at other degrees stays as flown, is not read as done, and the case is flown again; a rung states its own degrees)
+  const caseOf = new Map(all.cases.map((c) => [caseHash(c), c]));
+  const degreesAgree = (r) => RUNG || !caseOf.has(r.caseHash) || r.ap?.settings?.zonal == null || r.ap.settings.zonal === A.syntheticZonalDegree(caseOf.get(r.caseHash), version);
+  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha && current(r) && degreesAgree(r) && (!PERIGEE_SCAN || r.scanDigest === SCAN_DIGEST)).map((r) => r.caseHash))]));
   const cache = { read: 0, flown: 0, waited: 0, none: 0 };
   // --truth-only: the truths of the cases with drag in this mode flown into the shared cache (or read from it), no fit, no row written
   const truthOnly = !!args['truth-only'];
@@ -186,7 +220,7 @@ async function main() {
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version,...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
       if (!stopped && freeGiB() < MIN_FREE_GIB) stopped = `free disk under ${MIN_FREE_GIB} GiB`;
       if (!stopped && next < todo.length) { const c = todo[next++]; child.send({ c, fits: fitsOf(c) }); } else child.send({ stop: true });
@@ -388,7 +422,9 @@ async function worker() {
       // AP (drag on NRLMSISE-00 and the weather where the truth has them; where it has no drag, AP_VACUUM_TIDES: its own Jacchia 1970
       // atmosphere named and a drag term solved under the default prior; the solid tide; radiation held at 0 where the truth has none)
       // and our SGP4-XP, fitted the same way
-      const apPcf = radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } });
+      // the zonal degree by the catalog's rule for the case's orbit (headline-loop lib/arms.mjs syntheticZonalDegree): 70 from sdn-ap 0.6.42 in the
+      // class of the low table (e at or below 0.05, perigee under 2,500 km), else 20; the tesseral degree is 31 in both
+      const apPcf = WAYS.headlinePcf({ A, APL, c, version: args['ap-version'], drag, radiation });
       // the slot: AP's headline settings, or one rung (--rung): SGP4-XP's own record, or the settings at the rung's degrees. Each row's
       // label is built from the $PCF actually sent (settingsOf), never from these names.
       const slotOf = () => {

@@ -138,6 +138,19 @@ export function measurePassage(rs, lead = 0) {
 }
 
 /**
+ * AP's headline $PCF for a synthetic case (the slot without a rung): the solid tide, NRLMSISE-00 where the truth has drag, the radiation
+ * term fitted where the truth has radiation and held at 0 where it has none, tesseral degree 31 and the zonal degree the catalog's rule
+ * gives the case's orbit (headline-loop lib/arms.mjs syntheticZonalDegree: 70 from sdn-ap 0.6.42 where e is at or below 0.05 and the
+ * perigee under 2,500 km, else 20). Off the class it is the $PCF the tool always used (lib/arms.mjs PCF.AP_TIDES, AP_VACUUM_TIDES).
+ * A, APL: headline-loop lib/arms.mjs and operator-theory lib/ap.mjs.
+ */
+export const headlinePcf = ({ A, APL, c, version, drag, radiation }) => {
+  const zonal = A.syntheticZonalDegree(c, version), held = { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } };
+  if (zonal === 70) return APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal, atmosphere: radiation ? drag : false }), SOLID_TIDES: 1 }, fit: radiation ? null : held });
+  return radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal, atmosphere: false }), SOLID_TIDES: 1 }, fit: held });
+};
+
+/**
  * The rungs between SGP4-XP's record and AP's headline record (run.mjs --rung; stack #547): what the slot flies, each rung's rows keyed
  * apart. Each rung is described by its record's settings: the THEORY field the module writes, the tesseral and zonal degrees
  * (MAXIMUM_TESSERAL_DEGREE, MAXIMUM_DEGREE), the solid tide and the atmosphere. Each row records the THEORY field and the forces read

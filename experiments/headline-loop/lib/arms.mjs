@@ -68,6 +68,15 @@ export const TIDES_SINCE = '0.6.20';
 // records at zonal 20, and every other row, and an older build's, keep degree 20.
 export const ZONAL70_SINCE = '0.6.42';
 export const ZONAL70_GROUPS = ['T', 'P', 'S1', 'LS', 'DO'];
+// The same rule by orbit, for the synthetic orbits (they are no row's group): the class the low table's zonal degree 70 names is e at or below
+// 0.05 (sdn-ap SPEC 16.11: class 0, "at or below the 0.05 switch"; the low table from 0.6.42, stack #477) with the perigee under 2,500 km (SPEC
+// 12.5, `cov::regime_of`: the DRAG regime; from 2,500 km the regime is ABOVE and drag acts nowhere). From ZONAL70_SINCE a synthetic case in that
+// class is fitted and flown at zonal 70, tesseral 31, the degrees of AP_Z70_TIDES; every other case keeps zonal 20, tesseral 31. The class is
+// the stated one, not an outcome: a case at e 0.1 is not in it whatever it gains.
+export const LOW_TABLE_CLASS = { maxEccentricity: 0.05, regimeAboveKm: 2500 };
+export const inLowTableClass = ({ e, hpKm }) => e <= LOW_TABLE_CLASS.maxEccentricity && hpKm < LOW_TABLE_CLASS.regimeAboveKm;
+/** The zonal degree of AP's record for a synthetic case (e, hpKm: its mean eccentricity and perigee altitude) under an sdn-ap build's version. */
+export const syntheticZonalDegree = (c, version) => (atLeast(version, ZONAL70_SINCE) && inLowTableClass(c) ? 70 : 20);
 // The record's tesseral degree on the strong-drag rows (TESSERAL70_GROUPS: groups T and P): from TESSERAL70_SINCE (the first build after
 // sdn-ap 0.6.45) an AP fit there states tesseral degree 70 with zonal degree 70, the label AP_T70_Z70_TIDES. The cuts of 0.6.42 to
 // 0.6.45 state tesseral 31 (AP_Z70_TIDES) and stay as published; a table file's forces text says which a row used. Near 700 km, the

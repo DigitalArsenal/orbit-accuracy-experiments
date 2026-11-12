@@ -23,7 +23,8 @@ const modeTextOf = (mode, rung) => {
   if (mode === 'no-drag') return `Without drag in the truth: the truth is the full setting without drag on every orbit; ${noDrag}.`;
   return `Gravity, the solid tide, relativity and the Sun and Moon only: the truth without drag or radiation pressure; ${noDrag}${rung === 'xp' ? '' : ', and the radiation term is held at 0'}.`;
 };
-const DRAG_TERM_TEXT = 'Each row records AP\'s fitted drag term (bterm), so a fit where the truth has no drag can be read with the term it solved.';
+const DEGREES_TEXT = 'AP\'s record states tesseral degree 31 and, from sdn-ap 0.6.42, zonal degree 70 on a case in the class of the low table (e at or below 0.05 and the perigee under 2,500 km: sdn-ap SPEC 16.11 and 12.5), the degrees of AP_Z70_TIDES, and zonal degree 20 on every other case; each row\'s pcf label names the degrees it used, and a row flown before this rule keeps the degrees it was flown at.';
+const DRAG_TERM_TEXT ='Each row records AP\'s fitted drag term (bterm), so a fit where the truth has no drag can be read with the term it solved.';
 /**
  * A drag truth not converged to a tenth of the bar (stack #520): its lowest altitude over the bar's span (row.truth.minAltitudeSpanKm,
  * its lowest perigee there) is under underKm. At 1e-13 such a truth still moves 15 to 34 m on a tenfold tighter flight; every other low
@@ -60,6 +61,7 @@ const statisticOf = (fit, truthStartH, rung = null, withXp = false, perigeeScan 
       : `Both sides see the same space weather: ${WEATHER} drives the truth's drag and AP's.`,
   ...(fit === 'arc72' || withXp ? [`SGP4-XP is flown as it is in every force mode. ${XP_WEATHER_TEXT}`] : []),
   ...(perigeeScan ? [`${SCAN.text}${scanMinE != null && scanMinE !== SCAN_MIN_E ? ` This run widens the scan to every case at e ${scanMinE} and above.` : ''} The scan's definition is ${scanDigest}; rows flown under another definition are not read.`] : []),
+  ...(!rung ? [DEGREES_TEXT] : []),
   DRAG_TERM_TEXT,
   TOLERANCE,
 ].join(' ');
