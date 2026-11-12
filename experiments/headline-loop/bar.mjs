@@ -54,7 +54,8 @@ const heightKm = (r) => { const n = Math.hypot(r[0], r[1], r[2]), s = r[2] / n, 
   return n - (WGS84_A * b) / Math.sqrt(b * b * c2 + WGS84_A * WGS84_A * s * s); };
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { maxBuffer: 1 << 28 });
-const doneKey = (r) => `${r.key}|${r.arcH}|${r.source}|${r.from}`;
+// a bar row is of a trajectory: its line's key, arc, source, first state and the file's sha256 (a file written again is another trajectory)
+const doneKey = (r) => `${r.key}|${r.arcH}|${r.source}|${r.from}|${r.sha256 ?? ''}`;
 
 if (args.worker) await worker(); else await main();
 
@@ -79,30 +80,16 @@ async function main() {
   if (!fs.existsSync(file) || sha256(fs.readFileSync(file)) !== wasmSha) fs.writeFileSync(file, wasm);
   const groups = args.groups ? args.groups.split(',') : ALL, arcs = (args.arcs ?? '72,24').split(',').map(Number);
   // Each manifest line flies one fit, and a window's trajectory is the line of the fit whose figures the row reads, never the last line of
-  // the window. A line's fit identity (setting, process: 'full arc' or 'after burn', arc start, first state) is its own where it names it
-  // (fit, refly.mjs --tight); for an older line it is derived only where nothing leaves doubt: the setting and first state are the
-  // line's, the process its source's (a refit after the burn, or a full-arc source, whose arc starts at the cutoff less the fit arc). A
-  // line whose trajectory file a later line wrote again (a refit made at the same path) has no identity, nor a line without a trajectory.
-  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories'), H = 3600e3, isoOf = (t) => new Date(Date.parse(/Z$/.test(t) ? t : `${t}Z`)).toISOString();
+  // the window. A line's fit identity and a row's, and whether they are one fit, are lib/numerical.mjs's (lineFitOf, rowFitOf, sameFit),
+  // as trajectories.mjs reads them: the same setting and process, and the same first state where the row names one, else the same arc
+  // start to the millisecond.
+  const traj = path.join(A.STORE_ROOT, 'numerical-trajectories');
   const allLines = fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)), lastWriter = new Map();
   allLines.forEach((x, i) => { if (x.file) lastWriter.set(x.file, i); });
-  const fitOfLine = (x, i) => (x.fit ? { ...x.fit, firstState: isoOf(x.fit.firstState) } : x.source === 'none' || x.source === 'failed' || !x.file || lastWriter.get(x.file) !== i ? null
-    : /after the burn/.test(x.source) ? { setting: x.setting, process: 'after burn', firstState: isoOf(x.from) }
-      : { setting: x.setting, process: 'full arc', arcStart: new Date(Date.parse(x.cutoff) - x.arcH * H).toISOString(), firstState: isoOf(x.from) });
+  const fitOfLine = (x, i) => N.lineFitOf(x, lastWriter.get(x.file) === i);
   const linesOf = new Map();
   allLines.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!linesOf.has(k)) linesOf.set(k, []); linesOf.get(k).push({ x, fit: fitOfLine(x, i) }); });
-  // a numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by the arc the rule gives from its last burn (with
-  // the row's own minimum arc, lib/arms.mjs minHoursOf: 9 h on the long-period rows); a
-  // stored full-arc fit by its setting and the full arc
-  const rowFitOf = (b, label, D0, a) => {
-    const arm = label ? b?.arms?.[label] : null;
-    if (!arm?.ok) return null;
-    if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
-    if (b.fitProcess === 'maneuvering: the arc after its last burn') return { setting: arm.arm, process: 'after burn', arcStart: new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString() };
-    return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
-  };
-  const sameFit = (f, r) => f && r && f.setting === r.setting && f.process === r.process && (r.firstState ? f.firstState === r.firstState
-    : r.process === 'full arc' ? f.arcStart === r.arcStart : Date.parse(f.firstState) >= Date.parse(r.arcStart) && Date.parse(f.firstState) < Date.parse(r.arcStart) + H);
+  const rowFitOf = N.rowFitOf, sameFit = N.sameFit;
   // the last line of the row's fit for a window, or why there is none: lines of other fits only, or lines whose fit is not known
   const lineFor = (key, a, rf) => {
     const ls = linesOf.get(`${key}|${a}`) ?? [], hit = ls.filter((l) => sameFit(l.fit, rf)).at(-1);
@@ -379,7 +366,7 @@ async function worker() {
   // longer this line's fit
   const lastLine = (file) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); if (r.file === file) last = r; } return last; };
   const flyOne = async (man) => {
-    const t1 = performance.now(), row = { key: man.key, group: man.group, arcH: man.arcH, arm: man.arm, source: man.source, from: man.from, env };
+    const t1 = performance.now(), row = { key: man.key, group: man.group, arcH: man.arcH, arm: man.arm, source: man.source, from: man.from, ...(man.sha256 ? { sha256: man.sha256 } : {}), env };
     try {
       const w = winOf.get(man.key);
       if (!w) throw new Error('not a listed window');
@@ -388,6 +375,7 @@ async function worker() {
       const now = lastLine(man.file);
       if (!now || now.key !== man.key || now.arcH !== man.arcH || now.source !== man.source || now.from !== man.from || now.count !== man.count) throw new Error('trajectory changed since the manifest was read');
       const buf = fs.readFileSync(path.join(traj, man.file));
+      if (man.sha256 && sha256(buf) !== man.sha256) throw new Error('the trajectory file is not the one its line names (sha256)');
       if (buf.byteLength !== man.count * 48) throw new Error(`trajectory file holds ${buf.byteLength / 48} states, the manifest ${man.count}`);
       const f64 = new Float64Array(buf.buffer, buf.byteOffset, buf.byteLength / 8), from = Date.parse(man.from), step = man.stepS * 1000;
       const num = Array.from({ length: man.count }, (_, k) => ({ t: from + k * step, epoch: iso(from + k * step), r: [f64[6 * k], f64[6 * k + 1], f64[6 * k + 2]], v: [f64[6 * k + 3], f64[6 * k + 4], f64[6 * k + 5]] }));

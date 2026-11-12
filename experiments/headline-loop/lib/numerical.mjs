@@ -48,3 +48,35 @@ export function noArmWhy({ w, arc, ap, nr, lists }) {
   }
   return null;
 }
+
+// The fit identity of a numerical trajectory (a manifest line of numerical-trajectories, written by trajectories.mjs and refly.mjs --tight)
+// and of the numerical row it stands for, read alike by bar.mjs and trajectories.mjs.
+export const isoOf = (t) => new Date(Date.parse(/Z$/.test(t) ? t : `${t}Z`)).toISOString();
+/** A line's fit: { setting, process: 'full arc' | 'after burn', arcStart, firstState }. Its own (fit) where it names it; for an older line,
+ *  derived where nothing leaves doubt: the setting and first state are the line's, the process its source's, the arc start the cutoff less
+ *  the fit arc (a full-arc source) or the refit's recorded start (check.arcStart, a refit after the burn). A line whose trajectory a later
+ *  line wrote again (isLastWriter false), or with no trajectory, has none. */
+export function lineFitOf(x, isLastWriter) {
+  if (x.fit) return { ...x.fit, firstState: isoOf(x.fit.firstState) };
+  if (x.source === 'none' || x.source === 'failed' || !x.file || !isLastWriter) return null;
+  if (/after the burn/.test(x.source)) return { setting: x.setting, process: 'after burn', ...(x.check?.arcStart ? { arcStart: isoOf(x.check.arcStart) } : {}), firstState: isoOf(x.from) };
+  return { setting: x.setting, process: 'full arc', arcStart: new Date(Date.parse(x.cutoff) - x.arcH * H).toISOString(), firstState: isoOf(x.from) };
+}
+/** A numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by the arc the rule gives from its last burn (with the
+ *  row's own minimum arc); a stored full-arc fit by its setting and the full arc. */
+export function rowFitOf(b, label, D0, a) {
+  const arm = label ? b?.arms?.[label] : null;
+  if (!arm?.ok) return null;
+  if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
+  if (b.fitProcess === REFIT) return { setting: arm.arm, process: 'after burn', arcStart: new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString() };
+  return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
+}
+/** Whether a line's fit (f) is the row's (r): the same setting and process, and the same first state where the row names one, else the same
+ *  arc start to the millisecond where the line records it (an older refit line that records none: its first state within the hour after
+ *  the row's arc start). */
+export function sameFit(f, r) {
+  if (!f || !r || f.setting !== r.setting || f.process !== r.process) return false;
+  if (r.firstState) return f.firstState === r.firstState;
+  if (f.arcStart) return f.arcStart === r.arcStart;
+  return r.process === 'after burn' && Date.parse(f.firstState) >= Date.parse(r.arcStart) && Date.parse(f.firstState) < Date.parse(r.arcStart) + H;
+}
