@@ -35,6 +35,8 @@ export const PCF = {
   AP_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20 }), SOLID_TIDES: 1 }, fit: null }),
   AP_VACUUM_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: null }),
   AP_ECOM2_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), SOLID_TIDES: 1 }, fit: null }),
+  // the low table's rows from ZONAL70_SINCE: zonal degree 70, whose terms of degree 21 to 70 move a low orbit's node (stack #531)
+  AP_Z70_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 70 }), SOLID_TIDES: 1 }, fit: null }),
   XP: APL.fitPcf({ forces: {}, fit: null }),
 };
 
@@ -50,6 +52,13 @@ export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { 
 export const ECOM2_MIN_ARC = 72;
 // The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row (sdn-ap 0.6.20, stack #449)
 export const TIDES_SINCE = '0.6.20';
+// The record's zonal degree in the low table under the drag (class 0 at or below e 0.05, the rows of ZONAL70_GROUPS: strong drag,
+// Near 700 km, the laser spheres, altimetry): from ZONAL70_SINCE an AP fit there states zonal degree 70 (tesseral 31), the label
+// AP_Z70_TIDES (sdn-ap 0.6.42, the low table's output table to the record's degree, stack #477; the choice of degrees, stack #504).
+// Laser geodetic, above the drag, where the zonal terms of degree 21 to 70 move nothing and the covariance class is calibrated on
+// records at zonal 20, and every other row, and an older build's, keep degree 20.
+export const ZONAL70_SINCE = '0.6.42';
+export const ZONAL70_GROUPS = ['T', 'P', 'S1', 'LS', 'DO'];
 const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
 export const atLeast = (v, w) => {
   const a = numeric(v), b = numeric(w);
@@ -254,10 +263,11 @@ export const listedBurns = (dir, group, name, field = 'burns') => {
     return { t: Date.parse(b.burn ?? b.at), sizeMmS: Math.hypot(...dv), alongTrackMmS: dv[1] };
   });
 };
-/** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, pcf }. */
+/** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, or AP_Z70_TIDES on a low-table row from ZONAL70_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
   const base = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
-  const label = atLeast(version, TIDES_SINCE) ? `${base}_TIDES` : base;
+  const label = base === 'AP' && ZONAL70_GROUPS.includes(group) && atLeast(version, ZONAL70_SINCE) ? 'AP_Z70_TIDES'
+    : atLeast(version, TIDES_SINCE) ? `${base}_TIDES` : base;
   return { label, pcf: PCF[label] };
 };
 /** AP's forces and fitted terms for a $PCF label, in one plain sentence (the table's apForces). */
@@ -267,6 +277,7 @@ export const AP_FORCES_TEXT = {
   AP_ECOM2: 'Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module\'s stated priors, and the ECOM2 Y0 radiation term solved as well.',
 };
 for (const label of ['AP', 'AP_VACUUM', 'AP_ECOM2']) AP_FORCES_TEXT[`${label}_TIDES`] = AP_FORCES_TEXT[label].replace('31 in the tesseral terms;', '31 in the tesseral terms; the solid Earth tide (IERS 2010);');
+AP_FORCES_TEXT.AP_Z70_TIDES = AP_FORCES_TEXT.AP_TIDES.replace('Gravity to degree 20 in the zonal terms', 'Gravity to degree 70 in the zonal terms');
 
 
 /** The builds of the two outside theories (table.mjs names them): the Space Force's XP through propagator/sgp4-xp (its library is the
