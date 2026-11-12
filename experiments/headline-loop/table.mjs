@@ -500,7 +500,7 @@ async function main() {
       // windows: those with a numerical forecast and AP's figure at the lead; rowWindows: all the row's windows (those AP scored), the others being
       // the row's withoutNumericalFigure by cause. shareOfWindowsWithForecast (= share) is the propagator's measure: there is no forecast to be within
       // 100 m of otherwise; shareOfAllWindows is what a user is served: met over every window of the row
-      const within100mOfFfm = label && pass.length ? { windows: pass.length, met, share: round3(met / pass.length), rowWindows: scored.length, shareOfWindowsWithForecast: round3(met / pass.length), shareOfAllWindows: scored.length ? round3(met / scored.length) : null } : null;
+      const within100mOfFfm = label && pass.length ? { windows: pass.length, met, share: round3(met / pass.length) } : null;
       const burnSplit = within100mOfFfm ? splitByBurns(flags, pass, arc) : null;
       // --burns: the row's later burns in words (laterBurns), and on the strong-drag rows its burn-free windows (burnFreeScatter), on the pass
       // line's windows at day 5 (stack issue 462)
@@ -525,6 +525,7 @@ async function main() {
       }
       // the row's windows: every one AP scored at one lead at least; of them, those the numerical arm scored at none, by reason
       const scored = ws.filter((w) => LEADS.some(([, day]) => meters(rowOf('AP', w, arc), null, day) != null));
+      if (within100mOfFfm) Object.assign(within100mOfFfm, { rowWindows: scored.length, shareOfWindowsWithForecast: within100mOfFfm.share, shareOfAllWindows: scored.length ? round3(within100mOfFfm.met / scored.length) : null });
       const unscored = label ? scored.filter((w) => { const i = ws.indexOf(w); return !LEADS.some(([, day]) => meters(bs[i], label, day) != null); }) : [];
       const byReason = (why) => unscored.filter((w) => noFigureWhy(ws.indexOf(w)) === why).length;
       const withoutNumericalFigure = unscored.length ? { windows: unscored.length, satellites: new Set(unscored.map((w) => w.name)).size, ruleLeavesNoArm: byReason('ruleLeavesNoArm'), fitFailed: byReason('fitFailed'), noTruthOrCoverage: byReason('noTruthOrCoverage'), ...(byReason('armsOnDifferentArcs') ? { armsOnDifferentArcs: byReason('armsOnDifferentArcs') } : {}) } : null;
