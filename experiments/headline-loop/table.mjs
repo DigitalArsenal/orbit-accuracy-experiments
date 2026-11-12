@@ -93,6 +93,7 @@ const TRUTH_NOTE = {
 const LONG_PERIOD_TEXT = ' On the 72 h fits of the long-period rows (the highly elliptical ones) the arc after a burn is at least 9 h and at most 70 h, on AP and on the numerical arm alike; a burn ending less than 9 h before the cutoff stays inside that 9 h arc, and the window keeps both arms. On every other row AP\'s 72 h arc after a burn is at least 24 h. On the THEMIS and Chandra row a join of Chandra\'s solutions known at the cutoff moves the 72 h arc as a burn does; on the 336 h TESS row a join after the cutoff is flagged only (laterBurns, cleanToLead), and the 72 h TESS row, read from one file per window, holds none. The 336 h and 168 h fits are on their full arcs, whatever burns or joins lie inside them.';
 // a window stays in AP's columns whenever AP has a figure for it (it leaves only where AP has none: no truth or coverage); the numerical
 // column, apFfmRank and the pass line are over the windows where both have a figure, and withoutNumericalFigure counts the others by reason
+const PERIGEE_SCAN_TEXT = ' perigeeScan, on the long-period rows: AP\'s record flown at 1 s for 2 minutes either side of each perigee passage in the 120 h after the cutoff (the passages found as the minima of the record\'s radius on a 60 s grid), each state\'s displacement off the curve of its neighbors (the degree-5 polynomial through the three states either side of it); per row the windows scanned, the passages, the largest displacement (largestM) and the median of each window\'s largest (medianM, over the windows with a passage), in meters. A smooth record holds each state to well under a millimeter of that curve; a block of displaced states shows at its edges.';
 const NO_FIGURE_TEXT = ' A window stays in AP\'s, SGP4-XP\'s and the other theories\' columns, and in the row\'s windows and satellites, whenever AP has a figure for it; it leaves them only where AP has none (no truth or coverage). withoutNumericalFigure counts the row\'s windows that AP scored and the numerical arm scored at no lead, with their satellites, by reason at the row\'s tolerance: ruleLeavesNoArm (the rule gives no numerical arm: an orbit not ballistic between impulses, or a burn known at the cutoff in every arc the rule allows), fitFailed (the numerical fit or flight failed, or gave no figure at any lead where AP has one) and noTruthOrCoverage (the numerical row records no truth or coverage); on a 72 h row, armsOnDifferentArcs where it has any (AP\'s arc and the numerical arm\'s differ: the window keeps AP\'s figure and has no numerical one). A row with a window that has no stored numerical row has no numerical column (null).';
 // The measured spread of the numerical figure itself (stack issue 396): two flights of the same FFM fit that differ only in the integrator's
 // step sequence (the scored epochs against a 60 s trajectory), from the carried-record rows of 2026-11-10 (store 1104598edeeb-apc), by row
@@ -167,7 +168,9 @@ async function worker() {
             const pcf = theory === 'SGP4XP' ? A.PCF.XP : choice.pcf, spw = theory === 'SGP4XP' ? undefined : ctx.wx?.spw;
             if (theory === 'AP') row.pcf = choice.label;
             const base = { thin, D0, sc: ctx.sc, object: ctx.object };
-            let x = theory === 'USSFXP' ? await arms.ussf(base) : theory === 'SGP4' ? await arms.sgp4(base) : await arms.ap({ ...base, pcf, spw });
+            // AP's record on the long-period rows: its perigee scan too (lib/arms.mjs PERIGEE_SCAN)
+            const scan = theory === 'AP' && A.LONG_PERIOD.groups.includes(w.group);
+            let x = theory === 'USSFXP' ? await arms.ussf(base) : theory === 'SGP4' ? await arms.sgp4(base) : await arms.ap({ ...base, pcf, spw, scan });
             // stack issue 496: the 24 h fit's carried terms (arms.mjs, CARRY24_SINCE); fitProcess names what the row's fit did
             if (theory === 'AP' && arc === 24 && carrying) {
               const thin72 = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - 72 * W.HOUR && t <= D0; }), 72);
@@ -177,10 +180,10 @@ async function worker() {
                 const t72 = A.carriedTerms((await arms.ap({ ...base, thin: thin72, pcf: A.apPcfFor(w.group, build.version, G.vacuum, 72).pcf, spw, record: true })).ocm);
                 const radiation = t72.regime === 'ABOVE', drag = !radiation && (x.fit.sigmaLnB ?? 0) >= A.CARRY24_DRAG_SIGMA;
                 row.fitProcess = (radiation ? 'radiation carried from 72 h' : drag ? 'drag carried from 72 h' : 'plain') + (m?.maneuvering ? ', maneuvering' : '');
-                if (radiation || drag) x = await arms.ap({ ...base, pcf: A.carriedPcf(pcf, t72, { drag, radiation }), spw });
+                if (radiation || drag) x = await arms.ap({ ...base, pcf: A.carriedPcf(pcf, t72, { drag, radiation }), spw, scan });
               }
             }
-            Object.assign(row, { days: x.days, fitRmsKm: x.rms, fit: x.fit, s: x.s });
+            Object.assign(row, { days: x.days, fitRmsKm: x.rms, fit: x.fit, s: x.s, ...(x.perigeeScan ? { perigeeScan: x.perigeeScan } : {}) });
           } catch (e) { row.apError = String(e?.message ?? e).slice(0, 200); }
         }
       }
@@ -344,7 +347,10 @@ async function main() {
   };
   // a one-file window's row (windows.mjs oneFile) that names no reference file (truthFile) was made before the rows named it: flown again
   const noFile = (t, w, a) => !!W.GROUPS[w.group].oneFile && !!rowOf(t, w, a) && !rowOf(t, w, a).error && !rowOf(t, w, a).truthFile;
-  const needOf = (w) => flying.flatMap((t) => w.arcs.filter((a) => !rowOf(t, w, a) || staleList(t, w, a) || noFile(t, w, a) || (retry && (rowOf(t, w, a).error || rowOf(t, w, a).apError))).map((a) => [t, a]));
+  // an AP row of a long-period row without its perigee scan (perigeeScan; flown before rows held it, or carried from a build whose rows do
+  // not): flown again
+  const noScan = (t, w, a) => t === 'AP' && A.LONG_PERIOD.groups.includes(w.group) && !!rowOf(t, w, a) && !rowOf(t, w, a).error && !rowOf(t, w, a).apError && !rowOf(t, w, a).perigeeScan;
+  const needOf = (w) => flying.flatMap((t) => w.arcs.filter((a) => !rowOf(t, w, a) || staleList(t, w, a) || noFile(t, w, a) || noScan(t, w, a) || (retry && (rowOf(t, w, a).error || rowOf(t, w, a).apError))).map((a) => [t, a]));
   // AP left out of the theories flown (--theories): its 72 h rows that the re-fly rule would fly again are of another arc than the lists
   // give, so neither its figures nor the two arms' arcs can be read on these lists: refused
   if (!flying.includes('AP')) {
@@ -552,7 +558,11 @@ async function main() {
       // and the windows the two builds were compared on where the row carries (compared; null where it does not)
       const countOf = (t, sha) => ws.filter((w) => rowOf(t, w, arc)?.ap?.sha256 === sha).length;
       const carried = carry ? { from: carry.build.version, listed: ws.length, ...Object.fromEntries([['AP', 'ap'], ['SGP4XP', 'xp']].map(([t, name]) => [name, { carried: countOf(t, carry.build.wasmSha256), flown: countOf(t, wasmSha), compared: carry.compared.get(`${g}|${arc}|${t}`) ?? null }])) } : null;
-      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), ...(TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] ? { truthNote: TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] } : {}), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ...(withoutNumericalFigure ? { withoutNumericalFigure } : {}), apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), ...(placed.has(g) && ws.some((w) => w.placedAfterFiring) ? { placedAfterFiring: `${ws.filter((w) => w.placedAfterFiring).length} of the row's ${ws.length} windows are placed after a firing by the rule: each cutoff at the first midnight at least ${A.LONG_PERIOD.minHours} h after the firing's report time. The rule gives ${placed.get(g).cutoffs} cutoffs for the list's ${placed.get(g).firings} firings; ${placed.get(g).already} of them are cutoffs the row already has, not added again.` } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}), ...(carried ? { carried } : {}) });
+      // the long-period rows: the perigee scan of AP's records over the row's windows (lib/arms.mjs PERIGEE_SCAN): the windows scanned, the
+      // passages, the largest displacement and the median of each window's largest, m
+      const scans = A.LONG_PERIOD.groups.includes(g) ? scored.map((w) => rowOf('AP', w, arc)?.perigeeScan).filter(Boolean) : [], passed = scans.filter((x) => x.largestM != null);
+      const perigeeScan = scans.length ? { windows: scans.length, passages: scans.reduce((n, x) => n + x.passages.length, 0), largestM: passed.length ? Math.max(...passed.map((x) => x.largestM)) : null, medianM: passed.length ? round3(median(passed.map((x) => x.largestM))) : null } : null;
+      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), ...(TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] ? { truthNote: TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] } : {}), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ...(withoutNumericalFigure ? { withoutNumericalFigure } : {}), apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), ...(placed.has(g) && ws.some((w) => w.placedAfterFiring) ? { placedAfterFiring: `${ws.filter((w) => w.placedAfterFiring).length} of the row's ${ws.length} windows are placed after a firing by the rule: each cutoff at the first midnight at least ${A.LONG_PERIOD.minHours} h after the firing's report time. The rule gives ${placed.get(g).cutoffs} cutoffs for the list's ${placed.get(g).firings} firings; ${placed.get(g).already} of them are cutoffs the row already has, not added again.` } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}), ...(perigeeScan ? { perigeeScan } : {}), ...(carried ? { carried } : {}) });
       passOf.push({ g, arc, row: rows.at(-1), pass: within100mOfFfm ? pass : [], laterBurns, burnFreeScatter });
       if (/^AP_ECOM2/.test(pcfLabel)) ecom2Rows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
       if (/_TIDES$/.test(pcfLabel)) tideRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
@@ -640,7 +650,7 @@ async function main() {
   const doc = {
     schema: 'sdn-ap-scoreboard/2',
     measured: new Date().toISOString().slice(0, 10),
-    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${tightRows.length ? TIGHT_TEXT(tightRows) : ''}${tightHeld.length ? TIGHT_HELD_TEXT(tightHeld) : ''}${rows.some((r) => r.withoutNumericalFigure) ? NO_FIGURE_TEXT : ''}${carry ? CARRY_TEXT(carry.build) : ''}${listsText}${knownText}${args.burns && A.maneuver72(version) ? LONG_PERIOD_TEXT : ""}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}${rows.some((r) => r.leads.some((l) => l.ap?.cleanToLead)) ? CLEAN_TEXT : ''}`,
+    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${tightRows.length ? TIGHT_TEXT(tightRows) : ''}${tightHeld.length ? TIGHT_HELD_TEXT(tightHeld) : ''}${rows.some((r) => r.withoutNumericalFigure) ? NO_FIGURE_TEXT : ''}${rows.some((r) => r.perigeeScan) ? PERIGEE_SCAN_TEXT : ''}${carry ? CARRY_TEXT(carry.build) : ''}${listsText}${knownText}${args.burns && A.maneuver72(version) ? LONG_PERIOD_TEXT : ""}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}${rows.some((r) => r.leads.some((l) => l.ap?.cleanToLead)) ? CLEAN_TEXT : ''}`,
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
@@ -973,6 +983,14 @@ async function check() {
     ok(apX?.fitArcHours === 19.8 && !apX.burnInArc && /or join of the truth's solutions/.test(chandra?.fitProcess ?? '') && /a join of the truth's solutions .* falls in 1 of the /.test(chandra?.laterBurns ?? '')
       && clean(chandra, 72) === all(chandra, 72) - 1 && /chandra_merged\.bsp/.test(chandra.truthNote ?? ''),
     `the Chandra joins: AP ${JSON.stringify(apX && { fitArcHours: apX.fitArcHours, burnInArc: apX.burnInArc })}; ${chandra?.fitProcess?.slice(-160)}; ${chandra?.laterBurns}; cleanToLead ${clean(chandra, 72)} of ${all(chandra, 72)}`);
+    // the perigee scan: each AP row of both long-period rows holds one, Chandra's (its period under 3 days) a passage or more in 120 h, each
+    // passage's largest displacement a finite figure; each row states its windows scanned, passages, largest and median, the method line
+    // what the scan is
+    const scanOk = (r) => Array.isArray(r?.perigeeScan?.passages) && r.perigeeScan.passages.every((p) => Number.isFinite(p.largestM) && p.largestM >= 0 && p.leadH >= 0 && p.leadH <= 120);
+    const sumOf = (row, ws) => row?.perigeeScan && row.perigeeScan.windows === ws.length && row.perigeeScan.passages === ws.reduce((n, w) => n + (apOf(w)?.perigeeScan?.passages.length ?? 0), 0);
+    ok([...he, ...cx].every((w) => scanOk(apOf(w))) && cx.every((w) => apOf(w).perigeeScan.passages.length >= 1) && sumOf(tess, he) && sumOf(chandra, cx) && Number.isFinite(chandra.perigeeScan.largestM)
+      && /perigeeScan, on the long-period rows: AP's record flown at 1 s for 2 minutes either side of each perigee passage/.test(k11.statistic ?? ''),
+    `the perigee scan: ${JSON.stringify([...he, ...cx].map((w) => apOf(w)?.perigeeScan && { n: apOf(w).perigeeScan.passages.length, largestM: apOf(w).perigeeScan.largestM }))} ${JSON.stringify([tess?.perigeeScan, chandra?.perigeeScan])}`);
     // a window whose numerical refit is on another arc than AP's: it keeps AP's figure and has no numerical one (armsOnDifferentArcs). The
     // shift is the largest of 5 to 1 minutes, either way, that keeps the arc's tenth of an hour, so the two arcs round alike (3 minutes on
     // the first TESS window, whose 9.0 h arc rounds away at 4 and 5)
