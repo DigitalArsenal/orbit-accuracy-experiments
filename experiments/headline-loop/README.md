@@ -82,7 +82,8 @@ setting flown over 6 h pieces from the reference's own states closes to that dis
 thrusting. `refly.mjs --after-burns <lists>` fits a window again where its object's sigma at the cutoff is above the floor, or where the row's setting
 is not the one its stored fit names (the commercial row's prior), on the arc after its last known burn or, where none moves it, on the full arc (fit
 process `REFIT_FULL`, `lib/numerical.mjs`; its trajectory's process is `full arc at its sigma`), with `sigmaM` recorded on the fit and in its
-identity. That path is the only one that reads the lists, and it runs over the groups it is given (S1, DO and WA unless `--groups` says otherwise):
+identity. Where a window is refitted only because its setting changed (its sigma at or under the floor), the fit carries no `sigmaM` though its
+process, where no burn moves the arc, is named `full arc at its sigma`. That path is the only one that reads the lists, and it runs over the groups it is given (S1, DO and WA unless `--groups` says otherwise):
 the commercial row's objects are weighed by it; the four low-orbit laser spheres, whose lists put them above the floor, are not, since that row is
 not among its groups and the main `refly.mjs` run reads no list, so their stored fits stay weighed at 10 m.
 
@@ -101,16 +102,20 @@ sigma, an arc closing at a weighted RMS of 1.5 or less. The position test of `bu
 reference closes to 100 m (its threshold is about 700 m). The file it writes beside the list (`<satellite>.breaks.json`) holds the arcs and the
 constants, not the events; an arc whose truth or fit is missing is written with a null weighted RMS and the reason (read per arc, so a missing day
 costs the arcs that need it and no other). A cutoff reads the events with the arcs that end at or before it alone (`lib/arms.mjs`
-`breakEventsAsOf`, called by `knownBurns`). A run of failing arcs after an arc that closed is an event, known at the end of its first failing arc,
-between the end of the arc that closed before it (or the start of the run's last arc read, if later) and the end of the run's first arc; it is open
-until an arc that closed after the run has ended, and closed once one has, bounded above by that arc's start. As read at a cutoff, a run of up to
-3 failing arcs is an event and a run that reaches a fourth is a drift, so an event can be withdrawn when the fourth arc ends; a run with no arc
-that closed before it is no event; an arc whose fit or data are missing is neither closing nor failing. The events join the object's burns, so
-the arc rule reads them as burns, and the file is in the lists' digest and in the object's list sha.
+`breakEventsAsOf`, called by `knownBurns`). A run is failing arcs each one stride after the one before. It is an event, known at the end of its
+first failing arc, only if the arc one stride before the run closed. A gap (an arc with no truth, no coverage or no fit) neither closes nor fails
+and severs this: [closes, gap, fails] is no event. The early edge of the event is the later of the end of the arc that closed before the run and the
+start of the run's last arc (the former for a run of one or two arcs, 12 h later for three); its upper bound is the earlier of the end of the run's
+first arc and the start of the arc one stride after the run, where that arc closed. The event is closed only if that arc, one stride after the run,
+closed and has ended by the cutoff; it is open while it has not, and at every cutoff where a gap stands there ([closes, fails, gap, closes]). As
+read at a cutoff, a run of up to 3 failing arcs is an event and a run that reaches a fourth is a drift, so an event can be withdrawn when the
+fourth arc ends. The events join the object's burns, so the arc rule reads them as burns, and the file is in the lists' digest and in the
+object's list sha.
 
 **Judge before the next event.** A maneuvering satellite's reference holds its maneuvers, so the day-5 error judges nothing. `before-next-event.mjs`
 fits each setting named on the window's arc and gives the 3D distance to the reference at the last whole 12 h lead before the next event (a burn
-of the list, or the early edge of an event of the break test: the end of the last arc that closed), and the largest from 12 h on. An event
+of the list, or the early edge of an event of the break test, as above), and the largest from 12 h on. The events are read at the period's end, so
+a run later withdrawn as a drift is no event here, for a window whose cutoff came before the withdrawal too. An event
 reported after the cutoff counts from the later of its early edge and the cutoff, so one inside the window's own arc ends the lead at 0 (no whole
 lead). A window with no later event, or whose next event lies past 168 h, keeps its figure over the whole span, marked.
 
@@ -118,8 +123,8 @@ lead). A window with no later event, or whose next event lies past 168 h, keeps 
 at the cutoff, with no arc of the rule's minimum after it, has no numerical arm (`burnInArc`, set by `refly.mjs --after-burns`): the row lists it
 as "the numerical propagator has no forecast of this arc" (`ruleLeavesNoArm`, in `withoutNumericalFigure` by cause beside the windows flown). The
 minimum is 24 h after the event for a 72 h fit and 6 h for a 24 h fit. A break test event is known at the end of its first failing arc, and its
-extent ends there until an arc that closed after it has ended, so a window whose cutoff lies within that arc of an event has no arc after it. No
-other condition (a fit that does not close, for one) removes an arm.
+extent ends there while it is open (no arc that closed immediately after the run has ended), so a window whose cutoff lies within that arc of an
+event has no arc after it. No other condition (a fit that does not close, for one) removes an arm.
 
 **Shares.** Each row of `table.mjs` (`within100mOfFfm`) and of `bar.mjs` (`withinBar`) states its windows (`rowWindows`: every window of the row),
 those with a forecast (`windows`), those within the mark (`met`), and its windows without a forecast by cause (`withoutNumericalFigure`: in the
@@ -128,9 +133,13 @@ table always, in the bar's file wherever the row has a window without a figure),
 otherwise; and `shareOfAllWindows`, met over every window of the row, which is what a user is served. A row with no window without a forecast has
 the same two.
 
+The commercial geostationary row's figures stated with this change (its `withinBar` and `within100mOfFfm`, 24 h and 72 h) were flown with AP of
+sdn-ap 0.6.42: modules commit 86786933e33415d306ac4eca8e7ab31939da6321, `module.wasm` sha256
+3c389abfd8ce2ea1767f4d3040449e6ca9097f2edc31321d78cf6ca5f300e2df (the bar's `module` field).
+
 The numerical trajectories (`<store>/numerical-trajectories/manifest.jsonl`, one line per trajectory, Float64 x, y, z km and vx, vy, vz km/s
 per state at the line's `stepS` from its `from`) are selected by key, fit arc (`arcH`) and the identity of the fit the line flies:
-setting, process (the full arc, or the arc after a burn), the arc's start and the fit's first state. A line names it (`fit`), or for an
+setting, process (the full arc, the arc after a burn, or the full arc at its sigma), the arc's start and the fit's first state. A line names it (`fit`), or for an
 older line it is derived from the line where nothing leaves doubt. A line whose trajectory file a later line wrote again (a refit made
 at the same path) has none. bar.mjs flies, for each window, the line of the fit whose figures the row reads, and never the last line of
 a key or of a key and arc, which on a window with two fit arcs, two tolerances or a refit after a burn is another fit.

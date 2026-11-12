@@ -3,11 +3,12 @@
 // to about 100 m over 6 h pieces) its threshold is about 700 m and a step of 11 to 51 mm/s is below it. This test reads the fit instead: the
 // numerical setting with no empirical term (a sphere, Ffull) is fitted to every arc of LENGTH hours at a stride of STRIDE hours, each weighed at
 // the floor sigma (10 m), and an arc CLOSES where its weighted RMS is at most CLOSE (1.5). A step in the arc keeps it from closing: a run of failing
-// arcs after an arc that closed holds an event, which an arc that closed after the run bounds once it has ended.
+// arcs (each one stride after the one before) holds an event if the arc one stride before the run closed; the arc one stride after the run, if it
+// closed and has ended by a cutoff, closes the event. A gap (an arc with no truth, no coverage or no fit) neither closes nor fails, and severs both.
 // The file written holds the ARCS (start, end, weighted RMS, null with a reason where the fit or its data are missing) and the rule's constants,
-// never the events: a cutoff reads the events its arcs show with only the arcs that end at or before it (lib/arms.mjs breakEventsAsOf). As read
-// at a cutoff a run of up to MAX_RUN failing arcs is an event and a run that reaches MAX_RUN + 1 is a drift, so an event can be withdrawn when the
-// next arc ends. The events join the object's burns in lib/arms.mjs knownBurns (<group>/<satellite>.breaks.json beside <satellite>.burns.json):
+// never the events: a cutoff reads the events its arcs show with only the arcs that end at or before it (lib/arms.mjs breakEventsAsOf, whose
+// comment gives the rule exactly). As read at a cutoff a run of up to MAX_RUN failing arcs is an event and a run that reaches MAX_RUN + 1 is a
+// drift, so an event can be withdrawn when the next arc ends. The events join the object's burns in lib/arms.mjs knownBurns (<group>/<satellite>.breaks.json beside <satellite>.burns.json):
 // the arc rule reads each as a burn known at the end of its first failing arc. The summary line counts the events at the period's end.
 //   node experiments/burn-detector/breaks.mjs --group WA --satellite "<name>" --out <dir> [--length 24 --stride 12 --close 1.5 --max-run 3 --lead 4]
 // Reads the archive and the store only; the file named is the one thing written. SDN_MODULES_ROOT names the modules checkout, as for pieces.mjs.

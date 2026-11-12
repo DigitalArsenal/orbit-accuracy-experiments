@@ -189,15 +189,17 @@ export const listSha = (dir, group, name) => {
   if (fs.existsSync(b)) h.update('\0breaks\0').update(fs.readFileSync(b));
   return h.digest('hex').slice(0, 12);
 };
-/** The events of the break test (experiments/burn-detector/breaks.mjs) that its arcs show AT a cutoff: the file holds the arcs fitted (start,
- *  end, weighted RMS, null where the fit failed), and only the arcs that END at or before D0 are read, so an event, its extent and whether it is
- *  a drift are what the data before the cutoff show and nothing later. An arc closes at a weighted RMS of closeWeightedRms or less. A run of
- *  consecutive failing arcs after an arc that closed holds an event: it lies inside every failing arc and after the end of the arc that closed
- *  before the run, so between max(that end, the start of the run's last arc) and the end of the run's first arc; where an arc that closed after
- *  the run is among those read, before its start too (the event is closed); otherwise it is open, its extent as wide as the arcs read leave it.
- *  A run of more than maxRun arcs is a drift, a run with no arc that closed before it is no event, and an arc whose fit failed is neither
- *  closing nor failing (it ends a run and is no arc that closed). Each event is known at the end of its first failing arc:
- *  [{ from, to, extentFrom, extentTo, reportTime, source: 'break test', open }]. */
+/** The events of the break test (experiments/burn-detector/breaks.mjs) that its arcs show AT a cutoff: the file holds the arcs (start, end,
+ *  weighted RMS, null where there is none: no truth, no coverage, a read that threw or a fit that gave no number, a gap), and only the arcs that END
+ *  at or before D0 are read, so an event, its extent and whether it is a drift are what the data before the cutoff show and nothing later. An arc
+ *  closes at a weighted RMS of closeWeightedRms or less and fails above it; a gap neither closes nor fails, and it severs what follows. A run is
+ *  failing arcs each one stride after the one before. It is an event only if the arc one stride before the run closed ([closes, gap, fails] is no
+ *  event) and the run has at most maxRun arcs as read at D0 (a run that reaches maxRun + 1 is a drift and its event is withdrawn). The event lies
+ *  after the end of that arc and inside every failing arc: from = max(the end of the arc that closed, the start of the run's last arc) (the first of
+ *  the two for a run of one or two arcs at a 12 h stride, 12 h later for three), to = the end of the run's first arc, or the start of the arc one
+ *  stride after the run where that arc closed and is earlier. It is closed only if that arc, one stride after the run, closed and has ended by D0;
+ *  while it has not, and at every cutoff where a gap stands there ([closes, fails, gap, closes]), it is open. Each event is known at the end of its
+ *  first failing arc: [{ from, to, extentFrom, extentTo, reportTime, source: 'break test', open }]. */
 export const breakEventsAsOf = (d, D0) => {
   const H = 3600e3, stride = d.strideH * H, iso = (t) => new Date(t).toISOString();
   const arcs = (d.arcs ?? []).map((a) => ({ s: Date.parse(a.start), e: Date.parse(a.end), w: a.wrms })).filter((a) => a.e <= D0).sort((p, q) => p.s - q.s);

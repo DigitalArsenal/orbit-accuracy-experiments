@@ -46,8 +46,9 @@ const HOUR = 3600e3, DAY = 864e5, TRAJ = path.join(A.STORE_ROOT, 'numerical-traj
 const read = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
 const groups = (args.groups ?? 'WA').split(','), arcs = (args.arcs ?? '72,24').split(',').map(Number), settings = (args.settings ?? 'E5G,E1F').split(',');
 const only = args.only ? new Set(args.only.split(',')) : null, STARTS = args.starts ? JSON.parse(fs.readFileSync(args.starts, 'utf8')) : {};
-// every burn of the list and event of the break test (read at the period's end, for the measure; a burn's early edge is its extent's start, a break event's
-// the end of the last arc that closed): the lead stops before it, from the cutoff where it was reported after it
+// every burn of the list and event of the break test (read at the period's end, for the measure, so a run later withdrawn as a drift is no event here;
+// a burn's early edge is its extent's start, a break event's the later of the end of the arc that closed before the run and the start of the run's
+// last arc, lib/arms.mjs breakEventsAsOf): the lead stops before it, from the cutoff where it was reported after it
 const eventsOf = (g, name) => A.knownBurns(args.burns, g, name, Infinity).map((b) => ({ edgeMs: Date.parse(b.extentFrom ?? b.from), reportMs: Date.parse(b.reportTime ?? b.extentFrom ?? b.from) }));
 const arms = await A.openArms({}), F = await openFfm();
 const last = new Map();

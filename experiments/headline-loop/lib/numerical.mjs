@@ -70,7 +70,7 @@ export const REFIT_RMS_TOLERANCE = 1e-9;
 export const rmsAgrees = (c) => !c || c.storedWeightedRms == null
   || (Number.isFinite(c.refitWeightedRms) && Math.abs(c.refitWeightedRms - c.storedWeightedRms) <= REFIT_RMS_TOLERANCE * Math.max(1, Math.abs(c.storedWeightedRms)));
 
-/** A line's fit: { setting, process: 'full arc' | 'after burn', arcStart, firstState }, or null. Null for a line with no trajectory (no
+/** A line's fit: { setting, process: 'full arc' | 'after burn' | 'full arc at its sigma', arcStart, firstState }, or null. Null for a line with no trajectory (no
  *  truth, or a failed attempt: its fit, if an older line names one, is not a trajectory's), for a line whose trajectory file a later line
  *  wrote again (isLastWriter false), for a refit whose weighted RMS is not the stored fit's (rmsAgrees), and for a line whose instants do
  *  not read. Its own (fit) where it names it; for an older line derived where nothing leaves doubt: the setting and first state are the
