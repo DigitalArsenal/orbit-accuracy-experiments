@@ -79,7 +79,7 @@ export function windowSet(out, K = 0, N = 1) {
 }
 export const shardArg = (s) => { const [K, N] = (s ?? '0/1').split('/').map(Number); if (!(Number.isInteger(K) && Number.isInteger(N) && K >= 0 && K < N)) throw new Error(`shard ${s}: k/n`); return [K, N]; };
 
-/** The harness's readers and one build's module: { WN, A, S, build, invoke, fitRecord, fly, destroy }. */
+/** The headline loop's readers and one build's module: { WN, A, S, build, invoke, fitRecord, fly, destroy }. */
 export async function openBuild(out, sha12, caps) {
   const WN = await import(path.join(HARNESS, 'lib/windows.mjs'));
   const A = await import(path.join(HARNESS, 'lib/arms.mjs'));
