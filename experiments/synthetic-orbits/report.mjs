@@ -27,8 +27,8 @@ const DRAG_TERM_TEXT = 'Each row records AP\'s fitted drag term (bterm), so a fi
 /**
  * A drag truth not converged to a tenth of the bar (stack #520): its lowest altitude over the bar's span (row.truth.minAltitudeSpanKm,
  * its lowest perigee there) is under underKm. At 1e-13 such a truth still moves 15 to 34 m on a tenfold tighter flight; every other low
- * case measured moves at most 3.2 m. `measured`: each low case's truth flown again at 1e-12 and 1e-13 (the harness lane's flights, the
- * same request at four tolerances), the largest distance between the two over 0 to 120 h. A row without minAltitudeSpanKm (flown
+ * case measured moves at most 3.2 m. `measured`: each low case's truth flown again at 1e-12 and 1e-13 (thirteen low drag cases, run.mjs's
+ * truth request flown at 1e-10, 1e-11, 1e-12 and 1e-13, stack #520), the largest distance between the two over 0 to 120 h. A row without minAltitudeSpanKm (flown
  * before rows held it) is marked from its truth's lowest altitude over the whole flight (minAltitudeKm), and says so.
  */
 const CONVERGENCE = {
