@@ -28,16 +28,21 @@
 // (fits.mjs SCAN): each state within 80 s of the passage from the 8-point curve through the states 90, 100, 110 and 120 s either side
 // of the passage, and each state from the 8-point curve through its own neighbors 1 to 4 s either side, over the whole window. The
 // 300 s grid catches such a block only when an epoch falls inside it; a case within the bar on the grid whose scan finds a state more
-// than 100 m off by either measure, or whose scan failed, is reported as failing, with both figures (report.mjs). Those rows go to
-// their own file, each with the digest of the scan's definition (scanDigest): a row of another definition is not read as done.
-// Each theory's row also holds its record (base64), so a later pass can fly it again without fitting.
+// than 100 m off by either measure is reported as failing, with both figures, and one whose scan could not run (its flight refused or
+// short) as failing apart, with its reason (report.mjs). No state before the cutoff is flown (fits.mjs SCAN clipAtSpanStart). Those rows
+// go to their own file, each with the digest of the scan's definition (scanDigest): a row of another definition is not read as done.
+// --scan-min-e <e> widens the scan to every case at e and above (the digest then names it).
+// Each theory's row also holds its record (base64), so a later pass can fly it again without fitting, and, where the build exports
+// sdnap_kepler_unconverged (sdn-ap 0.6.37 and later, stack #550), the module's osculating Kepler-solve counts (kepler): for the fit,
+// the scored flights and the scan, each { apFar, section8Far, apRounding } (SPEC 16.21: AP's solves that ended far from their root
+// and were bisected, section 8's that ended far and were bisected, AP's that ended within rounding of it).
 //
 //   node experiments/synthetic-orbits/run.mjs --modules-commit <sha> --modules-root <modules checkout> [--seed 498] [--grid-step 1]
 //     [--jobs 8] [--only <id,id,...>] [--guard] [--no-drag [--no-radiation]] [--fit <way>[,<way>...]] [--truth-start-h <h>] [--rung <name>]
-//     [--xp] [--perigee-scan] [--scratch]
+//     [--xp] [--perigee-scan [--scan-min-e <e>]] [--scratch]
 //                                         rows to <store>/synthetic/<wasm sha12>/rows[-<mode>].jsonl (a row there is not flown again)
 //   node experiments/synthetic-orbits/run.mjs --report --modules-commit <sha> --modules-root <modules checkout> [--seed 498] [--grid-step 1]
-//     [--guard] [--no-drag [--no-radiation]] [--fit <way>] [--truth-start-h <h>] [--rung <name>] [--xp] [--perigee-scan] --out <dir>
+//     [--guard] [--no-drag [--no-radiation]] [--fit <way>] [--truth-start-h <h>] [--rung <name>] [--xp] [--perigee-scan [--scan-min-e <e>]] --out <dir>
 //     the result file and the maps (report.mjs)
 //   node experiments/synthetic-orbits/dense.mjs ...   a record flown densely around an hour, pooled and fresh, or over its perigee
 //     passages (dense.mjs)
@@ -102,13 +107,18 @@ const WAYS = await import('./fits.mjs');
 const FITS = FIT === 'arc72' ? null : WAYS.FITS;
 for (const f of FITS ? FIT_LIST : []) if (!FITS[f]) throw new Error(`--fit ${f}: not a way fits.mjs names (${Object.keys(FITS).join(', ')})`);
 const RUNG = args.rung ?? null, WITH_XP = !!args.xp, PERIGEE_SCAN = !!args['perigee-scan'];
-// the perigee scan's cases, spacing, window and curve (fits.mjs SCAN, scanned)
-const { SCAN, scanned } = WAYS;
+// the perigee scan's cases, spacing, window and curve (fits.mjs SCAN, scanned). --scan-min-e <e>: the scan also covers every case at
+// e and above (default fits.mjs SCAN_MIN_E, 0.3); the rows' digest names the rule only where it differs from the default, so rows of
+// the default rule keep theirs
+const SCAN_MIN_E = args['scan-min-e'] != null ? Number(args['scan-min-e']) : WAYS.SCAN_MIN_E;
+if (!(SCAN_MIN_E >= 0 && SCAN_MIN_E <= WAYS.SCAN_MIN_E)) throw new Error(`--scan-min-e ${args['scan-min-e']}: a number from 0 to ${WAYS.SCAN_MIN_E} (it widens the default rule)`);
+if (args['scan-min-e'] != null && !args['perigee-scan']) throw new Error('--scan-min-e goes with --perigee-scan');
+const { SCAN } = WAYS, scanned = (c) => WAYS.scanned(c, SCAN_MIN_E);
 if (RUNG && !WAYS.RUNGS[RUNG]) throw new Error(`--rung ${RUNG}: not a rung fits.mjs names (${Object.keys(WAYS.RUNGS).join(', ')})`);
 if (WITH_XP && FIT_LIST.includes('arc72')) throw new Error('--xp: arc72 flies SGP4-XP already');
 for (const f of FITS ? FIT_LIST : []) if (FITS[f].apOnly && (WITH_XP || RUNG === 'xp')) throw new Error(`--fit ${f} holds AP's drag and radiation terms at the truth's values; it is not flown for SGP4-XP (${WITH_XP ? '--xp' : '--rung xp'})`);
 // the scan's definition: its digest keys the -pscan rows (a row of another definition is neither read as done nor reported)
-const SCAN_DIGEST = crypto.createHash('sha256').update(JSON.stringify({ ...SCAN, text: undefined })).digest('hex').slice(0, 12);
+const SCAN_DIGEST = crypto.createHash('sha256').update(JSON.stringify({ ...SCAN, text: undefined, ...(SCAN_MIN_E !== WAYS.SCAN_MIN_E ? { minE: SCAN_MIN_E } : {}) })).digest('hex').slice(0, 12);
 const TRUTH_START_H = Math.max(Number(args['truth-start-h'] ?? ARC_H), ...FIT_LIST.map((f) => FITS?.[f]?.truthStartH ?? ARC_H));
 const suffixOf = (f) => `${MODE === 'full' ? '' : `-${MODE}`}${f === 'arc72' && TRUTH_START_H === ARC_H ? '' : `-fit-${f}-ts${TRUTH_START_H}`}${RUNG ? `-rung-${RUNG}` : ''}${WITH_XP ? '-xp' : ''}${PERIGEE_SCAN ? '-pscan' : ''}`;
 // the reference build that makes every case's starting state; a row whose truth names a hash (truth.hash) was flown from that state,
@@ -148,7 +158,7 @@ async function setup() {
   const seed = Number(args.seed ?? 498), gridStep = Number(args['grid-step'] ?? 1);
   const all = makeCases(seed, { gridStep });
   if (args.guard) all.cases = guardOf(all.cases);
-  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, `rows${ROWS_SUFFIX}.jsonl`), rowsFiles: Object.fromEntries(FIT_LIST.map((f) => [f, path.join(dir, `rows${suffixOf(f)}.jsonl`)])), seed, gridStep, all, A, mode: MODE, guard: !!args.guard, fit: FIT, truthStartH: TRUTH_START_H, rung: RUNG, withXp: WITH_XP, perigeeScan: PERIGEE_SCAN, scanDigest: PERIGEE_SCAN ? SCAN_DIGEST : null };
+  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, `rows${ROWS_SUFFIX}.jsonl`), rowsFiles: Object.fromEntries(FIT_LIST.map((f) => [f, path.join(dir, `rows${suffixOf(f)}.jsonl`)])), seed, gridStep, all, A, mode: MODE, guard: !!args.guard, fit: FIT, truthStartH: TRUTH_START_H, rung: RUNG, withXp: WITH_XP, perigeeScan: PERIGEE_SCAN, scanDigest: PERIGEE_SCAN ? SCAN_DIGEST : null, scanMinE: PERIGEE_SCAN ? SCAN_MIN_E : null };
 }
 
 async function main() {
@@ -172,11 +182,11 @@ async function main() {
   const fitsOf = (c) => (truthOnly ? (MODE === 'full' && c.hpKm < DRAG_BELOW_KM ? [FIT_LIST[0]] : []) : FIT_LIST.filter((f) => !doneOf[f].has(caseHash(c))));
   const todo = all.cases.filter((c) => (!only || only.has(c.id)) && fitsOf(c).length);
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
-  console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; fit ${FIT_LIST.join(', ')}, truth from ${TRUTH_START_H} h before the cutoff${RUNG ? `, rung ${RUNG}` : ''}; SGP4-XP ${FIT === 'arc72' || WITH_XP ? 'flown' : 'not flown'}; perigee scan ${PERIGEE_SCAN ? `on (definition ${SCAN_DIGEST})` : 'off'}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
+  console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; fit ${FIT_LIST.join(', ')}, truth from ${TRUTH_START_H} h before the cutoff${RUNG ? `, rung ${RUNG}` : ''}; SGP4-XP ${FIT === 'arc72' || WITH_XP ? 'flown' : 'not flown'}; perigee scan ${PERIGEE_SCAN ? `on (definition ${SCAN_DIGEST}${SCAN_MIN_E !== WAYS.SCAN_MIN_E ? `, every case at e ${SCAN_MIN_E} and above` : ''})` : 'off'}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
       if (!stopped && freeGiB() < MIN_FREE_GIB) stopped = `free disk under ${MIN_FREE_GIB} GiB`;
       if (!stopped && next < todo.length) { const c = todo[next++]; child.send({ c, fits: fitsOf(c) }); } else child.send({ stop: true });
@@ -211,6 +221,10 @@ async function worker() {
   const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
   const S = A.S, F = await openFfm(), m = await openModules(), env = envRecord();
   const h = await createStandaloneHarness('browser', args.wasm, { surface: 'direct' });
+  // the module's osculating Kepler-solve counts since the last read (SPEC 16.21; sdnap_kepler_unconverged(reset, which), sdn-ap 0.6.37 and
+  // later): read and reset together; this worker flies one case at a time, so a read covers its own calls only. null where not exported.
+  const kx = h.instance?.exports, keplerOf = typeof kx?.sdnap_kepler_unconverged === 'function'
+    ? () => ({ apFar: kx.sdnap_kepler_unconverged(1, 0), apRounding: kx.sdnap_kepler_unconverged(1, 2), section8Far: kx.sdnap_kepler_unconverged(1, 1) }) : () => null;
   const invoke = async (methodId, inputs) => { const r = await h.invoke({ methodId, inputs }); if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`); return r; };
   const iso = (t) => new Date(t).toISOString();
   const flightPcf = (epochs, frame = 'GCRF') => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame[frame], EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
@@ -275,21 +289,30 @@ async function worker() {
       const den = r[k - 1] - 2 * r[k] + r[k + 1], tp = Date.parse(coarse[k]) + (den > 0 ? (SCAN.coarseS * 1000 * (r[k - 1] - r[k + 1])) / (2 * den) : 0);
       if (tp >= D0 && tp <= endMs) passages.push(Math.round(tp / 1000) * 1000);
     }
-    const per = 2 * SCAN.halfS / SCAN.stepS + 1, epochs = passages.flatMap((tp) => Array.from({ length: per }, (_, j) => iso(tp + (j * SCAN.stepS - SCAN.halfS) * 1000)));
+    // each passage's window at stepS, clipped at the cutoff (SCAN clipAtSpanStart: no state before it is asked of the record); lead, the
+    // states cut from a window's start
+    const per = 2 * SCAN.halfS / SCAN.stepS + 1, windows = passages.map((tp) => {
+      const all = Array.from({ length: per }, (_, j) => tp + (j * SCAN.stepS - SCAN.halfS) * 1000), kept = SCAN.clipAtSpanStart ? all.filter((t) => t >= D0) : all;
+      return { tp, lead: per - kept.length, epochs: kept.map(iso) };
+    });
+    const epochs = windows.flatMap((w) => w.epochs);
     const fine = epochs.length ? await flyWith(ocm, epochs) : [];
     if (fine.length !== epochs.length) throw new Error(`the 1 s flight returned ${fine.length} of ${epochs.length} states`);
     const out = [];
-    for (const [p, tp] of passages.entries()) {
-      // both measures (fits.mjs measurePassage): the passage curve, and each state's own neighbors' curve over the whole window
-      const st = fine.slice(p * per, (p + 1) * per), m = WAYS.measurePassage(st.map((s) => s.r));
-      out.push({ atH: +((tp - D0) / HOUR).toFixed(4), ...m, largestM: Math.max(m.curveM, m.neighborsM), ...(keepStates ? { states: st.map((s, j) => ({ epoch: epochs[p * per + j], r: s.r })) } : {}) });
+    let at = 0;
+    for (const w of windows) {
+      // both measures (fits.mjs measurePassage): the passage curve (not taken on a clipped window), and each state's own neighbors' curve
+      // over the window
+      const st = fine.slice(at, at + w.epochs.length), m = WAYS.measurePassage(st.map((s) => s.r), w.lead);
+      out.push({ atH: +((w.tp - D0) / HOUR).toFixed(4), ...m, largestM: Math.max(m.curveM ?? -1, m.neighborsM), ...(keepStates ? { states: st.map((s, j) => ({ epoch: w.epochs[j], r: s.r })) } : {}) });
+      at += w.epochs.length;
     }
-    const worstBy = (k) => out.reduce((a, b) => (b[k] > a[k] ? b : a), { [k]: -1 });
-    const wc = worstBy('curveM'), wn = worstBy('neighborsM');
+    const worstBy = (k) => out.reduce((a, b) => ((b[k] ?? -1) > (a[k] ?? -1) ? b : a), { [k]: -1 });
+    const wc = worstBy('curveM'), wn = worstBy('neighborsM'), curveAny = out.some((x) => x.curveM != null), largest = Math.max(wc.curveM ?? -1, wn.neighborsM);
     return { definition: SCAN_DIGEST, passages: out.length, noPassage: out.length === 0,
-      curve: out.length ? { largestM: wc.curveM, atH: wc.atH, offsetS: wc.curveOffsetS, reliable: out.every((x) => x.curveReliable) } : null, neighbors: out.length ? { largestM: wn.neighborsM, atH: wn.atH, offsetS: wn.neighborsOffsetS } : null,
-      largestM: out.length ? Math.max(wc.curveM, wn.neighborsM) : null, atH: out.length ? (wc.curveM >= wn.neighborsM ? wc.atH : wn.atH) : null, offsetS: out.length ? (wc.curveM >= wn.neighborsM ? wc.curveOffsetS : wn.neighborsOffsetS) : null,
-      over: out.filter((x) => x.largestM > SCAN.failM).length, fails: out.length ? Math.max(wc.curveM, wn.neighborsM) > SCAN.failM : false, spanH, perPassage: out };
+      curve: curveAny ? { largestM: wc.curveM, atH: wc.atH, offsetS: wc.curveOffsetS, reliable: out.every((x) => x.curveReliable !== false) } : null, neighbors: out.length ? { largestM: wn.neighborsM, atH: wn.atH, offsetS: wn.neighborsOffsetS } : null,
+      largestM: out.length ? largest : null, atH: out.length ? (curveAny && wc.curveM >= wn.neighborsM ? wc.atH : wn.atH) : null, offsetS: out.length ? (curveAny && wc.curveM >= wn.neighborsM ? wc.curveOffsetS : wn.neighborsOffsetS) : null,
+      over: out.filter((x) => x.largestM > SCAN.failM).length, fails: out.length ? largest > SCAN.failM : false, clipped: out.filter((x) => x.clippedS).length, spanH, perPassage: out };
   };
   /** What a $PCF sent to the fit says: the THEORY field and the forces and priors it was written with, and whether weather went with it. */
   const settingsOf = (pcf, spw) => {
@@ -357,6 +380,9 @@ async function worker() {
       const costEpochs = Array.from({ length: COST_STATES }, (_, k) => iso(D0 + (k + 1) * STEP));
       // the bar's span: the cutoff and every truth state to 120 h after it (as far as the truth reaches)
       const span = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 && t <= D0 + BAR_H * HOUR && (low < 0 || t < Date.parse(lines[low].epoch)); });
+      // the truth's lowest altitude over the bar's span (its lowest perigee there): a drag truth whose perigee falls under 150 km is not
+      // converged to a tenth of the bar at 1e-13 (report.mjs CONVERGENCE, stack #520)
+      if (span.length) row.truth.minAltitudeSpanKm = r1(span.reduce((m, l) => Math.min(m, Math.hypot(...l.r) - RE), Infinity));
       // past the bar: the same distance over 120 h to 7 days (a record used past its 5 days; reported, not a criterion)
       const late = lines.filter((l) => { const t = Date.parse(l.epoch); return t > D0 + BAR_H * HOUR && t <= D0 + LEAD_DAYS * DAY && (low < 0 || t < Date.parse(lines[low].epoch)); });
       // AP (drag on NRLMSISE-00 and the weather where the truth has them; where it has no drag, AP_VACUUM_TIDES: its own Jacchia 1970
@@ -387,10 +413,14 @@ async function worker() {
           // the $PCF and weather of the fit that made the record (a way may change the $PCF, held-terms, or try several spans)
           let sent = { pcf: x.pcf, spw: x.way ? (x.noWeather ? undefined : wx?.spw) : x.spw };
           const fitSent = async (o, p, s) => { const r = await fit(o, p, s); sent = { pcf: p, spw: s }; return r; };
+          // the Kepler-solve counts of this theory's fit, scored flights and scan (keplerOf: read and reset; this read clears what came before)
+          keplerOf();
+          const kepler = {};
           try {
             const tf = performance.now();
             const made = x.way ? await x.way.fit({ lines, D0, drag, radiation, wx: x.noWeather ? null : wx, terms, fitPcf: x.pcf, oemOf, fitOf: fitSent, S, A, APL }) : null;
             const ocm = made ? made.ocm : await fitSent(oem, x.pcf, x.spw), info = APL.readOcm(ocm), fitS = r1((performance.now() - tf) / 1000);
+            kepler.fit = keplerOf();
             const d = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes);
             // D: the largest 3D distance to the truth over the span, its hour, and the first hour above 100 m
             const flown = await fly(ocm, span.map((l) => l.epoch));
@@ -408,12 +438,15 @@ async function worker() {
               const k = dl.indexOf(Math.max(...dl));
               row[t].pastBar = { maxM: r1(dl[k]), atH: r1((Date.parse(late[k].epoch) - D0) / HOUR), spanH: r1((Date.parse(late.at(-1).epoch) - D0) / HOUR) };
             }
+            kepler.flight = keplerOf();
             // the perigee scan (--perigee-scan) over the scored span
             if (PERIGEE_SCAN && scanned(c)) {
-              // a scan whose flight fails or comes back short is a failed scan (report.mjs: in n and not within)
-              try { row[t].perigeeScan = await scanOf(ocm, D0, row[t].maxDistance.spanH); } catch (e) { row[t].perigeeScan = { definition: SCAN_DIGEST, error: String(e?.message ?? e).slice(0, 200) }; }
+              // a scan whose flight is refused or comes back short could not run (report.mjs: in n, not within, counted apart with its reason)
+              try { row[t].perigeeScan = await scanOf(ocm, D0, row[t].maxDistance.spanH); } catch (e) { row[t].perigeeScan = { definition: SCAN_DIGEST, notRun: true, error: String(e?.message ?? e).slice(0, 200) }; }
+              kepler.scan = keplerOf();
             }
-          } catch (e) { const settings = settingsOf(sent.pcf, sent.spw); row[t] = { pcf: labelOf(settings), settings, error: String(e?.message ?? e).slice(0, 200) }; }
+            if (kepler.fit) row[t].kepler = kepler;
+          } catch (e) { const settings = settingsOf(sent.pcf, sent.spw); kepler.atError = keplerOf(); row[t] = { pcf: labelOf(settings), settings, error: String(e?.message ?? e).slice(0, 200), ...(kepler.atError ? { kepler } : {}) }; }
         }
         // cost per state (--cost only): each set warm (flown once), then three timed 7-day flights at 300 s, interleaved; the median
         if (args.cost && theories.ap?.ocm && theories.xp?.ocm) {
