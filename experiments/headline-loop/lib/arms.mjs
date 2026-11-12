@@ -311,7 +311,8 @@ export async function openArms({ apWasm = null, ussf = false, sgp4 = false } = {
   // the perigee scan (a block of displaced states at a perigee passage, which a 300 s grid sees only by luck): the record flown on
   // PERIGEE_SCAN.gridS over 0 to PERIGEE_SCAN.hours after the cutoff to find its perigee passages (the minima of its radius), then at 1 s
   // for PERIGEE_SCAN.halfS either side of each; each state's displacement off the curve of its neighbors (the degree-5 polynomial through
-  // the three states either side of it), m; per passage its lead (h) and largest displacement, and the window's largest
+  // the three states either side of it), m; per passage its lead (h) and largest displacement, and the window's largest. A block of displaced
+  // states shows at its edges, so a block longer than the 4 minutes flown around a passage, with no edge inside them, reads nothing here
   const lagrange = (xs, ys, x) => xs.reduce((sum, xi, i) => sum + ys[i] * xs.reduce((p, xj, j) => (j === i ? p : (p * (x - xj)) / (xi - xj)), 1), 0);
   const perigeeScan = async (ocm, D0) => {
     const P = PERIGEE_SCAN, coarse = Array.from({ length: (P.hours * 3600) / P.gridS + 1 }, (_, k) => D0 + k * P.gridS * 1000), rc = (await flyAp(ocm, coarse.map(iso))).map((x) => Math.hypot(...x.r));
