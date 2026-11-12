@@ -1,0 +1,17 @@
+{
+  "written": "2026-11-11T23:46Z, before any judging-date row of the size-form study was looked at",
+  "rule": "Each row's cutoffs before its choice date choose the form and its constants; cutoffs on or after it judge. The dates put about the first half of each row's cutoffs in the choice set. Strong drag: every 2025 window chooses, every 2026 window judges (the split already used for c).",
+  "choiceBefore": {
+    "T": "2026-01-01",
+    "P": "2025-01-01 (none: all 2026 strong-drag windows judge)",
+    "LS": "2025-11-15",
+    "DO": "2025-11-15",
+    "GD": "2025-11-15",
+    "GN": "2026-03-01",
+    "GN_GAL": "2026-02-10",
+    "IG": "2025-10-09",
+    "GE": "2025-10-09"
+  },
+  "unscreened": ["GN", "GN_GAL", "IG", "GE"],
+  "unscreenedRule": "Navigation, Galileo, inclined geosynchronous and geostationary have no burn lists: their sizes are fitted and judged apart, never pooled with the screened rows (T, P, LS, DO, GD)."
+}
