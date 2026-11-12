@@ -165,7 +165,8 @@ async function afterBurns() {
   usePackages();
   const W = await import('./lib/windows.mjs');
   const A = await import('./lib/arms.mjs');
-  const { FULL_SETTING } = await import('./lib/settings.mjs');
+  const { FULL_SETTING, OBSERVATION_SIGMA_FLOOR_M } = await import('./lib/settings.mjs');
+  const NUM = await import('./lib/numerical.mjs');
   const burnsDir = args['after-burns'], [K, N] = (args.shard ?? '0/1').split('/').map(Number);
   const groups = (args.groups ?? 'S1,DO,WA').split(',');
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
@@ -194,13 +195,19 @@ async function afterBurns() {
     const D0 = w.cutoffMs, G = W.GROUPS[w.group], maxArc = Math.max(...w.arcs);
     const head = { key: w.key, part: 'after-burn', group: w.group, name: w.name, cutoff: W.iso(D0), burnList: sha(w.group, w.name) };
     const burns = A.arcBreaks(burnsDir, w.group, w.name, D0), thrust = A.notBallistic(burnsDir, w.group, w.name, D0), minH = A.minHoursOf(w.group);
+    // the weight rule: an object whose burn list gives a median piece closure above the floor at the cutoff (the pieces that end by it: lib/arms.mjs
+    // objectSigmaM) is weighed at that closure, and its window is fitted again (on the arc the rule gives, the full arc where no burn moves it),
+    // never read from the stored fit weighed at the floor. The same where the row's setting is not the one its stored fit names (the commercial
+    // row's prior, E5G)
+    const sigmaM = A.objectSigmaM(burnsDir, w.group, w.name, D0), weighted = sigmaM > OBSERVATION_SIGMA_FLOOR_M;
+    const armChanged = w.arcs.some((arc) => { const s = base.get(`${w.key}|${arc}`)?.arms?.FFMq; return s?.ok && s.arm !== FULL_SETTING[w.group]; }), refitFull = weighted || armChanged;
     // the decision needs the cutoff's last state alone (its perigee); the window's truth, scored epochs and weather only where a fit moves
     let ctx;
     try {
       const lastRead = await W.truthOf(w, D0 - 2 * W.HOUR, D0, arms.axes), last = lastRead.lines.at(-1);
       if (!last) throw new Error('no state before the cutoff');
       ctx = { perigeeKm: A.perigeeKmOf(lastRead.lines.at(-1)), truthFile: lastRead.file };
-      if (!thrust && w.arcs.some((arc) => A.numericalArc(burns, D0, ctx.perigeeKm, arc, minH).maneuvering)) {
+      if (!thrust && (refitFull || w.arcs.some((arc) => A.numericalArc(burns, D0, ctx.perigeeKm, arc, minH).maneuvering))) {
         const truth = await W.truthOf(w, D0 - maxArc * W.HOUR - W.HOUR, D0 + 7 * W.DAY + W.HOUR, arms.axes);
         const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
         if (!sc.entered.length) throw new Error('no lead bin');
@@ -217,7 +224,8 @@ async function afterBurns() {
         row.burnInArc = true;
         row.fitProcess = `not ballistic: the truth flown from its positions alone closes to ${Math.round(thrust.positionsOnlyMedianM)} m over ${thrust.pieceHours} h (median); the stored fit`;
       } else {
-        const m = A.numericalArc(burns, D0, ctx.perigeeKm, arc, minH);
+        const m0 = A.numericalArc(burns, D0, ctx.perigeeKm, arc, minH);
+        const m = !m0.maneuvering && refitFull ? { ...m0, maneuvering: true, startMs: D0 - arc * W.HOUR } : m0;
         const hours = (D0 - m.startMs) / W.HOUR;
         // a known burn still inside the arc the rule gives (a burn in the last 24 h of a 72 h arc, or a 24 h arc after it too short)
         row.burnInArc = burns.some((x) => A.burnEndMs(x) > m.startMs && Date.parse(x.extentFrom ?? x.from) <= D0);
@@ -226,14 +234,15 @@ async function afterBurns() {
         if (!m.maneuvering) row.fitProcess = m.shortAfterBurn ? `maneuvering, the arc after its last burn under ${A.NUMERICAL_AFTER_BURN.minHours24} h: the stored full-arc fit` : 'the full arc: the stored fit';
         else if (!thin) row.fitProcess = 'maneuvering, the arc after its last burn short of coverage: the stored full-arc fit';
         else {
-          row.fitProcess = 'maneuvering: the arc after its last burn';
+          // a burn moved the arc (the arc after the last burn), or none did and the object's sigma is above the floor (the full arc, fitted again)
+          row.fitProcess = m0.maneuvering ? NUM.REFIT : NUM.REFIT_FULL;
           row.fitArcHours = Math.round(hours * 10) / 10;
           row.fitArcStart = W.iso(m.startMs);
           row.env = env;
           const arm = FULL_SETTING[w.group];
           try {
-            const f = await arms.ffm({ thin, D0, rows: ctx.wx?.ffm, sc: ctx.sc, arm });
-            row.arms = { FFMq: { ok: true, arm: f.arm, days: f.days, termination: f.termination, fitOk: f.fitOk, weightedRms: f.weightedRms, parameters: f.product.parameters, s: f.s } };
+            const f = await arms.ffm({ thin, D0, rows: ctx.wx?.ffm, sc: ctx.sc, arm, ...(weighted ? { sigmaM } : {}) });
+            row.arms = { FFMq: { ok: true, arm: f.arm, days: f.days, termination: f.termination, fitOk: f.fitOk, weightedRms: f.weightedRms, parameters: f.product.parameters, s: f.s, ...(weighted ? { sigmaM } : {}) } };
           } catch (e) { row.arms = { FFMq: { ok: false, arm, error: String(e?.message ?? e).slice(0, 200) } }; }
           refit += 1;
         }

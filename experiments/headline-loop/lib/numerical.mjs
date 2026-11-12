@@ -7,6 +7,9 @@ import * as A from './arms.mjs';
 import * as W from './windows.mjs';
 
 export const REFIT = 'maneuvering: the arc after its last burn';
+/** The fit of an object whose sigma (lib/arms.mjs objectSigmaM) is above the floor, on a window no burn moves: the full arc, fitted again at that
+ *  sigma, never the stored fit weighed at the floor. */
+export const REFIT_FULL = 'the full arc, fitted again at the object\'s own sigma';
 // the row whose numerical fits are not properly configured for its truth: an arm only where the arc after the last burn frees its fit
 export const NOT_CONFIGURED = new Set(['WA']);
 const H = 3600e3;
@@ -21,7 +24,7 @@ export function numericalOf({ w, arc, base, afterBurn, afterBurnGroups }) {
   const r = afterBurn.get(k);
   if (!r || r.error) return b?.error ? b : null;
   if (NOT_CONFIGURED.has(w.group) && r.burnInArc) return { ...b, arms: {}, fitProcess: r.fitProcess, burnInArc: true };
-  if (r.fitProcess === REFIT) return { ...b, env: r.env, arms: { FFMq: r.arms?.FFMq ?? { ok: false } }, fitProcess: r.fitProcess, fitArcHours: r.fitArcHours, lastBurn: r.lastBurn, ...(r.fitArcStart ? { fitArcStart: r.fitArcStart } : {}), truthFile: r.truthFile };
+  if (r.fitProcess === REFIT || r.fitProcess === REFIT_FULL) return { ...b, env: r.env, arms: { FFMq: r.arms?.FFMq ?? { ok: false } }, fitProcess: r.fitProcess, fitArcHours: r.fitArcHours, lastBurn: r.lastBurn, ...(r.fitArcStart ? { fitArcStart: r.fitArcStart } : {}), truthFile: r.truthFile };
   return { ...b, fitProcess: r.fitProcess };
 }
 
@@ -67,7 +70,7 @@ export const REFIT_RMS_TOLERANCE = 1e-9;
 export const rmsAgrees = (c) => !c || c.storedWeightedRms == null
   || (Number.isFinite(c.refitWeightedRms) && Math.abs(c.refitWeightedRms - c.storedWeightedRms) <= REFIT_RMS_TOLERANCE * Math.max(1, Math.abs(c.storedWeightedRms)));
 
-/** A line's fit: { setting, process: 'full arc' | 'after burn', arcStart, firstState }, or null. Null for a line with no trajectory (no
+/** A line's fit: { setting, process: 'full arc' | 'after burn' | 'full arc at its sigma', arcStart, firstState }, or null. Null for a line with no trajectory (no
  *  truth, or a failed attempt: its fit, if an older line names one, is not a trajectory's), for a line whose trajectory file a later line
  *  wrote again (isLastWriter false), for a refit whose weighted RMS is not the stored fit's (rmsAgrees), and for a line whose instants do
  *  not read. Its own (fit) where it names it; for an older line derived where nothing leaves doubt: the setting and first state are the
@@ -93,19 +96,21 @@ export function rowFitOf(b, label, D0, a) {
   const arm = label ? b?.arms?.[label] : null;
   if (!arm?.ok) return null;
   if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
+  // the full arc fitted again at the object's sigma: its own process (the trajectory is a refit, made at that sigma, which the identity names)
+  if (b.fitProcess === REFIT_FULL) return { setting: arm.arm, process: 'full arc at its sigma', arcStart: isoOf(b.fitArcStart) ?? new Date(D0 - a * H).toISOString(), ...(arm.sigmaM ? { sigmaM: arm.sigmaM } : {}) };
   if (b.fitProcess === REFIT && b.fitArcStart != null && !isoOf(b.fitArcStart)) throw new Error(`refused: the refit row ${b.key} ${b.arcH} h records an arc start that does not read (${b.fitArcStart})`);
-  if (b.fitProcess === REFIT) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString() };
+  if (b.fitProcess === REFIT) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString(), ...(arm.sigmaM ? { sigmaM: arm.sigmaM } : {}) };
   return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
 }
 /** Whether a line's fit (f) is the row's (r): the same setting and process, and the same first state, in milliseconds, where the row names
  *  one, else the same arc start in milliseconds. */
 export function sameFit(f, r) {
-  if (!f || !r || f.setting !== r.setting || f.process !== r.process) return false;
+  if (!f || !r || f.setting !== r.setting || f.process !== r.process || (f.sigmaM ?? null) !== (r.sigmaM ?? null)) return false;
   if (r.firstState) return Number.isFinite(msOf(r.firstState)) && msOf(f.firstState) === msOf(r.firstState);
   return Number.isFinite(msOf(r.arcStart)) && msOf(f.arcStart) === msOf(r.arcStart);
 }
 /** A fit's short name (10 hex of the sha256 of its setting, process and arc start in ms), so a trajectory file is named by its fit. */
-export const fitTag = (f) => crypto.createHash('sha256').update(`${f.setting}|${f.process}|${msOf(f.arcStart)}`).digest('hex').slice(0, 10);
+export const fitTag = (f) => crypto.createHash('sha256').update(`${f.setting}|${f.process}|${msOf(f.arcStart)}${f.sigmaM ? `|${f.sigmaM}` : ''}`).digest('hex').slice(0, 10);
 
 /** A row's numerical arm, as table.mjs and bar.mjs choose it: the fullest stored setting by name (PREFER) that a window of the row has,
  *  over the numerical rows (numericalOf) of every listed window of the row (none where one has no row); none on the commercial geostationary
