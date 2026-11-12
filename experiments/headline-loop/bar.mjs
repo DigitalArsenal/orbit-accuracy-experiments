@@ -173,7 +173,8 @@ async function main() {
   // a scoreboard cut with --carry-from (table.mjs): on a row whose AP windows it carried from the earlier build (the row's carried.ap), a
   // window this build's table store has no AP row for counts that build's row, as the table counts it; the bar flies every window on this
   // build all the same
-  const carryFrom = board ? /--carry-from ([0-9a-f]{12})/.exec(board.harness?.command ?? '')?.[1] ?? null : null;
+  // the build carried from is the scoreboard's own field (carriedFrom); a file written before table.mjs wrote the field names it in its command
+  const carryFrom = board ? (board.carriedFrom?.wasmSha256?.slice(0, 12) ?? /--carry-from ([0-9a-f]{12})/.exec(board.harness?.command ?? '')?.[1] ?? null) : null;
   const carriedAp = carryFrom ? new Map(readRows(path.join(A.STORE_ROOT, 'table', carryFrom, 'rows.jsonl')).filter((r) => (r.theory ?? 'AP') === 'AP' && r.ap?.sha256?.startsWith(carryFrom)).map((r) => [`${r.key}|${r.arcH}`, r])) : new Map();
   if (carryFrom && !carriedAp.size) throw new Error(`the scoreboard carried rows from ${carryFrom}, and the store holds no AP row of that build`);
   const apRowOf = (g, a, key) => apRows.get(`${key}|${a}`) ?? ((boardRow(g, a)?.carried?.ap?.carried ?? 0) > 0 ? carriedAp.get(`${key}|${a}`) : undefined);
