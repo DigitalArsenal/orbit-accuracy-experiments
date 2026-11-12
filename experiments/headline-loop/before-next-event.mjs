@@ -3,7 +3,7 @@
 // fitted on the arc the numerical row has (the stored fit's arc, or --starts), flown over the reference's epochs up to the last whole 12 h lead
 // before the next event (a burn of the object's list or an event of its break test, after the cutoff), and the 3D distance to the reference at
 // that lead is the figure; the largest distance over the leads from 12 h on goes beside it. One JSON line per window, arc and setting.
-//   node experiments/headline-loop/before-next-event.mjs --groups WA --burns <lists> [--arcs 72,24] [--settings E5F,E1F] [--starts <json>] [--only <date,...>]
+//   node experiments/headline-loop/before-next-event.mjs --groups WA --burns <lists> [--arcs 72,24] [--settings E5G,E1F] [--starts <json>] [--only <date,...>]
 //   --starts: { "<yyyy-mm-dd>|<arc h>": "<arc start>" }, the arcs after an event where the rule moves them
 //   node experiments/headline-loop/before-next-event.mjs --check
 import fs from 'node:fs';
@@ -33,7 +33,7 @@ const A = await import('./lib/arms.mjs');
 const { openFfm, SETTINGS } = await import('./lib/ffm.mjs');
 const HOUR = 3600e3, DAY = 864e5, TRAJ = path.join(A.STORE_ROOT, 'numerical-trajectories');
 const read = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
-const groups = (args.groups ?? 'WA').split(','), arcs = (args.arcs ?? '72,24').split(',').map(Number), settings = (args.settings ?? 'E5F,E1F').split(',');
+const groups = (args.groups ?? 'WA').split(','), arcs = (args.arcs ?? '72,24').split(',').map(Number), settings = (args.settings ?? 'E5G,E1F').split(',');
 const only = args.only ? new Set(args.only.split(',')) : null, STARTS = args.starts ? JSON.parse(fs.readFileSync(args.starts, 'utf8')) : {};
 const eventsOf = (g, name) => [...(A.listedBurns(args.burns, g, name) ?? []).map((b) => b.t), ...A.knownBurns(args.burns, g, name, Infinity).filter((b) => b.source === 'break test').map((b) => Date.parse(b.extentTo))];
 const arms = await A.openArms({}), F = await openFfm();

@@ -1220,8 +1220,9 @@ async function check() {
     put('WA/Blank.burns.json', { burns: [] });
     ok(A.objectSigmaM(lists, 'WA', 'Noisy') === 126.4 && A.objectSigmaM(lists, 'WA', 'Quiet') === 10 && A.objectSigmaM(lists, 'WA', 'Blank') === 10 && A.objectSigmaM(lists, 'WA', 'Absent') === 10 && A.objectSigmaM(null, 'WA', 'Noisy') === 10,
       `the sigma by list: ${['Noisy', 'Quiet', 'Blank', 'Absent'].map((n) => A.objectSigmaM(lists, 'WA', n)).join(', ')}`);
-    const { SETTINGS: ST, ECOM2_PRIOR_SIGMA: PR } = await import('./lib/settings.mjs'), n = ST.E5F.apriori.length ** 0.5, sig = (i) => Math.sqrt(ST.E5F.apriori[i * n + i]);
-    ok(['D0', 'Y0', 'B0', 'B1_COS', 'B1_SIN'].every((k, j) => Math.abs(sig(6 + j) / PR[k] - 1) < 1e-12) && PR.D0 === 1e-6 && PR.Y0 === 6.78e-9 && PR.B0 === 4.25e-9 && PR.B1_COS === 3.59e-8 && PR.B1_SIN === 6.98e-9, 'the five-term arm carries the prior of ECOM2_PRIOR_SIGMA');
+    const { SETTINGS: ST, ECOM2_PRIOR_SIGMA: PR, FULL_SETTING: FS, CONFIGURED: CF } = await import('./lib/settings.mjs'), n = ST.E5G.apriori.length ** 0.5, sig = (s, i) => Math.sqrt(ST[s].apriori[i * n + i]);
+    ok(['D0', 'Y0', 'B0', 'B1_COS', 'B1_SIN'].every((k, j) => Math.abs(sig('E5G', 6 + j) / PR[k] - 1) < 1e-12 && Math.abs(sig('E5GL', 6 + j) / PR[k] - 1) < 1e-12) && PR.D0 === 1e-6 && PR.Y0 === 6.78e-9 && PR.B0 === 4.25e-9 && PR.B1_COS === 3.59e-8 && PR.B1_SIN === 6.98e-9, 'the commercial row\'s five-term arms carry the prior of ECOM2_PRIOR_SIGMA');
+    ok(['E5', 'E5F'].every((s) => [7, 8, 9, 10].every((i) => Math.abs(sig(s, i) / 1e-7 - 1) < 1e-12) && Math.abs(sig(s, 6) / 1e-6 - 1) < 1e-12) && FS.WA === 'E5G' && CF.WA === 'E5GL' && ['GN', 'GN_GAL', 'GE', 'IG'].every((g) => FS[g] === 'E5F' && CF[g] === 'E5'), 'the other five-term rows keep E5 and E5F, the terms free');
     const before = A.listsDigest(lists), D0 = Date.parse('2026-01-10T00:00:00Z');
     put('WA/Noisy.breaks.json', { events: [{ from: '2026-01-09T00:00:00Z', to: '2026-01-09T12:00:00Z', extentFrom: '2026-01-09T00:00:00Z', extentTo: '2026-01-09T12:00:00Z', reportTime: '2026-01-09T12:00:00Z', source: 'break test' }] });
     const at = (t) => A.knownBurns(lists, 'WA', 'Noisy', t);
