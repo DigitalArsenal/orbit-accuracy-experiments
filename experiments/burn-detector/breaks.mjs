@@ -26,9 +26,9 @@ const full = D.FULL_SETTING[g], arm = /^E5/.test(full) ? 'Ffull' : full, setting
 const F = await D.F.openFfm(), axes = await D.openAxesFor(g);
 const HOUR = D.HOUR, STRIDE = strideH * HOUR;
 const arcs = [];
-const CHUNK = 10 * D.DAY;
+const CHUNK = 3 * D.DAY; // a read the store cannot serve whole (before its first day) loses its three days, not ten
 for (const [a, b] of D.spansOf(ws.map((w) => ({ ...w, arcs: [Math.max(...w.arcs) + leadDays * 24] })))) {
-  // the truth is read ten days at a time (as pieces.mjs does), a chunk's arcs being those that start in it
+  // the truth is read three days at a time, a chunk's arcs being those that start in it
   for (let c0 = Math.ceil(a / STRIDE) * STRIDE; c0 < b; c0 += CHUNK) {
     const c1 = Math.min(b, c0 + CHUNK + lengthH * HOUR);
     let lines;
