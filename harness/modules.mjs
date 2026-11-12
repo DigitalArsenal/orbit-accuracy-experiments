@@ -53,6 +53,8 @@ export async function loadModule(root, relative) {
   };
   return {
     provenance,
+    // the build's own manifest (its methods and ports), so a caller can send what this build accepts
+    manifest,
     // Raw SDK response; throws on a non-zero status.
     async invoke(methodId, inputs) {
       const response = await harness.invoke({ methodId, inputs });

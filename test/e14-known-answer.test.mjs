@@ -1,22 +1,34 @@
 // E14's known-answer test (experiments/e14-covariance-realism PLAN.md section 9a): synthetic errors with a known
 // covariance, run through the real modules (analysis/gp-error-model pair_statistics, fit_calibration,
 // calibrate_covariance, ffm_coverage, dcp_covariance) and E14's statistics; the known answers are set here.
-// Needs a modules checkout with gp-error-model 0.3.0 (SDN_MODULES_ROOT); skipped, visibly, without one.
+// They run on the module builds E14's frozen config.json pins (modules, by wasm SHA-256), found in the modules checkout
+// (SDN_MODULES_ROOT) at the commit its modulesSource names or in each module's history, and laid out on their own
+// (harness/pinned.mjs); skipped, visibly, with the reason where the checkout does not hold a pinned build.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import test from 'node:test';
+import test, { after } from 'node:test';
 import { loadModule } from '../harness/modules.mjs';
+import { pinnedModules } from '../harness/pinned.mjs';
 import { repoRoot } from '../harness/provenance.mjs';
 import { rng } from '../harness/stats.mjs';
 import { cell } from '../experiments/e14-covariance-realism/realism.mjs';
 import { config } from '../experiments/e14-covariance-realism/windows.mjs';
 
-const modulesDir = path.resolve(process.env.SDN_MODULES_ROOT ?? path.join(repoRoot, config.inputs.modules));
+const checkout = path.resolve(process.env.SDN_MODULES_ROOT ?? path.join(repoRoot, config.inputs.modules));
+const PINS = Object.fromEntries(Object.entries(config.modules).map(([rel, m]) => [rel, m.wasmSha256]));
+const pinned = pinnedModules(checkout, PINS, { hints: (config.modulesSource?.match(/\b[0-9a-f]{8,40}\b/g) ?? []).filter((h) => /[a-f]/.test(h)) });
+after(() => pinned.remove());
+const absent = (rels) => { const m = rels.filter((rel) => !pinned.found[rel]); return m.length ? `the pinned builds ${m.map((rel) => `${rel} ${PINS[rel].slice(0, 12)}`).join(', ')} are not in the modules checkout ${checkout}` : false; };
+const modulesDir = pinned.dir;
 const gpDir = path.join(modulesDir, 'analysis/gp-error-model');
 const manifest = fs.existsSync(path.join(gpDir, 'plugin-manifest.json')) ? JSON.parse(fs.readFileSync(path.join(gpDir, 'plugin-manifest.json'), 'utf8')) : null;
-const ready = manifest && ['pair_statistics', 'fit_calibration', 'calibrate_covariance', 'dcp_covariance'].every((m) => manifest.methods.some((x) => x.methodId === m));
-const skip = ready ? false : `no gp-error-model with E14's methods under ${modulesDir} (set SDN_MODULES_ROOT)`;
+const has = (m) => !!manifest?.methods.some((x) => x.methodId === m);
+// the coverage method and its payload kinds by the names the pinned build has: E14's builds (frozen 2026-10-10) name them hpop_coverage,
+// hpop-arc-plan and hpop-covariance-model; builds after the HPOP to FFM rename (2026-10-16) name them ffm_*
+const COVERAGE = has('ffm_coverage') ? 'ffm' : 'hpop';
+const ready = manifest && ['pair_statistics', 'fit_calibration', 'calibrate_covariance', 'dcp_covariance', `${COVERAGE}_coverage`].every(has);
+const skip = absent(['analysis/gp-error-model']) || (ready ? false : `the pinned gp-error-model build lacks E14's methods`);
 const json = (portId, value) => ({ portId, payload: Buffer.from(JSON.stringify(value)), typeRef: { schemaName: 'application/json' } });
 const call = async (m, method, inputs) => JSON.parse(Buffer.from((await m.invoke(method, inputs)).outputs[0].payload).toString('utf8'));
 
@@ -107,8 +119,8 @@ test('known answer: realism statistics, factors, the applied model, process nois
     predictions.push({ arc: k, samples: [{ state: [truth[0] * 1e3 + e[0], e[1], e[2], 0, 7500, 0], a: Ablk, u: U }] });
   }
   const regimes = [{ id: 'R', altitudeKm: [0, 2000], eccentricity: [0, 0.25] }];
-  const fit = await call(gp, 'ffm_coverage', [json('plan', { kind: 'ffm-arc-plan', version: 1, arcs }), json('predictions', { arcs: predictions }),
-    json('model', { kind: 'ffm-covariance-model', version: 1, regimes: [{ regimeIndex: 0, regime: 'R', p0: Array(21).fill(0).map((_, i) => ([0, 2, 5, 9, 14, 20].includes(i) ? 1e-6 : 0)) }] }),
+  const fit = await call(gp, `${COVERAGE}_coverage`, [json('plan', { kind: `${COVERAGE}-arc-plan`, version: 1, arcs }), json('predictions', { arcs: predictions }),
+    json('model', { kind: `${COVERAGE}-covariance-model`, version: 1, regimes: [{ regimeIndex: 0, regime: 'R', p0: Array(21).fill(0).map((_, i) => ([0, 2, 5, 9, 14, 20].includes(i) ? 1e-6 : 0)) }] }),
     json('options', { mode: 'fit', window: ['2026-01-01T00:00:00', '2026-01-03T00:00:00'], regimes })]);
   const ml = fit.regimes[0].processNoise.fit.maximumLikelihoodM2S3;
   assert.ok(rel(ml[1], qTrue[1]) < 0.10, `q_T ${ml[1]} vs ${qTrue[1]}`);
@@ -147,7 +159,7 @@ import { epochStates } from '../experiments/e2-catalog-covariance/product.mjs';
 import { startRun } from '../harness/provenance.mjs';
 import { configPath } from '../experiments/e14-covariance-realism/windows.mjs';
 const archiveReady = fs.existsSync(KERNEL.path) && fs.existsSync(config.inputs.gfzKp) && fs.existsSync(config.inputs.gpHistory);
-test('noise_responses agrees with propagator/ffm process noise on a full-force LEO arc', { skip: skip || (!archiveReady && 'archive inputs absent') }, async (ctx2) => {
+test('noise_responses agrees with propagator/ffm process noise on a full-force LEO arc', { skip: skip || absent(['analysis/epoch-state', 'propagator/ffm', 'data-source/eop-parser']) || (!archiveReady && 'archive inputs absent') }, async (ctx2) => {
   const run = startRun({ experiment: config.experiment, step: 'test-noise-responses', configPath, modulesDir: modulesDir, args: {} });
   const ctx = await s2Context(modulesDir, run);
   const forces = { ...config.s2.forces, degree: 20, order: 20 };
