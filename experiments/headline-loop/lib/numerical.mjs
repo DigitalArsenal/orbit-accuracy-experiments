@@ -100,7 +100,7 @@ export function rowFitOf(b, label, D0, a) {
   // names the way the trajectory is made, a refit), with the sigma it was weighed at in the identity
   if (b.fitProcess === REFIT_FULL) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(D0 - a * H).toISOString(), ...(arm.sigmaM ? { sigmaM: arm.sigmaM } : {}) };
   if (b.fitProcess === REFIT && b.fitArcStart != null && !isoOf(b.fitArcStart)) throw new Error(`refused: the refit row ${b.key} ${b.arcH} h records an arc start that does not read (${b.fitArcStart})`);
-  if (b.fitProcess === REFIT) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString() };
+  if (b.fitProcess === REFIT) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString(), ...(arm.sigmaM ? { sigmaM: arm.sigmaM } : {}) };
   return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
 }
 /** Whether a line's fit (f) is the row's (r): the same setting and process, and the same first state, in milliseconds, where the row names
