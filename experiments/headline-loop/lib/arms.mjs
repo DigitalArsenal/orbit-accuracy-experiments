@@ -37,6 +37,8 @@ export const PCF = {
   AP_ECOM2_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, ecom2: true }), SOLID_TIDES: 1 }, fit: null }),
   // the low table's rows from ZONAL70_SINCE: zonal degree 70, whose terms of degree 21 to 70 move a low orbit's node (stack #531)
   AP_Z70_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 70 }), SOLID_TIDES: 1 }, fit: null }),
+  // the strong-drag rows from TESSERAL70_SINCE: tesseral degree 70 as well, which carries the terms of degree 32 to 70 near 1.2 to 1.6 cycles a day
+  AP_T70_Z70_TIDES: APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 70, zonal: 70 }), SOLID_TIDES: 1 }, fit: null }),
   XP: APL.fitPcf({ forces: {}, fit: null }),
 };
 
@@ -59,6 +61,13 @@ export const TIDES_SINCE = '0.6.20';
 // records at zonal 20, and every other row, and an older build's, keep degree 20.
 export const ZONAL70_SINCE = '0.6.42';
 export const ZONAL70_GROUPS = ['T', 'P', 'S1', 'LS', 'DO'];
+// The record's tesseral degree on the strong-drag rows (TESSERAL70_GROUPS: groups T and P): from TESSERAL70_SINCE (the first build after
+// sdn-ap 0.6.45) an AP fit there states tesseral degree 70 with zonal degree 70, the label AP_T70_Z70_TIDES. The cuts of 0.6.42 to
+// 0.6.45 state tesseral 31 (AP_Z70_TIDES) and stay as published; a table file's forces text says which a row used. Near 700 km, the
+// laser spheres and altimetry keep tesseral 31: at tesseral 70 their figures gain nothing that counts and the laser spheres' day-3
+// median after 72 h fits is 4.4 m worse (stack #316).
+export const TESSERAL70_SINCE = '0.6.46';
+export const TESSERAL70_GROUPS = ['T', 'P'];
 const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
 export const atLeast = (v, w) => {
   const a = numeric(v), b = numeric(w);
@@ -263,10 +272,11 @@ export const listedBurns = (dir, group, name, field = 'burns') => {
     return { t: Date.parse(b.burn ?? b.at), sizeMmS: Math.hypot(...dv), alongTrackMmS: dv[1] };
   });
 };
-/** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, or AP_Z70_TIDES on a low-table row from ZONAL70_SINCE, pcf }. */
+/** AP's $PCF for a fit: { label: 'AP' | 'AP_VACUUM' | 'AP_ECOM2', with _TIDES from TIDES_SINCE, AP_Z70_TIDES on a low-table row from ZONAL70_SINCE, or AP_T70_Z70_TIDES from TESSERAL70_SINCE, pcf }. */
 export const apPcfFor = (group, version, vacuum, arcH) => {
   const base = vacuum ? 'AP_VACUUM' : arcH >= ECOM2_MIN_ARC && ECOM2_RULES.some((r) => r.groups.includes(group) && atLeast(version, r.since)) ? 'AP_ECOM2' : 'AP';
-  const label = base === 'AP' && ZONAL70_GROUPS.includes(group) && atLeast(version, ZONAL70_SINCE) ? 'AP_Z70_TIDES'
+  const label = base === 'AP' && TESSERAL70_GROUPS.includes(group) && atLeast(version, TESSERAL70_SINCE) ? 'AP_T70_Z70_TIDES'
+    : base === 'AP' && ZONAL70_GROUPS.includes(group) && atLeast(version, ZONAL70_SINCE) ? 'AP_Z70_TIDES'
     : atLeast(version, TIDES_SINCE) ? `${base}_TIDES` : base;
   return { label, pcf: PCF[label] };
 };
@@ -278,6 +288,7 @@ export const AP_FORCES_TEXT = {
 };
 for (const label of ['AP', 'AP_VACUUM', 'AP_ECOM2']) AP_FORCES_TEXT[`${label}_TIDES`] = AP_FORCES_TEXT[label].replace('31 in the tesseral terms;', '31 in the tesseral terms; the solid Earth tide (IERS 2010);');
 AP_FORCES_TEXT.AP_Z70_TIDES = AP_FORCES_TEXT.AP_TIDES.replace('Gravity to degree 20 in the zonal terms', 'Gravity to degree 70 in the zonal terms');
+AP_FORCES_TEXT.AP_T70_Z70_TIDES = AP_FORCES_TEXT.AP_Z70_TIDES.replace('31 in the tesseral terms', '70 in the tesseral terms');
 
 
 /** The builds of the two outside theories (table.mjs names them): the Space Force's XP through propagator/sgp4-xp (its library is the
