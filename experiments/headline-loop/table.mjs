@@ -1234,7 +1234,7 @@ async function check() {
     put('WA/Quiet.burns.json', { flown: 40, pieceClosures: pieces(3) });
     put('WA/Blank.burns.json', { flown: 40, burns: [] });
     const sg = (n, h) => A.objectSigmaM(lists, 'WA', n, T0 + h * 3600e3);
-    ok(sg('Noisy', 24) === 10 && sg('Noisy', 48) === 100 && sg('Noisy', 120) === 1000 && sg('Noisy', 50) === 100 && sg('Quiet', 120) === 10 && sg('Blank', 120) === 10 && sg('Absent', 120) === 10 && A.objectSigmaM(null, 'WA', 'Noisy', T0 + 120 * 3600e3) === 10,
+    ok(sg('Noisy', 24) === 10 && sg('Noisy', 48) === 100 && sg('Noisy', 120) === 550 && sg('Noisy', 50) === 100 && sg('Quiet', 48) === 10 && sg('Quiet', 120) === 16.5 && sg('Blank', 120) === 10 && sg('Absent', 120) === 10 && A.objectSigmaM(null, 'WA', 'Noisy', T0 + 120 * 3600e3) === 10,
       `the sigma at a cutoff is the median of the pieces that end by it, the floor below ${A.SIGMA_MIN_PIECES} pieces or with none carried: ${[24, 48, 50, 120].map((h) => sg('Noisy', h)).join(', ')}; ${sg('Quiet', 120)}, ${sg('Blank', 120)}`);
     ok(A.listsLackingClosure(lists).length === 1 && A.listsLackingClosure(lists)[0].group === 'WA', `a list whose pieces were flown and that carries no per-piece closures is named: ${A.listsLackingClosure(lists).length} of 3`);
     const { SETTINGS: ST, ECOM2_PRIOR_SIGMA: PR, FULL_SETTING: FS, CONFIGURED: CF } = await import('./lib/settings.mjs'), n = ST.E5G.apriori.length ** 0.5, sig = (s, i) => Math.sqrt(ST[s].apriori[i * n + i]);
