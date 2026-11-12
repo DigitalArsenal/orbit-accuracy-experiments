@@ -1,0 +1,20 @@
+{
+  "about": "A made-up orbit of the synthetic set (seed 498, case grid-hp2000-e0.5-i20: eccentricity 0.5, perigee 2,000 km, 4.0025 revolutions a day), as an AP seed record at its cutoff. A build held a block of displaced states at each of its perigee passages; the build that fixed it holds none. No satellite's data.",
+  "record": {
+    "epoch": "2026-04-16T00:00:00.000000",
+    "meanMotion": 4.002548305,
+    "eccentricity": 0.5,
+    "inclination": 20,
+    "raan": 347.2,
+    "argOfPericenter": 232,
+    "meanAnomaly": 57.4,
+    "bterm": 0.022,
+    "agom": 0.012,
+    "maximumTesseralDegree": 31,
+    "maximumZonalDegree": 20
+  },
+  "builds": [
+    { "version": "0.6.34", "modulesCommit": "1810ad02b9c4ebe4e272a232027fe034b99e175e", "gravityModel": "EGM-96", "holds": "a block at each passage" },
+    { "version": "0.6.37", "modulesCommit": "dbcb31733ae463d12ccb44442949366fa8c513ed", "gravityModel": "EGM2008", "holds": "no block" }
+  ]
+}
