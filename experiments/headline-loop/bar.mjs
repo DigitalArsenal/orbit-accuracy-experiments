@@ -20,6 +20,7 @@
 //      must be the one --burns gives for its satellite, or the run is refused; without --burns no refit is read]
 //     [--caps T,Z: a study of the record's degrees, not the release's figure: every record fitted at tesseral degree T and zonal
 //      degree Z (FORCES.MAXIMUM_TESSERAL_DEGREE, MAXIMUM_DEGREE), its other forces the row's own $PCF's; the file states the caps]
+//   node experiments/headline-loop/bar.mjs --check   (on a store of its own made from the real store; see check())
 //
 // The build is read by git show at the commit, never from a working tree; this repository's working tree must be clean (the file names
 // its commit). Each window's figures go to <store>/bar/<wasm sha12>/rows.jsonl (with --caps T,Z, rows-caps<T>-<Z>.jsonl beside it) and
@@ -57,7 +58,7 @@ const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { maxBuffer: 1
 // a bar row is of a trajectory: its line's key, arc, source, first state and the file's sha256 (a file written again is another trajectory)
 const doneKey = (r) => `${r.key}|${r.arcH}|${r.source}|${r.from}|${r.sha256 ?? ''}`;
 
-if (args.worker) await worker(); else await main();
+if (args.check) await check(); else if (args.worker) await worker(); else await main();
 
 async function main() {
   const t0 = Date.now(), root = args['modules-root'], want = args['modules-commit'], out = args.out;
@@ -353,7 +354,7 @@ async function worker() {
   // the last line of the same tolerance (a 1e-13 line beside a 1e-10 one is not a change of the 1e-10 trajectory)
   // the manifest's last line that wrote the trajectory file this line names: a later line writing the same file means the file is no
   // longer this line's fit
-  const lastLine = (file) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { const r = JSON.parse(l); if (r.file === file) last = r; } return last; };
+  const lastLine = (file) => { let last = null; for (const l of fs.readFileSync(path.join(traj, 'manifest.jsonl'), 'utf8').split('\n').filter(Boolean)) { let r = null; try { r = JSON.parse(l); } catch { continue; } if (r.file === file) last = r; } return last; };
   const flyOne = async (man) => {
     const t1 = performance.now(), row = { key: man.key, group: man.group, arcH: man.arcH, arm: man.arm, source: man.source, from: man.from, ...(man.sha256 ? { sha256: man.sha256 } : {}), env };
     try {
@@ -393,6 +394,63 @@ async function worker() {
   };
   process.on('message', async (msg) => { if (msg.stop) process.exit(0); process.send({ row: await flyOne(msg.m) }); });
   process.send({ ready: true });
+}
+
+/** --check: on a store of its own, made from the real store: its numerical rows and fitted products linked (symbolic links; the check
+ *  writes into neither), the 0.6.34 build's AP rows of the 72 h TESS row copied into the store's table folder for that build, a refit
+ *  folder holding the cut's refit rows of that row (every window, so the row's arm is the cut's), and the cut's lists. Three of the row's
+ *  windows, their trajectories made by trajectories.mjs: one whose refit after a burn is on an arc under 24 h (the short arc), one on its
+ *  full arc, and one whose refit row's stored weighted RMS is not its fit's (the refit is refused). One byte of the full-arc window's
+ *  trajectory file is changed before the bar reads it. The bar finds the short arc's line (its fit the row's, after a burn, its arc
+ *  start the rule's, under 24 h) and flies it to a figure; refuses the changed file (counted in failed, against the share); counts the
+ *  refused refit in trajectories.failed as refitNotTheStoredFit; and a second run flies nothing. Not covered here: the scoreboard
+ *  binding (--scoreboard), the 1e-13 rows, --caps, more than one job. Without the cut's lists, refit folder or that build's AP rows in
+ *  the store the check fails. */
+async function check() {
+  usePackages();
+  const E2 = await import('./lib/e2e.mjs'), W = await import('./lib/windows.mjs'), A = await import('./lib/arms.mjs'), N = await import('./lib/numerical.mjs');
+  const { check: ok, done } = E2.checker('BAR');
+  const BUILD = { version: '0.6.34', commit: '1810ad02b9c4ebe4e272a232027fe034b99e175e', sha12: 'a18f12431804' }, modulesRoot = process.env.HEADLINE_LOOP_CHECK_MODULES_ROOT ?? MODULES_ROOT;
+  const lists = path.join(A.STORE_ROOT, 'lists-9baa9131dcf8'), folder = `${A.NUMERICAL_STORE}-after-burn-9baa9131dcf8`, abReal = path.join(A.STORE_ROOT, folder), apReal = path.join(A.STORE_ROOT, 'table', BUILD.sha12, 'rows.jsonl');
+  if (![lists, abReal, apReal].every((f) => fs.existsSync(f))) { ok(false, `the store holds no lists-9baa9131dcf8, ${folder} or the ${BUILD.version} build's table rows: nothing was checked`); done('nothing'); }
+  const read = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  const dir = E2.tmp('bar'), store = path.join(dir, 'store'), keys = path.join(dir, 'keys.txt'), out = path.join(dir, 'bar.json'), env = { HEADLINE_LOOP_STORE: store }, TRAJ = path.join(store, 'numerical-trajectories');
+  fs.mkdirSync(path.join(store, folder), { recursive: true }); fs.mkdirSync(path.join(store, 'table', BUILD.sha12), { recursive: true });
+  fs.symlinkSync(path.join(A.STORE_ROOT, A.NUMERICAL_STORE), path.join(store, A.NUMERICAL_STORE)); fs.symlinkSync(path.join(A.STORE_ROOT, 'ffm-cache'), path.join(store, 'ffm-cache'));
+  // the cut's refit rows of the 72 h TESS row, as the tools read them (the first of a window-arc's)
+  const sel = new Map();
+  for (const r of fs.readdirSync(abReal).filter((f) => /^rows-after-burn-.*\.jsonl$/.test(f)).flatMap((f) => read(path.join(abReal, f))).filter((r) => r.group === 'HE72')) { const k = `${r.key}|${r.arcH}`; if (!sel.has(k) || (sel.get(k).error && !r.error)) sel.set(k, r); }
+  const held = [...sel.values()], refits = held.filter((r) => r.arcH === 72 && r.fitProcess === N.REFIT && r.arms?.FFMq?.ok && !r.burnInArc);
+  const short = refits.find((r) => r.fitArcHours < 24), refused = refits.find((r) => r !== short), full = held.find((r) => r.arcH === 72 && /^the full arc/.test(r.fitProcess ?? ''));
+  const off = refused ? { ...refused, arms: { ...refused.arms, FFMq: { ...refused.arms.FFMq, weightedRms: refused.arms.FFMq.weightedRms * 1.5 } } } : null;
+  fs.writeFileSync(path.join(store, folder, 'rows-after-burn-check.jsonl'), `${held.map((r) => JSON.stringify(r === refused ? off : r)).join('\n')}\n`);
+  // the build's AP rows of the row, copied
+  fs.writeFileSync(path.join(store, 'table', BUILD.sha12, 'rows.jsonl'), `${read(apReal).filter((r) => r.group === 'HE72' && (r.theory ?? 'AP') === 'AP').map((r) => JSON.stringify(r)).join('\n')}\n`);
+  const picked = [short, full, refused].filter(Boolean);
+  fs.writeFileSync(keys, `${picked.map((r) => r.key).join('\n')}\n`);
+  const t1 = E2.run('trajectories.mjs', ['--keys-file', keys, '--groups', 'HE72', '--burns', lists, '--after-burn-store', folder, '--refit', '--jobs', '1'], env);
+  const lines = fs.existsSync(path.join(TRAJ, 'manifest.jsonl')) ? read(path.join(TRAJ, 'manifest.jsonl')) : [], lineOf = (r) => lines.filter((x) => x.key === r?.key && x.arcH === 72).at(-1);
+  ok(t1.code === 0 && picked.length === 3 && lineOf(short)?.fit?.process === 'after burn' && lineOf(full)?.fit?.process === 'full arc' && lineOf(refused)?.source === 'failed' && /the refit is not the stored fit/.test(lineOf(refused)?.error ?? ''),
+    `the trajectories: ${t1.err.slice(-300)} ${JSON.stringify(picked.map((r) => [r.fitArcHours, lineOf(r)?.source?.slice(0, 30), lineOf(r)?.error?.slice(0, 40)]))}`);
+  // one byte of the full-arc window's file changed
+  const fullFile = lineOf(full)?.file ? path.join(TRAJ, lineOf(full).file) : null;
+  if (fullFile) { const b = fs.readFileSync(fullFile); b[100] ^= 1; fs.writeFileSync(fullFile, b); }
+  const bar = () => E2.run('bar.mjs', ['--modules-commit', BUILD.commit, '--modules-root', modulesRoot, '--out', out, '--groups', 'HE72', '--arcs', '72', '--burns', lists, '--after-burn-store', folder, '--jobs', '1'], env);
+  const barRows = () => (fs.existsSync(path.join(store, 'bar', BUILD.sha12, 'rows.jsonl')) ? read(path.join(store, 'bar', BUILD.sha12, 'rows.jsonl')) : []);
+  const b1 = bar(), doc1 = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, 'utf8')) : { rows: [] }, row1 = doc1.rows.find((r) => r.regime === W.GROUPS.HE72.label && r.fitHours === 72), rows1 = barRows();
+  const w = W.windowsOf(['HE72']).windows.find((x) => x.key === short?.key), barShort = rows1.find((r) => r.key === short?.key), barFull = rows1.find((r) => r.key === full?.key);
+  // the short arc's start as the row gives it (lib/numerical.mjs rowFitOf: its recorded start, else the rule's from its last burn)
+  const arcStart = short && w ? N.rowFitOf(short, 'FFMq', w.cutoffMs, 72)?.arcStart : null;
+  ok(b1.code === 0 && barShort && !barShort.error && Number.isFinite(barShort.maxDistanceM) && barShort.sha256 === lineOf(short).sha256 && /after the burn/.test(barShort.source) && Date.parse(lineOf(short).fit.arcStart) === Date.parse(arcStart) && w.cutoffMs - Date.parse(arcStart) < 24 * 3600e3,
+    `the short arc's line found and flown: ${b1.err.slice(-300)} ${JSON.stringify(barShort && { error: barShort.error, maxDistanceM: barShort.maxDistanceM, source: barShort.source?.slice(0, 30) })} ${arcStart}`);
+  ok(/the trajectory file is not the one its line names \(sha256\)/.test(barFull?.error ?? '') && row1?.flown === 1 && row1?.failed === 1 && row1?.withinBar?.windows === 2,
+    `the changed file refused: ${JSON.stringify(barFull && { error: barFull.error })} ${JSON.stringify(row1 && { flown: row1.flown, failed: row1.failed, withinBar: row1.withinBar })}`);
+  ok(JSON.stringify(row1?.trajectories?.failed) === JSON.stringify({ windows: 1, refitNotTheStoredFit: 1, coverage: 0, other: 0 }) && row1.trajectories.written === 2 && row1.trajectories.refitAfterBurn === 1,
+    `the refused refit counted: ${JSON.stringify(row1?.trajectories)}`);
+  const b2 = bar(), rows2 = barRows();
+  ok(b2.code === 0 && / 0 to fly/.test(b2.err) && rows2.length === rows1.length, `a second run flew again: ${b2.err.slice(-200)} ${rows2.length - rows1.length} rows`);
+  fs.rmSync(dir, { recursive: true, force: true });
+  done('bar.mjs, on the 72 h TESS row, finds the line of a refit after a burn on an arc under 24 h (the row\'s fit, its arc start the rule\'s) and flies it to a figure; refuses a trajectory file whose sha256 is not its line\'s, counting it in failed and against the share; counts a refit refused against the stored weighted RMS in trajectories.failed; and a second run flies nothing');
 }
 
 function repositoryArgs(argv) { const out = []; for (let i = 0; i < argv.length; i += 1) { if (['--modules-root', '--out', '--scoreboard', '--burns'].includes(argv[i])) { i += 1; continue; } out.push(argv[i]); } return out; }
