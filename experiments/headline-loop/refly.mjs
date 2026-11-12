@@ -224,6 +224,7 @@ async function afterBurns() {
         else {
           row.fitProcess = 'maneuvering: the arc after its last burn';
           row.fitArcHours = Math.round(hours * 10) / 10;
+          row.fitArcStart = W.iso(m.startMs);
           row.env = env;
           const arm = FULL_SETTING[w.group];
           try {
