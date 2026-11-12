@@ -24,7 +24,7 @@ export function random(seed) {
 export const GRID = {
   perigeeKm: [200, 300, 400, 500, 650, 800, 1000, 1400, 2000, 5000, 10000, 20200, 35786],
   eccentricity: [0, 0.001, 0.01, 0.05, 0.1, 0.3, 0.5, 0.7, 0.9],
-  // seven inclinations (cut from eleven to fit the first pass's three hours; the named edge cases carry 63.4, 90, 116.6, 150 to 180)
+  // seven inclinations (the named edge cases carry 63.4, 90, 116.6 and 150 to 180)
   inclinationDeg: [0.5, 20, 55, 70, 98, 130, 165],
 };
 export const BANDS = [[0, 30], [30, 60], [60, 90], [90, 120], [120, 180.01]];
@@ -75,8 +75,8 @@ export function cases(seed = 498, { gridStep = 1 } = {}) {
   for (const e of [1e-5, 1e-4]) edge(`ecc-${e}`, `eccentricity ${e} (600 km)`, { hpKm: 600, e, i: 51.6 });
   for (const i of [0.01, 0.1]) edge(`inc-${i}-leo`, `inclination ${i} deg (600 km)`, { hpKm: 600, e: 0.001, i });
   for (const i of [0.01, 0.1]) edge(`inc-${i}-geo`, `inclination ${i} deg (geostationary)`, { n: SIDEREAL, e: 0.0002, i });
-  // geosynchronous: inclined geosynchronous, the graveyard (the stable and unstable longitudes are not placed in this pass: see notCovered)
-  notCovered.push({ edge: 'geostationary at the stable (75 E, 105 W) and unstable (165 E, 15 W) longitudes', why: 'placing an orbit at a longitude needs Earth orientation on the frames call, not wired in this pass; the grid\'s geostationary orbits sit at the longitudes their drawn angles give' });
+  // geosynchronous: inclined geosynchronous, the graveyard (no case is placed at the stable or unstable longitudes: see notCovered)
+  notCovered.push({ edge: 'geostationary at the stable (75 E, 105 W) and unstable (165 E, 15 W) longitudes', why: 'placing an orbit at a longitude needs Earth orientation on the frames call, which the case builder does not make; the grid\'s geostationary orbits sit at the longitudes their drawn angles give' });
   edge('igso', 'inclined geosynchronous (i 55)', { n: SIDEREAL, e: 0.002, i: 55 });
   edge('graveyard', 'geostationary graveyard (+300 km)', { hpKm: 36086, e: 0.0005, i: 0.5 });
   // eccentric: Molniya, transfer orbits, lunar-resonant, one-day eccentric
@@ -95,6 +95,22 @@ export function cases(seed = 498, { gridStep = 1 } = {}) {
   edge('geo-solstice', 'geostationary at the June solstice (no eclipses), light debris', { n: SIDEREAL, e: 0.0002, i: 0.05, cutoff: '2026-06-21', am: 'debris' });
   edge('meo-shadow-entry', 'medium Earth orbit entering its eclipse season (light debris)', { n: 2 * SIDEREAL, e: 0.001, i: 55, cutoff: '2026-03-21', am: 'debris' });
   return { seed, gridStep, cases: out, notCovered };
+}
+/**
+ * A case's label as a page prints it. It is the case's own name, except where that name says more than the case is. A case
+ * object is never changed for this, because its hash, which covers the name, keys the stored rows.
+ * - The m:1 and 17:10 "exact" cases have a mean motion of m (or 1.7) times the sidereal rate, and the node's and the perigee's J2
+ *   rates are left out. They lie near the repeat, not on it: the true m:1 repeat is 0.2 to 0.9 % higher at m 8 to 16.
+ * - The two transfer orbits' apogees are the ones their eccentricity gives at their perigee, not 35,786 km.
+ */
+export function labelOf(c) {
+  if (!c?.name) return c?.id ?? '';
+  let m;
+  if ((m = /^edge-res-(\d+)to1-(exact|off)$/.exec(c.id))) return `${m[1] === '1' ? 'the sidereal rate' : `${m[1]} times the sidereal rate`}${m[2] === 'off' ? ', plus 0.5 %' : ''}, near the ${m[1]}:1 repeat-ground-track resonance (the node's and the perigee's J2 rates left out)`;
+  if ((m = /^edge-res-galileo-(exact|off)$/.exec(c.id))) return `Galileo-like, 1.7 times the sidereal rate${m[1] === 'off' ? ', plus 0.5 %' : ''}, near the 17:10 resonance (the node's and the perigee's J2 rates left out)`;
+  if (c.id === 'edge-gps-like') return 'GPS-like, twice the sidereal rate (e 0.01, i 55)';
+  if (c.id === 'edge-gto' || c.id === 'edge-gto-low-i') return `geostationary transfer-like (${c.hpKm.toLocaleString('en-US')} x ${c.haKm.toLocaleString('en-US')} km, i ${c.i})`;
+  return c.name;
 }
 export const bandOf = (i) => BANDS.findIndex(([lo, hi]) => i >= lo && i < hi);
 /** The guard subset: every 8th grid and every 8th area-to-mass case in the generator's order, and every named edge case. */
