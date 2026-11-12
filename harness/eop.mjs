@@ -11,7 +11,13 @@ import { PRW_TYPE } from './prw.mjs';
 
 // The parser accepts the SDK's typed HTTP response envelope. The original
 // IERS bytes stay in BODY; the module owns all parsing and validation.
-function sourceResponse(body) {
+// A build whose response port does not name that envelope (eop-parser 0.1.0,
+// whose response port took the host's response JSON) is sent the file's
+// bytes on its body port instead.
+function sourceResponse(body, parser, methodId) {
+  const port = parser.manifest?.methods.find((m) => m.methodId === methodId)?.inputPorts.find((p) => p.portId === 'response');
+  const typed = !parser.manifest || !!port?.acceptedTypeSets.some((s) => s.allowedTypes.some((t) => t.schemaName === 'HttpResponse.fbs'));
+  if (!typed) return { portId: 'body', payload: body, typeRef: { wireFormat: 'aligned-binary', requiredAlignment: 1, byteLength: body.length } };
   return {
     portId: 'response',
     payload: encodeHttpResponse({ status: 200, body }),
@@ -23,9 +29,11 @@ function sourceResponse(body) {
 // to its $EOP object, plus the parser's metadata.
 export async function c04Records(parser, file) {
   const body = fs.readFileSync(file);
-  const response = await parser.invoke('parse_c04', [sourceResponse(body)]);
+  const response = await parser.invoke('parse_c04', [sourceResponse(body, parser, 'parse_c04')]);
   const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
-  const meta = decodeIngestRequest(response.outputs.find((f) => f.portId === 'meta').payload);
+  // the parser's metadata: an INGQ frame, or JSON from eop-parser 0.1.0
+  const metaBytes = Buffer.from(response.outputs.find((f) => f.portId === 'meta').payload);
+  const meta = metaBytes.subarray(4, 8).toString('latin1') === 'INGQ' ? decodeIngestRequest(metaBytes) : JSON.parse(metaBytes.toString('utf8'));
   const records = [];
   for (let at = 0; at < out.length;) {
     const n = out.readUInt32LE(at);
@@ -39,7 +47,7 @@ export async function c04Records(parser, file) {
 // parse_finals2000a over an IERS finals2000A file (Rapid Service, with predictions; a path or its bytes): [{mjd, row}] as c04Records returns them. For dates after the C04 series ends.
 export async function finalsRecords(parser, file) {
   const body = Buffer.isBuffer(file) ? file : fs.readFileSync(file);
-  const response = await parser.invoke('parse_finals2000a', [sourceResponse(body)]);
+  const response = await parser.invoke('parse_finals2000a', [sourceResponse(body, parser, 'parse_finals2000a')]);
   const out = Buffer.from(response.outputs.find((f) => f.portId === 'records').payload);
   const records = [];
   for (let at = 0; at < out.length;) {

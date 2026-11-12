@@ -78,6 +78,12 @@ Paths default to `config.json` and can be overridden with `--modules`,
 `--archive` and `--reference` or the `SDN_MODULES_ROOT`, `SDN_GP_HISTORY`
 and `SDN_REFERENCE_STATES` environment variables.
 
+`npm test` runs each test on the module builds its experiment pins, found in
+the modules checkout's history (`harness/pinned.mjs`), and skips a test with
+the reason when the checkout does not hold them.
+
+Every pull request runs the Space Data Network stack's `scripts/check.mjs` on its head (secrets, no new home paths, and the change's end-to-end checks given with `--e2e`, `npm test` among them) and quotes its result.
+
 ## The site
 
 [digitalarsenal.github.io/orbit-accuracy-experiments](https://digitalarsenal.github.io/orbit-accuracy-experiments/)
