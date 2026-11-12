@@ -52,11 +52,13 @@ export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { 
 export const ECOM2_MIN_ARC = 72;
 // The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row (sdn-ap 0.6.20, stack #449)
 export const TIDES_SINCE = '0.6.20';
-// The record's zonal degree in the low table (class 0 at or below e 0.05: the rows of ZONAL70_GROUPS): from ZONAL70_SINCE an AP
-// fit there states zonal degree 70 (tesseral 31), the label AP_Z70_TIDES (sdn-ap 0.6.42, the low table's output table to the
-// record's degree, stack #477; the choice of degrees, stack #504). Every other row, and an older build's, keeps degree 20.
+// The record's zonal degree in the low table under the drag (class 0 at or below e 0.05, the rows of ZONAL70_GROUPS: strong drag,
+// Near 700 km, the laser spheres, altimetry): from ZONAL70_SINCE an AP fit there states zonal degree 70 (tesseral 31), the label
+// AP_Z70_TIDES (sdn-ap 0.6.42, the low table's output table to the record's degree, stack #477; the choice of degrees, stack #504).
+// Laser geodetic, above the drag, where the zonal terms of degree 21 to 70 move nothing and the covariance class is calibrated on
+// records at zonal 20, and every other row, and an older build's, keep degree 20.
 export const ZONAL70_SINCE = '0.6.42';
-export const ZONAL70_GROUPS = ['T', 'P', 'S1', 'LS', 'DO', 'GD'];
+export const ZONAL70_GROUPS = ['T', 'P', 'S1', 'LS', 'DO'];
 const numeric = (v) => { const m = /^(\d+)\.(\d+)\.(\d+)/.exec(String(v)); return m ? m.slice(1).map(Number) : null; };
 export const atLeast = (v, w) => {
   const a = numeric(v), b = numeric(w);
