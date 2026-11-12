@@ -129,6 +129,9 @@ export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
 // before the cutoff (the lists' seams) moves the arc as a firing does; elsewhere a join is flagged only. A list is read from the folder of
 // listsGroup(group) (the 72 h TESS row reads TESS's list).
 export const LONG_PERIOD = { groups: ['HE72', 'HE', 'HX'], minHours: 9 };
+/** The perigee scan of the long-period rows' AP records: the span after the cutoff it searches for perigee passages (hours), the grid it
+ *  finds them on (s), and the half-width flown at 1 s around each passage (s). */
+export const PERIGEE_SCAN = { hours: 120, gridS: 60, halfS: 120 };
 export const minHoursOf = (group) => (LONG_PERIOD.groups.includes(group) ? LONG_PERIOD.minHours : MANEUVER72.minHours);
 export const SEAMS_BREAK_ARC = ['HX'];
 /** Of two stored rows for one window and fit arc, whether the later (r) takes the earlier's place: a row that flew over one that recorded an
@@ -305,15 +308,40 @@ export async function openArms({ apWasm = null, ussf = false, sgp4 = false } = {
     if (lines.length !== epochs.length) throw new Error(`propagate returned ${lines.length} of ${epochs.length}`);
     return lines.map((l) => ({ r: l.r, v: l.v }));
   };
+  // the perigee scan (a block of displaced states at a perigee passage, which a 300 s grid sees only by luck): the record flown on
+  // PERIGEE_SCAN.gridS over 0 to PERIGEE_SCAN.hours after the cutoff to find its perigee passages (the minima of its radius), then at 1 s
+  // for PERIGEE_SCAN.halfS either side of each; each state's displacement off the curve of its neighbors (the degree-5 polynomial through
+  // the three states either side of it), m; per passage its lead (h) and largest displacement, and the window's largest. A smooth record
+  // reads a millimeter or less; a block of displaced states shows at its edges, where the measure reads a fraction of the block's
+  // displacement (a reading, not a displacement), so a block longer than the 4 minutes flown around a passage, with no edge inside them,
+  // reads nothing here
+  const lagrange = (xs, ys, x) => xs.reduce((sum, xi, i) => sum + ys[i] * xs.reduce((p, xj, j) => (j === i ? p : (p * (x - xj)) / (xi - xj)), 1), 0);
+  const perigeeScan = async (ocm, D0) => {
+    const P = PERIGEE_SCAN, coarse = Array.from({ length: (P.hours * 3600) / P.gridS + 1 }, (_, k) => D0 + k * P.gridS * 1000), rc = (await flyAp(ocm, coarse.map(iso))).map((x) => Math.hypot(...x.r));
+    const minima = coarse.filter((t, k) => k > 0 && k < coarse.length - 1 && rc[k] < rc[k - 1] && rc[k] <= rc[k + 1]), passages = [];
+    for (const t of minima) {
+      const n = 2 * P.halfS + 1, ts = Array.from({ length: n }, (_, k) => t + (k - P.halfS) * 1000), st = await flyAp(ocm, ts.map(iso));
+      let largest = 0;
+      for (let k = 3; k < n - 3; k += 1) {
+        const near = [k - 3, k - 2, k - 1, k + 1, k + 2, k + 3], xs = near.map((j) => j - k);
+        largest = Math.max(largest, 1000 * Math.hypot(...[0, 1, 2].map((c) => st[k].r[c] - lagrange(xs, near.map((j) => st[j].r[c]), 0))));
+      }
+      passages.push({ leadH: Math.round(((t - D0) / 3600e3) * 100) / 100, largestM: Math.round(largest * 1000) / 1000 });
+    }
+    return { passages, largestM: passages.length ? Math.max(...passages.map((p) => p.largestM)) : null };
+  };
   const fitAp = async (oem, pcf, spw) => {
     const r = await invoke('fit', [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(spw ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: spw }] : [])]);
     return new Uint8Array(r.outputs.find((o) => o.portId === 'elements').payload);
   };
   return {
     axes,
+    /** The perigee scan of a record (PERIGEE_SCAN): { passages: [{ leadH, largestM }], largestM }. */
+    perigeeScan,
     ffmProvenance: F.provenance,
-    /** AP: fitted to the truth arc (GCRF states), the record flown on the scored epochs in GCRF: { ok, rms (km), fit, days, s }. */
-    async ap({ object, thin, D0, pcf, spw, sc, record = false }) {
+    /** AP: fitted to the truth arc (GCRF states), the record flown on the scored epochs in GCRF: { ok, rms (km), fit, days, s }; with scan,
+     *  also the record's perigee scan (perigeeScan). */
+    async ap({ object, thin, D0, pcf, spw, sc, record = false, scan = false }) {
       const t0 = performance.now();
       const ocm = await fitAp(S.oemBytes({ frame: 'GCRF', object, lines: thin, useableStart: thin[0].epoch, useableStop: iso(D0) }), pcf, spw);
       if (record) return { ocm };  // the fitted record alone (a carried fit's source, stack issue 496): not flown
@@ -323,7 +351,8 @@ export async function openArms({ apWasm = null, ussf = false, sgp4 = false } = {
       const odComment = [].concat(info.o.ORBIT_DETERMINATION?.COMMENT ?? []).join(' ');
       const fit = { b: info.bterm, s: info.agom, sigmaLnB: info.sigmaLnB, iterations: info.iterations, converged: info.o.ORBIT_DETERMINATION?.FIT_STATISTICS?.CONVERGED ?? null,
         held: { drag: /BTERM held at its prior/.test(odComment), srp: /AGOM held at its prior/.test(odComment) } };
-      return { ok: true, rms: info.fitRmsKm, fit, days: byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), s: (performance.now() - t0) / 1000 };
+      const days = byDay(await m.rtn(states, sc.truth), sc.entered, sc.sizes), s = (performance.now() - t0) / 1000;
+      return { ok: true, rms: info.fitRmsKm, fit, days, s, ...(scan ? { perigeeScan: await perigeeScan(ocm, D0) } : {}) };
     },
     /** The Space Force's XP: propagator/sgp4-xp's own fit of the truth arc (GCRF states; its fitter searches two-line-element digits, every
      *  evaluation running the library), flown by its propagate in its own GCRF output on the scored epochs: { ok, days, s }. */
