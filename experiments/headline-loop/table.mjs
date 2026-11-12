@@ -17,6 +17,9 @@
 //      a row whose satellites all have lists, each lead's AP, numerical and SGP4-XP figures are also given over the windows with no burn from
 //      the cutoff to that lead (cleanToLead), and the row reads its later burns (laterBurns) and, on the strong-drag rows, its burn-free
 //      windows (burnFreeScatter); nothing is removed]
+//     [--carry-from <wasm sha12 of an earlier build's store folder>: a row and theory (AP, our SGP4-XP) whose windows flown on both builds,
+//      CARRY_SAMPLE at least, have the same figures to the bit takes that build's rows on the windows this build did not fly; every row
+//      counts its carried, flown and compared window-arcs (carried)]
 //   node experiments/headline-loop/table.mjs --check
 //
 // The build is read by git show at the commit (propagator/sdn-ap/dist/isomorphic/module.wasm and its package.json), never from a working tree.
@@ -41,6 +44,10 @@ const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA',
 // the order windows are handed out: the slowest first (long eccentric arcs), so the last ones to finish are short
 const HEAVY = ['HE', 'HE72', 'HX', 'DO', 'S1', 'P', 'T', 'WA', 'LS', 'GN_GAL', 'GN', 'GE', 'IG', 'GD'];
 const LEADS = [[24, 1], [72, 3], [120, 5], [168, 7]];
+// --carry-from (a cut on a build that moves AP on some rows only): the windows of a row flown on both builds before the row carries the
+// other build's rows, the fields compared, and the method line's sentence
+const CARRY_SAMPLE = 4, CARRY_FIELDS = ['pcf', 'fitProcess', 'fitArcHours', 'error', 'apError', 'days', 'fitRmsKm', 'fit'];
+const CARRY_TEXT = (b) => ` Rows carried from sdn-ap ${b.version} (wasm ${b.wasmSha256.slice(0, 12)}, --carry-from): on a row and theory (AP, our SGP4-XP) where at least ${CARRY_SAMPLE} of its windows, every satellite of the row among them, were flown on both builds with figures on both (a row that recorded an error compares nothing), and on every one of them the two have the same figures to the bit (the forces, the fit and each lead's error), and no window has figures on one build and an error on the other, the windows this build did not fly take that build's rows; a row and theory with one that differs, or with fewer compared, is flown on this build in full. carried gives on every row, per theory, the window-arcs carried, the window-arcs flown on this build, and the windows compared where it carries (null where it does not).`;
 // AP and SGP4XP are the released module's; USSFXP (the Space Force's XP, propagator/sgp4-xp) and SGP4 (analysis/gp-error-model's fit,
 // propagator/sgp4's flight) are outside builds, pinned (lib/arms.mjs OUTSIDE). --theories limits the ones flown in a run.
 const THEORIES = ['AP', 'SGP4XP', 'USSFXP', 'SGP4'];
@@ -298,6 +305,33 @@ async function main() {
     ...Object.keys(A.OUTSIDE).flatMap((t) => readRows(fileOf(t)).filter((r) => r.theory === t)),
   ].map((r) => [`${r.theory ?? 'AP'}|${r.key}|${r.arcH}`, r]));
   const rowOf = (theory, w, arc) => flownRows.get(`${theory}|${w.key}|${arc}`);
+  // --carry-from <sha12>: on a row and theory (AP, our SGP4-XP) where at least CARRY_SAMPLE windows, every satellite of the row among them,
+  // were flown on both this build and the build of that store folder with figures on both, and every one of them has the same figures to
+  // the bit (CARRY_FIELDS: the forces, the fit and each lead's error; never the build, the packages or the timings), and no window has
+  // figures on one build and an error on the other, the row's other windows take that build's rows. A row and theory with fewer on
+  // both, or with one that differs, is flown on this build. Each row says what it carried (carried), and the method line names the build
+  let carry = null;
+  if (args['carry-from']) {
+    const from = args['carry-from'], old = readRows(path.join(A.STORE_ROOT, 'table', from, 'rows.jsonl')).filter((r) => r.ap?.sha256?.startsWith(from) && !A.OUTSIDE[r.theory ?? 'AP']);
+    if (!/^[0-9a-f]{12}$/.test(from) || !old.length) throw new Error(`--carry-from ${from}: no rows of that build in the store`);
+    if (wasmSha.startsWith(from)) throw new Error(`--carry-from ${from} is this build`);
+    // a row and theory not carried is flown on this build in full, so every theory flies: a subset (--theories) is refused
+    if (args.theories) throw new Error('--carry-from flies every theory where a row does not carry: refused with --theories');
+    const oldOf = new Map(old.map((r) => [`${r.theory ?? 'AP'}|${r.key}|${r.arcH}`, r])), figures = (r) => JSON.stringify(CARRY_FIELDS.map((k) => r[k] ?? null));
+    carry = { build: { version: old[0].ap.version, wasmSha256: old[0].ap.sha256 }, compared: new Map() };
+    for (const g of groups) {
+      const mine = listed.filter((w) => w.group === g);
+      for (const arc of [...new Set(mine.flatMap((w) => w.arcs))]) for (const t of ['AP', 'SGP4XP']) {
+        const k = (w) => `${t}|${w.key}|${arc}`, ws = mine.filter((w) => w.arcs.includes(arc));
+        // compared: the windows where both builds' rows have figures (an error row compares nothing); every satellite of the row among them
+        const both = ws.filter((w) => flownRows.get(k(w))?.days && oldOf.get(k(w))?.days), seen = new Set(both.map((w) => w.name));
+        const oneSided = ws.some((w) => flownRows.has(k(w)) && oldOf.has(k(w)) && !flownRows.get(k(w)).days !== !oldOf.get(k(w)).days);
+        if (both.length < CARRY_SAMPLE || oneSided || ws.some((w) => !seen.has(w.name)) || both.some((w) => figures(flownRows.get(k(w))) !== figures(oldOf.get(k(w))))) continue;
+        for (const w of ws.filter((x) => !flownRows.has(k(x)) && oldOf.has(k(x)))) flownRows.set(k(w), oldOf.get(k(w)));
+        carry.compared.set(`${g}|${arc}|${t}`, both.length);
+      }
+    }
+  }
   // --retry-errors: a window whose row recorded an error (no truth, coverage, a failed fit or flight) is flown again; the later row is read in
   // its place
   const flying = args.theories ? args.theories.split(',') : THEORIES, retry = !!args['retry-errors'];
@@ -478,11 +512,12 @@ async function main() {
         const byJoin = seamRow && !A.knownBurns(args.burns, w.group, w.name, w.cutoffMs).some((b) => A.burnEndMs(b) === m.lastBurnMs);
         return { join: m.maneuvering && byJoin, inside: m.maneuvering && m.burnInArc };
       };
-      const afterArcs = args.burns ? scored.filter((w) => rowOf('AP', w, arc)?.fitProcess === 'maneuvering: the arc after its last burn').map(afterOf) : [];
+      // (without the lists, what the rows state: the windows on the arc after a burn and their burnInArc, burns and joins not told apart)
+      const afterArcs = scored.filter((w) => rowOf('AP', w, arc)?.fitProcess === 'maneuvering: the arc after its last burn').map((w) => (args.burns ? afterOf(w) : { join: false, inside: !!rowOf('AP', w, arc)?.burnInArc }));
       const fitProcess = arc === 24 && A.carry24(version)
         ? `Each 24 h fit first fits the same window's 72 h arc, which ends at the same cutoff, and carries its terms: above the drag the radiation terms (AGOM with its uncertainty, and ECOM2's Y0 where that fit solved it); under the drag the drag term with its uncertainty, only where the 24 h arc alone leaves it undetermined (a stated sigma of ln BTERM of ${A.CARRY24_DRAG_SIGMA} or more). That 72 h fit is of the full arc, for an object that maneuvers (the 72 h rule below) too, not its 72 h record. Windows: ${carryCount('radiation carried from 72 h')} radiation carried, ${carryCount('drag carried from 72 h')} drag carried, ${carryCount('plain')} fitted as before, ${processCount('plain, no 72 h arc')} without a 72 h arc in the truth (fitted as before); ${carryManeuvering} of the first three are of a maneuvering object.`
         : arc === 72 && A.maneuver72(version) && scored.some((w) => rowOf('AP', w, arc)?.fitProcess)
-          ? `An object${A.perigeeClause(A.MANEUVER72.perigeeMinKm)} whose ${refWord} holds a burn known at the cutoff, ending within ${A.MANEUVER72.historyDays} days before it, is fitted on the arc after its last such burn${A.SEAMS_BREAK_ARC.includes(g) ? " or join of the truth's solutions" : ""} (${A.minHoursOf(g)} to ${A.MANEUVER72.capHours} h; the module fits it under its short-arc rule; a burn ending less than ${A.minHoursOf(g)} h before the cutoff stays inside the arc, never dropped); every other window on the full 72 h. Windows: ${afterArcs.filter((x) => !x.join).length} on the arc after a burn${seamRow ? `, ${afterArcs.filter((x) => x.join).length} on the arc after a join` : ''} (${afterArcs.filter((x) => x.inside).length} of them with the ${seamRow ? 'burn or join' : 'burn'} inside the arc), ${scored.length - maneuvering} on the full arc. SGP4-XP, the Space Force XP and SGP4 are fitted on the full 72 h on every window, through the burn where AP's arc starts after it.`
+          ? `An object${A.perigeeClause(A.MANEUVER72.perigeeMinKm)} whose ${refWord} holds a burn known at the cutoff, ending within ${A.MANEUVER72.historyDays} days before it, is fitted on the arc after its last such burn${A.SEAMS_BREAK_ARC.includes(g) ? " or join of the truth's solutions" : ""} (${A.minHoursOf(g)} to ${A.MANEUVER72.capHours} h; the module fits it under its short-arc rule; a burn ending less than ${A.minHoursOf(g)} h before the cutoff stays inside the arc, never dropped); every other window on the full 72 h. Windows: ${!args.burns && seamRow ? `${afterArcs.length} on the arc after a burn or join` : `${afterArcs.filter((x) => !x.join).length} on the arc after a burn${seamRow ? `, ${afterArcs.filter((x) => x.join).length} on the arc after a join` : ''}`} (${afterArcs.filter((x) => x.inside).length} of them with the ${seamRow ? 'burn or join' : 'burn'} inside the arc), ${scored.length - maneuvering} on the full arc. SGP4-XP, the Space Force XP and SGP4 are fitted on the full 72 h on every window, through the burn where AP's arc starts after it.`
           : null;
       // --burns with after-burn rows: the numerical arm's fit process in one sentence, with the windows each way (stack issues 462 and 489)
       const ffmRefit = bs.filter((b) => b?.fitProcess === REFIT && !b.burnInArc).length, ffmNone = bs.filter((b) => b?.burnInArc).length;
@@ -494,11 +529,15 @@ async function main() {
         burnLeft ? `${burnLeft} where a burn known at the cutoff remains in every arc the rule allows` : null].filter(Boolean).join(', and ') + (ffmNone ? ' (those AP scored stay in AP\'s and the other theories\' columns, counted in withoutNumericalFigure)' : '');
       // on the Chandra row, the refits after a join apart from those after a burn (from the lists and the rule, as AP's sentence counts them)
       const ffmJoin = seamRow && args.burns ? ws.filter((w, i) => bs[i]?.fitProcess === REFIT && !bs[i].burnInArc && afterOf(w).join).length : 0;
-      const ffmFitProcess = label && afterBurnGroups.has(g) && arc !== 24 && arc !== 72 ? `The numerical arm's ${arc} h fit is the stored full-arc fit on every window: the rule moves the 24 h and 72 h fits only.`
+      const ffmFitProcess = label && afterBurnGroups.has(g) && arc !== 24 && arc !== 72 ? `The numerical arm's ${arc} h fit is the stored full-arc fit on every window that has one: the rule moves the 24 h and 72 h fits only. Windows: ${ffmFull} on the full arc${ws.length - ffmRefit - ffmFull - ffmNone ? `, ${ws.length - ffmRefit - ffmFull - ffmNone} without a numerical fit (no truth or coverage)` : ''}.`
         : label && afterBurnGroups.has(g)
         ? `The numerical arm's fit of an object${A.perigeeClause(A.NUMERICAL_AFTER_BURN.perigeeMinKm)} whose ${refWord} holds a burn${seamRow ? ' or join of the truth\'s solutions' : ''} known at the cutoff is on the arc after its last such burn${seamRow ? ' or join' : ''}, by AP's rule${arc === 72 ? '' : ` (here: where that burn ends inside the 24 h arc and the arc after it is at least ${A.NUMERICAL_AFTER_BURN.minHours24} h)`}; every other window keeps its full-arc fit. Windows: ${ffmRefit - ffmJoin} refitted on the arc after a burn${seamRow ? `, ${ffmJoin} on the arc after a join` : ''}, ${ffmFull} on the full arc${ffmNone ? `, ${ffmNone} without a numerical arm: ${noneText}` : ''}${ws.length - ffmRefit - ffmFull - ffmNone ? `, ${ws.length - ffmRefit - ffmFull - ffmNone} without a numerical fit (no truth or coverage)` : ''}.`
         : null;
-      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), ...(TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] ? { truthNote: TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] } : {}), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ...(withoutNumericalFigure ? { withoutNumericalFigure } : {}), apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), ...(placed.has(g) && ws.some((w) => w.placedAfterFiring) ? { placedAfterFiring: `${ws.filter((w) => w.placedAfterFiring).length} of the row's ${ws.length} windows are placed after a firing by the rule (lib/arms.mjs firingCutoffs): each cutoff at the first midnight at least ${A.LONG_PERIOD.minHours} h after the firing's report time. The rule gives ${placed.get(g).cutoffs} cutoffs for the list's ${placed.get(g).firings} firings; ${placed.get(g).already} of them are cutoffs the row already has, not added again.` } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}) });
+      // --carry-from: on every row, per theory, the window-arcs whose row is the other build's (carried), those flown on this build (flown),
+      // and the windows the two builds were compared on where the row carries (compared; null where it does not)
+      const countOf = (t, sha) => ws.filter((w) => rowOf(t, w, arc)?.ap?.sha256 === sha).length;
+      const carried = carry ? { from: carry.build.version, ...Object.fromEntries([['AP', 'ap'], ['SGP4XP', 'xp']].map(([t, name]) => [name, { carried: countOf(t, carry.build.wasmSha256), flown: countOf(t, wasmSha), compared: carry.compared.get(`${g}|${arc}|${t}`) ?? null }])) } : null;
+      rows.push({ regime: W.GROUPS[g].label, truth: truthName(g, ws), ...(TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] ? { truthNote: TRUTH_NOTE[`${g}:${arc}`] ?? TRUTH_NOTE[g] } : {}), fitData: `the truth's states over the ${arc} h before the cutoff, one every 300 s (GCRF)`, fitHours: arc, satellites: new Set(scored.map((w) => w.name)).size, windows: scored.length, ...(withoutNumericalFigure ? { withoutNumericalFigure } : {}), apForces: A.AP_FORCES_TEXT[pcfLabel], ...(fitProcess ? { fitProcess } : {}), ffm, ...(ffmFitProcess ? { ffmFitProcess } : {}), ...(placed.has(g) && ws.some((w) => w.placedAfterFiring) ? { placedAfterFiring: `${ws.filter((w) => w.placedAfterFiring).length} of the row's ${ws.length} windows are placed after a firing by the rule (lib/arms.mjs firingCutoffs): each cutoff at the first midnight at least ${A.LONG_PERIOD.minHours} h after the firing's report time. The rule gives ${placed.get(g).cutoffs} cutoffs for the list's ${placed.get(g).firings} firings; ${placed.get(g).already} of them are cutoffs the row already has, not added again.` } : {}), within100mOfFfm, leads, ...(burnSplit ? { burnSplit } : {}), ...(carried ? { carried } : {}) });
       passOf.push({ g, arc, row: rows.at(-1), pass: within100mOfFfm ? pass : [], laterBurns, burnFreeScatter });
       if (/^AP_ECOM2/.test(pcfLabel)) ecom2Rows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
       if (/_TIDES$/.test(pcfLabel)) tideRows.push(`${W.GROUPS[g].label} (${arc} h fit)`);
@@ -541,6 +580,19 @@ async function main() {
   const burnText = !flags ? '' : ` burnSplit, on the rows with burn flags (stack issue 462), splits the windows of the pass line (within100mOfFfm) by the burns that a detector reading the truth alone finds: velocity steps that the full numerical setting, flown from the truth's own states, does not explain, localized by halving (planted steps found down to 0.5 mm/s at 700 km; on the altimetry satellites, every burn of the IDS maneuver lists that falls where the truth covers it, and none that is not listed). burnInFitArc holds the windows with a burn in the fit arc; burnCutoffToDay5Only those with none there and one between the cutoff and day 5; noBurn those with neither; unflagged those the detector did not run on. The four are a partition: their windows and met add up to the pass line's. partlyCovered counts the windows where a span counted without a burn has hours without truth, which the detector cannot see; label states the counts in words. Neither fit solves a delta-v (the numerical fit has no such term), so a burn after the cutoff is missed by both and one in the fit arc is taken up by each fit's other terms.${rows.some((r) => r.sameAltitudes) ? ` sameAltitudes, under the ${W.GROUPS[SAME_ALTITUDES.row].label} rows, is the ${W.GROUPS[SAME_ALTITUDES.from].label} row's pass line at the same fit length on its satellites at ${SAME_ALTITUDES.fromKm} to ${SAME_ALTITUDES.toKm} km (mean geocentric distance less the equatorial radius over the truth's 3 h before each satellite's first scored cutoff), with its own burnSplit.` : ''} The flags cover ${count(flags.size)} window-arcs and are kept outside this repository (the first 12 hex digits of the sha256 of their files in name order, as for the builds: ${flags.sha256.slice(0, 12)}).`;
   // --burns: which lists and which store of refits after a burn the table read (one store per set of lists)
   const listsText = !args.burns ? '' : ` The burn lists read (--burns) are kept outside this repository (the first 12 hex digits of the sha256 of their relative paths and contents in path order, as for the builds: ${A.listsDigest(args.burns).slice(0, 12)})${afterBurnGroups.size ? `; the numerical arm's refits on the arc after a burn are read from the store folder ${afterBurnStore}, every one of them made on these lists` : ''}.`;
+  // the lists' time of becoming known (lib/arms.mjs knownBurns): per row, whether its satellites' lists are made as of each burn's report
+  // time (asOf) or over the whole data, where a burn counts as known by the list's own time for it
+  const listKinds = !args.burns ? null : (() => {
+    const kind = (g) => {
+      const d = path.join(args.burns, A.listsGroup(g)), fl = fs.existsSync(d) ? fs.readdirSync(d).filter((f) => f.endsWith('.burns.json')) : [];
+      const asOf = fl.filter((f) => JSON.parse(fs.readFileSync(path.join(d, f), 'utf8')).asOf).length;
+      return !fl.length ? null : asOf === fl.length ? 'asOf' : asOf ? 'mixed' : 'whole';
+    };
+    const of = (k) => [...new Set(groups.filter((g) => kind(g) === k).map((g) => W.GROUPS[g].label))];
+    return { whole: of('whole'), asOf: of('asOf'), mixed: of('mixed') };
+  })();
+  const known = '(for an entry with the detector\'s pieces, the end of the last piece that found it; for one without, the end of the entry itself)';
+  const knownText = !listKinds || !(listKinds.whole.length + listKinds.mixed.length) ? '' : ` ${listKinds.whole.length ? `On ${listKinds.whole.join('; ')} the burn lists are made over the whole data, not as of each cutoff: where a list decides a fit arc, a burn counts as known at a cutoff by the list's own time for it ${known}, not by a list made at that cutoff` : ''}${listKinds.mixed.length ? `${listKinds.whole.length ? '. ' : ''}On ${listKinds.mixed.join('; ')} some lists are made over the whole data (a burn known by the list's own time for it ${known}) and some as of each burn's report time (asOf)` : ''}${listKinds.asOf.length ? `; on ${listKinds.asOf.join('; ')} the lists are made as of each burn's report time (asOf)` : ''}. The later-burn flags (laterBurns, cleanToLead) read every burn of a list, known at the cutoff or not.`;
   // the method line's last sentences: each column's build, and what each scored over the table's window-arcs (a failure or a window
   // without truth is counted, never dropped); the rows whose AP fits state FORCES.ECOM2
   const short = (s) => String(s).slice(0, 12);
@@ -548,7 +600,8 @@ async function main() {
     USSFXP: A.OUTSIDE.USSFXP.builds.map((b) => `${b.module} ${b.version} (modules ${short(b.modulesCommit)}, wasm ${short(b.wasmSha256)})`).join(', '),
     SGP4: A.OUTSIDE.SGP4.builds.map((b) => `${b.module} (modules ${short(b.modulesCommit)}, wasm ${short(b.wasmSha256)})`).join(', ') };
   const tallyOf = (t) => { const c = tally[t] ?? { scored: 0, failed: 0, windowError: 0, none: 0 }; return `scored ${c.scored.toLocaleString('en-US')} of ${windowArcs.toLocaleString('en-US')}, its fit or flight failed on ${c.failed}, no truth or coverage on ${c.windowError}${c.none ? `, not flown on ${c.none}` : ''}`; };
-  const columns = `Columns by build: ap and xp come from ${builds.AP}, xpUssf from ${builds.USSFXP}, sgp4 from ${builds.SGP4}. Over the table's ${windowArcs.toLocaleString('en-US')} window-arcs (one window and one fit arc each), ap ${tallyOf('AP')}; xp ${tallyOf('SGP4XP')}; xpUssf ${tallyOf('USSFXP')}; sgp4 ${tallyOf('SGP4')}; each is counted in its column, none dropped. `
+  const carriedAny = carry && rows.some((r) => r.carried.ap.carried || r.carried.xp.carried);
+  const columns = `Columns by build: ap and xp come from ${builds.AP}${carriedAny ? `, except on the window-arcs each row's carried counts, which are of sdn-ap ${carry.build.version} (wasm ${short(carry.build.wasmSha256)})` : ''}, xpUssf from ${builds.USSFXP}, sgp4 from ${builds.SGP4}. Over the table's ${windowArcs.toLocaleString('en-US')} window-arcs (one window and one fit arc each), ap ${tallyOf('AP')}; xp ${tallyOf('SGP4XP')}; xpUssf ${tallyOf('USSFXP')}; sgp4 ${tallyOf('SGP4')}; each is counted in its column, none dropped. `
     + (ecom2Rows.length ? `The rows whose AP fits state $PCF FORCES.ECOM2 in this table: ${ecom2Rows.join(', ')}.` : 'No row\'s AP fits state $PCF FORCES.ECOM2 in this table.')
     + (tideRows.length === rows.length && rows.length ? ' Every row\'s AP fits state $PCF FORCES.SOLID_TIDES IERS 2010 in this table.' : tideRows.length ? ` The rows whose AP fits state $PCF FORCES.SOLID_TIDES IERS 2010 in this table: ${tideRows.join(', ')}.` : '');
   // --previous <the previous release table>: the rows that gained windows since it (a second pass coming in), so a moved row is not read
@@ -569,7 +622,7 @@ async function main() {
   const doc = {
     schema: 'sdn-ap-scoreboard/2',
     measured: new Date().toISOString().slice(0, 10),
-    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${tightRows.length ? TIGHT_TEXT(tightRows) : ''}${tightHeld.length ? TIGHT_HELD_TEXT(tightHeld) : ''}${rows.some((r) => r.withoutNumericalFigure) ? NO_FIGURE_TEXT : ''}${listsText}${args.burns && A.maneuver72(version) ? LONG_PERIOD_TEXT : ""}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}${rows.some((r) => r.leads.some((l) => l.ap?.cleanToLead)) ? CLEAN_TEXT : ''}`,
+    statistic: `${STATISTIC} ${columns}${gainedText}${armText}${tightRows.length ? TIGHT_TEXT(tightRows) : ''}${tightHeld.length ? TIGHT_HELD_TEXT(tightHeld) : ''}${rows.some((r) => r.withoutNumericalFigure) ? NO_FIGURE_TEXT : ''}${carry ? CARRY_TEXT(carry.build) : ''}${listsText}${knownText}${args.burns && A.maneuver72(version) ? LONG_PERIOD_TEXT : ""}${burnText}${rows.some((r) => r.within100mEitherWay) ? EITHER_WAY_TEXT : ''}${rows.some((r) => r.leads.some((l) => l.ap?.cleanToLead)) ? CLEAN_TEXT : ''}`,
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
@@ -596,8 +649,10 @@ async function check() {
   const commit = git(modulesRoot, 'rev-parse', '--verify', `${process.env.HEADLINE_LOOP_CHECK_MODULES_COMMIT ?? 'HEAD'}^{commit}`).toString().trim();
   const wasmSha = sha256(git(modulesRoot, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`));
   const version = JSON.parse(git(modulesRoot, 'show', `${commit}:propagator/sdn-ap/package.json`).toString()).version;
-  // the check's jobs (HEADLINE_LOOP_CHECK_JOBS, a whole number; 8 unless set: a shared machine runs it on fewer)
-  const jobsSet = Number(process.env.HEADLINE_LOOP_CHECK_JOBS), CHECK_JOBS = String(Number.isInteger(jobsSet) && jobsSet > 0 ? jobsSet : 8);
+  // the check's jobs (HEADLINE_LOOP_CHECK_JOBS, a positive whole number; 8 unless set: a shared machine runs it on fewer)
+  const jobsEnv = process.env.HEADLINE_LOOP_CHECK_JOBS;
+  if (jobsEnv !== undefined && !/^[1-9]\d*$/.test(jobsEnv)) throw new Error(`HEADLINE_LOOP_CHECK_JOBS=${jobsEnv}: refused, it is not a positive whole number`);
+  const CHECK_JOBS = jobsEnv ?? '8';
   const runIn = (store, out, more = [], groups = 'GD') => E.run('table.mjs', ['--modules-commit', commit, '--modules-root', modulesRoot, '--out', out, '--groups', groups, '--jobs', CHECK_JOBS, ...more], { HEADLINE_LOOP_STORE: store });
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
   const lines = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(parse).filter(Boolean);
@@ -874,16 +929,71 @@ async function check() {
     `the Chandra joins: AP ${JSON.stringify(apX && { fitArcHours: apX.fitArcHours, burnInArc: apX.burnInArc })}; ${chandra?.fitProcess?.slice(-160)}; ${chandra?.laterBurns}; cleanToLead ${clean(chandra, 72)} of ${all(chandra, 72)}`);
     const before11 = rowsNow().filter((r) => r.key === he[1].key).length;
     fs.writeFileSync(tessList, JSON.stringify({ asOf: '2026-11-11', lengthH: 6, burns: [ev(D11 + 13 * HR11, 1)], seams: [ev(D11 + 20 * HR11, 2)] }));
+    // and the Chandra list made over the whole data (no asOf): its joins are known at their own time, so no arc moves, and the method line says so
+    fs.writeFileSync(path.join(b11, 'HX', 'CHANDRA.burns.json'), JSON.stringify({ lengthH: 6, burns: [], seams: [ev(DX - 20 * HR11, 1), ev(DX + 30 * HR11, 1)] }));
     const r11b = runIn(s11, out11, ['--keys-file', keys11, '--theories', 'AP', '--burns', b11], 'HE72,HX'), last11 = apOf(he[0]);
-    ok(r11b.code === 0 && /, 1 to fly/.test(r11b.err) && rowsNow().filter((r) => r.key === he[1].key).length === before11 && last11?.fitArcHours === undefined && last11.burnList === shaOf(tessList) && apOf(cx[0])?.fitArcHours === 19.8,
+    ok(r11b.code === 0 && /, 1 to fly/.test(r11b.err) && rowsNow().filter((r) => r.key === he[1].key).length === before11 && last11?.fitArcHours === undefined && last11.burnList === shaOf(tessList) && apOf(cx[0])?.fitArcHours === 19.8
+      && /On Highly elliptical, THEMIS and Chandra the burn lists are made over the whole data, not as of each cutoff.*; on Highly elliptical the lists are made as of each burn's report time/.test((fs.existsSync(out11) ? E.readJson(out11) : {}).statistic ?? ''),
       `another list flies again the row whose arc it moves, no other: ${r11b.err.slice(-200)} ${JSON.stringify(last11 && { fitArcHours: last11.fitArcHours, burnList: last11.burnList })}`);
     // a store whose windows placed after a firing are not the rule's: refused, naming both
     added11([]);
     const r11c = runIn(s11, out11, ['--keys-file', keys11, '--theories', 'AP', '--burns', b11], 'HE72,HX');
     ok(r11c.code !== 0 && /refused: the windows placed after a firing on Highly elliptical \(HE72\) are at no cutoff, the rule gives \d{4}-\d\d-\d\d/.test(r11c.err), `placed windows not the rule's: ${r11c.code} ${r11c.err.slice(-300)}`);
   } else console.log(`TABLE CHECK: the long-period case did not run: sdn-ap ${version} is before ${A.MANEUVER72_SINCE}, which fits a 72 h arc after a burn`);
+  // 12. --carry-from on the laser geodetic windows of two satellites (--keys-file): the first run's AP and SGP4-XP rows stored again as
+  // another build's (its own wasm sha256 and version, other timings), and this build's rows on two windows of each satellite. The row
+  // carries the other windows of both theories, flies nothing, has the figures of the same keys read from the first run's store, and
+  // counts carried, flown and compared per theory. Then, each flying one window and carrying nothing: this build's rows on four windows
+  // of one satellite of the two; and on one satellite, four windows whose rows recorded an error on both builds. Last, one compared
+  // SGP4-XP row of the other build 1e-9 km off at day 5: SGP4-XP is flown on the row's windows in full (to the same figures), AP carried
+  {
+    const s12 = path.join(dir, 's12'), out12 = path.join(dir, 'l.json'), other = `0123456789ab${'0'.repeat(52)}`, oldDir = path.join(s12, 'table', other.slice(0, 12)), newDir = path.join(s12, 'table', sha12);
+    fs.mkdirSync(oldDir, { recursive: true }); fs.mkdirSync(newDir, { recursive: true });
+    fs.symlinkSync(real, path.join(s12, A.NUMERICAL_STORE)); fs.cpSync(path.join(s1, 'outside'), path.join(s12, 'outside'), { recursive: true });
+    const flownKeys = [...new Set(moduleRows.filter((r) => r.days).map((r) => r.key))].sort(), countOf12 = (n) => flownKeys.filter((k) => k.split('|')[1] === n).length;
+    // the two satellites with the most windows (the error case takes nine windows of the first)
+    const satsOf12 = [...new Set(flownKeys.map((k) => k.split('|')[1]))].sort((p, q) => countOf12(q) - countOf12(p) || (p < q ? -1 : 1));
+    const of12 = (n) => flownKeys.filter((k) => k.split('|')[1] === n), [satA, satB] = [satsOf12[0], satsOf12[1]], two = [...of12(satA), ...of12(satB)];
+    const asOther = (r) => ({ ...r, ap: { version: '0.0.1', sha256: other }, s: (r.s ?? 0) + 1, truthS: (r.truthS ?? 0) + 1 });
+    const put = (dirOf, rows) => fs.writeFileSync(path.join(dirOf, 'rows.jsonl'), rows.map((r) => JSON.stringify(r)).join('\n') + '\n');
+    const keysOf = (ks) => { const f = path.join(dir, `keys-12-${ks.length}-${ks[0].replace(/[^A-Za-z0-9]+/g, '_')}.txt`); fs.writeFileSync(f, `${ks.join('\n')}\n`); return f; };
+    const run12 = (ks) => { const r = runIn(s12, out12, ['--keys-file', keysOf(ks), '--carry-from', other.slice(0, 12)]); return { r, row: (fs.existsSync(out12) ? E.readJson(out12) : { rows: [] }).rows[0], doc: fs.existsSync(out12) ? E.readJson(out12) : {} }; };
+    // the expected row: the same keys read from the first run's store, nothing carried
+    const want12 = (ks) => { const o = path.join(dir, 'l0.json'); runIn(s1, o, ['--keys-file', keysOf(ks)]); return fs.existsSync(o) ? E.readJson(o).rows[0] : null; };
+    const strip12 = (x) => JSON.parse(JSON.stringify(x ?? {}, (k, v) => (k === 'carried' ? undefined : v)));
+    const sample = [of12(satA)[0], of12(satA).at(-1), of12(satB)[0], of12(satB).at(-1)], rest = two.length - 4;
+    put(oldDir, moduleRows.filter((r) => two.includes(r.key)).map(asOther));
+    put(newDir, moduleRows.filter((r) => sample.includes(r.key)));
+    const a12 = run12(two), w12 = want12(two);
+    ok(a12.r.code === 0 && /, 0 to fly/.test(a12.r.err) && JSON.stringify(strip12(a12.row)) === JSON.stringify(w12) && JSON.stringify(a12.row?.carried) === JSON.stringify({ from: '0.0.1', ap: { carried: rest, flown: 4, compared: 4 }, xp: { carried: rest, flown: 4, compared: 4 } })
+      && /Rows carried from sdn-ap 0\.0\.1 \(wasm 0123456789ab, --carry-from\)/.test(a12.doc.statistic ?? '') && /except on the window-arcs each row's carried counts/.test(a12.doc.statistic ?? ''),
+    `carried from another build: ${a12.r.err.slice(-200)} ${JSON.stringify(a12.row?.carried)}`);
+    // four compared windows on one satellite of the two: nothing carried, the other satellite's window flown
+    const oneSat = [...of12(satA).slice(0, 4), of12(satB)[0]];
+    put(newDir, moduleRows.filter((r) => of12(satA).slice(0, 4).includes(r.key)));
+    const b12 = run12(oneSat);
+    ok(b12.r.code === 0 && /, 1 to fly/.test(b12.r.err) && b12.row?.carried?.ap?.carried === 0 && b12.row.carried.ap.compared === null && b12.row.carried.xp.carried === 0,
+      `a sample on one satellite of two carried: ${b12.r.err.slice(-200)} ${JSON.stringify(b12.row?.carried)}`);
+    // four windows whose rows recorded an error on both builds: nothing compared, nothing carried, the fifth window flown
+    const errs = of12(satA).slice(4, 8), fifth = of12(satA)[8], asError = (r) => { const { days, fitRmsKm, fit, s, ...rest12 } = r; return { ...rest12, error: 'coverage' }; };
+    put(oldDir, [...moduleRows.filter((r) => two.includes(r.key) && !errs.includes(r.key)).map(asOther), ...moduleRows.filter((r) => errs.includes(r.key)).map((r) => asOther(asError(r)))]);
+    put(newDir, moduleRows.filter((r) => errs.includes(r.key)).map(asError));
+    const c12 = run12([...errs, fifth]);
+    ok(c12.r.code === 0 && /, 1 to fly/.test(c12.r.err) && c12.row?.carried?.ap?.carried === 0 && c12.row.carried.ap.compared === null,
+      `four error rows carried: ${c12.r.err.slice(-200)} ${JSON.stringify(c12.row?.carried)}`);
+    // one compared SGP4-XP row of the other build 1e-9 km off: SGP4-XP flown on the row in full, AP carried
+    const off = moduleRows.find((r) => r.theory === 'SGP4XP' && r.key === sample[0] && r.days?.['5']);
+    put(oldDir, moduleRows.filter((r) => two.includes(r.key)).map((r) => asOther(r === off ? { ...r, days: { ...r.days, 5: { ...r.days['5'], e: r.days['5'].e + 1e-9 } } } : r)));
+    put(newDir, moduleRows.filter((r) => sample.includes(r.key)));
+    const d12 = run12(two);
+    ok(d12.r.code === 0 && new RegExp(`, ${rest} to fly`).test(d12.r.err) && JSON.stringify(strip12(d12.row)) === JSON.stringify(w12) && JSON.stringify(d12.row?.carried) === JSON.stringify({ from: '0.0.1', ap: { carried: rest, flown: 4, compared: 4 }, xp: { carried: 0, flown: two.length, compared: null } }),
+      `one compared row differs: ${d12.r.err.slice(-200)} ${JSON.stringify(d12.row?.carried)}`);
+    // --carry-from flies every theory: a subset is refused
+    const e12 = runIn(s12, out12, ['--keys-file', keysOf(two), '--carry-from', other.slice(0, 12), '--theories', 'AP']);
+    ok(e12.code !== 0 && /refused with --theories/.test(e12.err), `--carry-from with --theories: ${e12.code} ${e12.err.slice(-200)}`);
+  }
   fs.rmSync(dir, { recursive: true, force: true });
-  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, one-sided and either way, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count; with made-up burn flags the row is the same row with burnSplit and the two-sided split, whose four parts each add up to their pass line and equal the ones recomputed, the flags not named in the file; under each Near 700 km row the altimetry row\'s pass line on its satellite at 600 to 850 km alone, recomputed, with its own split; with made-up burn lists every lead keeps its figures over all windows and gains cleanToLead for AP, the numerical propagator and SGP4-XP, recomputed over the windows with no burn from the cutoff to the lead (a rejected candidate not a burn), and laterBurns counts each kind of later burn; with made-up 1e-13 rows a row whose every window has one is scored on them, its configuration at 1e-13 and named in the method line, and a row with one window of two stays at 1e-10 with its figures; a window whose numerical fit failed stays in AP\'s columns and the row\'s windows, the numerical column and the pass line are over the others with their own counts, and withoutNumericalFigure counts it as fitFailed; on a row at 1e-13 a window whose 1e-10 fit failed takes its 1e-13 figure, a 1e-13 failed fit is counted as fitFailed and a 1e-13 record of no coverage as noTruthOrCoverage; on the 72 h TESS row a firing 6 h before a cutoff leaves AP\'s fit on the 9 h arc with the firing inside, a later firing is flagged and a join is not (one file per window), and the row names its reference; on Chandra a join before the cutoff moves the arc (a join the delta-v test rejects too) and a later one is flagged; a store whose windows placed after a firing are not the rule\'s is refused; with another list a row is flown again where the arc moves and only there');
+  done('table.mjs writes exactly the agreed fields (version 2) for the laser geodetic regime at 24, 72, 120 and 168 h: AP, FFM, our SGP4-XP, the Space Force XP and SGP4 medians and 95th percentiles, AP against both XPs as counts, the rank correlation of AP\'s and FFM\'s errors, and the 100 m pass line at 120 h, one-sided and either way, each equal to the one recomputed from the rows it read; the fitters named; the command line repository-relative; the numerical arm named in plain words on FFM 2.2.0; AP\'s forces per row ($PCF AP on the laser geodetic row; from 0.6.15, AP_ECOM2 on a medium Earth orbit 72 h fit and AP on its 24 h fit; from 0.6.19, AP_ECOM2 on a geostationary 72 h fit); with one numerical row and one Space Force XP row missing those columns are being measured (null) and nothing is flown again; a window where our XP and SGP4 failed is counted as flown, in failed, out of their figures and out of AP\'s pair count; with made-up burn flags the row is the same row with burnSplit and the two-sided split, whose four parts each add up to their pass line and equal the ones recomputed, the flags not named in the file; under each Near 700 km row the altimetry row\'s pass line on its satellite at 600 to 850 km alone, recomputed, with its own split; with made-up burn lists every lead keeps its figures over all windows and gains cleanToLead for AP, the numerical propagator and SGP4-XP, recomputed over the windows with no burn from the cutoff to the lead (a rejected candidate not a burn), and laterBurns counts each kind of later burn; with made-up 1e-13 rows a row whose every window has one is scored on them, its configuration at 1e-13 and named in the method line, and a row with one window of two stays at 1e-10 with its figures; a window whose numerical fit failed stays in AP\'s columns and the row\'s windows, the numerical column and the pass line are over the others with their own counts, and withoutNumericalFigure counts it as fitFailed; on a row at 1e-13 a window whose 1e-10 fit failed takes its 1e-13 figure, a 1e-13 failed fit is counted as fitFailed and a 1e-13 record of no coverage as noTruthOrCoverage; on the 72 h TESS row a firing 6 h before a cutoff leaves AP\'s fit on the 9 h arc with the firing inside, a later firing is flagged and a join is not (one file per window), and the row names its reference; on Chandra a join before the cutoff moves the arc (a join the delta-v test rejects too) and a later one is flagged; a store whose windows placed after a firing are not the rule\'s is refused; with another list a row is flown again where the arc moves and only there; with --carry-from a row takes another build\'s rows where 4 windows with figures on both, every satellite of the row among them, have the same figures to the bit, flies nothing and counts carried, flown and compared per theory; it carries nothing on a sample of one satellite of two, or on four windows whose rows recorded an error on both builds; with one compared row 1e-9 km off it flies that theory in full; and it refuses --theories');
 }
 
 function round(x) { return x == null ? null : Math.round(x * 100) / 100; }

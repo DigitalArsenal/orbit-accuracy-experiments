@@ -71,7 +71,7 @@ export function windowsOf(groups) {
     if (!G) throw new Error(`group ${g}`);
     const stored = rowsIn(path.join(ARCHIVE, G.store)).filter((r) => !r.error);
     // a row of its own over another group's windows (G.from) takes their cutoffs under its own key, and the windows added to it
-    // (<store>/added-windows.json, by the rule written there)
+    // (<store>/added-windows.json: the cutoffs of lib/arms.mjs firingCutoffs, the rule, checked against it by table.mjs with the lists)
     const src = G.from ?? g, mine = G.store === 'b0411/truth' ? stored : stored.filter((r) => r.group === src);
     const added = G.from ? (JSON.parse(fs.existsSync(ADDED_WINDOWS) ? fs.readFileSync(ADDED_WINDOWS, 'utf8') : '{}')[g] ?? []).map((x) => ({ ...mine[0], key: `${src}|${mine[0].name}|${x.cutoff}`, cutoff: `${x.cutoff}T00:00:00Z`, placedAfterFiring: true })) : [];
     for (const r of [...mine, ...added]) {
