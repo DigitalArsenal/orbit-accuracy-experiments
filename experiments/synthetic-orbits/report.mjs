@@ -23,8 +23,8 @@ const modeTextOf = (mode, rung) => {
   if (mode === 'no-drag') return `Without drag in the truth: the truth is the full setting without drag on every orbit; ${noDrag}.`;
   return `Gravity, the solid tide, relativity and the Sun and Moon only: the truth without drag or radiation pressure; ${noDrag}${rung === 'xp' ? '' : ', and the radiation term is held at 0'}.`;
 };
-const DEGREES_TEXT = 'AP\'s record states tesseral degree 31 and, from sdn-ap 0.6.42, zonal degree 70 on a case in the class of the low table (e at or below 0.05 and the perigee under 2,500 km: sdn-ap SPEC 16.11 and 12.5), the degrees of AP_Z70_TIDES, and zonal degree 20 on every other case; each row\'s pcf label names the degrees it used, and a row flown before this rule keeps the degrees it was flown at.';
-const DRAG_TERM_TEXT ='Each row records AP\'s fitted drag term (bterm), so a fit where the truth has no drag can be read with the term it solved.';
+const DEGREES_TEXT = 'AP\'s record states tesseral degree 31 and, from sdn-ap 0.6.42, zonal degree 70 on a case in the class of the low table (the case\'s seeded e at or below 0.05 and its perigee under 2,500 km: sdn-ap SPEC 16.1 and 16.11, 12.5), the degrees of AP_Z70_TIDES, and zonal degree 20 on every other case; each row\'s pcf label names the degrees it used. A row flown before the rule keeps the degrees it was flown at; this report reads only rows at the degrees the rule gives their case, and lists the cases that have only a row at other degrees.';
+const DRAG_TERM_TEXT = 'Each row records AP\'s fitted drag term (bterm), so a fit where the truth has no drag can be read with the term it solved.';
 /**
  * A drag truth not converged to a tenth of the bar (stack #520): its lowest altitude over the bar's span (row.truth.minAltitudeSpanKm,
  * its lowest perigee there) is under underKm. At 1e-13 such a truth still moves 15 to 34 m on a tenfold tighter flight; every other low
@@ -131,9 +131,15 @@ export async function report(ctx, args) {
   const ofBuild = allRows.filter((r) => r.wasmSha256 === wasmSha && (!r.truth || (r.truth.hash && (!r.truth.dragAreaOverMass || r.truth.setting === 'L70S13'))));
   const kept = perigeeScan ? ofBuild.filter((r) => r.scanDigest === scanDigest) : ofBuild;
   const otherDefinitions = perigeeScan ? [...new Set(ofBuild.filter((r) => r.scanDigest !== scanDigest).map((r) => r.scanDigest ?? 'none recorded'))] : [];
-  const byHash = new Map(kept.map((r) => [r.caseHash, r]));
   const { createHash } = await import('node:crypto');
   const hashOf = (c) => createHash('sha256').update(JSON.stringify(c)).digest('hex').slice(0, 16);
+  // the slot's rows (no rung) are read only at the degrees the rule of the real low rows gives their case under this build's version
+  // (arms.mjs rowAtRuleDegrees, the test run.mjs's done uses); a case with a row only at other degrees is counted and shown as not flown here
+  const A = await import('../headline-loop/lib/arms.mjs');
+  const caseByHash = new Map(all.cases.map((c) => [hashOf(c), c]));
+  const atRule = (r) => rung || !caseByHash.has(r.caseHash) || A.rowAtRuleDegrees(r, caseByHash.get(r.caseHash), version);
+  const keptAtRule = kept.filter(atRule), byHash = new Map(keptAtRule.map((r) => [r.caseHash, r]));
+  const onlyOtherDegrees = [...new Set(kept.filter((r) => !atRule(r)).map((r) => r.caseHash))].filter((h) => !byHash.has(h)).map((h) => caseByHash.get(h).id).sort();
   const rows = all.cases.map((c) => ({ c, r: byHash.get(hashOf(c)) ?? null }));
   const harnesses = [...new Set(rows.filter((x) => x.r).map((x) => x.r.harness))];
   const theory = (r, t) => (r?.[t] ? { pcf: r[t].pcf, settings: r[t].settings ?? null, fitNote: r[t].fitNote ?? null, fitRmsM: r[t].fitRmsM ?? null, bterm: r[t].bterm ?? null, maxDistance: r[t].maxDistance ?? null, days: r[t].days ?? null, perigeeScan: r[t].perigeeScan ?? null, kepler: r[t].kepler ?? null, error: r[t].error ?? null } : null);
@@ -181,6 +187,7 @@ export async function report(ctx, args) {
   const doc = {
     schema: 'sdn-ap-synthetic/3', measured: new Date().toISOString().slice(0, 10), mode, modeText: modeTextOf(mode, rung), guard, fit, truthStartH, rung, withXp, xpFlown: fit === 'arc72' || withXp, fitText: fitTextOf(fit, withXp), fitAfterCutoff: fit === 'arc72' ? false : FITS[fit].after,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha }, harness: { repo: 'orbit-accuracy-experiments', commits: harnesses, command },
+    rowsAtOtherDegrees: rung ? null : { count: onlyOtherDegrees.length, ids: onlyOtherDegrees },
     perigeeScan, scanSettings: perigeeScan ? SCAN : null, scanDigest, scanMinE, ...(perigeeScan ? { scanCounts } : {}), rowsOfOtherScanDefinitions: perigeeScan ? { count: ofBuild.length - kept.length, definitions: otherDefinitions } : null,
     slot: slotOf(rung), seed, gridStep, statistic: statisticOf(fit, truthStartH, rung, withXp, perigeeScan, scanDigest, scanMinE), truthSettings: TRUTH, areaToMass: Object.fromEntries(Object.entries(AM).map(([k, v]) => [k, { areaOverMassM2Kg: v, dragTerm: 2.2 * v, radiationTerm: 1.2 * v }])),
     grid: GRID, inclinationBands: BANDS, cost: { orbitsFlown: wall.length, wallSecondsSum: Math.round(wall.reduce((s, x) => s + x, 0)), medianWallS: median(wall) },
@@ -281,5 +288,6 @@ function page(doc, items) {
   for (const x of doc.truthNotConverged.cases) L.push(`| ${x.label} | ${x.band} | ${x.status} | ${x.lowestKm} km${x.over === 'flight' ? ' (over the whole flight: the row predates the span\'s figure)' : ''} | ${x.step12to13M != null ? `${x.step12to13M} m` : 'not measured'} | ${fmt(x.apDM)} | ${fmt(x.xpDM)} |`);
   if (!doc.truthNotConverged.cases.length) L.push('| none | | | | | | |');
   L.push('', '## Not covered', '', ...doc.notCovered.map((x) => `- ${x}`), '');
+  if (doc.rowsAtOtherDegrees?.count) L.push('## Rows at other degrees', '', `${doc.rowsAtOtherDegrees.count} cases have a row only at degrees other than the rule gives them (a row flown before the rule, a re-flight not finished). They are not shown as results: ${doc.rowsAtOtherDegrees.ids.join(', ')}.`, '');
   return L.join('\n');
 }

@@ -186,8 +186,12 @@ if (!isMain) { /* imported */ } else if (args['check-bound']) {
   if (!fs.existsSync(drawFile)) throw new Error(`${drawFile}: no draw in this folder`);
   const d = JSON.parse(fs.readFileSync(drawFile, 'utf8'));
   d.truthStartH ??= 72;
-  const all = read(path.join(args.out, 'rows.jsonl')), rows = all.filter((r) => sameRun(d, r));
-  const draws = d.bands.map((b) => ({ b, cases: draw(d.seed, b, d.perBand) }));
+  const { usePackages } = await import('../headline-loop/lib/env.mjs');
+  usePackages();
+  const A = await import('../headline-loop/lib/arms.mjs');
+  const draws = d.bands.map((b) => ({ b, cases: draw(d.seed, b, d.perBand) })), byId = new Map(draws.flatMap((x) => x.cases).map((c) => [c.id, c]));
+  // a row is read only at the degrees the rule of the real low rows gives its case under the build's version (arms.mjs rowAtRuleDegrees)
+  const all = read(path.join(args.out, 'rows.jsonl')), rows = all.filter((r) => sameRun(d, r) && byId.has(r.id) && A.rowAtRuleDegrees(r, byId.get(r.id), d.version));
   const t = table(draws, rows);
   const { FITS, ARC72_TEXT } = await import('./fits.mjs');
   const { NO_XP_TEXT } = await import('./fits.mjs');
@@ -239,14 +243,17 @@ async function fly() {
       && JSON.stringify(old.boxes) === JSON.stringify(BOXES) && JSON.stringify(old.bands) === JSON.stringify(bands);
     if (!same) throw new Error(`refused: ${drawFile} holds another run's draw (seed ${old.seed}, ${old.perBand} per box, fit ${old.fit}, build ${String(old.wasmSha256).slice(0, 12)}); give another --out`);
   }
-  const rowsFile = path.join(out, 'rows.jsonl'), done = new Set(read(rowsFile).filter((r) => sameRun(drawn, r)).map((r) => r.id));
-  const all = bands.flatMap((b) => draw(seed, b, perBand)), todo = all.filter((c) => !done.has(c.id));
+  // a row counts as done only at the degrees the rule of the real low rows gives its case under this build's version (arms.mjs rowAtRuleDegrees):
+  // a run begun before the rule, resumed, flies the cases of the low table's class again
+  const all = bands.flatMap((b) => draw(seed, b, perBand)), byId = new Map(all.map((c) => [c.id, c]));
+  const rowsFile = path.join(out, 'rows.jsonl'), done = new Set(read(rowsFile).filter((r) => sameRun(drawn, r) && byId.has(r.id) && A.rowAtRuleDegrees(r, byId.get(r.id), version)).map((r) => r.id));
+  const todo = all.filter((c) => !done.has(c.id));
   fs.writeFileSync(drawFile, JSON.stringify(drawn, null, 1));
   const jobs = Math.min(Number(args.jobs ?? 6), todo.length);
   console.error(`claim: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; seed ${seed}, ${perBand} per band, fit ${fit}; ${all.length} cases, ${todo.length} to fly on ${jobs} jobs; rows to ${rowsFile}`);
   let next = 0, flown = 0;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(RUN, ['--worker', '--wasm', file, '--fit', fit, '--truth-start-h', String(truthStartH)], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(RUN, ['--worker', '--wasm', file, '--ap-version', version, '--fit', fit, '--truth-start-h', String(truthStartH)], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => { if (next < todo.length) { const c = todo[next++]; child.send({ c, fits: [fit] }); } else child.send({ stop: true }); };
     child.on('message', (m) => {
       if (m.rows) {

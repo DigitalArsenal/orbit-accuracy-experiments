@@ -75,7 +75,7 @@ const hours = args.hours ? String(args.hours).split(',').map(Number) : null;
 if (hours && hours.length !== list.length) throw new Error(`--hours: ${hours.length} hours for ${list.length} cases`);
 console.error(`dense: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${theory === 'xp' ? 'SGP4-XP' : 'AP'}'s record, fit ${fit}${rung ? `, rung ${rung}` : ''}, ${mode}, truth from ${truthStartH} h before the cutoff; ${list.length} cases, ${opts.perigees ? 'each perigee passage over the scored span at 1 s for 120 s either side, on the pooled instance and a new one' : `each at ${opts.stepS} s for ${opts.halfMin} min either side of ${opts.hourH ?? 'its D hour'}, twice on the pooled instance and twice on new ones`}`);
 
-const child = fork(RUN, ['--worker', '--wasm', file, '--fit', fit, '--truth-start-h', String(truthStartH), ...(rung ? ['--rung', rung] : []), ...(withXp ? ['--xp'] : []),
+const child = fork(RUN, ['--worker', '--wasm', file, '--ap-version', version, '--fit', fit, '--truth-start-h', String(truthStartH), ...(rung ? ['--rung', rung] : []), ...(withXp ? ['--xp'] : []),
   ...(mode === 'full' ? [] : mode === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation'])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
 const results = [];
 await new Promise((resolve, reject) => {

@@ -139,9 +139,10 @@ export function measurePassage(rs, lead = 0) {
 
 /**
  * AP's headline $PCF for a synthetic case (the slot without a rung): the solid tide, NRLMSISE-00 where the truth has drag, the radiation
- * term fitted where the truth has radiation and held at 0 where it has none, tesseral degree 31 and the zonal degree the catalog's rule
- * gives the case's orbit (headline-loop lib/arms.mjs syntheticZonalDegree: 70 from sdn-ap 0.6.42 where e is at or below 0.05 and the
- * perigee under 2,500 km, else 20). Off the class it is the $PCF the tool always used (lib/arms.mjs PCF.AP_TIDES, AP_VACUUM_TIDES).
+ * term fitted where the truth has radiation and held at 0 where it has none, tesseral degree 31 and the zonal degree the rule of the real low
+ * rows (ZONAL70_GROUPS) gives the case's orbit (headline-loop lib/arms.mjs syntheticZonalDegree: 70 from sdn-ap 0.6.42 where e is at or below
+ * 0.05 and the perigee under 2,500 km, else 20). Off the class it is the previous code's $PCF (lib/arms.mjs PCF.AP_TIDES, AP_VACUUM_TIDES).
+ * A version that is absent or does not parse is refused by name (syntheticZonalDegree throws): no $PCF is built without it.
  * A, APL: headline-loop lib/arms.mjs and operator-theory lib/ap.mjs.
  */
 export const headlinePcf = ({ A, APL, c, version, drag, radiation }) => {
@@ -164,5 +165,7 @@ export const RUNGS = {
   'ap-d0-z20': { degrees: [0, 20], text: `THEORY AP: tesseral degree 0, zonal degree 20, the solid tide, ${ATMOSPHERE_TEXT}.` },
   'ap-d4-z20': { degrees: [4, 20], text: `THEORY AP: tesseral degree 4, zonal degree 20, the solid tide, ${ATMOSPHERE_TEXT}.` },
   'ap-d12-z20': { degrees: [12, 20], text: `THEORY AP: tesseral degree 12, zonal degree 20, the solid tide, ${ATMOSPHERE_TEXT}.` },
-  'ap-d31-z20': { degrees: [31, 20], text: `THEORY AP: tesseral degree 31, zonal degree 20 (the headline degrees, keyed as a rung), the solid tide, ${ATMOSPHERE_TEXT}.` },
+  'ap-d31-z20': { degrees: [31, 20], text: `THEORY AP: tesseral degree 31, zonal degree 20 (the headline degrees before the zonal rule of headlinePcf; the slot's degrees off the low table's class), the solid tide, ${ATMOSPHERE_TEXT}.` },
+  'ap-d31-z70': { degrees: [31, 70], text: `THEORY AP: tesseral degree 31, zonal degree 70, the solid tide, ${ATMOSPHERE_TEXT}.` },
+  'ap-d70-z70': { degrees: [70, 70], text: `THEORY AP: tesseral degree 70, zonal degree 70, the solid tide, ${ATMOSPHERE_TEXT}.` },
 };

@@ -68,15 +68,30 @@ export const TIDES_SINCE = '0.6.20';
 // records at zonal 20, and every other row, and an older build's, keep degree 20.
 export const ZONAL70_SINCE = '0.6.42';
 export const ZONAL70_GROUPS = ['T', 'P', 'S1', 'LS', 'DO'];
-// The same rule by orbit, for the synthetic orbits (they are no row's group): the class the low table's zonal degree 70 names is e at or below
-// 0.05 (sdn-ap SPEC 16.11: class 0, "at or below the 0.05 switch"; the low table from 0.6.42, stack #477) with the perigee under 2,500 km (SPEC
-// 12.5, `cov::regime_of`: the DRAG regime; from 2,500 km the regime is ABOVE and drag acts nowhere). From ZONAL70_SINCE a synthetic case in that
+// The rule of the real low rows (ZONAL70_GROUPS), by orbit, for the synthetic orbits (they are no row's group): the class of the low table
+// is e at or below 0.05 (sdn-ap SPEC 16.1 names the "0.05 switch" between the low table and the other; SPEC 16.11 states the same limit in
+// other words: class 0 is e at or below 0.05; the low table from 0.6.42, stack #477) with the perigee under 2,500 km (SPEC 12.5,
+// `cov::regime_of`: the DRAG regime; from 2,500 km the regime is ABOVE and drag acts nowhere). From ZONAL70_SINCE a synthetic case in that
 // class is fitted and flown at zonal 70, tesseral 31, the degrees of AP_Z70_TIDES; every other case keeps zonal 20, tesseral 31. The class is
-// the stated one, not an outcome: a case at e 0.1 is not in it whatever it gains.
+// the stated one, not an outcome: a case at e 0.1 is not in it whatever it gains. The class is the case's SEEDED mean eccentricity, not its
+// fitted record's: a record fitted on the limit can fly either branch of the module (at perigee 400 km and e 0.05, two of seven cases' fitted
+// records lie under 0.05 and five above it). The rule is by the case's orbit, as the real rule is by its row's group.
 export const LOW_TABLE_CLASS = { maxEccentricity: 0.05, regimeAboveKm: 2500 };
 export const inLowTableClass = ({ e, hpKm }) => e <= LOW_TABLE_CLASS.maxEccentricity && hpKm < LOW_TABLE_CLASS.regimeAboveKm;
-/** The zonal degree of AP's record for a synthetic case (e, hpKm: its mean eccentricity and perigee altitude) under an sdn-ap build's version. */
-export const syntheticZonalDegree = (c, version) => (atLeast(version, ZONAL70_SINCE) && inLowTableClass(c) ? 70 : 20);
+/**
+ * The zonal degree of AP's record for a synthetic case (e, hpKm: its seeded mean eccentricity and perigee altitude) under an sdn-ap build's
+ * version. A version that is absent or does not parse is refused by name: the degree is never read from a version that is not there.
+ */
+export const syntheticZonalDegree = (c, version) => {
+  if (!numeric(version)) throw new Error(`syntheticZonalDegree: the sdn-ap version is ${version === undefined || version === null || version === '' ? 'absent' : `not a version: ${JSON.stringify(version)}`}; the degrees of AP's record are not chosen without it`);
+  return atLeast(version, ZONAL70_SINCE) && inLowTableClass(c) ? 70 : 20;
+};
+/**
+ * Whether a stored row of the synthetic slot counts for its case under a build's version: only at the degrees the rule gives the case. A row
+ * with no AP record (a truth that could not be flown, a fit that failed) states no degrees and passes; a row with a record and no stated
+ * zonal degree does not. Used by run.mjs to decide what is done and by report.mjs and claim.mjs to decide what is read.
+ */
+export const rowAtRuleDegrees = (row, c, version) => (row?.ap?.record == null && row?.ap?.settings == null) || row.ap.settings?.zonal === syntheticZonalDegree(c, version);
 // The record's tesseral degree on the strong-drag rows (TESSERAL70_GROUPS: groups T and P): from TESSERAL70_SINCE (the first build after
 // sdn-ap 0.6.45) an AP fit there states tesseral degree 70 with zonal degree 70, the label AP_T70_Z70_TIDES. The cuts of 0.6.42 to
 // 0.6.45 state tesseral 31 (AP_Z70_TIDES) and stay as published; a table file's forces text says which a row used. Near 700 km, the
