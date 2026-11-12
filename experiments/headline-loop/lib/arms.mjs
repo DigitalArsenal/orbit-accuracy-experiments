@@ -55,7 +55,8 @@ export const ECOM2_SINCE = '0.6.15';
 // the one-day class's resonant tail (sdn-ap 0.6.19, stack #434), which also solves Y0 on these rows (SDN-AP SPEC 16.13)
 export const ECOM2_GEO_SINCE = '0.6.19';
 // The commercial geostationary row (WA) joins the geostationary and inclined geosynchronous rows: its numerical fits carry a Y0 of the same
-// kind (the five-term fits under the prior); with Y0 in AP's record 21 of the 22 closing 72 h windows are within 100 m of the forecast, 20 without.
+// kind (the five-term fits under the prior), so AP's record carries Y0 on fits of 72 h or more as theirs do; a 24 h fit carries the terms of its
+// 72 h fit, Y0 among them (table.mjs, CARRY24_SINCE).
 export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { groups: ['GE', 'IG', 'WA'], since: ECOM2_GEO_SINCE }];
 export const ECOM2_MIN_ARC = 72;
 // The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row (sdn-ap 0.6.20, stack #449)
