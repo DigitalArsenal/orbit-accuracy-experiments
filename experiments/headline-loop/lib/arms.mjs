@@ -131,6 +131,15 @@ export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
 export const LONG_PERIOD = { groups: ['HE72', 'HE', 'HX'], minHours: 9 };
 export const minHoursOf = (group) => (LONG_PERIOD.groups.includes(group) ? LONG_PERIOD.minHours : MANEUVER72.minHours);
 export const SEAMS_BREAK_ARC = ['HX'];
+/** The rule of the windows placed after a firing (the 72 h TESS row, stack #479): one cutoff per firing of the object's list (a burn the
+ *  list does not reject), at the first midnight (UTC) at least LONG_PERIOD.minHours after the firing's report time; ISO dates, one per
+ *  firing, sorted. The row's windows at those cutoffs are placed by the rule; a cutoff the row already has is not added again. */
+export const firingCutoffs = (dir, group, name) => {
+  const f = listFile(dir, group, name);
+  if (!fs.existsSync(f)) return [];
+  const DAY = 864e5, burns = (JSON.parse(fs.readFileSync(f, 'utf8')).burns ?? []).filter((b) => b.refined?.consistent !== false && b.reportTime);
+  return burns.map((b) => new Date(Math.ceil((Date.parse(b.reportTime) + LONG_PERIOD.minHours * 3600e3) / DAY) * DAY).toISOString().slice(0, 10)).sort();
+};
 export const listsGroup = (group) => (group === 'HE72' ? 'HE' : group);
 const listFile = (dir, group, name) => path.join(dir, listsGroup(group), `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
 /** An object's burn list's sha256, first 12 hex (refly.mjs --after-burns writes it as burnList, table.mjs on AP's 72 h rows), or null. */
@@ -140,8 +149,9 @@ export const knownBurns = (dir, group, name, D0, field = 'burns') => {
   if (!fs.existsSync(f)) return [];
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
   const knownAt = (b) => (d.asOf ? Date.parse(b.reportTime) : Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0));
-  const seen = (d[field] ?? []).filter((b) => knownAt(b) <= D0), rejected = seen.filter((b) => b.refined?.consistent === false);
-  return seen.filter((b) => b.refined?.consistent !== false).map((b) => {
+  // a join of the truth's solutions (seams) is a join whatever its delta-v test says: only burns pass the consistency filter
+  const seen = (d[field] ?? []).filter((b) => knownAt(b) <= D0), rejected = field === 'seams' ? [] : seen.filter((b) => b.refined?.consistent === false);
+  return seen.filter((b) => field === 'seams' || b.refined?.consistent !== false).map((b) => {
     let endMs = Date.parse(b.extentTo ?? b.to);
     for (let more = true; more;) {
       more = false;
@@ -164,8 +174,9 @@ export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMi
   const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
   if (!ends.length) return full;
   const last = Math.max(...ends), startMs = Math.min(D0 - minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000));
-  // burnInArc: the last burn ended less than the minimum arc before the cutoff, so the arc holds it
-  return { startMs, maneuvering: true, lastBurnMs: last, burnInArc: last + MANEUVER72.afterBurnMin * 60000 > startMs };
+  // burnInArc: the last burn ends after the arc's start (it ended less than the minimum arc before the cutoff), so the arc holds it; the
+  // numerical arm's rows (refly.mjs --after-burns) say the same of their arc
+  return { startMs, maneuvering: true, lastBurnMs: last, burnInArc: last > startMs };
 };
 // The numerical arm's fit of a maneuvering object (stack issues 462 and 489): the numerical propagator has no thrust term either, so a fit
 // through a burn takes the thrust into its drag and radiation terms and its forecast leaves the orbit. With the burn lists (refly.mjs
@@ -224,7 +235,7 @@ export const perigeeKmOf = ({ r, v }) => {
 export const listedBurns = (dir, group, name, field = 'burns') => {
   const f = listFile(dir, group, name);
   if (!fs.existsSync(f)) return null;
-  return (JSON.parse(fs.readFileSync(f, 'utf8'))[field] ?? []).filter((b) => b.refined?.consistent !== false).map((b) => {
+  return (JSON.parse(fs.readFileSync(f, 'utf8'))[field] ?? []).filter((b) => field === 'seams' || b.refined?.consistent !== false).map((b) => {
     const dv = b.refined?.dvRtnMmS ?? b.dvRtnMmS.map((x) => -x);
     return { t: Date.parse(b.burn ?? b.at), sizeMmS: Math.hypot(...dv), alongTrackMmS: dv[1] };
   });

@@ -44,7 +44,8 @@ export const GROUPS = {
   GE: { label: 'Geostationary', store: 'b0411/regimes', mgex: 'geo', ffmCol: 'FFM20' },
   // TESS (stack #479): the 336 h row reads the definitive files merged (each epoch from the newest file, a join flagged as a seam); the
   // 72 h row (HE72, its own keys) reads each window from the one file that covers its arc and 7 days, so no join falls inside it, and
-  // adds one window per firing (HE72_ADDED)
+  // adds the windows placed after a firing (lib/arms.mjs firingCutoffs: the rule; <store>/added-windows.json: its cutoffs, checked against
+  // the rule by table.mjs whenever it reads the lists)
   HE: { label: 'Highly elliptical', store: 'b0411/regimes', vacuum: true, ffmCol: 'FFM20', arcs: [336] },
   HE72: { label: 'Highly elliptical', store: 'b0411/regimes', from: 'HE', vacuum: true, ffmCol: 'FFM20', arcs: [72], oneFile: true },
   HX: { label: 'Highly elliptical, THEMIS and Chandra', store: 'b0411/regimes', vacuum: true, ffmCol: 'FFM20' },
@@ -52,7 +53,9 @@ export const GROUPS = {
 };
 const XM_PROVIDER = (name) => (/^Swarm/.test(name) ? 'ESA' : /^GRACE/.test(name) ? 'Data E' : /^Sentinel/.test(name) ? 'Copernicus' : 'ESA navigation');
 const XM_PUBLIC = (name) => (/^GRACE-FO/.test(name) ? `Research satellite ${name.at(-1)}` : name);
-export const providerOf = (group, name) => (GROUPS[group].store.startsWith('b0411/truth') || GROUPS[group].truth === 'gnss' ? XM_PROVIDER(name) : R.GROUPS[GROUPS[group].from ?? group]?.provider ?? 'All');
+// the long-period rows' references as their files name their makers (stack #479; table.mjs TRUTH_NOTE says how each row reads them)
+const LONG_PROVIDER = (group, name) => (group === 'HE' || group === 'HE72' ? 'MAST (TESS_EPH_DEF)' : group !== 'HX' ? null : name === 'CHANDRA' ? 'JPL Horizons (chandra_merged.bsp)' : 'UCB SSL (THEMIS kernels)');
+export const providerOf = (group, name) => LONG_PROVIDER(group, name) ?? (GROUPS[group].store.startsWith('b0411/truth') || GROUPS[group].truth === 'gnss' ? XM_PROVIDER(name) : R.GROUPS[GROUPS[group].from ?? group]?.provider ?? 'All');
 export const satelliteOf = (group, name) => (GROUPS[group].store.startsWith('b0411/truth') ? XM_PUBLIC(name) : name);
 
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
@@ -70,11 +73,11 @@ export function windowsOf(groups) {
     // a row of its own over another group's windows (G.from) takes their cutoffs under its own key, and the windows added to it
     // (<store>/added-windows.json, by the rule written there)
     const src = G.from ?? g, mine = G.store === 'b0411/truth' ? stored : stored.filter((r) => r.group === src);
-    const added = G.from ? (JSON.parse(fs.existsSync(ADDED_WINDOWS) ? fs.readFileSync(ADDED_WINDOWS, 'utf8') : '{}')[g] ?? []).map((x) => ({ ...mine[0], key: `${src}|${mine[0].name}|${x.cutoff}`, cutoff: `${x.cutoff}T00:00:00Z` })) : [];
+    const added = G.from ? (JSON.parse(fs.existsSync(ADDED_WINDOWS) ? fs.readFileSync(ADDED_WINDOWS, 'utf8') : '{}')[g] ?? []).map((x) => ({ ...mine[0], key: `${src}|${mine[0].name}|${x.cutoff}`, cutoff: `${x.cutoff}T00:00:00Z`, placedAfterFiring: true })) : [];
     for (const r of [...mine, ...added]) {
       const cutoffMs = Date.parse(r.cutoff ?? `${r.key.split('|').at(-1)}T00:00:00Z`);
       const arcs = G.arcs ?? [...new Set(Object.keys(r.arms).filter((a) => /^AP\d+$/.test(a)).map((a) => Number(a.slice(2))))].sort((a, b) => a - b);
-      const w = { key: G.from ? r.key.replace(new RegExp(`^${src}\\|`), `${g}|`) : r.key, group: g, name: r.name, norad: r.norad ?? null, cutoffMs, arcs };
+      const w = { key: G.from ? r.key.replace(new RegExp(`^${src}\\|`), `${g}|`) : r.key, group: g, name: r.name, norad: r.norad ?? null, cutoffMs, arcs, ...(r.placedAfterFiring ? { placedAfterFiring: true } : {}) };
       const from = cutoffMs - Math.max(...arcs) * HOUR - HOUR, to = cutoffMs + 7 * DAY + HOUR;
       (touches(AFTER, from, to) ? after : touches(MARCH_TO_MAY, from, to) ? second : out).push(w);
     }
@@ -223,9 +226,10 @@ export function arcOf(lines, hours) {
   const coverage = lines.length > 1 ? lines.length / ((hours * 3600) / ((ms(lines[1].epoch) - ms(lines[0].epoch)) / 1000)) : 0;
   return coverage >= MIN_COV ? T.thinned(lines).chosen : null;
 }
-/** As-issued weather at the cutoff (O condition): the AP fit's $SPW rows through the record's horizon and FFM's driver rows to D0 + 8 d. */
-export function weatherAt(D0) {
-  const O = W.rowsO(D0 - 72 * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
+/** As-issued weather at the cutoff (O condition): the AP fit's $SPW rows through the record's horizon and FFM's driver rows to D0 + 8 d,
+ *  from `arcH` hours before the cutoff (and the margin) on. */
+export function weatherAt(D0, arcH = 72) {
+  const O = W.rowsO(D0 - arcH * HOUR - XM.config.conditions.rowsMarginDays * DAY, D0);
   if (O.excluded) throw new Error(O.excluded);
   return { rows: O.rows, spw: APL.fitWeather(O.rows, APL.horizonOf(D0)), ffm: driverRows(O.rows, D0).rows.map((r) => ({ DATE: r.date, F107_OBS: r.f107, F107_OBS_CENTER81: r.c81, AP_AVG: r.ap })) };
 }
