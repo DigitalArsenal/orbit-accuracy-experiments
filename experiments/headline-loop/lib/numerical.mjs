@@ -25,16 +25,16 @@ export function numericalOf({ w, arc, base, afterBurn, afterBurnGroups }) {
   return { ...b, fitProcess: r.fitProcess };
 }
 
-/** A 72 h window's arc starts (ms), AP's and the numerical arm's, each to the millisecond where it can be told: AP's from the rule on the
+/** A window's arc starts (ms) on a fit whose arc the lists set (lib/arms.mjs arcRuleApplies: a 72 h fit, or a long-period row's longer fit), AP's and the numerical arm's, each to the millisecond where it can be told: AP's from the rule on the
  *  lists given (lib/arms.mjs maneuverArc, the row's recorded start where it has one), the full 72 h where its row is on the full arc; the
  *  numerical arm's from its refit's last burn by the rule (numericalArc, with the row's own minimum arc), the full 72 h otherwise. Without
  *  lists AP's start is the cutoff less its fitArcHours. */
-export function arcStarts({ w, ap, nr, lists }) {
-  const D0 = w.cutoffMs, full = D0 - 72 * H;
+export function arcStarts({ w, arc = 72, ap, nr, lists }) {
+  const D0 = w.cutoffMs, full = D0 - arc * H;
   const apStart = ap.fitArcStart ? Date.parse(ap.fitArcStart) : ap.fitArcHours == null ? full
-    : lists ? A.maneuverArc(A.arcBreaks(lists, w.group, w.name, D0), D0, ap.perigeeKm ?? Infinity, undefined, A.minHoursOf(w.group)).startMs : D0 - ap.fitArcHours * H;
+    : lists ? A.maneuverArc(A.arcBreaks(lists, w.group, w.name, D0), D0, ap.perigeeKm ?? Infinity, undefined, A.minHoursOf(w.group), arc).startMs : D0 - ap.fitArcHours * H;
   const numStart = nr.fitProcess !== REFIT ? full : nr.fitArcStart ? Date.parse(nr.fitArcStart)
-    : nr.lastBurn ? A.numericalArc([{ from: nr.lastBurn, to: nr.lastBurn }], D0, Infinity, 72, A.minHoursOf(w.group)).startMs : D0 - nr.fitArcHours * H;
+    : nr.lastBurn ? A.numericalArc([{ from: nr.lastBurn, to: nr.lastBurn }], D0, Infinity, arc, A.minHoursOf(w.group)).startMs : D0 - nr.fitArcHours * H;
   return { ap: apStart, numerical: numStart };
 }
 
@@ -45,8 +45,8 @@ export function arcStarts({ w, ap, nr, lists }) {
 export function noArmWhy({ w, arc, ap, nr, lists }) {
   if (!nr || nr.error) return 'noTruthOrCoverage';
   if (nr.burnInArc) return 'ruleLeavesNoArm';
-  if (arc === 72 && ap && !ap.error && !ap.apError) {
-    const s = arcStarts({ w, ap, nr, lists });
+  if (A.arcRuleApplies(w.group, arc) && ap && !ap.error && !ap.apError) {
+    const s = arcStarts({ w, arc, ap, nr, lists });
     if (s.ap !== s.numerical) return 'armsOnDifferentArcs';
   }
   return null;
