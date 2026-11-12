@@ -2,10 +2,10 @@
 // for one build, one force mode, one fit way and one truth start (the file's name, title and command carry all four).
 // The bar (stack #503): AP's forecast never more than 100 m from the numerical propagator at any time from 0 to 5 days. D is the
 // largest 3D distance between AP's forecast and the truth over 0 to 120 h at the truth's own 300 s epochs; a case is within the bar
-// when D <= 100 m over the whole 0 to 120 h. The page: the band table (k of n within 100 m, with every case that has a truth in n, and
-// the cases that are not within for another reason counted beside), the perigee by eccentricity maps, the cases above 100 m worst
-// first, the cases whose truth ends before 120 h with their span, the cases without a truth with their reason, the named edge cases,
-// and what the run does not cover. No pass rate is printed: the grid and the named cases are lists of cases, not a sample.
+// when D <= 100 m over the whole 0 to 120 h. The page: the band table (k of n within 100 m, with every case that has a truth past the
+// cutoff in n, and the cases that are not within for another reason counted beside), the perigee by eccentricity maps, the cases above
+// 100 m worst first, the cases whose truth ends before 120 h with their span, the cases that decay by the cutoff or have no truth with
+// their reason, the named edge cases, and what the run does not cover. No pass rate is printed: the grid and the named cases are lists of cases, not a sample.
 import fs from 'node:fs';
 import path from 'node:path';
 import { GRID, BANDS, AM, bandOf, BAR_BANDS, barBandOf, labelOf } from './cases.mjs';
@@ -42,23 +42,30 @@ const median = (v) => { const s = v.filter(Number.isFinite).sort((a, b) => a - b
 
 /**
  * What became of a case in this run, from its row (run.mjs flyCase):
- * - not-flown: no row; no-truth: it failed before its truth existed (the weather, the seed record or the reference flight), or the
- *   numerical flight failed outright (no state at all) — neither is in n;
- * - with a truth (in n): within or over (D over the whole 0 to 120 h), short (the truth ends before 120 h: a decay or the flight
- *   ending early; never within, D over its span where one was scored), refused (AP's fit refused), flight-failed (AP's flight failed),
- *   failed (another error after the truth existed).
+ * - outside n: not-flown (no row); no-truth (it failed before its truth existed: the weather, the seed record or the reference
+ *   flight; or the numerical flight failed before the cutoff for another reason than a decay); decayed (the orbit decays below 100 km
+ *   at or before the cutoff, so there is no forecast to score: the numerical flight stopped there, as FFM stops at a reentry, or ran
+ *   through it);
+ * - in n: within or over (D over the whole 0 to 120 h), short (the truth ends before 120 h, a decay after the cutoff among them:
+ *   never within, D over its span where one was scored), refused (AP's fit refused), flight-failed (AP's flight failed), failed
+ *   (another error after the truth existed).
  */
+const REENTRY = /descends below 100 km/;
 function statusOf(r, ap) {
   if (!r) return { status: 'not-flown', reason: 'not flown in this run' };
   const t = r.truth;
   if (!t) return { status: 'no-truth', reason: `failed before its truth existed: ${r.error ?? 'no truth'}` };
+  if (t.decayedAtH != null && t.decayedAtH <= 0) return { status: 'decayed', reason: `decays below 100 km at ${t.decayedAtH} h, at or before the cutoff: no forecast to score` };
+  if (t.error && t.flownToDay == null) {
+    return REENTRY.test(t.error) ? { status: 'decayed', reason: `decays below 100 km before the cutoff, where the numerical flight stops: no forecast to score (${t.error})` }
+      : { status: 'no-truth', reason: `the numerical flight failed before the cutoff: ${t.error}` };
+  }
   const shortSpan = () => {
-    if (t.decayedAtH != null) return { spanH: Math.max(0, t.decayedAtH), why: t.decayedAtH <= 0 ? `decays below 100 km at ${t.decayedAtH} h, before the cutoff` : `decays below 100 km at ${t.decayedAtH} h` };
+    if (t.decayedAtH != null) return { spanH: t.decayedAtH, why: `decays below 100 km at ${t.decayedAtH} h` };
     if (t.flownToDay != null) return { spanH: t.flownToDay * 24, why: `the numerical flight ends at day ${t.flownToDay}${t.error ? ` (${t.error})` : ''}` };
     return null;
   };
   if (!ap) {
-    if (t.error && t.flownToDay == null) return { status: 'no-truth', reason: `the numerical flight failed: ${t.error}` };
     const s = shortSpan();
     if (s) return { status: 'short', spanH: s.spanH, reason: s.why };
     return { status: 'failed', reason: `failed after its truth existed: ${r.error ?? 'no result'}` };
@@ -69,7 +76,7 @@ function statusOf(r, ap) {
   return { status: md.maxM <= PASS_M ? 'within' : 'over' };
 }
 const IN_N = new Set(['within', 'over', 'short', 'refused', 'flight-failed', 'failed']);
-const NOT_WITHIN_MARK = new Set(['short', 'refused', 'flight-failed', 'failed', 'no-truth']);
+const NOT_WITHIN_MARK = new Set(['short', 'refused', 'flight-failed', 'failed', 'no-truth', 'decayed']);
 
 export async function report(ctx, args) {
   const { commit, version, wasmSha, rowsFile, seed, gridStep, all, mode, guard, fit, truthStartH, rung = null, withXp = false } = ctx;
@@ -94,7 +101,7 @@ export async function report(ctx, args) {
   const bandRow = (xs) => {
     const inN = xs.filter((x) => IN_N.has(x.status)), full = inN.filter((x) => x.fullD != null), xpFull = inN.filter((x) => x.xp?.maxDistance && x.xp.maxDistance.spanH >= BAR_H);
     return { cases: xs.length, n: inN.length, within: count(xs, 'within'), over: count(xs, 'over'), short: count(xs, 'short'), refused: count(xs, 'refused'), flightFailed: count(xs, 'flight-failed'), failed: count(xs, 'failed'),
-      noTruth: count(xs, 'no-truth'), notFlown: count(xs, 'not-flown'),
+      decayed: count(xs, 'decayed'), noTruth: count(xs, 'no-truth'), notFlown: count(xs, 'not-flown'),
       scored: full.length, medianDM: median(full.map((x) => x.fullD)), worstDM: full.length ? Math.max(...full.map((x) => x.fullD)) : null,
       medianFirstOver100mH: median(full.map((x) => x.ap.maxDistance.firstOver100mH).filter((v) => v != null)),
       xpWithin: inN.filter((x) => x.xpWithin).length, xpScored: xpFull.length, xpMedianDM: median(xpFull.map((x) => x.xpD)) };
@@ -102,7 +109,7 @@ export async function report(ctx, args) {
   const bands = Object.fromEntries(BAR_BANDS.map((b) => [b, bandRow(items.filter((x) => x.band === b))]));
   const failing = items.filter((x) => x.status === 'over').sort((a, b) => b.D - a.D).map((x) => ({ id: x.id, kind: x.kind, label: x.label, band: x.band, hpKm: x.elements.hpKm, e: x.elements.e, i: x.elements.i, am: x.am, apDM: x.D, apAtH: x.ap.maxDistance.atH, apFirstOver100mH: x.ap.maxDistance.firstOver100mH, xpDM: x.xpD, apFitRmsM: x.ap.fitRmsM, truth: x.truth?.setting }));
   const short = items.filter((x) => x.status === 'short').map((x) => ({ id: x.id, label: x.label, band: x.band, spanH: x.spanH, reason: x.reason, apDM: x.D }));
-  const without = items.filter((x) => ['refused', 'flight-failed', 'failed', 'no-truth', 'not-flown'].includes(x.status)).map((x) => ({ id: x.id, label: x.label, band: x.band, status: x.status, reason: x.reason }));
+  const without = items.filter((x) => ['refused', 'flight-failed', 'failed', 'decayed', 'no-truth', 'not-flown'].includes(x.status)).map((x) => ({ id: x.id, label: x.label, band: x.band, status: x.status, reason: x.reason }));
   const wall = rows.filter((x) => x.r).map((x) => x.r.wallS).filter(Number.isFinite);
   const command = `node experiments/synthetic-orbits/run.mjs --modules-commit ${commit} --modules-root <modules clone> --seed ${seed} --grid-step ${gridStep}${guard ? ' --guard' : ''}${mode === 'no-drag' ? ' --no-drag' : mode === 'no-drag-no-radiation' ? ' --no-drag --no-radiation' : ''} --fit ${fit} --truth-start-h ${truthStartH}${rung ? ` --rung ${rung}` : ''}${withXp ? ' --xp' : ''}`;
   const doc = {
@@ -117,7 +124,7 @@ export async function report(ctx, args) {
   fs.writeFileSync(`${base}.json`, `${JSON.stringify(doc, null, 1)}\n`);
   fs.writeFileSync(`${base}.md`, page(doc, items));
   const all0 = bandRow(items);
-  console.error(`report: ${base}.json and .md; ${all0.within} of ${all0.n} with a truth within 100 m (${all0.over} over, ${all0.short} short of 120 h, ${all0.refused} refused, ${all0.flightFailed} flight failed, ${all0.failed} other); ${all0.noTruth} without a truth, ${all0.notFlown} not flown`);
+  console.error(`report: ${base}.json and .md; ${all0.within} of ${all0.n} with a truth within 100 m (${all0.over} over, ${all0.short} short of 120 h, ${all0.refused} refused, ${all0.flightFailed} flight failed, ${all0.failed} other); ${all0.decayed} decayed by the cutoff, ${all0.noTruth} without a truth, ${all0.notFlown} not flown`);
   for (const [b, x] of Object.entries(bands)) console.error(`  ${b}: ${x.within} of ${x.n} within 100 m; median D ${fmt(x.medianDM)}, worst ${fmt(x.worstDM)} over ${x.scored} scored`);
   process.exit(0);
 }
@@ -141,14 +148,14 @@ function page(doc, items) {
   L.push(doc.statistic, '');
   L.push('The grid and the named cases are lists of cases to work on, not a sample: the figures below are counts, and carry no pass rate.', '');
   L.push(`## The bar by band (D: the largest distance to the truth over 0 to ${BAR_H} h; within at ${PASS_M} m)`, '',
-    'n counts every case that has a truth. A case whose truth ends before 120 h, whose fit was refused or whose flight failed is in n and is not within; each is counted beside. The cases without a truth and those not flown are not in n. Median and worst D are over the scored cases, those with a D over the whole 0 to 120 h.', '',
-    '| Band | Cases | Within 100 m (k of n) | Over 100 m | Truth short of 120 h | Refused fit | Failed flight | Other failure | Without a truth | Not flown | Median D (scored) | Worst D (scored) | Median first hour above 100 m | SGP4-XP within (of n) | SGP4-XP median D |',
-    '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
-  for (const [b, x] of Object.entries(doc.bands)) L.push(`| ${b} | ${x.cases} | ${x.within} of ${x.n} | ${x.over} | ${x.short} | ${x.refused} | ${x.flightFailed} | ${x.failed} | ${x.noTruth} | ${x.notFlown} | ${fmt(x.medianDM)} (${x.scored}) | ${fmt(x.worstDM)} | ${x.medianFirstOver100mH ?? '-'} | ${doc.xpFlown ? `${x.xpWithin} of ${x.n}` : '-'} | ${doc.xpFlown ? `${fmt(x.xpMedianDM)} (${x.xpScored})` : '-'} |`);
+    'n counts every case that has a truth past the cutoff. A case whose truth ends before 120 h (a decay after the cutoff among them), whose fit was refused or whose flight failed is in n and is not within; each is counted beside. An orbit that decays at or before the cutoff has no forecast to score and is not in n, whether the numerical flight stopped there or ran through it; nor are the cases without a truth and those not flown. Median and worst D are over the scored cases, those with a D over the whole 0 to 120 h.', '',
+    '| Band | Cases | Within 100 m (k of n) | Over 100 m | Truth short of 120 h | Refused fit | Failed flight | Other failure | Decayed by the cutoff | Without a truth | Not flown | Median D (scored) | Worst D (scored) | Median first hour above 100 m | SGP4-XP within (of n) | SGP4-XP median D |',
+    '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
+  for (const [b, x] of Object.entries(doc.bands)) L.push(`| ${b} | ${x.cases} | ${x.within} of ${x.n} | ${x.over} | ${x.short} | ${x.refused} | ${x.flightFailed} | ${x.failed} | ${x.decayed} | ${x.noTruth} | ${x.notFlown} | ${fmt(x.medianDM)} (${x.scored}) | ${fmt(x.worstDM)} | ${x.medianFirstOver100mH ?? '-'} | ${doc.xpFlown ? `${x.xpWithin} of ${x.n}` : '-'} | ${doc.xpFlown ? `${fmt(x.xpMedianDM)} (${x.xpScored})` : '-'} |`);
   L.push('');
   // the maps: every grid case with a row is an orbit of its cell; a cell holding a case that is not within for another reason is marked
   const grid = items.filter((x) => x.kind === 'grid');
-  L.push('In the maps a cell gives the worst D over its scored orbits and (orbits within 100 m / orbits with a row); * marks a cell holding an orbit whose truth ends before 120 h, whose fit was refused, whose flight failed or that has no truth; "not flown" a cell whose orbits have no row; an empty cell holds no case of this run.', '');
+  L.push('In the maps a cell gives the worst D over its scored orbits and (orbits within 100 m / orbits with a row); * marks a cell holding an orbit whose truth ends before 120 h, whose fit was refused, whose flight failed, that decays by the cutoff or that has no truth; "not flown" a cell whose orbits have no row; an empty cell holds no case of this run.', '');
   const table = (title, xs, cell) => {
     L.push(title, '', `| Perigee \\ e | ${doc.grid.eccentricity.join(' | ')} |`, `|---|${doc.grid.eccentricity.map(() => '---').join('|')}|`);
     for (const hp of doc.grid.perigeeKm) L.push(`| ${hp.toLocaleString('en-US')} km | ${doc.grid.eccentricity.map((e) => { const ys = xs.filter((x) => x.elements.hpKm === hp && x.elements.e === e); return ys.length ? cell(ys) : ' '; }).join(' | ')} |`);
@@ -174,7 +181,7 @@ function page(doc, items) {
   L.push('', '## Truth shorter than 120 h (never within; D over the span the truth reaches)', '', '| Orbit | Band | Span (h) | Why | AP D over the span |', '|---|---|---:|---|---|');
   for (const s of doc.short) L.push(`| ${s.label} | ${s.band} | ${s.spanH} | ${s.reason} | ${fmt(s.apDM)} |`);
   if (!doc.short.length) L.push('| none | | | | |');
-  L.push('', '## Refused, failed, without a truth or not flown', '', '| Orbit | Band | What became of it |', '|---|---|---|');
+  L.push('', '## Refused, failed, decayed by the cutoff, without a truth or not flown', '', '| Orbit | Band | What became of it |', '|---|---|---|');
   for (const w of doc.without) L.push(`| ${w.label} | ${w.band} | ${w.reason} |`);
   if (!doc.without.length) L.push('| none | | |');
   L.push('', '## The named edge cases', '', `| Case | AP D | First above 100 m | AP day 1 / 3 / 5 / 7 | ${doc.xpFlown ? 'SGP4-XP D | ' : ''}Within |`, `|---|---|---|---|${doc.xpFlown ? '---|' : ''}---|`);
