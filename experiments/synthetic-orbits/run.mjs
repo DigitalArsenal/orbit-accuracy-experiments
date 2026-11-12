@@ -2,8 +2,8 @@
 // (seeded): the state at the truth's start (D0 - 72 h) is made from the case's mean elements (the record seed.mjs writes) by ONE named
 // reference build, sdn-ap 0.6.26 (modules 7ed7cf88, wasm 9119284b8f97), whatever build is under test, so a case's starting state is a
 // function of the case and that build alone; the numerical propagator (FFM 2.2.0, pinned by hash in headline-loop/lib/ffm.mjs) flies it
-// through the fit arc and 7 days past it on a 300 s grid, and that flight is the truth. A drag case's truth is flown at tolerance 1e-10
-// (headline-loop/lib/settings.mjs L70S), which that file records as meters to tens of meters from the converged orbit with drag. The truth is
+// through the fit arc and 7 days past it on a 300 s grid, and that flight is the truth. A drag case's truth is flown at tolerance 1e-13
+// (headline-loop/lib/settings.mjs L70S13, DRAG_TRUTH below); the truth without drag at 1e-10. The truth is
 // cached in <store>/synthetic/truth/ by the hash of everything it depends on (the starting state, FFM's, the kernel's and the Earth
 // orientation's builds, the setting, the force terms, the weather rows and the span), shared by every clone and process: a run reads it
 // when it is there and flies it once when it is not (a lock file; a second process waits for the first). Each row names its truth's hash
@@ -76,6 +76,11 @@ const HOUR = 3600e3, DAY = 864e5, STEP = 300e3, ARC_H = 72, LEAD_DAYS = 7, COST_
 const RE = 6378.137;
 // the truth's settings (lib/settings.mjs): drag where the perigee is under 2,500 km
 const DRAG_BELOW_KM = 2500;
+// the truth's setting where it has drag (stack #520): the full drag setting at 1e-13 (lib/settings.mjs L70S13); at 1e-10 the integration
+// after each change of the weather rows leaves the truth meters to hundreds of meters from the converged orbit (to 237 m over 0 to 120 h
+// at perigee 200 km, e 0.9). At 1e-13 a tenfold tighter flight moves it under 4 m, except on the cases whose perigee falls under 150 km
+// (15 to 34 m). Without drag the truth is the full setting at 1e-10, unchanged (exact there to the meter).
+const DRAG_TRUTH = 'L70S13';
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { maxBuffer: 1 << 28 });
 const caseHash = (c) => sha256(JSON.stringify(c)).slice(0, 16);
@@ -167,28 +172,33 @@ async function main() {
   // per way, the cases its file holds; a case flies the ways that lack it
   // (a row counts only if it is of the shared truth, truth.hash; rows from before the reference state are flown again)
   // (with --perigee-scan, only rows of this scan definition, scanDigest)
-  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha && r.truth?.hash && (!PERIGEE_SCAN || r.scanDigest === SCAN_DIGEST)).map((r) => r.caseHash))]));
+  // (and, stack #520, a row whose truth has drag counts only on the drag truth at 1e-13, DRAG_TRUTH; rows on the 1e-10 drag truth are
+  // flown again, the truth read from the cache once it is warm)
+  const current = (r) => r.truth?.hash && (!r.truth.dragAreaOverMass || r.truth.setting === DRAG_TRUTH);
+  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha && current(r) && (!PERIGEE_SCAN || r.scanDigest === SCAN_DIGEST)).map((r) => r.caseHash))]));
   const cache = { read: 0, flown: 0, waited: 0, none: 0 };
-  const fitsOf = (c) => FIT_LIST.filter((f) => !doneOf[f].has(caseHash(c)));
+  // --truth-only: the truths of the cases with drag in this mode flown into the shared cache (or read from it), no fit, no row written
+  const truthOnly = !!args['truth-only'];
+  const fitsOf = (c) => (truthOnly ? (MODE === 'full' && c.hpKm < DRAG_BELOW_KM ? [FIT_LIST[0]] : []) : FIT_LIST.filter((f) => !doneOf[f].has(caseHash(c))));
   const todo = all.cases.filter((c) => (!only || only.has(c.id)) && fitsOf(c).length);
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
   console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; fit ${FIT_LIST.join(', ')}, truth from ${TRUTH_START_H} h before the cutoff${RUNG ? `, rung ${RUNG}` : ''}; SGP4-XP ${FIT === 'arc72' || WITH_XP ? 'flown' : 'not flown'}; perigee scan ${PERIGEE_SCAN ? `on (definition ${SCAN_DIGEST}${SCAN_MIN_E !== WAYS.SCAN_MIN_E ? `, every case at e ${SCAN_MIN_E} and above` : ''})` : 'off'}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
       if (!stopped && freeGiB() < MIN_FREE_GIB) stopped = `free disk under ${MIN_FREE_GIB} GiB`;
       if (!stopped && next < todo.length) { const c = todo[next++]; child.send({ c, fits: fitsOf(c) }); } else child.send({ stop: true });
     };
     child.on('message', (m) => {
       if (m.rows) {
-        for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...row, caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness, ...(PERIGEE_SCAN ? { scanDigest: SCAN_DIGEST } : {}) })}\n`);
+        if (!truthOnly) for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...row, caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness, ...(PERIGEE_SCAN ? { scanDigest: SCAN_DIGEST } : {}) })}\n`);
         flown += 1;
         cache[Object.values(m.rows)[0]?.truth?.cache ?? 'none'] += 1;
         const D = (r) => r.ap?.maxDistance?.maxM ?? r.ap?.error ?? r.error;
         const rs = Object.entries(m.rows), one = rs.length === 1 ? rs[0][1] : null;
-        console.error(`  ${flown}/${todo.length} ${m.c.id}: ${one ? `D ${RUNG ? `slot (rung ${RUNG})` : 'AP'} ${D(one)} m, XP ${one.xp?.maxDistance?.maxM ?? one.xp?.error ?? '-'} m; ${one.wallS} s` : `D ${rs.map(([f, r]) => `${f} ${D(r)}`).join(', ')} m; ${rs[0][1].wallS} s`}`);
+        if (truthOnly) { const t = rs[0]?.[1]?.truth; console.error(`  ${flown}/${todo.length} ${m.c.id}: truth ${t?.setting ?? '-'} ${t?.cache ?? 'none'}${t?.flightS != null ? ` in ${t.flightS} s` : ''}${t?.error ? ` (${t.error})` : ''}`); } else console.error(`  ${flown}/${todo.length} ${m.c.id}: ${one ? `D ${RUNG ? `slot (rung ${RUNG})` : 'AP'} ${D(one)} m, XP ${one.xp?.maxDistance?.maxM ?? one.xp?.error ?? '-'} m; ${one.wallS} s` : `D ${rs.map(([f, r]) => `${f} ${D(r)}`).join(', ')} m; ${rs[0][1].wallS} s`}`);
       }
       give();
     });
@@ -330,12 +340,12 @@ async function worker() {
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
       // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
       const drag = MODE === 'full' && c.hpKm < DRAG_BELOW_KM, radiation = MODE !== 'no-drag-no-radiation', wx = drag ? W.weatherAt(D0, Math.max(ARC_H, TRUTH_START_H)) : null;
-      const setting = drag ? 'L70S' : radiation ? 'Ffull' : 'Ffull without radiation pressure';
+      const setting = drag ? DRAG_TRUTH : radiation ? 'Ffull' : 'Ffull without radiation pressure';
       const settings = radiation ? SETTINGS[setting] : { ...SETTINGS.Ffull, forces: { ...SETTINGS.Ffull.forces, srp: false }, parameters: [], apriori: [] };
       const epochs = Array.from({ length: ((TRUTH_START_H + LEAD_DAYS * 24) * HOUR) / STEP + 1 }, (_, k) => iso(tStart + k * STEP));
       const parameters = [...(drag ? [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }] : []), ...(radiation ? [{ kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }] : [])];
       row.mode = MODE;
-      row.truth = { setting, dragAreaOverMass: drag ? terms.dragAreaOverMass : 0, srpAreaOverMass: radiation ? terms.srpAreaOverMass : 0 };
+      row.truth = { setting, tolerance: settings.integrator.tolerance, dragAreaOverMass: drag ? terms.dragAreaOverMass : 0, srpAreaOverMass: radiation ? terms.srpAreaOverMass : 0 };
       // the truth's key: everything the flight depends on
       const start = { epoch, r: s0.r, v: s0.v };
       row.truth.stateFrom = `sdn-ap ${REFERENCE.version} (modules ${REFERENCE.modulesCommit}, wasm ${REFERENCE.wasmSha256})`;
@@ -355,6 +365,8 @@ async function worker() {
       if (got.flownToDay != null) row.truth.flownToDay = got.flownToDay;
       if (got.cache === 'flown') row.truth.flightS = got.flightS;
       if (!got.states || got.flownToDay === 0) { row.truth.error = got.error ?? 'no state'; throw new Error('truth'); }
+      // --truth-only: the truth is in the cache; no fit
+      if (args['truth-only']) throw new Error('truth');
       const states = got.states;
       epochs.length = states.length;
       const lines = epochs.map((t, k) => ({ epoch: t, r: states[k].r, v: states[k].v }));
