@@ -634,6 +634,8 @@ async function main() {
     ffmSelection: FFM_SELECTION,
     windows: windowsText,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha },
+    // --carry-from: the build the carried rows are of, as a field (the bar reads it)
+    ...(carry ? { carriedFrom: carry.build } : {}),
     harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: ['node', 'experiments/headline-loop/table.mjs', ...repositoryArgs(process.argv.slice(2))].join(' ') },
     frame: 'GCRF, the module\'s own output',
     rows,
@@ -994,7 +996,7 @@ async function check() {
     put(newDir, moduleRows.filter((r) => sample.includes(r.key)));
     const a12 = run12(two), w12 = want12(two);
     ok(a12.r.code === 0 && /, 0 to fly/.test(a12.r.err) && JSON.stringify(strip12(a12.row)) === JSON.stringify(w12) && JSON.stringify(a12.row?.carried) === JSON.stringify({ from: '0.0.1', ap: { carried: rest, flown: 4, compared: 4 }, xp: { carried: rest, flown: 4, compared: 4 } })
-      && /Rows carried from sdn-ap 0\.0\.1 \(wasm 0123456789ab, --carry-from\)/.test(a12.doc.statistic ?? '') && /except on the window-arcs each row's carried counts/.test(a12.doc.statistic ?? ''),
+      && /Rows carried from sdn-ap 0\.0\.1 \(wasm 0123456789ab, --carry-from\)/.test(a12.doc.statistic ?? '') && JSON.stringify(a12.doc.carriedFrom) === JSON.stringify({ version: '0.0.1', wasmSha256: other }) && /except on the window-arcs each row's carried counts/.test(a12.doc.statistic ?? ''),
     `carried from another build: ${a12.r.err.slice(-200)} ${JSON.stringify(a12.row?.carried)}`);
     // four compared windows on one satellite of the two: nothing carried, the other satellite's window flown
     const oneSat = [...of12(satA).slice(0, 4), of12(satB)[0]];
