@@ -345,11 +345,14 @@ async function worker() {
    * through its four neighbors on each side (a state off its neighbors' curve); and whether the four runs agree bit for bit. No truth
    * is compared; the truth is read only to make the record.
    */
-  const denseOf = async ({ c, hourH = null, halfMin = 30, stepS = 10, runs = 2, theory = 'ap' }) => {
+  const denseOf = async ({ c, hourH = null, halfMin = 30, stepS = 10, runs = 2, theory = 'ap', keepStates = false }) => {
     const keep = {};
     const row = (await flyCase(c, [FIT], keep))[FIT], ocm = keep[FIT]?.[theory] ?? null;
     const summary = { id: c.id, fit: FIT, rung: RUNG, theory, D: row[theory]?.maxDistance?.maxM ?? null, atH: row[theory]?.maxDistance?.atH ?? null, spanH: row[theory]?.maxDistance?.spanH ?? null };
     if (!ocm) return { ...summary, error: row[theory]?.error ?? row.error ?? row.truth?.error ?? 'no record' };
+    // the record's own mean elements and epoch (the theory's clock starts there)
+    const me = APL.readOcm(ocm).o.MEAN_ELEMENTS;
+    summary.record = { epoch: me.EPOCH, n: me.MEAN_MOTION, e: me.ECCENTRICITY, i: me.INCLINATION, raan: me.RA_OF_ASC_NODE, argp: me.ARG_OF_PERICENTER, ma: me.MEAN_ANOMALY, bterm: me.BTERM, agom: me.AGOM };
     const D0 = Date.parse(`${c.cutoff}T00:00:00Z`), hour = Number.isFinite(hourH) ? hourH : summary.atH;
     const t0 = D0 + hour * HOUR - halfMin * 60e3, count = Math.round((2 * halfMin * 60) / stepS) + 1;
     const epochs = Array.from({ length: count }, (_, k) => iso(t0 + k * stepS * 1000));
@@ -376,7 +379,13 @@ async function worker() {
     };
     const ref = flights.find((x) => x.states && !x.error)?.states;
     const same = (st) => !!ref && !!st && st.length === ref.length && st.every((s, k) => [0, 1, 2].every((q) => Object.is(s.r[q], ref[k].r[q]) && Object.is(s.v[q], ref[k].v[q])));
-    return { ...summary, hourH: hour, from: epochs[0], to: epochs.at(-1), stepS, count,
+    // with keepStates, the first run's states (GCRF km) and each state's distance off the 8th-order curve through its neighbors (m)
+    const kept = keepStates && ref ? ref.map((s, k) => {
+      if (k < 4 || k + 4 >= ref.length) return { epoch: epochs[k], r: s.r, offM: null };
+      const ix = [-4, -3, -2, -1, 1, 2, 3, 4].map((x) => k + x), p = lag(ix, ix.map((x) => ref[x].r), k);
+      return { epoch: epochs[k], r: s.r, offM: 1000 * Math.hypot(...[0, 1, 2].map((q) => s.r[q] - p[q])) };
+    }) : undefined;
+    return { ...summary, hourH: hour, from: epochs[0], to: epochs.at(-1), stepS, count, ...(kept ? { states: kept } : {}),
       runs: flights.map((x) => ({ instance: x.instance, run: x.run, error: x.error ?? null, ...(x.states?.length ? measure(x.states) : {}) })),
       bitForBit: flights.every((x) => !x.error && same(x.states)), agreeing: flights.map((x) => !x.error && same(x.states)) };
   };

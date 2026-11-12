@@ -7,7 +7,9 @@
 // make the record. Every orbit is made up, and the truth is a model's flight, not any satellite's data.
 //
 //   node experiments/synthetic-orbits/dense.mjs --modules-commit <sha> --modules-root <modules checkout> --cases <id,id,...>
-//     [--fit arc72] [--rung <name>] [--seed 498] [--hour <h>] [--half-min 30] [--step-s 10] [--theory ap|xp] [--out <file>] [--scratch]
+//     [--fit arc72] [--rung <name>] [--seed 498] [--hour <h> | --hours <h,h,...>] [--half-min 30] [--step-s 10] [--theory ap|xp] [--states]
+//     [--out <file>] [--scratch]
+//   --states: the first run's states and each state's distance off its neighbors' curve, in the result file
 //   <id>: a case of cases.mjs (seed --seed), or of the claim set (claim-<seed>-b<band>-<k>)
 // Without --scratch this repository's working tree (experiments/synthetic-orbits, experiments/headline-loop) must be clean, since the
 // result names its commit.
@@ -53,14 +55,17 @@ if (fit !== 'arc72' && !FITS[fit]) throw new Error(`--fit ${fit}: not a way fits
 if (rung && !RUNGS[rung]) throw new Error(`--rung ${rung}: not a rung fits.mjs names`);
 const truthStartH = Math.max(72, FITS[fit]?.truthStartH ?? 72);
 const list = String(args.cases).split(',').map((id) => caseOf(id, seed));
-const opts = { hourH: args.hour != null ? Number(args.hour) : null, halfMin: Number(args['half-min'] ?? 30), stepS: Number(args['step-s'] ?? 10), runs: 2, theory };
+const opts = { hourH: args.hour != null ? Number(args.hour) : null, halfMin: Number(args['half-min'] ?? 30), stepS: Number(args['step-s'] ?? 10), runs: 2, theory, keepStates: !!args.states };
+// --hours h1,h2,...: an hour for each case, in the order of --cases (in place of --hour)
+const hours = args.hours ? String(args.hours).split(',').map(Number) : null;
+if (hours && hours.length !== list.length) throw new Error(`--hours: ${hours.length} hours for ${list.length} cases`);
 console.error(`dense: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; fit ${fit}${rung ? `, rung ${rung}` : ''}; ${list.length} cases, each at ${opts.stepS} s for ${opts.halfMin} min either side of ${opts.hourH ?? 'its D hour'}, on the pooled instance and a fresh one, twice each`);
 
 const child = fork(RUN, ['--worker', '--wasm', file, '--fit', fit, '--truth-start-h', String(truthStartH), ...(rung ? ['--rung', rung] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
 const results = [];
 await new Promise((resolve, reject) => {
   let k = 0;
-  const next = () => { if (k < list.length) child.send({ dense: { c: list[k++], ...opts } }); else child.send({ stop: true }); };
+  const next = () => { if (k < list.length) { const j = k++; child.send({ dense: { c: list[j], ...opts, ...(hours ? { hourH: hours[j] } : {}) } }); } else child.send({ stop: true }); };
   child.on('message', (m) => {
     if (m.ready) return next();
     if (m.dense) { results.push(m.dense); next(); }
