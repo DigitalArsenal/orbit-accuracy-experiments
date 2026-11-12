@@ -1,28 +1,36 @@
-// The claim set (stack #505, Tier 1): for each band of the bar's table, n independent random orbits drawn inside the band's box, each
-// flown exactly as run.mjs flies a case (run.mjs's own worker: the same starting state, seed.mjs's record flown by the reference build;
-// the same truth; the same way of making AP's record; the same D = the largest 3D distance to the truth over 0 to 120 h at the truth's
-// own 300 s epochs). Only this set carries a pass rate. The grid and the named cases of cases.mjs stay as they are: they are lists of
-// cases to work on, not a sample.
+// The claim set (stack #505): for each box of the bar's table, n independent random orbits drawn inside the box, each flown exactly as
+// run.mjs flies a case (run.mjs's own worker: the same starting state, seed.mjs's record flown by the reference build; the same truth;
+// the same way of making AP's record; the same D = the largest 3D distance to the truth over 0 to 120 h at the truth's own 300 s
+// epochs). Every orbit is made up, and the truth is a model's flight (the numerical propagator's), not any satellite's data. Only this
+// set carries a pass rate. The grid and the named cases of cases.mjs stay as they are: they are lists of cases to work on, not a sample.
 //
 // The draw, per case (independent, from one seed that is recorded with every row; a fresh seed by default, so each release draws anew):
-//   perigee height: log-uniform inside the band's range;  eccentricity: uniform inside the band's range;
-//   inclination, right ascension of the node, argument of perigee, mean anomaly: uniform (inclination on 0 to 180 deg);
-//   area-to-mass: one of the three classes of cases.mjs (0.001, 0.01, 0.1 m^2/kg: log-uniform over the decade pair), equally likely;
+//   perigee height: log-uniform inside the box's range;  eccentricity: uniform inside the box's range;
+//   inclination: uniform in angle on 0 to 180 deg (not uniform over the sphere); node, argument of perigee, mean anomaly: uniform;
+//   area-to-mass: one of the three classes of cases.mjs (0.001, 0.01, 0.1 m^2/kg), each with the same chance;
 //   cutoff: a whole day, uniform over the span where the as-issued space weather is stored (as cases.mjs);
 //   an orbit whose apogee lies beyond the Moon's mean distance is drawn again (cases.mjs leaves such cells out as well).
-// Mean motion from perigee and eccentricity, two-body, as cases.mjs makes its grid.
+// Mean motion from perigee and eccentricity, two-body, as cases.mjs makes its grid. The boxes (BOXES) are printed by what they draw
+// (boxLabelOf); each row stores the bar's band name (cases.mjs BAR_BANDS) it stands for, whose name is not its box's edges. Drawn in no
+// box: near-circular orbits with perigee 20,200 to 35,486 km or above 36,086 km, eccentric orbits (e above 0.01) with perigee above
+// 35,786 km, and e above 0.9.
 //
-// Per band, by the rules of report.mjs (statusOf): n counts every case that has a truth; k counts those in n that are not within the
-// bar, that is D > 100 m over the whole 0 to 120 h, a truth that ends before 120 h (a decay or the numerical flight ending early,
-// never within, counted with its span), a refused fit, a failed flight or another failure after the truth existed. A case without a
-// truth (it failed before its truth existed, or the numerical flight failed outright) is not in n and is counted on its own line with
-// its reason. Then the exact one-sided 95 % upper bound on the failure share k / n (Clopper-Pearson), and the median, 95th percentile
-// and largest D over the scored cases (those with a D over the whole 0 to 120 h), with their count.
+// The population of a box: its drawn orbits whose numerical flight reaches the cutoff. The status rules are those of report.mjs
+// statusOf (kept the same here): n counts every case that has a truth; k counts those in n that are not within the bar, that is D >
+// 100 m over the whole 0 to 120 h, a truth that ends before 120 h (a decay after the cutoff or the numerical flight ending early, never
+// within, counted with its span), a refused fit, a failed flight or another failure after the truth existed. A case without a truth
+// (it failed before its truth existed, or the numerical flight failed outright, as a decay before the cutoff does) is not in n and is
+// counted on its own line with its reason. The bound is the exact one-sided 95 % upper confidence bound on the failure share k / n
+// (Clopper-Pearson). It is printed only when every drawn case of the box has a row. The median D is the sorted values' element
+// floor(m / 2) (as report.mjs) and the 95th percentile the nearest rank, ceil(0.95 m), over the m scored cases (those with a D over
+// the whole 0 to 120 h).
 //
 //   node experiments/synthetic-orbits/claim.mjs --modules-commit <sha> --modules-root <modules checkout> [--per-band 256] [--seed <s>]
-//     [--fit forecast-span] [--jobs 6] [--bands 0,1,...] [--out <dir>]      flies the set; rows to <dir>/rows.jsonl (resumes)
-//   node experiments/synthetic-orbits/claim.mjs --report --out <dir>       the per-band table from the rows
+//     [--fit forecast-span] [--jobs 6] [--bands 0,1,...] [--out <dir>] [--scratch]   flies the set; rows to <dir>/rows.jsonl (resumes)
+//   node experiments/synthetic-orbits/claim.mjs --report --out <dir>       the per-box table from the draw and its rows
 //   node experiments/synthetic-orbits/claim.mjs --check-bound               the bound against the published table
+// Without --scratch this repository's working tree (experiments/synthetic-orbits, experiments/headline-loop) must be clean, since the
+// rows name its commit. A folder that holds another run's draw (another seed, count, fit, truth start, build or boxes) is refused.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -37,7 +45,8 @@ const MU = 398600.4418, RE = 6378.137, DAY_S = 86400, MOON_KM = 384400, PASS_M =
 const FIRST = Date.parse('2025-11-15T00:00:00Z'), LAST = Date.parse('2026-09-25T00:00:00Z');
 const revPerDay = (hpKm, e) => { const a = (RE + hpKm) / (1 - e); return (DAY_S / (2 * Math.PI)) * Math.sqrt(MU / a ** 3); };
 
-/** The nine bands of the bar's table as boxes (perigee height km, eccentricity), on the same edges as cases.mjs barBandOf. */
+/** The nine boxes drawn from (perigee height km, eccentricity), one for each band of the bar's table (cases.mjs BAR_BANDS, the key the
+ *  rows store). A box's edges are its own, not its band name's: print a box by boxLabelOf. */
 export const BOXES = [
   { band: BAR_BANDS[0], hp: [200, 400], e: [0, 0.01] },
   { band: BAR_BANDS[1], hp: [400, 600], e: [0, 0.01] },
@@ -49,6 +58,11 @@ export const BOXES = [
   { band: BAR_BANDS[7], hp: [200, 2500], e: [0.3, 0.9] },
   { band: BAR_BANDS[8], hp: [2500, 35786], e: [0.3, 0.9] },
 ];
+
+const km = (x) => x.toLocaleString('en-US');
+/** What box b draws, as a page prints it: its eccentricity and perigee ranges. */
+export const boxLabelOf = (b) => { const x = BOXES[b]; return `${x.e[1] <= 0.01 ? 'near-circular, e 0 to 0.01' : `e ${x.e[0]} to ${x.e[1]}`}, perigee ${km(x.hp[0])} to ${km(x.hp[1])} km`; };
+export const NOT_DRAWN = 'Drawn in no box: near-circular orbits with perigee 20,200 to 35,486 km or above 36,086 km; eccentric orbits (e above 0.01) with perigee above 35,786 km; e above 0.9.';
 
 /** The cases of band b: n independent draws from seed s (the band's own stream, so a band's cases do not depend on the others). */
 export function draw(seed, b, n) {
@@ -86,7 +100,9 @@ export function upperBound(k, n, level = 0.95) {
   return (lo + hi) / 2;
 }
 
-const percentile = (v, q) => { if (!v.length) return null; const s = v.slice().sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.ceil(q * s.length) - 1)]; };
+// the median as report.mjs takes it (the sorted values' element floor(m / 2)), and the 95th percentile by nearest rank
+const median = (v) => { if (!v.length) return null; const s = v.slice().sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
+const p95 = (v) => { if (!v.length) return null; const s = v.slice().sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.ceil(0.95 * s.length) - 1)]; };
 const read = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : []);
 
 /**
@@ -116,22 +132,33 @@ export function statusOf(r) {
 }
 const IN_N = new Set(['within', 'over', 'short', 'refused', 'flight-failed', 'failed']);
 
-/** The per-band table from the rows: k of n not within the bar (n every case with a truth), the bound on k / n, D over the scored
- *  cases, and the counts of each way a case is not within, and of the cases without a truth. */
-export function table(rows) {
-  return BOXES.map((box) => {
-    const rs = rows.filter((r) => r.band === box.band).map((r) => ({ r, ...statusOf(r) }));
+/** The per-box table from the draw and the rows: every drawn case by its row (the last one, of this run: build, seed, fit and truth
+ *  start), k of n not within the bar (n every case with a truth), the bound on k / n only when no drawn case lacks a row, D over the
+ *  scored cases, and the counts of each way a case is not within, of the cases without a truth and of those not flown. */
+export function table(draws, rows) {
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  return draws.map(({ b, cases }) => {
+    const box = BOXES[b];
+    const rs = cases.map((c) => { const r = byId.get(c.id) ?? null; return { c, r, ...statusOf(r) }; });
     const of = (s) => rs.filter((x) => x.status === s);
-    const inN = rs.filter((x) => IN_N.has(x.status)), within = of('within').length, n = inN.length, k = n - within;
+    const inN = rs.filter((x) => IN_N.has(x.status)), within = of('within').length, n = inN.length, k = n - within, notFlown = of('not-flown').length;
     const scored = rs.filter((x) => x.status === 'within' || x.status === 'over'), Ds = scored.map((x) => x.r.ap.maxDistance.maxM);
-    const worst = scored.sort((a, b) => b.r.ap.maxDistance.maxM - a.r.ap.maxDistance.maxM)[0];
+    const worst = scored.slice().sort((a, b) => b.r.ap.maxDistance.maxM - a.r.ap.maxDistance.maxM)[0];
     const short = of('short');
-    return { band: box.band, box: { perigeeKm: box.hp, eccentricity: box.e }, drawn: rs.length, n, k, within, over: of('over').length,
+    return { box: b, label: boxLabelOf(b), band: box.band, edges: { perigeeKm: box.hp, eccentricity: box.e }, drawn: rs.length, notFlown, n, k, within, over: of('over').length,
       short: short.length, shortSpansH: short.map((x) => x.spanH).sort((a, b) => a - b), refused: of('refused').length, flightFailed: of('flight-failed').length, failed: of('failed').length,
       noTruth: of('no-truth').length, noTruthReasons: [...new Set(of('no-truth').map((x) => x.reason.replace(/ at \d{4}-\d\d-\d\dT[\d:.]+ UTC.*$/, '')))],
-      upper95: n ? upperBound(k, n) : null, scored: Ds.length, medianM: percentile(Ds, 0.5), p95M: percentile(Ds, 0.95), maxM: Ds.length ? Math.max(...Ds) : null, worst: worst ? worst.r.id : null };
+      upper95: n && !notFlown ? upperBound(k, n) : null, boundWithheld: notFlown ? `${notFlown} drawn case${notFlown > 1 ? 's have' : ' has'} no row` : null,
+      scored: Ds.length, medianM: median(Ds), p95M: p95(Ds), maxM: Ds.length ? Math.max(...Ds) : null, worst: worst ? worst.r.id : null };
   });
 }
+
+/** What a result says of itself (claim.json and the printed lines). */
+const STATUS_RULES = 'n counts every drawn case that has a truth; k counts those in n not within the bar: D > 100 m over the whole 0 to 120 h, a truth that ends before 120 h (never within), a refused fit, a failed flight or another failure after the truth existed. A case without a truth (it failed before its truth existed, or the numerical flight failed outright, as a decay before the cutoff does) is outside n, with its reason.';
+const POPULATION = 'The population of a box: its drawn orbits whose numerical flight reaches the cutoff. A decay after the cutoff is in n as a failure, one before it is outside n. A draw whose apogee lies beyond the Moon\'s mean distance is drawn again.';
+const BOUND = 'The bound: the exact one-sided 95 % upper confidence bound on the failure share k / n (Clopper-Pearson), printed only when every drawn case of the box has a row.';
+const MADE_UP = 'Every orbit is made up, and the truth is a model\'s flight (the numerical propagator\'s), not any satellite\'s data.';
+const sameRun = (d, r) => r.wasmSha256 === d.wasmSha256 && r.claimSeed === d.seed && r.fit === d.fit && (r.truthStartH ?? 72) === d.truthStartH;
 
 // run only as the program itself, not when another script imports draw or table
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
@@ -142,12 +169,26 @@ if (!isMain) { /* imported */ } else if (args['check-bound']) {
   for (const [k, n, pct] of want) { const got = 100 * upperBound(k, n), ok = Math.abs(got - pct) < 0.006; bad += ok ? 0 : 1; console.log(`${k} of ${n}: ${got.toFixed(3)} % (table ${pct} %)${ok ? '' : '  MISMATCH'}`); }
   process.exit(bad ? 1 : 0);
 } else if (args.report) {
-  const rows = read(path.join(args.out, 'rows.jsonl'));
-  const t = table(rows), meta = rows[0] ? { seed: rows[0].claimSeed, fit: rows[0].fit, version: rows[0].version, wasmSha256: rows[0].wasmSha256, modulesCommit: rows[0].modulesCommit } : {};
-  fs.writeFileSync(path.join(args.out, 'claim.json'), JSON.stringify({ ...meta, bands: t }, null, 1));
+  const drawFile = path.join(args.out, 'draw.json');
+  if (!fs.existsSync(drawFile)) throw new Error(`${drawFile}: no draw in this folder`);
+  const d = JSON.parse(fs.readFileSync(drawFile, 'utf8'));
+  d.truthStartH ??= 72;
+  const all = read(path.join(args.out, 'rows.jsonl')), rows = all.filter((r) => sameRun(d, r));
+  const draws = d.bands.map((b) => ({ b, cases: draw(d.seed, b, d.perBand) }));
+  const t = table(draws, rows);
+  const { FITS, ARC72_TEXT } = await import('./fits.mjs');
+  const way = d.fit === 'arc72' ? { text: ARC72_TEXT, after: false } : FITS[d.fit];
+  const command = `node experiments/synthetic-orbits/claim.mjs --modules-commit ${d.modulesCommit} --modules-root <modules clone> --seed ${d.seed} --per-band ${d.perBand} --fit ${d.fit}${d.bands.length < BOXES.length ? ` --bands ${d.bands.join(',')}` : ''}`;
+  const harness = [...new Set(rows.map((r) => r.harness).filter(Boolean))];
+  const doc = { seed: d.seed, perBand: d.perBand, fit: d.fit, fitText: way.text, fitAfterCutoff: way.after, truthStartH: d.truthStartH, version: d.version, modulesCommit: d.modulesCommit, wasmSha256: d.wasmSha256,
+    command, harness: harness.length ? harness : 'not recorded in these rows', rowsRead: rows.length, rowsOfOtherRuns: all.length - rows.length,
+    madeUp: MADE_UP, population: POPULATION, statusRules: STATUS_RULES, bound: BOUND, notDrawn: NOT_DRAWN, boxes: t };
+  fs.writeFileSync(path.join(args.out, 'claim.json'), JSON.stringify(doc, null, 1));
   const f = (x) => (x == null ? '-' : x >= 1000 ? `${(x / 1000).toFixed(2)} km` : `${x.toFixed(1)} m`);
-  console.log(`seed ${meta.seed}, fit ${meta.fit}, sdn-ap ${meta.version} (${(meta.wasmSha256 ?? '').slice(0, 12)})`);
-  for (const b of t) console.log(`${b.band} (perigee ${b.box.perigeeKm.join(' to ')} km, e ${b.box.eccentricity.join(' to ')}): ${b.k} of ${b.n} not within 100 m (over ${b.over}, truth short of 120 h ${b.short}${b.short ? ` [${b.shortSpansH.join(', ')} h]` : ''}, refused fits ${b.refused}, failed flights ${b.flightFailed}, other ${b.failed}), bound ${b.upper95 == null ? '-' : (100 * b.upper95).toFixed(2)} %; over the ${b.scored} scored: median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}; without a truth ${b.noTruth}${b.noTruth ? ` (${b.noTruthReasons.join('; ').slice(0, 160)})` : ''}`);
+  console.log(`seed ${d.seed}, ${d.perBand} per box, fit ${d.fit} (fitted after the cutoff: ${way.after ? 'yes' : 'no'}), truth from ${d.truthStartH} h before the cutoff, sdn-ap ${d.version} (${d.wasmSha256.slice(0, 12)}, modules ${d.modulesCommit.slice(0, 12)}); rows of this run ${rows.length}${all.length > rows.length ? `, of other runs ${all.length - rows.length} (not read)` : ''}; this repository at ${harness.length ? harness.join(', ') : 'a commit these rows do not record'}`);
+  console.log(`command: ${command}`);
+  for (const s of [MADE_UP, POPULATION, STATUS_RULES, BOUND, `Fit way ${d.fit}: ${way.text}`, NOT_DRAWN]) console.log(s);
+  for (const b of t) console.log(`${b.label}: ${b.k} of ${b.n} not within 100 m (drawn ${b.drawn}; over ${b.over}, truth short of 120 h ${b.short}${b.short ? ` [${b.shortSpansH.join(', ')} h]` : ''}, refused fits ${b.refused}, failed flights ${b.flightFailed}, other ${b.failed}; without a truth ${b.noTruth}${b.noTruth ? ` (${b.noTruthReasons.join('; ').slice(0, 160)})` : ''}; not flown ${b.notFlown}), bound ${b.upper95 == null ? `- (${b.boundWithheld ?? 'n is 0'})` : `${(100 * b.upper95).toFixed(2)} %`}; over the ${b.scored} scored: median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}`);
 } else await fly();
 
 async function fly() {
@@ -157,6 +198,11 @@ async function fly() {
   const { usePackages } = await import('../headline-loop/lib/env.mjs');
   usePackages();
   const A = await import('../headline-loop/lib/arms.mjs');
+  // the rows name this repository's commit: its working tree must be clean (as run.mjs), or the run says --scratch
+  const REPO = path.resolve(HERE, '../..');
+  const dirty = execFileSync('git', ['-C', REPO, 'status', '--porcelain', '--', 'experiments/synthetic-orbits', 'experiments/headline-loop'], { encoding: 'utf8' }).trim();
+  if (dirty && !args.scratch) throw new Error(`refused: this repository's working tree differs from its commit (the rows name the commit):\n${dirty}`);
+  const harness = execFileSync('git', ['-C', REPO, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim() + (dirty ? '+scratch' : '');
   const git = (...a) => execFileSync('git', ['-C', root, ...a], { maxBuffer: 1 << 28 });
   const commit = git('rev-parse', '--verify', `${want}^{commit}`).toString().trim();
   const wasm = git('show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`), version = JSON.parse(git('show', `${commit}:propagator/sdn-ap/package.json`).toString()).version;
@@ -171,9 +217,16 @@ async function fly() {
   const bands = args.bands ? args.bands.split(',').map(Number) : BOXES.map((_, b) => b);
   const out = args.out ?? path.join(dir, `claim-${seed}-${fit}`);
   fs.mkdirSync(out, { recursive: true });
-  const rowsFile = path.join(out, 'rows.jsonl'), done = new Set(read(rowsFile).map((r) => r.id));
+  // one run to a folder: a draw already there must be this run's
+  const drawFile = path.join(out, 'draw.json'), drawn = { seed, perBand, fit, truthStartH, modulesCommit: commit, version, wasmSha256: wasmSha, boxes: BOXES, bands };
+  if (fs.existsSync(drawFile)) {
+    const old = JSON.parse(fs.readFileSync(drawFile, 'utf8')), same = ['seed', 'perBand', 'fit', 'wasmSha256'].every((k) => old[k] === drawn[k]) && (old.truthStartH ?? 72) === truthStartH
+      && JSON.stringify(old.boxes) === JSON.stringify(BOXES) && JSON.stringify(old.bands) === JSON.stringify(bands);
+    if (!same) throw new Error(`refused: ${drawFile} holds another run's draw (seed ${old.seed}, ${old.perBand} per box, fit ${old.fit}, build ${String(old.wasmSha256).slice(0, 12)}); give another --out`);
+  }
+  const rowsFile = path.join(out, 'rows.jsonl'), done = new Set(read(rowsFile).filter((r) => sameRun(drawn, r)).map((r) => r.id));
   const all = bands.flatMap((b) => draw(seed, b, perBand)), todo = all.filter((c) => !done.has(c.id));
-  fs.writeFileSync(path.join(out, 'draw.json'), JSON.stringify({ seed, perBand, fit, truthStartH, modulesCommit: commit, version, wasmSha256: wasmSha, boxes: BOXES, bands }, null, 1));
+  fs.writeFileSync(drawFile, JSON.stringify(drawn, null, 1));
   const jobs = Math.min(Number(args.jobs ?? 6), todo.length);
   console.error(`claim: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; seed ${seed}, ${perBand} per band, fit ${fit}; ${all.length} cases, ${todo.length} to fly on ${jobs} jobs; rows to ${rowsFile}`);
   let next = 0, flown = 0;
@@ -183,7 +236,7 @@ async function fly() {
     child.on('message', (m) => {
       if (m.rows) {
         const row = m.rows[fit], c = m.c;
-        fs.appendFileSync(rowsFile, `${JSON.stringify({ ...row, band: c.band, claimSeed: seed, version, modulesCommit: commit, wasmSha256: wasmSha })}\n`);
+        fs.appendFileSync(rowsFile, `${JSON.stringify({ ...row, band: c.band, claimSeed: seed, version, modulesCommit: commit, wasmSha256: wasmSha, harness })}\n`);
         flown += 1;
         console.error(`  ${flown}/${todo.length} ${c.id}: D ${row.ap?.maxDistance?.maxM ?? row.ap?.error ?? row.error ?? 'no truth'} m; ${row.wallS} s`);
       }

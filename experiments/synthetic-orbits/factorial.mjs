@@ -1,37 +1,54 @@
-// The factorial attribution (stack #505, Tier 3): for one case, every on/off combination of the listed force components, each set the
-// same way on both sides (the numerical propagator's truth and AP), with AP's record fitted over the forecast span (the truth's own 0 to
-// 120 h after the cutoff, as fits.mjs forecast-span) and, as one more factor, the drag and radiation terms held at the truth's values or
-// solved. The fit reads the same numerical flight it is then scored on, so D is how well one record can follow that flight over the
-// span, not a forecast from data before the cutoff. Switching forces off one at a time walks a single path through these combinations
-// and credits an interaction to whichever force is removed first; the full table gives every main effect, every two-factor interaction
-// and each component's Shapley share.
+// The factorial attribution (stack #505): for one made-up case, every combination of the listed force components, each set the
+// same way on both sides (the numerical propagator's truth and AP), with AP's record fitted over the forecast span (the truth's own 0
+// to 120 h after the cutoff, as fits.mjs forecast-span) and, as one more factor, the drag and radiation terms held at the truth's
+// values or solved. The fit reads the same numerical flight it is then scored on, so D is how well one record can follow that flight
+// over the span, not a forecast from data before the cutoff. Every orbit is made up, and the truth is a model's flight, not any
+// satellite's data.
 //
-// The components, and how each is set on each side (as the elimination flights of stack #497 set them):
-//   zonal     the zonal field above J2.  Truth: EGM96 to degree 20 (order 0), or J2 alone.  AP: MAXIMUM_DEGREE 20 and its J3 to J5, or a
-//             build with J3, J4 and J5 zero and MAXIMUM_DEGREE 5 (no zonal tail).
-//   tesseral  the tesseral and sectoral terms.  Truth: EGM96 70 x 70, or the zonals alone.  AP: MAXIMUM_TESSERAL_DEGREE 31, or 0 with a
-//             build that flies no resonance-class terms (with the cap at 0, AP still flies the theory's resonance-class terms, which a
-//             zonal truth lacks).  Nested in zonal: with the zonal field off both sides are J2 alone, so a combination with zonal off and
-//             tesseral on is the same flight as zonal and tesseral off (the truth cannot fly J2 with tesserals).
-//   moon, sun the Moon's and the Sun's attraction.  Truth: the body in its third-body list.  AP: a build with that body's mass zero.
-//   radiation the truth's cannonball radiation pressure (C_R A/m = the case's term).  AP: its radiation term (held: at the truth's value,
-//             or at 0 with the component off).
-//   drag      only where the perigee is under 2,500 km.  Truth: drag on NRLMSISE-00 (C_D A/m = the case's term).  AP: its drag term
-//             (held: at the truth's value, or at 0 off).  Both sides see constant weather (F10.7 150, Ap 15).
-//   tide      the solid Earth tide.  Truth: IERS 2010 solid tides and the IERS 2010 relativity terms.  AP: SOLID_TIDES.
-//   fit       held: the drag and radiation terms held at the values above (sigma 1e-10); solved: the call's default priors.
-// The truth: FFM from the state at the cutoff - 72 h, made as run.mjs makes it (seed.mjs's record of the case's mean elements, flown
-// by the reference build, sdn-ap 0.6.26 at modules 7ed7cf88, whatever commit is under test), on a 300 s grid to 120 h past the cutoff;
-// DE440s, constant Earth orientation (TAI - UTC 37 s); RK78, tolerance 1e-11, steps 1e-3 to 120 s.
-// AP's builds are built unsigned from the commit's sources, every arm alike, the full arm included (its sha is printed beside the
-// committed dist's). D: the largest 3D distance to the truth over the 1,440 states after the cutoff (0 to 120 h at the truth's own
-// epochs); with it the signed radial, along-track and cross-track differences at that time. A cell has no D when its fit is refused
-// or its truth ends before 120 h after the cutoff (a decay, or the numerical flight ending early): such a cell is never within, its
-// reason is printed, and the analysis is refused, since main effects and Shapley shares need every cell of the table.
+// The factors, and each level on each side:
+//   field      one factor at three levels, every level of one field model, EGM2008 (the model AP's table carries from sdn-ap 0.6.36):
+//              - J2 alone. Truth: EGM2008 to degree 2, order 0. AP: a build with J3, J4 and J5 zero, MAXIMUM_DEGREE 5 (no zonal tail)
+//                and MAXIMUM_TESSERAL_DEGREE 0, flying no resonance-class terms; AP's J2 is its own constant (SPEC 1.3), not
+//                EGM2008's C20.
+//              - the zonal tail. Truth: EGM2008 to degree 20, order 0. AP: MAXIMUM_DEGREE 20 with its J3 to J5, MAXIMUM_TESSERAL_DEGREE
+//                0, the build that flies no resonance-class terms.
+//              - the full field. Truth: EGM2008 to degree and order 70. AP: MAXIMUM_DEGREE 20, MAXIMUM_TESSERAL_DEGREE 31, the build
+//                as committed. The degrees differ: the truth carries degrees 21 to 70 and the tesserals above 31 that AP does not.
+//   moon, sun  each body's attraction. Truth: the body in the third-body list. AP: a build with that body's mass zero in the attraction
+//              only; AP's solid tide keeps both bodies, as the truth's does whatever its third-body list says.
+//   radiation  cannonball radiation pressure, C_R A/m = the case's term. Truth: on or off. AP: its radiation term at the truth's value
+//              (held) or solved where on; held at 0 where off, in both halves.
+//   drag       only where the perigee is under 2,500 km. Truth: NRLMSISE-00 drag, C_D A/m = the case's term. AP: NRLMSISE-00 on the
+//              same weather with its drag term at the truth's value (held) or solved where on; where off, no atmosphere (as run.mjs
+//              flies a truth without drag) and its drag term held at 0, in both halves.
+//   tide       the solid Earth tide, IERS 2010, on both sides (AP: SOLID_TIDES).
+//   fit        + held: the drag and radiation terms held at the values above (sigma 1e-10); - solved: AP's default priors where
+//              the component is on.
+// In every truth cell: the IERS 2010 relativity terms (AP carries no relativity), DE440s, the Earth orientation, the numerical
+// propagator FFM 2.2.0 (each pinned and checked by hash in headline-loop/lib/ffm.mjs, as run.mjs flies them), constant space weather
+// (F10.7 150, its 81-day mean 150, Ap 15, every day, on both sides), RK78 at tolerance 1e-11 with steps of 1e-3 to 120 s, from the
+// state at the cutoff - 72 h made as run.mjs makes it (seed.mjs's record of the case's mean elements flown by the reference build,
+// sdn-ap 0.6.26 at modules 7ed7cf88, whatever commit is under test), on a 300 s grid to 120 h past the cutoff.
+// AP's builds are built unsigned from the commit's sources with the named patches, every arm alike, the full arm included; each build
+// is keyed by the hash of its patches' text, and its sha256 is printed beside the committed dist's.
+// D: the largest 3D distance to the truth over 0 to 120 h after the cutoff inclusive (1,441 states at the truth's own epochs); with it
+// the signed radial, along-track and cross-track differences at that time. A cell has no D, with its reason, when its fit is refused,
+// AP's flight fails or returns fewer states than asked, a distance is not finite, the numerical flight fails, or the truth ends before
+// 120 h; the analysis is then refused, since main effects and Shapley shares need every cell.
+// The analysis, on log10 D:
+// - each binary factor's main effect: the mean of log10 D with the factor on less the mean with it off, over every other cell;
+// - the field's two steps: the mean at the zonal tail less the mean at J2 alone, and the mean at the full field less the mean at the
+//   zonal tail;
+// - two-factor interactions: of two binary factors, and of a field step with a binary factor, each half the change of one's effect
+//   between the other's levels;
+// - Shapley shares of D for each fit level, over the players field (off: J2 alone; on: the full field), moon, sun, radiation, drag
+//   and tide; the field's own split (D at its three levels with every other component on) apart;
+// - the one-at-a-time path: J2 alone with every other component off, then the zonal tail, the full field, the Moon, the Sun,
+//   radiation, drag and the tide added in that order.
 //
 //   node experiments/synthetic-orbits/factorial.mjs --case <id> --modules-commit <sha> --modules-root <modules checkout>
-//     [--factors zonal,tesseral,moon,sun,radiation,drag,tide,fit] [--jobs 6] [--seed 498] [--out <dir>]
-//   <id>: a case of cases.mjs (seed --seed), or of the claim set (claim-<seed>-b<band>-<k>)
+//     [--factors moon,sun,radiation,drag,tide,fit] [--jobs 2] [--seed 498] [--out <dir>]
+//   <id>: a case of cases.mjs (seed --seed), or of the claim set (claim-<seed>-b<band>-<k>); the field is always a factor
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -42,21 +59,40 @@ import { cases as makeCases, termsOf, labelOf } from './cases.mjs';
 import { draw } from './claim.mjs';
 import { seedRecord } from './seed.mjs';
 
-// the reference build that makes every case's starting state (as run.mjs REFERENCE), read by git show and checked by its sha256
-const REFERENCE = { version: '0.6.26', modulesCommit: '7ed7cf887b37', wasmSha256: '9119284b8f972799' };
-
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = fileURLToPath(import.meta.url);
-const ALL = ['zonal', 'tesseral', 'moon', 'sun', 'radiation', 'drag', 'tide', 'fit'];
-const DAY = 864e5, STEP = 300e3, N = (8 * DAY) / STEP + 1, NA = (3 * DAY) / STEP, DRAG_BELOW_KM = 2500;
+const FIELD = ['j2', 'zonal', 'full'];
+const BINARY = ['moon', 'sun', 'radiation', 'drag', 'tide', 'fit'];
+const FIELD_TEXT = { j2: 'J2 alone', zonal: 'the zonal tail', full: 'the full field' };
+const DAY = 864e5, HOUR = 36e5, STEP = 300e3, N = (8 * DAY) / STEP + 1, NA = (3 * DAY) / STEP, NB = (120 * HOUR) / STEP, DRAG_BELOW_KM = 2500;
+const TOLERANCE = 1e-11, WEATHER = { f107: 150, c81: 150, ap: 15 };
+const TRUTH_V = 2;
+// the reference build that makes every case's starting state (as run.mjs REFERENCE), read by git show and checked by its sha256
+const REFERENCE = { version: '0.6.26', modulesCommit: '7ed7cf887b37', wasmSha256: '9119284b8f972799' };
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
-const iso = (ms) => new Date(ms).toISOString().replace('Z', '');
-const jdUtc = (ms) => 2440587.5 + ms / DAY;
-const PATCHES = {
-  j2: [['xp_theory.inc', 'constexpr double kJ3 = -2.53265648533224e-6;', 'constexpr double kJ3 = 0.0;'], ['xp_theory.inc', 'constexpr double kJ4 = -1.619621591367e-6;', 'constexpr double kJ4 = 0.0;'], ['xp_theory.inc', 'constexpr double kJ5 = -2.27296082868698e-7;', 'constexpr double kJ5 = 0.0;']],
-  nores: [['xp_theory.inc', 's.ctx.res_count = res::current_terms(res, e.eo, std::sin(e.xincl), std::cos(e.xincl), rc);', 's.ctx.res_count = res::current_terms(res, e.eo, std::sin(e.xincl), std::cos(e.xincl), rc); s.ctx.res_count = 0;']],
-  nosun: [['xp_theory.inc', 'constexpr double kSunMass = 332946.038;', 'constexpr double kSunMass = 0.0;']],
-  nomoon: [['xp_theory.inc', 'constexpr double kMoonMass = 0.012300034;', 'constexpr double kMoonMass = 0.0;']],
+const iso = (ms) => new Date(ms).toISOString();
+
+// the diagnostic builds' patches (propagator/sdn-ap/src/xp_theory.inc), each an exact text found once
+const X = 'xp_theory.inc';
+const TIDE_LINE = 'inline void rates_eq(const double k1[2], const Bodies& b, const double* y, const Frame& fr, double* out) {\n  double txx = 0.0, tyy = 0.0, tzz = 0.0, txy = 0.0, txz = k1[0], tyz = k1[1];\n  const Vec3 us[2] = {b.sun_u, b.moon_u};\n  const double rs[2] = {b.sun_r, b.moon_r}, ms[2] = {kSunMass, kMoonMass};';
+const PATCH = {
+  // J3 to J5 zero
+  j2: [[X, 'constexpr double kJ3 = -2.53265648533224e-6;', 'constexpr double kJ3 = 0.0;'], [X, 'constexpr double kJ4 = -1.619621591367e-6;', 'constexpr double kJ4 = 0.0;'],
+    [X, 'constexpr double kJ5 = -2.27296082868698e-7;', 'constexpr double kJ5 = 0.0;']],
+  // no resonance-class terms
+  nores: [[X, 's.ctx.res_count = res::current_terms(res, e.eo, std::sin(e.xincl), std::cos(e.xincl), rc);', 's.ctx.res_count = res::current_terms(res, e.eo, std::sin(e.xincl), std::cos(e.xincl), rc); s.ctx.res_count = 0;']],
+  // the solid tide's own body masses, so that a body's attraction can be zeroed alone
+  tidemass: [[X, TIDE_LINE, TIDE_LINE.replace('ms[2] = {kSunMass, kMoonMass}', 'ms[2] = {kSunMassTide, kMoonMassTide}')],
+    [X, 'constexpr double kFlattening = 3.3528197529902951e-3;', 'constexpr double kSunMassTide = 332946.038;\nconstexpr double kMoonMassTide = 0.012300034;\nconstexpr double kFlattening = 3.3528197529902951e-3;']],
+  nosun: [[X, 'constexpr double kSunMass = 332946.038;', 'constexpr double kSunMass = 0.0;']],
+  nomoon: [[X, 'constexpr double kMoonMass = 0.012300034;', 'constexpr double kMoonMass = 0.0;']],
+};
+const buildName = (a) => [a.field === 'j2' ? 'j2-nores' : a.field === 'zonal' ? 'nores' : 'base', a.sun ? null : 'nosun', a.moon ? null : 'nomoon'].filter(Boolean).join('-');
+const patchesOf = (name) => {
+  const parts = name.split('-').filter((p) => p !== 'base');
+  const bodies = parts.includes('nosun') || parts.includes('nomoon');
+  return [...(parts.includes('j2') ? PATCH.j2 : []), ...(parts.includes('nores') ? PATCH.nores : []), ...(bodies ? PATCH.tidemass : []),
+    ...(parts.includes('nosun') ? PATCH.nosun : []), ...(parts.includes('nomoon') ? PATCH.nomoon : [])];
 };
 
 /** The case by id: cases.mjs's list, or a claim-set draw. */
@@ -67,36 +103,28 @@ function caseOf(id, seed) {
   if (!c) throw new Error(`no case ${id} (seed ${seed})`);
   return c;
 }
-/** The arm's on/off settings from a cell (factor -> 0/1), the nesting applied: zonal off means J2 alone on both sides. */
-const armOf = (cell, dragApplies) => {
-  const on = (f) => (cell[f] ?? 1) === 1;
-  const grav = !on('zonal') ? 'j2' : on('tesseral') ? 'full' : 'zonal';
-  return { grav, moon: on('moon'), sun: on('sun'), radiation: on('radiation'), drag: dragApplies && on('drag'), tide: on('tide'), fit: (cell.fit ?? 1) === 1 ? 'held' : 'solved' };
-};
-const buildName = (a) => [a.grav === 'j2' ? 'j2-nores' : a.grav === 'zonal' ? 'nores' : 'base', a.sun ? null : 'nosun', a.moon ? null : 'nomoon'].filter(Boolean).join('-');
-const truthKey = (a) => JSON.stringify({ grav: a.grav, moon: a.moon, sun: a.sun, radiation: a.radiation, drag: a.drag, tide: a.tide });
+/** A cell's arm: the field level and each binary component on or off (drag off where it does not apply). */
+const armOf = (cell, dragApplies) => ({ field: cell.field, moon: cell.moon === 1, sun: cell.sun === 1, radiation: cell.radiation === 1, drag: dragApplies && cell.drag === 1, tide: cell.tide === 1, fit: cell.fit === 1 ? 'held' : 'solved' });
+const truthKeyOf = (a) => JSON.stringify({ field: a.field, moon: a.moon, sun: a.sun, radiation: a.radiation, drag: a.drag, tide: a.tide });
 
+/** The modules root's harness, the SDS bindings and AP's fit settings (headline-loop and operator-theory, as run.mjs reads them). */
 async function libs(root) {
-  const lib = (f) => import(pathToFileURL(path.join(root, 'propagator/sdn-ap/test/lib', f)).href);
-  const req = createRequire(path.join(root, 'propagator/sdn-ap/package.json'));
-  const imp = (s) => import(pathToFileURL(req.resolve(s)).href);
-  return { O: await lib('ocm.mjs'), P: await lib('pcf.mjs'), Fr: await lib('frames.mjs'), Spw: await lib('spw-constant.mjs'), T: await lib('ffm-truth.mjs'),
-    C: await import(pathToFileURL(path.join(root, 'propagator/ffm/tests/lib/prwCodec.mjs')).href), sdk: await imp('space-data-module-sdk/testing/isomorphic'),
-    fb: await imp('flatbuffers'), OEM: await imp('spacedatastandards.org/lib/js/OEM/OEM.js'), CAT: await imp('spacedatastandards.org/lib/js/OEM/CAT.js'),
-    Block: await imp('spacedatastandards.org/lib/js/OEM/ephemerisDataBlock.js'), Line: await imp('spacedatastandards.org/lib/js/OEM/ephemerisDataLine.js'),
-    TS: await imp('spacedatastandards.org/lib/js/OEM/timingStandard.js'), Atm: await imp('spacedatastandards.org/lib/js/PCF/pcfAtmosphereFamily.js'),
-    Wx: await imp('spacedatastandards.org/lib/js/PCF/pcfWeatherSource.js'), Out: await imp('spacedatastandards.org/lib/js/PCF/pcfOutputFrame.js') };
+  process.env.SDN_MODULES_ROOT ??= root;
+  const { usePackages, MODULES_ROOT } = await import('../headline-loop/lib/env.mjs');
+  usePackages();
+  const A = await import('../headline-loop/lib/arms.mjs');
+  const APL = await import('../operator-theory/lib/ap.mjs');
+  const entry = createRequire(path.join(MODULES_ROOT, 'propagator/sdn-ap/package.json')).resolve('space-data-module-sdk/testing/isomorphic');
+  const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
+  return { A, S: A.S, APL, createStandaloneHarness };
 }
-const harnessOf = async (L, wasm) => {
-  const h = await L.sdk.createStandaloneHarness('browser', wasm, { surface: 'command' });
-  return { h, call: async (methodId, inputs) => { const r = await h.invoke({ methodId, inputs }); if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode} ${String(r.errorMessage).slice(0, 200)}`); return r.outputs; } };
-};
-const linesOf = (L, out) => L.OEM.OEM.getRootAsOEM(new L.fb.ByteBuffer(out.find((v) => v.portId === 'ephemeris').payload)).unpack().EPHEMERIS_DATA_BLOCK[0].EPHEMERIS_DATA_LINES;
+const flightPcf = (S, epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 16); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
+const statesOf = (S, r) => S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload)).map((l) => ({ r: l.r, v: l.v }));
 
 /** The case's state at tStart (GCRF, km and km/s): seed.mjs's record flown by the reference build, as run.mjs's worker makes it. The
  *  reference wasm is the one run.mjs places in <store>/synthetic/reference, or read by git show from the modules clone. */
-async function startState(A, L, root, c, tStart) {
-  const S = A.S, file = path.join(A.STORE_ROOT, 'synthetic', 'reference', `${REFERENCE.wasmSha256}.wasm`);
+async function startState(L, root, c, tStart) {
+  const S = L.S, file = path.join(L.A.STORE_ROOT, 'synthetic', 'reference', `${REFERENCE.wasmSha256}.wasm`);
   if (!fs.existsSync(file)) {
     const ref = execFileSync('git', ['-C', root, 'show', `${REFERENCE.modulesCommit}:propagator/sdn-ap/dist/isomorphic/module.wasm`], { maxBuffer: 1 << 28 });
     if (!sha256(ref).startsWith(REFERENCE.wasmSha256)) throw new Error('the reference build\'s wasm is not the named one');
@@ -104,28 +132,28 @@ async function startState(A, L, root, c, tStart) {
     fs.writeFileSync(`${file}.${process.pid}`, ref); fs.renameSync(`${file}.${process.pid}`, file);
   }
   if (!sha256(fs.readFileSync(file)).startsWith(REFERENCE.wasmSha256)) throw new Error(`${file} is not the reference build`);
-  const epoch = new Date(tStart).toISOString();
-  const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: [epoch] });
-  const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b));
-  const h = await L.sdk.createStandaloneHarness('browser', file, { surface: 'direct' });
+  const epoch = iso(tStart);
+  const h = await L.createStandaloneHarness('browser', file, { surface: 'direct' });
   const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: seedRecord(S, { epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma }) },
-    { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: b.asUint8Array().slice() }] });
+    { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf(S, [epoch]) }] });
   if (r.statusCode !== 0) throw new Error(`reference propagate: ${String(r.errorMessage).slice(0, 200)}`);
-  const [p] = S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload));
+  const [p] = statesOf(S, r);
   await h.close?.();
   return [...p.r, ...p.v];
 }
 
-/** An AP build of the commit's sources with the named patches, built unsigned once into <store>/factorial/builds. */
+/** An AP build of the commit's sources with the named build's patches, built unsigned once into <store>/factorial/builds, keyed by the
+ *  hash of the patches' text. */
 function build(root, commit, name, store) {
-  const tree = path.join(store, 'builds', `${commit.slice(0, 12)}-${name}`), wasm = path.join(tree, 'dist/isomorphic/module.wasm');
-  if (fs.existsSync(wasm)) return wasm;
+  const patches = patchesOf(name), key = sha256(JSON.stringify(patches)).slice(0, 12);
+  const tree = path.join(store, 'builds', `${commit.slice(0, 12)}-${name}-${key}`), wasm = path.join(tree, 'dist/isomorphic/module.wasm');
+  if (fs.existsSync(wasm)) return { wasm, key };
   const pkg = path.join(root, 'propagator/sdn-ap'), copy = path.join(tree, 'propagator/sdn-ap');
   fs.rmSync(tree, { recursive: true, force: true });
   fs.cpSync(pkg, copy, { recursive: true, filter: (p) => { const rel = p.slice(pkg.length); return !/\/(node_modules|test|dist)(\/|$)/.test(rel) && !/^\/src(\/|$)/.test(rel); } });
   const files = execFileSync('git', ['-C', root, 'ls-tree', '-r', '--name-only', commit, 'propagator/sdn-ap/src'], { encoding: 'utf8' }).trim().split('\n');
   for (const f of files) { const o = path.join(tree, f); fs.mkdirSync(path.dirname(o), { recursive: true }); fs.writeFileSync(o, execFileSync('git', ['-C', root, 'show', `${commit}:${f}`], { maxBuffer: 1 << 28 })); }
-  for (const part of name.split('-').filter((p) => p !== 'base')) for (const [file, a, b] of PATCHES[part === 'j2' ? 'j2' : part]) {
+  for (const [file, a, b] of patches) {
     const source = path.join(copy, 'src', file), text = fs.readFileSync(source, 'utf8');
     if (text.split(a).length !== 2) throw new Error(`${name}: ${a.slice(0, 60)} not found once`);
     fs.writeFileSync(source, text.replace(a, b));
@@ -135,31 +163,31 @@ function build(root, commit, name, store) {
   const env = { ...process.env, SDM_MODULE_UNSIGNED_BUILD: '1', SPACE_DATA_NETWORK_MODULES_ROOT: root, SDNAP_DIST_DIR: path.join(tree, 'dist') };
   delete env.SDM_MODULE_SIGNING_KEYPAIR_PATH;
   try { execFileSync(process.execPath, ['build.mjs'], { cwd: copy, stdio: 'ignore', env }); } finally { fs.unlinkSync(path.join(copy, 'node_modules')); fs.unlinkSync(path.join(tree, 'foundation')); }
-  return wasm;
+  return { wasm, key };
 }
 
 async function main() {
   const root = args['modules-root'], want = args['modules-commit'];
   if (!root || !want || !args.case) throw new Error('usage: factorial.mjs --case <id> --modules-commit <sha> --modules-root <modules checkout> [...]');
-  process.env.SDN_MODULES_ROOT ??= root;
-  const A = await import('../headline-loop/lib/arms.mjs');
+  const L = await libs(root);
   const commit = execFileSync('git', ['-C', root, 'rev-parse', '--verify', `${want}^{commit}`], { encoding: 'utf8' }).trim();
   const c = caseOf(args.case, Number(args.seed ?? 498)), dragApplies = c.hpKm < DRAG_BELOW_KM;
-  const factors = (args.factors ? args.factors.split(',') : ALL).filter((f) => f !== 'drag' || dragApplies);
-  for (const f of factors) if (!ALL.includes(f)) throw new Error(`--factors: ${f} is not one of ${ALL.join(', ')}`);
-  const store = path.join(A.STORE_ROOT, 'factorial'), out = args.out ?? path.join(store, commit.slice(0, 12), c.id);
+  const binary = (args.factors ? args.factors.split(',') : BINARY).filter((f) => f !== 'drag' || dragApplies);
+  for (const f of binary) if (!BINARY.includes(f)) throw new Error(`--factors: ${f} is not one of ${BINARY.join(', ')} (the field is always a factor)`);
+  const store = path.join(L.A.STORE_ROOT, 'factorial'), out = args.out ?? path.join(store, commit.slice(0, 12), c.id);
   fs.mkdirSync(out, { recursive: true });
-  const cells = Array.from({ length: 2 ** factors.length }, (_, m) => Object.fromEntries(factors.map((f, j) => [f, (m >> j) & 1])));
+  // every cell: the field's three levels by every combination of the binary factors (a factor not listed stays on)
+  const cells = FIELD.flatMap((field) => Array.from({ length: 2 ** binary.length }, (_, m) => ({ field, ...Object.fromEntries(BINARY.map((f) => [f, 1])), ...Object.fromEntries(binary.map((f, j) => [f, (m >> j) & 1])) })));
   const arms = new Map();
   for (const cl of cells) { const a = armOf(cl, dragApplies), k = JSON.stringify(a); if (!arms.has(k)) arms.set(k, a); }
-  // the builds every arm needs, then the seed state from the full arm's build
-  const builds = Object.fromEntries([...new Set([...arms.values()].map(buildName))].map((n) => [n, null]));
-  for (const n of Object.keys(builds)) { console.error(`factorial: build ${n}`); builds[n] = build(root, commit, n, store); }
+  const names = [...new Set([...arms.values()].map(buildName))];
+  const builds = {};
+  for (const n of names) { console.error(`factorial: build ${n}`); builds[n] = build(root, commit, n, store); }
   const committed = sha256(execFileSync('git', ['-C', root, 'show', `${commit}:propagator/sdn-ap/dist/isomorphic/module.wasm`], { maxBuffer: 1 << 28 }));
-  const L = await libs(root), D0 = Date.parse(`${c.cutoff}T00:00:00Z`), tStart = D0 - 3 * DAY;
-  // the starting state as run.mjs makes it: seed.mjs's record flown by the reference build to the truth's start, in GCRF
-  const s0 = await startState(A, L, root, c, tStart);
-  const job = { case: c, D0, tStart, s0, root, store, terms: termsOf(c.am) };
+  const buildShas = Object.fromEntries(Object.entries(builds).map(([n, b]) => [n, { sha256: sha256(fs.readFileSync(b.wasm)), patchKey: b.key }]));
+  const D0 = Date.parse(`${c.cutoff}T00:00:00Z`), tStart = D0 - 3 * DAY;
+  const s0 = await startState(L, root, c, tStart);
+  const job = { case: c, D0, tStart, s0, root, store, terms: termsOf(c.am), dragApplies };
   // phase 1 the truths (one per truth-side combination), phase 2 AP's arms; each a child process, --jobs at a time
   const runAll = async (items, jobs) => {
     let next = 0; const res = new Array(items.length);
@@ -174,120 +202,147 @@ async function main() {
     }));
     return res;
   };
-  const jobs = Number(args.jobs ?? 6), truths = [...new Map([...arms.values()].map((a) => [truthKey(a), a])).values()];
-  console.error(`factorial: ${c.id} (perigee ${c.hpKm} km, e ${c.e}, i ${c.i}), factors ${factors.join(', ')}: ${cells.length} cells, ${arms.size} distinct arms, ${truths.length} truths, ${Object.keys(builds).length} builds`);
-  await runAll(truths.map((a) => ({ ...job, arm: a, truthOnly: true })), jobs);
-  const results = await runAll([...arms.values()].map((a) => ({ ...job, arm: a, wasm: builds[buildName(a)] })), jobs);
+  const jobs = Number(args.jobs ?? 2), truths = [...new Map([...arms.values()].map((a) => [truthKeyOf(a), a])).values()];
+  console.error(`factorial: ${c.id} (perigee ${c.hpKm} km, e ${c.e}, i ${c.i}), the field at three levels and ${binary.join(', ')}: ${cells.length} cells, ${arms.size} distinct arms, ${truths.length} truths, ${names.length} builds`);
+  const truthResults = await runAll(truths.map((a) => ({ ...job, arm: a, truthOnly: true })), jobs);
+  const results = await runAll([...arms.values()].map((a) => ({ ...job, arm: a, wasm: builds[buildName(a)].wasm })), jobs);
   const byArm = new Map([...arms.keys()].map((k, j) => [k, results[j]]));
   const rows = cells.map((cl) => ({ cell: cl, arm: armOf(cl, dragApplies), ...byArm.get(JSON.stringify(armOf(cl, dragApplies))) }));
-  const analysis = analyse(rows, factors);
-  const record = { case: c, modulesCommit: commit, committedDistSha256: committed, builds: Object.fromEntries(Object.entries(builds).map(([n, w]) => [n, sha256(fs.readFileSync(w))])),
-    ffmSha256: sha256(fs.readFileSync(L.T.ffmPath)), factors, dragApplies, rows, ...analysis };
+  const analysis = analyze(rows, binary);
+  const record = { case: c, label: labelOf(c), modulesCommit: commit, committedDistSha256: committed, builds: buildShas, ffm: truthResults.find((t) => t.ffm)?.ffm ?? null,
+    truthSettings: { field: 'EGM2008', tolerance: TOLERANCE, maxStepS: 120, minStepS: 1e-3, weather: WEATHER, relativity: 'IERS_2010 in every cell', stepS: STEP / 1000, from: iso(tStart), states: N },
+    fitFactor: '+ held (drag and radiation terms at the truth\'s values, sigma 1e-10), - solved', field: FIELD_TEXT, factors: ['field', ...binary], dragApplies, rows, ...analysis };
   fs.writeFileSync(path.join(out, 'factorial.json'), JSON.stringify(record, null, 1));
   print(record);
   console.error(`factorial: ${path.join(out, 'factorial.json')}`);
 }
 
-/** Main effects and two-factor interactions of log10 D (+1/-1 contrasts over the full table), and each force component's Shapley share. */
-function analyse(rows, factors) {
-  const refused = rows.filter((r) => !Number.isFinite(r.D));
-  if (refused.length) return { analysisRefused: `${refused.length} of ${rows.length} cells have no D (a refused fit, or a truth that ends before 120 h): ${refused.slice(0, 3).map((r) => r.error).join('; ')}` };
-  const y = rows.map((r) => Math.log10(r.D)), sgn = (r, f) => (r.cell[f] ? 1 : -1), half = rows.length / 2;
-  const effect = (fs_) => rows.reduce((s, r, k) => s + fs_.reduce((p, f) => p * sgn(r, f), 1) * y[k], 0) / half;
-  const main = Object.fromEntries(factors.map((f) => [f, effect([f])]));
-  const pairs = {};
-  for (let a = 0; a < factors.length; a += 1) for (let b = a + 1; b < factors.length; b += 1) pairs[`${factors[a]} x ${factors[b]}`] = effect([factors[a], factors[b]]);
-  // Shapley over the force components (fit fixed at each of its levels): v(S) = D with exactly the components in S on
-  const comps = factors.filter((f) => f !== 'fit'), n = comps.length, fact = (k) => (k <= 1 ? 1 : k * fact(k - 1));
-  const shapley = {};
-  for (const level of factors.includes('fit') ? [1, 0] : [null]) {
-    const v = (S) => rows.find((r) => comps.every((f) => r.cell[f] === (S.has(f) ? 1 : 0)) && (level == null || r.cell.fit === level)).D;
-    const out = {};
-    for (const j of comps) {
+/** The analysis of log10 D over the table (see the header), refused when a cell has no D. */
+function analyze(rows, binary) {
+  const failed = rows.filter((r) => !Number.isFinite(r.D));
+  if (failed.length) return { analysisRefused: `${failed.length} of ${rows.length} cells have no D: ${[...new Set(failed.map((r) => r.error))].slice(0, 3).join('; ')}` };
+  const y = (r) => Math.log10(r.D), mean = (xs) => xs.reduce((s, r) => s + y(r), 0) / xs.length;
+  const where = (f) => rows.filter(f), at = (field) => (r) => r.cell.field === field, on = (f, v) => (r) => r.cell[f] === v;
+  const main = Object.fromEntries(binary.map((f) => [f, mean(where(on(f, 1))) - mean(where(on(f, 0)))]));
+  const STEPS = [['j2', 'zonal'], ['zonal', 'full']], stepName = ([a, b]) => `${FIELD_TEXT[a]} to ${FIELD_TEXT[b]}`;
+  const fieldSteps = Object.fromEntries(STEPS.map((s) => [stepName(s), mean(where(at(s[1]))) - mean(where(at(s[0])))]));
+  const interactions = {};
+  for (let a = 0; a < binary.length; a += 1) for (let b = a + 1; b < binary.length; b += 1) {
+    const [p, q] = [binary[a], binary[b]], m = (u, v) => mean(where((r) => r.cell[p] === u && r.cell[q] === v));
+    interactions[`${p} x ${q}`] = (m(1, 1) - m(0, 1) - (m(1, 0) - m(0, 0))) / 2;
+  }
+  for (const s of STEPS) for (const f of binary) {
+    const m = (lvl, v) => mean(where((r) => r.cell.field === lvl && r.cell[f] === v));
+    interactions[`(${stepName(s)}) x ${f}`] = (m(s[1], 1) - m(s[0], 1) - (m(s[1], 0) - m(s[0], 0))) / 2;
+  }
+  // Shapley over the players field (off: J2 alone, on: the full field) and the binary components but the fit, at each fit level
+  const players = ['field', ...binary.filter((f) => f !== 'fit')], n = players.length, fact = (k) => (k <= 1 ? 1 : k * fact(k - 1));
+  const levels = binary.includes('fit') ? [1, 0] : [null];
+  const cellD = (field, S, level) => rows.find((r) => r.cell.field === field && players.every((p) => p === 'field' || r.cell[p] === (S.has(p) ? 1 : 0)) && (level == null || r.cell.fit === level)).D;
+  const shapley = {}, fieldSplit = {}, onePath = {};
+  for (const level of levels) {
+    const v = (S) => cellD(S.has('field') ? 'full' : 'j2', S, level), key = level == null ? 'any' : level ? 'held' : 'solved';
+    const shares = {};
+    for (const j of players) {
       let s = 0;
-      const others = comps.filter((f) => f !== j);
+      const others = players.filter((f) => f !== j);
       for (let m = 0; m < 2 ** others.length; m += 1) {
         const S = new Set(others.filter((_, q) => (m >> q) & 1));
-        const w = (fact(S.size) * fact(n - S.size - 1)) / fact(n);
-        s += w * (v(new Set([...S, j])) - v(S));
+        s += ((fact(S.size) * fact(n - S.size - 1)) / fact(n)) * (v(new Set([...S, j])) - v(S));
       }
-      out[j] = s;
+      shares[j] = s;
     }
-    const all = v(new Set(comps)), none = v(new Set());
-    shapley[level == null ? 'any' : level ? 'held' : 'solved'] = { allOnM: all, allOffM: none, sharesM: out };
+    shapley[key] = { allOnM: v(new Set(players)), allOffM: v(new Set()), sharesM: shares };
+    const rest = new Set(players.filter((p) => p !== 'field'));
+    fieldSplit[key] = Object.fromEntries(FIELD.map((f) => [FIELD_TEXT[f], cellD(f, rest, level)]));
+    // the one-at-a-time path: J2 alone with every other component off, then each added in turn
+    const path_ = [['J2 alone', cellD('j2', new Set(), level)], ['+ the zonal tail', cellD('zonal', new Set(), level)], ['+ the full field', cellD('full', new Set(), level)]];
+    const S = new Set();
+    for (const p of ['moon', 'sun', 'radiation', 'drag', 'tide'].filter((x) => players.includes(x))) { S.add(p); path_.push([`+ ${p}`, cellD('full', S, level)]); }
+    onePath[key] = path_;
   }
-  return { mainEffectsLog10D: main, interactionsLog10D: pairs, shapley };
+  return { mainEffectsLog10D: main, fieldStepsLog10D: fieldSteps, interactionsLog10D: interactions, shapley, fieldSplitM: fieldSplit, onePathM: onePath };
 }
 
 function print(r) {
-  const f = (x) => (x >= 1000 ? `${(x / 1000).toFixed(2)} km` : `${x.toFixed(1)} m`);
-  console.log(`${r.case.id}${r.case.name ? ` (${labelOf(r.case)})` : ''}: perigee ${r.case.hpKm} km, e ${r.case.e}, i ${r.case.i}, cutoff ${r.case.cutoff}; ${r.rows.length} cells (factors ${r.factors.join(', ')})`);
-  const label = (row) => r.factors.map((x) => (x === 'fit' ? (row.cell.fit ? 'held' : 'solved') : row.cell[x] ? x : `-${x}`)).join(' ');
-  for (const row of r.rows) console.log(`  ${label(row)}:${Number.isFinite(row.D) ? `D ${f(row.D)} at ${row.at.h} h (R ${row.at.r}, T ${row.at.t}, N ${row.at.n} m)` : `no record: ${row.error}`}`);
+  const f = (x) => (!Number.isFinite(x) ? 'no D' : x >= 1000 ? `${(x / 1000).toFixed(2)} km` : `${x.toFixed(1)} m`);
+  console.log(`${r.case.id}${r.case.name ? ` (${r.label})` : ''}: perigee ${r.case.hpKm} km, e ${r.case.e}, i ${r.case.i}, cutoff ${r.case.cutoff}; ${r.rows.length} cells (factors ${r.factors.join(', ')})`);
+  console.log(`  builds: ${Object.entries(r.builds).map(([n, b]) => `${n} ${b.sha256.slice(0, 12)}`).join(', ')}; the committed dist ${r.committedDistSha256.slice(0, 12)}${r.builds.base ? (r.builds.base.sha256 === r.committedDistSha256 ? ' (the base build is the committed dist)' : ' (the base build differs from the committed dist)') : ''}`);
+  console.log(`  truth: FFM ${r.ffm?.ffm?.version ?? '?'} (${r.ffm?.ffm?.sha256?.slice(0, 12) ?? '?'}), EGM2008, tolerance ${r.truthSettings.tolerance}, constant weather F10.7 ${WEATHER.f107} Ap ${WEATHER.ap}, relativity in every cell; fit factor: ${r.fitFactor}`);
+  const label = (row) => [FIELD_TEXT[row.cell.field], ...r.factors.filter((x) => x !== 'field').map((x) => (x === 'fit' ? (row.cell.fit ? 'held' : 'solved') : row.cell[x] ? x : `-${x}`))].join(' ');
+  for (const row of r.rows) console.log(`  ${label(row)}: ${Number.isFinite(row.D) ? `D ${f(row.D)} at ${row.at.h} h (R ${row.at.r}, T ${row.at.t}, N ${row.at.n} m)` : `no D: ${row.error}`}`);
   if (r.analysisRefused) { console.log(`  ${r.analysisRefused}`); return; }
   console.log('  main effects, log10 D:', Object.entries(r.mainEffectsLog10D).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
-  console.log('  interactions, log10 D:', Object.entries(r.interactionsLog10D).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
-  for (const [lvl, s] of Object.entries(r.shapley)) console.log(`  Shapley (fit ${lvl}): all on ${f(s.allOnM)}, all off ${f(s.allOffM)};`, Object.entries(s.sharesM).map(([k, v]) => `${k} ${v.toFixed(1)} m`).join(', '));
+  console.log('  the field\'s steps, log10 D:', Object.entries(r.fieldStepsLog10D).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
+  console.log('  interactions, log10 D:', Object.entries(r.interactionsLog10D).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 8).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
+  for (const [lvl, s] of Object.entries(r.shapley)) {
+    console.log(`  Shapley (fit ${lvl}): all on ${f(s.allOnM)}, all off ${f(s.allOffM)};`, Object.entries(s.sharesM).map(([k, v]) => `${k} ${v.toFixed(1)} m`).join(', '));
+    console.log(`    the field's split, every other component on: ${Object.entries(r.fieldSplitM[lvl]).map(([k, v]) => `${k} ${f(v)}`).join(', ')}`);
+    console.log(`    the one-at-a-time path: ${r.onePathM[lvl].map(([k, v]) => `${k} ${f(v)}`).join(', ')}`);
+  }
 }
 
-/** One child: a truth (cached by the hash of FFM's build and every byte of the request), or one AP arm against it. */
+/** One child: a truth (cached by the hash of the numerical propagator's build and everything the flight depends on), or one AP arm
+ *  against it. */
 async function cell(job) {
-  const L = await libs(job.root), a = job.arm, c = job.case, { D0, tStart } = job;
-  const kernel = fs.readFileSync('/opt/data/sdn-archive/operator-ephemerides/_capture/de440s.bsp');
+  const L = await libs(job.root), S = L.S, a = job.arm, c = job.case, { D0, tStart } = job;
   const cd = job.terms.dragAreaOverMass, cr = job.terms.srpAreaOverMass;
-  const FIELD = { zonal: [20, 0], full: [70, 70] };
-  const grav = a.grav === 'j2' ? { gravityMode: 'J2' } : { gravityMode: 'EGM96', maxDegree: FIELD[a.grav][0], maxOrder: FIELD[a.grav][1] };
-  const params = { epochJD: jdUtc(tStart), epochTimeScale: 'UTC', targetJD: jdUtc(tStart + (N - 1) * STEP), targetTimeScale: 'UTC',
-    position: job.s0.slice(0, 3), velocity: job.s0.slice(3), frame: 'GCRF', sampleEpochsJD: Array.from({ length: N }, (_, k) => ({ jd: jdUtc(tStart + k * STEP), scale: 'UTC' })),
-    forces: { ...grav, thirdBody: a.sun || a.moon, thirdBodySun: a.sun, thirdBodyMoon: a.moon, srp: a.radiation, drag: a.drag, massKg: 1, areaM2: 1, cr, cd },
-    weather: { epochUTCJD: jdUtc(tStart), F107: 150, F107a: 150, Ap: 15, Kp: 3 }, integrator: { tolerance: 1e-11, minStep: 1e-3, maxStep: 120, maxSteps: 2000000 }, ephemerisSource: 'JPL_SPK' };
-  const exec = L.C.execution(params, true);
-  if (a.tide) { exec.FORCES.SOLID_TIDES = L.C.sds.pcfSolidTideModel.IERS_2010; exec.FORCES.RELATIVITY = L.C.sds.pcfRelativityTerms.IERS_2010; }
-  const startMjd = Math.floor(jdUtc(tStart) - 2400000.5) - 2;
-  const req = { methodId: 'invoke', inputs: [{ portId: 'request', typeRef: L.C.TYPE, payload: L.C.encodePrw('EXECUTION_REQUEST', exec) }, { portId: 'kernel', typeRef: L.C.TYPE, payload: L.C.nativeInput(kernel) },
-    { portId: 'earth_orientation', typeRef: L.C.TYPE, payload: L.C.encodePrw('EARTH_ORIENTATION', L.C.makeTable('PRWEarthOrientation', { ROWS: Array.from({ length: 14 }, (_, k) => L.C.makeTable('EOP', { DATE: new Date((startMjd + k - 40587) * DAY).toISOString(), MJD: startMjd + k, TAI_MINUS_UTC_SECONDS: 37 })) })) }] };
-  const hash = crypto.createHash('sha256').update(fs.readFileSync(L.T.ffmPath));
-  for (const i of req.inputs) hash.update(i.portId).update(Buffer.from(i.payload));
-  const dir = path.join(job.store, 'truth'), file = path.join(dir, `${hash.digest('hex')}.json`);
-  fs.mkdirSync(dir, { recursive: true });
-  // a cell without a whole truth (the numerical flight failed, or ended before 120 h after the cutoff) has no D, with its reason
   const noD = (error) => { process.send({ D: Infinity, at: { h: null, r: null, t: null, n: null }, error }); process.exit(0); };
+  const days = (from, to) => Array.from({ length: Math.round((to - from) / DAY) + 1 }, (_, k) => iso(from + k * DAY).slice(0, 10));
+  // the truth: FFM 2.2.0 (headline-loop/lib/ffm.mjs, pinned with its kernel and Earth orientation, as run.mjs flies it)
+  const { openFfm } = await import('../headline-loop/lib/ffm.mjs');
+  const F = await openFfm();
+  const LEVEL = { j2: [2, 0], zonal: [20, 0], full: [70, 70] }[a.field];
+  const settings = { forces: { degree: LEVEL[0], order: LEVEL[1], thirdBodies: [...(a.sun ? [10] : []), ...(a.moon ? [301] : [])], srp: a.radiation, drag: a.drag, atmosphere: 'NRLMSISE00', solidTides: a.tide, relativity: 'IERS_2010' },
+    integrator: { tolerance: TOLERANCE, maxStep: 120, minStep: 1e-3 }, fixed: {} };
+  const parameters = [...(a.drag ? [{ kind: 'DRAG_AREA_OVER_MASS', value: cd }] : []), ...(a.radiation ? [{ kind: 'SRP_AREA_OVER_MASS', value: cr }] : [])];
+  const weather = days(tStart - 3 * DAY, D0 + 9 * DAY).map((d) => ({ DATE: d, F107_OBS: WEATHER.f107, F107_OBS_CENTER81: WEATHER.c81, AP_AVG: WEATHER.ap }));
+  const epochs = Array.from({ length: N }, (_, k) => iso(tStart + k * STEP));
+  const key = sha256(JSON.stringify({ v: TRUTH_V, ffm: F.provenance, start: job.s0, from: epochs[0], stepS: STEP / 1000, count: N, settings, parameters, weather: a.drag ? weather : null }));
+  const dir = path.join(job.store, 'truth'), file = path.join(dir, `${key}.json`);
+  fs.mkdirSync(dir, { recursive: true });
   let truth;
   if (fs.existsSync(file)) truth = JSON.parse(fs.readFileSync(file, 'utf8'));
   else {
-    const hf = await L.sdk.createStandaloneHarness('browser', L.T.ffmPath, { surface: 'command' });
-    const r = await hf.invoke(req);
-    await hf.close?.();
-    if (r.statusCode !== 0) noD(`the numerical flight failed: FFM ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`);
-    truth = L.C.decodeResult(r).samples.map((s) => [...s.position, ...s.velocity]);
+    try { truth = (await F.forecast({ epoch: epochs[0], state: job.s0.map((x) => x * 1000), parameters }, epochs, settings, a.drag ? weather : null)).map((s) => [...s.r, ...s.v]); }
+    catch (e) { await F.close(); noD(`the numerical flight failed: ${String(e?.message ?? e).slice(0, 200)}`); }
     if (truth.length === N) { const tmp = `${file}.${process.pid}.tmp`; fs.writeFileSync(tmp, JSON.stringify(truth)); fs.renameSync(tmp, file); }
   }
-  if (truth.length !== N) noD(`the truth ends at ${(((truth.length - 1 - NA) * STEP) / 36e5).toFixed(2)} h after the cutoff (${truth.length} of ${N} states)`);
-  if (job.truthOnly) { process.send({ truth: path.basename(file) }); process.exit(0); }
-  // AP: fitted over the forecast span (D0 to D0 + 120 h), flown over the same 1,440 states
-  const lines = truth.slice(NA).map((s, k) => Object.assign(new L.Line.ephemerisDataLineT(), { EPOCH: iso(D0 + k * STEP), X: s[0], Y: s[1], Z: s[2], X_DOT: s[3], Y_DOT: s[4], Z_DOT: s[5] }));
-  const blk = Object.assign(new L.Block.ephemerisDataBlockT(), { OBJECT: Object.assign(new L.CAT.CATT(), { NORAD_CAT_ID: 99498, OBJECT_NAME: 'SYNTHETIC' }), CENTER_NAME: 'EARTH', REFERENCE_FRAME: L.Fr.rfm('GCRF'),
-    TIME_SYSTEM: L.TS.timingStandard.UTC, START_TIME: lines[0].EPOCH, STOP_TIME: lines.at(-1).EPOCH, EPHEMERIS_DATA_LINES: lines, USEABLE_START_TIME: lines[0].EPOCH, USEABLE_STOP_TIME: lines.at(-1).EPOCH });
-  const oem = L.Fr.packOem(Object.assign(new L.OEM.OEMT(), { EPHEMERIS_DATA_BLOCK: [blk] }));
-  const forces = { EPHEMERIS_SOURCE: '', HAS_MAXIMUM_TESSERAL_DEGREE: true, MAXIMUM_TESSERAL_DEGREE: a.grav === 'full' ? 31 : 0, HAS_MAXIMUM_DEGREE: true, MAXIMUM_DEGREE: a.grav === 'j2' ? 5 : 20,
-    ATMOSPHERE_MODEL: L.Atm.pcfAtmosphereFamily.NRLMSISE00, WEATHER_SOURCE: L.Wx.pcfWeatherSource.RECORDS, ...(a.tide ? { SOLID_TIDES: 1 } : {}) };
-  const cfg = L.P.configuration({ forces, ...(a.fit === 'held' ? { fit: { DRAG_PRIOR: L.P.prior(a.drag ? cd : 0, 1e-10), DRAG_PRIOR_FORM: L.P.pcfPriorForm.GAUSSIAN_SIGNED, SRP_PRIOR: L.P.prior(a.radiation ? cr : 0, 1e-10) } } : {}) });
-  const rows = L.O.rowsThrough(JSON.parse(L.Spw.spwConstantText(c.cutoff, 45)));
-  const ap = await harnessOf(L, job.wasm);
-  const T2 = (n) => ({ schemaName: `${n}.fbs`, fileIdentifier: `$${n}`, rootTypeName: n });
-  let omm;
-  try { omm = (await ap.call('fit', [cfg, { portId: 'space_weather', typeRef: T2('SPW'), payload: L.O.spwStream(rows) }, { portId: 'ephemeris', typeRef: T2('OEM'), payload: oem }])).find((v) => v.portId === 'elements').payload; }
-  catch (e) { process.send({ D: Infinity, at: { h: null, r: null, t: null, n: null }, error: String(e?.message ?? e).slice(0, 200) }); process.exit(0); }
-  const flown = linesOf(L, await ap.call('propagate', L.O.flight([omm], { output: { EPOCHS: Array.from({ length: N - 1 - NA }, (_, k) => iso(D0 + (k + 1) * STEP)), FRAME: L.Out.pcfOutputFrame.GCRF } })));
-  await ap.h.close?.();
+  const ffm = F.provenance;
+  await F.close();
+  if (truth.length !== N) noD(`the truth ends at ${(((truth.length - 1 - NA) * STEP) / HOUR).toFixed(2)} h after the cutoff (${truth.length} of ${N} states)`);
+  if (job.truthOnly) { process.send({ truth: path.basename(file), ffm }); process.exit(0); }
+  // AP: fitted over the forecast span (D0 to D0 + 120 h, 1,441 states), flown over the same states
+  const span = truth.slice(NA, NA + NB + 1).map((s, k) => ({ epoch: iso(D0 + k * STEP), r: s.slice(0, 3), v: s.slice(3) }));
+  const oem = S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: span, useableStart: span[0].epoch, useableStop: span.at(-1).epoch });
+  const forces = { ...L.APL.apForces({ tesseral: a.field === 'full' ? 31 : 0, zonal: a.field === 'j2' ? 5 : 20, atmosphere: a.drag }), ...(a.tide ? { SOLID_TIDES: 1 } : {}) };
+  const held = (mean) => ({ mean, sigma: 1e-10, form: 'GAUSSIAN_SIGNED' });
+  const fit = {
+    ...(job.dragApplies ? (a.drag ? (a.fit === 'held' ? { dragPrior: held(cd) } : {}) : { dragPrior: held(0) }) : {}),
+    ...(a.radiation ? (a.fit === 'held' ? { srpPrior: held(cr) } : {}) : { srpPrior: held(0) }),
+  };
+  const pcf = L.APL.fitPcf({ forces, fit: Object.keys(fit).length ? fit : null });
+  // AP's weather: the same constant rows, through the record's horizon (31 days past the arc's end)
+  const spw = a.drag ? L.APL.fitWeather(days(tStart - 3 * DAY, L.APL.horizonOf(D0 + 120 * HOUR)).map((d) => ({ date: d, f107: WEATHER.f107, c81: WEATHER.c81, ap: WEATHER.ap })), L.APL.horizonOf(D0 + 120 * HOUR)) : null;
+  const h = await L.createStandaloneHarness('browser', job.wasm, { surface: 'direct' });
+  const call = async (methodId, inputs) => { const r = await h.invoke({ methodId, inputs }); if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`); return r; };
+  let ocm;
+  try { ocm = new Uint8Array((await call('fit', [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: oem }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(spw ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: spw }] : [])])).outputs.find((o) => o.portId === 'elements').payload); }
+  catch (e) { noD(`AP's fit refused: ${String(e?.message ?? e).slice(0, 200)}`); }
+  let flown;
+  try { flown = statesOf(S, await call('propagate', [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf(S, span.map((l) => l.epoch)) }])); }
+  catch (e) { noD(`AP's flight failed: ${String(e?.message ?? e).slice(0, 200)}`); }
+  await h.close?.();
+  if (flown.length !== span.length) noD(`AP's flight returned ${flown.length} of ${span.length} states`);
   const unit = (v) => { const q = Math.hypot(...v); return v.map((x) => x / q); }, cross = (u, w) => [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]];
-  let D = 0, at = null;
-  flown.forEach((fl, k) => {
-    const s = truth[NA + 1 + k], err = [fl.X - s[0], fl.Y - s[1], fl.Z - s[2]], d = 1000 * Math.hypot(...err);
-    if (d > D) { const rh = unit(s.slice(0, 3)), ch = unit(cross(s.slice(0, 3), s.slice(3))), ih = cross(ch, rh), dot = (u) => +(1000 * err.reduce((t, x, i) => t + x * u[i], 0)).toFixed(1); D = d; at = { h: +(((k + 1) * STEP) / 36e5).toFixed(2), r: dot(rh), t: dot(ih), n: dot(ch) }; }
-  });
-  const fitted = L.O.fittedOf(omm);
-  process.send({ D: +D.toFixed(2), at, fitWrmsM: +(fitted.wrms * 1000).toFixed(2), fitB: fitted.bterm, fitAgom: fitted.agom });
+  let D = -1, at = null;
+  for (let k = 0; k < span.length; k += 1) {
+    const s = span[k], fl = flown[k], err = [fl.r[0] - s.r[0], fl.r[1] - s.r[1], fl.r[2] - s.r[2]], d = 1000 * Math.hypot(...err);
+    if (!Number.isFinite(d)) noD(`a distance is not finite at ${((k * STEP) / HOUR).toFixed(2)} h`);
+    if (d > D) { const rh = unit(s.r), ch = unit(cross(s.r, s.v)), ih = cross(ch, rh), dot = (u) => +(1000 * err.reduce((t, x, i) => t + x * u[i], 0)).toFixed(1); D = d; at = { h: +((k * STEP) / HOUR).toFixed(2), r: dot(rh), t: dot(ih), n: dot(ch) }; }
+  }
+  const fitted = L.APL.readOcm(ocm);
+  process.send({ D: +D.toFixed(2), at, fitRmsM: Number.isFinite(fitted.fitRmsKm) ? +(fitted.fitRmsKm * 1000).toFixed(2) : null, fitB: fitted.bterm ?? null, fitAgom: fitted.agom ?? null });
   process.exit(0);
 }
 
