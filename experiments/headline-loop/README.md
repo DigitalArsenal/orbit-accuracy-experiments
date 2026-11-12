@@ -13,6 +13,11 @@ undetermined (a stated sigma of ln BTERM of 1 or more). The 72 h fit is of the f
 not its 72 h record (the arc after its burn). Each such row names its fit process (`fitProcess`) with the count of windows each way,
 and each stored row records its own (`fitProcess` in rows.jsonl).
 
+The record's gravity degrees in the low table (lib/arms.mjs): from `ZONAL70_SINCE` the rows of strong drag, near 700 km, the laser spheres
+and altimetry state zonal degree 70 and tesseral degree 31. From `TESSERAL70_SINCE` (the first build after sdn-ap 0.6.45) the two
+strong-drag rows state tesseral degree 70 as well (`AP_T70_Z70_TIDES`); the other three keep tesseral 31. A table file's configuration
+sentence for the row says which degrees it used, so a file of 0.6.42 to 0.6.45 and one of a later build read differently.
+
 From `MANEUVER72_SINCE` (lib/arms.mjs; stack #489), with `--burns` naming the burn detector's lists (stack #462), AP's 72 h fit of a
 maneuvering object takes the arc after its last burn. That is an object with its perigee at 600 km or above whose precise orbit holds a
 burn known at the cutoff, and the burn ended within 7 days before it. In a list made as of its burns (`experiments/burn-detector`, stack
