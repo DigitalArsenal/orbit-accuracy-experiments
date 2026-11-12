@@ -931,7 +931,7 @@ async function check() {
       fs.writeFileSync(path.join(d, 'rows-after-burn-0of1.jsonl'), [...he, ...cx].map((w) => {
         const m = A.maneuverArc(A.arcBreaks(b11, w.group, w.name, w.cutoffMs), w.cutoffMs, Infinity, undefined, A.minHoursOf(w.group)), b = base11.get(w.key);
         const arm = b?.arms?.FFMq, head = { key: w.key, part: 'after-burn', group: w.group, name: w.name, cutoff: iso11(w.cutoffMs), burnList: A.listSha(b11, w.group, w.name), arcH: 72, burnInArc: !!(m.maneuvering && m.burnInArc) };
-        return JSON.stringify(m.maneuvering ? { ...head, lastBurn: iso11(m.lastBurnMs), fitProcess: 'maneuvering: the arc after its last burn', fitArcHours: Math.round(((w.cutoffMs - m.startMs) / HR11) * 10) / 10 + (off[w.key] ?? 0), arms: { FFMq: arm } } : { ...head, fitProcess: 'the full arc: the stored fit' });
+        return JSON.stringify(m.maneuvering ? { ...head, lastBurn: iso11(m.lastBurnMs), fitProcess: 'maneuvering: the arc after its last burn', fitArcHours: Math.round(((w.cutoffMs - m.startMs) / HR11) * 10) / 10 + (off[w.key] ?? 0), env: b?.env, arms: { FFMq: arm } } : { ...head, fitProcess: 'the full arc: the stored fit' });
       }).join('\n') + '\n');
     };
     refits11();
