@@ -272,7 +272,8 @@ async function main() {
       const c = cells(xs.filter((x) => hasTrajectory(x.m)));
       // the row's two shares, named: of the windows with a forecast (windows, the propagator's measure: there is no forecast to be within 100 m of
       // otherwise) and of all the row's windows (what a user is served); rowWindows - windows is the row's windows without a forecast or a figure
-      c.withinBar = { ...c.withinBar, rowWindows: windows, shareOfWindowsWithForecast: c.withinBar.share, shareOfAllWindows: windows ? Math.round((c.withinBar.met / windows) * 1000) / 1000 : null };
+      const rowAll = mine ? mine.windows : windows;
+      c.withinBar = { ...c.withinBar, rowWindows: rowAll, shareOfWindowsWithForecast: c.withinBar.share, shareOfAllWindows: rowAll ? Math.round((c.withinBar.met / rowAll) * 1000) / 1000 : null };
       const refitAfterBurn = xs.filter((x) => x.m && (x.m.fit?.process === 'after burn' || /after the burn/.test(x.m.source ?? ''))).length;
       // of the windows without a trajectory, those whose lines are all of other fits, and those whose lines' fit is not known (a file
       // written again by a later line)
