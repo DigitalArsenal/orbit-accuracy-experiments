@@ -42,13 +42,20 @@ export const GROUPS = {
   GD: { label: 'Laser geodetic', store: 'b0411/regimes', static: true, ffmCol: 'FFM20' },
   IG: { label: 'Inclined geosynchronous', store: 'b0411/regimes', mgex: 'igso', ffmCol: 'FFM20' },
   GE: { label: 'Geostationary', store: 'b0411/regimes', mgex: 'geo', ffmCol: 'FFM20' },
-  HE: { label: 'Highly elliptical', store: 'b0411/regimes', vacuum: true, ffmCol: 'FFM20' },
+  // TESS (stack #479): the 336 h row reads the definitive files merged (each epoch from the newest file, a join flagged as a seam); the
+  // 72 h row (HE72, its own keys) reads each window from the one file that covers its arc and 7 days, so no join falls inside it, and
+  // adds the windows placed after a firing (lib/arms.mjs firingCutoffs: the rule; <store>/added-windows.json: its cutoffs, checked against
+  // the rule by table.mjs whenever it reads the lists)
+  HE: { label: 'Highly elliptical', store: 'b0411/regimes', vacuum: true, ffmCol: 'FFM20', arcs: [336] },
+  HE72: { label: 'Highly elliptical', store: 'b0411/regimes', from: 'HE', vacuum: true, ffmCol: 'FFM20', arcs: [72], oneFile: true },
   HX: { label: 'Highly elliptical, THEMIS and Chandra', store: 'b0411/regimes', vacuum: true, ffmCol: 'FFM20' },
   WA: { label: 'Geostationary, commercial', store: 'b065/truth-fresh', vacuum: true, arcs: [24, 72], ffmCol: 'FFM20', suiteOnly: true },
 };
 const XM_PROVIDER = (name) => (/^Swarm/.test(name) ? 'ESA' : /^GRACE/.test(name) ? 'Data E' : /^Sentinel/.test(name) ? 'Copernicus' : 'ESA navigation');
 const XM_PUBLIC = (name) => (/^GRACE-FO/.test(name) ? `Research satellite ${name.at(-1)}` : name);
-export const providerOf = (group, name) => (GROUPS[group].store.startsWith('b0411/truth') || GROUPS[group].truth === 'gnss' ? XM_PROVIDER(name) : R.GROUPS[group]?.provider ?? 'All');
+// the long-period rows' references as their files name their makers (stack #479; table.mjs TRUTH_NOTE says how each row reads them)
+const LONG_PROVIDER = (group, name) => (group === 'HE' || group === 'HE72' ? 'MAST (TESS_EPH_DEF)' : group !== 'HX' ? null : name === 'CHANDRA' ? 'JPL Horizons (chandra_merged.bsp)' : 'UCB SSL (THEMIS kernels)');
+export const providerOf = (group, name) => LONG_PROVIDER(group, name) ?? (GROUPS[group].store.startsWith('b0411/truth') || GROUPS[group].truth === 'gnss' ? XM_PROVIDER(name) : R.GROUPS[GROUPS[group].from ?? group]?.provider ?? 'All');
 export const satelliteOf = (group, name) => (GROUPS[group].store.startsWith('b0411/truth') ? XM_PUBLIC(name) : name);
 
 const jsonl = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
@@ -63,11 +70,14 @@ export function windowsOf(groups) {
     const G = GROUPS[g];
     if (!G) throw new Error(`group ${g}`);
     const stored = rowsIn(path.join(ARCHIVE, G.store)).filter((r) => !r.error);
-    const mine = G.store === 'b0411/truth' ? stored : stored.filter((r) => r.group === g);
-    for (const r of mine) {
+    // a row of its own over another group's windows (G.from) takes their cutoffs under its own key, and the windows added to it
+    // (<store>/added-windows.json: the cutoffs of lib/arms.mjs firingCutoffs, the rule, checked against it by table.mjs with the lists)
+    const src = G.from ?? g, mine = G.store === 'b0411/truth' ? stored : stored.filter((r) => r.group === src);
+    const added = G.from ? (JSON.parse(fs.existsSync(ADDED_WINDOWS) ? fs.readFileSync(ADDED_WINDOWS, 'utf8') : '{}')[g] ?? []).map((x) => ({ ...mine[0], key: `${src}|${mine[0].name}|${x.cutoff}`, cutoff: `${x.cutoff}T00:00:00Z`, placedAfterFiring: true })) : [];
+    for (const r of [...mine, ...added]) {
       const cutoffMs = Date.parse(r.cutoff ?? `${r.key.split('|').at(-1)}T00:00:00Z`);
       const arcs = G.arcs ?? [...new Set(Object.keys(r.arms).filter((a) => /^AP\d+$/.test(a)).map((a) => Number(a.slice(2))))].sort((a, b) => a - b);
-      const w = { key: r.key, group: g, name: r.name, norad: r.norad ?? null, cutoffMs, arcs };
+      const w = { key: G.from ? r.key.replace(new RegExp(`^${src}\\|`), `${g}|`) : r.key, group: g, name: r.name, norad: r.norad ?? null, cutoffMs, arcs, ...(r.placedAfterFiring ? { placedAfterFiring: true } : {}) };
       const from = cutoffMs - Math.max(...arcs) * HOUR - HOUR, to = cutoffMs + 7 * DAY + HOUR;
       (touches(AFTER, from, to) ? after : touches(MARCH_TO_MAY, from, to) ? second : out).push(w);
     }
@@ -104,7 +114,8 @@ function gfzRsoSeries(o, fromMs, toMs) {
 // ---- truth readers, one object at a time (each kept until the next object of the shard) ----
 const XM_OBJECTS = new Map([...XP2F.objects.map((o) => [o.norad, o]), ...Object.values(XM.config.groups).flatMap((g) => g.objects.map((o) => [o.norad, o]))]);
 const GALILEO = { 43567: 'Galileo FOC 19', 37847: 'Galileo IOV 2', 41862: 'Galileo FOC 14', 41174: 'Galileo FOC 9', 43055: 'Galileo FOC 15', 41175: 'Galileo FOC 8' };
-let staticCache = null, mgexCache = new Map(), spkCache = new Map();
+let staticCache = null, mgexCache = new Map(), spkCache = new Map(), tessFileCache = new Map();
+const ADDED_WINDOWS = path.join(process.env.HEADLINE_LOOP_STORE ?? '/opt/data/sdn-archive/headline-loop', 'added-windows.json');
 async function spkOnGrid(lines, axes) {
   const norm = lines.map((l) => ({ ...l, epoch: new Date(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`)).toISOString() }));
   const first = Math.round(ms(norm[0].epoch) / 1000) * 1000;
@@ -158,6 +169,26 @@ export async function truthOf(w, fromMs, toMs, axes) {
     return { lines: cut(lines), norad: sat.norad, objectId: '' };
   }
   // HE and HX: NAIF kernels on the 300 s grid (all-regimes.mjs objects())
+  // the 72 h TESS row: the newest one of the definitive files that covers the span asked for (the window's arc and 7 days; the margins of
+  // an hour either side need not be covered), read alone
+  if (GROUPS[w.group]?.oneFile) {
+    const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
+    const readOne = async (f) => {
+      if (!tessFileCache.has(f)) {
+        const s = await spkObjectSeries(process.env.SDN_MODULES_ROOT, { files: [f], source: 'ap6-heo', id: 'TESS (-95)', name: R.TESS.name, norad: R.TESS.norad, fromUtc: R.TESS.from, toUtc: R.TESS.to, stride: 1 });
+        tessFileCache.set(f, { lines: await spkOnGrid(s.lines, axes) });
+      }
+      return tessFileCache.get(f);
+    };
+    const files = fs.readdirSync(R.TESS.dir).filter((f) => /^TESS_EPH_DEF_.*\.bsp$/.test(f)).sort().map((f) => path.join(R.TESS.dir, f));
+    let chosen = null;
+    for (const f of files.slice().reverse()) {
+      const s = await readOne(f), first = ms(s.lines[0].epoch), last = ms(s.lines.at(-1).epoch);
+      if (first <= fromMs + HOUR && last >= toMs - HOUR) { chosen = { f, s }; break; }
+    }
+    if (!chosen) throw new Error(`no single definitive file covers ${new Date(fromMs + HOUR).toISOString()} to ${new Date(toMs - HOUR).toISOString()}`);
+    return { lines: cut(chosen.s.lines), norad: R.TESS.norad, objectId: R.TESS.objectId, file: path.basename(chosen.f) };
+  }
   if (!spkCache.has(w.name)) {
     const { spkObjectSeries } = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/spk-sources.mjs')).href);
     let s;
