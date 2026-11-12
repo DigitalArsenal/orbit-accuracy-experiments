@@ -74,12 +74,15 @@ whose truth holds station-keeping burns that every stored fit runs through, it i
 
 **Weight.** The numerical arm weighs the positions of a reference at sigma = max(10 m, the object's median piece closure), fixed before the
 fit (`lib/arms.mjs` `objectSigmaM`, `lib/settings.mjs` `OBSERVATION_SIGMA_FLOOR_M`). The median piece closure is the `positionClosure.medianM`
-of the object's burn list (`burn-detector/pieces.mjs` and `burns.mjs`): the full setting flown over 6 h pieces from the reference's own states
-closes to that distance, which is the reference's noise where the object is not thrusting. Every precise orbit measured so far closes within
-the floor except four of the six laser geodetic satellites' (up to 111 m) and the WAAS broadcast ephemeris of the commercial geostationary row
-(127 to 572 m), so those two rows' sigma changes and every other row's is the floor. Without a list, or with a list that records no median (the
-long-period rows'), the sigma is the floor. `refly.mjs --after-burns <lists>` fits again every window of an object whose sigma is above the floor
-(on the arc after its last known burn, else the full arc) with `sigmaM` recorded on the fit.
+of the object's burn list: `burn-detector/burns.mjs` writes it (`positionClosure`: the median, MAD, 90th and 99th percentile of the position
+closure over the flown pieces, and their count, from `lib/detector.mjs` `positionClosureOf`; `burn-detector/check.mjs` case D tests it). The full
+setting flown over 6 h pieces from the reference's own states closes to that distance, which is the reference's noise where the object is not
+thrusting. In the lists of the store, the objects above the floor are four of the six low-orbit laser spheres (12 to 111 m) and the three
+satellites of the commercial geostationary row (127 to 572 m: the WAAS broadcast ephemeris); so those two rows' sigma changes and every other
+row's is the floor. The lists of the long-period rows were made before the field was written and have none (`listsLackingClosure`, which
+`table.mjs --check` reads over the store's lists: no other list may lack it), and an object without a list or a median is weighed at the floor.
+`refly.mjs --after-burns <lists>` fits again every window of an object whose sigma is above the floor, on the arc after its last known burn or,
+where none moves it, on the full arc (fit process `REFIT_FULL`, `lib/numerical.mjs`), with `sigmaM` recorded on the fit and in its identity.
 
 **Prior.** Of the rows fitted with the four empirical terms (the E5 settings), one whose reference's own noise is above the 10 m floor takes the
 prior sized from the precise-reference geosynchronous rows, because its data cannot determine Y0, B0, B1cos and B1sin; a row with a precise
@@ -93,18 +96,26 @@ of 12 windows each, and 4 of 8 geostationary windows at 24 h were worse, by up t
 
 **Break test.** `burn-detector/breaks.mjs` is the burn detector's second detector: the sphere fitted to every 24 h arc at a 12 h stride at the floor
 sigma, an arc closing at a weighted RMS of 1.5 or less; an arc that closes on both sides of a time and not across it holds an event there. The
-position test of `burns.mjs` cannot see a step of 11 to 51 mm/s on an object whose reference closes to 100 m (its threshold is about 700 m). An
-event is known at the end of the first arc that failed and joins the object's burns in `knownBurns` through `<satellite>.breaks.json` beside the
-list, so the arc rule reads it as a burn and the lists' digest covers it.
+position test of `burns.mjs` cannot see a step of 11 to 51 mm/s on an object whose reference closes to 100 m (its threshold is about 700 m). The
+file it writes beside the list (`<satellite>.breaks.json`) holds the arcs and the constants, not the events: a cutoff reads the events with the
+arcs that end at or before it alone (`lib/arms.mjs` `breakEventsAsOf`, called by `knownBurns`). A run of failing arcs after an arc that closed is an
+event, known at the end of its first failing arc, between the end of the arc that closed before it (or the start of the run's last arc read, if
+later) and the end of the run's first arc; it is open until an arc that closed after the run has ended, and closed once one has, when the arc
+that closed bounds it from above too. A run of more than 3 arcs is a drift, a run with no arc that closed before it is no event, and an arc
+whose fit failed is neither closing nor failing. The events join the object's burns, so the arc rule reads them as burns, and the file is in the
+lists' digest and in the object's list sha.
 
 **Judge before the next event.** A maneuvering satellite's reference holds its maneuvers, so the day-5 error judges nothing. `before-next-event.mjs`
 fits each setting named on the window's arc and gives the 3D distance to the reference at the last whole 12 h lead before the next event (a burn
-of the list or an event of the break test), and the largest from 12 h on.
+of the list, or the early edge of an event of the break test: the end of the last arc that closed), and the largest from 12 h on. A window with
+no later event, or whose next event lies past 168 h, keeps its figure over the whole span, marked.
 
-**An arc with no forecast.** A window whose arc holds an event of the list (a burn or a break test event) and has no arc of the rule's minimum after
-it, or whose fit does not close, has no numerical figure: the row lists it as "the numerical propagator has no forecast of this arc"
-(`ruleLeavesNoArm`, in `withoutNumericalFigure` beside the windows flown), and it stays in the row's window total. The count within the bar reads
-against that total as well as against the windows flown.
+**An arc with no forecast.** On the commercial geostationary row (`NOT_CONFIGURED`), a window whose arc holds a burn or a break test event known
+at the cutoff, with no arc of the rule's minimum after it, has no numerical arm (`burnInArc`, set by `refly.mjs --after-burns`): the row lists it
+as "the numerical propagator has no forecast of this arc" (`ruleLeavesNoArm`, in `withoutNumericalFigure` beside the windows flown), and it stays
+in the row's window total; the count within the bar reads against that total as well as against the windows flown. An event still open at the
+cutoff has its extent to the cutoff, so a window whose cutoff is within a failing arc's length of an event has none. No other condition (a
+fit that does not close, for one) removes an arm.
 
 The numerical trajectories (`<store>/numerical-trajectories/manifest.jsonl`, one line per trajectory, Float64 x, y, z km and vx, vy, vz km/s
 per state at the line's `stepS` from its `from`) are selected by key, fit arc (`arcH`) and the identity of the fit the line flies:

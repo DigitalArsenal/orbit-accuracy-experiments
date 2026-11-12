@@ -35,11 +35,14 @@ before D0.
 4. `breaks.mjs`: the second detector, a break test on the fit. The position test of step 2 has a threshold set by the object's own closure
    (about 700 m on the commercial geostationary satellite, whose reference closes to about 100 m over a 6 h piece), below which a step of 11 to
    51 mm/s passes. The break test fits the sphere (`Ffull`, no empirical term) to every 24 h arc at a 12 h stride at the floor sigma of 10 m; an arc
-   closes at a weighted RMS of 1.5 or less. A run of failing arcs after an arc that closes holds an event between the end of that arc and the
-   start of the first arc that closed after the run, inside every failing arc; it is known at the end of the first arc that failed. A run of more
-   than 3 arcs is a drift (continuous thrust or a model that does not fit), listed apart in `drifts` and never an event. The events are written
-   to `<group>/<satellite>.breaks.json` beside the list; `lib/arms.mjs` `knownBurns` reads them as burns known at their report time, so the arc
-   rule moves a fit's arc after one, and `listsDigest` covers the file.
+   closes at a weighted RMS of 1.5 or less. The file written, `<group>/<satellite>.breaks.json` beside the list, holds the arcs (start, end, weighted
+   RMS, null where the fit failed) and the constants, not events: `lib/arms.mjs` `breakEventsAsOf`, called by `knownBurns`, reads the events a
+   cutoff shows from the arcs that end at or before it alone. A run of failing arcs after an arc that closed is an event between the end of that
+   arc (or the start of the run's last arc read, if later) and the end of the run's first arc, inside every failing arc, and before the start of
+   the first arc that closed after the run once one has ended (open until then); it is known at the end of the first arc that failed. A run of more
+   than 3 arcs is a drift (continuous thrust or a model that does not fit) and never an event, a run with no arc that closed before it is no event,
+   and an arc whose fit failed is neither closing nor failing. The arc rule reads the events as burns known at that time, and `listsDigest` and the
+   object's list sha cover the file. `check.mjs` cases E test the reading as of a cutoff.
 
 Each list (`<group>/<satellite>.burns.json`) keeps every candidate with its report time, its extent and its velocity change; beside it,
 `<satellite>.mnv` holds one size-prefixed `$MNV` per burn that holds (STATUS DETECTED, REPORT_TIME the time it became known,

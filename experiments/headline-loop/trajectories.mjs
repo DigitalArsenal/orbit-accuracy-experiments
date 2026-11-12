@@ -78,7 +78,7 @@ async function main() {
         const source = !fit?.arcStart ? 'none' : fit.process === 'after burn' ? 'after-burn' : p?.meta?.trajectory && fs.existsSync(path.join(path.dirname(p.file), p.meta.trajectory.file)) ? 'trajectory' : p ? 'product' : 'refit';
         c[source === 'none' ? 'noFit' : source === 'after-burn' ? 'afterBurn' : source] += 1;
         if (source !== 'none' && !redo.has(k) && (fitsOf.get(k) ?? []).some((l) => N.sameFit(l.fit, fit) && intact(l.x))) { c.done += 1; continue; }
-        jobs.push({ g, key: w.key, arc, label, setting: fit?.setting ?? null, source, fit: fit?.arcStart ? { setting: fit.setting, process: fit.process, arcStart: fit.arcStart } : null, product: p?.file ?? null, storedRms: label ? nr?.arms?.[label]?.weightedRms ?? null : null, truthFile: nr?.truthFile ?? null });
+        jobs.push({ g, key: w.key, arc, label, setting: fit?.setting ?? null, source, fit: fit?.arcStart ? { setting: fit.setting, process: fit.process, arcStart: fit.arcStart, ...(fit.sigmaM ? { sigmaM: fit.sigmaM } : {}) } : null, product: p?.file ?? null, storedRms: label ? nr?.arms?.[label]?.weightedRms ?? null : null, truthFile: nr?.truthFile ?? null });
       }
     }
   }
@@ -132,7 +132,8 @@ async function worker() {
         if (truth.file) line.truthFile = truth.file;
         const thin = W.arcOf(truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= startMs && t <= D0; }), (D0 - startMs) / W.HOUR);
         if (!thin) throw new Error(j.source === 'after-burn' ? 'coverage of the arc after the burn' : 'coverage');
-        const f = await F.fit(thin, SETTINGS[j.setting], D0, G.vacuum ? null : W.weatherAt(D0).ffm);
+        // a fit weighed at the object's own sigma (lib/arms.mjs objectSigmaM; the refit row records it) is made at that sigma
+        const f = await F.fit(thin, j.fit.sigmaM ? { ...SETTINGS[j.setting], sigmaM: j.fit.sigmaM } : SETTINGS[j.setting], D0, G.vacuum ? null : W.weatherAt(D0).ffm);
         product = { epoch: f.epoch, state: f.state, parameters: f.parameters };
         line.check = { arcStart: new Date(startMs).toISOString(), refitWeightedRms: f.weightedRms ?? null, storedWeightedRms: j.storedRms ?? null };
         if (!N.rmsAgrees(line.check)) throw new Error(`the refit is not the stored fit: weighted RMS ${line.check.refitWeightedRms} against the stored ${line.check.storedWeightedRms}`);

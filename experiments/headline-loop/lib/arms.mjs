@@ -177,13 +177,46 @@ export const firingCutoffs = (dir, group, name) => {
 };
 export const listsGroup = (group) => (group === 'HE72' ? 'HE' : group);
 const listFile = (dir, group, name) => path.join(dir, listsGroup(group), `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`);
-/** An object's burn list's sha256, first 12 hex (refly.mjs --after-burns writes it as burnList, table.mjs on AP's 72 h rows), or null. */
-export const listSha = (dir, group, name) => { const f = listFile(dir, group, name); return fs.existsSync(f) ? sha256(fs.readFileSync(f)).slice(0, 12) : null; };
-/** The break test's events for an object (experiments/burn-detector/breaks.mjs): [{ from, to (the event lies between), extentFrom, extentTo,
- *  reportTime (the end of the first arc that failed to close), source: 'break test' }], or none without a file. They join the burns of the
- *  object's list in knownBurns: an event is a break in the arc whatever its size, and the detector's position test cannot see a small step. */
 const breaksFile = (dir, group, name) => path.join(dir, listsGroup(group), `${String(name).replace(/[^A-Za-z0-9]+/g, '_')}.breaks.json`);
-const breakEvents = (dir, group, name) => { const f = breaksFile(dir, group, name); return fs.existsSync(f) ? (JSON.parse(fs.readFileSync(f, 'utf8')).events ?? []) : []; };
+/** An object's burn list's sha256, first 12 hex (refly.mjs --after-burns writes it as burnList, table.mjs on AP's 72 h rows), or null. The break
+ *  test's file beside the list (<name>.breaks.json) decides arcs too, so it is in the sha where there is one; a list without one has the
+ *  sha of its own bytes, as before. */
+export const listSha = (dir, group, name) => {
+  const f = listFile(dir, group, name), b = breaksFile(dir, group, name);
+  if (!fs.existsSync(f)) return null;
+  const h = crypto.createHash('sha256').update(fs.readFileSync(f));
+  if (fs.existsSync(b)) h.update('\0breaks\0').update(fs.readFileSync(b));
+  return h.digest('hex').slice(0, 12);
+};
+/** The events of the break test (experiments/burn-detector/breaks.mjs) that its arcs show AT a cutoff: the file holds the arcs fitted (start,
+ *  end, weighted RMS, null where the fit failed), and only the arcs that END at or before D0 are read, so an event, its extent and whether it is
+ *  a drift are what the data before the cutoff show and nothing later. An arc closes at a weighted RMS of closeWeightedRms or less. A run of
+ *  consecutive failing arcs after an arc that closed holds an event: it lies inside every failing arc and after the end of the arc that closed
+ *  before the run, so between max(that end, the start of the run's last arc) and the end of the run's first arc; where an arc that closed after
+ *  the run is among those read, before its start too (the event is closed); otherwise it is open, its extent as wide as the arcs read leave it.
+ *  A run of more than maxRun arcs is a drift, a run with no arc that closed before it is no event, and an arc whose fit failed is neither
+ *  closing nor failing (it ends a run and is no arc that closed). Each event is known at the end of its first failing arc:
+ *  [{ from, to, extentFrom, extentTo, reportTime, source: 'break test', open }]. */
+export const breakEventsAsOf = (d, D0) => {
+  const H = 3600e3, stride = d.strideH * H, iso = (t) => new Date(t).toISOString();
+  const arcs = (d.arcs ?? []).map((a) => ({ s: Date.parse(a.start), e: Date.parse(a.end), w: a.wrms })).filter((a) => a.e <= D0).sort((p, q) => p.s - q.s);
+  const kind = (a) => (!Number.isFinite(a.w) ? 'unknown' : a.w <= d.closeWeightedRms ? 'closes' : 'fails');
+  const events = [];
+  for (let i = 0; i < arcs.length;) {
+    if (kind(arcs[i]) !== 'fails') { i += 1; continue; }
+    let j = i;
+    while (j + 1 < arcs.length && kind(arcs[j + 1]) === 'fails' && arcs[j + 1].s - arcs[j].s === stride) j += 1;
+    const prev = i > 0 && kind(arcs[i - 1]) === 'closes' && arcs[i].s - arcs[i - 1].s === stride ? arcs[i - 1] : null;
+    const next = j + 1 < arcs.length && kind(arcs[j + 1]) === 'closes' && arcs[j + 1].s - arcs[j].s === stride ? arcs[j + 1] : null;
+    if (prev && j - i + 1 <= d.maxRun) {
+      const from = Math.max(prev.e, arcs[j].s), to = Math.min(next ? next.s : Infinity, arcs[i].e);
+      if (from <= to) events.push({ from: iso(from), to: iso(to), extentFrom: iso(from), extentTo: iso(to), reportTime: iso(arcs[i].e), source: 'break test', open: !next });
+    }
+    i = j + 1;
+  }
+  return events;
+};
+const breakEvents = (dir, group, name, D0) => { const f = breaksFile(dir, group, name); return fs.existsSync(f) ? breakEventsAsOf(JSON.parse(fs.readFileSync(f, 'utf8')), D0) : []; };
 /** An object's sigma for a fit (m): max(OBSERVATION_SIGMA_FLOOR_M, the median piece closure of its burn list), the floor without a list or
  *  where the list records no median (the long-period rows' lists). The median is the list's positionClosure.medianM: the closure of the
  *  numerical setting flown over 6 h pieces from the reference's own states, which is the reference's noise where the object is not thrusting. */
@@ -191,13 +224,26 @@ export const objectSigmaM = (dir, group, name) => {
   const f = dir ? listFile(dir, group, name) : null, m = f && fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')).positionClosure?.medianM : null;
   return Math.max(OBSERVATION_SIGMA_FLOOR_M, Number.isFinite(m) ? m : 0);
 };
+/** The lists of a folder whose pieces were flown (flown above 0) and that record no median closure ([{ group, name }]): such an object is weighed at
+ *  the floor whatever its pieces closed to. burns.mjs writes the field into every list it makes (burn-detector/lib/detector.mjs positionClosureOf); a
+ *  list made before it did has none. */
+export const listsLackingClosure = (dir) => {
+  const out = [];
+  for (const g of fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name)) {
+    for (const f of fs.readdirSync(path.join(dir, g)).filter((x) => x.endsWith('.burns.json'))) {
+      const d = JSON.parse(fs.readFileSync(path.join(dir, g, f), 'utf8'));
+      if (d.flown > 0 && !Number.isFinite(d.positionClosure?.medianM)) out.push({ group: g, name: d.name });
+    }
+  }
+  return out;
+};
 export const knownBurns = (dir, group, name, D0, field = 'burns') => {
   const f = listFile(dir, group, name);
   if (!fs.existsSync(f)) return [];
   const d = JSON.parse(fs.readFileSync(f, 'utf8')), H = 3600000;
   const knownAt = (b) => (d.asOf || b.source === 'break test' ? Date.parse(b.reportTime) : Math.max(...(b.pieces ?? [b.to]).map((p) => Date.parse(p))) + (b.pieces ? d.lengthH * H : 0));
   // a join of the truth's solutions (seams) is a join whatever its delta-v test says: only burns pass the consistency filter
-  const seen = [...(d[field] ?? []), ...(field === 'burns' ? breakEvents(dir, group, name) : [])].filter((b) => knownAt(b) <= D0), rejected = field === 'seams' ? [] : seen.filter((b) => b.refined?.consistent === false);
+  const seen = [...(d[field] ?? []), ...(field === 'burns' ? breakEvents(dir, group, name, D0) : [])].filter((b) => knownAt(b) <= D0), rejected = field === 'seams' ? [] : seen.filter((b) => b.refined?.consistent === false);
   return seen.filter((b) => field === 'seams' || b.refined?.consistent !== false).map((b) => {
     let endMs = Date.parse(b.extentTo ?? b.to);
     for (let more = true; more;) {

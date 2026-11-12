@@ -81,7 +81,16 @@ function rtn(r, v, d) {
   const R = n(r), N = n(cross(r, v)), T = cross(N, R), dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
   return [dot(d, R), dot(d, T), dot(d, N)];
 }
-/** State f against state q (km, km/s): { dr: R, T, N m, dv: R, T, N mm/s of the relative velocity in the rotating frame (dv - w x dr) }. */
+/** An object's piece closure, the field burns.mjs writes as positionClosure: of the flown pieces (rows with posM, the position closure in m,
+ *  and judged, thr where the flag rule judged them): { pieces, medianM, madM, p90M, p99M, floorM, thresholdM (the last judged piece's) }. The
+ *  median is the weight of the object's reference in a numerical fit (headline-loop lib/arms.mjs objectSigmaM). */
+export function positionClosureOf(pieces, floorM) {
+  const v = pieces.map((p) => p.posM).filter(Number.isFinite).sort((a, b) => a - b);
+  const med = (s) => { const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }, quant = (q) => v[Math.min(v.length - 1, Math.floor(q * v.length))];
+  const medianM = v.length ? med(v) : null;
+  return { pieces: v.length, medianM, madM: medianM == null ? null : med(v.map((x) => Math.abs(x - medianM)).sort((a, b) => a - b)), p90M: v.length ? quant(0.9) : null, p99M: v.length ? quant(0.99) : null, floorM, thresholdM: pieces.filter((p) => p.judged).at(-1)?.thr ?? null };
+}
+/** State f against state q (km, km/s):{ dr: R, T, N m, dv: R, T, N mm/s of the relative velocity in the rotating frame (dv - w x dr) }. */
 export function closure(q, f) {
   const dr = sub(f.r, q.r), r2 = q.r[0] ** 2 + q.r[1] ** 2 + q.r[2] ** 2, w = cross(q.r, q.v).map((x) => x / r2);
   return { dr: rtn(q.r, q.v, dr).map((x) => x * 1000), dv: rtn(q.r, q.v, sub(sub(f.v, q.v), cross(w, dr))).map((x) => x * 1e6) };

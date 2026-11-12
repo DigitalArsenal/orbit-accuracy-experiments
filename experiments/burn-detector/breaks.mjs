@@ -3,11 +3,12 @@
 // to about 100 m over 6 h pieces) its threshold is about 700 m and a step of 11 to 51 mm/s is below it. This test reads the fit instead: the
 // numerical setting with no empirical term (a sphere, Ffull) is fitted to every arc of LENGTH hours at a stride of STRIDE hours, each weighed at
 // the floor sigma (10 m), and an arc CLOSES where its weighted RMS is at most CLOSE (1.5). A step in the arc keeps it from closing; an arc that
-// closes on both sides of a time and not across it holds an event there. A run of failing arcs after an arc that closes holds an event between the
-// end of the arc that closed before it and the start of the first arc that closed after it, inside every failing arc; a run of more than
-// MAX_RUN arcs is a drift (continuous thrust, or a model that does not fit), listed apart and never an event.
-// Each event is known at the end of the first arc that failed (data before it only), and joins the object's list in lib/arms.mjs knownBurns
-// (<group>/<satellite>.breaks.json beside <satellite>.burns.json): the arc rule reads it as a burn.
+// closes on both sides of a time and not across it holds an event there.
+// The file written holds the ARCS (start, end, weighted RMS, null where the fit failed) and the rule's constants, never the events: a cutoff reads
+// the events its arcs show with only the arcs that end at or before it (lib/arms.mjs breakEventsAsOf), so an event, its extent and whether a run
+// of failing arcs is a drift (more than MAX_RUN arcs) are what the data before the cutoff show. The events join the object's burns in lib/arms.mjs
+// knownBurns (<group>/<satellite>.breaks.json beside <satellite>.burns.json): the arc rule reads each as a burn known at the end of its first
+// failing arc. The summary line counts the events the whole file shows.
 //   node experiments/burn-detector/breaks.mjs --group WA --satellite "<name>" --out <dir> [--length 24 --stride 12 --close 1.5 --max-run 3 --lead 4]
 // Reads the archive and the store only; the file named is the one thing written. SDN_MODULES_ROOT names the modules checkout, as for pieces.mjs.
 import fs from 'node:fs';
@@ -38,28 +39,17 @@ for (const [a, b] of D.spansOf(ws.map((w) => ({ ...w, arcs: [Math.max(...w.arcs)
       if (!thin) continue;
       try {
         const f = await F.fit(thin, settings, e, settings.forces.drag ? D.weatherAsOf(e) : null);
-        arcs.push({ start: s, end: e, wrms: f.weightedRms, closes: Number.isFinite(f.weightedRms) && f.weightedRms <= close });
-      } catch (err) { arcs.push({ start: s, end: e, wrms: null, closes: false, error: String(err?.message ?? err).slice(0, 120) }); }
+        arcs.push({ start: s, end: e, wrms: Number.isFinite(f.weightedRms) ? f.weightedRms : null });
+      } catch (err) { arcs.push({ start: s, end: e, wrms: null, error: String(err?.message ?? err).slice(0, 120) }); }
     }
   }
 }
 arcs.sort((p, q) => p.start - q.start);
-const events = [], drifts = [];
-for (let i = 0; i < arcs.length;) {
-  if (arcs[i].closes) { i += 1; continue; }
-  let j = i;
-  while (j + 1 < arcs.length && !arcs[j + 1].closes && arcs[j + 1].start - arcs[j].start === STRIDE) j += 1;
-  const prev = i > 0 && arcs[i - 1].closes && arcs[i].start - arcs[i - 1].start === STRIDE ? arcs[i - 1] : null;
-  const next = j + 1 < arcs.length && arcs[j + 1].closes && arcs[j + 1].start - arcs[j].start === STRIDE ? arcs[j + 1] : null;
-  const run = arcs.slice(i, j + 1), worst = Math.max(...run.map((x) => x.wrms ?? 0));
-  const from = Math.max(prev ? prev.end : -Infinity, arcs[j].start), to = Math.min(next ? next.start : Infinity, arcs[i].end);
-  if (run.length > maxRun) drifts.push({ from: D.iso(arcs[i].start), to: D.iso(arcs[j].end), arcs: run.length, worstWrms: Math.round(worst * 100) / 100 });
-  else if (from <= to) events.push({ from: D.iso(from), to: D.iso(to), extentFrom: D.iso(from), extentTo: D.iso(to), reportTime: D.iso(arcs[i].end), source: 'break test', arcsFailing: run.length, worstWrms: Math.round(worst * 100) / 100, closedBefore: !!prev, closedAfter: !!next });
-  i = j + 1;
-}
 const file = path.join(out, g === 'HE72' ? 'HE' : g, `${D.slugOf(name)}.breaks.json`);
+const doc = { group: g, name, norad, setting: arm, sigmaM: settings.sigmaM, lengthH, strideH, closeWeightedRms: close, maxRun, arcs: arcs.map((x) => ({ start: D.iso(x.start), end: D.iso(x.end), wrms: x.wrms == null ? null : Math.round(x.wrms * 1e4) / 1e4 })) };
 fs.mkdirSync(path.dirname(file), { recursive: true });
-fs.writeFileSync(file, `${JSON.stringify({ group: g, name, norad, setting: arm, sigmaM: settings.sigmaM, lengthH, strideH, closeWeightedRms: close, maxRun, arcs: arcs.length, failing: arcs.filter((x) => !x.closes).length, events, drifts })}\n`);
-console.log(JSON.stringify({ group: g, satellite: name, arcs: arcs.length, failing: arcs.filter((x) => !x.closes).length, events: events.length, drifts: drifts.length }));
+fs.writeFileSync(file, `${JSON.stringify(doc)}\n`);
+const events = D.A.breakEventsAsOf(doc, Infinity);
+console.log(JSON.stringify({ group: g, satellite: name, arcs: arcs.length, failing: arcs.filter((x) => Number.isFinite(x.wrms) && x.wrms > close).length, failedFits: arcs.filter((x) => !Number.isFinite(x.wrms)).length, events: events.length }));
 await F.close();
 process.exit(0);

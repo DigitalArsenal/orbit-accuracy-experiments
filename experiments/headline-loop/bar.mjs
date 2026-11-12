@@ -352,7 +352,7 @@ async function worker() {
   const invoke = async (methodId, inputs) => { const r = await h.invoke({ methodId, inputs }); if (r.statusCode !== 0) throw new Error(`${methodId}: ${r.errorCode}: ${String(r.errorMessage).slice(0, 200)}`); return r; };
   // --caps: the row's $PCF (lib/arms.mjs PCF: AP, AP_VACUUM or AP_ECOM2, with _TIDES) with the record's degrees replaced
   const capsOf = (choice) => (CAPS ? { label: `${choice.label} at ${CAPS[0]}/${CAPS[1]}`, pcf: APL.fitPcf({ forces: {
-    ...APL.apForces({ tesseral: CAPS[0], zonal: CAPS[1], atmosphere: !choice.label.startsWith('AP_VACUUM'), ecom2: choice.label.startsWith('AP_ECOM2') }),
+    ...APL.apForces({ tesseral: CAPS[0], zonal: CAPS[1], atmosphere: !choice.label.startsWith('AP_VACUUM'), ecom2: /ECOM2/.test(choice.label) }),
     ...(choice.label.endsWith('_TIDES') ? { SOLID_TIDES: 1 } : {}) }, fit: null }) } : choice);
   const iso = (t) => new Date(t).toISOString();
   const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };

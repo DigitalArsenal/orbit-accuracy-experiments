@@ -166,6 +166,7 @@ async function afterBurns() {
   const W = await import('./lib/windows.mjs');
   const A = await import('./lib/arms.mjs');
   const { FULL_SETTING, OBSERVATION_SIGMA_FLOOR_M } = await import('./lib/settings.mjs');
+  const NUM = await import('./lib/numerical.mjs');
   const burnsDir = args['after-burns'], [K, N] = (args.shard ?? '0/1').split('/').map(Number);
   const groups = (args.groups ?? 'S1,DO,WA').split(',');
   const parse = (l) => { try { return JSON.parse(l); } catch { return null; } };
@@ -230,7 +231,8 @@ async function afterBurns() {
         if (!m.maneuvering) row.fitProcess = m.shortAfterBurn ? `maneuvering, the arc after its last burn under ${A.NUMERICAL_AFTER_BURN.minHours24} h: the stored full-arc fit` : 'the full arc: the stored fit';
         else if (!thin) row.fitProcess = 'maneuvering, the arc after its last burn short of coverage: the stored full-arc fit';
         else {
-          row.fitProcess = 'maneuvering: the arc after its last burn';
+          // a burn moved the arc (the arc after the last burn), or none did and the object's sigma is above the floor (the full arc, fitted again)
+          row.fitProcess = m0.maneuvering ? NUM.REFIT : NUM.REFIT_FULL;
           row.fitArcHours = Math.round(hours * 10) / 10;
           row.fitArcStart = W.iso(m.startMs);
           row.env = env;

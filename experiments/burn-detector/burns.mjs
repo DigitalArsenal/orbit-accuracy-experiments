@@ -93,8 +93,12 @@ const record = (ev) => {
 };
 const burns = events.filter((e) => e.attempts.length && !e.seam).map(record).sort((a, b) => a.burn.localeCompare(b.burn));
 const seams = events.filter((e) => e.seam).map((e) => { const { burn, ...rest } = record(e); return { at: burn, ...rest, seamTest: e.seam }; }).sort((a, b) => a.at.localeCompare(b.at));
+// the object's piece closure: the median of the position closure over all its flown pieces, with its MAD and 90th and 99th percentiles, and the
+// last threshold the flag rule gave. The median is the weight of the object's reference in a numerical fit (lib/arms.mjs objectSigmaM:
+// sigma = max(10 m, medianM)), the reference's own noise where the object is not thrusting. Written for every list made here.
+const positionClosure = D.positionClosureOf(ok, floor);
 const doc = { group: g, name, norad, arm, asOf: 'each burn is known at its reportTime, made from nothing later', piecesFile, lengthH: ok[0]?.lengthH ?? 6, strideH: ok[0]?.strideH ?? 3,
-  pieces: all.length, flown: ok.length, gapPieces: all.filter((r) => r.gap).length, errorPieces: all.filter((r) => r.error).length, unjudged,
+  pieces: all.length, flown: ok.length, positionClosure, gapPieces: all.filter((r) => r.gap).length, errorPieces: all.filter((r) => r.error).length, unjudged,
   rule: { floorM: floor, flagVelocity: flagVel, termsDays, minPrior, minCalib, vFloorMmS: vFloor, calibrationPieces: calib.length, seam: D.SEAM }, flaggedPieces: ok.filter((p) => p.flagged).map((p) => p.nominal), burns, seams, unlocalized };
 fs.writeFileSync(path.join(dir, `${slug}.burns.json`), `${JSON.stringify(doc, null, 1)}\n`);
 // the typed records: one $MNV per burn that holds
