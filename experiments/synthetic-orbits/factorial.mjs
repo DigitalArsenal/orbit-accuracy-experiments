@@ -19,11 +19,14 @@
 //   radiation  cannonball radiation pressure, C_R A/m = the case's term. Truth: on or off. AP: its radiation term at the truth's value
 //              (held) or solved where on; held at 0 where off, in both halves.
 //   drag       only where the perigee is under 2,500 km. Truth: NRLMSISE-00 drag, C_D A/m = the case's term. AP: NRLMSISE-00 on the
-//              same weather with its drag term at the truth's value (held) or solved where on; where off, no atmosphere (as run.mjs
-//              flies a truth without drag) and its drag term held at 0, in both halves.
+//              same weather with its drag term at the truth's value (held) or solved where on; where off, AP's settings name its own
+//              Jacchia 1970 atmosphere on its own flux model, with the drag term held at 0, in both halves. With the perigee at or
+//              above 2,500 km the truth has no drag in any cell, and every cell is AP's drag off.
 //   tide       the solid Earth tide, IERS 2010, on both sides (AP: SOLID_TIDES).
 //   fit        + held: the drag and radiation terms held at the values above (sigma 1e-10); - solved: AP's default priors where
-//              the component is on.
+//              the component is on. A term whose component the truth does not have is held at 0 at both levels.
+// A binary factor left out of --factors is on in every cell (the fit held where it is the one left out), J2 alone and the all-off
+// cell included; the printed labels and the result file (onInEveryCell) name it.
 // In every truth cell: the IERS 2010 relativity terms (AP carries no relativity), DE440s, the Earth orientation, the numerical
 // propagator FFM 2.2.0 (each pinned and checked by hash in headline-loop/lib/ffm.mjs, as run.mjs flies them), constant space weather
 // (F10.7 150, its 81-day mean 150, Ap 15, every day, on both sides), RK78 at tolerance 1e-11 with steps of 1e-3 to 120 s, from the
@@ -45,10 +48,15 @@
 //   and tide; the field's own split (D at its three levels with every other component on) apart;
 // - the one-at-a-time path: J2 alone with every other component off, then the zonal tail, the full field, the Moon, the Sun,
 //   radiation, drag and the tide added in that order.
+// The main effects, the field's steps and the interactions are in log10 D (D in meters); the Shapley shares, the field's split and
+// the one-at-a-time path are in meters. The printout shows the eight largest interactions by size; the result file holds all of them.
 //
 //   node experiments/synthetic-orbits/factorial.mjs --case <id> --modules-commit <sha> --modules-root <modules checkout>
-//     [--factors moon,sun,radiation,drag,tide,fit] [--jobs 2] [--seed 498] [--out <dir>]
+//     [--factors moon,sun,radiation,drag,tide,fit] [--jobs 2] [--seed 498] [--out <dir>] [--scratch]
 //   <id>: a case of cases.mjs (seed --seed), or of the claim set (claim-<seed>-b<band>-<k>); the field is always a factor
+// A modules commit whose sdn-ap is older than 0.6.36 is refused: AP's field there is not EGM2008, the truth's. Without --scratch this
+// repository's working tree (experiments/synthetic-orbits, experiments/headline-loop) must be clean, since the result file names its
+// commit (as claim.mjs and run.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -60,7 +68,8 @@ import { draw } from './claim.mjs';
 import { seedRecord } from './seed.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
-const SELF = fileURLToPath(import.meta.url);
+const SELF = fileURLToPath(import.meta.url), REPO = path.resolve(path.dirname(SELF), '../..');
+const FIRST_VERSION = '0.6.36';
 const FIELD = ['j2', 'zonal', 'full'];
 const BINARY = ['moon', 'sun', 'radiation', 'drag', 'tide', 'fit'];
 const FIELD_TEXT = { j2: 'J2 alone', zonal: 'the zonal tail', full: 'the full field' };
@@ -169,15 +178,25 @@ function build(root, commit, name, store) {
 async function main() {
   const root = args['modules-root'], want = args['modules-commit'];
   if (!root || !want || !args.case) throw new Error('usage: factorial.mjs --case <id> --modules-commit <sha> --modules-root <modules checkout> [...]');
-  const L = await libs(root);
+  // the result file names this repository's commit: its working tree must be clean (as claim.mjs and run.mjs), or the run says --scratch
+  const dirty = execFileSync('git', ['-C', REPO, 'status', '--porcelain', '--', 'experiments/synthetic-orbits', 'experiments/headline-loop'], { encoding: 'utf8' }).trim();
+  if (dirty && !args.scratch) throw new Error(`refused: this repository's working tree differs from its commit (the result file names the commit):\n${dirty}`);
+  const harness = execFileSync('git', ['-C', REPO, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim() + (dirty ? '+scratch' : '');
   const commit = execFileSync('git', ['-C', root, 'rev-parse', '--verify', `${want}^{commit}`], { encoding: 'utf8' }).trim();
+  const version = JSON.parse(execFileSync('git', ['-C', root, 'show', `${commit}:propagator/sdn-ap/package.json`], { encoding: 'utf8' })).version;
+  const older = (a, b) => { const p = a.split('.').map((x) => parseInt(x, 10)), q = b.split('.').map((x) => parseInt(x, 10)); for (let k = 0; k < 3; k += 1) if (p[k] !== q[k]) return p[k] < q[k]; return false; };
+  if (older(version, FIRST_VERSION)) throw new Error(`refused: modules ${commit.slice(0, 12)} carries sdn-ap ${version}; before ${FIRST_VERSION} AP's field is not EGM2008, the truth's`);
+  const L = await libs(root);
   const c = caseOf(args.case, Number(args.seed ?? 498)), dragApplies = c.hpKm < DRAG_BELOW_KM;
   const binary = (args.factors ? args.factors.split(',') : BINARY).filter((f) => f !== 'drag' || dragApplies);
   for (const f of binary) if (!BINARY.includes(f)) throw new Error(`--factors: ${f} is not one of ${BINARY.join(', ')} (the field is always a factor)`);
   const store = path.join(L.A.STORE_ROOT, 'factorial'), out = args.out ?? path.join(store, commit.slice(0, 12), c.id);
   fs.mkdirSync(out, { recursive: true });
-  // every cell: the field's three levels by every combination of the binary factors (a factor not listed stays on)
-  const cells = FIELD.flatMap((field) => Array.from({ length: 2 ** binary.length }, (_, m) => ({ field, ...Object.fromEntries(BINARY.map((f) => [f, 1])), ...Object.fromEntries(binary.map((f, j) => [f, (m >> j) & 1])) })));
+  // every cell: the field's three levels by every combination of the binary factors; a factor not listed is on in every cell (the
+  // fit held), J2 alone and the all-off cell included, and drag where the perigee is at or above 2,500 km is off in every cell
+  const fixed = Object.fromEntries(BINARY.filter((f) => !binary.includes(f)).map((f) => [f, f === 'drag' && !dragApplies ? 0 : 1]));
+  const onInEveryCell = Object.entries(fixed).filter(([, v]) => v === 1).map(([f]) => (f === 'fit' ? 'the fit held' : f));
+  const cells = FIELD.flatMap((field) => Array.from({ length: 2 ** binary.length }, (_, m) => ({ field, ...fixed, ...Object.fromEntries(binary.map((f, j) => [f, (m >> j) & 1])) })));
   const arms = new Map();
   for (const cl of cells) { const a = armOf(cl, dragApplies), k = JSON.stringify(a); if (!arms.has(k)) arms.set(k, a); }
   const names = [...new Set([...arms.values()].map(buildName))];
@@ -209,9 +228,12 @@ async function main() {
   const byArm = new Map([...arms.keys()].map((k, j) => [k, results[j]]));
   const rows = cells.map((cl) => ({ cell: cl, arm: armOf(cl, dragApplies), ...byArm.get(JSON.stringify(armOf(cl, dragApplies))) }));
   const analysis = analyze(rows, binary);
-  const record = { case: c, label: labelOf(c), modulesCommit: commit, committedDistSha256: committed, builds: buildShas, ffm: truthResults.find((t) => t.ffm)?.ffm ?? null,
+  const record = { case: c, label: labelOf(c), harness, version, modulesCommit: commit, committedDistSha256: committed, builds: buildShas, ffm: truthResults.find((t) => t.ffm)?.ffm ?? null,
     truthSettings: { field: 'EGM2008', tolerance: TOLERANCE, maxStepS: 120, minStepS: 1e-3, weather: WEATHER, relativity: 'IERS_2010 in every cell', stepS: STEP / 1000, from: iso(tStart), states: N },
-    fitFactor: '+ held (drag and radiation terms at the truth\'s values, sigma 1e-10), - solved', field: FIELD_TEXT, factors: ['field', ...binary], dragApplies, rows, ...analysis };
+    fitFactor: '+ held (drag and radiation terms at the truth\'s values, sigma 1e-10), - solved; a term whose component the truth does not have is held at 0 at both levels', field: FIELD_TEXT, factors: ['field', ...binary],
+    onInEveryCell, onInEveryCellText: onInEveryCell.length ? `left out of --factors and on in every cell, J2 alone and the all-off cell included: ${onInEveryCell.join(', ')}` : 'every binary factor is a factor',
+    dragApplies, dragText: dragApplies ? 'drag a factor (the perigee is under 2,500 km)' : 'no drag in any cell: the perigee is at or above 2,500 km, the truth has no drag, and AP\'s settings name its own Jacchia 1970 atmosphere with the drag term held at 0',
+    units: 'main effects, the field\'s steps and the interactions in log10 D (D in m); the Shapley shares, the field\'s split and the one-at-a-time path in m', rows, ...analysis };
   fs.writeFileSync(path.join(out, 'factorial.json'), JSON.stringify(record, null, 1));
   print(record);
   console.error(`factorial: ${path.join(out, 'factorial.json')}`);
@@ -266,19 +288,22 @@ function analyze(rows, binary) {
 
 function print(r) {
   const f = (x) => (!Number.isFinite(x) ? 'no D' : x >= 1000 ? `${(x / 1000).toFixed(2)} km` : `${x.toFixed(1)} m`);
-  console.log(`${r.case.id}${r.case.name ? ` (${r.label})` : ''}: perigee ${r.case.hpKm} km, e ${r.case.e}, i ${r.case.i}, cutoff ${r.case.cutoff}; ${r.rows.length} cells (factors ${r.factors.join(', ')})`);
+  console.log(`${r.case.id}${r.case.name ? ` (${r.label})` : ''}: perigee ${r.case.hpKm} km, e ${r.case.e}, i ${r.case.i}, cutoff ${r.case.cutoff}; ${r.rows.length} cells (factors ${r.factors.join(', ')}; ${r.onInEveryCellText}; ${r.dragText})`);
+  console.log(`  sdn-ap ${r.version} at modules ${r.modulesCommit.slice(0, 12)}; this repository at ${r.harness}`);
   console.log(`  builds: ${Object.entries(r.builds).map(([n, b]) => `${n} ${b.sha256.slice(0, 12)}`).join(', ')}; the committed dist ${r.committedDistSha256.slice(0, 12)}${r.builds.base ? (r.builds.base.sha256 === r.committedDistSha256 ? ' (the base build is the committed dist)' : ' (the base build differs from the committed dist)') : ''}`);
   console.log(`  truth: FFM ${r.ffm?.ffm?.version ?? '?'} (${r.ffm?.ffm?.sha256?.slice(0, 12) ?? '?'}), EGM2008, tolerance ${r.truthSettings.tolerance}, constant weather F10.7 ${WEATHER.f107} Ap ${WEATHER.ap}, relativity in every cell; fit factor: ${r.fitFactor}`);
-  const label = (row) => [FIELD_TEXT[row.cell.field], ...r.factors.filter((x) => x !== 'field').map((x) => (x === 'fit' ? (row.cell.fit ? 'held' : 'solved') : row.cell[x] ? x : `-${x}`))].join(' ');
+  // a cell's label: its field level, each listed factor's level, and what is on in every cell
+  const every = r.onInEveryCell.length ? ` (in every cell: ${r.onInEveryCell.join(', ')})` : '';
+  const label = (row) => [FIELD_TEXT[row.cell.field], ...r.factors.filter((x) => x !== 'field').map((x) => (x === 'fit' ? (row.cell.fit ? 'held' : 'solved') : row.cell[x] ? x : `-${x}`))].join(' ') + every;
   for (const row of r.rows) console.log(`  ${label(row)}: ${Number.isFinite(row.D) ? `D ${f(row.D)} at ${row.at.h} h (R ${row.at.r}, T ${row.at.t}, N ${row.at.n} m)` : `no D: ${row.error}`}`);
   if (r.analysisRefused) { console.log(`  ${r.analysisRefused}`); return; }
   console.log('  main effects, log10 D:', Object.entries(r.mainEffectsLog10D).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
   console.log('  the field\'s steps, log10 D:', Object.entries(r.fieldStepsLog10D).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
-  console.log('  interactions, log10 D:', Object.entries(r.interactionsLog10D).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 8).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
+  console.log(`  interactions, log10 D (the eight largest of ${Object.keys(r.interactionsLog10D).length}; all in the result file):`, Object.entries(r.interactionsLog10D).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 8).map(([k, v]) => `${k} ${v.toFixed(3)}`).join(', '));
   for (const [lvl, s] of Object.entries(r.shapley)) {
-    console.log(`  Shapley (fit ${lvl}): all on ${f(s.allOnM)}, all off ${f(s.allOffM)};`, Object.entries(s.sharesM).map(([k, v]) => `${k} ${v.toFixed(1)} m`).join(', '));
+    console.log(`  Shapley (fit ${lvl}), in m: all on ${f(s.allOnM)}, all off${every} ${f(s.allOffM)};`, Object.entries(s.sharesM).map(([k, v]) => `${k} ${v.toFixed(1)} m`).join(', '));
     console.log(`    the field's split, every other component on: ${Object.entries(r.fieldSplitM[lvl]).map(([k, v]) => `${k} ${f(v)}`).join(', ')}`);
-    console.log(`    the one-at-a-time path: ${r.onePathM[lvl].map(([k, v]) => `${k} ${f(v)}`).join(', ')}`);
+    console.log(`    the one-at-a-time path${every}: ${r.onePathM[lvl].map(([k, v]) => `${k} ${f(v)}`).join(', ')}`);
   }
 }
 
@@ -317,8 +342,10 @@ async function cell(job) {
   const oem = S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: span, useableStart: span[0].epoch, useableStop: span.at(-1).epoch });
   const forces = { ...L.APL.apForces({ tesseral: a.field === 'full' ? 31 : 0, zonal: a.field === 'j2' ? 5 : 20, atmosphere: a.drag }), ...(a.tide ? { SOLID_TIDES: 1 } : {}) };
   const held = (mean) => ({ mean, sigma: 1e-10, form: 'GAUSSIAN_SIGNED' });
+  // a term whose component the truth does not have is held at 0 at both fit levels: the drag term wherever drag is off, the
+  // perigee at or above 2,500 km included (AP's settings name its Jacchia 1970 atmosphere there), and the radiation term
   const fit = {
-    ...(job.dragApplies ? (a.drag ? (a.fit === 'held' ? { dragPrior: held(cd) } : {}) : { dragPrior: held(0) }) : {}),
+    ...(a.drag ? (a.fit === 'held' ? { dragPrior: held(cd) } : {}) : { dragPrior: held(0) }),
     ...(a.radiation ? (a.fit === 'held' ? { srpPrior: held(cr) } : {}) : { srpPrior: held(0) }),
   };
   const pcf = L.APL.fitPcf({ forces, fit: Object.keys(fit).length ? fit : null });

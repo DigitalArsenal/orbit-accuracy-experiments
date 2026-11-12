@@ -12,15 +12,17 @@
 //   an orbit whose apogee lies beyond the Moon's mean distance is drawn again (cases.mjs leaves such cells out as well).
 // Mean motion from perigee and eccentricity, two-body, as cases.mjs makes its grid. The boxes (BOXES) are printed by what they draw
 // (boxLabelOf); each row stores the bar's band name (cases.mjs BAR_BANDS) it stands for, whose name is not its box's edges. Drawn in no
-// box: near-circular orbits with perigee 20,200 to 35,486 km or above 36,086 km, eccentric orbits (e above 0.01) with perigee above
-// 35,786 km, and e above 0.9.
+// box: perigee below 200 km, near-circular orbits with perigee 20,200 to 35,486 km or above 36,086 km, eccentric orbits (e above 0.01)
+// with perigee above 35,786 km, and e above 0.9.
 //
-// The population of a box: its drawn orbits whose numerical flight reaches the cutoff. The status rules are those of report.mjs
-// statusOf (kept the same here): n counts every case that has a truth; k counts those in n that are not within the bar, that is D >
-// 100 m over the whole 0 to 120 h, a truth that ends before 120 h (a decay after the cutoff or the numerical flight ending early, never
-// within, counted with its span), a refused fit, a failed flight or another failure after the truth existed. A case without a truth
-// (it failed before its truth existed, or the numerical flight failed outright, as a decay before the cutoff does) is not in n and is
-// counted on its own line with its reason. The bound is the exact one-sided 95 % upper confidence bound on the failure share k / n
+// The population of a box: its drawn orbits that are above 100 km at the cutoff and whose numerical flight reaches it. The status
+// rules are those of report.mjs statusOf (kept the same here): n counts every case that has a truth past the cutoff; k counts those in
+// n that are not within the bar, that is D > 100 m over the whole 0 to 120 h, a truth that ends before 120 h (a decay after the
+// cutoff or the numerical flight ending early, never within, counted with its span), a refused fit, a failed flight or another
+// failure after the truth existed. Outside n, each counted on its own line with its reason: an orbit that decays below 100 km at or
+// before the cutoff, which has no forecast to score, whether the numerical flight stopped there (FFM stops at a reentry) or ran
+// through it; a case without a truth (it failed before its truth existed, or the numerical flight failed before the cutoff for
+// another reason). The bound is the exact one-sided 95 % upper confidence bound on the failure share k / n
 // (Clopper-Pearson). It is printed only when every drawn case of the box has a row. The median D is the sorted values' element
 // floor(m / 2) (as report.mjs) and the 95th percentile the nearest rank, ceil(0.95 m), over the m scored cases (those with a D over
 // the whole 0 to 120 h).
@@ -62,7 +64,7 @@ export const BOXES = [
 const km = (x) => x.toLocaleString('en-US');
 /** What box b draws, as a page prints it: its eccentricity and perigee ranges. */
 export const boxLabelOf = (b) => { const x = BOXES[b]; return `${x.e[1] <= 0.01 ? 'near-circular, e 0 to 0.01' : `e ${x.e[0]} to ${x.e[1]}`}, perigee ${km(x.hp[0])} to ${km(x.hp[1])} km`; };
-export const NOT_DRAWN = 'Drawn in no box: near-circular orbits with perigee 20,200 to 35,486 km or above 36,086 km; eccentric orbits (e above 0.01) with perigee above 35,786 km; e above 0.9.';
+export const NOT_DRAWN = 'Drawn in no box: perigee below 200 km; near-circular orbits with perigee 20,200 to 35,486 km or above 36,086 km; eccentric orbits (e above 0.01) with perigee above 35,786 km; e above 0.9.';
 
 /** The cases of band b: n independent draws from seed s (the band's own stream, so a band's cases do not depend on the others). */
 export function draw(seed, b, n) {
@@ -106,21 +108,27 @@ const p95 = (v) => { if (!v.length) return null; const s = v.slice().sort((a, b)
 const read = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : []);
 
 /**
- * What became of a case, from its row: the rule of report.mjs statusOf, kept the same here. not-flown; no-truth (it failed before
- * its truth existed, or the numerical flight failed outright); and with a truth (in n): within or over (D over the whole 0 to 120 h),
- * short (the truth ends before 120 h: never within; spanH the hours it reaches), refused (AP's fit refused), flight-failed, failed.
+ * What became of a case, from its row: the rule of report.mjs statusOf, kept the same here. Outside n: not-flown; no-truth (it failed
+ * before its truth existed, or the numerical flight failed before the cutoff for another reason than a decay); decayed (the orbit
+ * decays below 100 km at or before the cutoff, so there is no forecast to score: the numerical flight stopped there, as FFM stops at
+ * a reentry, or ran through it). In n: within or over (D over the whole 0 to 120 h), short (the truth ends before 120 h, a decay
+ * after the cutoff among them: never within; spanH the hours it reaches), refused (AP's fit refused), flight-failed, failed.
  */
 export function statusOf(r) {
   if (!r) return { status: 'not-flown', reason: 'not flown' };
   const t = r.truth, ap = r.ap ?? null;
   if (!t) return { status: 'no-truth', reason: `failed before its truth existed: ${r.error ?? 'no truth'}` };
+  if (t.decayedAtH != null && t.decayedAtH <= 0) return { status: 'decayed', reason: `decays below 100 km at ${t.decayedAtH} h, at or before the cutoff: no forecast to score` };
+  if (t.error && t.flownToDay == null) {
+    return REENTRY.test(t.error) ? { status: 'decayed', reason: `decays below 100 km before the cutoff, where the numerical flight stops: no forecast to score (${t.error})` }
+      : { status: 'no-truth', reason: `the numerical flight failed before the cutoff: ${t.error}` };
+  }
   const shortSpan = () => {
-    if (t.decayedAtH != null) return { spanH: Math.max(0, t.decayedAtH), why: t.decayedAtH <= 0 ? `decays below 100 km at ${t.decayedAtH} h, before the cutoff` : `decays below 100 km at ${t.decayedAtH} h` };
+    if (t.decayedAtH != null) return { spanH: t.decayedAtH, why: `decays below 100 km at ${t.decayedAtH} h` };
     if (t.flownToDay != null) return { spanH: t.flownToDay * 24, why: `the numerical flight ends at day ${t.flownToDay}${t.error ? ` (${t.error})` : ''}` };
     return null;
   };
   if (!ap) {
-    if (t.error && t.flownToDay == null) return { status: 'no-truth', reason: `the numerical flight failed: ${t.error}` };
     const s = shortSpan();
     if (s) return { status: 'short', spanH: s.spanH, reason: s.why };
     return { status: 'failed', reason: `failed after its truth existed: ${r.error ?? 'no result'}` };
@@ -131,6 +139,8 @@ export function statusOf(r) {
   return { status: md.maxM <= PASS_M ? 'within' : 'over' };
 }
 const IN_N = new Set(['within', 'over', 'short', 'refused', 'flight-failed', 'failed']);
+// FFM's reentry refusal: the trajectory descends below 100 km
+const REENTRY = /descends below 100 km/;
 
 /** The per-box table from the draw and the rows: every drawn case by its row (the last one, of this run: build, seed, fit and truth
  *  start), k of n not within the bar (n every case with a truth), the bound on k / n only when no drawn case lacks a row, D over the
@@ -147,15 +157,15 @@ export function table(draws, rows) {
     const short = of('short');
     return { box: b, label: boxLabelOf(b), band: box.band, edges: { perigeeKm: box.hp, eccentricity: box.e }, drawn: rs.length, notFlown, n, k, within, over: of('over').length,
       short: short.length, shortSpansH: short.map((x) => x.spanH).sort((a, b) => a - b), refused: of('refused').length, flightFailed: of('flight-failed').length, failed: of('failed').length,
-      noTruth: of('no-truth').length, noTruthReasons: [...new Set(of('no-truth').map((x) => x.reason.replace(/ at \d{4}-\d\d-\d\dT[\d:.]+ UTC.*$/, '')))],
+      decayed: of('decayed').length, noTruth: of('no-truth').length, noTruthReasons: [...new Set(of('no-truth').map((x) => x.reason.replace(/ at \d{4}-\d\d-\d\dT[\d:.]+ UTC.*$/, '')))],
       upper95: n && !notFlown ? upperBound(k, n) : null, boundWithheld: notFlown ? `${notFlown} drawn case${notFlown > 1 ? 's have' : ' has'} no row` : null,
       scored: Ds.length, medianM: median(Ds), p95M: p95(Ds), maxM: Ds.length ? Math.max(...Ds) : null, worst: worst ? worst.r.id : null };
   });
 }
 
 /** What a result says of itself (claim.json and the printed lines). */
-const STATUS_RULES = 'n counts every drawn case that has a truth; k counts those in n not within the bar: D > 100 m over the whole 0 to 120 h, a truth that ends before 120 h (never within), a refused fit, a failed flight or another failure after the truth existed. A case without a truth (it failed before its truth existed, or the numerical flight failed outright, as a decay before the cutoff does) is outside n, with its reason.';
-const POPULATION = 'The population of a box: its drawn orbits whose numerical flight reaches the cutoff. A decay after the cutoff is in n as a failure, one before it is outside n. A draw whose apogee lies beyond the Moon\'s mean distance is drawn again.';
+const STATUS_RULES = 'n counts every drawn case that has a truth past the cutoff; k counts those in n not within the bar: D > 100 m over the whole 0 to 120 h, a truth that ends before 120 h (never within; a decay after the cutoff among them), a refused fit, a failed flight or another failure after the truth existed. Outside n, each with its reason: an orbit that decays below 100 km at or before the cutoff (no forecast to score), whether the numerical flight stopped there or ran through it; a case without a truth (it failed before its truth existed, or the numerical flight failed before the cutoff for another reason).';
+const POPULATION = 'The population of a box: its drawn orbits that are above 100 km at the cutoff and whose numerical flight reaches it. A decay after the cutoff is in n as a failure; a decay at or before the cutoff is outside n. A draw whose apogee lies beyond the Moon\'s mean distance is drawn again.';
 const BOUND = 'The bound: the exact one-sided 95 % upper confidence bound on the failure share k / n (Clopper-Pearson), printed only when every drawn case of the box has a row.';
 const MADE_UP = 'Every orbit is made up, and the truth is a model\'s flight (the numerical propagator\'s), not any satellite\'s data.';
 const sameRun = (d, r) => r.wasmSha256 === d.wasmSha256 && r.claimSeed === d.seed && r.fit === d.fit && (r.truthStartH ?? 72) === d.truthStartH;
@@ -188,7 +198,7 @@ if (!isMain) { /* imported */ } else if (args['check-bound']) {
   console.log(`seed ${d.seed}, ${d.perBand} per box, fit ${d.fit} (fitted after the cutoff: ${way.after ? 'yes' : 'no'}), truth from ${d.truthStartH} h before the cutoff, sdn-ap ${d.version} (${d.wasmSha256.slice(0, 12)}, modules ${d.modulesCommit.slice(0, 12)}); rows of this run ${rows.length}${all.length > rows.length ? `, of other runs ${all.length - rows.length} (not read)` : ''}; this repository at ${harness.length ? harness.join(', ') : 'a commit these rows do not record'}`);
   console.log(`command: ${command}`);
   for (const s of [MADE_UP, POPULATION, STATUS_RULES, BOUND, `Fit way ${d.fit}: ${way.text}`, NOT_DRAWN]) console.log(s);
-  for (const b of t) console.log(`${b.label}: ${b.k} of ${b.n} not within 100 m (drawn ${b.drawn}; over ${b.over}, truth short of 120 h ${b.short}${b.short ? ` [${b.shortSpansH.join(', ')} h]` : ''}, refused fits ${b.refused}, failed flights ${b.flightFailed}, other ${b.failed}; without a truth ${b.noTruth}${b.noTruth ? ` (${b.noTruthReasons.join('; ').slice(0, 160)})` : ''}; not flown ${b.notFlown}), bound ${b.upper95 == null ? `- (${b.boundWithheld ?? 'n is 0'})` : `${(100 * b.upper95).toFixed(2)} %`}; over the ${b.scored} scored: median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}`);
+  for (const b of t) console.log(`${b.label}: ${b.k} of ${b.n} not within 100 m (drawn ${b.drawn}; over ${b.over}, truth short of 120 h ${b.short}${b.short ? ` [${b.shortSpansH.join(', ')} h]` : ''}, refused fits ${b.refused}, failed flights ${b.flightFailed}, other ${b.failed}; decayed by the cutoff ${b.decayed}; without a truth ${b.noTruth}${b.noTruth ? ` (${b.noTruthReasons.join('; ').slice(0, 160)})` : ''}; not flown ${b.notFlown}), bound ${b.upper95 == null ? `- (${b.boundWithheld ?? 'n is 0'})` : `${(100 * b.upper95).toFixed(2)} %`}; over the ${b.scored} scored: median ${f(b.medianM)}, 95th ${f(b.p95M)}, largest ${f(b.maxM)}`);
 } else await fly();
 
 async function fly() {
