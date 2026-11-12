@@ -157,6 +157,11 @@ async function worker() {
           row.burnList = listShaOf(w.group, w.name);
           // its perigee at the cutoff (km), so the re-fly rule can tell an object under the floor from the row (main: staleList)
           row.perigeeKm = perigeeKm;
+        } else if (m && theory === 'AP') {
+          // a fit the rule does not move (a 24 h fit) still notes whether the object was maneuvering (its carry): the list and the perigee that
+          // decided the note, so the note can be checked against today's lists (main: staleList)
+          row.burnList = listShaOf(w.group, w.name);
+          row.perigeeKm = perigeeKm;
         }
         let thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= from && t <= D0; }), hours);
         // the arc after the burn short of coverage: the full arc, so no window leaves the row
@@ -338,8 +343,8 @@ async function main() {
     // note is not what today's lists give (a burn or a break test event added or withdrawn) is flown again
     if (t === 'AP' && a === 24 && args.burns && A.maneuver72(version) && A.carry24(version)) {
       const r = rowOf(t, w, a);
-      if (!r || r.error || r.fitProcess == null) return false;
-      const m = A.maneuverArc(A.arcBreaks(args.burns, w.group, w.name, w.cutoffMs), w.cutoffMs, r.perigeeKm ?? Infinity, undefined, A.minHoursOf(w.group));
+      if (!r || r.error || r.fitProcess == null || r.perigeeKm == null) return false; // a row that recorded no perigee cannot be told from today's lists
+      const m = A.maneuverArc(A.arcBreaks(args.burns, w.group, w.name, w.cutoffMs), w.cutoffMs, r.perigeeKm, undefined, A.minHoursOf(w.group));
       return !!m.maneuvering !== /, maneuvering$/.test(r.fitProcess);
     }
     if (t !== 'AP' || !A.arcRuleApplies(w.group, a) || !args.burns || !A.maneuver72(version)) return false;
