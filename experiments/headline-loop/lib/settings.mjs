@@ -21,9 +21,9 @@ const cannon = { parameters: [{ kind: 'SRP_AREA_OVER_MASS', value: 0.02 }], fixe
 /** The a priori sigma (m/s^2) of each ECOM2 term of the five-term arms: D0 1e-6 and 1e-7 on the other four, which a precise reference determines
  *  itself (E5, E5F: the navigation, geostationary and inclined geosynchronous rows). */
 const ecom = (terms, sigma = (t) => (t === 'D0' ? 1e-6 : 1e-7)) => ({ parameters: terms.map((t) => ({ kind: `ECOM2_${t}`, value: 0 })), fixed: { agom: 0 }, apriori: apriori(terms.map(sigma)) });
-/** The prior of E5G: the rule is that a row whose reference's own noise is above the 10 m floor (OBSERVATION_SIGMA_FLOOR_M) takes the prior sized
- *  from the precise-reference geosynchronous rows, because its data cannot determine Y0, B0, B1cos and B1sin; a row with a precise reference keeps
- *  the terms free. D0 stays free at 1e-6. Y0, B0, B1cos and B1sin are three times the 95th percentile of their absolute value over 115 fits of the
+/** The prior of E5G: of the rows fitted with the four empirical terms (the E5 settings), one whose reference's own noise is above the 10 m floor
+ *  (OBSERVATION_SIGMA_FLOOR_M) takes the prior sized from the precise-reference geosynchronous rows, because its data cannot determine Y0, B0,
+ *  B1cos and B1sin; a row with a precise reference keeps the terms free. D0 stays free at 1e-6. Y0, B0, B1cos and B1sin are three times the 95th percentile of their absolute value over 115 fits of the
  *  geostationary and inclined geosynchronous rows with the terms free (95 fits of 72 h and 20 of 24 h; a precise orbit of the satellite is the
  *  reference): 95th percentiles 2.26e-9, 1.42e-9, 1.20e-8 and 2.33e-9, largest 3.12e-9, 1.99e-9, 2.59e-8 and 4.20e-9. The commercial geostationary
  *  row (E5G) is the one row on it: its reference, the WAAS broadcast ephemeris, closes to 127 to 572 m over 6 h pieces, and under the free terms its

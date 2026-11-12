@@ -81,8 +81,9 @@ the floor except four of the six laser geodetic satellites' (up to 111 m) and th
 long-period rows'), the sigma is the floor. `refly.mjs --after-burns <lists>` fits again every window of an object whose sigma is above the floor
 (on the arc after its last known burn, else the full arc) with `sigmaM` recorded on the fit.
 
-**Prior.** A row whose reference's own noise is above the 10 m floor takes the prior sized from the precise-reference geosynchronous rows, because
-its data cannot determine Y0, B0, B1cos and B1sin; a row with a precise reference keeps the terms free. The prior is an a priori sigma of three
+**Prior.** Of the rows fitted with the four empirical terms (the E5 settings), one whose reference's own noise is above the 10 m floor takes the
+prior sized from the precise-reference geosynchronous rows, because its data cannot determine Y0, B0, B1cos and B1sin; a row with a precise
+reference keeps the terms free. The prior is an a priori sigma of three
 times the 95th percentile of the absolute value over 115 fits of the geostationary and inclined geosynchronous rows with the terms free (95 of 72 h,
 20 of 24 h): 6.78e-9, 4.25e-9, 3.59e-8 and 6.98e-9 m/s^2 (`ECOM2_PRIOR_SIGMA`), D0 free at 1e-6; the 95th percentiles are 2.26e-9, 1.42e-9,
 1.20e-8 and 2.33e-9 and the largest 3.12e-9, 1.99e-9, 2.59e-8 and 4.20e-9. Only the commercial geostationary row takes it (settings `E5G`, full
