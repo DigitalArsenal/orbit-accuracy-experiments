@@ -151,6 +151,8 @@ async function worker() {
           if (m.maneuvering) { from = m.startMs; hours = (D0 - from) / W.HOUR; row.fitArcHours = Math.round(hours * 10) / 10; if (m.burnInArc) row.burnInArc = true; }
           // the list that decided the arc (the first 12 hex of its sha256), so a row made on other lists is flown again (main: needOf)
           row.burnList = listShaOf(w.group, w.name);
+          // its perigee at the cutoff (km), so the re-fly rule can tell an object under the floor from the row (main: staleList)
+          row.perigeeKm = perigeeKm;
         }
         let thin = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= from && t <= D0; }), hours);
         // the arc after the burn short of coverage: the full arc, so no window leaves the row
@@ -338,15 +340,17 @@ async function main() {
   // an AP 72 h row whose arc a burn list decides (from MANEUVER72_SINCE, with --burns) is the same fit only on the same arc. A row made on
   // another list of its satellite, or before the rows named their list, is flown again unless the arc today's list gives is the row's own:
   // the full arc where the list holds no burn (on SEAMS_BREAK_ARC rows no join) known at the cutoff in the days the rule reads, the same
-  // arc after the burn where the row's is one. Where only the perigee could tell (such a burn, a row on the full arc) it is flown again: a
-  // row is flown again where the arc moves or cannot be told from the row.
+  // arc after the burn where the row's is one. The rule reads the perigee the row recorded (perigeeKm); a row that recorded none (flown
+  // before it did) is taken as above the floor, so where only its perigee could tell it is flown again: a row is flown again where the arc
+  // moves or cannot be told from the row.
   const listNow = new Map(), staleList = (t, w, a) => {
     if (t !== 'AP' || a !== 72 || !args.burns || !A.maneuver72(version)) return false;
     const s = `${w.group}|${w.name}`;
     if (!listNow.has(s)) listNow.set(s, A.listSha(args.burns, w.group, w.name));
     const r = rowOf(t, w, a);
     if (!r || r.error || (r.burnList ?? null) === listNow.get(s)) return false;
-    const m = A.maneuverArc(A.arcBreaks(args.burns, w.group, w.name, w.cutoffMs), w.cutoffMs, Infinity, undefined, A.minHoursOf(w.group));
+    // the row's own perigee where it recorded one (rows flown from this harness on), else none known: the arc as for an object above the floor
+    const m = A.maneuverArc(A.arcBreaks(args.burns, w.group, w.name, w.cutoffMs), w.cutoffMs, r.perigeeKm ?? Infinity, undefined, A.minHoursOf(w.group));
     return m.maneuvering ? r.fitArcHours !== Math.round(((w.cutoffMs - m.startMs) / W.HOUR) * 10) / 10 : r.fitArcHours != null;
   };
   const needOf = (w) => flying.flatMap((t) => w.arcs.filter((a) => !rowOf(t, w, a) || staleList(t, w, a) || (retry && (rowOf(t, w, a).error || rowOf(t, w, a).apError))).map((a) => [t, a]));
