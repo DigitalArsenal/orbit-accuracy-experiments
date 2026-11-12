@@ -108,7 +108,7 @@ async function main() {
   // arm both have a figure at one lead at least. The numerical day-5 figure is the same row's.
   const base = new Map();
   for (const f of fs.readdirSync(path.join(A.STORE_ROOT, A.NUMERICAL_STORE)).filter((x) => /^rows-truth-.*\.jsonl$/.test(x)))
-    for (const r of readRows(path.join(A.STORE_ROOT, A.NUMERICAL_STORE, f))) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
+    for (const r of readRows(path.join(A.STORE_ROOT, A.NUMERICAL_STORE, f))) { const k = `${r.key}|${r.arcH}`; if (A.laterWins(base.get(k), r, W.GROUPS[r.group]?.oneFile)) base.set(k, r); }
   // --burns <lists> [--after-burn-store <folder>]: the refits after a burn, read as trajectories.mjs reads them (lib/numerical.mjs
   // readAfterBurn): from the folder (lib/arms.mjs NUMERICAL_AFTER_BURN.store unless given), which must be in the store, each row's list
   // (burnList) the one --burns gives for its satellite, or the run is refused; without --burns no refit is read, and a folder named is
@@ -371,6 +371,8 @@ async function worker() {
       const span = num.filter((l) => l.t >= D0 && l.t <= D0 + BAR_H * HOUR);
       if (span.length < 2) throw new Error('no forecast span');
       const truth = await W.truthOf(w, D0 - man.arcH * HOUR - HOUR, D0 + 7 * DAY + HOUR, arms.axes);
+      // a one-file window (windows.mjs oneFile): AP's record and the numerical trajectory read the same reference file, or the window is refused
+      if (G.oneFile && (!man.truthFile || man.truthFile !== truth.file)) throw new Error(`the reference file differs: the trajectory's ${man.truthFile ?? 'names none'}, AP's ${truth.file}`);
       const sc = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0);
       const wx = G.vacuum ? null : W.weatherAt(D0), object = { name: w.name, id: truth.objectId ?? '', norad: truth.norad ?? w.norad ?? 0 };
       const choice = capsOf(A.apPcfFor(w.group, args.version, G.vacuum, man.arcH));

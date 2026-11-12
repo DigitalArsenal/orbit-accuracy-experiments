@@ -39,7 +39,7 @@ const nameOf = (key, arc) => `${key.replace(/[| ]/g, '_')}-${arc}`;
 const productOf = (setting, key, arc) => { for (const d of fs.readdirSync(CACHE).filter((x) => x.startsWith(`${setting}-`))) { const f = path.join(CACHE, d, `${nameOf(key, arc)}.json`); if (fs.existsSync(f)) return { file: f, meta: JSON.parse(fs.readFileSync(f, 'utf8')) }; } return null; };
 const readBase = () => {
   const base = new Map();
-  for (const r of fs.readdirSync(path.join(A.STORE_ROOT, A.NUMERICAL_STORE)).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => read(path.join(A.STORE_ROOT, A.NUMERICAL_STORE, f)))) { const k = `${r.key}|${r.arcH}`; if (!base.has(k) || (base.get(k).error && !r.error)) base.set(k, r); }
+  for (const r of fs.readdirSync(path.join(A.STORE_ROOT, A.NUMERICAL_STORE)).filter((f) => /^rows-truth-.*\.jsonl$/.test(f)).flatMap((f) => read(path.join(A.STORE_ROOT, A.NUMERICAL_STORE, f)))) { const k = `${r.key}|${r.arcH}`; if (A.laterWins(base.get(k), r, W.GROUPS[r.group]?.oneFile)) base.set(k, r); }
   return base;
 };
 
@@ -52,10 +52,11 @@ async function main() {
   // the refits after a burn, read as bar.mjs reads them, and each window's numerical row by the one function both read
   const { afterBurn, afterBurnGroups } = N.readAfterBurn({ burns: args.burns, store: args['after-burn-store'], readRows: read });
   const numericalOf = (w, arc) => N.numericalOf({ w, arc, base, afterBurn, afterBurnGroups });
-  // the fits the manifest's lines hold (a line whose file a later line wrote again holds none)
+  // the fits the manifest's lines hold (a line whose file a later line wrote again holds none; on a one-file row, windows.mjs oneFile, a line
+  // that names no reference file holds none: it was made before lines named it)
   const prior = fs.existsSync(path.join(OUT, 'manifest.jsonl')) ? read(path.join(OUT, 'manifest.jsonl')) : [];
   const lastWriter = new Map(); prior.forEach((x, i) => { if (x.file) lastWriter.set(x.file, i); });
-  const fitsOf = new Map(); prior.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!fitsOf.has(k)) fitsOf.set(k, []); fitsOf.get(k).push(N.lineFitOf(x, lastWriter.get(x.file) === i)); });
+  const fitsOf = new Map(); prior.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!fitsOf.has(k)) fitsOf.set(k, []); fitsOf.get(k).push(!W.GROUPS[x.group]?.oneFile || x.truthFile ? N.lineFitOf(x, lastWriter.get(x.file) === i) : null); });
   // --redo <file of key|arc>: those window-arcs are flown again whatever their lines
   const redo = args.redo ? new Set(fs.readFileSync(args.redo, 'utf8').split('\n').filter(Boolean)) : new Set();
   const jobs = [], count = {}, listed = N.listedOf(groups, base);
@@ -72,7 +73,7 @@ async function main() {
         const source = !fit?.arcStart ? 'none' : fit.process === 'after burn' ? 'after-burn' : p?.meta?.trajectory && fs.existsSync(path.join(path.dirname(p.file), p.meta.trajectory.file)) ? 'trajectory' : p ? 'product' : 'refit';
         c[source === 'none' ? 'noFit' : source === 'after-burn' ? 'afterBurn' : source] += 1;
         if (source !== 'none' && !redo.has(k) && (fitsOf.get(k) ?? []).some((x) => N.sameFit(x, fit))) { c.done += 1; continue; }
-        jobs.push({ g, key: w.key, arc, label, setting: fit?.setting ?? null, source, fit: fit?.arcStart ? { setting: fit.setting, process: fit.process, arcStart: fit.arcStart } : null, product: p?.file ?? null, storedRms: label ? nr?.arms?.[label]?.weightedRms ?? null : null });
+        jobs.push({ g, key: w.key, arc, label, setting: fit?.setting ?? null, source, fit: fit?.arcStart ? { setting: fit.setting, process: fit.process, arcStart: fit.arcStart } : null, product: p?.file ?? null, storedRms: label ? nr?.arms?.[label]?.weightedRms ?? null : null, truthFile: nr?.truthFile ?? null });
       }
     }
   }
@@ -123,13 +124,14 @@ async function worker() {
       if (j.source === 'after-burn' || j.source === 'refit') {
         F ??= await openFfm();
         const truth = await truthSpan(w, D0, j.arc);
+        if (truth.file) line.truthFile = truth.file;
         const thin = W.arcOf(truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= startMs && t <= D0; }), (D0 - startMs) / W.HOUR);
         if (!thin) throw new Error(j.source === 'after-burn' ? 'coverage of the arc after the burn' : 'coverage');
         const f = await F.fit(thin, SETTINGS[j.setting], D0, G.vacuum ? null : W.weatherAt(D0).ffm);
         product = { epoch: f.epoch, state: f.state, parameters: f.parameters };
         line.check = { arcStart: new Date(startMs).toISOString(), refitWeightedRms: f.weightedRms ?? null, storedWeightedRms: j.storedRms ?? null };
         if (!N.rmsAgrees(line.check)) throw new Error(`the refit is not the stored fit: weighted RMS ${line.check.refitWeightedRms} against the stored ${line.check.storedWeightedRms}`);
-      } else product = JSON.parse(fs.readFileSync(j.product, 'utf8')).product;
+      } else { product = JSON.parse(fs.readFileSync(j.product, 'utf8')).product; if (j.truthFile) line.truthFile = j.truthFile; }
       const from = ms(product.epoch), count = Math.floor((D0 + LEAD_D * W.DAY - from) / (STEP_S * 1000)) + 1;
       if (j.source === 'trajectory') {
         const meta = JSON.parse(fs.readFileSync(j.product, 'utf8')), tr = meta.trajectory, buf = fs.readFileSync(path.join(path.dirname(j.product), tr.file)), f64 = new Float64Array(buf.buffer, buf.byteOffset, buf.length / 8);
@@ -222,8 +224,8 @@ async function check() {
   const accepted = (read1, key, arc) => {
     const { w, rf, x } = read1(key, arc);
     const buf = x?.file && fs.existsSync(path.join(TRAJ, x.file)) ? fs.readFileSync(path.join(TRAJ, x.file)) : null, count = x ? Math.floor((w.cutoffMs + LEAD_D * 864e5 - Date.parse(x.from)) / (STEP_S * 1000)) + 1 : null;
-    const good = !!x && x.count === count && buf?.length === count * 48 && crypto.createHash('sha256').update(buf).digest('hex') === x.sha256 && x.file === `${w.group}/${nameOf(key, arc)}-${N.fitTag(rf)}.bin` && N.rmsAgrees(x.check);
-    return { ok: good, x, why: good ? null : JSON.stringify({ key, row: rf, line: x ? { source: x.source, fit: x.fit, file: x.file, count: [x.count, count], bytes: buf?.length ?? null, check: x.check ?? null } : null }) };
+    const good = !!x && x.count === count && buf?.length === count * 48 && crypto.createHash('sha256').update(buf).digest('hex') === x.sha256 && x.file === `${w.group}/${nameOf(key, arc)}-${N.fitTag(rf)}.bin` && N.rmsAgrees(x.check) && (!W.GROUPS[w.group]?.oneFile || !!x.truthFile);
+    return { ok: good, x, why: good ? null : JSON.stringify({ key, row: rf, line: x ? { source: x.source, fit: x.fit, file: x.file, count: [x.count, count], bytes: buf?.length ?? null, check: x.check ?? null, truthFile: x.truthFile ?? null } : null }) };
   };
   const r1 = run(), read1 = reading();
   const results = [[he9?.key, 72], [s24?.key, 72], [full?.key, 72], [traj, sp?.arc], [prod, sp?.arc]].map(([k, a]) => (k ? accepted(read1, k, a) : { ok: false, why: 'no such window in the store' }));
