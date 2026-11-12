@@ -9,7 +9,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { GRID, BANDS, AM, bandOf, BAR_BANDS, barBandOf, labelOf } from './cases.mjs';
-import { FITS, ARC72_TEXT } from './fits.mjs';
+import { FITS, ARC72_TEXT, RUNGS, xpTextOf, NO_XP_TEXT } from './fits.mjs';
 
 const PASS_M = 100, BAR_H = 120;
 const MODE_TEXT = {
@@ -18,15 +18,17 @@ const MODE_TEXT = {
   'no-drag-no-radiation': 'Gravity, the solid tide, relativity and the Sun and Moon only: the truth without drag or radiation pressure, AP without its atmosphere and with its radiation term held at 0.',
 };
 const TOLERANCE = 'A drag case\'s truth is flown at tolerance 1e-10 (the L70S setting of headline-loop/lib/settings.mjs), which that file records as meters to tens of meters from the converged orbit with drag.';
-const statisticOf = (fit, truthStartH) => [
+const fitTextOf = (fit, withXp) => (fit === 'arc72' ? ARC72_TEXT : `${FITS[fit].text} ${withXp ? xpTextOf(fit) : NO_XP_TEXT}`);
+const statisticOf = (fit, truthStartH, rung = null, withXp = false) => [
   'Each orbit is made up (cases.mjs, seeded).',
   `Its state at the truth's start, ${truthStartH} h before the cutoff, is made from the case's mean elements (the record seed.mjs writes) by one reference build, sdn-ap 0.6.26 (modules 7ed7cf88), whatever build is scored, so every build is scored against the same truth; each row names its truth's hash.`,
   'The truth is the numerical propagator, FFM 2.2.0 (pinned by hash in headline-loop/lib/ffm.mjs), flown from that state on a 300 s grid to 7 days past the cutoff.',
-  `Fit way ${fit}: ${fit === 'arc72' ? ARC72_TEXT : FITS[fit].text}`,
+  `Fit way ${fit}: ${fitTextOf(fit, withXp)}`,
+  ...(rung ? [`Rung ${rung} of the ladder from SGP4-XP toward AP: ${RUNGS[rung].text}`] : []),
   `D is the largest 3D distance between AP's forecast and the truth over 0 to ${BAR_H} h after the cutoff, at the truth's own 300 s epochs. A case is within the bar when D is at most ${PASS_M} m over the whole 0 to ${BAR_H} h; a truth that ends before ${BAR_H} h is never within.`,
   'The daily figures are the root mean square of the 3D distance over the 24 h ending at each day.',
   'Both sides see the same space weather: the weather known at the cutoff (GFZ observed, then the NOAA forecast issued before it) drives the truth\'s drag and AP\'s.',
-  ...(fit === 'arc72' ? ['SGP4-XP is flown as it is in every force mode.'] : []),
+  ...(fit === 'arc72' || withXp ? ['SGP4-XP is flown as it is in every force mode.'] : []),
   TOLERANCE,
 ].join(' ');
 const TRUTH = {
@@ -70,7 +72,7 @@ const IN_N = new Set(['within', 'over', 'short', 'refused', 'flight-failed', 'fa
 const NOT_WITHIN_MARK = new Set(['short', 'refused', 'flight-failed', 'failed', 'no-truth']);
 
 export async function report(ctx, args) {
-  const { commit, version, wasmSha, rowsFile, seed, gridStep, all, mode, guard, fit, truthStartH } = ctx;
+  const { commit, version, wasmSha, rowsFile, seed, gridStep, all, mode, guard, fit, truthStartH, rung = null, withXp = false } = ctx;
   const out = args.out;
   if (!out) throw new Error('--report needs --out <dir>');
   // the rows of this build flown from the reference state (truth.hash), and the rows of cases that failed before their truth existed
@@ -102,16 +104,16 @@ export async function report(ctx, args) {
   const short = items.filter((x) => x.status === 'short').map((x) => ({ id: x.id, label: x.label, band: x.band, spanH: x.spanH, reason: x.reason, apDM: x.D }));
   const without = items.filter((x) => ['refused', 'flight-failed', 'failed', 'no-truth', 'not-flown'].includes(x.status)).map((x) => ({ id: x.id, label: x.label, band: x.band, status: x.status, reason: x.reason }));
   const wall = rows.filter((x) => x.r).map((x) => x.r.wallS).filter(Number.isFinite);
-  const command = `node experiments/synthetic-orbits/run.mjs --modules-commit ${commit} --modules-root <modules clone> --seed ${seed} --grid-step ${gridStep}${guard ? ' --guard' : ''}${mode === 'no-drag' ? ' --no-drag' : mode === 'no-drag-no-radiation' ? ' --no-drag --no-radiation' : ''} --fit ${fit} --truth-start-h ${truthStartH}`;
+  const command = `node experiments/synthetic-orbits/run.mjs --modules-commit ${commit} --modules-root <modules clone> --seed ${seed} --grid-step ${gridStep}${guard ? ' --guard' : ''}${mode === 'no-drag' ? ' --no-drag' : mode === 'no-drag-no-radiation' ? ' --no-drag --no-radiation' : ''} --fit ${fit} --truth-start-h ${truthStartH}${rung ? ` --rung ${rung}` : ''}${withXp ? ' --xp' : ''}`;
   const doc = {
-    schema: 'sdn-ap-synthetic/3', measured: new Date().toISOString().slice(0, 10), mode, modeText: MODE_TEXT[mode], guard, fit, truthStartH, fitText: fit === 'arc72' ? ARC72_TEXT : FITS[fit].text, fitAfterCutoff: fit === 'arc72' ? false : FITS[fit].after,
+    schema: 'sdn-ap-synthetic/3', measured: new Date().toISOString().slice(0, 10), mode, modeText: MODE_TEXT[mode], guard, fit, truthStartH, rung, withXp, xpFlown: fit === 'arc72' || withXp, fitText: fitTextOf(fit, withXp), fitAfterCutoff: fit === 'arc72' ? false : FITS[fit].after,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha }, harness: { repo: 'orbit-accuracy-experiments', commits: harnesses, command },
-    seed, gridStep, statistic: statisticOf(fit, truthStartH), truthSettings: TRUTH, areaToMass: Object.fromEntries(Object.entries(AM).map(([k, v]) => [k, { areaOverMassM2Kg: v, dragTerm: 2.2 * v, radiationTerm: 1.2 * v }])),
+    seed, gridStep, statistic: statisticOf(fit, truthStartH, rung, withXp), truthSettings: TRUTH, areaToMass: Object.fromEntries(Object.entries(AM).map(([k, v]) => [k, { areaOverMassM2Kg: v, dragTerm: 2.2 * v, radiationTerm: 1.2 * v }])),
     grid: GRID, inclinationBands: BANDS, cost: { orbitsFlown: wall.length, wallSecondsSum: Math.round(wall.reduce((s, x) => s + x, 0)), medianWallS: median(wall) },
     bands, failing, short, without, cases: items, notCovered: notCoveredOf(all),
   };
   fs.mkdirSync(out, { recursive: true });
-  const base = path.join(out, `synthetic-${version}-seed${seed}-${mode}-fit-${fit}-ts${truthStartH}${guard ? '-guard' : ''}`);
+  const base = path.join(out, `synthetic-${version}-seed${seed}-${mode}-fit-${fit}-ts${truthStartH}${rung ? `-rung-${rung}` : ''}${withXp ? '-xp' : ''}${guard ? '-guard' : ''}`);
   fs.writeFileSync(`${base}.json`, `${JSON.stringify(doc, null, 1)}\n`);
   fs.writeFileSync(`${base}.md`, page(doc, items));
   const all0 = bandRow(items);
@@ -133,7 +135,7 @@ function notCoveredOf(all) {
 
 function page(doc, items) {
   const L = [];
-  L.push(`# Synthetic orbits: sdn-ap ${doc.module.version} against the numerical propagator, ${doc.mode}, fit ${doc.fit}, truth from ${doc.truthStartH} h before the cutoff${doc.guard ? ' (guard set)' : ''}`, '');
+  L.push(`# Synthetic orbits: sdn-ap ${doc.module.version} against the numerical propagator, ${doc.mode}, fit ${doc.fit}${doc.rung ? `, rung ${doc.rung}` : ''}${doc.withXp ? ', SGP4-XP beside AP' : ''}, truth from ${doc.truthStartH} h before the cutoff${doc.guard ? ' (guard set)' : ''}`, '');
   L.push(`Modules ${doc.module.modulesCommit.slice(0, 12)} (wasm ${doc.module.wasmSha256.slice(0, 12)}), seed ${doc.seed}, grid step ${doc.gridStep}, fit way ${doc.fit}, truth start ${doc.truthStartH} h before the cutoff; ${doc.cost.orbitsFlown} orbits with a row, ${Math.round((doc.cost.wallSecondsSum / 3600) * 10) / 10} worker-hours. ${doc.modeText}`, '');
   L.push(`Command: \`${doc.harness.command}\``, '');
   L.push(doc.statistic, '');
@@ -142,7 +144,7 @@ function page(doc, items) {
     'n counts every case that has a truth. A case whose truth ends before 120 h, whose fit was refused or whose flight failed is in n and is not within; each is counted beside. The cases without a truth and those not flown are not in n. Median and worst D are over the scored cases, those with a D over the whole 0 to 120 h.', '',
     '| Band | Cases | Within 100 m (k of n) | Over 100 m | Truth short of 120 h | Refused fit | Failed flight | Other failure | Without a truth | Not flown | Median D (scored) | Worst D (scored) | Median first hour above 100 m | SGP4-XP within (of n) | SGP4-XP median D |',
     '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
-  for (const [b, x] of Object.entries(doc.bands)) L.push(`| ${b} | ${x.cases} | ${x.within} of ${x.n} | ${x.over} | ${x.short} | ${x.refused} | ${x.flightFailed} | ${x.failed} | ${x.noTruth} | ${x.notFlown} | ${fmt(x.medianDM)} (${x.scored}) | ${fmt(x.worstDM)} | ${x.medianFirstOver100mH ?? '-'} | ${doc.fit === 'arc72' ? `${x.xpWithin} of ${x.n}` : '-'} | ${doc.fit === 'arc72' ? `${fmt(x.xpMedianDM)} (${x.xpScored})` : '-'} |`);
+  for (const [b, x] of Object.entries(doc.bands)) L.push(`| ${b} | ${x.cases} | ${x.within} of ${x.n} | ${x.over} | ${x.short} | ${x.refused} | ${x.flightFailed} | ${x.failed} | ${x.noTruth} | ${x.notFlown} | ${fmt(x.medianDM)} (${x.scored}) | ${fmt(x.worstDM)} | ${x.medianFirstOver100mH ?? '-'} | ${doc.xpFlown ? `${x.xpWithin} of ${x.n}` : '-'} | ${doc.xpFlown ? `${fmt(x.xpMedianDM)} (${x.xpScored})` : '-'} |`);
   L.push('');
   // the maps: every grid case with a row is an orbit of its cell; a cell holding a case that is not within for another reason is marked
   const grid = items.filter((x) => x.kind === 'grid');
@@ -164,7 +166,7 @@ function page(doc, items) {
     if (!inBand.length) continue;
     const incs = [...new Set(inBand.map((x) => x.elements.i))].sort((p, q) => p - q).join(', ');
     table(`## Inclination ${lo} to ${Math.round(hi)} deg (${incs}): AP's worst D (within 100 m / orbits)`, inBand, worst);
-    if (doc.fit === 'arc72') table(`## Inclination ${lo} to ${Math.round(hi)} deg: SGP4-XP's D over AP's, the median over the orbits both scored (above 1: AP is closer)`, inBand, (ys) => { const v = median(ys.map((x) => x.xpOverAp)); return v == null ? '-' : String(v); });
+    if (doc.xpFlown) table(`## Inclination ${lo} to ${Math.round(hi)} deg: SGP4-XP's D over AP's, the median over the orbits both scored (above 1: AP is closer)`, inBand, (ys) => { const v = median(ys.map((x) => x.xpOverAp)); return v == null ? '-' : String(v); });
   }
   L.push('## Above 100 m over the whole 0 to 120 h, worst first', '', '| Orbit | Band | Perigee | e | i | A/m | AP D | At hour | First above 100 m | SGP4-XP D | AP fit RMS |', '|---|---|---|---|---|---|---|---|---|---|---|');
   for (const f of doc.failing.slice(0, 60)) L.push(`| ${f.label} | ${f.band} | ${f.hpKm.toLocaleString('en-US')} km | ${f.e} | ${f.i} | ${f.am} | ${fmt(f.apDM)} | ${f.apAtH} | ${f.apFirstOver100mH ?? '-'} | ${fmt(f.xpDM)} | ${fmt(f.apFitRmsM)} |`);
@@ -175,11 +177,11 @@ function page(doc, items) {
   L.push('', '## Refused, failed, without a truth or not flown', '', '| Orbit | Band | What became of it |', '|---|---|---|');
   for (const w of doc.without) L.push(`| ${w.label} | ${w.band} | ${w.reason} |`);
   if (!doc.without.length) L.push('| none | | |');
-  L.push('', '## The named edge cases', '', `| Case | AP D | First above 100 m | AP day 1 / 3 / 5 / 7 | ${doc.fit === 'arc72' ? 'SGP4-XP D | ' : ''}Within |`, `|---|---|---|---|${doc.fit === 'arc72' ? '---|' : ''}---|`);
+  L.push('', '## The named edge cases', '', `| Case | AP D | First above 100 m | AP day 1 / 3 / 5 / 7 | ${doc.xpFlown ? 'SGP4-XP D | ' : ''}Within |`, `|---|---|---|---|${doc.xpFlown ? '---|' : ''}---|`);
   for (const x of items.filter((y) => y.kind === 'edge')) {
     const days = x.ap?.days ? ['1', '3', '5', '7'].map((d) => fmt(x.ap.days[d])).join(' / ') : x.reason ?? '-';
     const within = x.status === 'within' ? 'yes' : x.status === 'over' ? 'no' : x.status === 'short' ? `no (truth to ${x.spanH} h)` : IN_N.has(x.status) ? 'no' : '-';
-    L.push(`| ${x.label} | ${fmt(x.D)}${x.status === 'short' && x.D != null ? ` (to ${x.spanH} h)` : ''} | ${x.ap?.maxDistance?.firstOver100mH ?? '-'} | ${days} | ${doc.fit === 'arc72' ? `${fmt(x.xpD)} | ` : ''}${within} |`);
+    L.push(`| ${x.label} | ${fmt(x.D)}${x.status === 'short' && x.D != null ? ` (to ${x.spanH} h)` : ''} | ${x.ap?.maxDistance?.firstOver100mH ?? '-'} | ${days} | ${doc.xpFlown ? `${fmt(x.xpD)} | ` : ''}${within} |`);
   }
   L.push('', '## Not covered', '', ...doc.notCovered.map((x) => `- ${x}`), '');
   return L.join('\n');

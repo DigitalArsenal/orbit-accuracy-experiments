@@ -64,15 +64,16 @@ const held = (ctx) => {
   return b.asUint8Array().slice();
 };
 
-const before = (h) => `AP is fitted to the truth's states over the ${h} h before the cutoff and flown; SGP4-XP is not flown on this way.`;
+// a way's text speaks of AP; whether SGP4-XP is flown beside it is said by the run (run.mjs --xp, xpTextOf)
+const before = (h) => `AP is fitted to the truth's states over the ${h} h before the cutoff and flown.`;
 const AFTER = 'On a made-up case this fit reads the same numerical flight it is then scored on, so D is how well one record can follow that flight over the span, not a forecast from data before the cutoff. (On a real window the span after the cutoff is the numerical propagator\'s forecast from its own fit before the cutoff, so every input to the record is data before the cutoff.)';
-const after = (what) => `AP is fitted to the truth's states ${what} and flown; SGP4-XP is not flown on this way. ${AFTER}`;
+const after = (what) => `AP is fitted to the truth's states ${what} and flown. ${AFTER}`;
 export const FITS = {
   cutoff72: { truthStartH: 72, after: false, text: before(72), fit: span(-72, 0) },
   arc24: { truthStartH: 24, after: false, text: before(24), fit: span(-24, 0) },
   arc120: { truthStartH: 120, after: false, text: before(120), fit: span(-120, 0) },
   arc168: { truthStartH: 168, after: false, text: before(168), fit: span(-168, 0) },
-  'held-terms': { truthStartH: 72, after: false, text: 'AP is fitted to the truth\'s states over the 72 h before the cutoff with its drag and radiation terms held at the truth\'s own values (the state solved) and flown; SGP4-XP is not flown on this way.', fit: span(-72, 0, held) },
+  'held-terms': { truthStartH: 72, after: false, text: 'AP is fitted to the truth\'s states over the 72 h before the cutoff with its drag and radiation terms held at the truth\'s own values (the state solved) and flown.', fit: span(-72, 0, held) },
   'forecast-span': { truthStartH: 0, after: true, text: after('from the cutoff to 120 h after it'), fit: span(0, 120) },
   'forecast-span-ladder': { truthStartH: 0, after: true, text: after('from the cutoff to 120 h after it, or, where the module refuses that span as one set, the longest of 96, 72, 48 and 24 h from the cutoff it fits (the row\'s fitNote names it)'), fit: ladder },
   'arc-plus-forecast': { truthStartH: 72, after: true, text: after('from 72 h before the cutoff to 120 h after it'), fit: span(-72, 120) },
@@ -80,3 +81,22 @@ export const FITS = {
 };
 /** The report's sentence for arc72, run.mjs's default (not a FITS way). */
 export const ARC72_TEXT = 'AP and SGP4-XP (THEORY SGP4XP, the same module) are fitted to the truth\'s states over the 72 h before the cutoff and flown.';
+/** The sentence for SGP4-XP flown beside AP on a way (run.mjs --xp): its own record, no space weather, fitted over the way's span. */
+export const xpTextOf = (way) => `SGP4-XP (THEORY SGP4XP, the same module) is fitted to the same states with its own record and no space weather, and flown beside AP.${FITS[way]?.after ? ' On a made-up case this, too, is a fit to the flight it is scored on.' : ''}`;
+export const NO_XP_TEXT = 'SGP4-XP is not flown on this way.';
+
+/**
+ * The rungs of the ladder from SGP4-XP toward AP (run.mjs --rung; stack #547): what AP's slot flies, each rung's rows keyed apart.
+ * xp is SGP4-XP's own record (A.PCF.XP, no space weather). Every other rung is AP's settings (its atmosphere where the truth has drag,
+ * the solid tide, as the headline setting) at MAXIMUM_TESSERAL_DEGREE d and MAXIMUM_DEGREE z: z below 6 carries no zonal tail, and
+ * d = z = 0 is AP's gate shut (the module then flies SGP4-XP's theory with AP's fit settings).
+ */
+export const RUNGS = {
+  xp: { degrees: null, text: 'AP\'s slot holds SGP4-XP\'s own record, fitted the same way with no space weather.' },
+  'ap-d0-z0': { degrees: [0, 0], text: 'AP\'s settings at tesseral degree 0 and zonal degree 0, without the solid tide (the module flies AP\'s tide only with its gravity terms and refuses it here).' },
+  'ap-d0-z5': { degrees: [0, 5], text: 'AP\'s settings at tesseral degree 0 and zonal degree 5 (no zonal tail).' },
+  'ap-d0-z20': { degrees: [0, 20], text: 'AP\'s settings at tesseral degree 0 and zonal degree 20.' },
+  'ap-d4-z20': { degrees: [4, 20], text: 'AP\'s settings at tesseral degree 4 and zonal degree 20.' },
+  'ap-d12-z20': { degrees: [12, 20], text: 'AP\'s settings at tesseral degree 12 and zonal degree 20.' },
+  'ap-d31-z20': { degrees: [31, 20], text: 'AP\'s settings at tesseral degree 31 and zonal degree 20 (the headline degrees, keyed as a rung).' },
+};

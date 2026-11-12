@@ -177,7 +177,9 @@ if (!isMain) { /* imported */ } else if (args['check-bound']) {
   const draws = d.bands.map((b) => ({ b, cases: draw(d.seed, b, d.perBand) }));
   const t = table(draws, rows);
   const { FITS, ARC72_TEXT } = await import('./fits.mjs');
-  const way = d.fit === 'arc72' ? { text: ARC72_TEXT, after: false } : FITS[d.fit];
+  const { NO_XP_TEXT } = await import('./fits.mjs');
+  // the claim set flies AP alone on a way other than arc72
+  const way = d.fit === 'arc72' ? { text: ARC72_TEXT, after: false } : { ...FITS[d.fit], text: `${FITS[d.fit].text} ${NO_XP_TEXT}` };
   const command = `node experiments/synthetic-orbits/claim.mjs --modules-commit ${d.modulesCommit} --modules-root <modules clone> --seed ${d.seed} --per-band ${d.perBand} --fit ${d.fit}${d.bands.length < BOXES.length ? ` --bands ${d.bands.join(',')}` : ''}`;
   const harness = [...new Set(rows.map((r) => r.harness).filter(Boolean))];
   const doc = { seed: d.seed, perBand: d.perBand, fit: d.fit, fitText: way.text, fitAfterCutoff: way.after, truthStartH: d.truthStartH, version: d.version, modulesCommit: d.modulesCommit, wasmSha256: d.wasmSha256,
