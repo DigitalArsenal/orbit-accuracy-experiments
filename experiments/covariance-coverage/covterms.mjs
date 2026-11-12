@@ -39,7 +39,8 @@ for (const k of lines) {
     row.sizes = record.COV_PROPAGATION; row.pcf = pcf;
     const me = record.MEAN_ELEMENTS, st = record.ORBIT_DETERMINATION?.FIT_STATISTICS;
     Object.assign(row, { build: sha12, version: M.build.version, meanMotion: me.MEAN_MOTION, ecc: me.ECCENTRICITY, inc: me.INCLINATION, sma: me.SEMI_MAJOR_AXIS, bterm: me.BTERM, agom: me.AGOM, fitRmsKm: st?.FIT_RMS_KM, fitStates: st?.FIT_STATES });
-    const base = await M.fly(ocm, sc);
+    // the base flies the record repacked unedited, as every doubled flight is repacked: a field the bindings drop cannot land in a term
+    const base = await M.fly(M.editRecord(ocm, () => {}), sc);
     const terms = {};
     for (const [name, fn] of Object.entries(TERMS)) {
       try { const x = await M.fly(M.editRecord(ocm, fn), sc); terms[name] = x.map((s, i) => s.v.map((v, a) => (v - base[i].v[a]) / 3)); } catch (e) { row[`${name}Error`] = String(e?.message ?? e).slice(0, 160); }

@@ -6,20 +6,32 @@ import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const HERE = path.dirname(fileURLToPath(import.meta.url));
-export const REPO = path.resolve(HERE, '../..');
-export const HARNESS = path.join(REPO, 'experiments/headline-loop');
+export const REPO = fs.realpathSync(path.resolve(HERE, '../..'));
+export const HEADLINE_LOOP = path.join(REPO, 'experiments/headline-loop');
 export const STORE = process.env.HEADLINE_LOOP_STORE ?? '/opt/data/sdn-archive/headline-loop';
 // the window set's sources: the numerical arm's rows (strong drag, the FFMq flight) and the AP table the windows were drawn from
 export const NUMERICAL = 'f0b8352a43f3';
 export const AP_TABLE = '048ffe19d63e';
 export const DAY = 86400000, HOUR = 3600000;
+export const VERSION = /^\d+\.\d+\.\d+$/;
 
+/** The real path of p: its nearest existing ancestor resolved through every link, the rest appended. */
+function realOf(p) {
+  let head = path.resolve(p), tail = [];
+  while (!fs.existsSync(head)) { tail.unshift(path.basename(head)); head = path.dirname(head); }
+  return path.join(fs.realpathSync(head), ...tail);
+}
+/** Whether p is this repository or inside it (through links; letter case folded where the file system folds it). */
+export function insideRepo(p) {
+  const fold = (s) => (process.platform === 'darwin' || process.platform === 'win32' ? s.toLowerCase() : s);
+  const rel = path.relative(fold(REPO), fold(realOf(p)));
+  return !(rel === '..' || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel));
+}
 /** The output directory: outside this repository (its rows name real satellites and dates), created if absent. */
 export function outDir(arg) {
   if (!arg) throw new Error('the output directory is the first argument');
   const out = path.resolve(arg);
-  const rel = path.relative(REPO, out);
-  if (!rel.startsWith('..') && !path.isAbsolute(rel)) throw new Error(`${out} is inside this repository: its rows name real satellites and dates; give a directory outside it`);
+  if (insideRepo(out)) throw new Error(`${out} is inside this repository: its rows name real satellites and dates; give a directory outside it`);
   fs.mkdirSync(out, { recursive: true });
   return out;
 }
@@ -81,14 +93,16 @@ export const shardArg = (s) => { const [K, N] = (s ?? '0/1').split('/').map(Numb
 
 /** The headline loop's readers and one build's module: { WN, A, S, build, invoke, fitRecord, fly, destroy }. */
 export async function openBuild(out, sha12, caps) {
-  const WN = await import(path.join(HARNESS, 'lib/windows.mjs'));
-  const A = await import(path.join(HARNESS, 'lib/arms.mjs'));
-  const { MODULES_ROOT } = await import(path.join(HARNESS, 'lib/env.mjs'));
+  const WN = await import(path.join(HEADLINE_LOOP, 'lib/windows.mjs'));
+  const A = await import(path.join(HEADLINE_LOOP, 'lib/arms.mjs'));
+  const { MODULES_ROOT } = await import(path.join(HEADLINE_LOOP, 'lib/env.mjs'));
   const XMC = await import(path.join(REPO, 'experiments/xp-atmosphere-merit/common.mjs'));
   const APL = await import(path.join(REPO, 'experiments/operator-theory/lib/ap.mjs'));
   const S = A.S;
   const dir = path.join(out, 'builds', sha12);
   const build = JSON.parse(fs.readFileSync(path.join(dir, 'build.json'), 'utf8'));
+  // the version picks the $PCF (apPcfFor's gates): one the gates cannot read would fit every record as the oldest version does
+  if (!VERSION.test(build.version)) throw new Error(`${dir}/build.json: version ${JSON.stringify(build.version)} is not X.Y.Z`);
   const entry = createRequire(path.join(MODULES_ROOT, 'propagator/sdn-ap/package.json')).resolve('space-data-module-sdk/testing/isomorphic');
   const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
   const ap = await createStandaloneHarness('browser', path.join(dir, 'module.wasm'), { surface: 'direct' });

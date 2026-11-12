@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { outDir } from './lib.mjs';
+import { outDir, VERSION } from './lib.mjs';
 
 const out = outDir(process.argv[2]);
 const [how, a, b, c, d] = process.argv.slice(3);
@@ -26,6 +26,8 @@ if (how === 'file') {
   const version = JSON.parse(execFileSync('git', ['-C', a, 'show', `${b}:propagator/sdn-ap/package.json`]).toString()).version;
   build = { commit, sha256: sha, version };
 } else throw new Error('build.mjs <out> file <module.wasm> <SHA-256> <commit> <version> | git <modules checkout> <commit> [SHA-256 prefix]');
+// the version picks the build's $PCF (apPcfFor's gates); one they cannot read would fit every record as the oldest version does
+if (!VERSION.test(build.version)) throw new Error(`version ${JSON.stringify(build.version)} is not X.Y.Z (the package version, e.g. 0.6.42)`);
 const dir = path.join(out, 'builds', build.sha256.slice(0, 12));
 fs.mkdirSync(dir, { recursive: true });
 fs.writeFileSync(path.join(dir, 'module.wasm'), bytes);
