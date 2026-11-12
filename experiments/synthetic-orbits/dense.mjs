@@ -3,13 +3,19 @@
 // worker instance, the one every case of this run goes through in the order given (pooled), twice, and on a fresh instance of the same
 // build, twice. Reported for each run: the largest step between neighboring states, the largest second difference, and the largest
 // distance of a state from the 8th-order interpolation through its four neighbors on each side (a state off its neighbors' curve);
-// then whether the four runs agree bit for bit. No truth is compared; the truth (from the shared cache, or flown once) is read only to
-// make the record. Every orbit is made up, and the truth is a model's flight, not any satellite's data.
+// then whether the four runs agree bit for bit (a run that fails is "failed", and runs that all fail with one error say so). No truth
+// is compared; the truth (from the shared cache, or flown once) is read only to make the record. Every orbit is made up, and the truth
+// is a model's flight, not any satellite's data.
+// --perigees (stack #550): instead of an hour, the record's perigee scan (fits.mjs SCAN, as run.mjs --perigee-scan flies it): every
+// perigee passage over the scored span at 1 s for 120 s either side, each state within 80 s of the passage measured from the 8-point
+// curve through the states 90 to 120 s from it, the largest displacement per passage; on the pooled instance and a fresh one,
+// compared bit for bit.
 //
 //   node experiments/synthetic-orbits/dense.mjs --modules-commit <sha> --modules-root <modules checkout> --cases <id,id,...>
 //     [--fit arc72] [--rung <name>] [--seed 498] [--hour <h> | --hours <h,h,...>] [--half-min 30] [--step-s 10] [--theory ap|xp] [--states]
-//     [--out <file>] [--scratch]
-//   --states: the first run's states and each state's distance off its neighbors' curve, in the result file
+//     [--perigees] [--out <file>] [--scratch]
+//   --states: the first run's states and each state's distance off its neighbors' curve (with --perigees, each passage's 1 s states),
+//   in the result file
 //   <id>: a case of cases.mjs (seed --seed), or of the claim set (claim-<seed>-b<band>-<k>)
 // Without --scratch this repository's working tree (experiments/synthetic-orbits, experiments/headline-loop) must be clean, since the
 // result names its commit.
@@ -55,11 +61,11 @@ if (fit !== 'arc72' && !FITS[fit]) throw new Error(`--fit ${fit}: not a way fits
 if (rung && !RUNGS[rung]) throw new Error(`--rung ${rung}: not a rung fits.mjs names`);
 const truthStartH = Math.max(72, FITS[fit]?.truthStartH ?? 72);
 const list = String(args.cases).split(',').map((id) => caseOf(id, seed));
-const opts = { hourH: args.hour != null ? Number(args.hour) : null, halfMin: Number(args['half-min'] ?? 30), stepS: Number(args['step-s'] ?? 10), runs: 2, theory, keepStates: !!args.states };
+const opts = { hourH: args.hour != null ? Number(args.hour) : null, halfMin: Number(args['half-min'] ?? 30), stepS: Number(args['step-s'] ?? 10), runs: 2, theory, keepStates: !!args.states, perigees: !!args.perigees };
 // --hours h1,h2,...: an hour for each case, in the order of --cases (in place of --hour)
 const hours = args.hours ? String(args.hours).split(',').map(Number) : null;
 if (hours && hours.length !== list.length) throw new Error(`--hours: ${hours.length} hours for ${list.length} cases`);
-console.error(`dense: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; fit ${fit}${rung ? `, rung ${rung}` : ''}; ${list.length} cases, each at ${opts.stepS} s for ${opts.halfMin} min either side of ${opts.hourH ?? 'its D hour'}, on the pooled instance and a fresh one, twice each`);
+console.error(`dense: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; fit ${fit}${rung ? `, rung ${rung}` : ''}; ${list.length} cases, ${opts.perigees ? 'each perigee passage over the scored span at 1 s for 120 s either side, on the pooled instance and a fresh one' : `each at ${opts.stepS} s for ${opts.halfMin} min either side of ${opts.hourH ?? 'its D hour'}, on the pooled instance and a fresh one, twice each`}`);
 
 const child = fork(RUN, ['--worker', '--wasm', file, '--fit', fit, '--truth-start-h', String(truthStartH), ...(rung ? ['--rung', rung] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
 const results = [];
@@ -76,10 +82,17 @@ await new Promise((resolve, reject) => {
 const f = (x) => (x == null ? '-' : x >= 1000 ? `${(x / 1000).toFixed(2)} km` : x >= 1 ? `${x.toFixed(1)} m` : `${(x * 1000).toFixed(3)} mm`);
 for (const r of results) {
   const c = list.find((x) => x.id === r.id);
-  console.log(`${r.id}${c?.name ? ` (${labelOf(c)})` : ''}: ${r.error ? `no record: ${r.error}` : `D ${f(r.D)} at ${r.atH} h (span ${r.spanH} h); flown ${r.from} to ${r.to} at ${r.stepS} s; four runs bit for bit: ${r.bitForBit ? 'yes' : `no (${r.agreeing.map((x) => (x ? 'same' : 'differs')).join(', ')})`}`}`);
+  if (r.scan) {
+    const s = r.scan;
+    console.log(`${r.id}${c?.name ? ` (${labelOf(c)})` : ''}: D ${f(r.D)} at ${r.atH} h (span ${r.spanH} h); ${s.error ? `scan failed: ${s.error}` : `${s.passages} perigee passages; largest off the curve ${f(s.largestM)} at ${s.atH} h (${s.offsetS} s from the passage); passages above 100 m ${s.over}; pooled and fresh bit for bit: ${s.bitForBit ? 'yes' : 'no'}`}`);
+    if (!s.error) console.log(`  ${s.perPassage.map((p) => `${p.atH.toFixed(2)} h ${f(p.largestM)}`).join(', ')}`);
+    continue;
+  }
+  const agree = r.failedAlike ? `no: every run failed alike (${r.failedAlike})` : r.bitForBit ? 'yes' : `no (${r.agreeing.map((x) => (x === 'failed' ? 'failed' : x ? 'same' : 'differs')).join(', ')})`;
+  console.log(`${r.id}${c?.name ? ` (${labelOf(c)})` : ''}: ${r.error ? `no record: ${r.error}` : `D ${f(r.D)} at ${r.atH} h (span ${r.spanH} h); flown ${r.from} to ${r.to} at ${r.stepS} s; four runs bit for bit: ${agree}`}`);
   for (const x of r.runs ?? []) console.log(`  ${x.instance} ${x.run}: ${x.error ? `error ${x.error}` : `largest step ${f(x.largestStep.meters)} at ${x.largestStep.atH} h; largest second difference ${f(x.largestSecondDifference.meters)} at ${x.largestSecondDifference.atH} h; largest off its neighbors ${f(x.largestOffNeighbors.meters)} at ${x.largestOffNeighbors.atH} h`}`);
 }
-const out = args.out ?? path.join(dir, 'dense', `${fit}${rung ? `-rung-${rung}` : ''}-${theory}-${sha256(list.map((c) => c.id).join(',')).slice(0, 12)}.json`);
+const out = args.out ?? path.join(dir, 'dense', `${fit}${rung ? `-rung-${rung}` : ''}-${theory}${opts.perigees ? '-perigees' : ''}-${sha256(list.map((c) => c.id).join(',')).slice(0, 12)}.json`);
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, `${JSON.stringify({ measured: new Date().toISOString(), version, modulesCommit: commit, wasmSha256: wasmSha, harness, fit, rung, theory, truthStartH, seed, ...opts, order: list.map((c) => c.id),
   pooled: 'run.mjs\'s worker instance, through which every case of this run went in the order given', fresh: 'a new module instance of the same build for each run', results }, null, 1)}\n`);

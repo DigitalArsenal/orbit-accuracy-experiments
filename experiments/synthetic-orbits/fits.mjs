@@ -4,7 +4,8 @@
 // fits states after the cutoff; `text` is the sentence the report prints for the way.
 //
 // ctx (run.mjs): lines (every truth state, 300 s), D0 (the cutoff, ms), drag (the truth has drag), wx (the weather known at the cutoff),
-// terms (the case's true drag and radiation terms, m^2/kg), label and fitPcf (AP's $PCF for the case: its forces as the truth's),
+// terms (the case's true drag and radiation terms, m^2/kg), label and fitPcf (AP's $PCF for the case: its forces as the truth's, but
+// where the truth has no drag its settings name its own Jacchia 1970 atmosphere and solve a drag term under the default prior),
 // oemOf(fromMs, toMs) (the truth's states over that span as an $OEM, its usable span the same), fitOf(oem, pcf, spw) (the module's fit),
 // and S, A (headline-loop lib/arms.mjs), APL (operator-theory lib/ap.mjs).
 //
@@ -86,9 +87,22 @@ export const xpTextOf = (way) => `SGP4-XP (THEORY SGP4XP, the same module) is fi
 export const NO_XP_TEXT = 'SGP4-XP is not flown on this way.';
 
 /**
+ * The perigee scan (run.mjs --perigee-scan, dense.mjs --perigees; stack #550): which cases are scanned, and how. The passages are
+ * the radius minima of the record's flight at coarseS over the scored span, refined by a parabola to the second; each is flown at
+ * stepS for halfS either side. Each passage's curve is the 8-point Lagrange curve through its states at refS from the passage, and
+ * every state within coreS of the passage is measured from it, so the curve is drawn from states clear of a block near the passage
+ * and a state's figure is its own displacement, not one spread from a displaced neighbor. A scan fails when its largest displacement
+ * is above failM.
+ */
+export const SCAN = { coarseS: 20, halfS: 120, stepS: 1, refS: [-120, -110, -100, -90, 90, 100, 110, 120], coreS: 80, failM: 100,
+  text: 'Perigee scan: every case at e 0.3 and above and every named case at e 0.1 and above has each perigee passage over the scored span flown at 1 s for 120 s either side; each state within 80 s of the passage is measured from the 8-point curve through the states 90, 100, 110 and 120 s either side of the passage, and the largest displacement is kept. The 300 s grid catches a displaced block of a few seconds only when an epoch falls inside it, so a case within the bar on the grid whose scan finds a state more than 100 m off is counted as failing, with both figures.' };
+export const scanned = (c) => c.e >= 0.3 || (c.kind === 'edge' && c.e >= 0.1);
+
+/**
  * The rungs of the ladder from SGP4-XP toward AP (run.mjs --rung; stack #547): what AP's slot flies, each rung's rows keyed apart.
- * xp is SGP4-XP's own record (A.PCF.XP, no space weather). Every other rung is AP's settings (its atmosphere where the truth has drag,
- * the solid tide, as the headline setting) at MAXIMUM_TESSERAL_DEGREE d and MAXIMUM_DEGREE z: z below 6 carries no zonal tail, and
+ * xp is SGP4-XP's own record (A.PCF.XP, no space weather). Every other rung is AP's settings (NRLMSISE-00 where the truth has drag,
+ * and where it has none its own Jacchia 1970 atmosphere named with a drag term solved under the default prior; the solid tide; as the
+ * headline setting) at MAXIMUM_TESSERAL_DEGREE d and MAXIMUM_DEGREE z: z below 6 carries no zonal tail, and
  * d = z = 0 is AP's gate shut (the module then flies SGP4-XP's theory with AP's fit settings).
  */
 export const RUNGS = {

@@ -136,9 +136,11 @@ export function statusOf(r) {
   if (ap.error) return /^fit\b/.test(ap.error) ? { status: 'refused', reason: `AP's fit refused: ${ap.error}` } : { status: 'flight-failed', reason: `AP's fit or flight failed: ${ap.error}` };
   const md = ap.maxDistance;
   if (md.spanH < BAR_H) { const s = shortSpan(); return { status: 'short', spanH: md.spanH, reason: s?.why ?? `the truth ends at ${md.spanH} h` }; }
+  // within on the 300 s grid, but a perigee scan (run.mjs --perigee-scan) that finds a state more than 100 m off: failing
+  if (md.maxM <= PASS_M && ap.perigeeScan?.fails) return { status: 'scan', reason: `within on the 300 s grid (D ${md.maxM} m); the perigee scan finds ${ap.perigeeScan.largestM} m off at ${ap.perigeeScan.atH} h` };
   return { status: md.maxM <= PASS_M ? 'within' : 'over' };
 }
-const IN_N = new Set(['within', 'over', 'short', 'refused', 'flight-failed', 'failed']);
+const IN_N = new Set(['within', 'over', 'scan', 'short', 'refused', 'flight-failed', 'failed']);
 // FFM's reentry refusal: the trajectory descends below 100 km
 const REENTRY = /descends below 100 km/;
 
