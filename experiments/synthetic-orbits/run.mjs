@@ -24,11 +24,13 @@
 //                               held at 0
 // --guard flies a fixed subset that spans every band (every 8th grid and area-to-mass case and every named edge case), for pull requests.
 // --perigee-scan (stack #550): for every case at e 0.3 and above and every named case at e 0.1 and above, each theory's record is also
-// flown at 1 s for 120 s either side of each perigee passage over the scored span; each state within 80 s of the passage is measured
-// from the 8-point curve through the states 90, 100, 110 and 120 s either side of it (states clear of a block near the passage), and
-// the largest displacement is recorded with its passage (fits.mjs SCAN). The 300 s grid catches such a block only when an epoch falls
-// inside it; a case within the bar on the grid whose scan finds a state more than 100 m off is reported as failing, with both figures
-// (report.mjs). Those rows go to their own file.
+// flown at 1 s for 120 s either side of each perigee passage over the scored span, and two distances off the record's own curve taken
+// (fits.mjs SCAN): each state within 80 s of the passage from the 8-point curve through the states 90, 100, 110 and 120 s either side
+// of the passage, and each state from the 8-point curve through its own neighbors 1 to 4 s either side, over the whole window. The
+// 300 s grid catches such a block only when an epoch falls inside it; a case within the bar on the grid whose scan finds a state more
+// than 100 m off by either measure, or whose scan failed, is reported as failing, with both figures (report.mjs). Those rows go to
+// their own file, each with the digest of the scan's definition (scanDigest): a row of another definition is not read as done.
+// Each theory's row also holds its record (base64), so a later pass can fly it again without fitting.
 //
 //   node experiments/synthetic-orbits/run.mjs --modules-commit <sha> --modules-root <modules checkout> [--seed 498] [--grid-step 1]
 //     [--jobs 8] [--only <id,id,...>] [--guard] [--no-drag [--no-radiation]] [--fit <way>[,<way>...]] [--truth-start-h <h>] [--rung <name>]
@@ -81,11 +83,13 @@ const PASS_M = 100, BAR_H = 120;
 // before the cutoff (default 72; at least the way's own truthStartH), so ways can be scored against one truth. A way other than arc72, or
 // another start, has its own rows file.
 // --fit <name>,<name>,...: several ways (not arc72; cutoff72 is its fit) on one truth per case, each row to its way's own file.
-// --rung <name>: AP's slot flown at one rung of the ladder from SGP4-XP toward AP (fits.mjs RUNGS): xp, SGP4-XP's own record with no
-// space weather, or AP's settings at the rung's tesseral and zonal degrees; each rung's rows to their own file, so no rung is read back
-// as another. Without it AP's slot is AP's headline settings (degrees 31 and 20), as before.
+// --rung <name>: the slot flown at one of the rungs between SGP4-XP's record and AP's headline record (fits.mjs RUNGS): xp, SGP4-XP's
+// own record with no space weather, or the settings at the rung's tesseral and zonal degrees; each rung's rows to their own file, so no
+// rung is read back as another. Without it the slot is AP's headline settings (degrees 31 and 20), as before. Each theory's row records
+// the THEORY field and the forces read from the $PCF actually sent (settings), and its label is built from them.
 // --xp: on a way other than arc72, SGP4-XP is also fitted over the way's span (its own record, no space weather) and flown beside AP;
-// those rows go to their own file. (arc72 flies SGP4-XP already.)
+// those rows go to their own file. (arc72 flies SGP4-XP already.) A way that holds AP's terms at the truth's (held-terms) is refused
+// with --xp and with --rung xp.
 const FIT_LIST = String(args.fit ?? 'arc72').split(',');
 const FIT = FIT_LIST[0];
 if (FIT_LIST.length > 1 && FIT_LIST.includes('arc72')) throw new Error('--fit: arc72 flies alone (fits.mjs cutoff72 is the same fit, without SGP4-XP)');
@@ -97,6 +101,9 @@ const RUNG = args.rung ?? null, WITH_XP = !!args.xp, PERIGEE_SCAN = !!args['peri
 const { SCAN, scanned } = WAYS;
 if (RUNG && !WAYS.RUNGS[RUNG]) throw new Error(`--rung ${RUNG}: not a rung fits.mjs names (${Object.keys(WAYS.RUNGS).join(', ')})`);
 if (WITH_XP && FIT_LIST.includes('arc72')) throw new Error('--xp: arc72 flies SGP4-XP already');
+for (const f of FITS ? FIT_LIST : []) if (FITS[f].apOnly && (WITH_XP || RUNG === 'xp')) throw new Error(`--fit ${f} holds AP's drag and radiation terms at the truth's values; it is not flown for SGP4-XP (${WITH_XP ? '--xp' : '--rung xp'})`);
+// the scan's definition: its digest keys the -pscan rows (a row of another definition is neither read as done nor reported)
+const SCAN_DIGEST = crypto.createHash('sha256').update(JSON.stringify({ ...SCAN, text: undefined })).digest('hex').slice(0, 12);
 const TRUTH_START_H = Math.max(Number(args['truth-start-h'] ?? ARC_H), ...FIT_LIST.map((f) => FITS?.[f]?.truthStartH ?? ARC_H));
 const suffixOf = (f) => `${MODE === 'full' ? '' : `-${MODE}`}${f === 'arc72' && TRUTH_START_H === ARC_H ? '' : `-fit-${f}-ts${TRUTH_START_H}`}${RUNG ? `-rung-${RUNG}` : ''}${WITH_XP ? '-xp' : ''}${PERIGEE_SCAN ? '-pscan' : ''}`;
 // the reference build that makes every case's starting state; a row whose truth names a hash (truth.hash) was flown from that state,
@@ -136,7 +143,7 @@ async function setup() {
   const seed = Number(args.seed ?? 498), gridStep = Number(args['grid-step'] ?? 1);
   const all = makeCases(seed, { gridStep });
   if (args.guard) all.cases = guardOf(all.cases);
-  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, `rows${ROWS_SUFFIX}.jsonl`), rowsFiles: Object.fromEntries(FIT_LIST.map((f) => [f, path.join(dir, `rows${suffixOf(f)}.jsonl`)])), seed, gridStep, all, A, mode: MODE, guard: !!args.guard, fit: FIT, truthStartH: TRUTH_START_H, rung: RUNG, withXp: WITH_XP, perigeeScan: PERIGEE_SCAN };
+  return { commit, version, wasmSha, dir, file, rowsFile: path.join(dir, `rows${ROWS_SUFFIX}.jsonl`), rowsFiles: Object.fromEntries(FIT_LIST.map((f) => [f, path.join(dir, `rows${suffixOf(f)}.jsonl`)])), seed, gridStep, all, A, mode: MODE, guard: !!args.guard, fit: FIT, truthStartH: TRUTH_START_H, rung: RUNG, withXp: WITH_XP, perigeeScan: PERIGEE_SCAN, scanDigest: PERIGEE_SCAN ? SCAN_DIGEST : null };
 }
 
 async function main() {
@@ -149,12 +156,13 @@ async function main() {
   const read = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean) : []);
   // per way, the cases its file holds; a case flies the ways that lack it
   // (a row counts only if it is of the shared truth, truth.hash; rows from before the reference state are flown again)
-  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha && r.truth?.hash).map((r) => r.caseHash))]));
+  // (with --perigee-scan, only rows of this scan definition, scanDigest)
+  const doneOf = Object.fromEntries(FIT_LIST.map((f) => [f, new Set(read(rowsFiles[f]).filter((r) => r.wasmSha256 === wasmSha && r.truth?.hash && (!PERIGEE_SCAN || r.scanDigest === SCAN_DIGEST)).map((r) => r.caseHash))]));
   const cache = { read: 0, flown: 0, waited: 0, none: 0 };
   const fitsOf = (c) => FIT_LIST.filter((f) => !doneOf[f].has(caseHash(c)));
   const todo = all.cases.filter((c) => (!only || only.has(c.id)) && fitsOf(c).length);
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
-  console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
+  console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; fit ${FIT_LIST.join(', ')}, truth from ${TRUTH_START_H} h before the cutoff${RUNG ? `, rung ${RUNG}` : ''}; SGP4-XP ${FIT === 'arc72' || WITH_XP ? 'flown' : 'not flown'}; perigee scan ${PERIGEE_SCAN ? `on (definition ${SCAN_DIGEST})` : 'off'}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
@@ -165,12 +173,12 @@ async function main() {
     };
     child.on('message', (m) => {
       if (m.rows) {
-        for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...row, caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness })}\n`);
+        for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...row, caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness, ...(PERIGEE_SCAN ? { scanDigest: SCAN_DIGEST } : {}) })}\n`);
         flown += 1;
         cache[Object.values(m.rows)[0]?.truth?.cache ?? 'none'] += 1;
         const D = (r) => r.ap?.maxDistance?.maxM ?? r.ap?.error ?? r.error;
         const rs = Object.entries(m.rows), one = rs.length === 1 ? rs[0][1] : null;
-        console.error(`  ${flown}/${todo.length} ${m.c.id}: ${one ? `D AP ${D(one)} m, XP ${one.xp?.maxDistance?.maxM ?? one.xp?.error ?? '-'} m; ${one.wallS} s` : `D ${rs.map(([f, r]) => `${f} ${D(r)}`).join(', ')} m; ${rs[0][1].wallS} s`}`);
+        console.error(`  ${flown}/${todo.length} ${m.c.id}: ${one ? `D ${RUNG ? `slot (rung ${RUNG})` : 'AP'} ${D(one)} m, XP ${one.xp?.maxDistance?.maxM ?? one.xp?.error ?? '-'} m; ${one.wallS} s` : `D ${rs.map(([f, r]) => `${f} ${D(r)}`).join(', ')} m; ${rs[0][1].wallS} s`}`);
       }
       give();
     });
@@ -236,16 +244,19 @@ async function worker() {
       if (fs.existsSync(meta)) return { ...load(), cache: waited ? 'waited' : 'read' };
     }
   };
-  const lagrange = (ts, ps, at) => { const o = [0, 0, 0]; for (let i = 0; i < ts.length; i += 1) { let w = 1; for (let j = 0; j < ts.length; j += 1) if (j !== i) w *= (at - ts[j]) / (ts[i] - ts[j]); for (let q = 0; q < 3; q += 1) o[q] += w * ps[i][q]; } return o; };
   /**
    * The perigee scan of one record (fits.mjs SCAN): its perigee passages from D0 to D0 + spanH, each flown at 1 s for 120 s either
-   * side, each state within 80 s of the passage measured from the curve through the states 90 to 120 s from it. Returns the passages
-   * with their largest displacement and its offset from the passage, and the largest over all; `states` keeps the 1 s states.
+   * side, and two distances off the record's own curve: each state within 80 s of the passage from the curve through the states 90 to
+   * 120 s from the passage, and each state from the curve through its own neighbors 1 to 4 s either side. Returns the passages with
+   * each measure's largest value and its offset from the passage, and the largest over all; `states` keeps the 1 s states. A flight
+   * that fails or comes back short throws (the caller records a failed scan).
    */
   const scanOf = async (ocm, D0, spanH, { flyWith = fly, states: keepStates = false } = {}) => {
     const n = APL.readOcm(ocm).o.MEAN_ELEMENTS.MEAN_MOTION, periodS = 86400 / n, endMs = D0 + spanH * HOUR;
     const coarse = Array.from({ length: Math.floor((spanH * 3600) / SCAN.coarseS) + 1 }, (_, k) => iso(D0 + k * SCAN.coarseS * 1000));
-    const cs = await flyWith(ocm, coarse), r = cs.map((s) => Math.hypot(...s.r)), w = Math.max(1, Math.floor(periodS / 4 / SCAN.coarseS));
+    const cs = await flyWith(ocm, coarse);
+    if (cs.length !== coarse.length) throw new Error(`the ${SCAN.coarseS} s flight returned ${cs.length} of ${coarse.length} states`);
+    const r = cs.map((s) => Math.hypot(...s.r)), w = Math.max(1, Math.floor(periodS / 4 / SCAN.coarseS));
     const passages = [];
     for (let k = 1; k + 1 < r.length; k += 1) {
       if (!(r[k] < r[k - 1] && r[k] <= r[k + 1])) continue;
@@ -256,21 +267,33 @@ async function worker() {
     }
     const per = 2 * SCAN.halfS / SCAN.stepS + 1, epochs = passages.flatMap((tp) => Array.from({ length: per }, (_, j) => iso(tp + (j * SCAN.stepS - SCAN.halfS) * 1000)));
     const fine = epochs.length ? await flyWith(ocm, epochs) : [];
-    // the passage's curve through its states at refS from the passage; each state within coreS of it measured from that curve
-    const mid = SCAN.halfS / SCAN.stepS, ix = SCAN.refS.map((s) => mid + s / SCAN.stepS), core = SCAN.coreS / SCAN.stepS, out = [];
+    if (fine.length !== epochs.length) throw new Error(`the 1 s flight returned ${fine.length} of ${epochs.length} states`);
+    const out = [];
     for (const [p, tp] of passages.entries()) {
-      const st = fine.slice(p * per, (p + 1) * per), ps = ix.map((x) => st[x].r);
-      let best = { m: -1, j: null };
-      for (let j = mid - core; j <= mid + core; j += 1) {
-        const q = lagrange(ix, ps, j), d = 1000 * Math.hypot(...[0, 1, 2].map((x) => st[j].r[x] - q[x]));
-        if (d > best.m) best = { m: d, j };
-      }
-      out.push({ atH: +((tp - D0) / HOUR).toFixed(4), largestM: +best.m.toPrecision(4), offsetS: best.j * SCAN.stepS - SCAN.halfS, ...(keepStates ? { states: st.map((s, j) => ({ epoch: epochs[p * per + j], r: s.r })) } : {}) });
+      // both measures (fits.mjs measurePassage): the passage curve, and each state's own neighbors' curve over the whole window
+      const st = fine.slice(p * per, (p + 1) * per), m = WAYS.measurePassage(st.map((s) => s.r));
+      out.push({ atH: +((tp - D0) / HOUR).toFixed(4), ...m, largestM: Math.max(m.curveM, m.neighborsM), ...(keepStates ? { states: st.map((s, j) => ({ epoch: epochs[p * per + j], r: s.r })) } : {}) });
     }
-    const worst = out.reduce((a, b) => (b.largestM > a.largestM ? b : a), { largestM: -1 });
-    return { passages: out.length, largestM: out.length ? worst.largestM : null, atH: out.length ? worst.atH : null, offsetS: out.length ? worst.offsetS : null,
-      over: out.filter((x) => x.largestM > SCAN.failM).length, fails: out.length ? worst.largestM > SCAN.failM : false, spanH, perPassage: out };
+    const worstBy = (k) => out.reduce((a, b) => (b[k] > a[k] ? b : a), { [k]: -1 });
+    const wc = worstBy('curveM'), wn = worstBy('neighborsM');
+    return { definition: SCAN_DIGEST, passages: out.length, noPassage: out.length === 0,
+      curve: out.length ? { largestM: wc.curveM, atH: wc.atH, offsetS: wc.curveOffsetS, reliable: out.every((x) => x.curveReliable) } : null, neighbors: out.length ? { largestM: wn.neighborsM, atH: wn.atH, offsetS: wn.neighborsOffsetS } : null,
+      largestM: out.length ? Math.max(wc.curveM, wn.neighborsM) : null, atH: out.length ? (wc.curveM >= wn.neighborsM ? wc.atH : wn.atH) : null, offsetS: out.length ? (wc.curveM >= wn.neighborsM ? wc.curveOffsetS : wn.neighborsOffsetS) : null,
+      over: out.filter((x) => x.largestM > SCAN.failM).length, fails: out.length ? Math.max(wc.curveM, wn.neighborsM) > SCAN.failM : false, spanH, perPassage: out };
   };
+  /** What a $PCF sent to the fit says: the THEORY field and the forces and priors it was written with, and whether weather went with it. */
+  const settingsOf = (pcf, spw) => {
+    const P = S.PCF, x = P.PCF.getRootAsPCF(new S.flatbuffers.ByteBuffer(pcf)).unpack(), f = x.FORCES ?? {}, fp = x.FIT ?? null;
+    const name = (en, v) => (v == null ? null : en?.[v] ?? v);
+    const prior = (p, form) => (p ? { mean: p.MEAN, sigma: p.SIGMA, form: name(P.pcfPriorForm, form) } : 'default');
+    return { theory: name(P.pcfTheory, x.THEORY), tesseral: f.HAS_MAXIMUM_TESSERAL_DEGREE ? f.MAXIMUM_TESSERAL_DEGREE : null, zonal: f.HAS_MAXIMUM_DEGREE ? f.MAXIMUM_DEGREE : null,
+      solidTides: !!f.SOLID_TIDES, atmosphere: name(P.pcfAtmosphereFamily, f.ATMOSPHERE_MODEL), weatherSource: name(P.pcfWeatherSource, f.WEATHER_SOURCE),
+      dragPrior: prior(fp?.DRAG_PRIOR, fp?.DRAG_PRIOR_FORM), srpPrior: prior(fp?.SRP_PRIOR, fp?.SRP_PRIOR_FORM), spaceWeather: !!spw };
+  };
+  /** A row's label, from those settings. */
+  const labelOf = (s) => [`THEORY ${s.theory}`, `tesseral ${s.tesseral ?? 'not stated'}`, `zonal ${s.zonal ?? 'not stated'}`, s.solidTides ? 'solid tide' : 'no solid tide',
+    `${s.atmosphere ?? 'no atmosphere named'}${s.spaceWeather ? ' on the issued weather' : ''}`, s.dragPrior === 'default' ? 'drag term under the default prior' : `drag prior ${s.dragPrior.mean} (sigma ${s.dragPrior.sigma})`,
+    s.srpPrior === 'default' ? 'radiation term under the default prior' : `radiation prior ${s.srpPrior.mean} (sigma ${s.srpPrior.sigma})`].join(', ');
   // one case on one truth: { [way]: row } for each way of `fits` (each row as a single --fit's)
   const flyCase = async (c, fits, keep = null) => {
     const t1 = performance.now(), D0 = Date.parse(`${c.cutoff}T00:00:00Z`), tStart = D0 - TRUTH_START_H * HOUR, epoch = iso(tStart);
@@ -328,16 +351,15 @@ async function worker() {
       // atmosphere named and a drag term solved under the default prior; the solid tide; radiation held at 0 where the truth has none)
       // and our SGP4-XP, fitted the same way
       const apPcf = radiation ? A.PCF[drag ? 'AP_TIDES' : 'AP_VACUUM_TIDES'] : APL.fitPcf({ forces: { ...APL.apForces({ tesseral: 31, zonal: 20, atmosphere: false }), SOLID_TIDES: 1 }, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } });
-      const apLabel = drag ? 'AP_TIDES' : radiation ? 'AP_VACUUM_TIDES' : 'AP_VACUUM_TIDES, radiation term held at 0';
-      // AP's slot: AP's headline settings, or a rung of the ladder (--rung): SGP4-XP's own record, or AP's settings at the rung's degrees
+      // the slot: AP's headline settings, or one rung (--rung): SGP4-XP's own record, or the settings at the rung's degrees. Each row's
+      // label is built from the $PCF actually sent (settingsOf), never from these names.
       const slotOf = () => {
-        if (!RUNG) return { label: apLabel, pcf: apPcf, spw: wx?.spw };
-        if (RUNG === 'xp') return { label: 'XP (rung xp: SGP4-XP\'s own record)', pcf: A.PCF.XP, spw: undefined, noWeather: true };
+        if (!RUNG) return { pcf: apPcf, spw: wx?.spw };
+        if (RUNG === 'xp') return { pcf: A.PCF.XP, spw: undefined, noWeather: true };
         const [d, z] = WAYS.RUNGS[RUNG].degrees;
         // the module flies AP's solid tide only with its gravity terms (a degree above 0), and refuses it at degrees 0 and 0
         const forces = { ...APL.apForces({ tesseral: d, zonal: z, atmosphere: drag }), ...(d > 0 || z > 0 ? { SOLID_TIDES: 1 } : {}) };
-        return { label: `${apLabel} at degrees ${d} and ${z} (rung ${RUNG})`, spw: wx?.spw,
-          pcf: radiation ? APL.fitPcf({ forces, fit: null }) : APL.fitPcf({ forces, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } }) };
+        return { spw: wx?.spw, pcf: radiation ? APL.fitPcf({ forces, fit: null }) : APL.fitPcf({ forces, fit: { srpPrior: { mean: 0, sigma: 1e-12, form: 'GAUSSIAN_SIGNED' } } }) };
       };
       const slot = slotOf();
       // another way of making AP's record (--fit, fits.mjs): its record is scored as AP's; SGP4-XP beside it with --xp (its own record
@@ -345,16 +367,18 @@ async function worker() {
       const oemOf = (fromMs, toMs) => { const ls = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= fromMs && t <= toMs && (low < 0 || t < Date.parse(lines[low].epoch)); }); return S.oemBytes({ frame: 'GCRF', object: { name: 'SYNTHETIC', id: '', norad: 99498 }, lines: ls, useableStart: ls[0].epoch, useableStop: ls.at(-1).epoch }); };
       const base = JSON.stringify(row);
       for (const FIT of fits) {
-        const theories = FIT === 'arc72' ? { ap: { ...slot }, xp: { label: 'XP', pcf: A.PCF.XP, spw: undefined } }
-          : { ap: { ...slot, label: `${slot.label}, fit ${FIT}`, way: FITS[FIT] }, ...(WITH_XP ? { xp: { label: `XP, fit ${FIT}`, pcf: A.PCF.XP, spw: undefined, noWeather: true, way: FITS[FIT] } } : {}) };
+        const theories = FIT === 'arc72' ? { ap: { ...slot }, xp: { pcf: A.PCF.XP, spw: undefined } }
+          : { ap: { ...slot, way: FITS[FIT] }, ...(WITH_XP ? { xp: { pcf: A.PCF.XP, spw: undefined, noWeather: true, way: FITS[FIT] } } : {}) };
         const row = out[FIT] = JSON.parse(base);
         row.fit = FIT; row.truthStartH = TRUTH_START_H;
         for (const [t, x] of Object.entries(theories)) {
+          // the $PCF and weather of the fit that made the record (a way may change the $PCF, held-terms, or try several spans)
+          let sent = { pcf: x.pcf, spw: x.way ? (x.noWeather ? undefined : wx?.spw) : x.spw };
+          const fitSent = async (o, p, s) => { const r = await fit(o, p, s); sent = { pcf: p, spw: s }; return r; };
           try {
             const tf = performance.now();
-            const made = x.way ? await x.way.fit({ lines, D0, drag, wx: x.noWeather ? null : wx, terms, label: x.label, fitPcf: x.pcf, oemOf, fitOf: fit, S, A, APL }) : null;
-            if (made?.note) row.fitNote = made.note;
-            const ocm = made ? made.ocm : await fit(oem, x.pcf, x.spw), info = APL.readOcm(ocm), fitS = r1((performance.now() - tf) / 1000);
+            const made = x.way ? await x.way.fit({ lines, D0, drag, radiation, wx: x.noWeather ? null : wx, terms, fitPcf: x.pcf, oemOf, fitOf: fitSent, S, A, APL }) : null;
+            const ocm = made ? made.ocm : await fitSent(oem, x.pcf, x.spw), info = APL.readOcm(ocm), fitS = r1((performance.now() - tf) / 1000);
             const d = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes);
             // D: the largest 3D distance to the truth over the span, its hour, and the first hour above 100 m
             const flown = await fly(ocm, span.map((l) => l.epoch));
@@ -362,8 +386,11 @@ async function worker() {
             const at = dist.indexOf(Math.max(...dist)), over = dist.findIndex((x) => x > PASS_M), hourOf = (k) => r1((Date.parse(span[k].epoch) - D0) / HOUR);
             x.ocm = ocm;
             if (keep) (keep[FIT] ??= {})[t] = ocm;
-            row[t] = { pcf: x.label, fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, fitS, epoch: info.epoch ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])),
-              maxDistance: { maxM: r1(dist[at]), atH: hourOf(at), firstOver100mH: over < 0 ? null : hourOf(over), spanH: hourOf(dist.length - 1), pass: dist[at] <= PASS_M } };
+            const settings = settingsOf(sent.pcf, sent.spw);
+            row[t] = { pcf: labelOf(settings), settings, ...(made?.note ? { fitNote: made.note } : {}), fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, fitS, epoch: info.epoch ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])),
+              maxDistance: { maxM: r1(dist[at]), atH: hourOf(at), firstOver100mH: over < 0 ? null : hourOf(over), spanH: hourOf(dist.length - 1), pass: dist[at] <= PASS_M },
+              // the record itself (base64), so a later pass can fly it again without fitting
+              record: Buffer.from(ocm).toString('base64') };
             if (late.length) {
               const dl = (await fly(ocm, late.map((l) => l.epoch))).map((s, k) => Math.hypot(s.r[0] - late[k].r[0], s.r[1] - late[k].r[1], s.r[2] - late[k].r[2]) * 1000);
               const k = dl.indexOf(Math.max(...dl));
@@ -371,9 +398,10 @@ async function worker() {
             }
             // the perigee scan (--perigee-scan) over the scored span
             if (PERIGEE_SCAN && scanned(c)) {
-              try { row[t].perigeeScan = await scanOf(ocm, D0, row[t].maxDistance.spanH); } catch (e) { row[t].perigeeScan = { error: String(e?.message ?? e).slice(0, 200) }; }
+              // a scan whose flight fails or comes back short is a failed scan (report.mjs: in n and not within)
+              try { row[t].perigeeScan = await scanOf(ocm, D0, row[t].maxDistance.spanH); } catch (e) { row[t].perigeeScan = { definition: SCAN_DIGEST, error: String(e?.message ?? e).slice(0, 200) }; }
             }
-          } catch (e) { row[t] = { pcf: x.label, error: String(e?.message ?? e).slice(0, 200) }; }
+          } catch (e) { const settings = settingsOf(sent.pcf, sent.spw); row[t] = { pcf: labelOf(settings), settings, error: String(e?.message ?? e).slice(0, 200) }; }
         }
         // cost per state (--cost only): each set warm (flown once), then three timed 7-day flights at 300 s, interleaved; the median
         if (args.cost && theories.ap?.ocm && theories.xp?.ocm) {
@@ -392,8 +420,8 @@ async function worker() {
   /**
    * The dense re-fly (dense.mjs): the case's record made as flyCase makes it (fit way FIT, the rung if any), then flown at stepS spacing
    * for halfMin minutes either side of the hour asked (default the hour of its D) on this worker's module instance, the one every case
-   * of the run has gone through (pooled), twice, and on a fresh instance of the same build, twice. For each run: the largest step
-   * between neighboring states, the largest second difference, and the largest distance of a state from the 8th-order interpolation
+   * of the run has gone through (pooled), twice, and twice more, each on a new instance of the same build. For each run: the largest
+   * step between neighboring states, the largest second difference, and the largest distance of a state from the 8-point (degree-7) curve
    * through its four neighbors on each side (a state off its neighbors' curve); and whether the four runs agree bit for bit. No truth
    * is compared; the truth is read only to make the record.
    */
@@ -445,7 +473,7 @@ async function worker() {
     };
     const ref = flights.find((x) => x.states && !x.error)?.states;
     const same = (st) => !!ref && !!st && st.length === ref.length && st.every((s, k) => [0, 1, 2].every((q) => Object.is(s.r[q], ref[k].r[q]) && Object.is(s.v[q], ref[k].v[q])));
-    // with keepStates, the first run's states (GCRF km) and each state's distance off the 8th-order curve through its neighbors (m)
+    // with keepStates, the first run's states (GCRF km) and each state's distance off the 8-point curve through its neighbors (m)
     const kept = keepStates && ref ? ref.map((s, k) => {
       if (k < 4 || k + 4 >= ref.length) return { epoch: epochs[k], r: s.r, offM: null };
       const ix = [-4, -3, -2, -1, 1, 2, 3, 4].map((x) => k + x), p = lag(ix, ix.map((x) => ref[x].r), k);
