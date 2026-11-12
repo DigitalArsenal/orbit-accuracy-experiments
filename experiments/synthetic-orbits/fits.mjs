@@ -100,33 +100,41 @@ export const NO_XP_TEXT = 'SGP4-XP is not flown on this way.';
  * - the neighbors' curve: each state measured from the 8-point curve through its own neighbors 1 to `neighbors` steps either side,
  *   over the whole window but its first and last `neighbors` states, so a sharp-edged block anywhere in the window is caught (its
  *   figure is set by the block's edge, not its displacement).
- * A scan fails when either measure's largest value is above failM; a scan whose flight fails or comes back short is a failed scan.
+ * A scan reads a failure when either measure's largest value is above failM. A scan whose flight is refused or comes back short could
+ * not run: it is counted apart, with its reason, and never as a reading.
  * Where a block's edge (the neighbors' curve above failM) lies beyond coreS less `neighbors` steps from the passage it may reach the
  * states the passage curve is drawn through, and that passage's curve figure is marked as not a displacement (curveReliable false).
  * A block wholly outside the window (more than halfS from the passage) is not measured.
+ * The window is clipped at the scored span's start (clipAtSpanStart: the cutoff, where a record made at the cutoff begins, so no state
+ * before it is asked of the record): a passage within halfS of the cutoff is flown from the cutoff on, its neighbors' curve taken over
+ * the states flown and its passage curve, whose reference states the clip removes, not taken (curveM null, clippedS the seconds cut).
  * `v` numbers the measures' definition: the digest of SCAN's settings keys the rows (run.mjs), so rows of another definition are
  * neither read as done nor reported as this one's.
  */
-export const SCAN = { v: 2, coarseS: 20, halfS: 120, stepS: 1, refS: [-120, -110, -100, -90, 90, 100, 110, 120], coreS: 80, neighbors: 4, failM: 100,
-  text: 'Perigee scan: every case at e 0.3 and above and every named case at e 0.1 and above has each perigee passage over the scored span flown at 1 s for 120 s either side, and two distances off the record\'s own curve (not distances to the truth) taken: each state within 80 s of the passage from the 8-point curve through the states 90, 100, 110 and 120 s either side of the passage (for a block near the passage, its own displacement), and each state from the 8-point curve through its own neighbors 1 to 4 s either side, over the whole window (a sharp-edged block anywhere in it; its figure is set by the block\'s edge, not its displacement). Where a block reaches the states the passage curve is drawn through, that figure is marked as not a displacement; a block wholly more than 120 s from the passage is not measured. The 300 s grid catches a displaced block of a few seconds only when an epoch falls inside it, so a case within the bar on the grid whose scan finds a state more than 100 m off by either measure is counted as failing ("over in the perigee scan"), with both figures; one whose scan failed is counted as failing too ("scan failed"); a case with no perigee passage in the scored span is counted as the grid counts it.' };
-export const scanned = (c) => c.e >= 0.3 || (c.kind === 'edge' && c.e >= 0.1);
+export const SCAN = { v: 3, coarseS: 20, halfS: 120, stepS: 1, refS: [-120, -110, -100, -90, 90, 100, 110, 120], coreS: 80, neighbors: 4, failM: 100, clipAtSpanStart: true,
+  text: 'Perigee scan: every case at e 0.3 and above and every named case at e 0.1 and above has each perigee passage over the scored span flown at 1 s for 120 s either side, and two distances off the record\'s own curve (not distances to the truth) taken: each state within 80 s of the passage from the 8-point curve through the states 90, 100, 110 and 120 s either side of the passage (for a block near the passage, its own displacement), and each state from the 8-point curve through its own neighbors 1 to 4 s either side, over the whole window (a sharp-edged block anywhere in it; its figure is set by the block\'s edge, not its displacement). Where a block reaches the states the passage curve is drawn through, that figure is marked as not a displacement; a block wholly more than 120 s from the passage is not measured. No state before the cutoff is flown: a passage within 120 s after the cutoff is flown from the cutoff on, and only its neighbors\' curve is taken. The 300 s grid catches a displaced block of a few seconds only when an epoch falls inside it, so a case within the bar on the grid whose scan finds a state more than 100 m off by either measure is counted as failing ("over in the perigee scan"), with both figures; one whose scan could not run (its flight refused or short) is counted as failing too, apart and with its reason ("scan could not run"); a case with no perigee passage in the scored span is counted as the grid counts it.' };
+/** The scan's case rule at its default (e 0.3; named cases from 0.1); run.mjs --scan-min-e widens it, and the rows' digest then names it. */
+export const SCAN_MIN_E = 0.3;
+export const scanned = (c, minE = SCAN_MIN_E) => c.e >= minE || (c.kind === 'edge' && c.e >= 0.1);
 const lagrange = (ts, ps, at) => { const o = [0, 0, 0]; for (let i = 0; i < ts.length; i += 1) { let w = 1; for (let j = 0; j < ts.length; j += 1) if (j !== i) w *= (at - ts[j]) / (ts[i] - ts[j]); for (let q = 0; q < 3; q += 1) o[q] += w * ps[i][q]; } return o; };
-/** One passage's two measures (SCAN): rs, its positions (km) at stepS from halfS before the passage to halfS after it. Returns each
- *  measure's largest distance (m) and the offset (s) from the passage where it falls. */
-export function measurePassage(rs) {
+/** One passage's two measures (SCAN): rs, its positions (km) at stepS from halfS before the passage to halfS after it, less its first
+ *  `lead` states where the window is clipped at the span's start. Returns each measure's largest distance (m) and the offset (s) from
+ *  the passage where it falls; a clipped passage has no passage curve (curveM null) and states the seconds cut (clippedS). */
+export function measurePassage(rs, lead = 0) {
   const per = (2 * SCAN.halfS) / SCAN.stepS + 1, mid = SCAN.halfS / SCAN.stepS, nb = SCAN.neighbors;
-  if (rs.length !== per) throw new Error(`a passage holds ${rs.length} states, not ${per}`);
-  const ix = SCAN.refS.map((s) => mid + s / SCAN.stepS), ps = ix.map((x) => rs[x]), core = SCAN.coreS / SCAN.stepS;
+  if (rs.length + lead !== per) throw new Error(`a passage holds ${rs.length} states and ${lead} clipped, not ${per}`);
+  const st = (j) => rs[j - lead];
+  const ix = SCAN.refS.map((s) => mid + s / SCAN.stepS), core = SCAN.coreS / SCAN.stepS, curveTaken = ix.every((x) => x >= lead);
   const nbOffsets = Array.from({ length: 2 * nb }, (_, q) => (q < nb ? q - nb : q - nb + 1));
-  const off = (j, at, pts) => { const q = lagrange(at, pts, j); return 1000 * Math.hypot(...[0, 1, 2].map((x) => rs[j][x] - q[x])); };
+  const off = (j, at, pts) => { const q = lagrange(at, pts, j), p = st(j); return 1000 * Math.hypot(...[0, 1, 2].map((x) => p[x] - q[x])); };
   let curve = { m: -1, j: null }, near = { m: -1, j: null };
-  for (let j = mid - core; j <= mid + core; j += 1) { const d = off(j, ix, ps); if (d > curve.m) curve = { m: d, j }; }
-  for (let j = nb; j + nb < per; j += 1) { const at = nbOffsets.map((o) => j + o), d = off(j, at, at.map((x) => rs[x])); if (d > near.m) near = { m: d, j }; }
+  if (curveTaken) { const ps = ix.map(st); for (let j = mid - core; j <= mid + core; j += 1) { const d = off(j, ix, ps); if (d > curve.m) curve = { m: d, j }; } }
+  for (let j = lead + nb; j + nb < per; j += 1) { const at = nbOffsets.map((o) => j + o), d = off(j, at, at.map(st)); if (d > near.m) near = { m: d, j }; }
   // a block edge (the neighbors' curve above failM) beyond the core may reach the states the passage curve is drawn through: the
   // passage curve's figure is then not a displacement (curveReliable false)
   const nearOffsetS = (near.j - mid) * SCAN.stepS;
-  return { curveM: +curve.m.toPrecision(4), curveOffsetS: (curve.j - mid) * SCAN.stepS, neighborsM: +near.m.toPrecision(4), neighborsOffsetS: nearOffsetS,
-    curveReliable: !(near.m > SCAN.failM && Math.abs(nearOffsetS) > SCAN.coreS - nb * SCAN.stepS) };
+  return { curveM: curveTaken ? +curve.m.toPrecision(4) : null, curveOffsetS: curveTaken ? (curve.j - mid) * SCAN.stepS : null, neighborsM: +near.m.toPrecision(4), neighborsOffsetS: nearOffsetS,
+    curveReliable: curveTaken ? !(near.m > SCAN.failM && Math.abs(nearOffsetS) > SCAN.coreS - nb * SCAN.stepS) : null, ...(lead ? { clippedS: lead * SCAN.stepS } : {}) };
 }
 
 /**

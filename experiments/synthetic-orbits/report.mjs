@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { GRID, BANDS, AM, bandOf, BAR_BANDS, barBandOf, labelOf } from './cases.mjs';
-import { FITS, ARC72_TEXT, RUNGS, xpTextOf, NO_XP_TEXT, XP_WEATHER_TEXT, SCAN } from './fits.mjs';
+import { FITS, ARC72_TEXT, RUNGS, xpTextOf, NO_XP_TEXT, XP_WEATHER_TEXT, SCAN, SCAN_MIN_E } from './fits.mjs';
 
 const PASS_M = 100, BAR_H = 120;
 /** The force mode, said of what the slot flies: AP's settings, a rung's settings, or (rung xp) SGP4-XP's record. */
@@ -28,7 +28,7 @@ const fitTextOf = (fit, withXp) => (fit === 'arc72' ? ARC72_TEXT : `${FITS[fit].
 /** What the slot holds: AP's headline record, or one rung's record (a rung-xp slot holds SGP4-XP's record). */
 const slotOf = (rung) => (!rung ? { name: 'AP', short: 'AP' } : rung === 'xp' ? { name: 'the slot\'s SGP4-XP record (rung xp)', short: 'SGP4-XP (rung xp)' } : { name: `the slot (rung ${rung})`, short: `Slot (rung ${rung})` });
 const WEATHER = 'the weather known at the cutoff (GFZ observed, then the NOAA forecast issued before it)';
-const statisticOf = (fit, truthStartH, rung = null, withXp = false, perigeeScan = false, scanDigest = null) => [
+const statisticOf = (fit, truthStartH, rung = null, withXp = false, perigeeScan = false, scanDigest = null, scanMinE = null) => [
   'Each orbit is made up (cases.mjs, seeded).',
   `Its state at the truth's start, ${truthStartH} h before the cutoff, is made from the case's mean elements (the record seed.mjs writes) by one reference build, sdn-ap 0.6.26 (modules 7ed7cf88), whatever build is scored, so every build is scored against the same truth; each row names its truth's hash.`,
   'The truth is the numerical propagator, FFM 2.2.0 (pinned by hash in headline-loop/lib/ffm.mjs), flown from that state on a 300 s grid to 7 days past the cutoff.',
@@ -40,7 +40,7 @@ const statisticOf = (fit, truthStartH, rung = null, withXp = false, perigeeScan 
     : rung ? `Where the truth has drag, ${WEATHER} drives the truth's NRLMSISE-00 and the slot's (its settings name NRLMSISE-00 there).`
       : `Both sides see the same space weather: ${WEATHER} drives the truth's drag and AP's.`,
   ...(fit === 'arc72' || withXp ? [`SGP4-XP is flown as it is in every force mode. ${XP_WEATHER_TEXT}`] : []),
-  ...(perigeeScan ? [`${SCAN.text} The scan's definition is ${scanDigest}; rows flown under another definition are not read.`] : []),
+  ...(perigeeScan ? [`${SCAN.text}${scanMinE != null && scanMinE !== SCAN_MIN_E ? ` This run widens the scan to every case at e ${scanMinE} and above.` : ''} The scan's definition is ${scanDigest}; rows flown under another definition are not read.`] : []),
   DRAG_TERM_TEXT,
   TOLERANCE,
 ].join(' ');
@@ -61,9 +61,9 @@ const median = (v) => { const s = v.filter(Number.isFinite).sort((a, b) => a - b
  *   through it);
  * - in n: within or over (D over the whole 0 to 120 h), short (the truth ends before 120 h, a decay after the cutoff among them:
  *   never within, D over its span where one was scored), refused (AP's fit refused), flight-failed (AP's flight failed), failed
- *   (another error after the truth existed); with the perigee scan, a case within on the 300 s grid is scan (its scan finds a state
- *   more than 100 m off by either measure) or scan-failed (its scan's flight failed or came back short), both not within. A scanned
- *   case with no perigee passage in the span is counted as the grid counts it.
+ *   (another error after the truth existed); with the perigee scan, a case within on the 300 s grid is scan (its scan reads a state
+ *   more than 100 m off by either measure) or scan-not-run (its scan could not run: its flight refused or short; with the reason), both
+ *   not within and each counted apart. A scanned case with no perigee passage in the span is counted as the grid counts it.
  * SGP4-XP's within takes the same rules (scanFails).
  */
 const scanFails = (t) => !!(t?.perigeeScan && (t.perigeeScan.error || t.perigeeScan.fails));
@@ -90,16 +90,16 @@ function statusOf(r, ap) {
   if (ap.error) return /^fit\b/.test(ap.error) ? { status: 'refused', reason: `AP's fit refused: ${ap.error}` } : { status: 'flight-failed', reason: `AP's fit or flight failed: ${ap.error}` };
   const md = ap.maxDistance;
   if (md.spanH < BAR_H) { const s = shortSpan(); return { status: 'short', spanH: md.spanH, reason: s?.why ?? `the truth ends at ${md.spanH} h` }; }
-  // within on the 300 s grid, but the perigee scan (run.mjs --perigee-scan) failed, or finds a state more than 100 m off its curve
-  if (md.maxM <= PASS_M && ap.perigeeScan?.error) return { status: 'scan-failed', reason: `within on the 300 s grid (D ${md.maxM} m); the perigee scan failed: ${ap.perigeeScan.error}` };
+  // within on the 300 s grid, but the perigee scan (run.mjs --perigee-scan) could not run, or reads a state more than 100 m off its curve
+  if (md.maxM <= PASS_M && ap.perigeeScan?.error) return { status: 'scan-not-run', reason: `within on the 300 s grid (D ${md.maxM} m); the perigee scan could not run: ${ap.perigeeScan.error}` };
   if (md.maxM <= PASS_M && ap.perigeeScan?.fails) return { status: 'scan', reason: `within on the 300 s grid (D ${md.maxM} m); the perigee scan finds a state ${ap.perigeeScan.largestM} m off the record's own curve at ${ap.perigeeScan.atH} h` };
   return { status: md.maxM <= PASS_M ? 'within' : 'over' };
 }
-const IN_N = new Set(['within', 'over', 'scan', 'scan-failed', 'short', 'refused', 'flight-failed', 'failed']);
-const NOT_WITHIN_MARK = new Set(['scan', 'scan-failed', 'short', 'refused', 'flight-failed', 'failed', 'no-truth', 'decayed']);
+const IN_N = new Set(['within', 'over', 'scan', 'scan-not-run', 'short', 'refused', 'flight-failed', 'failed']);
+const NOT_WITHIN_MARK = new Set(['scan', 'scan-not-run', 'short', 'refused', 'flight-failed', 'failed', 'no-truth', 'decayed']);
 
 export async function report(ctx, args) {
-  const { commit, version, wasmSha, rowsFile, seed, gridStep, all, mode, guard, fit, truthStartH, rung = null, withXp = false, perigeeScan = false, scanDigest = null } = ctx;
+  const { commit, version, wasmSha, rowsFile, seed, gridStep, all, mode, guard, fit, truthStartH, rung = null, withXp = false, perigeeScan = false, scanDigest = null, scanMinE = null } = ctx;
   const out = args.out;
   if (!out) throw new Error('--report needs --out <dir>');
   // the rows of this build flown from the reference state (truth.hash), and the rows of cases that failed before their truth existed;
@@ -113,9 +113,9 @@ export async function report(ctx, args) {
   const hashOf = (c) => createHash('sha256').update(JSON.stringify(c)).digest('hex').slice(0, 16);
   const rows = all.cases.map((c) => ({ c, r: byHash.get(hashOf(c)) ?? null }));
   const harnesses = [...new Set(rows.filter((x) => x.r).map((x) => x.r.harness))];
-  const theory = (r, t) => (r?.[t] ? { pcf: r[t].pcf, settings: r[t].settings ?? null, fitNote: r[t].fitNote ?? null, fitRmsM: r[t].fitRmsM ?? null, bterm: r[t].bterm ?? null, maxDistance: r[t].maxDistance ?? null, days: r[t].days ?? null, perigeeScan: r[t].perigeeScan ?? null, error: r[t].error ?? null } : null);
+  const theory = (r, t) => (r?.[t] ? { pcf: r[t].pcf, settings: r[t].settings ?? null, fitNote: r[t].fitNote ?? null, fitRmsM: r[t].fitRmsM ?? null, bterm: r[t].bterm ?? null, maxDistance: r[t].maxDistance ?? null, days: r[t].days ?? null, perigeeScan: r[t].perigeeScan ?? null, kepler: r[t].kepler ?? null, error: r[t].error ?? null } : null);
   const items = rows.map(({ c, r }) => {
-    const ap = theory(r, 'ap'), xp = theory(r, 'xp'), st = statusOf(r, ap), full = ['within', 'over', 'scan', 'scan-failed'].includes(st.status);
+    const ap = theory(r, 'ap'), xp = theory(r, 'xp'), st = statusOf(r, ap), full = ['within', 'over', 'scan', 'scan-not-run'].includes(st.status);
     const D = ap?.maxDistance?.maxM ?? null, X = xp?.maxDistance?.maxM ?? null, xpFull = xp?.maxDistance && xp.maxDistance.spanH >= BAR_H;
     return { id: c.id, kind: c.kind, name: c.name ?? null, label: labelOf(c), band: barBandOf(c), regime: regimeOf(c), am: c.am, elements: r?.elements ?? { n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, hpKm: c.hpKm, haKm: c.haKm, cutoff: c.cutoff },
       truth: r?.truth ?? null, flown: !!r, error: r?.error ?? null, status: st.status, reason: st.reason ?? null, spanH: st.spanH ?? (ap?.maxDistance?.spanH ?? null), ap, xp,
@@ -125,7 +125,7 @@ export async function report(ctx, args) {
   const count = (xs, s) => xs.filter((x) => x.status === s).length;
   const bandRow = (xs) => {
     const inN = xs.filter((x) => IN_N.has(x.status)), full = inN.filter((x) => x.fullD != null), xpFull = inN.filter((x) => x.xp?.maxDistance && x.xp.maxDistance.spanH >= BAR_H);
-    return { cases: xs.length, n: inN.length, within: count(xs, 'within'), over: count(xs, 'over'), scanOver: count(xs, 'scan'), scanFailed: count(xs, 'scan-failed'), short: count(xs, 'short'), refused: count(xs, 'refused'), flightFailed: count(xs, 'flight-failed'), failed: count(xs, 'failed'),
+    return { cases: xs.length, n: inN.length, within: count(xs, 'within'), over: count(xs, 'over'), scanOver: count(xs, 'scan'), scanNotRun: count(xs, 'scan-not-run'), short: count(xs, 'short'), refused: count(xs, 'refused'), flightFailed: count(xs, 'flight-failed'), failed: count(xs, 'failed'),
       decayed: count(xs, 'decayed'), noTruth: count(xs, 'no-truth'), notFlown: count(xs, 'not-flown'),
       scored: full.length, medianDM: median(full.map((x) => x.fullD)), worstDM: full.length ? Math.max(...full.map((x) => x.fullD)) : null,
       medianFirstOver100mH: median(full.map((x) => x.ap.maxDistance.firstOver100mH).filter((v) => v != null)),
@@ -138,19 +138,26 @@ export async function report(ctx, args) {
   const scanOf = (t) => {
     const s = t?.perigeeScan;
     if (!s) return null;
-    if (s.error) return { error: s.error };
+    if (s.error) return { notRun: true, error: s.error };
     if (s.noPassage) return { noPassage: true };
-    return { largestM: s.largestM, atH: s.atH, offsetS: s.offsetS, curve: s.curve, neighbors: s.neighbors, passages: s.passages, over: s.over, fails: s.fails };
+    return { largestM: s.largestM, atH: s.atH, offsetS: s.offsetS, curve: s.curve, neighbors: s.neighbors, passages: s.passages, over: s.over, fails: s.fails, clipped: s.clipped ?? 0 };
   };
   const scans = items.filter((x) => x.ap?.perigeeScan || x.xp?.perigeeScan).map((x) => ({ id: x.id, label: x.label, band: x.band, status: x.status, apDM: x.D, ap: scanOf(x.ap), xpDM: x.xpD, xp: scanOf(x.xp) }));
+  // the scans by what they read, whatever the case's status on the grid: a reading over 100 m, or a scan that could not run (with its
+  // reason) — never one count for both
+  const scanCounts = Object.fromEntries(['ap', 'xp'].map((t) => {
+    const of = scans.filter((s) => s[t]);
+    return [t, { scanned: of.length, readOver: of.filter((s) => s[t].fails).map((s) => ({ id: s.id, largestM: s[t].largestM, atH: s[t].atH, dM: t === 'ap' ? s.apDM : s.xpDM })),
+      notRun: of.filter((s) => s[t].notRun).map((s) => ({ id: s.id, reason: s[t].error, dM: t === 'ap' ? s.apDM : s.xpDM })), noPassage: of.filter((s) => s[t].noPassage).length, clipped: of.filter((s) => s[t].clipped).length }];
+  }));
   const without = items.filter((x) => ['refused', 'flight-failed', 'failed', 'decayed', 'no-truth', 'not-flown'].includes(x.status)).map((x) => ({ id: x.id, label: x.label, band: x.band, status: x.status, reason: x.reason }));
   const wall = rows.filter((x) => x.r).map((x) => x.r.wallS).filter(Number.isFinite);
   const command = `node experiments/synthetic-orbits/run.mjs --modules-commit ${commit} --modules-root <modules clone> --seed ${seed} --grid-step ${gridStep}${guard ? ' --guard' : ''}${mode === 'no-drag' ? ' --no-drag' : mode === 'no-drag-no-radiation' ? ' --no-drag --no-radiation' : ''} --fit ${fit} --truth-start-h ${truthStartH}${rung ? ` --rung ${rung}` : ''}${withXp ? ' --xp' : ''}${perigeeScan ? ' --perigee-scan' : ''}`;
   const doc = {
     schema: 'sdn-ap-synthetic/3', measured: new Date().toISOString().slice(0, 10), mode, modeText: modeTextOf(mode, rung), guard, fit, truthStartH, rung, withXp, xpFlown: fit === 'arc72' || withXp, fitText: fitTextOf(fit, withXp), fitAfterCutoff: fit === 'arc72' ? false : FITS[fit].after,
     module: { version, modulesCommit: commit, wasmSha256: wasmSha }, harness: { repo: 'orbit-accuracy-experiments', commits: harnesses, command },
-    perigeeScan, scanSettings: perigeeScan ? SCAN : null, scanDigest, rowsOfOtherScanDefinitions: perigeeScan ? { count: ofBuild.length - kept.length, definitions: otherDefinitions } : null,
-    slot: slotOf(rung), seed, gridStep, statistic: statisticOf(fit, truthStartH, rung, withXp, perigeeScan, scanDigest), truthSettings: TRUTH, areaToMass: Object.fromEntries(Object.entries(AM).map(([k, v]) => [k, { areaOverMassM2Kg: v, dragTerm: 2.2 * v, radiationTerm: 1.2 * v }])),
+    perigeeScan, scanSettings: perigeeScan ? SCAN : null, scanDigest, scanMinE, ...(perigeeScan ? { scanCounts } : {}), rowsOfOtherScanDefinitions: perigeeScan ? { count: ofBuild.length - kept.length, definitions: otherDefinitions } : null,
+    slot: slotOf(rung), seed, gridStep, statistic: statisticOf(fit, truthStartH, rung, withXp, perigeeScan, scanDigest, scanMinE), truthSettings: TRUTH, areaToMass: Object.fromEntries(Object.entries(AM).map(([k, v]) => [k, { areaOverMassM2Kg: v, dragTerm: 2.2 * v, radiationTerm: 1.2 * v }])),
     grid: GRID, inclinationBands: BANDS, cost: { orbitsFlown: wall.length, wallSecondsSum: Math.round(wall.reduce((s, x) => s + x, 0)), medianWallS: median(wall) },
     bands, failing, short, without, ...(perigeeScan ? { scans } : {}), cases: items, notCovered: notCoveredOf(all),
   };
@@ -159,7 +166,8 @@ export async function report(ctx, args) {
   fs.writeFileSync(`${base}.json`, `${JSON.stringify(doc, null, 1)}\n`);
   fs.writeFileSync(`${base}.md`, page(doc, items));
   const all0 = bandRow(items);
-  console.error(`report: ${base}.json and .md; ${all0.within} of ${all0.n} with a truth within 100 m (${all0.over} over${perigeeScan ? `, ${all0.scanOver} over in the perigee scan, ${all0.scanFailed} scan failed` : ''}, ${all0.short} short of 120 h, ${all0.refused} refused, ${all0.flightFailed} flight failed, ${all0.failed} other); ${all0.decayed} decayed by the cutoff, ${all0.noTruth} without a truth, ${all0.notFlown} not flown${perigeeScan && ofBuild.length > kept.length ? `; ${ofBuild.length - kept.length} rows of another scan definition not read` : ''}`);
+  console.error(`report: ${base}.json and .md; ${all0.within} of ${all0.n} with a truth within 100 m (${all0.over} over${perigeeScan ? `, ${all0.scanOver} over in the perigee scan, ${all0.scanNotRun} whose perigee scan could not run` : ''}, ${all0.short} short of 120 h, ${all0.refused} refused, ${all0.flightFailed} flight failed, ${all0.failed} other); ${all0.decayed} decayed by the cutoff, ${all0.noTruth} without a truth, ${all0.notFlown} not flown${perigeeScan && ofBuild.length > kept.length ? `; ${ofBuild.length - kept.length} rows of another scan definition not read` : ''}`);
+  if (perigeeScan) for (const t of ['ap', 'xp']) { const k = scanCounts[t]; if (k.scanned) console.error(`  ${t === 'ap' ? 'AP' : 'SGP4-XP'}'s perigee scan, every scanned case: ${k.scanned} scanned; read over 100 m ${k.readOver.length}${k.readOver.length ? ` (${k.readOver.map((y) => y.id).join(' ')})` : ''}; could not run ${k.notRun.length}${k.notRun.length ? ` (${k.notRun.map((y) => `${y.id}: ${y.reason.slice(0, 80)}`).join('; ')})` : ''}; clipped at the cutoff ${k.clipped}; no passage ${k.noPassage}`); }
   for (const [b, x] of Object.entries(bands)) console.error(`  ${b}: ${x.within} of ${x.n} within 100 m; median D ${fmt(x.medianDM)}, worst ${fmt(x.worstDM)} over ${x.scored} scored`);
   process.exit(0);
 }
@@ -184,14 +192,14 @@ function page(doc, items) {
   L.push('The grid and the named cases are lists of cases to work on, not a sample: the figures below are counts, and carry no pass rate.', '');
   L.push(`## The bar by band (D: the largest distance to the truth over 0 to ${BAR_H} h; within at ${PASS_M} m)`, '',
     'n counts every case that has a truth past the cutoff. A case whose truth ends before 120 h (a decay after the cutoff among them), whose fit was refused or whose flight failed is in n and is not within; each is counted beside. An orbit that decays at or before the cutoff has no forecast to score and is not in n, whether the numerical flight stopped there or ran through it; nor are the cases without a truth and those not flown. Median and worst D are over the scored cases, those with a D over the whole 0 to 120 h.', '',
-    ...(doc.perigeeScan ? ['A case within 100 m on the 300 s grid whose perigee scan finds a state more than 100 m off the record\'s own curve, by either measure, is in n and is not within ("over in the perigee scan"); one whose scan failed (its flight failed or came back short) is in n and is not within ("scan failed"); a scanned case with no perigee passage in the span is counted as the grid counts it. SGP4-XP is counted the same way.', ''] : []),
-    `| Band | Cases | Within 100 m (k of n) | Over 100 m |${doc.perigeeScan ? ' Over in the perigee scan | Scan failed |' : ''} Truth short of 120 h | Refused fit | Failed flight | Other failure | Decayed by the cutoff | Without a truth | Not flown | Median D (scored) | Worst D (scored) | Median first hour above 100 m | SGP4-XP within (of n) | SGP4-XP median D |`,
+    ...(doc.perigeeScan ? ['A case within 100 m on the 300 s grid whose perigee scan finds a state more than 100 m off the record\'s own curve, by either measure, is in n and is not within ("over in the perigee scan"); one whose scan could not run (its flight refused or short) is in n and is not within, counted apart with its reason ("scan could not run"); a scanned case with no perigee passage in the span is counted as the grid counts it. SGP4-XP is counted the same way.', ''] : []),
+    `| Band | Cases | Within 100 m (k of n) | Over 100 m |${doc.perigeeScan ? ' Over in the perigee scan | Scan could not run |' : ''} Truth short of 120 h | Refused fit | Failed flight | Other failure | Decayed by the cutoff | Without a truth | Not flown | Median D (scored) | Worst D (scored) | Median first hour above 100 m | SGP4-XP within (of n) | SGP4-XP median D |`,
     `|---|---:|---:|---:|${doc.perigeeScan ? '---:|---:|' : ''}---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|`);
-  for (const [b, x] of Object.entries(doc.bands)) L.push(`| ${b} | ${x.cases} | ${x.within} of ${x.n} | ${x.over} |${doc.perigeeScan ? ` ${x.scanOver} | ${x.scanFailed} |` : ''} ${x.short} | ${x.refused} | ${x.flightFailed} | ${x.failed} | ${x.decayed} | ${x.noTruth} | ${x.notFlown} | ${fmt(x.medianDM)} (${x.scored}) | ${fmt(x.worstDM)} | ${x.medianFirstOver100mH ?? '-'} | ${doc.xpFlown ? `${x.xpWithin} of ${x.n}` : '-'} | ${doc.xpFlown ? `${fmt(x.xpMedianDM)} (${x.xpScored})` : '-'} |`);
+  for (const [b, x] of Object.entries(doc.bands)) L.push(`| ${b} | ${x.cases} | ${x.within} of ${x.n} | ${x.over} |${doc.perigeeScan ? ` ${x.scanOver} | ${x.scanNotRun} |` : ''} ${x.short} | ${x.refused} | ${x.flightFailed} | ${x.failed} | ${x.decayed} | ${x.noTruth} | ${x.notFlown} | ${fmt(x.medianDM)} (${x.scored}) | ${fmt(x.worstDM)} | ${x.medianFirstOver100mH ?? '-'} | ${doc.xpFlown ? `${x.xpWithin} of ${x.n}` : '-'} | ${doc.xpFlown ? `${fmt(x.xpMedianDM)} (${x.xpScored})` : '-'} |`);
   L.push('');
   // the maps: every grid case with a row is an orbit of its cell; a cell holding a case that is not within for another reason is marked
   const grid = items.filter((x) => x.kind === 'grid');
-  L.push(`In the maps a cell gives the worst D over its scored orbits and (orbits within 100 m / orbits with a row); * marks a cell holding an orbit whose truth ends before 120 h, whose fit was refused, whose flight failed, that decays by the cutoff or that has no truth${doc.perigeeScan ? ', or that is within 100 m on the grid but over in the perigee scan or whose scan failed' : ''}; "not flown" a cell whose orbits have no row; an empty cell holds no case of this run.`, '');
+  L.push(`In the maps a cell gives the worst D over its scored orbits and (orbits within 100 m / orbits with a row); * marks a cell holding an orbit whose truth ends before 120 h, whose fit was refused, whose flight failed, that decays by the cutoff or that has no truth${doc.perigeeScan ? ', or that is within 100 m on the grid but over in the perigee scan or whose scan could not run' : ''}; "not flown" a cell whose orbits have no row; an empty cell holds no case of this run.`, '');
   const table = (title, xs, cell) => {
     L.push(title, '', `| Perigee \\ e | ${doc.grid.eccentricity.join(' | ')} |`, `|---|${doc.grid.eccentricity.map(() => '---').join('|')}|`);
     for (const hp of doc.grid.perigeeKm) L.push(`| ${hp.toLocaleString('en-US')} km | ${doc.grid.eccentricity.map((e) => { const ys = xs.filter((x) => x.elements.hpKm === hp && x.elements.e === e); return ys.length ? cell(ys) : ' '; }).join(' | ')} |`);
@@ -215,11 +223,13 @@ function page(doc, items) {
   for (const f of doc.failing.slice(0, 60)) L.push(`| ${f.label} | ${f.band} | ${f.hpKm.toLocaleString('en-US')} km | ${f.e} | ${f.i} | ${f.am} | ${fmt(f.apDM)} | ${f.apAtH} | ${f.apFirstOver100mH ?? '-'} | ${fmt(f.xpDM)} | ${fmt(f.apFitRmsM)} |`);
   if (doc.failing.length > 60) L.push('', `${doc.failing.length - 60} more in the result file.`);
   if (doc.perigeeScan) {
-    // every scanned case where a scan finds a state more than 100 m off, failed, or had no passage in the span: both theories' figures
-    const sf = (s) => (!s ? '-' : s.error ? `scan failed: ${s.error.slice(0, 60)}` : s.noPassage ? 'no passage in the span'
-      : `${fmt(s.largestM)} at ${s.atH} h, ${s.offsetS} s from the passage (passage curve ${fmt(s.curve.largestM)}${s.curve.reliable === false ? ', not a displacement: a block edge reaches the states it is drawn through' : ''}; neighbors' curve ${fmt(s.neighbors.largestM)}); ${s.over} of ${s.passages} passages above 100 m`);
-    const shown = doc.scans.filter((s) => s.ap?.fails || s.xp?.fails || s.ap?.error || s.xp?.error || s.ap?.noPassage || s.xp?.noPassage);
-    L.push('', `## The perigee scan: ${doc.scans.length} cases scanned, ${shown.length} with a state more than 100 m off, a failed scan or no passage in the span`, '',
+    // every scanned case where a scan reads a state more than 100 m off, could not run, or had no passage in the span: both theories' figures
+    const sf = (s) => (!s ? '-' : s.notRun ? `scan could not run: ${s.error.slice(0, 80)}` : s.noPassage ? 'no passage in the span'
+      : `${fmt(s.largestM)} at ${s.atH} h, ${s.offsetS} s from the passage (${s.curve ? `passage curve ${fmt(s.curve.largestM)}${s.curve.reliable === false ? ', not a displacement: a block edge reaches the states it is drawn through' : ''}` : 'no passage curve'}; neighbors' curve ${fmt(s.neighbors.largestM)}${s.clipped ? `; ${s.clipped} passage${s.clipped > 1 ? 's' : ''} clipped at the cutoff` : ''}); ${s.over} of ${s.passages} passages above 100 m`);
+    const shown = doc.scans.filter((s) => s.ap?.fails || s.xp?.fails || s.ap?.notRun || s.xp?.notRun || s.ap?.noPassage || s.xp?.noPassage);
+    const k = doc.scanCounts, kl = (t) => `${k[t].readOver.length} read over 100 m and ${k[t].notRun.length} could not run of ${k[t].scanned} scanned`;
+    L.push('', `## The perigee scan: ${doc.scans.length} cases scanned, ${shown.length} with a state more than 100 m off, a scan that could not run or no passage in the span`, '',
+      `Over every scanned case, whatever its status on the grid: ${S.short}'s scan ${kl('ap')}${k.xp.scanned ? `; SGP4-XP's ${kl('xp')}` : ''}. A reading over 100 m and a scan that could not run are never counted together.`, '',
       `| Orbit | Band | ${S.short} D (300 s grid) | ${S.short}: largest distance off the record's own curve (not a distance to the truth) | SGP4-XP D (300 s grid) | SGP4-XP: largest distance off the record's own curve (not a distance to the truth) |`, '|---|---|---|---|---|---|');
     for (const s of shown.slice(0, 80)) L.push(`| ${s.label} | ${s.band} | ${fmt(s.apDM)} | ${sf(s.ap)} | ${fmt(s.xpDM)} | ${sf(s.xp)} |`);
     if (shown.length > 80) L.push('', `${shown.length - 80} more in the result file.`);
@@ -235,7 +245,7 @@ function page(doc, items) {
   for (const x of items.filter((y) => y.kind === 'edge')) {
     const days = x.ap?.days ? ['1', '3', '5', '7'].map((d) => fmt(x.ap.days[d])).join(' / ') : x.reason ?? '-';
     const within = x.status === 'within' ? 'yes' : x.status === 'over' ? 'no' : x.status === 'short' ? `no (truth to ${x.spanH} h)`
-      : x.status === 'scan' ? `no (perigee scan: ${fmt(x.ap.perigeeScan.largestM)} off the record's own curve at ${x.ap.perigeeScan.atH} h)` : x.status === 'scan-failed' ? 'no (the perigee scan failed)' : IN_N.has(x.status) ? 'no' : '-';
+      : x.status === 'scan' ? `no (perigee scan: ${fmt(x.ap.perigeeScan.largestM)} off the record's own curve at ${x.ap.perigeeScan.atH} h)` : x.status === 'scan-not-run' ? 'no (the perigee scan could not run)' : IN_N.has(x.status) ? 'no' : '-';
     L.push(`| ${x.label} | ${fmt(x.D)}${x.status === 'short' && x.D != null ? ` (to ${x.spanH} h)` : ''} | ${x.ap?.maxDistance?.firstOver100mH ?? '-'} | ${days} | ${doc.xpFlown ? `${fmt(x.xpD)} | ` : ''}${within} |`);
   }
   L.push('', '## Not covered', '', ...doc.notCovered.map((x) => `- ${x}`), '');

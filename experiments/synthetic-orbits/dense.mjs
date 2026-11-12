@@ -93,7 +93,7 @@ for (const r of results) {
   const c = list.find((x) => x.id === r.id);
   if (r.scan) {
     const s = r.scan;
-    console.log(`${r.id}${c?.name ? ` (${labelOf(c)})` : ''}: D ${f(r.D)} at ${r.atH} h (span ${r.spanH} h); ${s.error ? `scan failed: ${s.error}` : s.noPassage ? 'no perigee passage in the span' : `${s.passages} perigee passages; off the record's own curve (not a distance to the truth): the passage curve's largest ${f(s.curve.largestM)} at ${s.curve.atH} h (${s.curve.offsetS} s from the passage), the neighbors' curve's largest ${f(s.neighbors.largestM)} at ${s.neighbors.atH} h (${s.neighbors.offsetS} s from the passage); passages above 100 m ${s.over}; pooled and new instance bit for bit: ${s.bitForBit ? 'yes' : 'no'}`}`);
+    console.log(`${r.id}${c?.name ? ` (${labelOf(c)})` : ''}: D ${f(r.D)} at ${r.atH} h (span ${r.spanH} h); ${s.error ? `scan could not run: ${s.error}` : s.noPassage ? 'no perigee passage in the span' : `${s.passages} perigee passages${s.clipped ? ` (${s.clipped} clipped at the cutoff, no passage curve)` : ''}; off the record's own curve (not a distance to the truth): ${s.curve ? `the passage curve's largest ${f(s.curve.largestM)} at ${s.curve.atH} h (${s.curve.offsetS} s from the passage)` : 'no passage curve'}, the neighbors' curve's largest ${f(s.neighbors.largestM)} at ${s.neighbors.atH} h (${s.neighbors.offsetS} s from the passage); passages above 100 m ${s.over}; pooled and new instance bit for bit: ${s.bitForBit ? 'yes' : 'no'}`}`);
     if (!s.error && !s.noPassage) console.log(`  passage curve / neighbors' curve: ${s.perPassage.map((p) => `${p.atH.toFixed(2)} h ${f(p.curveM)} / ${f(p.neighborsM)}`).join(', ')}`);
     continue;
   }
