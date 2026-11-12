@@ -25,17 +25,22 @@ const full = D.FULL_SETTING[g], arm = /^E5/.test(full) ? 'Ffull' : full, setting
 const F = await D.F.openFfm(), axes = await D.openAxesFor(g);
 const HOUR = D.HOUR, STRIDE = strideH * HOUR;
 const arcs = [];
+const CHUNK = 10 * D.DAY;
 for (const [a, b] of D.spansOf(ws.map((w) => ({ ...w, arcs: [Math.max(...w.arcs) + leadDays * 24] })))) {
-  let lines;
-  try { lines = await D.truthSeries(g, name, norad, a - HOUR, b + HOUR, axes); } catch { continue; }
-  if (!lines.length) continue;
-  for (let s = Math.ceil(a / STRIDE) * STRIDE; s + lengthH * HOUR <= b; s += STRIDE) {
-    const e = s + lengthH * HOUR, thin = D.W.arcOf(lines.filter((l) => l.t >= s && l.t <= e), lengthH);
-    if (!thin) continue;
-    try {
-      const f = await F.fit(thin, settings, e, settings.forces.drag ? D.weatherAsOf(e) : null);
-      arcs.push({ start: s, end: e, wrms: f.weightedRms, closes: Number.isFinite(f.weightedRms) && f.weightedRms <= close });
-    } catch (err) { arcs.push({ start: s, end: e, wrms: null, closes: false, error: String(err?.message ?? err).slice(0, 120) }); }
+  // the truth is read ten days at a time (as pieces.mjs does), a chunk's arcs being those that start in it
+  for (let c0 = Math.ceil(a / STRIDE) * STRIDE; c0 < b; c0 += CHUNK) {
+    const c1 = Math.min(b, c0 + CHUNK + lengthH * HOUR);
+    let lines;
+    try { lines = await D.truthSeries(g, name, norad, c0 - HOUR, c1 + HOUR, axes); } catch { continue; }
+    if (!lines.length) continue;
+    for (let s = c0; s < c0 + CHUNK && s + lengthH * HOUR <= c1; s += STRIDE) {
+      const e = s + lengthH * HOUR, thin = D.W.arcOf(lines.filter((l) => l.t >= s && l.t <= e), lengthH);
+      if (!thin) continue;
+      try {
+        const f = await F.fit(thin, settings, e, settings.forces.drag ? D.weatherAsOf(e) : null);
+        arcs.push({ start: s, end: e, wrms: f.weightedRms, closes: Number.isFinite(f.weightedRms) && f.weightedRms <= close });
+      } catch (err) { arcs.push({ start: s, end: e, wrms: null, closes: false, error: String(err?.message ?? err).slice(0, 120) }); }
+    }
   }
 }
 arcs.sort((p, q) => p.start - q.start);
