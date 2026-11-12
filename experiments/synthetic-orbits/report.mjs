@@ -5,9 +5,10 @@
 // when D <= 100 m over the whole 0 to 120 h. The page: the band table (k of n within 100 m, with every case that has a truth past the
 // cutoff in n, and the cases that are not within for another reason counted beside), the perigee by eccentricity maps, the cases above
 // 100 m worst first, the cases whose truth ends before 120 h with their span, the cases that decay by the cutoff or have no truth with
-// their reason, the named edge cases, and what the run does not cover; with --perigee-scan, the scanned cases whose scan finds a state
-// more than 100 m off (AP's and SGP4-XP's figures beside their D on the grid). No pass rate is printed: the grid and the named cases are
-// lists of cases, not a sample.
+// their reason, the named edge cases, the cases whose drag truth is not converged to a tenth of the bar (CONVERGENCE, marked beside their
+// rows wherever they appear), and what the run does not cover; with --perigee-scan, the scanned cases whose scan reads a state more than
+// 100 m off or could not run (AP's and SGP4-XP's figures beside their D on the grid; the two counted apart). No pass rate is printed: the
+// grid and the named cases are lists of cases, not a sample.
 import fs from 'node:fs';
 import path from 'node:path';
 import { GRID, BANDS, AM, bandOf, BAR_BANDS, barBandOf, labelOf } from './cases.mjs';
@@ -23,6 +24,24 @@ const modeTextOf = (mode, rung) => {
   return `Gravity, the solid tide, relativity and the Sun and Moon only: the truth without drag or radiation pressure; ${noDrag}${rung === 'xp' ? '' : ', and the radiation term is held at 0'}.`;
 };
 const DRAG_TERM_TEXT = 'Each row records AP\'s fitted drag term (bterm), so a fit where the truth has no drag can be read with the term it solved.';
+/**
+ * A drag truth not converged to a tenth of the bar (stack #520): its lowest altitude over the bar's span (row.truth.minAltitudeSpanKm,
+ * its lowest perigee there) is under underKm. At 1e-13 such a truth still moves 15 to 34 m on a tenfold tighter flight; every other low
+ * case measured moves at most 3.2 m. `measured`: each low case's truth flown again at 1e-12 and 1e-13 (the harness lane's flights, the
+ * same request at four tolerances), the largest distance between the two over 0 to 120 h. A row without minAltitudeSpanKm (flown
+ * before rows held it) is marked from its truth's lowest altitude over the whole flight (minAltitudeKm), and says so.
+ */
+const CONVERGENCE = {
+  underKm: 150,
+  measured: { 'grid-hp200-e0.9-i130': 34, 'grid-hp200-e0.9-i20': 22, 'edge-heo-perigee-150': 15.5, 'grid-hp200-e0.7-i130': 3.2, 'grid-hp400-e0.5-i55': 2.2, 'grid-hp300-e0.9-i165': 2,
+    'grid-hp200-e0.9-i98': 1.7, 'grid-hp200-e0.5-i98': 1.3, 'grid-hp300-e0.5-i165': 0.8, 'grid-hp300-e0.9-i20': 0.5, 'grid-hp300-e0.3-i130': 0.5, 'grid-hp200-e0.5-i130': 0.3, 'grid-hp200-e0.9-i55': 0 },
+  text: 'A case whose drag truth falls under 150 km over 0 to 120 h is marked "truth not converged": at 1e-13 such a truth still moves 15 to 34 m between 1e-12 and 1e-13, a tenth to a third of the bar, where every other low case measured moves at most 3.2 m. Each marked case gives its lowest altitude and, where it was measured, that step.',
+};
+const convergenceOf = (truth, id) => {
+  if (!truth?.dragAreaOverMass) return null;
+  const lowKm = truth.minAltitudeSpanKm ?? truth.minAltitudeKm ?? null, over = truth.minAltitudeSpanKm != null ? 'span' : 'flight';
+  return lowKm == null ? null : { lowestKm: lowKm, over, notConverged: lowKm < CONVERGENCE.underKm, step12to13M: CONVERGENCE.measured[id] ?? null };
+};
 const TOLERANCE = 'A drag case\'s truth is flown at tolerance 1e-13 (the L70S13 setting of headline-loop/lib/settings.mjs). At 1e-10 the integration after each change of the weather rows leaves a drag truth meters to hundreds of meters from the converged orbit; at 1e-13 a tenfold tighter flight moves it under 4 m, except where the perigee falls under 150 km (15 to 34 m). A truth without drag is flown at 1e-10, exact there to the meter. A drag case is read only from rows on the 1e-13 truth. The real rows\' table states each row\'s numerical tolerance in its method line: a row is at 1e-13 where every one of its windows has been fitted and flown at that setting, and at 1e-10 otherwise. In the 0.6.42 table, strong drag 2025 is at 1e-13 and every other row at 1e-10. Every made-up truth with drag is at 1e-13, since each is one flight from a known state.';
 const fitTextOf = (fit, withXp) => (fit === 'arc72' ? ARC72_TEXT : `${FITS[fit].text} ${withXp ? xpTextOf(fit) : NO_XP_TEXT}`);
 /** What the slot holds: AP's headline record, or one rung's record (a rung-xp slot holds SGP4-XP's record). */
@@ -122,8 +141,10 @@ export async function report(ctx, args) {
     return { id: c.id, kind: c.kind, name: c.name ?? null, label: labelOf(c), band: barBandOf(c), regime: regimeOf(c), am: c.am, elements: r?.elements ?? { n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma, hpKm: c.hpKm, haKm: c.haKm, cutoff: c.cutoff },
       truth: r?.truth ?? null, flown: !!r, error: r?.error ?? null, status: st.status, reason: st.reason ?? null, spanH: st.spanH ?? (ap?.maxDistance?.spanH ?? null), ap, xp,
       D, fullD: full ? D : null, within: st.status === 'within', xpD: X, xpWithin: IN_N.has(st.status) && xpFull ? X <= PASS_M && !scanFails(xp) : false,
-      xpOverAp: full && D && X && xpFull ? Math.round((X / D) * 100) / 100 : null, costUsPerState: r?.costUsPerState ?? null };
+      xpOverAp: full && D && X && xpFull ? Math.round((X / D) * 100) / 100 : null, costUsPerState: r?.costUsPerState ?? null, truthConvergence: convergenceOf(r?.truth, c.id) };
   });
+  // the cases whose drag truth is not converged to a tenth of the bar (CONVERGENCE), marked beside their rows wherever they appear
+  const unconverged = items.filter((x) => x.truthConvergence?.notConverged).map((x) => ({ id: x.id, label: x.label, band: x.band, status: x.status, apDM: x.D, xpDM: x.xpD, ...x.truthConvergence }));
   const count = (xs, s) => xs.filter((x) => x.status === s).length;
   const bandRow = (xs) => {
     const inN = xs.filter((x) => IN_N.has(x.status)), full = inN.filter((x) => x.fullD != null), xpFull = inN.filter((x) => x.xp?.maxDistance && x.xp.maxDistance.spanH >= BAR_H);
@@ -161,7 +182,7 @@ export async function report(ctx, args) {
     perigeeScan, scanSettings: perigeeScan ? SCAN : null, scanDigest, scanMinE, ...(perigeeScan ? { scanCounts } : {}), rowsOfOtherScanDefinitions: perigeeScan ? { count: ofBuild.length - kept.length, definitions: otherDefinitions } : null,
     slot: slotOf(rung), seed, gridStep, statistic: statisticOf(fit, truthStartH, rung, withXp, perigeeScan, scanDigest, scanMinE), truthSettings: TRUTH, areaToMass: Object.fromEntries(Object.entries(AM).map(([k, v]) => [k, { areaOverMassM2Kg: v, dragTerm: 2.2 * v, radiationTerm: 1.2 * v }])),
     grid: GRID, inclinationBands: BANDS, cost: { orbitsFlown: wall.length, wallSecondsSum: Math.round(wall.reduce((s, x) => s + x, 0)), medianWallS: median(wall) },
-    bands, failing, short, without, ...(perigeeScan ? { scans } : {}), cases: items, notCovered: notCoveredOf(all),
+    bands, failing, short, without, ...(perigeeScan ? { scans } : {}), truthNotConverged: { underKm: CONVERGENCE.underKm, text: CONVERGENCE.text, cases: unconverged }, cases: items, notCovered: notCoveredOf(all),
   };
   fs.mkdirSync(out, { recursive: true });
   const base = path.join(out, `synthetic-${version}-seed${seed}-${mode}-fit-${fit}-ts${truthStartH}${rung ? `-rung-${rung}` : ''}${withXp ? '-xp' : ''}${perigeeScan ? '-pscan' : ''}${guard ? '-guard' : ''}`);
@@ -170,6 +191,7 @@ export async function report(ctx, args) {
   const all0 = bandRow(items);
   console.error(`report: ${base}.json and .md; ${all0.within} of ${all0.n} with a truth within 100 m (${all0.over} over${perigeeScan ? `, ${all0.scanOver} over in the perigee scan, ${all0.scanNotRun} whose perigee scan could not run` : ''}, ${all0.short} short of 120 h, ${all0.refused} refused, ${all0.flightFailed} flight failed, ${all0.failed} other); ${all0.decayed} decayed by the cutoff, ${all0.noTruth} without a truth, ${all0.notFlown} not flown${perigeeScan && ofBuild.length > kept.length ? `; ${ofBuild.length - kept.length} rows of another scan definition not read` : ''}`);
   if (perigeeScan) for (const t of ['ap', 'xp']) { const k = scanCounts[t]; if (k.scanned) console.error(`  ${t === 'ap' ? 'AP' : 'SGP4-XP'}'s perigee scan, every scanned case: ${k.scanned} scanned; read over 100 m ${k.readOver.length}${k.readOver.length ? ` (${k.readOver.map((y) => y.id).join(' ')})` : ''}; could not run ${k.notRun.length}${k.notRun.length ? ` (${k.notRun.map((y) => `${y.id}: ${y.reason.slice(0, 80)}`).join('; ')})` : ''}; clipped at the cutoff ${k.clipped}; no passage ${k.noPassage}`); }
+  if (unconverged.length) console.error(`  truth not converged to a tenth of the bar (under ${CONVERGENCE.underKm} km over 0 to 120 h): ${unconverged.map((x) => `${x.id} (${x.lowestKm} km${x.step12to13M != null ? `, ${x.step12to13M} m from 1e-12 to 1e-13` : ''})`).join('; ')}`);
   for (const [b, x] of Object.entries(bands)) console.error(`  ${b}: ${x.within} of ${x.n} within 100 m; median D ${fmt(x.medianDM)}, worst ${fmt(x.worstDM)} over ${x.scored} scored`);
   process.exit(0);
 }
@@ -187,6 +209,8 @@ function notCoveredOf(all) {
 
 function page(doc, items) {
   const L = [], S = doc.slot, poss = S.short === 'AP' ? 'AP\'s' : `${S.short}:`;
+  // the cases whose drag truth is not converged to a tenth of the bar, marked beside their rows (CONVERGENCE)
+  const nc = new Map(doc.truthNotConverged.cases.map((x) => [x.id, x])), ncMark = (id) => (nc.has(id) ? ' (truth not converged)' : '');
   L.push(`# Synthetic orbits: sdn-ap ${doc.module.version} against the numerical propagator, ${doc.mode}, fit ${doc.fit}${doc.rung ? `, rung ${doc.rung}` : ''}${doc.withXp ? ', SGP4-XP beside AP' : ''}, truth from ${doc.truthStartH} h before the cutoff${doc.perigeeScan ? `, with the perigee scan (definition ${doc.scanDigest})` : ''}${doc.guard ? ' (guard set)' : ''}`, '');
   L.push(`Modules ${doc.module.modulesCommit.slice(0, 12)} (wasm ${doc.module.wasmSha256.slice(0, 12)}), seed ${doc.seed}, grid step ${doc.gridStep}, fit way ${doc.fit}, truth start ${doc.truthStartH} h before the cutoff; ${doc.cost.orbitsFlown} orbits with a row, ${Math.round((doc.cost.wallSecondsSum / 3600) * 10) / 10} worker-hours. ${doc.modeText}`, '');
   L.push(`Command: \`${doc.harness.command}\``, '');
@@ -222,7 +246,7 @@ function page(doc, items) {
     if (doc.xpFlown) table(`## Inclination ${lo} to ${Math.round(hi)} deg: SGP4-XP's D over the D of ${S.name}, the median over the orbits both scored (above 1: ${S.short} is closer)`, inBand, (ys) => { const v = median(ys.map((x) => x.xpOverAp)); return v == null ? '-' : String(v); });
   }
   L.push('## Above 100 m over the whole 0 to 120 h, worst first', '', `| Orbit | Band | Perigee | e | i | A/m | ${S.short} D | At hour | First above 100 m | SGP4-XP D | ${S.short} fit RMS |`, '|---|---|---|---|---|---|---|---|---|---|---|');
-  for (const f of doc.failing.slice(0, 60)) L.push(`| ${f.label} | ${f.band} | ${f.hpKm.toLocaleString('en-US')} km | ${f.e} | ${f.i} | ${f.am} | ${fmt(f.apDM)} | ${f.apAtH} | ${f.apFirstOver100mH ?? '-'} | ${fmt(f.xpDM)} | ${fmt(f.apFitRmsM)} |`);
+  for (const f of doc.failing.slice(0, 60)) L.push(`| ${f.label}${ncMark(f.id)} | ${f.band} | ${f.hpKm.toLocaleString('en-US')} km | ${f.e} | ${f.i} | ${f.am} | ${fmt(f.apDM)} | ${f.apAtH} | ${f.apFirstOver100mH ?? '-'} | ${fmt(f.xpDM)} | ${fmt(f.apFitRmsM)} |`);
   if (doc.failing.length > 60) L.push('', `${doc.failing.length - 60} more in the result file.`);
   if (doc.perigeeScan) {
     // every scanned case where a scan reads a state more than 100 m off, could not run, or had no passage in the span: both theories' figures
@@ -233,23 +257,27 @@ function page(doc, items) {
     L.push('', `## The perigee scan: ${doc.scans.length} cases scanned, ${shown.length} with a state more than 100 m off, a scan that could not run or no passage in the span`, '',
       `Over every scanned case, whatever its status on the grid: ${S.short}'s scan ${kl('ap')}${k.xp.scanned ? `; SGP4-XP's ${kl('xp')}` : ''}. A reading over 100 m and a scan that could not run are never counted together.`, '',
       `| Orbit | Band | ${S.short} D (300 s grid) | ${S.short}: largest distance off the record's own curve (not a distance to the truth) | SGP4-XP D (300 s grid) | SGP4-XP: largest distance off the record's own curve (not a distance to the truth) |`, '|---|---|---|---|---|---|');
-    for (const s of shown.slice(0, 80)) L.push(`| ${s.label} | ${s.band} | ${fmt(s.apDM)} | ${sf(s.ap)} | ${fmt(s.xpDM)} | ${sf(s.xp)} |`);
+    for (const s of shown.slice(0, 80)) L.push(`| ${s.label}${ncMark(s.id)} | ${s.band} | ${fmt(s.apDM)} | ${sf(s.ap)} | ${fmt(s.xpDM)} | ${sf(s.xp)} |`);
     if (shown.length > 80) L.push('', `${shown.length - 80} more in the result file.`);
     if (!shown.length) L.push('| none | | | | | |');
   }
   L.push('', '## Truth shorter than 120 h (never within; D over the span the truth reaches)', '', `| Orbit | Band | Span (h) | Why | ${S.short} D over the span |`, '|---|---|---:|---|---|');
-  for (const s of doc.short) L.push(`| ${s.label} | ${s.band} | ${s.spanH} | ${s.reason} | ${fmt(s.apDM)} |`);
+  for (const s of doc.short) L.push(`| ${s.label}${ncMark(s.id)} | ${s.band} | ${s.spanH} | ${s.reason} | ${fmt(s.apDM)} |`);
   if (!doc.short.length) L.push('| none | | | | |');
   L.push('', '## Refused, failed, decayed by the cutoff, without a truth or not flown', '', '| Orbit | Band | What became of it |', '|---|---|---|');
-  for (const w of doc.without) L.push(`| ${w.label} | ${w.band} | ${w.reason} |`);
+  for (const w of doc.without) L.push(`| ${w.label}${ncMark(w.id)} | ${w.band} | ${w.reason} |`);
   if (!doc.without.length) L.push('| none | | |');
   L.push('', '## The named edge cases', '', `| Case | ${S.short} D | First above 100 m | ${S.short} day 1 / 3 / 5 / 7 | ${doc.xpFlown ? 'SGP4-XP D | ' : ''}Within |`, `|---|---|---|---|${doc.xpFlown ? '---|' : ''}---|`);
   for (const x of items.filter((y) => y.kind === 'edge')) {
     const days = x.ap?.days ? ['1', '3', '5', '7'].map((d) => fmt(x.ap.days[d])).join(' / ') : x.reason ?? '-';
     const within = x.status === 'within' ? 'yes' : x.status === 'over' ? 'no' : x.status === 'short' ? `no (truth to ${x.spanH} h)`
       : x.status === 'scan' ? `no (perigee scan: ${fmt(x.ap.perigeeScan.largestM)} off the record's own curve at ${x.ap.perigeeScan.atH} h)` : x.status === 'scan-not-run' ? 'no (the perigee scan could not run)' : IN_N.has(x.status) ? 'no' : '-';
-    L.push(`| ${x.label} | ${fmt(x.D)}${x.status === 'short' && x.D != null ? ` (to ${x.spanH} h)` : ''} | ${x.ap?.maxDistance?.firstOver100mH ?? '-'} | ${days} | ${doc.xpFlown ? `${fmt(x.xpD)} | ` : ''}${within} |`);
+    L.push(`| ${x.label}${ncMark(x.id)} | ${fmt(x.D)}${x.status === 'short' && x.D != null ? ` (to ${x.spanH} h)` : ''} | ${x.ap?.maxDistance?.firstOver100mH ?? '-'} | ${days} | ${doc.xpFlown ? `${fmt(x.xpD)} | ` : ''}${within} |`);
   }
+  L.push('', `## Truth not converged to a tenth of the bar (lowest altitude under ${doc.truthNotConverged.underKm} km over 0 to 120 h)`, '', doc.truthNotConverged.text, '',
+    `| Orbit | Band | Status | Lowest altitude | Its truth moved, 1e-12 to 1e-13 | ${S.short} D | SGP4-XP D |`, '|---|---|---|---|---|---|---|');
+  for (const x of doc.truthNotConverged.cases) L.push(`| ${x.label} | ${x.band} | ${x.status} | ${x.lowestKm} km${x.over === 'flight' ? ' (over the whole flight: the row predates the span\'s figure)' : ''} | ${x.step12to13M != null ? `${x.step12to13M} m` : 'not measured'} | ${fmt(x.apDM)} | ${fmt(x.xpDM)} |`);
+  if (!doc.truthNotConverged.cases.length) L.push('| none | | | | | | |');
   L.push('', '## Not covered', '', ...doc.notCovered.map((x) => `- ${x}`), '');
   return L.join('\n');
 }

@@ -380,6 +380,9 @@ async function worker() {
       const costEpochs = Array.from({ length: COST_STATES }, (_, k) => iso(D0 + (k + 1) * STEP));
       // the bar's span: the cutoff and every truth state to 120 h after it (as far as the truth reaches)
       const span = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 && t <= D0 + BAR_H * HOUR && (low < 0 || t < Date.parse(lines[low].epoch)); });
+      // the truth's lowest altitude over the bar's span (its lowest perigee there): a drag truth whose perigee falls under 150 km is not
+      // converged to a tenth of the bar at 1e-13 (report.mjs CONVERGENCE, stack #520)
+      if (span.length) row.truth.minAltitudeSpanKm = r1(span.reduce((m, l) => Math.min(m, Math.hypot(...l.r) - RE), Infinity));
       // past the bar: the same distance over 120 h to 7 days (a record used past its 5 days; reported, not a criterion)
       const late = lines.filter((l) => { const t = Date.parse(l.epoch); return t > D0 + BAR_H * HOUR && t <= D0 + LEAD_DAYS * DAY && (low < 0 || t < Date.parse(lines[low].epoch)); });
       // AP (drag on NRLMSISE-00 and the weather where the truth has them; where it has no drag, AP_VACUUM_TIDES: its own Jacchia 1970
