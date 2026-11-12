@@ -136,9 +136,12 @@ export function statusOf(r) {
   if (ap.error) return /^fit\b/.test(ap.error) ? { status: 'refused', reason: `AP's fit refused: ${ap.error}` } : { status: 'flight-failed', reason: `AP's fit or flight failed: ${ap.error}` };
   const md = ap.maxDistance;
   if (md.spanH < BAR_H) { const s = shortSpan(); return { status: 'short', spanH: md.spanH, reason: s?.why ?? `the truth ends at ${md.spanH} h` }; }
+  // within on the 300 s grid, but the perigee scan (run.mjs --perigee-scan) failed, or finds a state more than 100 m off its curve
+  if (md.maxM <= PASS_M && ap.perigeeScan?.error) return { status: 'scan-failed', reason: `within on the 300 s grid (D ${md.maxM} m); the perigee scan failed: ${ap.perigeeScan.error}` };
+  if (md.maxM <= PASS_M && ap.perigeeScan?.fails) return { status: 'scan', reason: `within on the 300 s grid (D ${md.maxM} m); the perigee scan finds a state ${ap.perigeeScan.largestM} m off the record's own curve at ${ap.perigeeScan.atH} h` };
   return { status: md.maxM <= PASS_M ? 'within' : 'over' };
 }
-const IN_N = new Set(['within', 'over', 'short', 'refused', 'flight-failed', 'failed']);
+const IN_N = new Set(['within', 'over', 'scan', 'scan-failed', 'short', 'refused', 'flight-failed', 'failed']);
 // FFM's reentry refusal: the trajectory descends below 100 km
 const REENTRY = /descends below 100 km/;
 
@@ -187,7 +190,9 @@ if (!isMain) { /* imported */ } else if (args['check-bound']) {
   const draws = d.bands.map((b) => ({ b, cases: draw(d.seed, b, d.perBand) }));
   const t = table(draws, rows);
   const { FITS, ARC72_TEXT } = await import('./fits.mjs');
-  const way = d.fit === 'arc72' ? { text: ARC72_TEXT, after: false } : FITS[d.fit];
+  const { NO_XP_TEXT } = await import('./fits.mjs');
+  // the claim set flies AP alone on a way other than arc72
+  const way = d.fit === 'arc72' ? { text: ARC72_TEXT, after: false } : { ...FITS[d.fit], text: `${FITS[d.fit].text} ${NO_XP_TEXT}` };
   const command = `node experiments/synthetic-orbits/claim.mjs --modules-commit ${d.modulesCommit} --modules-root <modules clone> --seed ${d.seed} --per-band ${d.perBand} --fit ${d.fit}${d.bands.length < BOXES.length ? ` --bands ${d.bands.join(',')}` : ''}`;
   const harness = [...new Set(rows.map((r) => r.harness).filter(Boolean))];
   const doc = { seed: d.seed, perBand: d.perBand, fit: d.fit, fitText: way.text, fitAfterCutoff: way.after, truthStartH: d.truthStartH, version: d.version, modulesCommit: d.modulesCommit, wasmSha256: d.wasmSha256,
