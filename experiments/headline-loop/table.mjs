@@ -615,8 +615,9 @@ async function main() {
   // the sentence where the field is the same), so a count that moved with the arm is not read as the build's doing either
   const field = (c) => String(c ?? '').split(';')[0].replace(/^Earth gravity to /, '');
   const tolerance = (c) => /at a tolerance of ([^ ]+)/.exec(String(c ?? ''))?.[1] ?? null;
-  // the setting a configuration sentence names: the sentence without its spread note and issue references, which are wording, not setting
-  const settingOf = (c) => (c == null ? null : String(c).replace(/ Two flights of this same fit [^.]*\./g, '').replace(/;? ?\(?stack issue \d+\)?/g, '').trim());
+  // the setting a configuration sentence names: the sentence without its spread note (the end of the sentence) and issue references, which
+  // are wording, not setting
+  const settingOf = (c) => (c == null ? null : String(c).replace(/ Two flights of this same fit .*$/, '').replace(/;? ?\(?stack issue \d+\)?/g, '').trim());
   const armChanged = previous ? rows.map((r) => ({ r, p: previous.rows.find((x) => x.regime === r.regime && x.fitHours === r.fitHours) })).filter(({ r, p }) => p && settingOf(p.ffm?.configuration) !== settingOf(r.ffm?.configuration)) : [];
   const armText = armChanged.length
     ? ` These rows are scored against a different numerical setting than in that table: ${armChanged.map(({ r, p }) => `${r.regime} (${r.fitHours} h fit), ${field(p.ffm?.configuration) !== field(r.ffm?.configuration) ? `${field(p.ffm?.configuration) || 'none'} to ${field(r.ffm?.configuration) || 'none'}` : tolerance(p.ffm?.configuration) !== tolerance(r.ffm?.configuration) ? `the same setting fitted and flown at a tolerance of ${tolerance(r.ffm?.configuration) ?? 'none stated'}, where that table's was ${tolerance(p.ffm?.configuration) ?? 'not stated'}` : 'its configuration sentence changed'}`).join('; ')}.`
