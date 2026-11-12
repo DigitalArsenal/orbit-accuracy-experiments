@@ -127,12 +127,17 @@ export const maneuver72 = (version) => atLeast(version, MANEUVER72_SINCE);
 // MANEUVER72.capHours); a firing less than that before the cutoff stays inside the arc (burnInArc), never dropped. Every other row keeps
 // MANEUVER72.minHours. On the rows of SEAMS_BREAK_ARC, whose truth is weekly solutions joined inside the windows (Chandra), a join known
 // before the cutoff (the lists' seams) moves the arc as a firing does; elsewhere a join is flagged only. A list is read from the folder of
-// listsGroup(group) (the 72 h TESS row reads TESS's list).
+// listsGroup(group) (the 72 h TESS row reads TESS's list). Their fits longer than 72 h (336 h, 168 h) take the same rule over their own
+// arc (maneuverArc with the arc): a firing (on Chandra, a join) known at the cutoff that ends inside the arc starts it, at least
+// LONG_PERIOD.minHours, uncapped; so a row's hours are the longest arc allowed, not the arc used.
 export const LONG_PERIOD = { groups: ['HE72', 'HE', 'HX'], minHours: 9 };
 /** The perigee scan of the long-period rows' AP records: the span after the cutoff it searches for perigee passages (hours), the grid it
  *  finds them on (s), and the half-width flown at 1 s around each passage (s). */
 export const PERIGEE_SCAN = { hours: 120, gridS: 60, halfS: 120 };
 export const minHoursOf = (group) => (LONG_PERIOD.groups.includes(group) ? LONG_PERIOD.minHours : MANEUVER72.minHours);
+/** Whether a fit's arc is set by the burn lists: every row's 72 h fit, and every fit longer than 72 h of the long-period rows (the 336 h TESS
+ *  row, the 168 h THEMIS and Chandra row), on AP and on the numerical arm alike. */
+export const arcRuleApplies = (group, arcH) => arcH === 72 || (LONG_PERIOD.groups.includes(group) && arcH > 72);
 export const SEAMS_BREAK_ARC = ['HX'];
 /** Of two stored rows for one window and fit arc, whether the later (r) takes the earlier's place: a row that flew over one that recorded an
  *  error, and on a one-file row (windows.mjs oneFile) a row that names its reference file (truthFile) over one that names none. */
@@ -172,14 +177,16 @@ export const knownSeams = (dir, group, name, D0) => knownBurns(dir, group, name,
 export const arcBreaks = (dir, group, name, D0) => [...knownBurns(dir, group, name, D0), ...(SEAMS_BREAK_ARC.includes(group) ? knownSeams(dir, group, name, D0) : [])];
 /** A known burn's end (ms): endMs (knownBurns), else its extent's end. */
 export const burnEndMs = (b) => b.endMs ?? Date.parse(b.extentTo ?? b.to);
-/** A 72 h fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason.
+/** A fit's arc start (ms): the full arc, or for a maneuvering object (above) the arc after its last known burn; with the rule's reason. A
+ *  72 h fit (arcH, 72 unless given) reads the burns ending in the MANEUVER72.historyDays before the cutoff, its arc after one capped at
+ *  MANEUVER72.capHours; a longer fit (the long-period rows' 168 h and 336 h) reads those ending inside its own arc, uncapped.
  *  floorKm: the perigee floor (MANEUVER72.perigeeMinKm unless given; the numerical arm passes NUMERICAL_AFTER_BURN.perigeeMinKm, the same). */
-export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMinKm, minHours = MANEUVER72.minHours) => {
-  const H = 3600000, full = { startMs: D0 - 72 * H, maneuvering: false };
+export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMinKm, minHours = MANEUVER72.minHours, arcH = 72) => {
+  const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false }, long = arcH > 72;
   if (!(perigeeKm >= floorKm)) return full;
-  const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t >= D0 - MANEUVER72.historyDays * 24 * H);
+  const ends = burns.map(burnEndMs).filter((t) => t <= D0 && (long ? t > D0 - arcH * H : t >= D0 - MANEUVER72.historyDays * 24 * H));
   if (!ends.length) return full;
-  const last = Math.max(...ends), startMs = Math.min(D0 - minHours * H, Math.max(D0 - MANEUVER72.capHours * H, last + MANEUVER72.afterBurnMin * 60000));
+  const last = Math.max(...ends), capH = long ? arcH : MANEUVER72.capHours, startMs = Math.min(D0 - minHours * H, Math.max(D0 - capH * H, last + MANEUVER72.afterBurnMin * 60000));
   // burnInArc: the last burn ends after the arc's start (it ended less than the minimum arc before the cutoff), so the arc holds it; the
   // numerical arm's rows (refly.mjs --after-burns) say the same of their arc
   return { startMs, maneuvering: true, lastBurnMs: last, burnInArc: last > startMs };
@@ -209,7 +216,8 @@ export function listsDigest(dir) {
 /** The numerical arm's fit arc for a fit of arcH hours: { startMs, maneuvering, lastBurnMs?, shortAfterBurn? }. */
 export const numericalArc = (burns, D0, perigeeKm, arcH, minHours = MANEUVER72.minHours) => {
   const H = 3600000, full = { startMs: D0 - arcH * H, maneuvering: false };
-  if (arcH === 72) return maneuverArc(burns, D0, perigeeKm, NUMERICAL_AFTER_BURN.perigeeMinKm, minHours);
+  // a 72 h fit, and a longer one (only the long-period rows have them: arcRuleApplies), by AP's rule over its own arc
+  if (arcH >= 72) return maneuverArc(burns, D0, perigeeKm, NUMERICAL_AFTER_BURN.perigeeMinKm, minHours, arcH);
   if (arcH !== 24 || !(perigeeKm >= NUMERICAL_AFTER_BURN.perigeeMinKm)) return full;
   const ends = burns.map(burnEndMs).filter((t) => t <= D0 && t > D0 - arcH * H);
   if (!ends.length) return full;
