@@ -794,7 +794,7 @@ async function check() {
   fs.writeFileSync(path.join(fdir, 'flags-GD.json'), JSON.stringify({ windows: gdKeys.map((key) => madeUp(key, 72, kindOf(key))) }));
   const r5 = runIn(s1, out5, ['--burn-flags', fdir]);
   const e = fs.existsSync(out5) ? E.readJson(out5) : {}, er = e.rows?.[0];
-  ok(r5.code === 0 && /, 0 to fly/.test(r5.err) && e.harness?.command === doc.harness?.command && !JSON.stringify(e).includes(fdir), `the run with flags: ${r5.err.slice(-200)} ${e.harness?.command}`);
+  ok(r5.code === 0 && /, 0 to fly/.test(r5.err) && e.harness?.command === `${doc.harness?.command} --burn-flags flags` && !JSON.stringify(e).includes(fdir), `the run with flags: ${r5.err.slice(-200)} ${e.harness?.command}`);
   const plain = Object.keys(row ?? {}).filter((k) => k !== 'within100mEitherWay');
   ok(er && JSON.stringify(Object.keys(er)) === JSON.stringify([...plain, 'burnSplit', 'within100mEitherWay', 'within100mEitherWayBurnSplit']) && Object.keys(row ?? {}).every((k) => JSON.stringify(er[k]) === JSON.stringify(row[k])), 'with flags the row is the same row and burnSplit and the two-sided split, no window moved');
   // the two-sided split: the same four parts, within 100 m either way, adding up to within100mEitherWay
@@ -852,7 +852,7 @@ async function check() {
   for (const n of sats) fs.writeFileSync(path.join(bdir, 'GD', `${n.replace(/[^A-Za-z0-9]+/g, '_')}.burns.json`), JSON.stringify({ asOf: '2026-11-11', lengthH: 6, burns: plan[n] ?? [] }));
   const r7 = runIn(s1, out7, ['--burns', bdir]);
   const g7 = fs.existsSync(out7) ? E.readJson(out7) : {}, gr = g7.rows?.[0];
-  ok(r7.code === 0 && /, 0 to fly/.test(r7.err) && g7.harness?.command === doc.harness?.command && !JSON.stringify(g7).includes(bdir) && /cleanToLead/.test(g7.statistic ?? ''), `the run with burn lists: ${r7.err.slice(-200)}`);
+  ok(r7.code === 0 && /, 0 to fly/.test(r7.err) && g7.harness?.command === `${doc.harness?.command} --burns burns-7` && !JSON.stringify(g7).includes(bdir) && /cleanToLead/.test(g7.statistic ?? ''), `the run with burn lists: ${r7.err.slice(-200)}`);
   ok(gr && JSON.stringify(Object.keys(gr)) === JSON.stringify([...Object.keys(row ?? {}), 'laterBurns']) && Object.keys(row ?? {}).filter((k) => k !== 'leads').every((k) => JSON.stringify(gr[k]) === JSON.stringify(row[k])), `with burn lists the row is the same row and laterBurns: ${JSON.stringify(Object.keys(gr ?? {}))}`);
   const strip = (l) => JSON.parse(JSON.stringify(l, (k, v) => (k === 'cleanToLead' ? undefined : v)));
   ok(gr && JSON.stringify(gr.leads.map(strip)) === JSON.stringify(row?.leads), 'with burn lists every lead keeps its figures over all windows');
