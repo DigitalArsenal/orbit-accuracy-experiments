@@ -223,7 +223,8 @@ async function main() {
   const toleranceOf = (c) => /at a tolerance of ([^ ]+)/.exec(String(c ?? ''))?.[1] ?? null;
   if (board) {
     // the scoreboard's burn lists and refit folder (its method line, with --burns) against this run's: both the same, or both none
-    const named = /read from the store folder ([^ ,]+)/.exec(board.statistic ?? '')?.[1] ?? null, digest = /The burn lists read \(--burns\)[^:]*: ([0-9a-f]{12})\)/.exec(board.statistic ?? '')?.[1] ?? null;
+    const named = board.burnLists ? board.burnLists.afterBurnStore : /read from the store folder ([^ ,]+)/.exec(board.statistic ?? '')?.[1] ?? null;
+    const digest = board.burnLists ? board.burnLists.digest : /The burn lists read \(--burns\)[^:]*: ([0-9a-f]{12})\)/.exec(board.statistic ?? '')?.[1] ?? null;
     if ((digest ?? null) !== (lists?.digest ?? null)) throw new Error(`the scoreboard read the burn lists ${digest ?? 'none'}, this run ${lists?.digest ?? 'none'} (--burns)`);
     if ((named ?? null) !== (lists && afterBurnGroups.size ? abStore : null)) throw new Error(`the scoreboard read the refits after a burn from ${named ?? 'no folder'}, this run from ${lists && afterBurnGroups.size ? abStore : 'no folder'}`);
     for (const [k, label] of rowArm) {
@@ -326,7 +327,7 @@ async function main() {
     const parts = G.regimes.filter((g) => groups.includes(g)).map((g) => ({ g, a: pooledArc(g) })).filter((p) => p.a != null);
     const pooled = parts.flatMap((p) => byGroup.get(`${p.g}|${p.a}`)), c = cells(pooled);
     const tol = (p) => rowTolerance.get(`${p.g}|${p.a}`) ?? null, tols = [...new Set(parts.map(tol).filter((x) => x != null))];
-    return { key: G.key, name: G.name, regimes: G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label),
+    return { key: G.key, name: G.name, regimes: [...new Set(G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label))],
       rows: parts.map((p) => ({ regime: W.GROUPS[p.g].label, fitHours: p.a, numericalTolerance: tol(p) })), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5,
       ...(G.heights ? { heightsKm: heightsOf(pooled) } : {}),
       ...(tols.length > 1 ? { toleranceNote: `pools rows whose numerical arms are fitted and flown at different tolerances (${parts.map((p) => `${W.GROUPS[p.g].label} ${p.a} h ${tol(p) ? `at ${tol(p)}` : 'without a numerical arm'}`).join(', ')})` } : {}) };
