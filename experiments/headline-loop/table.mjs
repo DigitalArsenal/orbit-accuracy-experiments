@@ -66,7 +66,7 @@ const EITHER_WAY_TEXT = ' within100mEitherWay counts, at the 120 hour lead on th
 const STATISTIC = [
   'For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth\'s 300 s grid (a day counts when the truth covers 90 % of it). The median and the 95th percentile (linear interpolation) of each column are taken over the lead\'s windows where that column has a figure: a lead\'s windows are those where AP was scored, AP\'s column is over all of them, the numerical propagator\'s over those of them where it was scored too (with its own windows where the two differ), and each other theory\'s as stated below.',
   'xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module\'s own GCRF output. xpUssf is the Space Force\'s SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module\'s own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is null until it has a row on every window of the row; a window where its fit or flight failed counts as flown. Its median and 95th percentile are taken over the lead\'s windows where it was scored (windows); failed counts the lead\'s windows where its fit or flight failed, so a figure with failed above 0 is over the scored windows alone (a file without windows and failed does not state them, and its readers must not take failed as 0). apBeatsXp and apBeatsXpUssf count the lead\'s windows where that XP was scored (windows), the ones where AP\'s error is below that XP\'s (apBetter), and give the median over them of AP\'s error divided by that XP\'s (medianApOverXp); a window where that XP failed is left out of the pair count, never counted as AP closer.',
-  'From sdn-ap 0.6.15 the two medium Earth orbit rows of navigation satellites (GN and Galileo), and from sdn-ap 0.6.19 the geostationary, inclined geosynchronous and commercial geostationary rows (the commercial row with the vacuum $PCF), fit AP with $PCF FORCES.ECOM2 on fits of 72 h or more, which also solves the ECOM2 Y0 radiation term (SDN-AP SPEC 16.13); a 24 h fit of those rows carries the terms of its 72 h fit, Y0 among them where the 72 h record states one; every other row, and every row of an older build, fits AP with the same $PCF as before. From sdn-ap 0.6.20 every row\'s AP fit also states the solid Earth tide ($PCF FORCES.SOLID_TIDES IERS 2010), which that build flies only where it is stated. apForces states each row\'s forces and fitted terms.',
+  'From sdn-ap 0.6.15 the two medium Earth orbit rows of navigation satellites (GN and Galileo), and from sdn-ap 0.6.19 the geostationary, inclined geosynchronous and commercial geostationary rows (the commercial row with the vacuum $PCF), fit AP with $PCF FORCES.ECOM2 on fits of 72 h or more, which also solves the ECOM2 Y0 radiation term (SDN-AP SPEC 16.13); from sdn-ap 0.6.26 a 24 h fit of those rows carries the terms of its 72 h fit where that record\'s regime is above the drag, Y0 among them where the record states one; every other row, and every row of an older build, fits AP with the same $PCF as before. From sdn-ap 0.6.20 every row\'s AP fit also states the solid Earth tide ($PCF FORCES.SOLID_TIDES IERS 2010), which that build flies only where it is stated. apForces states each row\'s forces and fitted terms.',
   'within100mOfFfm counts, at the 120 hour lead and over the windows where AP and the numerical propagator both have a figure, the windows where AP\'s error is less than 100 m above the numerical propagator\'s (AP better than it counts as met); share is met over windows. apFfmRank is Spearman\'s rank correlation (average ranks for ties) of AP\'s and the numerical propagator\'s errors over the lead\'s windows where both have a figure (null without a numerical propagator or under 10 such windows); near 1, the two order the windows alike, as when both are limited by the same density forecast.',
 ].join(' ');
 // linear interpolation between order statistics (R type 7)
@@ -334,6 +334,14 @@ async function main() {
   // before it did) is taken as above the floor, so where only its perigee could tell it is flown again: a row is flown again where the arc
   // moves or cannot be told from the row.
   const listNow = new Map(), staleList = (t, w, a) => {
+    // a 24 h fit carries its 72 h fit's terms and notes whether the object was maneuvering at the cutoff (the rule's, on the lists): a row whose
+    // note is not what today's lists give (a burn or a break test event added or withdrawn) is flown again
+    if (t === 'AP' && a === 24 && args.burns && A.maneuver72(version) && A.carry24(version)) {
+      const r = rowOf(t, w, a);
+      if (!r || r.error || r.fitProcess == null) return false;
+      const m = A.maneuverArc(A.arcBreaks(args.burns, w.group, w.name, w.cutoffMs), w.cutoffMs, r.perigeeKm ?? Infinity, undefined, A.minHoursOf(w.group));
+      return !!m.maneuvering !== /, maneuvering$/.test(r.fitProcess);
+    }
     if (t !== 'AP' || !A.arcRuleApplies(w.group, a) || !args.burns || !A.maneuver72(version)) return false;
     const s = `${w.group}|${w.name}`;
     if (!listNow.has(s)) listNow.set(s, A.listSha(args.burns, w.group, w.name));
@@ -489,7 +497,10 @@ async function main() {
       });
       const pass = label ? pairsAt(PASS_LEAD_DAY).filter((p) => p.f != null) : [];
       const met = pass.filter(passes).length;
-      const within100mOfFfm = label && pass.length ? { windows: pass.length, met, share: round3(met / pass.length) } : null;
+      // windows: those with a numerical forecast and AP's figure at the lead; rowWindows: all the row's windows (those AP scored), the others being
+      // the row's withoutNumericalFigure by cause. shareOfWindowsWithForecast (= share) is the propagator's measure: there is no forecast to be within
+      // 100 m of otherwise; shareOfAllWindows is what a user is served: met over every window of the row
+      const within100mOfFfm = label && pass.length ? { windows: pass.length, met, share: round3(met / pass.length), rowWindows: scored.length, shareOfWindowsWithForecast: round3(met / pass.length), shareOfAllWindows: scored.length ? round3(met / scored.length) : null } : null;
       const burnSplit = within100mOfFfm ? splitByBurns(flags, pass, arc) : null;
       // --burns: the row's later burns in words (laterBurns), and on the strong-drag rows its burn-free windows (burnFreeScatter), on the pass
       // line's windows at day 5 (stack issue 462)
@@ -563,7 +574,7 @@ async function main() {
       const noFit = ws.length - ffmRefit - ffmFull - ffmNone - apart;
       const ffmFitProcess = label && afterBurnGroups.has(g) && arc !== 24 && !A.arcRuleApplies(g, arc) ? `The numerical arm's ${arc} h fit is the stored full-arc fit on every window that has one: the rule moves the 24 h and 72 h fits only, and the long-period rows' longer ones. Of the row's ${ws.length} listed windows: ${ffmFull} on the full arc${noFit ? `, ${noFit} without a numerical fit (no truth or coverage)` : ''}.`
         : label && afterBurnGroups.has(g)
-        ? `The numerical arm's fit of an object${A.perigeeClause(A.NUMERICAL_AFTER_BURN.perigeeMinKm)} whose ${refWord} holds a burn${seamRow ? ' or join of the truth\'s solutions' : ''} known at the cutoff is on the arc after its last such burn${seamRow ? ' or join' : ''}${arc !== 24 ? `, by AP's rule (on every window with figures on both arms, AP's ${arc} h fit is on the same arc)` : ` where that burn ends inside the 24 h arc and the arc after it is at least ${A.NUMERICAL_AFTER_BURN.minHours24} h, while AP's 24 h fit is on the full 24 h, so on those windows the two arms are fitted on different arcs`}; every other window keeps its full-arc fit. Of the row's ${ws.length} listed windows: ${ffmRefit - ffmJoin} refitted on the arc after a burn${seamRow ? `, ${ffmJoin} on the arc after a join` : ''}, ${ffmFull} on the full arc${apartText}${ffmNone ? `, ${ffmNone} without a numerical arm: ${noneText}` : ''}${noFit ? `, ${noFit} without a numerical fit (no truth or coverage)` : ''}.`
+        ? `The numerical arm's fit of an object${A.perigeeClause(A.NUMERICAL_AFTER_BURN.perigeeMinKm)} whose ${refWord} holds a burn${seamRow ? ' or join of the truth\'s solutions' : ''} known at the cutoff is on the arc after its last such burn${seamRow ? ' or join' : ''}${arc !== 24 ? `, by AP's rule (on every window with figures on both arms, AP's ${arc} h fit is on the same arc)` : ` where that burn ends inside the 24 h arc and the arc after it is at least ${A.NUMERICAL_AFTER_BURN.minHours24} h, while AP's 24 h fit is on the full 24 h, so on those windows the two arms are fitted on different arcs`}; every other window is on the full arc (the stored fit, or, for an object weighed at its own sigma or on the row that takes the prior, that fit made again). Of the row's ${ws.length} listed windows: ${ffmRefit - ffmJoin} refitted on the arc after a burn${seamRow ? `, ${ffmJoin} on the arc after a join` : ''}, ${ffmFull} on the full arc${apartText}${ffmNone ? `, ${ffmNone} without a numerical arm: ${noneText}` : ''}${noFit ? `, ${noFit} without a numerical fit (no truth or coverage)` : ''}.`
         : label && apart ? `The numerical arm's fit is the stored full-arc fit; this row has no refits after a burn, so the ${apart} windows whose AP arc starts after a burn have no numerical figure (armsOnDifferentArcs).`
         : null;
       // --carry-from: on every row, per theory, the window-arcs whose row is the other build's (carried), those flown on this build (flown),
@@ -1216,11 +1227,15 @@ async function check() {
   // its 24 h fit names no ECOM2 and carries the 72 h fit's terms, Y0 among them (CARRY24_SINCE, below), as every ECOM2 row's does
   {
     const lists = fs.mkdtempSync(path.join(os.tmpdir(), 'lists-18-')), put = (rel, o) => { fs.mkdirSync(path.dirname(path.join(lists, rel)), { recursive: true }); fs.writeFileSync(path.join(lists, rel), JSON.stringify(o)); };
-    put('WA/Noisy.burns.json', { positionClosure: { medianM: 126.4 }, burns: [] });
-    put('WA/Quiet.burns.json', { positionClosure: { medianM: 3.1 }, burns: [] });
-    put('WA/Blank.burns.json', { burns: [] });
-    ok(A.objectSigmaM(lists, 'WA', 'Noisy') === 126.4 && A.objectSigmaM(lists, 'WA', 'Quiet') === 10 && A.objectSigmaM(lists, 'WA', 'Blank') === 10 && A.objectSigmaM(lists, 'WA', 'Absent') === 10 && A.objectSigmaM(null, 'WA', 'Noisy') === 10,
-      `the sigma by list: ${['Noisy', 'Quiet', 'Blank', 'Absent'].map((n) => A.objectSigmaM(lists, 'WA', n)).join(', ')}`);
+    // the per-piece closures a list carries (burn-detector/lib/detector.mjs closureFieldsOf writes them): 40 pieces ending 3 h apart from 2026-01-01
+    const T0 = Date.parse('2026-01-01T00:00:00Z'), pieces = (m) => Array.from({ length: 40 }, (_, k) => [new Date(T0 + (k + 1) * 3 * 3600e3).toISOString(), k < 20 ? m : 10 * m]);
+    put('WA/Noisy.burns.json', { flown: 40, pieceClosures: pieces(100) });
+    put('WA/Quiet.burns.json', { flown: 40, pieceClosures: pieces(3) });
+    put('WA/Blank.burns.json', { flown: 40, burns: [] });
+    const sg = (n, h) => A.objectSigmaM(lists, 'WA', n, T0 + h * 3600e3);
+    ok(sg('Noisy', 24) === 10 && sg('Noisy', 48) === 100 && sg('Noisy', 120) === 1000 && sg('Noisy', 50) === 100 && sg('Quiet', 120) === 10 && sg('Blank', 120) === 10 && sg('Absent', 120) === 10 && A.objectSigmaM(null, 'WA', 'Noisy', T0 + 120 * 3600e3) === 10,
+      `the sigma at a cutoff is the median of the pieces that end by it, the floor below ${A.SIGMA_MIN_PIECES} pieces or with none carried: ${[24, 48, 50, 120].map((h) => sg('Noisy', h)).join(', ')}; ${sg('Quiet', 120)}, ${sg('Blank', 120)}`);
+    ok(A.listsLackingClosure(lists).length === 1 && A.listsLackingClosure(lists)[0].group === 'WA', `a list whose pieces were flown and that carries no per-piece closures is named: ${A.listsLackingClosure(lists).length} of 3`);
     const { SETTINGS: ST, ECOM2_PRIOR_SIGMA: PR, FULL_SETTING: FS, CONFIGURED: CF } = await import('./lib/settings.mjs'), n = ST.E5G.apriori.length ** 0.5, sig = (s, i) => Math.sqrt(ST[s].apriori[i * n + i]);
     ok(['D0', 'Y0', 'B0', 'B1_COS', 'B1_SIN'].every((k, j) => Math.abs(sig('E5G', 6 + j) / PR[k] - 1) < 1e-12 && Math.abs(sig('E5GL', 6 + j) / PR[k] - 1) < 1e-12) && PR.D0 === 1e-6 && PR.Y0 === 6.78e-9 && PR.B0 === 4.25e-9 && PR.B1_COS === 3.59e-8 && PR.B1_SIN === 6.98e-9, 'the commercial row\'s five-term arms carry the prior of ECOM2_PRIOR_SIGMA');
     ok(['E5', 'E5F'].every((s) => [7, 8, 9, 10].every((i) => Math.abs(sig(s, i) / 1e-7 - 1) < 1e-12) && Math.abs(sig(s, 6) / 1e-6 - 1) < 1e-12) && FS.WA === 'E5G' && CF.WA === 'E5GL' && ['GN', 'GN_GAL', 'GE', 'IG'].every((g) => FS[g] === 'E5F' && CF[g] === 'E5'), 'the other five-term rows keep E5 and E5F, the terms free');
@@ -1231,9 +1246,6 @@ async function check() {
     ok(at(35).length === 0 && at(36).length === 1 && at(36)[0].open && A.burnEndMs(at(36)[0]) === H0 + 36 * 3600e3 && at(60).length === 1 && !at(60)[0].open && at(96).length === 1 && A.knownBurns(lists, 'WA', 'Quiet', H0 + 96 * 3600e3).length === 0,
       `a break test event is read from the arcs that end by the cutoff: ${[35, 36, 60, 96].map((h) => at(h).length).join(', ')} events at 35, 36, 60 and 96 h`);
     ok(A.listsDigest(lists) !== before && A.listSha(lists, 'WA', 'Noisy') !== shaBefore && A.listSha(lists, 'WA', 'Quiet') === shaQuiet, 'a breaks file moves the lists\' digest and its object\'s sha, no other object\'s');
-    const realLists = '/opt/data/sdn-archive/headline-loop/lists-9baa9131dcf8';
-    if (fs.existsSync(realLists)) ok(A.listsLackingClosure(realLists).every((x) => ['HE', 'HX'].includes(x.group)), `the lists of the store that lack a median piece closure are the long-period rows' only (made before the field was written): ${JSON.stringify(A.listsLackingClosure(realLists).map((x) => x.group))}`);
-    else console.log('TABLE CHECK: the lists of the store are not here: the closure of every list was not checked');
     const y0 = (g, v, a) => /ECOM2/.test(A.apPcfFor(g, v, true, a).label);
     ok(y0('WA', A.ECOM2_GEO_SINCE, 72) && !y0('WA', A.ECOM2_GEO_SINCE, 24) && !y0('WA', '0.6.18', 72) && !y0('HE', A.ECOM2_GEO_SINCE, 72) && A.apPcfFor('WA', '0.6.42', true, 72).label === 'AP_VACUUM_ECOM2_TIDES' && /ECOM2 Y0/.test(A.AP_FORCES_TEXT.AP_VACUUM_ECOM2_TIDES),
       `the commercial row's labels: ${A.apPcfFor('WA', '0.6.42', true, 72).label}, ${A.apPcfFor('WA', '0.6.42', true, 24).label}, ${A.apPcfFor('WA', '0.6.18', true, 72).label}`);

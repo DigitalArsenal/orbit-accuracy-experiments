@@ -49,14 +49,14 @@ export const PCF = {
 // The published rule (2026-11-10): for navigation satellites in medium Earth orbit AP also solves the ECOM2 Y0 term on fits of 72 h or
 // more. The gate is the group, the fit arc and the AP build's own version (its package.json at the commit flown, compared by its numeric
 // fields, so 0.6.15-rc.1 counts as 0.6.15): from ECOM2_SINCE, GN and GN_GAL fits of ECOM2_MIN_ARC hours or more use PCF.AP_ECOM2, and from
-// ECOM2_GEO_SINCE the geostationary (GE) and inclined geosynchronous (IG) fits of that length too; every other
-// fit, and every fit by an older build (which refuses FORCES.ECOM2 by name), uses the same $PCF bytes as before.
+// ECOM2_GEO_SINCE the geostationary (GE), inclined geosynchronous (IG) and commercial geostationary (WA, with the vacuum $PCF) fits of that
+// length too; every other fit, and every fit by an older build (which refuses FORCES.ECOM2 by name), uses the same $PCF bytes as before.
 export const ECOM2_SINCE = '0.6.15';
 // the one-day class's resonant tail (sdn-ap 0.6.19, stack #434), which also solves Y0 on these rows (SDN-AP SPEC 16.13)
 export const ECOM2_GEO_SINCE = '0.6.19';
 // The commercial geostationary row (WA) joins the geostationary and inclined geosynchronous rows: its numerical fits carry a Y0 of the same
-// kind (the five-term fits under the prior), so AP's record carries Y0 on fits of 72 h or more as theirs do; a 24 h fit carries the terms of its
-// 72 h fit, Y0 among them (table.mjs, CARRY24_SINCE).
+// kind (the five-term fits under the prior), so AP's record carries Y0 on fits of 72 h or more as theirs do. A 24 h fit names no ECOM2; from
+// CARRY24_SINCE it carries the terms of its 72 h fit where that record's regime is above the drag, Y0 among them where the record states one.
 export const ECOM2_RULES = [{ groups: ['GN', 'GN_GAL'], since: ECOM2_SINCE }, { groups: ['GE', 'IG', 'WA'], since: ECOM2_GEO_SINCE }];
 export const ECOM2_MIN_ARC = 72;
 // The solid Earth tide (IERS 2010): from TIDES_SINCE every AP fit states it, on every row (sdn-ap 0.6.20, stack #449)
@@ -218,22 +218,27 @@ export const breakEventsAsOf = (d, D0) => {
   return events;
 };
 const breakEvents = (dir, group, name, D0) => { const f = breaksFile(dir, group, name); return fs.existsSync(f) ? breakEventsAsOf(JSON.parse(fs.readFileSync(f, 'utf8')), D0) : []; };
-/** An object's sigma for a fit (m): max(OBSERVATION_SIGMA_FLOOR_M, the median piece closure of its burn list), the floor without a list or
- *  where the list records no median (the long-period rows' lists). The median is the list's positionClosure.medianM: the closure of the
- *  numerical setting flown over 6 h pieces from the reference's own states, which is the reference's noise where the object is not thrusting. */
-export const objectSigmaM = (dir, group, name) => {
-  const f = dir ? listFile(dir, group, name) : null, m = f && fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')).positionClosure?.medianM : null;
-  return Math.max(OBSERVATION_SIGMA_FLOOR_M, Number.isFinite(m) ? m : 0);
+/** The fewest pieces that weigh an object: below this many pieces ending by a cutoff, the floor holds. */
+export const SIGMA_MIN_PIECES = 16;
+/** An object's sigma for a fit at a cutoff D0 (m): max(OBSERVATION_SIGMA_FLOOR_M, the median position closure of the pieces of its burn list that
+ *  END at or before D0), the floor with fewer than SIGMA_MIN_PIECES such pieces, without a list, or where the list carries no per-piece closures
+ *  (a list made before burns.mjs wrote them). The closure is the numerical setting flown over 6 h pieces from the reference's own states: the
+ *  reference's noise where the object is not thrusting. Nothing after D0 is read. */
+export const objectSigmaM = (dir, group, name, D0 = Infinity) => {
+  const f = dir ? listFile(dir, group, name) : null, pc = f && fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')).pieceClosures : null;
+  if (!Array.isArray(pc)) return OBSERVATION_SIGMA_FLOOR_M;
+  const v = pc.filter(([end]) => Date.parse(end) <= D0).map(([, m]) => m).filter(Number.isFinite).sort((a, b) => a - b);
+  if (v.length < SIGMA_MIN_PIECES) return OBSERVATION_SIGMA_FLOOR_M;
+  return Math.max(OBSERVATION_SIGMA_FLOOR_M, v.length % 2 ? v[v.length >> 1] : (v[v.length / 2 - 1] + v[v.length / 2]) / 2);
 };
-/** The lists of a folder whose pieces were flown (flown above 0) and that record no median closure ([{ group, name }]): such an object is weighed at
- *  the floor whatever its pieces closed to. burns.mjs writes the field into every list it makes (burn-detector/lib/detector.mjs positionClosureOf); a
- *  list made before it did has none. */
+/** The lists of a folder whose pieces were flown (flown above 0) and that carry no per-piece closures ([{ group, name }]): such an object is weighed
+ *  at the floor whatever its pieces closed to. burns.mjs writes the field into every list it makes (burn-detector/lib/detector.mjs closureFieldsOf). */
 export const listsLackingClosure = (dir) => {
   const out = [];
   for (const g of fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name)) {
     for (const f of fs.readdirSync(path.join(dir, g)).filter((x) => x.endsWith('.burns.json'))) {
       const d = JSON.parse(fs.readFileSync(path.join(dir, g, f), 'utf8'));
-      if (d.flown > 0 && !Number.isFinite(d.positionClosure?.medianM)) out.push({ group: g, name: d.name });
+      if (d.flown > 0 && !Array.isArray(d.pieceClosures)) out.push({ group: g, name: d.name });
     }
   }
   return out;

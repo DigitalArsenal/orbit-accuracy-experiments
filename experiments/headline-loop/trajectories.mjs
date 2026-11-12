@@ -156,7 +156,7 @@ async function worker() {
       const file = path.join(dir, `${nameOf(j.key, j.arc)}-${N.fitTag(j.fit)}.bin`), buf = Buffer.from(new Float64Array(states.flat()).buffer), tmp = `${file}.tmp-${process.pid}`;
       const sha256 = crypto.createHash('sha256').update(buf).digest('hex');
       fs.writeFileSync(tmp, buf); fs.renameSync(tmp, file);
-      Object.assign(line, { fit: { ...j.fit, firstState: new Date(from).toISOString() }, sha256, source: j.source === 'trajectory' ? `the stored ${stepOf} s trajectory, every ${STEP_S / stepOf}th state` : j.source === 'product' ? 'a forecast from the stored fitted product' : j.source === 'after-burn' ? AFTER_BURN : 'a refit of the row\'s setting on the window\'s truth', file: path.relative(OUT, file), from: new Date(from).toISOString(), cutoff: new Date(D0).toISOString(), count, parameters: product.parameters });
+      Object.assign(line, { fit: { ...j.fit, firstState: new Date(from).toISOString() }, sha256, source: j.source === 'trajectory' ? `the stored ${stepOf} s trajectory, every ${STEP_S / stepOf}th state` : j.source === 'product' ? 'a forecast from the stored fitted product' : j.source === 'after-burn' ? AFTER_BURN : j.fit.sigmaM ? `a refit of the row's setting on the window's truth at the object's own sigma (${j.fit.sigmaM} m)` : 'a refit of the row\'s setting on the window\'s truth', file: path.relative(OUT, file), from: new Date(from).toISOString(), cutoff: new Date(D0).toISOString(), count, parameters: product.parameters });
     } catch (e) {
       // a failed attempt holds no fit: it names the fit it tried and why it failed
       for (const k of ['fit', 'sha256', 'file']) delete line[k];

@@ -264,12 +264,15 @@ async function main() {
       if (board && !b) continue;
       // with --scoreboard the row's windows are the scoreboard row's (every window AP scored); of them the bar flies those with a numerical
       // figure, withoutNumericalFigure counts the others by reason, and a count that differs from the scoreboard's is a note
-      const windows = b ? b.windows : xs.length, without = exact ? rowWithout.get(`${g}|${a}`) ?? null : null, mine = rowAp.get(`${g}|${a}`);
+      const windows = b ? b.windows : xs.length, without = rowWithout.get(`${g}|${a}`) ?? null, mine = rowAp.get(`${g}|${a}`);
       const differs = b && mine && mine.windows !== b.windows;
       if (differs) console.error(`bar: ${W.GROUPS[g].label} ${a} h: ${mine.windows} windows AP scored here against the scoreboard's ${b.windows}`);
       const head = { regime: W.GROUPS[g].label, fitHours: a, numericalTolerance: rowTolerance.get(`${g}|${a}`) ?? null, satellites: b ? b.satellites : new Set(xs.map((x) => x.w.name)).size, windows, ...(without ? { withoutNumericalFigure: without } : {}), ...(differs ? { note: `${mine.windows} windows AP scored by this file's reading of the store against the scoreboard's ${b.windows}` } : {}) };
       if (!written) { rows.push({ ...head, noNumericalArm: true }); continue; }
       const c = cells(xs.filter((x) => hasTrajectory(x.m)));
+      // the row's two shares, named: of the windows with a forecast (windows, the propagator's measure: there is no forecast to be within 100 m of
+      // otherwise) and of all the row's windows (what a user is served); rowWindows - windows is the row's windows without a forecast or a figure
+      c.withinBar = { ...c.withinBar, rowWindows: windows, shareOfWindowsWithForecast: c.withinBar.share, shareOfAllWindows: windows ? Math.round((c.withinBar.met / windows) * 1000) / 1000 : null };
       const refitAfterBurn = xs.filter((x) => x.m && (x.m.fit?.process === 'after burn' || /after the burn/.test(x.m.source ?? ''))).length;
       // of the windows without a trajectory, those whose lines are all of other fits, and those whose lines' fit is not known (a file
       // written again by a later line)

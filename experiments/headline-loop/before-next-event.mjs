@@ -12,24 +12,29 @@ import { usePackages } from './lib/env.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 export const LEAD_STEP_H = 12;
-/** The last whole lead (h, a multiple of LEAD_STEP_H) before the next event after a cutoff, 0 where there is none or it is under one step. */
+/** The last whole lead (h, a multiple of LEAD_STEP_H) before the next event of a cutoff. An event is { edgeMs (its early edge), reportMs (when it
+ *  was reported) }; one reported after the cutoff counts, from the later of its edge and the cutoff (an event inside the window's own arc, reported
+ *  after the cutoff, has lead 0: there is no whole lead before it). With none, or one past HORIZON_H, the lead is the whole horizon, marked. */
 export const HORIZON_H = 168;
-export const leadBefore = (cutoffMs, eventsMs) => {
-  const next = eventsMs.filter((e) => e > cutoffMs + 1000).sort((a, b) => a - b)[0], cap = Math.floor(HORIZON_H / LEAD_STEP_H) * LEAD_STEP_H;
-  if (!next) return { leadH: cap, mark: 'no later event: the figure is over the whole span of the reference' };
+export const leadBefore = (cutoffMs, events) => {
+  const next = events.filter((e) => e.reportMs > cutoffMs).map((e) => Math.max(e.edgeMs, cutoffMs)).sort((a, b) => a - b)[0], cap = Math.floor(HORIZON_H / LEAD_STEP_H) * LEAD_STEP_H;
+  if (next === undefined) return { leadH: cap, mark: 'no later event: the figure is over the whole span of the reference' };
   const h = Math.floor((next - cutoffMs) / (LEAD_STEP_H * 3600e3)) * LEAD_STEP_H;
   return h > cap ? { leadH: cap, mark: 'the next event lies past the horizon: the figure is over the whole span of the reference' } : { leadH: h, mark: null };
 };
 if (args.check) {
   const eq = (a, b, m) => { if (a !== b) throw new Error(`${m}: ${a} !== ${b}`); };
   const D0 = Date.parse('2026-01-10T00:00:00Z'), H = 3600e3;
-  eq(leadBefore(D0, [D0 + 40 * H]).leadH, 36, 'the last whole lead before an event 40 h on');
-  eq(leadBefore(D0, [D0 + 11 * H]).leadH, 0, 'an event under one step on');
-  eq(leadBefore(D0, [D0 + 100 * H, D0 + 30 * H]).leadH, 24, 'the nearer of two events');
-  eq(leadBefore(D0, [D0 - 5 * H]).leadH, 168, 'no event after the cutoff: the whole span, marked');
-  eq(/no later event/.test(leadBefore(D0, [D0 - 5 * H]).mark), true, 'the mark of a window with no later event');
-  eq(leadBefore(D0, [D0 + 500 * H]).leadH, 168, 'an event past the horizon: the whole span');
-  eq(leadBefore(D0, [D0 + 40 * H]).mark, null, 'no mark where an event ends the lead');
+  const ev = (edge, report = edge) => ({ edgeMs: D0 + edge * H, reportMs: D0 + report * H });
+  eq(leadBefore(D0, [ev(40)]).leadH, 36, 'the last whole lead before an event 40 h on');
+  eq(leadBefore(D0, [ev(11)]).leadH, 0, 'an event under one step on');
+  eq(leadBefore(D0, [ev(100), ev(30)]).leadH, 24, 'the nearer of two events');
+  eq(leadBefore(D0, [ev(-5)]).leadH, 168, 'an event reported before the cutoff is not a later event: the whole span, marked');
+  eq(/no later event/.test(leadBefore(D0, [ev(-5)]).mark), true, 'the mark of a window with no later event');
+  eq(leadBefore(D0, [ev(500)]).leadH, 168, 'an event past the horizon: the whole span');
+  eq(leadBefore(D0, [ev(40)]).mark, null, 'no mark where an event ends the lead');
+  eq(leadBefore(D0, [ev(0, 10)]).leadH, 0, 'an event whose early edge is the cutoff and that is reported later ends the lead at 0');
+  eq(leadBefore(D0, [ev(-8, 4), ev(60)]).leadH, 0, 'an event inside the arc, reported after the cutoff, counts from the cutoff');
   console.log('before-next-event.mjs --check: PASS');
   process.exit(0);
 }
@@ -41,7 +46,9 @@ const HOUR = 3600e3, DAY = 864e5, TRAJ = path.join(A.STORE_ROOT, 'numerical-traj
 const read = (f) => fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
 const groups = (args.groups ?? 'WA').split(','), arcs = (args.arcs ?? '72,24').split(',').map(Number), settings = (args.settings ?? 'E5G,E1F').split(',');
 const only = args.only ? new Set(args.only.split(',')) : null, STARTS = args.starts ? JSON.parse(fs.readFileSync(args.starts, 'utf8')) : {};
-const eventsOf = (g, name) => [...(A.listedBurns(args.burns, g, name) ?? []).map((b) => b.t), ...A.knownBurns(args.burns, g, name, Infinity).filter((b) => b.source === 'break test').map((b) => Date.parse(b.extentFrom))]; // a break event's early edge (the end of the last arc that closed): the lead stops before it
+// every burn of the list and event of the break test (read at the period's end, for the measure; a burn's early edge is its extent's start, a break event's
+// the end of the last arc that closed): the lead stops before it, from the cutoff where it was reported after it
+const eventsOf = (g, name) => A.knownBurns(args.burns, g, name, Infinity).map((b) => ({ edgeMs: Date.parse(b.extentFrom ?? b.from), reportMs: Date.parse(b.reportTime ?? b.extentFrom ?? b.from) }));
 const arms = await A.openArms({}), F = await openFfm();
 const last = new Map();
 for (const x of read(path.join(TRAJ, 'manifest.jsonl'))) if (groups.includes(x.group) && arcs.includes(x.arcH) && x.file && x.source !== 'none' && x.source !== 'failed') last.set(`${x.key}|${x.arcH}`, x);
@@ -60,7 +67,7 @@ for (const man of last.values()) {
     for (const s of settings) {
       const out = { ...head, setting: s };
       try {
-        const f = await arms.ffm({ thin, D0, rows: null, sc, arm: s, sigmaM: A.objectSigmaM(args.burns, g, name) });
+        const f = await arms.ffm({ thin, D0, rows: null, sc, arm: s, sigmaM: A.objectSigmaM(args.burns, g, name, D0) });
         const fc = await F.forecast(f.product, ref.map((l) => l.epoch), SETTINGS[s], null);
         const d = fc.map((x, k) => ({ h: (W.ms(ref[k].epoch) - D0) / HOUR, e: Math.hypot(...[0, 1, 2].map((j) => (x.r[j] - ref[k].r[j]) * 1000)) }));
         const at = d.filter((x) => x.h >= leadH - 0.5).sort((a, b) => b.h - a.h)[0], big = d.filter((x) => x.h >= LEAD_STEP_H);

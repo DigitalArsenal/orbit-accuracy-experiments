@@ -96,9 +96,8 @@ export function rowFitOf(b, label, D0, a) {
   const arm = label ? b?.arms?.[label] : null;
   if (!arm?.ok) return null;
   if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
-  // the full arc fitted again at the object's sigma is a refit on a stated arc, as a refit after a burn is: process 'after burn' (the process
-  // names the way the trajectory is made, a refit), with the sigma it was weighed at in the identity
-  if (b.fitProcess === REFIT_FULL) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(D0 - a * H).toISOString(), ...(arm.sigmaM ? { sigmaM: arm.sigmaM } : {}) };
+  // the full arc fitted again at the object's sigma: its own process (the trajectory is a refit, made at that sigma, which the identity names)
+  if (b.fitProcess === REFIT_FULL) return { setting: arm.arm, process: 'full arc at its sigma', arcStart: isoOf(b.fitArcStart) ?? new Date(D0 - a * H).toISOString(), ...(arm.sigmaM ? { sigmaM: arm.sigmaM } : {}) };
   if (b.fitProcess === REFIT && b.fitArcStart != null && !isoOf(b.fitArcStart)) throw new Error(`refused: the refit row ${b.key} ${b.arcH} h records an arc start that does not read (${b.fitArcStart})`);
   if (b.fitProcess === REFIT) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString(), ...(arm.sigmaM ? { sigmaM: arm.sigmaM } : {}) };
   return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
@@ -111,7 +110,7 @@ export function sameFit(f, r) {
   return Number.isFinite(msOf(r.arcStart)) && msOf(f.arcStart) === msOf(r.arcStart);
 }
 /** A fit's short name (10 hex of the sha256 of its setting, process and arc start in ms), so a trajectory file is named by its fit. */
-export const fitTag = (f) => crypto.createHash('sha256').update(`${f.setting}|${f.process}|${msOf(f.arcStart)}`).digest('hex').slice(0, 10);
+export const fitTag = (f) => crypto.createHash('sha256').update(`${f.setting}|${f.process}|${msOf(f.arcStart)}${f.sigmaM ? `|${f.sigmaM}` : ''}`).digest('hex').slice(0, 10);
 
 /** A row's numerical arm, as table.mjs and bar.mjs choose it: the fullest stored setting by name (PREFER) that a window of the row has,
  *  over the numerical rows (numericalOf) of every listed window of the row (none where one has no row); none on the commercial geostationary

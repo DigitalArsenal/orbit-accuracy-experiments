@@ -90,6 +90,13 @@ export function positionClosureOf(pieces, floorM) {
   const medianM = v.length ? med(v) : null;
   return { pieces: v.length, medianM, madM: medianM == null ? null : med(v.map((x) => Math.abs(x - medianM)).sort((a, b) => a - b)), p90M: v.length ? quant(0.9) : null, p99M: v.length ? quant(0.99) : null, floorM, thresholdM: pieces.filter((p) => p.judged).at(-1)?.thr ?? null };
 }
+/** The closure fields of a list (burns.mjs writes both): positionClosure (the summary, positionClosureOf) and pieceClosures, [[end of the piece (ISO),
+ *  position closure (m)], ...] by end, one per flown piece. A reader weighs an object at a cutoff from the pieces that end by it
+ *  (headline-loop lib/arms.mjs objectSigmaM), so the pieces themselves, not their whole-period median, are what the list carries. */
+export function closureFieldsOf(pieces, floorM) {
+  const ps = pieces.filter((p) => Number.isFinite(p.posM) && p.end).slice().sort((a, b) => Date.parse(a.end) - Date.parse(b.end));
+  return { positionClosure: positionClosureOf(ps, floorM), pieceClosures: ps.map((p) => [new Date(Date.parse(p.end)).toISOString(), Math.round(p.posM * 1000) / 1000]) };
+}
 /** State f against state q (km, km/s):{ dr: R, T, N m, dv: R, T, N mm/s of the relative velocity in the rotating frame (dv - w x dr) }. */
 export function closure(q, f) {
   const dr = sub(f.r, q.r), r2 = q.r[0] ** 2 + q.r[1] ** 2 + q.r[2] ** 2, w = cross(q.r, q.v).map((x) => x / r2);
