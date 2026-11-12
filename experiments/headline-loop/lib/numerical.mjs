@@ -56,7 +56,8 @@ export function noArmWhy({ w, arc, ap, nr, lists }) {
 // and of the numerical row it stands for, and the readings around it, one function each, called alike by bar.mjs and trajectories.mjs:
 // the row's arm (rowArmOf), its listed windows (listedOf), the refits after a burn (readAfterBurn), the fit a window's numerical row
 // stands for (rowFitOf: the one trajectories.mjs makes and bar.mjs reads), a line's fit (lineFitOf) and whether two are one (sameFit).
-const msOf = (t) => (typeof t === 'number' ? t : typeof t === 'string' ? Date.parse(/Z$/.test(t) ? t : `${t}Z`) : NaN);
+// (an instant as the tools write it: ISO text in UTC, with Z, an offset, or no zone, which is read as UTC)
+const msOf = (t) => (typeof t === 'number' ? t : typeof t === 'string' ? Date.parse(/(Z|[+-]\d\d:\d\d)$/.test(t) ? t : `${t}Z`) : NaN);
 /** An instant as ISO text, or null where it is none (a line that cannot be read has no fit; nothing throws). */
 export const isoOf = (t) => { const ms = msOf(t); return Number.isFinite(ms) ? new Date(ms).toISOString() : null; };
 
@@ -86,11 +87,13 @@ export const triedOf = (x) => (x?.source === 'failed' && x.tried ? { ...x.tried,
 export const failureOf = (x) => (/the refit is not the stored fit/.test(x?.error ?? '') ? 'refitNotTheStoredFit' : /coverage/.test(x?.error ?? '') ? 'coverage' : 'other');
 
 /** A numerical row's fit: a 1e-13 row by its stored first state; a refit after a burn by its recorded arc start, else the arc the rule gives
- *  from its last burn (with the row's own minimum arc); a stored full-arc fit by its setting and the full arc. */
+ *  from its last burn (with the row's own minimum arc); a stored full-arc fit by its setting and the full arc. A refit row whose recorded
+ *  arc start does not read is refused (thrown), never read at the rule's start. */
 export function rowFitOf(b, label, D0, a) {
   const arm = label ? b?.arms?.[label] : null;
   if (!arm?.ok) return null;
   if (arm.product?.epoch) return { setting: arm.arm, process: 'full arc', firstState: isoOf(arm.product.epoch) };
+  if (b.fitProcess === REFIT && b.fitArcStart != null && !isoOf(b.fitArcStart)) throw new Error(`refused: the refit row ${b.key} ${b.arcH} h records an arc start that does not read (${b.fitArcStart})`);
   if (b.fitProcess === REFIT) return { setting: arm.arm, process: 'after burn', arcStart: isoOf(b.fitArcStart) ?? new Date(A.numericalArc([{ from: b.lastBurn, to: b.lastBurn }], D0, Infinity, a, A.minHoursOf(b.group)).startMs).toISOString() };
   return { setting: arm.arm, process: 'full arc', arcStart: new Date(D0 - a * H).toISOString() };
 }
@@ -119,8 +122,12 @@ export function listedOf(groups, base) {
 /** The refits after a burn: with burn lists (burns), from the store folder named (store, else lib/arms.mjs NUMERICAL_AFTER_BURN.store; a
  *  folder name beginning NUMERICAL_STORE-after-burn), which must be in the store; every row's list (burnList) the one the lists give for its
  *  satellite, a row a burn moved or withheld naming one, or the run is refused; of a window-arc's rows the first, or a later one that flew
- *  over one that recorded an error, or on a one-file row one that names its reference file over one that names none (lib/arms.mjs laterWins). Without lists none is read, and a folder named is refused. */
-export function readAfterBurn({ burns, store, readRows }) {
+ *  over one that recorded an error, or on a one-file row one that names its reference file over one that names none (lib/arms.mjs laterWins).
+ *  Without lists none is read, and a folder named is refused. A folder that is not in the store is refused
+ *  (required, bar.mjs and trajectories.mjs: their numerical arm read with lists and without the refits made on them would stand a stored
+ *  fit where the rule moved the arc); table.mjs reads it as none (required false), since its --burns also sets AP's 72 h rule, which runs
+ *  where no refit was made, and its file names the folder it read (burnLists.afterBurnStore, null where none). */
+export function readAfterBurn({ burns, store, readRows, required = true }) {
   if (!burns) {
     if (store) throw new Error(`refused: --after-burn-store ${store} without --burns (the refits are read with the lists that made them)`);
     return { afterBurn: new Map(), afterBurnGroups: new Set(), abStore: null };
@@ -128,7 +135,10 @@ export function readAfterBurn({ burns, store, readRows }) {
   const abStore = store ?? A.NUMERICAL_AFTER_BURN.store;
   if (!abStore.startsWith(`${A.NUMERICAL_STORE}-after-burn`) || abStore.includes('/')) throw new Error(`--after-burn-store ${abStore}: a folder name beginning ${A.NUMERICAL_STORE}-after-burn`);
   const dir = path.join(A.STORE_ROOT, abStore);
-  if (!fs.existsSync(dir)) throw new Error(`refused: the store holds no ${abStore}, the refits after a burn the lists --burns gives are read from`);
+  if (!fs.existsSync(dir)) {
+    if (required) throw new Error(`refused: the store holds no ${abStore}, the refits after a burn the lists --burns gives are read from`);
+    return { afterBurn: new Map(), afterBurnGroups: new Set(), abStore };
+  }
   const afterBurn = new Map(), afterBurnGroups = new Set(), listOf = new Map(), wrong = [];
   for (const f of fs.readdirSync(dir).filter((x) => /^rows-after-burn-.*\.jsonl$/.test(x))) for (const r of readRows(path.join(dir, f))) {
     const s = `${r.group}|${r.name}`;

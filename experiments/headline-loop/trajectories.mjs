@@ -13,14 +13,17 @@
 // Needs: the store (HEADLINE_LOOP_STORE: its numerical rows, ffm-cache, refit folder), the truth archive and the space weather the
 // windows read, the NAIF kernels and the modules checkout (SDN_MODULES_ROOT) the FFM build and arms load from.
 // A window-arc is done where a line of it holds the fit the row gives now (lib/numerical.mjs lineFitOf and sameFit: the setting, the
-// process and the arc start in milliseconds). A line holds none where it has no trajectory (no arm, or a failed attempt), where a later
-// line wrote its file again, where its refit's weighted RMS is not the stored fit's, or where it is a refit after a burn that records no
-// arc start: such a window-arc is made again. --redo flies given window-arcs again; a window-arc listed twice is refused. Each attempt
+// process and the arc start in milliseconds), its file in place at the sha256 the line names. A line holds none where it has no trajectory
+// (no arm, or a failed attempt), where a later line wrote its file again, where its refit's weighted RMS is not the stored fit's, where it
+// is a refit after a burn that records no arc start, or where its file is missing or not at its hash: such a window-arc is made again. So a
+// run cut off between a file's rename and its line's append (new bytes under an earlier line's name) heals on the next run: that line's
+// file is not at its hash, the window-arc is made again, and bar.mjs, which stores nothing for a trajectory it cannot read, reads the new line. --redo flies given window-arcs again; a window-arc listed twice is refused. Each attempt
 // appends one manifest line. A trajectory's line names its fit (fit) and its file's sha256; the file is named by its fit
 // (<group>/<key>-<arc>-<fit tag>.bin, lib/numerical.mjs fitTag), written to a temporary name and renamed into place before the line is
 // appended. A failed attempt's line names the fit it tried (tried) and the error, and holds no fit. A refit of a stored fit (after a burn,
 // or of the full arc) must give the stored weighted RMS (lib/numerical.mjs rmsAgrees: within 1e-9 absolute where the stored RMS is at
-// most 1, relative above), or the window-arc fails, its line saying so.
+// most 1, relative above), or the window-arc fails, its line saying so; a stored row that records no weighted RMS has nothing to compare,
+// and its refit is taken as it is.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fork } from 'node:child_process';
@@ -56,7 +59,9 @@ async function main() {
   // that names no reference file holds none: it was made before lines named it)
   const prior = fs.existsSync(path.join(OUT, 'manifest.jsonl')) ? read(path.join(OUT, 'manifest.jsonl')) : [];
   const lastWriter = new Map(); prior.forEach((x, i) => { if (x.file) lastWriter.set(x.file, i); });
-  const fitsOf = new Map(); prior.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!fitsOf.has(k)) fitsOf.set(k, []); fitsOf.get(k).push(!W.GROUPS[x.group]?.oneFile || x.truthFile ? N.lineFitOf(x, lastWriter.get(x.file) === i) : null); });
+  const fitsOf = new Map(); prior.forEach((x, i) => { const k = `${x.key}|${x.arcH}`; if (!fitsOf.has(k)) fitsOf.set(k, []); fitsOf.get(k).push({ fit: !W.GROUPS[x.group]?.oneFile || x.truthFile ? N.lineFitOf(x, lastWriter.get(x.file) === i) : null, x }); });
+  // a line's file in place, at the sha256 the line names (a line written before lines named one: in place)
+  const intact = (x) => { const f = path.join(OUT, x.file); return fs.existsSync(f) && (!x.sha256 || crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex') === x.sha256); };
   // --redo <file of key|arc>: those window-arcs are flown again whatever their lines
   const redo = args.redo ? new Set(fs.readFileSync(args.redo, 'utf8').split('\n').filter(Boolean)) : new Set();
   const jobs = [], count = {}, listed = N.listedOf(groups, base);
@@ -72,7 +77,7 @@ async function main() {
         const p = fit?.process === 'full arc' ? productOf(fit.setting, w.key, arc) : null;
         const source = !fit?.arcStart ? 'none' : fit.process === 'after burn' ? 'after-burn' : p?.meta?.trajectory && fs.existsSync(path.join(path.dirname(p.file), p.meta.trajectory.file)) ? 'trajectory' : p ? 'product' : 'refit';
         c[source === 'none' ? 'noFit' : source === 'after-burn' ? 'afterBurn' : source] += 1;
-        if (source !== 'none' && !redo.has(k) && (fitsOf.get(k) ?? []).some((x) => N.sameFit(x, fit))) { c.done += 1; continue; }
+        if (source !== 'none' && !redo.has(k) && (fitsOf.get(k) ?? []).some((l) => N.sameFit(l.fit, fit) && intact(l.x))) { c.done += 1; continue; }
         jobs.push({ g, key: w.key, arc, label, setting: fit?.setting ?? null, source, fit: fit?.arcStart ? { setting: fit.setting, process: fit.process, arcStart: fit.arcStart } : null, product: p?.file ?? null, storedRms: label ? nr?.arms?.[label]?.weightedRms ?? null : null, truthFile: nr?.truthFile ?? null });
       }
     }

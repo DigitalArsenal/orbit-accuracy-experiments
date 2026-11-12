@@ -231,27 +231,13 @@ async function main() {
   // --burns (stack issues 462 and 489): the numerical arm's fit of a maneuvering object on the arc after its last burn known at the cutoff
   // (refly.mjs --after-burns, lib/arms.mjs numericalArc), stored apart. A regime with such rows takes, window by window, the refit where the
   // rule moved the arc and the stored fit where it did not; a window of it without a decision row leaves the row's arm being measured.
-  const afterBurn = new Map(), afterBurnGroups = new Set();
-  // --after-burn-store <folder>: the refits made on the lists given (refly.mjs --after-burn-store), one folder per set of lists. Each refit
-  // row names its satellite's list (burnList, the first 12 hex digits of its sha256, written by refly.mjs --after-burns); a row made on a
+  // --after-burn-store <folder>: the refits made on the lists given (refly.mjs --after-burn-store), one folder per set of lists, read as bar.mjs
+  // and trajectories.mjs read them (lib/numerical.mjs readAfterBurn): each refit row names its satellite's list (burnList); a row made on a
   // list that is not the one --burns gives for that satellite, or a row a burn moved or withheld without a list, is refused, so refits of
-  // other lists never stand in for this table's
-  const afterBurnStore = args['after-burn-store'] ?? A.NUMERICAL_AFTER_BURN.store;
-  if (!afterBurnStore.startsWith(`${A.NUMERICAL_STORE}-after-burn`) || afterBurnStore.includes('/')) throw new Error(`--after-burn-store ${afterBurnStore}: a folder name beginning ${A.NUMERICAL_STORE}-after-burn`);
-  if (args.burns) {
-    const d = path.join(A.STORE_ROOT, afterBurnStore), listOf = new Map(), wrong = [];
-    const listSha = (g, name) => A.listSha(args.burns, g, name);
-    for (const r of fs.existsSync(d) ? fs.readdirSync(d).filter((f) => /^rows-after-burn-.*\.jsonl$/.test(f)).flatMap((f) => readRows(path.join(d, f))) : []) {
-      const s = `${r.group}|${r.name}`;
-      if (!listOf.has(s)) listOf.set(s, listSha(r.group, r.name));
-      // a row that a burn moved or withheld (lastBurn, burnInArc) was made from a list, so without one it is of other lists too
-      if ((r.burnList ?? null) !== listOf.get(s) || ((r.lastBurn || r.burnInArc) && !r.burnList)) { wrong.push(r); continue; }
-      const k = `${r.key}|${r.arcH}`;
-      if (A.laterWins(afterBurn.get(k), r, W.GROUPS[r.group]?.oneFile)) afterBurn.set(k, r);
-      afterBurnGroups.add(r.group);
-    }
-    if (wrong.length) throw new Error(`refused: ${wrong.length} rows of ${afterBurnStore} were made on burn lists other than --burns gives (${[...new Set(wrong.map((r) => r.group))].join(', ')})`);
-  }
+  // other lists never stand in for this table's. A folder that is not in the store is read as none here: --burns also sets AP's 72 h rule,
+  // which runs where no refit was made, and the file names the folder it read (burnLists.afterBurnStore, null where none)
+  const ab = N.readAfterBurn({ burns: args.burns, store: args['after-burn-store'], readRows, required: false });
+  const { afterBurn, afterBurnGroups } = ab, afterBurnStore = ab.abStore ?? args['after-burn-store'] ?? A.NUMERICAL_AFTER_BURN.store;
   // stack issue 520: the drag setting fitted and flown again at 1e-13 (lib/arms.mjs NUMERICAL_TIGHT), stored apart; a row takes them only
   // when every window of it with a numerical arm by the rule has one (below)
   const tight = new Map(), tightDir = path.join(A.STORE_ROOT, A.NUMERICAL_TIGHT.store);
