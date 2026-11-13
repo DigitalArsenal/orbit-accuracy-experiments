@@ -78,13 +78,23 @@ export const ZONAL70_GROUPS = ['T', 'P', 'S1', 'LS', 'DO'];
 // records lie under 0.05 and five above it). The rule is by the case's orbit, as the real rule is by its row's group.
 export const LOW_TABLE_CLASS = { maxEccentricity: 0.05, regimeAboveKm: 2500 };
 export const inLowTableClass = ({ e, hpKm }) => e <= LOW_TABLE_CLASS.maxEccentricity && hpKm < LOW_TABLE_CLASS.regimeAboveKm;
+// The class of the zonal tail's long-period terms (the added terms of J6 to J20 act where e is at or under 0.3): from ZONAL70_E03_SINCE, the
+// sdn-ap version of that fix, a synthetic case with e at or under 0.3 and a perigee under 2,500 km is fitted and flown at zonal 70, tesseral 31,
+// as the low table's class is. At zonal 20 the added terms of J6 to J20 lose their cancellation with the omitted J21 to J69 terms; at
+// zonal 70 they are complete. The covariance size at zonal 70 was judged on the low table's records only (sdn-ap SPEC 16, the DRAG row's
+// s_i at zonal degree 70), so this class takes it unjudged. This is a rule for the synthetic orbits only; ZONAL70_GROUPS, the real rows' rule,
+// and LOW_TABLE_CLASS, the low table's class, are not changed by it. The version is one named constant, set at the landing of the fix.
+export const ZONAL70_E03_SINCE = '0.6.54';
+export const ZONAL_TAIL_CLASS = { maxEccentricity: 0.3, regimeAboveKm: 2500 };
+export const inZonalTailClass = ({ e, hpKm }) => e <= ZONAL_TAIL_CLASS.maxEccentricity && hpKm < ZONAL_TAIL_CLASS.regimeAboveKm;
 /**
  * The zonal degree of AP's record for a synthetic case (e, hpKm: its seeded mean eccentricity and perigee altitude) under an sdn-ap build's
  * version. A version that is absent or does not parse is refused by name: the degree is never read from a version that is not there.
+ * Zonal 70 for the low table's class from ZONAL70_SINCE and for the zonal tail's class from ZONAL70_E03_SINCE; every other case, 20.
  */
 export const syntheticZonalDegree = (c, version) => {
   if (!numeric(version)) throw new Error(`syntheticZonalDegree: the sdn-ap version is ${version === undefined || version === null || version === '' ? 'absent' : `not a version: ${JSON.stringify(version)}`}; the degrees of AP's record are not chosen without it`);
-  return atLeast(version, ZONAL70_SINCE) && inLowTableClass(c) ? 70 : 20;
+  return (atLeast(version, ZONAL70_SINCE) && inLowTableClass(c)) || (atLeast(version, ZONAL70_E03_SINCE) && inZonalTailClass(c)) ? 70 : 20;
 };
 /**
  * Whether a stored row of the synthetic slot counts for its case under a build's version: only at the degrees the rule gives the case. A row

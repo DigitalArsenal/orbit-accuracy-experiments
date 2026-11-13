@@ -141,7 +141,7 @@ export function measurePassage(rs, lead = 0) {
  * AP's headline $PCF for a synthetic case (the slot without a rung): the solid tide, NRLMSISE-00 where the truth has drag, the radiation
  * term fitted where the truth has radiation and held at 0 where it has none, tesseral degree 31 and the zonal degree the rule of the real low
  * rows (ZONAL70_GROUPS) gives the case's orbit (headline-loop lib/arms.mjs syntheticZonalDegree: 70 from sdn-ap 0.6.42 where e is at or below
- * 0.05 and the perigee under 2,500 km, else 20). Off the class it is the previous code's $PCF (lib/arms.mjs PCF.AP_TIDES, AP_VACUUM_TIDES).
+ * 0.05 and the perigee under 2,500 km, and from ZONAL70_E03_SINCE where e is at or under 0.3 and the perigee under 2,500 km, else 20). Off the classes it is the previous code's $PCF (lib/arms.mjs PCF.AP_TIDES, AP_VACUUM_TIDES).
  * A version that is absent or does not parse is refused by name (syntheticZonalDegree throws): no $PCF is built without it.
  * A, APL: headline-loop lib/arms.mjs and operator-theory lib/ap.mjs.
  */

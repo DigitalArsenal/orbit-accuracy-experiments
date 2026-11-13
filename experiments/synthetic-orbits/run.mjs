@@ -96,7 +96,7 @@ const PASS_M = 100, BAR_H = 120;
 // --rung <name>: the slot flown at one of the rungs between SGP4-XP's record and AP's headline record (fits.mjs RUNGS): xp, SGP4-XP's
 // own record with no space weather, or the settings at the rung's tesseral and zonal degrees; each rung's rows to their own file, so no
 // rung is read back as another. Without it the slot is AP's headline settings: tesseral 31 and zonal 20, and from sdn-ap 0.6.42 zonal 70 on a case in the
-// class of the low table (e at or below 0.05 and the perigee under 2,500 km; headline-loop lib/arms.mjs inLowTableClass, syntheticZonalDegree). Each theory's row records
+// class of the low table (e at or below 0.05 and the perigee under 2,500 km; headline-loop lib/arms.mjs inLowTableClass, syntheticZonalDegree), and from ZONAL70_E03_SINCE on a case at e up to 0.3 (inZonalTailClass). Each theory's row records
 // the THEORY field and the forces read from the $PCF actually sent (settings), and its label is built from them.
 // --xp: on a way other than arc72, SGP4-XP is also fitted over the way's span (its own record, no space weather) and flown beside AP;
 // those rows go to their own file. (arc72 flies SGP4-XP already.) A way that holds AP's terms at the truth's (held-terms) is refused
@@ -158,6 +158,11 @@ async function check() {
   is([z(0.01, 500, '0.6.41'), z(0.01, 500, '0.6.42'), z(0.01, 500, '0.6.47-rc.1'), z(0.01, 500, '0.6.100'), z(0.01, 500, '0.7.0'), z(0.01, 500, '1.0.0')], [20, 70, 70, 70, 70, 70], 'zonal degree under sdn-ap 0.6.41, 0.6.42, 0.6.47-rc.1, 0.6.100, 0.7.0 and 1.0.0');
   const refused = [undefined, null, '', 'abc', '0.6'].map((v) => throwsBy(() => A.syntheticZonalDegree({ e: 0.01, hpKm: 500 }, v)) !== null);
   is(refused, [true, true, true, true, true], 'a version that is absent, null, empty, not a version or incomplete is refused by name (no degree is chosen)');
+  // the zonal tail's class (e at or under 0.3, perigee under 2,500 km) from ZONAL70_E03_SINCE; the low table's class and every other case as before
+  const V = A.ZONAL70_E03_SINCE, below = '0.6.53';
+  is([z(0.3, 500, V), z(0.3000001, 500, V), z(0.5, 500, V), z(0.1, 500, V), z(0.05, 500, V)], [70, 20, 20, 70, 70], `zonal degree under ${V} at e 0.3, 0.3000001, 0.5, 0.1 and 0.05 (perigee 500 km)`);
+  is([z(0.3, 2499.9, V), z(0.3, 2500, V), z(0.3, 2500.2, V)], [70, 20, 20], `zonal degree under ${V} at e 0.3 and perigee 2,499.9, 2,500 and 2,500.2 km`);
+  is([z(0.1, 500, below), z(0.3, 500, below), z(0.1, 500, '0.6.47'), z(0.1, 500, '0.6.48'), z(0.1, 500, V), z(0.1, 500, '0.7.0')], [20, 20, 20, 20, 70, 70], `zonal degree at e 0.1 under 0.6.53, 0.6.47, 0.6.48 (20), ${V} and 0.7.0 (70)`);
   const rowOf = (zonal) => ({ ap: { settings: { zonal }, record: 'x' } });
   is([A.rowAtRuleDegrees(rowOf(70), { e: 0.01, hpKm: 500 }, '0.6.47'), A.rowAtRuleDegrees(rowOf(20), { e: 0.01, hpKm: 500 }, '0.6.47'), A.rowAtRuleDegrees(rowOf(20), { e: 0.1, hpKm: 500 }, '0.6.47'),
     A.rowAtRuleDegrees({ ap: { record: 'x', settings: {} } }, { e: 0.1, hpKm: 500 }, '0.6.47'), A.rowAtRuleDegrees({ ap: { error: 'fit' } }, { e: 0.01, hpKm: 500 }, '0.6.47'), A.rowAtRuleDegrees({}, { e: 0.01, hpKm: 500 }, '0.6.47')],
@@ -182,7 +187,21 @@ async function check() {
   }
   ok(same(mk(inside, '0.6.47', true, true), A.PCF.AP_Z70_TIDES) && isDeepStrictEqual(degreesOf(A.PCF.AP_Z70_TIDES), [31, 70]), 'with drag and radiation a case in the class gets AP_Z70_TIDES, tesseral 31 and zonal 70');
   ok(throwsBy(() => mk(inside, undefined, true, true)) !== null && throwsBy(() => mk(inside, 'x', true, true)) !== null, 'the slot\'s $PCF is not built from an absent or unparseable version');
+  // the $PCF of a case in the zonal tail's class under V is the previous code's with only the zonal degree changed, in the three modes
+  for (const [name, drag, radiation] of MODES) {
+    const want = decoded(previous(drag, radiation)); want.FORCES.MAXIMUM_DEGREE = 70;
+    ok(isDeepStrictEqual(decoded(mk({ e: 0.3, hpKm: 800 }, V, drag, radiation)), want) && same(mk({ e: 0.3, hpKm: 800 }, below, drag, radiation), previous(drag, radiation)),
+      `mode ${name}: a case at e 0.3 gets the previous code's $PCF with only the zonal degree changed under ${V}, and the previous code's byte for byte under ${below}`);
+  }
   const all = makeCases(498, { gridStep: 1 }).cases, inClass = all.filter((c) => A.inLowTableClass(c));
+  // the seeded set: at a version before the fix every case has the degree it has under the low table's rule alone; from it exactly the cases at e above 0.05
+  // and at or under 0.3 with a perigee under 2,500 km move, from 20 to 70, and no other
+  const degs = (v) => all.map((c) => A.syntheticZonalDegree(c, v)), d47 = degs('0.6.47'), d52 = degs('0.6.52'), dV = degs(V);
+  const moved = all.filter((_, k) => dV[k] !== d47[k]), movedRight = all.filter((c) => c.e > 0.05 && c.e <= 0.3 && c.hpKm < 2500);
+  is([d52.filter((d) => d === 70).length, d52.filter((d) => d === 20).length, d52.every((d, k) => d === d47[k])], [301, 664, true], 'seed 498 under 0.6.52: cases at zonal 70, at zonal 20, and every case as under 0.6.47');
+  is([dV.filter((d) => d === 70).length, dV.filter((d) => d === 20).length, moved.length], [301 + movedRight.length, 664 - movedRight.length, movedRight.length], `seed 498 under ${V}: cases at zonal 70, at zonal 20, and the cases that move`);
+  ok(moved.length === movedRight.length && moved.every((c) => movedRight.includes(c)) && moved.every((c) => A.syntheticZonalDegree(c, '0.6.47') === 20 && A.syntheticZonalDegree(c, V) === 70), `seed 498: the cases that move under ${V} are exactly those with e above 0.05 and at or under 0.3 and a perigee under 2,500 km, from 20 to 70`);
+  console.error(`     (seed 498: ${movedRight.length} cases move under ${V}, of ${all.length})`);
   is([inClass.length, all.length], [301, 965], 'seed 498: cases in the class, and cases');
   ok(inClass.every((c) => c.e <= 0.05 && c.hpKm < 2500) && all.filter((c) => c.e > 0.05 || c.hpKm >= 2500).every((c) => !A.inLowTableClass(c)) && all.filter((c) => c.e === 0.1).length > 0 && all.filter((c) => c.e === 0.1).every((c) => !A.inLowTableClass(c)),
     'seed 498: no case above e 0.05 or at perigee 2,500 km and above is in the class, and none of the e 0.1 cases');
@@ -249,7 +268,7 @@ async function main() {
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, ...(args['force-zonal'] ? ['--force-zonal', args['force-zonal']] : []), ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
       if (!stopped && freeGiB() < MIN_FREE_GIB) stopped = `free disk under ${MIN_FREE_GIB} GiB`;
       if (!stopped && next < todo.length) { const c = todo[next++]; child.send({ c, fits: fitsOf(c) }); } else child.send({ stop: true });
@@ -279,6 +298,7 @@ async function worker() {
   // the build's version comes with the worker (every caller passes --ap-version); a worker without a usable one stops here, by name,
   // before it flies a case at degrees nobody chose
   A.syntheticZonalDegree({ e: 0, hpKm: 0 }, args['ap-version']);
+  if (args['force-zonal'] && (args['force-zonal'] !== '70' || !process.env.HEADLINE_LOOP_STORE)) throw new Error('--force-zonal takes 70 and only with a store of its own (HEADLINE_LOOP_STORE): its rows are not the rule\'s');
   const APL = await import(path.join(REPO, 'experiments/operator-theory/lib/ap.mjs'));
   const { openFfm } = await import(path.join(REPO, 'experiments/headline-loop/lib/ffm.mjs'));
   const { SETTINGS } = await import(path.join(REPO, 'experiments/headline-loop/lib/settings.mjs'));
@@ -456,7 +476,11 @@ async function worker() {
       // and our SGP4-XP, fitted the same way
       // the zonal degree by the rule of the real low rows (ZONAL70_GROUPS) for the case's orbit (headline-loop lib/arms.mjs syntheticZonalDegree): 70 from sdn-ap 0.6.42 in the
       // class of the low table (e at or below 0.05, perigee under 2,500 km), else 20; the tesseral degree is 31 in both
-      const apPcf = WAYS.headlinePcf({ A, APL, c, version: args['ap-version'], drag, radiation });
+      // --force-zonal 70 (a control, not a registered configuration): every case gets the $PCF of the zonal-70 classes, zonal 70 and tesseral 31,
+      // whatever its eccentricity and perigee; its rows state zonal 70 and so are not the rule's rows for a case outside the classes, hence the
+      // run refuses it without a store of its own (HEADLINE_LOOP_STORE)
+      const apPcf = args['force-zonal'] === '70' ? WAYS.headlinePcf({ A, APL, c: { e: 0, hpKm: 0 }, version: args['ap-version'], drag, radiation })
+        : WAYS.headlinePcf({ A, APL, c, version: args['ap-version'], drag, radiation });
       // the slot: AP's headline settings, or one rung (--rung): SGP4-XP's own record, or the settings at the rung's degrees. Each row's
       // label is built from the $PCF actually sent (settingsOf), never from these names.
       const slotOf = () => {
