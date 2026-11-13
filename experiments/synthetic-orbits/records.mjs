@@ -128,3 +128,12 @@ export class StreamReplacement {
     fs.renameSync(this.file, this.target);
   }
 }
+
+/** Attach a stable outcome to failed seed or truth stream writes. */
+export function streamWrite(stream, write) {
+  try { return write(); } catch (cause) {
+    const error = new Error(`stream-write-failed: ${stream}: ${cause.message}`, { cause });
+    error.outcome = { name: 'stream-write-failed', stream, code: cause.code ?? 'stream-error' };
+    throw error;
+  }
+}

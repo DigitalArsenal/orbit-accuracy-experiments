@@ -33,7 +33,7 @@
 // go to their own file, each with the digest of the scan's definition (scanDigest): a row of another definition is not read as done.
 // --scan-min-e <e> widens the scan to every case at e and above (the digest then names it).
 // Each theory's row also holds its record (base64), so a later pass can fly it again without fitting, and, where the build exports
-// sdnap_kepler_unconverged (sdn-ap 0.6.37 and later, stack #550), the module's osculating Kepler-solve counts (kepler): for the fit,
+// sdnap_kepler_unconverged (sdn-ap 0.6.37 and later), the module's osculating Kepler-solve counts (kepler): for the fit,
 // the scored flights and the scan, each { apFar, section8Far, apRounding } (SPEC 16.21: AP's solves that ended far from their root
 // and were bisected, section 8's that ended far and were bisected, AP's that ended within rounding of it).
 //
@@ -70,7 +70,7 @@ import { REPO, MODULES_ROOT, usePackages, envRecord } from '../headline-loop/lib
 import { cases as makeCases, termsOf, guardOf } from './cases.mjs';
 import { seedRecord } from './seed.mjs';
 import { FrameIndex, statedSeed, truthRecord, completeFit, seedMessageId } from './identity.mjs';
-import { RecordStream, recordsFileOf, withStreamedRecords } from './records.mjs';
+import { streamWrite, RecordStream, recordsFileOf, withStreamedRecords } from './records.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = new URL(import.meta.url).pathname;
@@ -252,7 +252,7 @@ async function main() {
   // per way, the cases its file holds; a case flies the ways that lack it
   // (a row counts only if it is of the shared truth, truth.hash; rows from before the reference state are flown again)
   // (with --perigee-scan, only rows of this scan definition, scanDigest)
-  // (and, stack #520, a row whose truth has drag counts only on the drag truth at 1e-13, DRAG_TRUTH; rows on the 1e-10 drag truth are
+  // (and, a row whose truth has drag counts only on the drag truth at 1e-13, DRAG_TRUTH; rows on the 1e-10 drag truth are
   // flown again, the truth read from the cache once it is warm)
   const current = (r) => r.truth?.hash && (!r.truth.dragAreaOverMass || r.truth.setting === DRAG_TRUTH);
   // (and a row of the slot's headline settings counts only at the degrees the rule gives its case under this build's version, arms.mjs
@@ -269,7 +269,7 @@ async function main() {
   console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; fit ${FIT_LIST.join(', ')}, truth from ${TRUTH_START_H} h before the cutoff${RUNG ? `, rung ${RUNG}` : ''}; SGP4-XP ${FIT === 'arc72' || WITH_XP ? 'flown' : 'not flown'}; perigee scan ${PERIGEE_SCAN ? `on (definition ${SCAN_DIGEST}${SCAN_MIN_E !== WAYS.SCAN_MIN_E ? `, every case at e ${SCAN_MIN_E} and above` : ''})` : 'off'}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
   const streams = new Map(), streamOf = (rowsPath) => { if (!streams.has(rowsPath)) streams.set(rowsPath, new RecordStream(recordsFileOf(rowsPath))); return streams.get(rowsPath); };
-  let next = 0, flown = 0, stopped = null;
+  let next = 0, flown = 0, stopped = null, streamWriteFailed = 0;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
     const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, ...(args['force-zonal'] ? ['--force-zonal', args['force-zonal']] : []), ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => {
@@ -278,6 +278,7 @@ async function main() {
     };
     child.on('message', (m) => {
       if (m.rows) {
+        if (Object.values(m.rows).some((r) => r.streamWriteFailure)) streamWriteFailed += 1;
         // the fitted records go to the stream beside the rows file (records<suffix>.fsdata: [4-byte little-endian size][$OCM bytes] frames); the row names each by {file, offset, size, sha256}
         if (!truthOnly) for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...withStreamedRecords(row, streamOf(rowsFiles[f])), caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness, ...(PERIGEE_SCAN ? { scanDigest: SCAN_DIGEST } : {}) })}\n`);
         flown += 1;
@@ -291,7 +292,8 @@ async function main() {
     child.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`worker exited ${code}`))));
   })));
   console.error(`synthetic: ${flown} flown in ${((Date.now() - t0) / 1000).toFixed(0)} s${stopped ? `; stopped: ${stopped}` : ''}; truths read from the cache ${cache.read}, flown ${cache.flown}, waited for another process ${cache.waited}${cache.none ? `, none (the case ended before its truth) ${cache.none}` : ''}; hit rate ${flown ? Math.round(((cache.read + cache.waited) / flown) * 1000) / 10 : 0} %`);
-  process.exit(stopped ? 2 : 0);
+  console.error(JSON.stringify({ outcome: 'stream-write-failed', cases: streamWriteFailed }));
+  process.exit(stopped || streamWriteFailed ? 2 : 0);
 }
 
 /** A forked worker: opens the module, FFM and the frames once, then flies each case it is sent. */
@@ -431,7 +433,7 @@ async function worker() {
       // (the record carries the case's identity and its two numbers as held terms, which change no state: truth-to-ocm.mjs checks every seed)
       const seedTerms = [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }, { kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }];
       const seed = statedSeed(S.OCM, S.flatbuffers, seedRecord(S, { epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma }), { caseId: c.id, epoch, terms: seedTerms });
-      const seedFrame = seedIndex.ensure(seedMessageId(c.id, epoch), () => seed);
+      const seedFrame = streamWrite('seed-ocm.fsdata', () => seedIndex.ensure(seedMessageId(c.id, epoch), () => seed));
       const [s0] = await refFly(seed, [epoch]);
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
       // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
@@ -462,8 +464,8 @@ async function worker() {
       if (got.cache === 'flown') row.truth.flightS = got.flightS;
       if (!got.states || got.flownToDay === 0) { row.truth.error = got.error ?? 'no state'; throw new Error('truth'); }
       // the flight as an $OCM in the truth stream, named by its cache key, with the seed it started from (a flight with no states has no record)
-      const truthFrame = truthIndex.ensure(row.truth.hash, () => truthRecord(S.OCM, S.flatbuffers, { hash: row.truth.hash, caseId: c.id, startMs: tStart, states: Float64Array.from(got.states.flatMap((s) => [...s.r, ...s.v])),
-        seed: { id: seedMessageId(c.id, epoch), sha256: seedFrame.sha256, bytes: seedFrame.bytes, epoch: epoch.replace('Z', '') }, terms: parameters, tolerance: settings.integrator.tolerance, degree: settings.forces.degree ?? 0, order: settings.forces.order ?? 0 }));
+      const truthFrame = streamWrite('truth-ocm.fsdata', () => truthIndex.ensure(row.truth.hash, () => truthRecord(S.OCM, S.flatbuffers, { hash: row.truth.hash, caseId: c.id, startMs: tStart, states: Float64Array.from(got.states.flatMap((s) => [...s.r, ...s.v])),
+        seed: { id: seedMessageId(c.id, epoch), sha256: seedFrame.sha256, bytes: seedFrame.bytes, epoch: epoch.replace('Z', '') }, terms: parameters, tolerance: settings.integrator.tolerance, degree: settings.forces.degree ?? 0, order: settings.forces.order ?? 0 })));
       // --truth-only: the truth is in the cache; no fit
       if (args['truth-only']) throw new Error('truth');
       const states = got.states;
@@ -480,7 +482,7 @@ async function worker() {
       // the bar's span: the cutoff and every truth state to 120 h after it (as far as the truth reaches)
       const span = lines.filter((l) => { const t = Date.parse(l.epoch); return t >= D0 && t <= D0 + BAR_H * HOUR && (low < 0 || t < Date.parse(lines[low].epoch)); });
       // the truth's lowest altitude over the bar's span (its lowest perigee there): a drag truth whose perigee falls under 150 km is not
-      // converged to a tenth of the bar at 1e-13 (report.mjs CONVERGENCE, stack #520)
+      // converged to a tenth of the bar at 1e-13 (report.mjs CONVERGENCE)
       if (span.length) row.truth.minAltitudeSpanKm = r1(span.reduce((m, l) => Math.min(m, Math.hypot(...l.r) - RE), Infinity));
       // past the bar: the same distance over 120 h to 7 days (a record used past its 5 days; reported, not a criterion)
       const late = lines.filter((l) => { const t = Date.parse(l.epoch); return t > D0 + BAR_H * HOUR && t <= D0 + LEAD_DAYS * DAY && (low < 0 || t < Date.parse(lines[low].epoch)); });
@@ -562,15 +564,15 @@ async function worker() {
           row.costUsPerState = { ap: r1((median(times.ap) * 1000) / COST_STATES), xp: r1((median(times.xp) * 1000) / COST_STATES), states: COST_STATES };
         }
       }
-    } catch (e) { if (String(e?.message) !== 'truth') row.error = String(e?.message ?? e).slice(0, 200); }
+    } catch (e) { if (e.outcome) row.streamWriteFailure = e.outcome; if (String(e?.message) !== 'truth') row.error = String(e?.message ?? e).slice(0, 200); }
     // a case that ends before its ways (no truth, or an error) gives every way the case's row
     const wallS = r1((performance.now() - t1) / 1000);
-    for (const f of fits) { out[f] ??= { ...JSON.parse(JSON.stringify(row)), fit: f, truthStartH: TRUTH_START_H }; if (row.error) out[f].error = row.error; out[f].wallS = wallS; }
+    for (const f of fits) { out[f] ??= { ...JSON.parse(JSON.stringify(row)), fit: f, truthStartH: TRUTH_START_H }; if (row.error) out[f].error = row.error; if (row.streamWriteFailure) out[f].streamWriteFailure = row.streamWriteFailure; out[f].wallS = wallS; }
     return out;
   };
   /**
    * The dense re-fly (dense.mjs): the case's record made as flyCase makes it (fit way FIT, the rung if any), then flown at stepS spacing
-   * for halfMin minutes either side of the hour asked (default the hour of its D) on this worker's module instance, the one every case
+   * for halfMin minutes either side of the hour asked (default the hour of its D) on this process's module instance, the one every case
    * of the run has gone through (pooled), twice, and twice more, each on a new instance of the same build. For each run: the largest
    * step between neighboring states, the largest second difference, and the largest distance of a state from the 8-point (degree-7) curve
    * through its four neighbors on each side (a state off its neighbors' curve); and whether the four runs agree bit for bit. No truth
