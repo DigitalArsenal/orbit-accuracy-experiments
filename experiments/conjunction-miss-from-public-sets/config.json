@@ -1,0 +1,69 @@
+{
+  "experiment": "conjunction-miss-from-public-sets",
+  "frozen": true,
+  "registeredUtc": "2026-11-14",
+  "runDateUtc": "2026-12-15",
+  "archive": { "root": "/opt/data/sdn-archive" },
+  "store": "runs/conjunction-miss-from-public-sets/test",
+  "module": {
+    "package": "propagator/sdn-ap",
+    "version": "0.6.57",
+    "repositoryCommit": "6a807990a2ed004295c0cfe80f612205fc28d784",
+    "wasmSha256": "652fa229c89a565d688e6cf2384a38fb9cc9aa12e5f8178900bda5bf189b797c",
+    "wasmPathEnv": "SDN_AP_WASM",
+    "wasmPath": "runs/conjunction-miss-from-public-sets/module.wasm"
+  },
+  "weatherForecaster": {
+    "file": "experiments/ap-five-day-accuracy/wasm/tle-astrodynamics-upgrades.wasm",
+    "sha256": "68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73",
+    "builtBy": "experiments/ap-five-day-accuracy/build-tle-upgrades-wasm.mjs (not in git: built locally)"
+  },
+  "messages": {
+    "year": 2026,
+    "from": "2026-10-11",
+    "through": "2026-12-15",
+    "createdBefore": "2026-12-15T00:00:00Z",
+    "earlyExclusionCreatedThrough": "2026-11-12T07:27:59Z"
+  },
+  "window": { "finalFrom": "2026-11-16T00:00:00Z", "finalTo": "2026-12-14T00:00:00Z" },
+  "sets": { "year": 2026, "startDay": "2026-10-14", "createdBefore": "2026-12-15T00:00:00Z", "theory": "SGP4" },
+  "eventGapSeconds": 60,
+  "primaryHours": 12,
+  "leadBins": [
+    { "label": "0-0.5 d", "from": 0, "to": 0.5, "middle": 0.25 },
+    { "label": "0.5-1 d", "from": 0.5, "to": 1, "middle": 0.75 },
+    { "label": "1-2 d", "from": 1, "to": 2, "middle": 1.5 },
+    { "label": "2-3 d", "from": 2, "to": 3.0001, "middle": 2.5 }
+  ],
+  "sampleSeconds": 300,
+  "arms": {
+    "W": { "theory": "AP", "fromDays": -2.5, "toDays": 5, "epochPlacement": 0 },
+    "X": { "theory": "SGP4-XP", "fromDays": -2.5, "toDays": 5, "epochPlacement": 0 }
+  },
+  "overlap": { "developmentObjectsFile": "development-objects.json" },
+  "comparisons": [
+    { "id": "W-vs-S", "arm": "W", "base": "S", "verdict": true },
+    { "id": "W-vs-X", "arm": "W", "base": "X", "verdict": true },
+    { "id": "X-vs-S", "arm": "X", "base": "S", "verdict": false }
+  ],
+  "statistics": {
+    "seed": 20261215,
+    "resamples": 2000,
+    "interval": 0.95,
+    "percentileMethod": "linear",
+    "generator": "numpy.random.default_rng",
+    "minimumPrimaryEvents": 100,
+    "plannedPrimaryEvents": 190,
+    "fewBelowEvents": 20,
+    "guardAlpha": 0.05,
+    "worseFactor": 2,
+    "worseMissMeters": 1000
+  },
+  "bands": {
+    "perigeeKm": [600, 1000, 2000],
+    "setAgeDays": [1, 2],
+    "finalMissMeters": [100, 300, 1000],
+    "earthRadiusKm": 6378.137,
+    "mu": 398600.4418
+  }
+}
