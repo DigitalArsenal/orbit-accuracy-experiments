@@ -12,7 +12,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { execFileSync } from 'node:child_process';
 import { repoRoot } from '../harness/provenance.mjs';
-import { frames, readRecord, recordsFileOf } from '../experiments/synthetic-orbits/records.mjs';
+import { RecordStream, frames, readRecord, recordsFileOf } from '../experiments/synthetic-orbits/records.mjs';
 
 const STORE = process.env.HEADLINE_LOOP_STORE ?? '/opt/data/sdn-archive/headline-loop', SYN = path.join(STORE, 'synthetic');
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
@@ -69,5 +69,49 @@ test('real stored rows: convert, read every record back, replace', { skip: sampl
     const seen = [...frames(stream)];
     assert.equal(seen.length, records);
     assert.equal(seen.reduce((s, f) => s + 4 + f.size, 0), fs.statSync(stream).size);
+  } finally { fs.rmSync(scratch, { recursive: true, force: true }); }
+});
+
+// Two writers on one stream (two run.mjs parents started on the same wasm folder and suffix): every reference reads back its own bytes, whoever appended it,
+// and a reference whose offset or hash is wrong is refused, never guessed. The records are the first stored records of the archive sample when it is there (real $OCM bytes), else the bytes of any file.
+test('two RecordStream objects on one stream: every reference reads back its own bytes; a wrong reference is refused', () => {
+  const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'records-fsdata-two-'));
+  try {
+    const file = path.join(scratch, 'records.fsdata'), a = new RecordStream(file), b = new RecordStream(file), made = [];
+    const real = sample ? fs.readFileSync(sample.path, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).filter((r) => typeof r.ap?.record === 'string').map((r) => Buffer.from(r.ap.record, 'base64')) : [];
+    const pool = real.length >= 6 ? real : Array.from({ length: 6 }, (_, i) => crypto.randomBytes(900 + 37 * i));
+    for (let i = 0; i < 24; i += 1) { const bytes = pool[i % pool.length], writer = i % 3 === 0 ? a : b; made.push({ bytes, ref: writer.append(bytes) }); }
+    for (const { bytes, ref } of made) assert.ok(Buffer.from(readRecord(scratch, ref)).equals(bytes));
+    // the references tile the file: each offset is the end of the one before, and a walk from byte 0 ends at the end of the file
+    made.reduce((end, { ref }) => { assert.equal(ref.offset, end); return end + 4 + ref.size; }, 0);
+    assert.equal([...frames(file)].length, made.length);
+    assert.equal(fs.existsSync(`${file}.lock`), false, 'the lock is released');
+    // a wrong offset, size or hash is refused
+    const good = made[3].ref;
+    assert.throws(() => readRecord(scratch, { ...good, offset: good.offset + 1 }), /not reading another frame/);
+    assert.throws(() => readRecord(scratch, { ...good, size: good.size + 1 }), /not reading another frame/);
+    assert.throws(() => readRecord(scratch, { ...good, sha256: '0000000000000000' }), /not reading another frame/);
+    // a stale lock (its holder's process is gone) is taken over
+    fs.mkdirSync(`${file}.lock`); fs.writeFileSync(path.join(`${file}.lock`, 'holder'), '2147483646');
+    const ref = a.append(pool[0]);
+    assert.ok(Buffer.from(readRecord(scratch, ref)).equals(pool[0]));
+  } finally { fs.rmSync(scratch, { recursive: true, force: true }); }
+});
+
+// Two processes appending at the same time (two run.mjs parents on one wasm folder and suffix): 150 records each, started together;
+// every reference they return reads back its own bytes and the references tile the file.
+test('two processes appending to one stream at once: no reference is wrong', async () => {
+  const { spawn } = await import('node:child_process');
+  const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'records-fsdata-proc-'));
+  try {
+    const file = path.join(scratch, 'records.fsdata'), mod = path.join(repoRoot, 'experiments/synthetic-orbits/records.mjs');
+    const code = `import { RecordStream } from ${JSON.stringify(mod)}; import crypto from 'node:crypto'; const s = new RecordStream(${JSON.stringify(file)}), seed = process.argv[1], out = []; for (let i = 0; i < 150; i += 1) { const b = crypto.createHash('sha512').update(seed + i).digest(); const bytes = Buffer.concat(Array.from({ length: 8 + (i % 40) }, () => b)); out.push({ i, ref: s.append(bytes), sha: crypto.createHash('sha256').update(bytes).digest('hex') }); } console.log(JSON.stringify(out));`;
+    const run = (seed) => new Promise((resolve, reject) => { const c = spawn(process.execPath, ['--input-type=module', '-e', code, seed], { stdio: ['ignore', 'pipe', 'inherit'] }); let o = ''; c.stdout.on('data', (d) => { o += d; }); c.on('exit', (k) => (k === 0 ? resolve(JSON.parse(o)) : reject(new Error(`writer ${seed} exited ${k}`)))); });
+    const [x, y] = await Promise.all([run('x'), run('y')]);
+    const all = [...x, ...y];
+    for (const { ref, sha } of all) assert.equal(sha256(readRecord(scratch, ref)), sha);
+    all.sort((p, q) => p.ref.offset - q.ref.offset).reduce((end, { ref }) => { assert.equal(ref.offset, end); return end + 4 + ref.size; }, 0);
+    assert.equal([...frames(file)].length, 300);
+    assert.equal(fs.existsSync(`${file}.lock`), false);
   } finally { fs.rmSync(scratch, { recursive: true, force: true }); }
 });
