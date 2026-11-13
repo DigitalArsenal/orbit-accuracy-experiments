@@ -62,7 +62,7 @@ const fly = async (ocm, epochs) => { const r = await h.invoke({ methodId: 'propa
 const js = (v) => JSON.stringify(v, (_k, x) => (typeof x === 'bigint' ? `${x}n` : x));
 const named = (t) => { const c = JSON.parse(js(t)); for (const k of ['MESSAGE_ID', 'MESSAGE_STATUS', 'EXERCISE_NAME']) delete c.HEADER?.[k]; for (const k of ['NORAD_CAT_ID', 'CATALOG_NAME', 'OBJECT_DESIGNATOR', 'OBJECT_NAME']) delete c.METADATA?.[k]; delete c.PROVENANCE; return c; };
 
-const wasm12 = path.basename(dir), made = [], selected = new Map();
+const wasm12 = path.basename(dir), selected = new Map();
 const tally = { rows: 0, records: 0, noTruth: 0, bytesOld: 0, bytesNew: 0, statesCompared: 0, flownEqual: 0, otherFieldsEqual: 0 };
 const problems = [];
 for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x)).sort()) {
@@ -76,20 +76,20 @@ for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x)).sor
     if (chosen) old = readFrame(chosen.file, chosen);
     const truth = truths.get(row.truth?.hash);
     if (!truth) { tally.noTruth += 1; continue; }
-    const messageId = `${row.id}:${wasm12}${fitKey}:ap`, bytes = completeFit(O, fb, old, { caseId: row.id, messageId, truth: { id: row.truth.hash, ...truth } });
+    const messageId = `${row.id}:${wasm12}${fitKey}:ap`;
     const header = O.OCM.getRootAsOCM(new fb.ByteBuffer(old)).HEADER();
-    putUnique(selected, messageId, { row: row.id, fitKey, old, bytes, messageId, truth: row.truth.hash }, header?.CREATION_DATE(), args.includes('--newest'));
+    putUnique(selected, messageId, { row: row.id, fitKey, original: chosen ?? row.ap.record, indexed: !!chosen, messageId, truth: row.truth.hash }, header?.CREATION_DATE(), args.includes('--newest'));
   }
 }
 
-for (const m of selected.values()) {
-  m.ref = stream.append(m.bytes, m.messageId); made.push(m);
+// Append and verify one selected record at a time; retained selections contain references only.
+for (const selection of selected.values()) {
+  const m = { ...selection };
+  m.old = m.indexed ? readFrame(m.original.file, m.original) : readRecord(dir, m.original);
+  const produced = completeFit(O, fb, m.old, { caseId: m.row, messageId: m.messageId, truth: { id: m.truth, ...truths.get(m.truth) } });
+  m.ref = stream.append(produced, m.messageId);
   tally.records += 1; tally.bytesOld += m.old.length; tally.bytesNew += 4 + m.ref.size;
-}
-// the checks: read each new record back from the stream, fly old and new, compare
-const byOffset = new Map(); for (const fr of frames(stream.file)) byOffset.set(fr.offset, fr.bytes);
-for (const m of made) {
-  const bytes = byOffset.get(m.ref.offset);
+  const bytes = readFrame(stream.file, m.ref);
   if (!bytes || bytes.length !== m.ref.size || sha(bytes).slice(0, 16) !== m.ref.sha256) { problems.push(`${m.row}: the frame read back is not the record made`); continue; }
   const nw = O.OCM.getRootAsOCM(new fb.ByteBuffer(new Uint8Array(bytes))).unpack(), od = O.OCM.getRootAsOCM(new fb.ByteBuffer(m.old)).unpack();
   if (js(named(nw)) === js(named(od))) tally.otherFieldsEqual += 1; else problems.push(`${m.row}: a field the completion does not name differs`);
