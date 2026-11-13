@@ -31,15 +31,18 @@ const { SETTINGS } = await import('../headline-loop/lib/settings.mjs');
 const require = createRequire(import.meta.url);
 const { createStandaloneHarness } = await import(require.resolve('space-data-module-sdk/testing/isomorphic'));
 const iso = (ms) => new Date(ms).toISOString().replace('Z', '');
-const truthDir = path.join(root, 'truth'), seedFile = path.join(truthDir, 'seed-ocm.fsdata'), truthFile = path.join(truthDir, 'truth-ocm.fsdata'), limit = Number(opt('limit') ?? Infinity);
+const truthDir = path.join(root, 'truth'), seedFile = opt('seeds-out') ?? path.join(truthDir, 'seed-ocm.fsdata'), truthFile = opt('out') ?? path.join(truthDir, 'truth-ocm.fsdata'), limit = Number(opt('limit') ?? Infinity);
 const refFile = opt('ref-wasm') ?? (() => { const d = path.join(root, 'reference'), w = fs.readdirSync(d).filter((f) => f.endsWith('.wasm')); if (w.length !== 1) throw new Error(`${d} holds ${w.length} builds: say which with --ref-wasm`); return path.join(d, w[0]); })();
 
 // 1. what the rows say: per truth hash the case and its start epoch
+const sourceFiles = [refFile, ...fs.readdirSync(truthDir).filter((f) => /\.(json|bin)$/.test(f)).map((f) => path.join(truthDir, f))];
+if (Number.isFinite(limit) && (fs.existsSync(seedFile) || fs.existsSync(truthFile))) throw new Error('--limit requires new output paths; refusing to replace a complete stream with a subset');
 const byHash = new Map(), startsOf = new Map();
 for (const d of fs.readdirSync(root)) {
   const dir = path.join(root, d);
   if (!fs.statSync(dir).isDirectory() || ['truth', 'reference'].includes(d)) continue;
   for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x))) {
+    sourceFiles.push(path.join(dir, n));
     for await (const line of createInterface({ input: fs.createReadStream(path.join(dir, n)), crlfDelay: Infinity })) {
       if (!line.includes('"hash"')) continue;
       const r = JSON.parse(line), h = r.truth?.hash;
@@ -55,7 +58,7 @@ const universe = makeCases(498, { gridStep: 1 }).cases;
 for (const c of universe) { const start = Date.parse(`${c.cutoff}T00:00:00Z`) - 72 * 3600e3, k = seedMessageId(c.id, iso(start)); if (!startsOf.has(k)) startsOf.set(k, { id: c.id, start, el: c, am: c.am }); }
 
 // 2. the seeds
-const seedStream = new StreamReplacement(seedFile), seeds = new Map();
+const seedStream = new StreamReplacement(seedFile, [...sourceFiles, truthFile]), seeds = new Map();
 const refH = await createStandaloneHarness('browser', refFile, { surface: 'direct' });
 const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
 const refFly = async (ocm, epoch) => { const r = await refH.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf([`${epoch}Z`]) }] }); if (r.statusCode !== 0) throw new Error(`reference: ${r.errorMessage}`); return S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload))[0]; };
@@ -76,7 +79,7 @@ for (const [k, s] of [...startsOf].sort(([a], [b]) => (a < b ? -1 : 1))) {
 const hashes = fs.readdirSync(truthDir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort();
 const tally = { flights: hashes.length, withStates: 0, converted: 0, noStates: 0, noRow: 0, startsDisagree: 0, sharedByCases: 0, bytesBin: 0, bytesStream: 0 };
 const made = new Map();
-const truthStream = new StreamReplacement(truthFile);
+const truthStream = new StreamReplacement(truthFile, [...sourceFiles, seedFile]);
 for (const h of hashes) {
   if (made.size >= limit) break;
   const meta = JSON.parse(fs.readFileSync(path.join(truthDir, `${h}.json`), 'utf8'));

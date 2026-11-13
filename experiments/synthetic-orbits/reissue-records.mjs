@@ -18,7 +18,7 @@ import path from 'node:path';
 import { createInterface } from 'node:readline';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
-import { StreamReplacement, readRecord, frames } from './records.mjs';
+import { StreamReplacement, readRecord, readFrame, frames } from './records.mjs';
 import { putUnique } from './duplicates.mjs';
 import { completeFit } from './identity.mjs';
 
@@ -50,6 +50,12 @@ for (const fr of frames(truthFile)) {
   putUnique(truths, header.MESSAGE_ID(), { sha256: sha(fr.bytes), bytes: fr.size }, header.CREATION_DATE(), args.includes('--newest'));
 }
 
+// Validate all referenced input streams, including frames no row selects.
+const originals = new Map();
+for (const file of new Set(inputs.filter((f) => f !== truthFile && f.endsWith('.fsdata')))) for (const fr of frames(file)) {
+  const header = O.OCM.getRootAsOCM(new fb.ByteBuffer(fr.bytes)).HEADER();
+  putUnique(originals, header?.MESSAGE_ID(), { file, offset: fr.offset, size: fr.size, sha256: sha(fr.bytes) }, header?.CREATION_DATE(), args.includes('--newest'));
+}
 const h = await createStandaloneHarness('browser', wasm, { surface: 'direct' });
 const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
 const fly = async (ocm, epochs) => { const r = await h.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf(epochs) }] }); if (r.statusCode !== 0) return `refused: ${r.errorCode}: ${String(r.errorMessage).slice(0, 100)}`; return S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload)).map((l) => [...l.r, ...l.v]); };
@@ -65,7 +71,10 @@ for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x)).sor
     if (!line.trim()) continue;
     const row = JSON.parse(line); tally.rows += 1;
     if (!row.ap?.record) continue;
-    const old = readRecord(dir, row.ap.record), truth = truths.get(row.truth?.hash);
+    let old = readRecord(dir, row.ap.record);
+    const originalId = O.OCM.getRootAsOCM(new fb.ByteBuffer(old)).HEADER()?.MESSAGE_ID(), chosen = originals.get(originalId);
+    if (chosen) old = readFrame(chosen.file, chosen);
+    const truth = truths.get(row.truth?.hash);
     if (!truth) { tally.noTruth += 1; continue; }
     const messageId = `${row.id}:${wasm12}${fitKey}:ap`, bytes = completeFit(O, fb, old, { caseId: row.id, messageId, truth: { id: row.truth.hash, ...truth } });
     const header = O.OCM.getRootAsOCM(new fb.ByteBuffer(old)).HEADER();
