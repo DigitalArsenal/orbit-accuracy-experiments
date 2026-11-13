@@ -56,6 +56,8 @@ test('duplicate identity and repeated case/technique are refused; newest selects
   const a = unpack(first), b = unpack(first); a.HEADER.CREATION_DATE = '2026-01-01T00:00:00'; b.HEADER.CREATION_DATE = '2026-01-02T00:00:00';
   write(pack(a), pack(b)); run = reduce(['--records', file, '--newest'], FIX);
   assert.equal(run.status, 0, run.stderr); assert.equal(JSON.parse(run.stdout).counts.supersededRecords, 1);
+  const idx = new FrameIndex(S.OCM, S.flatbuffers, file, { newest: true });
+  assert.equal(idx.lookup(a.HEADER.MESSAGE_ID).sha256, crypto.createHash('sha256').update(pack(b)).digest('hex'));
   b.HEADER.MESSAGE_ID += '-other-build'; write(pack(a), pack(b));
   run = reduce(['--records', file], FIX); assert.notEqual(run.status, 0); assert.match(run.stderr, /duplicate record identity:/);
   run = reduce(['--records', file, '--newest'], FIX); assert.equal(run.status, 0, run.stderr); assert.equal(JSON.parse(run.stdout).counts.selectedRecords, 1);
@@ -68,4 +70,22 @@ test('identity fields are required and module hash refusal is specific', () => {
   const file = path.join(dir, 'unnamed.fsdata'); new RecordStream(file).append(pack(o));
   let run = reduce(['--records', file]); assert.notEqual(run.status, 0); assert.match(run.stderr, /record lacks study identity/);
   run = reduce(['--sha256', '0'.repeat(64)]); assert.notEqual(run.status, 0); assert.match(run.stderr, /the module is .* not 000000/);
+});
+
+test('reissue verifies complete streams, refuses input aliases and repeated truth identities', () => {
+  const local = path.join(dir, 'reissue'); fs.mkdirSync(local);
+  for (const n of ['records.fsdata', 'truth-ocm.fsdata']) fs.copyFileSync(path.join(FIX, n), path.join(local, n));
+  const source = path.join(local, 'records.fsdata'), truth = path.join(local, 'truth-ocm.fsdata'), output = path.join(local, 'out.fsdata');
+  const hash = (b) => crypto.createHash('sha256').update(b).digest('hex');
+  const rows = [...frames(source)].map((fr) => { const o = unpack(fr.bytes); return { id: o.METADATA.OBJECT_NAME,
+    ap: { record: { file: 'records.fsdata', offset: fr.offset, size: fr.size, sha256: hash(fr.bytes).slice(0, 16) } }, truth: { hash: o.PROVENANCE.SOURCE_ID } }; });
+  fs.writeFileSync(path.join(local, 'rows.jsonl'), rows.map((r) => JSON.stringify(r)).join('\n'));
+  const run = (out) => spawnSync(process.execPath, [path.join(repoRoot, 'experiments/synthetic-orbits/reissue-records.mjs'), local,
+    '--truth', truth, '--wasm', found.f, '--out', out], { encoding: 'utf8', env: { ...process.env, SDM_MODULE_UNSIGNED_BUILD: '1' } });
+  const good = run(output); assert.equal(good.status, 0, good.stderr);
+  const tally = JSON.parse(good.stdout); assert.equal(tally.records, 4); assert.equal(tally.flownEqual, 4); assert.equal(tally.otherFieldsEqual, 4); assert.equal(tally.problems, 0);
+  const original = hash(fs.readFileSync(source)); const alias = run(source);
+  assert.notEqual(alias.status, 0); assert.match(alias.stderr, /output equals input/); assert.equal(hash(fs.readFileSync(source)), original);
+  const preserved = hash(fs.readFileSync(output)); new RecordStream(truth).append([...frames(truth)][0].bytes);
+  const duplicate = run(output); assert.notEqual(duplicate.status, 0); assert.match(duplicate.stderr, /duplicate record identity:/); assert.equal(hash(fs.readFileSync(output)), preserved);
 });
