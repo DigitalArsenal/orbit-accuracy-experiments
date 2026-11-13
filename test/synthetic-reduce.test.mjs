@@ -21,9 +21,9 @@ const FIX = path.join(repoRoot, 'test/fixtures/synthetic-reduce');
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'synthetic-reduce-'));
 process.on('exit', () => fs.rmSync(dir, { recursive: true, force: true }));
 makeFixtures(FIX, dir);
-const reduce = (extra = [], input = dir) => spawnSync(process.execPath, [path.join(repoRoot, 'experiments/synthetic-orbits/reduce.mjs'),
+const reduce = (extra = [], input = dir) => spawnSync(process.execPath, [path.join(repoRoot, 'experiments/synthetic-orbits/reduce.mjs'), ...extra,
   '--truth', path.join(input, 'truth-ocm.fsdata'), '--seeds', path.join(input, 'seed-ocm.fsdata'), '--records', path.join(input, 'records.fsdata'),
-  '--wasm', found.f, ...extra], { encoding: 'utf8', env: { ...process.env, SDM_MODULE_UNSIGNED_BUILD: '1' }, maxBuffer: 1 << 24 });
+  '--wasm', found.f], { encoding: 'utf8', env: { ...process.env, SDM_MODULE_UNSIGNED_BUILD: '1' }, maxBuffer: 1 << 24 });
 const expected = JSON.parse(fs.readFileSync(path.join(FIX, 'expected.json'), 'utf8'));
 const table = (o) => ({ counts: o.counts, cases: o.cases, missing: o.missing });
 
