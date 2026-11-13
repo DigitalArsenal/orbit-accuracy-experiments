@@ -29,7 +29,7 @@ function withLock(file, fn) {
     try {
       const pid = Number(fs.readFileSync(holder, 'utf8'));
       if (pid) { try { process.kill(pid, 0); } catch (e) { gone = e.code === 'ESRCH'; } } else gone = Date.now() - fs.statSync(lock).mtimeMs > 60e3;
-    } catch { try { gone = Date.now() - fs.statSync(lock).mtimeMs > 60e3; } catch { continue; } }   // no holder file yet: the taker is between mkdir and its write
+    } catch { try { gone = Date.now() - fs.statSync(lock).mtimeMs > 60e3; } catch { continue; } }   // no holder file: the taker is between mkdir and its write
     if (gone) { fs.rmSync(lock, { recursive: true, force: true }); continue; }
     if (tries > 12000) throw new Error(`${file}: the stream's lock is held by another process (${fs.readFileSync(holder, 'utf8')}) for over a minute`);
     sleepMs(5);
@@ -62,7 +62,7 @@ export function withStreamedRecords(row, stream) {
 }
 
 /** The $OCM bytes of the frame a reference names in a stream file: the size prefix and the hash must be the reference's, else it throws and reads nothing else (no search, no guess). */
-function readFrame(file, ref) {
+export function readFrame(file, ref) {
   const fd = fs.openSync(file, 'r');
   try {
     const frame = Buffer.alloc(4 + ref.size);
@@ -83,12 +83,48 @@ export function readRecord(dir, ref) {
 
 /** Every frame of a stream in order: { offset, size, bytes }. */
 export function* frames(file) {
-  const buf = fs.readFileSync(file);
-  for (let at = 0; at < buf.length;) {
-    if (at + 4 > buf.length) throw new Error(`${file}: a size prefix is cut off at ${at}`);
-    const size = buf.readUInt32LE(at);
-    if (at + 4 + size > buf.length) throw new Error(`${file}: the frame at ${at} runs past the end`);
-    yield { offset: at, size, bytes: buf.subarray(at + 4, at + 4 + size) };
-    at += 4 + size;
+  const fd = fs.openSync(file, 'r');
+  try {
+    const length = fs.fstatSync(fd).size, prefix = Buffer.alloc(4);
+    for (let at = 0; at < length;) {
+      if (fs.readSync(fd, prefix, 0, 4, at) !== 4) throw new Error(`${file}: a size prefix is cut off at ${at}`);
+      const size = prefix.readUInt32LE(0);
+      if (!size || at + 4 + size > length) throw new Error(`${file}: the frame at ${at} runs past the end or is empty`);
+      const bytes = Buffer.alloc(size);
+      if (fs.readSync(fd, bytes, 0, size, at + 4) !== size) throw new Error(`${file}: incomplete frame at ${at}`);
+      yield { offset: at, size, bytes };
+      at += 4 + size;
+    }
+  } finally { fs.closeSync(fd); }
+}
+
+/** A replacement is published only after its frames tile the file and every identity reads back. */
+export class StreamReplacement {
+  constructor(target, inputs = []) {
+    const canonical = (f) => fs.existsSync(f) ? fs.realpathSync(f) : path.resolve(f);
+    if (inputs.some((f) => canonical(f) === canonical(target))) throw new Error(`output equals input: ${target}`);
+    this.target = target;
+    this.file = `${target}.${process.pid}.${crypto.randomUUID()}.tmp`;
+    fs.closeSync(fs.openSync(this.file, 'wx'));
+    this.stream = new RecordStream(this.file);
+    this.expected = [];
+  }
+  append(bytes, identity) {
+    const ref = this.stream.append(bytes);
+    this.expected.push({ identity, sha: sha256(bytes) });
+    return ref;
+  }
+  verify(identityOf) {
+    let count = 0;
+    for (const fr of frames(this.file)) {
+      const want = this.expected[count++];
+      if (!want || identityOf(fr.bytes) !== want.identity || sha256(fr.bytes) !== want.sha) throw new Error('replacement identity or bytes differ');
+    }
+    if (count !== this.expected.length) throw new Error('replacement frame count differs');
+    this.verified = true;
+  }
+  publish() {
+    if (!this.verified) throw new Error('replacement has not been verified');
+    fs.renameSync(this.file, this.target);
   }
 }
