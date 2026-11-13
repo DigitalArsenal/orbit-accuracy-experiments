@@ -119,9 +119,9 @@ export const atLeast = (v, w) => {
 // Evidence. Measured on 0.6.26 against the precise orbits (stack issue 496): the gate at 1 carried the drag term on altimetry (day-5
 // error 1,702 to 1,363 m; 1,435 to 318 m on the windows clean of later burns) and laser spheres (108 to 48 m); carrying it on every window
 // lost on near 700 km (worse on 195, better on 50) and strong drag (worse on 81, better on 59), where a full 72 h arc across a burn fits a
-// drag term near zero, which carried took the day-5 median of the near-700 km windows clean of burns from 137 to 1,778 m. The plain 24 h
-// fit's stated sigma has since fallen: on 0.6.50 the 24 development windows of altimetry and laser spheres state 0.11 to 2.5 and none
-// carries at 1 (the one above 1 has no 72 h arc), while the 236 strong-drag windows state 0.001 to 0.007. Carried from the 72 h arc at a gate of 0.1 or less, the drag term lowers the day-5 in-track error from 2.58 to
+// drag term near zero, which carried took the day-5 median of the near-700 km windows clean of burns from 137 to 1,778 m. On the 260
+// development 24 h windows of a later build the plain 24 h fit states 0.11 to 2.5 on the 24 of altimetry and laser spheres (the one above 1
+// has no 72 h arc, so none carries at 1) and 0.001 to 0.007 on the 236 of strong drag. Carried from the 72 h arc at a gate of 0.1 or less, the drag term lowers the day-5 in-track error from 2.58 to
 // 0.45 km on altimetry (15 of 15 better) and from 0.51 to 0.07 km on laser spheres (5 better, none worse, of the 6 with a 72 h arc); on
 // strong drag, carried, it raises it from 5.12 to 5.98 km (101 of 236 windows worse). In the table's stored rows of one build the plain
 // sigma of every strong-drag window is at most 0.011 and every other window's at least 0.040, so a gate of 0.03 carries no strong-drag
