@@ -141,13 +141,7 @@ async function worker() {
         // (a truth with no state before the cutoff has no arc either: the coverage error below)
         // the object's maneuvering state at the cutoff (arms.mjs MANEUVER72): the 72 h fit's arc, and whether a 24 h fit carries
         let m = null, perigeeKm = null;
-        if (theory === 'AP' && A.maneuver72(build.version) && args.burns && lastBeforeCutoff) {
-          const last = lastBeforeCutoff, MU = 398600.4418, rr = Math.hypot(...last.r), vv = Math.hypot(...last.v);
-          const aKm = 1 / (2 / rr - (vv * vv) / MU), h = [last.r[1] * last.v[2] - last.r[2] * last.v[1], last.r[2] * last.v[0] - last.r[0] * last.v[2], last.r[0] * last.v[1] - last.r[1] * last.v[0]];
-          perigeeKm = aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
-          // the row's minimum arc (lib/arms.mjs minHoursOf: 9 h on the long-period rows) and, on SEAMS_BREAK_ARC rows, the joins too
-          m = A.maneuverArc(A.arcBreaks(args.burns, w.group, w.name, D0), D0, perigeeKm, undefined, A.minHoursOf(w.group));
-        }
+        if (theory === 'AP') ({ m, perigeeKm } = A.maneuverState({ burns: args.burns, group: w.group, name: w.name, D0, last: lastBeforeCutoff, version: build.version }));
         // the arc the rule gives this fit (lib/arms.mjs arcRuleApplies: the 72 h fits, and the long-period rows' longer fits over their own arc)
         const ma = m && A.arcRuleApplies(w.group, arc) ? (arc === 72 ? m : A.maneuverArc(A.arcBreaks(args.burns, w.group, w.name, D0), D0, perigeeKm, undefined, A.minHoursOf(w.group), arc)) : null;
         if (ma) {
@@ -185,7 +179,7 @@ async function worker() {
               // the terms come from the fit of the full 72 h arc, a maneuvering object's too (not its 72 h record, the arc after its burn);
               // lib/arms.mjs carry24Fit, the function the covariance coverage flight calls too
               const fitOnce = ({ thin: t = thin, pcf: p, record }) => (record ? arms.ap({ ...base, thin: t, pcf: p, spw, record: true }) : arms.ap({ ...base, thin: t, pcf: p, spw, scan }));
-              const kept = await A.carry24Fit({ x, fitOnce, thin72, pcf, pcf72: A.apPcfFor(w.group, build.version, G.vacuum, 72).pcf, maneuvering: !!m?.maneuvering });
+              const kept = await A.carry24Fit({ x, fitOnce, thin72, pcf, pcf72: A.apPcfFor(w.group, build.version, G.vacuum, 72).pcf, version: build.version, maneuvering: !!m?.maneuvering });
               x = kept.x; row.fitProcess = kept.fitProcess;
             }
             Object.assign(row, { days: x.days, fitRmsKm: x.rms, fit: x.fit, s: x.s, ...(x.perigeeScan ? { perigeeScan: x.perigeeScan } : {}) });
@@ -556,7 +550,7 @@ async function main() {
       const lengths = new Map(); for (const w of scored) { const r = rowOf('AP', w, arc), h = r?.fitArcHours ?? arc; if (r?.fitProcess) lengths.set(h, (lengths.get(h) ?? { n: 0, inside: 0 })); const x = lengths.get(h); if (x) { x.n += 1; if (r.burnInArc) x.inside += 1; } }
       const arcCounts = [...lengths].sort(([p], [q]) => q - p).map(([h, x]) => `${x.n} of ${h.toLocaleString('en-US')} h${x.inside ? ` (${x.inside} with the ${seamRow ? 'firing or join' : 'firing'} inside the arc)` : ''}`).join(', ');
       const fitProcess = arc === 24 && A.carry24(version)
-        ? `Each 24 h fit first fits the same window's 72 h arc, which ends at the same cutoff, and carries its terms: above the drag the radiation terms (AGOM with its uncertainty, and ECOM2's Y0 where that fit solved it); under the drag the drag term with its uncertainty, only where the 24 h arc alone leaves it undetermined (a stated sigma of ln BTERM of ${A.CARRY24_DRAG_SIGMA} or more). That 72 h fit is of the full arc, for an object that maneuvers (the 72 h rule below) too, not its 72 h record. Windows: ${carryCount('radiation carried from 72 h')} radiation carried, ${carryCount('drag carried from 72 h')} drag carried, ${carryCount('plain')} fitted as before, ${processCount('plain, no 72 h arc')} without a 72 h arc in the truth (fitted as before); ${carryManeuvering} of the first three are of a maneuvering object.`
+        ? `Each 24 h fit first fits the same window's 72 h arc, which ends at the same cutoff, and carries its terms: above the drag the radiation terms (AGOM with its uncertainty, and ECOM2's Y0 where that fit solved it); under the drag the drag term with its uncertainty, only where the 24 h arc alone leaves it undetermined (a stated sigma of ln BTERM of ${A.carry24Gate(version, false)} or more${A.carry24Gate(version, false) === A.carry24Gate(version, true) ? '' : `, ${A.carry24Gate(version, true)} or more for an object that is maneuvering at the cutoff`}). That 72 h fit is of the full arc, for an object that maneuvers (the 72 h rule below) too, not its 72 h record. Windows: ${carryCount('radiation carried from 72 h')} radiation carried, ${carryCount('drag carried from 72 h')} drag carried, ${carryCount('plain')} fitted as before, ${processCount('plain, no 72 h arc')} without a 72 h arc in the truth (fitted as before); ${carryManeuvering} of the first three are of a maneuvering object.`
         : arc > 72 && A.arcRuleApplies(g, arc) && A.maneuver72(version) && scored.some((w) => rowOf('AP', w, arc)?.fitProcess)
           ? `The ${arc} h of this row is the longest arc allowed, not the arc used: a firing${seamRow ? ' or join of the truth\'s solutions' : ''} known at the cutoff that ends inside the ${arc} h starts the fit\'s arc, at least ${A.minHoursOf(g)} h (one ending less than ${A.minHoursOf(g)} h before the cutoff stays inside that ${A.minHoursOf(g)} h arc, never dropped), with no other cap, on AP and on the numerical arm alike. Arcs fitted: ${arcCounts}. SGP4-XP, the Space Force XP and SGP4 are fitted on the full ${arc} h on every window, through the ${seamRow ? 'firing or join' : 'firing'} where AP\'s arc starts after it.`
         : arc === 72 && A.maneuver72(version) && scored.some((w) => rowOf('AP', w, arc)?.fitProcess)

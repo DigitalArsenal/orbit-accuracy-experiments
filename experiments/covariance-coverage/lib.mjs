@@ -103,6 +103,10 @@ export async function openBuild(out, sha12, caps) {
   const build = JSON.parse(fs.readFileSync(path.join(dir, 'build.json'), 'utf8'));
   // the version picks the $PCF (apPcfFor's gates): one the gates cannot read would fit every record as the oldest version does
   if (!VERSION.test(build.version)) throw new Error(`${dir}/build.json: version ${JSON.stringify(build.version)} is not X.Y.Z`);
+  // --burns <dir of the burn detector's lists>: a 24 h fit reads its object's maneuvering state as the table does; --rules-at <X.Y.Z>: the
+  // version the 24 h carry rule is read at, the build's own where absent (the rule changes with the version, lib/arms.mjs carry24Gate)
+  const BURNS = opt('--burns') ?? null, ruleVersion = opt('--rules-at') ?? build.version;
+  if (!VERSION.test(ruleVersion)) throw new Error(`--rules-at ${ruleVersion} is not X.Y.Z`);
   const entry = createRequire(path.join(MODULES_ROOT, 'propagator/sdn-ap/package.json')).resolve('space-data-module-sdk/testing/isomorphic');
   const { createStandaloneHarness } = await import(pathToFileURL(entry).href);
   const ap = await createStandaloneHarness('browser', path.join(dir, 'module.wasm'), { surface: 'direct' });
@@ -133,7 +137,7 @@ export async function openBuild(out, sha12, caps) {
    *  fit did), sc (the scored epochs and truth after the cutoff) }. */
   async function fitRecord(w) {
     const D0 = w.D0, arc = w.arcH, G = WN.GROUPS[w.group];
-    const carrying = arc === 24 && A.carry24(build.version);
+    const carrying = arc === 24 && A.carry24(ruleVersion);
     const truth = await WN.truthOf(w, D0 - (carrying ? 72 : arc) * HOUR - HOUR, D0 + 7 * DAY + HOUR, null);
     const sc = WN.scoredOf(truth.lines.filter((l) => WN.ms(l.epoch) > D0), D0);
     const thin = WN.arcOf(truth.lines.filter((l) => { const t = WN.ms(l.epoch); return t >= D0 - arc * HOUR && t <= D0; }), arc);
@@ -149,7 +153,9 @@ export async function openBuild(out, sha12, caps) {
     if (carrying) {
       const thin72 = WN.arcOf(truth.lines.filter((l) => { const t = WN.ms(l.epoch); return t >= D0 - 72 * HOUR && t <= D0; }), 72);
       const fitOnce = async ({ thin: t = thin, pcf: p, record }) => { const o = await fitBytes(t, p); return record ? { ocm: o } : { ocm: o, fit: { sigmaLnB: A.carriedTerms(o).sLnB } }; };
-      const kept = await A.carry24Fit({ x: { ocm, fit: { sigmaLnB: A.carriedTerms(ocm).sLnB } }, fitOnce, thin72, pcf: choice.pcf, pcf72: capsOf(A.apPcfFor(w.group, build.version, !!G.vacuum, 72)).pcf });
+      // the object's maneuvering state at the cutoff by the burn lists (--burns), as the table reads it (lib/arms.mjs maneuverState)
+      const { m } = A.maneuverState({ burns: BURNS, group: w.group, name: w.name, D0, last: truth.lines.filter((l) => WN.ms(l.epoch) <= D0).at(-1), version: ruleVersion });
+      const kept = await A.carry24Fit({ x: { ocm, fit: { sigmaLnB: A.carriedTerms(ocm).sLnB } }, fitOnce, thin72, pcf: choice.pcf, pcf72: capsOf(A.apPcfFor(w.group, build.version, !!G.vacuum, 72)).pcf, version: ruleVersion, maneuvering: !!m?.maneuvering });
       ocm = kept.x.ocm; fitProcess = kept.fitProcess;
     }
     return { ocm, record: S.OCM.OCM.getRootAsOCM(new S.flatbuffers.ByteBuffer(ocm)).unpack(), pcf: choice.label, fitProcess, sc };

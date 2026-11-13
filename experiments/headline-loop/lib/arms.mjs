@@ -106,21 +106,33 @@ export const atLeast = (v, w) => {
   for (let i = 0; i < 3; i += 1) if (a[i] !== b[i]) return a[i] > b[i];
   return true;
 };
-// The 24 h fit's carried terms (stack issue 496; owner, 2026-11-11: how an $OCM is made is free, and only data before the cutoff is
-// used). From CARRY24_SINCE a 24 h AP fit first fits the window's 72 h arc, which ends at the same cutoff, and carries its terms:
+// The 24 h fit's carried terms (stack issue 496; only data before the cutoff is used). From CARRY24_SINCE a 24 h AP fit first fits the
+// window's 72 h arc, which ends at the same cutoff, and carries its terms:
 // - above the drag (the 72 h record's regime ABOVE), the radiation terms: AGOM with its stated sigma (FIT.SRP_PRIOR GAUSSIAN_SIGNED) and,
 //   where the 72 h fit solved it, ECOM2's Y0 (FORCES.ECOM2 Y0_M_S2, held on a 24 h arc);
-// - under the drag, the drag term only, and only where the plain 24 h fit states a sigma of ln BTERM of CARRY24_DRAG_SIGMA or more (the
-//   arc does not see it): BTERM with the 72 h record's stated sigma of ln B (FIT.DRAG_PRIOR LOG_NORMAL).
+// - under the drag, the drag term only: BTERM with the 72 h record's stated sigma of ln B (FIT.DRAG_PRIOR LOG_NORMAL), where the plain 24 h
+//   fit states a sigma of ln BTERM at or above a gate (the arc does not see the term). The gate is CARRY24_DRAG_SIGMA (1); from
+//   CARRY24_CLEAN_SINCE it is CARRY24_DRAG_SIGMA_CLEAN (0.03) for an object that is not maneuvering at the cutoff by the burn lists
+//   (maneuverState), and stays 1 for one that is.
 // The 72 h fit is of the full 72 h arc, for an object that maneuvers (MANEUVER72, below) too: not its 72 h record, which is the arc after
 // its burn. Where the truth holds no 72 h arc before the cutoff, the 24 h fit is the plain one.
-// Measured on 0.6.26 against the precise orbits (stack issue 496): carrying the drag term where the 24 h arc does see it lost on the
-// near-700 km and strong-drag rows, and carrying the radiation terms under the drag changed nothing. On the maneuvering windows the full
-// arc's drag term, carried under the rule, gained over carrying nothing on altimetry (14 better, 2 worse of 34; the median at day 5 2,049
-// to 950 m) and moved one near-700 km window of 266 (worse).
+// Evidence. Measured on 0.6.26 against the precise orbits (stack issue 496): the gate at 1 carried the drag term on altimetry (day-5
+// error 1,702 to 1,363 m; 1,435 to 318 m on the windows clean of later burns) and laser spheres (108 to 48 m); carrying it on every window
+// lost on near 700 km (worse on 195, better on 50) and strong drag (worse on 81, better on 59), where a full 72 h arc across a burn fits a
+// drag term near zero, which carried took the day-5 median of the near-700 km windows clean of burns from 137 to 1,778 m. The plain 24 h
+// fit's stated sigma has since fallen: on 0.6.50 the 24 development windows of altimetry and laser spheres state 0.11 to 2.5 and none
+// carries at 1 (the one above 1 has no 72 h arc), while the 236 strong-drag windows state 0.001 to 0.007. Carried from the 72 h arc at a gate of 0.1 or less, the drag term lowers the day-5 in-track error from 2.58 to
+// 0.45 km on altimetry (15 of 15 better) and from 0.51 to 0.07 km on laser spheres (5 better, none worse, of the 6 with a 72 h arc); on
+// strong drag, carried, it raises it from 5.12 to 5.98 km (101 of 236 windows worse). In the table's stored rows of one build the plain
+// sigma of every strong-drag window is at most 0.011 and every other window's at least 0.040, so a gate of 0.03 carries no strong-drag
+// window.
 export const CARRY24_SINCE = '0.6.26';
 export const CARRY24_DRAG_SIGMA = 1;
+export const CARRY24_CLEAN_SINCE = '0.6.52';
+export const CARRY24_DRAG_SIGMA_CLEAN = 0.03;
 export const carry24 = (version) => atLeast(version, CARRY24_SINCE);
+/** The gate on the plain 24 h fit's stated sigma of ln BTERM for the drag term to be carried, at a build version and an object's maneuvering state. */
+export const carry24Gate = (version, maneuvering) => (!maneuvering && atLeast(version, CARRY24_CLEAN_SINCE) ? CARRY24_DRAG_SIGMA_CLEAN : CARRY24_DRAG_SIGMA);
 /** The terms a fitted $OCM carries into a later fit: { b, sLnB, agom, sAgom, y0, regime } (regime: the record's COV_REALISM REGIME). */
 export const carriedTerms = (ocm) => {
   const info = APL.readOcm(ocm), o = info.o, kinds = o.COV_PARAMETER_KINDS ?? [], cv = o.COVARIANCE_DATA ?? [];
@@ -152,13 +164,14 @@ export const carriedPcf = (bytes, t, { drag, radiation }) => {
 /** A 24 h AP window's fit by the table's process (stack issue 496), the one function the table and the covariance coverage flight both call.
  *  `x`: the plain 24 h fit (its fit.sigmaLnB is read); `fitOnce({ pcf, thin, record })`: one more fit of the same window (the 24 h arc unless `thin`
  *  is given; `record` asks for the fitted record alone, { ocm }); `thin72`: the 72 h arc ending at the same cutoff, null where the truth holds none;
- *  `pcf`, `pcf72`: the plain fits' $PCF bytes at 24 h and at 72 h. Returns { x: the fit the row keeps, fitProcess: what the row's fit did }. */
-export const carry24Fit = async ({ x, fitOnce, thin72, pcf, pcf72, maneuvering = false }) => {
+ *  `pcf`, `pcf72`: the plain fits' $PCF bytes at 24 h and at 72 h; `version`: the build version the rule is read at (carry24Gate); `maneuvering`:
+ *  the object's state at the cutoff (maneuverState). Returns { x: the fit the row keeps, fitProcess: what the row's fit did }. */
+export const carry24Fit = async ({ x, fitOnce, thin72, pcf, pcf72, version, maneuvering = false }) => {
   let fitProcess = 'plain, no 72 h arc';
   if (thin72) {
     // the terms come from the fit of the full 72 h arc
     const t72 = carriedTerms((await fitOnce({ thin: thin72, pcf: pcf72, record: true })).ocm);
-    const radiation = t72.regime === 'ABOVE', drag = !radiation && (x.fit.sigmaLnB ?? 0) >= CARRY24_DRAG_SIGMA;
+    const radiation = t72.regime === 'ABOVE', drag = !radiation && (x.fit.sigmaLnB ?? 0) >= carry24Gate(version, maneuvering);
     fitProcess = (radiation ? 'radiation carried from 72 h' : drag ? 'drag carried from 72 h' : 'plain') + (maneuvering ? ', maneuvering' : '');
     if (radiation || drag) x = await fitOnce({ pcf: carriedPcf(pcf, t72, { drag, radiation }) });
   }
@@ -319,6 +332,17 @@ export const maneuverArc = (burns, D0, perigeeKm, floorKm = MANEUVER72.perigeeMi
   // burnInArc: the last burn ends after the arc's start (it ended less than the minimum arc before the cutoff), so the arc holds it; the
   // numerical arm's rows (refly.mjs --after-burns) say the same of their arc
   return { startMs, maneuvering: true, lastBurnMs: last, burnInArc: last > startMs };
+};
+/** An AP window's maneuvering state at its cutoff, the one the table and the covariance coverage flight both read: { m, perigeeKm }, with m the
+ *  maneuverArc of the object's burns known at the cutoff and the perigee of its last state before it, or null where the rule is off (the build's
+ *  version below MANEUVER72_SINCE, no burn lists `burns`, or no state before the cutoff). `last`: that state, { r, v } in km and km/s. */
+export const maneuverState = ({ burns, group, name, D0, last, version }) => {
+  if (!(maneuver72(version) && burns && last)) return { m: null, perigeeKm: null };
+  const MU = 398600.4418, rr = Math.hypot(...last.r), vv = Math.hypot(...last.v);
+  const aKm = 1 / (2 / rr - (vv * vv) / MU), h = [last.r[1] * last.v[2] - last.r[2] * last.v[1], last.r[2] * last.v[0] - last.r[0] * last.v[2], last.r[0] * last.v[1] - last.r[1] * last.v[0]];
+  const perigeeKm = aKm * (1 - Math.sqrt(Math.max(0, 1 - (h[0] ** 2 + h[1] ** 2 + h[2] ** 2) / (MU * aKm)))) - 6378.137;
+  // the row's minimum arc (minHoursOf: 9 h on the long-period rows) and, on SEAMS_BREAK_ARC rows, the joins too
+  return { m: maneuverArc(arcBreaks(burns, group, name, D0), D0, perigeeKm, undefined, minHoursOf(group)), perigeeKm };
 };
 // The numerical arm's fit of a maneuvering object (stack issues 462 and 489): the numerical propagator has no thrust term either, so a fit
 // through a burn takes the thrust into its drag and radiation terms and its forecast leaves the orbit. With the burn lists (refly.mjs

@@ -3,7 +3,9 @@
 // cutoff; a 24 h fit carries its 72 h arc's terms where lib/arms.mjs carry24Fit says so, and states which in fitProcess) and flown by its
 // propagate in GCRF with its COVARIANCE_MATRIX_LINES on the scored epochs; errors and stated covariance in the truth's R, T, N axes by
 // analysis/gp-error-model pair_statistics.
-//   node covbuild.mjs <out> <build sha12> <shard k/n> [--caps T,Z]
+//   node covbuild.mjs <out> <build sha12> <shard k/n> [--caps T,Z] [--burns <burn lists dir>] [--rules-at <X.Y.Z>]
+// --burns: the burn detector's lists, from which a 24 h fit reads its object's maneuvering state as the table does (the carry rule's gate
+// depends on it from CARRY24_CLEAN_SINCE); --rules-at: the version the carry rule is read at, the build's own where absent.
 // --caps T,Z: every record fitted at tesseral degree T and zonal degree Z (FORCES.MAXIMUM_TESSERAL_DEGREE, MAXIMUM_DEGREE), its other
 // forces the row's own $PCF's.
 // Rows: <out>/covbuild-<sha12>[-capsT-Z]-<k>of<n>.jsonl, one per window: line, group, arcH, cutoff, pcf, fitProcess, cp (the record's
