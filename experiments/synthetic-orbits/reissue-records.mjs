@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Duplicate MESSAGE_IDs are errors; --newest selects by CREATION_DATE, refusing missing dates or ties.
 // One-time re-issue of a release's stored fitted records with their identity filled (identity.mjs completeFit), into a new stream.
 //
 //   node experiments/synthetic-orbits/reissue-records.mjs <store>/synthetic/<wasm sha12> --truth <store>/synthetic/truth/truth-ocm.fsdata --wasm <module.wasm> [--out <stream file>]
@@ -19,6 +20,7 @@ import { createInterface } from 'node:readline';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 import { StreamReplacement, readRecord, frames } from './records.mjs';
+import { putUnique } from './duplicates.mjs';
 import { completeFit } from './identity.mjs';
 
 const args = process.argv.slice(2), dir = args[0];
@@ -46,7 +48,10 @@ const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
 
 // the truth stream: MESSAGE_ID -> the frame's SHA-256 and length
 const truths = new Map();
-for (const fr of frames(truthFile)) truths.set(O.OCM.getRootAsOCM(new fb.ByteBuffer(new Uint8Array(fr.bytes))).HEADER().MESSAGE_ID(), { sha256: sha(fr.bytes), bytes: fr.size });
+for (const fr of frames(truthFile)) {
+  const header = O.OCM.getRootAsOCM(new fb.ByteBuffer(fr.bytes)).HEADER();
+  putUnique(truths, header.MESSAGE_ID(), { sha256: sha(fr.bytes), bytes: fr.size }, header.CREATION_DATE(), args.includes('--newest'));
+}
 
 const h = await createStandaloneHarness('browser', wasm, { surface: 'direct' });
 const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
@@ -54,7 +59,7 @@ const fly = async (ocm, epochs) => { const r = await h.invoke({ methodId: 'propa
 const js = (v) => JSON.stringify(v, (_k, x) => (typeof x === 'bigint' ? `${x}n` : x));
 const named = (t) => { const c = JSON.parse(js(t)); for (const k of ['MESSAGE_ID', 'MESSAGE_STATUS', 'EXERCISE_NAME']) delete c.HEADER?.[k]; for (const k of ['NORAD_CAT_ID', 'CATALOG_NAME', 'OBJECT_DESIGNATOR', 'OBJECT_NAME']) delete c.METADATA?.[k]; delete c.PROVENANCE; return c; };
 
-const wasm12 = path.basename(dir), made = [];
+const wasm12 = path.basename(dir), made = [], selected = new Map();
 const tally = { rows: 0, records: 0, noTruth: 0, bytesOld: 0, bytesNew: 0, statesCompared: 0, flownEqual: 0, otherFieldsEqual: 0 };
 const problems = [];
 for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x)).sort()) {
@@ -66,12 +71,15 @@ for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x)).sor
     const old = readRecord(dir, row.ap.record), truth = truths.get(row.truth?.hash);
     if (!truth) { tally.noTruth += 1; continue; }
     const messageId = `${row.id}:${wasm12}${fitKey}:ap`, bytes = completeFit(O, fb, old, { caseId: row.id, messageId, truth: { id: row.truth.hash, ...truth } });
-    const ref = stream.append(bytes, messageId);
-    made.push({ row: row.id, fitKey, old, ref, messageId, truth: row.truth.hash });
-    tally.records += 1; tally.bytesOld += old.length; tally.bytesNew += 4 + ref.size;
+    const header = O.OCM.getRootAsOCM(new fb.ByteBuffer(old)).HEADER();
+    putUnique(selected, messageId, { row: row.id, fitKey, old, bytes, messageId, truth: row.truth.hash }, header?.CREATION_DATE(), args.includes('--newest'));
   }
 }
 
+for (const m of selected.values()) {
+  m.ref = stream.append(m.bytes, m.messageId); made.push(m);
+  tally.records += 1; tally.bytesOld += m.old.length; tally.bytesNew += 4 + m.ref.size;
+}
 // the checks: read each new record back from the stream, fly old and new, compare
 const byOffset = new Map(); for (const fr of frames(stream.file)) byOffset.set(fr.offset, fr.bytes);
 for (const m of made) {

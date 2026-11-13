@@ -6,7 +6,7 @@
 // Three kinds of $OCM, each in a [4-byte little-endian size][FlatBuffer] stream (records.mjs):
 //   the seed       (seed-ocm.fsdata)   a case's mean elements at the epoch the truth starts: the record seed.mjs makes and the reference build flies to that
 //                                      epoch. HEADER.MESSAGE_ID is <case id>@<epoch>. The case's two numbers (drag area over mass Cd*A/m, radiation area over
-//                                      mass Cr*A/m, m**2/kg) are stated as held ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS, the pin's own name and definition for
+//                                      mass Cr*A/m, m**2/kg) are stated as held ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS, the standard's name and definition for
 //                                      them. They are not stated in MEAN_ELEMENTS.BTERM and AGOM: those would change the state the reference build returns (verified).
 //   the truth      (truth-ocm.fsdata)  one numerical flight: STATE_DATA (x, y, z km and vx, vy, vz km/s, GCRF, STATE_STEP_SIZE 300 s) from METADATA.START_TIME,
 //                                      TRAJ_BASIS SIMULATED, the force terms it was flown with and its two numbers as above. HEADER.MESSAGE_ID is the flight's
@@ -17,6 +17,7 @@
 // The completion is done after the fit, on the record the module returned (unpack, fill, pack); the state the record flies is the same to the bit.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import { putUnique } from './duplicates.mjs';
 import { RecordStream } from './records.mjs';
 
 export const IDENTITY = { catalog: 'SYNTHETIC-ORBITS', exercise: 'synthetic-orbits seed 498', originator: 'orbit-accuracy-experiments synthetic-orbits', norad: 0 };
@@ -77,11 +78,10 @@ export function completeFit(O, fb, fitted, { caseId, messageId, truth }) {
   return pack(O, fb, t);
 }
 
-/** A stream of $OCM frames read by HEADER.MESSAGE_ID: lookup(id) -> { sha256, bytes } of the frame (the first frame with that id), reading only what was appended since the last look.
- *  ensure(id, make) appends make()'s bytes when the stream has no frame with that id. Whoever writes the records must make the same bytes for the same id (no creation date): two
- *  processes that both find the id missing then append identical frames. */
+/** Index by HEADER.MESSAGE_ID. Duplicates are errors; { newest: true } selects by CREATION_DATE.
+ * Missing or tied creation dates are refused. An incomplete trailing frame is deferred. */
 export class FrameIndex {
-  constructor(O, fb, file) { this.O = O; this.fb = fb; this.file = file; this.at = 0; this.map = new Map(); this.stream = new RecordStream(file); }
+  constructor(O, fb, file, { newest = false } = {}) { this.newest = newest; this.O = O; this.fb = fb; this.file = file; this.at = 0; this.map = new Map(); this.stream = new RecordStream(file); }
   scan() {
     if (!fs.existsSync(this.file)) return;
     const fd = fs.openSync(this.file, 'r');
@@ -89,14 +89,14 @@ export class FrameIndex {
       const size = fs.fstatSync(fd).size, head = Buffer.alloc(4);
       while (this.at + 4 <= size) {
         fs.readSync(fd, head, 0, 4, this.at); const n = head.readUInt32LE(0);
-        if (this.at + 4 + n > size) break;   // a frame still being written is not read yet
+        if (this.at + 4 + n > size) break;   // an incomplete frame is deferred
         const frame = Buffer.alloc(n); fs.readSync(fd, frame, 0, n, this.at + 4);
-        const id = this.O.OCM.getRootAsOCM(new this.fb.ByteBuffer(new Uint8Array(frame))).HEADER()?.MESSAGE_ID();
-        if (id && !this.map.has(id)) this.map.set(id, { sha256: sha256hex(frame), bytes: n });
+        const header = this.O.OCM.getRootAsOCM(new this.fb.ByteBuffer(new Uint8Array(frame))).HEADER();
+        putUnique(this.map, header?.MESSAGE_ID(), { sha256: sha256hex(frame), bytes: n }, header?.CREATION_DATE(), this.newest);
         this.at += 4 + n;
       }
     } finally { fs.closeSync(fd); }
   }
-  lookup(id) { let e = this.map.get(id); if (!e) { this.scan(); e = this.map.get(id); } return e ?? null; }
+  lookup(id) { this.scan(); return this.map.get(id) ?? null; }
   ensure(id, make) { let e = this.lookup(id); if (!e) { this.stream.append(make()); this.scan(); e = this.map.get(id); } if (!e) throw new Error(`${this.file}: the frame ${id} is not there after it was appended`); return e; }
 }
