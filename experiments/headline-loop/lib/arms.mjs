@@ -149,6 +149,21 @@ export const carriedPcf = (bytes, t, { drag, radiation }) => {
   P.PCF.finishPCFBuffer(b, x.pack(b));
   return b.asUint8Array().slice();
 };
+/** A 24 h AP window's fit by the table's process (stack issue 496), the one function the table and the covariance coverage flight both call.
+ *  `x`: the plain 24 h fit (its fit.sigmaLnB is read); `fitOnce({ pcf, thin, record })`: one more fit of the same window (the 24 h arc unless `thin`
+ *  is given; `record` asks for the fitted record alone, { ocm }); `thin72`: the 72 h arc ending at the same cutoff, null where the truth holds none;
+ *  `pcf`, `pcf72`: the plain fits' $PCF bytes at 24 h and at 72 h. Returns { x: the fit the row keeps, fitProcess: what the row's fit did }. */
+export const carry24Fit = async ({ x, fitOnce, thin72, pcf, pcf72, maneuvering = false }) => {
+  let fitProcess = 'plain, no 72 h arc';
+  if (thin72) {
+    // the terms come from the fit of the full 72 h arc
+    const t72 = carriedTerms((await fitOnce({ thin: thin72, pcf: pcf72, record: true })).ocm);
+    const radiation = t72.regime === 'ABOVE', drag = !radiation && (x.fit.sigmaLnB ?? 0) >= CARRY24_DRAG_SIGMA;
+    fitProcess = (radiation ? 'radiation carried from 72 h' : drag ? 'drag carried from 72 h' : 'plain') + (maneuvering ? ', maneuvering' : '');
+    if (radiation || drag) x = await fitOnce({ pcf: carriedPcf(pcf, t72, { drag, radiation }) });
+  }
+  return { x, fitProcess };
+};
 // The 72 h fit of a maneuvering object (stack issue 489; owner, 2026-11-11: "do not get worse against truth just to match FFM", and the
 // OD process is free). From MANEUVER72_SINCE the table's 72 h AP fit of an object with its perigee at MANEUVER72.perigeeMinKm or above,
 // whose precise orbit holds a burn known at the cutoff (the burn detector, stack issue 462: every piece that found it ended at or

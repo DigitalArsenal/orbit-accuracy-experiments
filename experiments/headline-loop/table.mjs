@@ -182,14 +182,11 @@ async function worker() {
             // stack issue 496: the 24 h fit's carried terms (arms.mjs, CARRY24_SINCE); fitProcess names what the row's fit did
             if (theory === 'AP' && arc === 24 && carrying) {
               const thin72 = W.arcOf(ctx.truth.lines.filter((l) => { const t = W.ms(l.epoch); return t >= D0 - 72 * W.HOUR && t <= D0; }), 72);
-              // the terms come from the fit of the full 72 h arc, a maneuvering object's too (not its 72 h record, the arc after its burn)
-              row.fitProcess = 'plain, no 72 h arc';
-              if (thin72) {
-                const t72 = A.carriedTerms((await arms.ap({ ...base, thin: thin72, pcf: A.apPcfFor(w.group, build.version, G.vacuum, 72).pcf, spw, record: true })).ocm);
-                const radiation = t72.regime === 'ABOVE', drag = !radiation && (x.fit.sigmaLnB ?? 0) >= A.CARRY24_DRAG_SIGMA;
-                row.fitProcess = (radiation ? 'radiation carried from 72 h' : drag ? 'drag carried from 72 h' : 'plain') + (m?.maneuvering ? ', maneuvering' : '');
-                if (radiation || drag) x = await arms.ap({ ...base, pcf: A.carriedPcf(pcf, t72, { drag, radiation }), spw, scan });
-              }
+              // the terms come from the fit of the full 72 h arc, a maneuvering object's too (not its 72 h record, the arc after its burn);
+              // lib/arms.mjs carry24Fit, the function the covariance coverage flight calls too
+              const fitOnce = ({ thin: t = thin, pcf: p, record }) => (record ? arms.ap({ ...base, thin: t, pcf: p, spw, record: true }) : arms.ap({ ...base, thin: t, pcf: p, spw, scan }));
+              const kept = await A.carry24Fit({ x, fitOnce, thin72, pcf, pcf72: A.apPcfFor(w.group, build.version, G.vacuum, 72).pcf, maneuvering: !!m?.maneuvering });
+              x = kept.x; row.fitProcess = kept.fitProcess;
             }
             Object.assign(row, { days: x.days, fitRmsKm: x.rms, fit: x.fit, s: x.s, ...(x.perigeeScan ? { perigeeScan: x.perigeeScan } : {}) });
           } catch (e) { row.apError = String(e?.message ?? e).slice(0, 200); }

@@ -35,8 +35,8 @@ for (const k of lines) {
   const row = { line: k, key: w?.key, group: w?.group, name: w?.name, arcH: w?.arcH, cutoff: w?.date };
   try {
     if (!w) throw new Error('unknown window');
-    const { ocm, record, pcf, sc } = await M.fitRecord(w);
-    row.sizes = record.COV_PROPAGATION; row.pcf = pcf;
+    const { ocm, record, pcf, fitProcess, sc } = await M.fitRecord(w);
+    row.sizes = record.COV_PROPAGATION; row.pcf = pcf; row.fitProcess = fitProcess;
     const me = record.MEAN_ELEMENTS, st = record.ORBIT_DETERMINATION?.FIT_STATISTICS;
     Object.assign(row, { build: sha12, version: M.build.version, meanMotion: me.MEAN_MOTION, ecc: me.ECCENTRICITY, inc: me.INCLINATION, sma: me.SEMI_MAJOR_AXIS, bterm: me.BTERM, agom: me.AGOM, fitRmsKm: st?.FIT_RMS_KM, fitStates: st?.FIT_STATES });
     // the base flies the record repacked unedited, as every doubled flight is repacked: a field the bindings drop cannot land in a term

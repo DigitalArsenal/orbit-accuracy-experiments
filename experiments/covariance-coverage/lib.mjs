@@ -127,19 +127,32 @@ export async function openBuild(out, sha12, caps) {
   const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs, MAXIMUM_STATES: Math.max(1000, epochs.length + 16) }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
   const LTM = ['CX_X', 'CY_X', 'CY_Y', 'CZ_X', 'CZ_Y', 'CZ_Z', 'CX_DOT_X', 'CX_DOT_Y', 'CX_DOT_Z', 'CX_DOT_X_DOT', 'CY_DOT_X', 'CY_DOT_Y', 'CY_DOT_Z', 'CY_DOT_X_DOT', 'CY_DOT_Y_DOT', 'CZ_DOT_X', 'CZ_DOT_Y', 'CZ_DOT_Z', 'CZ_DOT_X_DOT', 'CZ_DOT_Y_DOT', 'CZ_DOT_Z_DOT'];
   const full6 = (l) => { const v = LTM.map((k) => l[k]); const M = Array.from({ length: 6 }, () => Array(6).fill(0)); let i = 0; for (let r = 0; r < 6; r += 1) for (let c = 0; c <= r; c += 1) { M[r][c] = v[i]; M[c][r] = v[i]; i += 1; } return M.flat(); };
-  /** The build's fit of the window: the truth arc thinned as the scoreboard thins it, the $PCF its version (or --caps) gives, the weather
-   *  issued at the cutoff. Returns { ocm (bytes), record (unpacked), pcf (label), sc (the scored epochs and truth after the cutoff) }. */
+  /** The build's fit of the window by the table's own process: the truth arc thinned as the scoreboard thins it, the $PCF its version (or --caps)
+   *  gives, the weather issued at the cutoff; a 24 h fit carries the terms of the window's 72 h fit ending at the same cutoff where the table's rule
+   *  says so (lib/arms.mjs carry24Fit, the function table.mjs calls). Returns { ocm (bytes), record (unpacked), pcf (label), fitProcess (what the
+   *  fit did), sc (the scored epochs and truth after the cutoff) }. */
   async function fitRecord(w) {
     const D0 = w.D0, arc = w.arcH, G = WN.GROUPS[w.group];
-    const truth = await WN.truthOf(w, D0 - arc * HOUR - HOUR, D0 + 7 * DAY + HOUR, null);
+    const carrying = arc === 24 && A.carry24(build.version);
+    const truth = await WN.truthOf(w, D0 - (carrying ? 72 : arc) * HOUR - HOUR, D0 + 7 * DAY + HOUR, null);
     const sc = WN.scoredOf(truth.lines.filter((l) => WN.ms(l.epoch) > D0), D0);
     const thin = WN.arcOf(truth.lines.filter((l) => { const t = WN.ms(l.epoch); return t >= D0 - arc * HOUR && t <= D0; }), arc);
     if (!thin) throw new Error('coverage');
     const choice = capsOf(A.apPcfFor(w.group, build.version, !!G.vacuum, arc));
     const wx = G.vacuum ? null : WN.weatherAt(D0);
-    const fit = await invoke('fit', [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: S.oemBytes({ frame: 'GCRF', object: { name: w.name, id: truth.objectId ?? '', norad: truth.norad ?? w.norad ?? 0 }, lines: thin, useableStart: thin[0].epoch, useableStop: WN.iso(D0) }) }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: choice.pcf }, ...(wx ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: wx.spw }] : [])]);
-    const ocm = new Uint8Array(fit.outputs.find((o) => o.portId === 'elements').payload);
-    return { ocm, record: S.OCM.OCM.getRootAsOCM(new S.flatbuffers.ByteBuffer(ocm)).unpack(), pcf: choice.label, sc };
+    const object = { name: w.name, id: truth.objectId ?? '', norad: truth.norad ?? w.norad ?? 0 };
+    const fitBytes = async (lines, pcf) => {
+      const fit = await invoke('fit', [{ portId: 'ephemeris', typeRef: S.TYPE('OEM'), payload: S.oemBytes({ frame: 'GCRF', object, lines, useableStart: lines[0].epoch, useableStop: WN.iso(D0) }) }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: pcf }, ...(wx ? [{ portId: 'space_weather', typeRef: S.TYPE('SPW'), payload: wx.spw }] : [])]);
+      return new Uint8Array(fit.outputs.find((o) => o.portId === 'elements').payload);
+    };
+    let ocm = await fitBytes(thin, choice.pcf), fitProcess = 'the full arc';
+    if (carrying) {
+      const thin72 = WN.arcOf(truth.lines.filter((l) => { const t = WN.ms(l.epoch); return t >= D0 - 72 * HOUR && t <= D0; }), 72);
+      const fitOnce = async ({ thin: t = thin, pcf: p, record }) => { const o = await fitBytes(t, p); return record ? { ocm: o } : { ocm: o, fit: { sigmaLnB: A.carriedTerms(o).sLnB } }; };
+      const kept = await A.carry24Fit({ x: await fitOnce({ pcf: choice.pcf }), fitOnce, thin72, pcf: choice.pcf, pcf72: capsOf(A.apPcfFor(w.group, build.version, !!G.vacuum, 72)).pcf });
+      ocm = kept.x.ocm; fitProcess = kept.fitProcess;
+    }
+    return { ocm, record: S.OCM.OCM.getRootAsOCM(new S.flatbuffers.ByteBuffer(ocm)).unpack(), pcf: choice.label, fitProcess, sc };
   }
   /** The record flown with its covariance on the scored epochs (GCRF), each epoch's error and stated R, T, N variances in the truth's axes. */
   async function fly(ocmBytes, sc) {
