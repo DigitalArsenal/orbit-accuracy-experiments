@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 // Converter: the synthetic set's seeds and truth flights as $OCM records in two frame streams (identity.mjs says what each holds).
 //
-//   node experiments/synthetic-orbits/truth-to-ocm.mjs <store>/synthetic [--ref-wasm <reference build .wasm>] [--limit <n>]
+//   node experiments/synthetic-orbits/truth-to-ocm.mjs <store>/synthetic [--ref-wasm <reference build .wasm>] [--limit <n>] [--out <truth stream>] [--seeds-out <seed stream>]
 //
 // Requires the installed packages and SDM_MODULE_UNSIGNED_BUILD=1; module paths are arguments.
 //
 // Writes <store>/synthetic/truth/seed-ocm.fsdata (one $OCM per case and truth start epoch: every case the generator makes, at the default start, and every
-// start epoch a stored row used) and <store>/synthetic/truth/truth-ocm.fsdata (one $OCM per flight with states). Both are written through StreamReplacement, new
-// files each run (an existing one is removed first). The .bin and .json files stay.
+// start epoch a stored row used) and <store>/synthetic/truth/truth-ocm.fsdata (one $OCM per flight with states). Both are verified as temporary streams beside their targets
+// before replacement; interruption during conversion preserves the existing targets. The .bin and .json files stay.
 //
 // Checked here, and the exit code says so:
 //   every seed: the reference build flies the stated seed to its epoch to the same state, bit for bit, as seedRecord's plain record (run.mjs flies the plain one);
@@ -25,7 +25,7 @@ import { statedSeed, truthRecord, seedMessageId, sha256hex } from './identity.mj
 
 const args = process.argv.slice(2), root = args[0];
 const opt = (k) => { const i = args.indexOf(`--${k}`); return i < 0 ? null : args[i + 1]; };
-if (!root) { console.error('usage: truth-to-ocm.mjs <store>/synthetic [--ref-wasm <file>] [--limit <n>]'); process.exit(2); }
+if (!root) { console.error('usage: truth-to-ocm.mjs <store>/synthetic [--ref-wasm <file>] [--limit <n>] [--out <truth stream>] [--seeds-out <seed stream>]'); process.exit(2); }
 const S = await import('./bindings.mjs'), O = S.OCM, fb = S.flatbuffers;
 const { SETTINGS } = await import('../headline-loop/lib/settings.mjs');
 const require = createRequire(import.meta.url);
