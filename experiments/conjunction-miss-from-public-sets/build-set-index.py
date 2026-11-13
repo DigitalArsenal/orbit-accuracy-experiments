@@ -22,7 +22,7 @@ def arg(name, default=None):
 CONFIG_FILE = os.path.abspath(arg('--config', os.path.join(HERE, 'config.json')))
 CONFIG = json.load(open(CONFIG_FILE))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
-ARCHIVE = os.environ.get('SDN_ARCHIVE_ROOT', CONFIG['archive']['root'])
+ARCHIVE = os.environ.get('SDN_ARCHIVE_ROOT') or CONFIG['archive']['root']  # an empty value is not a root
 STORE = os.path.abspath(os.environ.get('CONJ_STORE', CONFIG['store'] if os.path.isabs(CONFIG['store']) else os.path.join(REPO, CONFIG['store'])))
 UTC = datetime.timezone.utc
 
@@ -39,6 +39,7 @@ def ts(v):
 
 SETS = CONFIG['sets']
 BEFORE = ts(SETS['createdBefore'])
+START = ts(SETS['startDay'] + 'T00:00:00')
 events = json.load(open(os.path.join(STORE, 'events.json')))
 want = {x for e in events for x in e['pair']}
 root = os.path.join(ARCHIVE, 'spacetrack', 'gp_history', 'by-creation', str(SETS['year']))
@@ -96,6 +97,9 @@ for f in files:
         if cr is None or cr >= BEFORE:
             counts['sets of event objects created at or after the cutoff (not used)'] += 1
             continue
+        if cr < START:
+            counts['sets of event objects created before the start day (not used; a file that straddles the start day is read, its early sets are not kept)'] += 1
+            continue
         if r.get('MEAN_ELEMENT_THEORY') != SETS['theory']:
             counts['sets of event objects with another mean-element theory (dropped)'] += 1
             continue
@@ -125,9 +129,13 @@ counts['event objects'] = len(want)
 counts['event objects with no set created after the start day'] = len(want) - len(out)
 counts['sets kept'] = sum(len(v) for v in out.values())
 agg = hashlib.sha256(''.join('%s %s\n' % (i['file'], i['sha256']) for i in inputs).encode()).hexdigest()
+CONFIG_SHA = hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest()
+REGISTERED = os.path.realpath(CONFIG_FILE) == os.path.realpath(os.path.join(HERE, 'config.json'))
 json.dump(out, open(os.path.join(STORE, 'sets_index.json'), 'w'))
-json.dump(dict(kind='sets', files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-sets.json'), 'w'), indent=1)
-json.dump(dict(counts=counts, inputAggregateSha256=agg), open(os.path.join(STORE, 'sets-counts.json'), 'w'), indent=1)
+sha = lambda p: hashlib.sha256(open(os.path.join(STORE, p), 'rb').read()).hexdigest()
+json.dump(dict(kind='sets', configSha256=CONFIG_SHA, registered=REGISTERED, files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-sets.json'), 'w'), indent=1)
+json.dump(dict(counts=counts, inputAggregateSha256=agg, configSha256=CONFIG_SHA, registered=REGISTERED, builtFromEventsSha256=sha('events.json'), setsIndexSha256=sha('sets_index.json')),
+          open(os.path.join(STORE, 'sets-counts.json'), 'w'), indent=1)
 print(json.dumps(dict(configSha256=hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest(), inputAggregateSha256=agg, files=len(files)), indent=1))
 for k in sorted(counts):
     print('%8d  %s' % (counts[k], k))

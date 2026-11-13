@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import { readConfig, HERE, REPO, SDS, sha256, verifyModule } from './lib/module.mjs';
 
 const config = readConfig();
@@ -46,7 +47,27 @@ if (sha256(text) !== closureWant || String(seen.size) !== countWant) fail(`BINDI
 console.log(`${entries.length} binding entry files and the closure of ${seen.size} files checked at ${path.relative(REPO, SDS)}`);
 
 // the module and the forecaster
-try { console.log(`module ${verifyModule(config)}: SHA-256 as registered (sdn-ap ${config.module.version}, commit ${config.module.repositoryCommit})`); } catch (error) { fail(`MODULE ${error.message}`); }
+try { verifyModule(config); console.log(`module: SHA-256 as registered (sdn-ap ${config.module.version}, commit ${config.module.repositoryCommit})`); } catch (error) { fail(`MODULE ${error.message.replace(/\/\S*\//g, '')}`); }
+console.log(`configuration ${path.basename(config.file)}: ${config.registered ? 'the registered configuration' : 'NOT the registered configuration'} (SHA-256 ${config.configSha256})`);
+// the bindings' own imports: no dynamic import, and every bare import is the flatbuffers package, resolved from the standards checkout at the locked version
+const bare = new Set();
+let dynamic = 0;
+for (const rel of seen) {
+  const p = path.join(SDS, rel);
+  if (!fs.existsSync(p)) continue;
+  const text = fs.readFileSync(p, 'utf8');
+  if (/\bimport\s*\(|\brequire\s*\(/.test(text)) dynamic += 1;
+  for (const m of text.matchAll(/(?:from|import)\s*['"]([^./'"][^'"]*)['"]/g)) bare.add(m[1]);
+}
+if (dynamic) fail(`BINDINGS ${dynamic} files of the closure use a dynamic import`);
+for (const name of bare) if (name !== 'flatbuffers') fail(`BINDINGS the closure imports the package ${name}`);
+try {
+  const resolved = createRequire(path.join(fs.realpathSync(SDS), 'PCF/main.js')).resolve('flatbuffers');
+  const pj = JSON.parse(fs.readFileSync(path.join(resolved.slice(0, resolved.lastIndexOf('node_modules/flatbuffers') + 'node_modules/flatbuffers'.length), 'package.json'), 'utf8'));
+  const lockVersion = JSON.parse(fs.readFileSync(path.join(REPO, 'package-lock.json'), 'utf8')).packages['node_modules/flatbuffers'].version;
+  if (pj.version !== lockVersion) fail(`BINDINGS flatbuffers resolved from the standards checkout is ${pj.version}, locked ${lockVersion}`);
+  else console.log(`bindings: flatbuffers ${pj.version} resolved from the standards checkout, as locked; no dynamic import`);
+} catch (error) { fail(`BINDINGS flatbuffers cannot be resolved from the standards checkout: ${error.message}`); }
 const fc = path.join(REPO, config.weatherForecaster.file);
 const got = fs.existsSync(fc) ? sha256(fs.readFileSync(fc)) : null;
 if (got !== config.weatherForecaster.sha256) fail(`FORECASTER ${config.weatherForecaster.file}: ${got ?? 'absent'}, registered ${config.weatherForecaster.sha256}`);
@@ -64,6 +85,7 @@ try {
   const v = execFileSync('python3', ['-c', 'import sys, numpy; print(sys.version.split()[0], numpy.__version__)'], { encoding: 'utf8' }).trim().split(' ');
   console.log(`python ${v[0]} numpy ${v[1]}`);
   if (v[1] !== config.environment.numpy) fail(`NUMPY ${v[1]}, registered ${config.environment.numpy}`);
+  if (v[0] !== config.environment.python) fail(`PYTHON ${v[0]}, registered ${config.environment.python}`);
 } catch { fail('python3 with numpy: absent'); }
 console.log(`node ${process.version}`);
 process.exit(bad ? 1 : 0);

@@ -39,6 +39,13 @@ function weatherFiles(day) {
   }
   return list.filter((f) => fs.existsSync(f)).map((f) => ({ file: path.relative(config.archiveRoot, f), sha256: sha256(fs.readFileSync(f)) }));
 }
+/** With the registered configuration arm W needs its weather inputs for the epoch day: the baseline table, a nowcast directory and a space-weather directory dated on or before the day. */
+function assertWeatherInputs(day) {
+  const files = weatherFiles(day).map((f) => f.file);
+  const need = [/^hac\/gfz-kp\/20261009\/Kp_ap_Ap_SN_F107_since_1932\.txt$/, /^hac\/gfz-kp\/2026\/[^/]+\/Kp_ap_Ap_SN_F107_nowcast\.txt$/,
+    /^hac\/noaa-swpc\/2026\/[^/]+\/daily-solar-indices\.txt$/, /^hac\/noaa-swpc\/2026\/[^/]+\/daily-geomagnetic-indices\.txt$/];
+  for (const re of need) if (!files.some((f) => re.test(f))) throw new Error(`no weather input ${re} for the epoch day ${day}: the registered run stops`);
+}
 let extraFor = () => [];
 let forecasterSha256 = null;
 if (ARM === 'W') {
@@ -46,14 +53,18 @@ if (ARM === 'W') {
   const fcFile = path.join(REPO, config.weatherForecaster.file);
   forecasterSha256 = fs.existsSync(fcFile) ? sha256(fs.readFileSync(fcFile)) : null;
   if (forecasterSha256 !== config.weatherForecaster.sha256) throw new Error(`the weather forecaster ${config.weatherForecaster.file} is ${forecasterSha256 ?? 'absent'}; this experiment registers ${config.weatherForecaster.sha256}`);
-  process.env.SDN_ARCHIVE_ROOT ??= config.archiveRoot;
+  process.env.SDN_ARCHIVE_ROOT = config.archiveRoot;
   const five = path.join(REPO, 'experiments/ap-five-day-accuracy/lib');
+  // the weather builder's host loads the forecaster from this path: the registered file is the one it loads
+  if (path.resolve(fcFile) !== path.resolve(five, '../wasm/tle-astrodynamics-upgrades.wasm')) throw new Error('the registered forecaster path is not the path the weather builder loads');
   const { buildSpaceWeather } = await importFile(path.join(five, 'space-weather.mjs'));
+  if (sha256(fs.readFileSync(fcFile)) !== config.weatherForecaster.sha256) throw new Error('the weather forecaster changed while it was loaded');
   const { CREDITS, buildPvnBytes } = await importFile(path.join(five, 'hold-gate.mjs'));
   const spwCache = new Map();
   const spwFor = (ms) => {
     const day = dayOf(ms);
     if (!spwCache.has(day)) {
+      if (config.registered) assertWeatherInputs(day);
       spwCache.set(day, buildSpaceWeather({ archiveRoot: config.archiveRoot, firstDate: dayOf(ms - 45 * DAY), lastDate: dayOf(ms + 50 * DAY), cutoffDate: day }).bytes);
       weatherDays.set(day, weatherFiles(day));
     }
@@ -88,21 +99,22 @@ for (const gp of jobs.filter((_, i) => i % sn === si).slice(0, LIMIT || Infinity
   const from = t0 + SPAN.fromDays * DAY, to = t0 + SPAN.toDays * DAY;
   const row = { key: `${ARM}-${gp}`, arm: ARM, gp, norad, spanFrom: from, spanTo: to, e: s.e, n: s.n };
   const ts = Date.now();
-  try {
-    const ms = []; for (let t = from; t <= to; t += STEP) ms.push(t);
-    const fl = fly(host, tle, ms.map((m) => m / 1000));
-    if (fl.st.some((x) => x !== 0)) { row.ok = false; row.status = { name: 'sgp4-status' }; }
-    else {
-      const states = ms.map((m, i) => ({ epoch: isoNoZ(m), r: [fl.r[3 * i], fl.r[3 * i + 1], fl.r[3 * i + 2]], v: [fl.v[3 * i], fl.v[3 * i + 1], fl.v[3 * i + 2]] }));
-      const place = host.instance.exports.sdnap_fit_epoch_diagnostic;
-      if (typeof place !== 'function') throw new Error('this build has no sdnap_fit_epoch_diagnostic export');
-      place(SPAN.epochPlacement); // 0: the record's epoch at the first fitted state
-      const f = await fitRecord(host, lib, { oem: wholeArcOem(lib, { norad, states }), pcf: fitPcfBytes(lib, ARM, s.e), extra: extraFor(t0) });
-      row.ok = f.ok;
-      if (f.ok) { row.rmsM = Math.round(f.rmsM * 10) / 10; fs.writeFileSync(path.join(config.storeDir, 'ocm', `${row.key}.bin`), f.ocmBytes); }
-      else { row.status = f.status; await freshHost(); }
-    }
-  } catch (error) { row.ok = false; row.status = { name: 'exception', msg: String(error?.message ?? error).slice(0, 160) }; await freshHost(); }
+  // Only the module's own answers are counted results: its refusal of the fit (a returned status) and an SGP4 status on the set's flight. Every other error
+  // (a missing weather input, a failed read or write, a missing export) is not caught: it stops the run with a non-zero exit.
+  const extra = extraFor(t0);
+  const ms = []; for (let t = from; t <= to; t += STEP) ms.push(t);
+  const fl = fly(host, tle, ms.map((m) => m / 1000));
+  if (fl.st.some((x) => x !== 0)) { row.ok = false; row.status = { name: 'sgp4-status' }; }
+  else {
+    const states = ms.map((m, i) => ({ epoch: isoNoZ(m), r: [fl.r[3 * i], fl.r[3 * i + 1], fl.r[3 * i + 2]], v: [fl.v[3 * i], fl.v[3 * i + 1], fl.v[3 * i + 2]] }));
+    const place = host.instance.exports.sdnap_fit_epoch_diagnostic;
+    if (typeof place !== 'function') throw new Error('this build has no sdnap_fit_epoch_diagnostic export');
+    place(SPAN.epochPlacement); // 0: the record's epoch at the first fitted state
+    const f = await fitRecord(host, lib, { oem: wholeArcOem(lib, { norad, states }), pcf: fitPcfBytes(lib, ARM, s.e), extra });
+    row.ok = f.ok;
+    if (f.ok) { row.rmsM = Math.round(f.rmsM * 10) / 10; fs.writeFileSync(path.join(config.storeDir, 'ocm', `${row.key}.bin`), f.ocmBytes); }
+    else { row.status = f.status; await freshHost(); }
+  }
   row.wallMs = Date.now() - ts;
   out.write(JSON.stringify(row) + '\n');
   k += 1;

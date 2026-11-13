@@ -20,7 +20,7 @@ export function readConfig(argv = process.argv.slice(2)) {
   config.file = file;
   config.configSha256 = sha256(fs.readFileSync(file));
   if (config.frozen !== true) throw new Error('config.json is not frozen: a step never reads a test window while the plan is not frozen');
-  config.archiveRoot = process.env.SDN_ARCHIVE_ROOT ?? config.archive.root;
+  config.archiveRoot = process.env.SDN_ARCHIVE_ROOT || config.archive.root; // an empty value is not a root
   config.storeDir = path.resolve(process.env.CONJ_STORE ?? (path.isAbsolute(config.store) ? config.store : path.join(REPO, config.store)));
   // the registered configuration is this folder's own config.json: its SHA-256 must be the one in MANIFEST.sha256 and no option may change the run
   config.registered = fs.realpathSync(file) === fs.realpathSync(path.join(HERE, 'config.json'));
@@ -50,8 +50,11 @@ export async function loadHost(config) {
   return createStandaloneHarness('browser', verifyModule(config), { surface: 'direct' });
 }
 /** The header line of every rows-*.jsonl and fits-*.jsonl file. */
+const hashIfPresent = (file) => (fs.existsSync(file) ? sha256(fs.readFileSync(file)) : null);
 export const header = (config, what, extra = {}) => ({ _header: { what, experiment: config.experiment, module: config.module.version, moduleWasmSha256: config.module.wasmSha256, configSha256: config.configSha256,
-  registered: config.registered, shard: shardOf(), archiveRoot: config.archiveRoot, store: config.storeDir, ...extra } });
+  configName: path.basename(config.file), registered: config.registered, shard: shardOf(), node: process.version, manifestSha256: hashIfPresent(path.join(HERE, 'MANIFEST.sha256')),
+  eventsSha256: hashIfPresent(path.join(config.storeDir, 'events.json')), setsIndexSha256: hashIfPresent(path.join(config.storeDir, 'sets_index.json')),
+  archiveRoot: config.archiveRoot, store: config.storeDir, ...extra } });
 
 /** The Space Data Standards bindings: the checkout's files at the relative path the repository's libraries import them from (one binding set, no override); BINDINGS.sha256 lists them. */
 export const SDS = path.join(STACK, 'repos/main-packages/spacedatastandards.org/lib/js');

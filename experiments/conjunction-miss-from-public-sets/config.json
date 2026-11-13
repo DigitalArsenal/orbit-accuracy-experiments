@@ -54,7 +54,7 @@
     "percentileMethod": "linear",
     "generator": "numpy.random.default_rng",
     "minimumPrimaryEvents": 100,
-    "plannedPrimaryEvents": 190,
+    "expectedPrimaryEvents": 190,
     "fewBelowEvents": 20,
     "guardAlpha": 0.05,
     "worseFactor": 2,

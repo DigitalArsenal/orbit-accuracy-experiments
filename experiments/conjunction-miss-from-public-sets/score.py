@@ -50,18 +50,25 @@ def say(s=''):
 
 
 def invalid(reason):
-    """A run that cannot be the registered run is not scored: no verdict, exit 1. It is repeated into an empty store."""
+    """A run that cannot be the registered run is not scored: no verdict, exit 1. It is repeated into an empty store; output of an earlier run is removed."""
     say('INVALID: %s' % reason)
     say('No verdict is stated. The run is repeated into an empty store.')
+    if os.path.exists(os.path.join(STORE, 'results.json')):
+        os.remove(os.path.join(STORE, 'results.json'))
     open(os.path.join(STORE, 'results.txt'), 'w').write('\n'.join(OUT) + '\n')
     sys.exit(1)
 
 
+sha_file = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
 if REGISTERED:
     mline = [l for l in open(os.path.join(HERE, 'MANIFEST.sha256')).read().split('\n') if l.endswith('/config.json')]
     if not mline or mline[0].split()[0] != CONFIG_SHA:
         sys.exit('config.json differs from its line in MANIFEST.sha256: the registered configuration is refused')
-say('archive root %s; store %s; configuration %s (%s); run date %s' % (os.environ.get('SDN_ARCHIVE_ROOT', CONFIG['archive']['root']), STORE, CONFIG_FILE, 'registered' if REGISTERED else 'not the registered configuration', CONFIG.get('runDateUtc', 'n/a')))
+    if '--rule-table' in ARGV:
+        sys.exit('--rule-table is refused with the registered configuration')
+ARCHIVE_ROOT = os.environ.get('SDN_ARCHIVE_ROOT') or CONFIG['archive']['root']
+say('archive root %s%s; store %s; configuration %s (%s); run date %s' % (CONFIG['archive']['root'], ' (overridden by SDN_ARCHIVE_ROOT)' if ARCHIVE_ROOT != CONFIG['archive']['root'] else '',
+    os.path.basename(STORE), os.path.basename(CONFIG_FILE), 'registered' if REGISTERED else 'not the registered configuration', CONFIG.get('runDateUtc', 'n/a')))
 
 
 # ------------------------------------------------------------------ inputs
@@ -79,9 +86,13 @@ ROW_FILES = CONFIG.get('rowFiles', {'S': 'rows-sgp4*.jsonl', **{a: 'rows-%s*.jso
 FIT_FILES = {a: 'fits-%s*.jsonl' % a for a in CONFIG['arms']}
 
 
+DUPLICATES = {}
+
+
 def read_rows(arm):
-    """rows by (event, message) and, per file, its header (None when absent)"""
+    """rows by (event, message) and, per file, its header (None when absent); a key seen twice is counted"""
     rows, heads = {}, {}
+    DUPLICATES[arm] = 0
     for f in sorted(glob.glob(os.path.join(STORE, ROW_FILES[arm]))):
         heads[os.path.basename(f)] = None
         for line in open(f):
@@ -93,33 +104,80 @@ def read_rows(arm):
                 continue
             if r.get('kind', 'msg') != 'msg' or 'id' not in r:
                 continue
-            rows[(r['ev'], str(r['id']))] = r
+            key = (r['ev'], str(r['id']))
+            if key in rows:
+                DUPLICATES[arm] += 1
+            rows[key] = r
     return rows, heads
 
 
-def read_headers(pattern):
-    heads = {}
+def read_fits(pattern):
+    """per file its header (None when absent) and the status names of its fit rows"""
+    heads, statuses = {}, {}
     for f in sorted(glob.glob(os.path.join(STORE, pattern))):
         heads[os.path.basename(f)] = None
         for line in open(f):
-            if '_header' in line[:12]:
-                heads[os.path.basename(f)] = json.loads(line)['_header']
-            break
-    return heads
+            if not line.strip():
+                continue
+            r = json.loads(line)
+            if '_header' in r:
+                heads[os.path.basename(f)] = r['_header']
+            elif 'ok' in r:
+                name = 'accepted' if r['ok'] else (r.get('status') or {}).get('name', 'unnamed')
+                statuses[name] = statuses.get(name, 0) + 1
+    return heads, statuses
 
 
 ARMS = ['S'] + [a for a in CONFIG['arms']]
 ROWS, HEADS = {}, {}
 for a in ARMS:
     ROWS[a], HEADS[a] = read_rows(a)
+EVENTS_SHA = sha_file(os.path.join(STORE, 'events.json'))
+SETS_SHA = sha_file(os.path.join(STORE, 'sets_index.json'))
+FITS, FIT_STATUS = {}, {}
+for a in CONFIG['arms']:
+    FITS[a], FIT_STATUS[a] = read_fits(FIT_FILES[a])
+
+
+def utc_seconds(text):
+    return datetime.datetime.strptime(text.replace('Z', ''), '%Y-%m-%dT%H:%M:%S').replace(tzinfo=datetime.timezone.utc).timestamp()
 
 say('numpy %s; generator %s; percentile method %s; interval %s; resamples %d; seed %d' % (np.__version__, ST['generator'], ST['percentileMethod'], ST['interval'], ST['resamples'], ST['seed']))
 say('configuration SHA-256 %s' % CONFIG_SHA)
 say('module version %s, wasm SHA-256 %s' % (CONFIG['module']['version'], CONFIG['module']['wasmSha256']))
-if REGISTERED:
-    # a store that cannot be the one complete run of this configuration is not scored
+def check_registered_store():
+    """With the registered configuration, a store that cannot be the one complete run of this configuration is not scored."""
+    # (1) the files that identify the run, and the identity of the event table and the set index
+    for nm in ('events-counts.json', 'sets-counts.json', 'inputs-messages.json', 'inputs-sets.json'):
+        p = os.path.join(STORE, nm)
+        if not os.path.exists(p):
+            invalid('%s is missing from the store' % nm)
+        j = json.load(open(p))
+        if j.get('configSha256') != CONFIG_SHA or not j.get('registered'):
+            invalid('%s names another configuration' % nm)
+    if json.load(open(os.path.join(STORE, 'events-counts.json'))).get('eventsSha256') != EVENTS_SHA:
+        invalid('events.json is not the event table its counts file describes')
+    sc = json.load(open(os.path.join(STORE, 'sets-counts.json')))
+    if sc.get('builtFromEventsSha256') != EVENTS_SHA or sc.get('setsIndexSha256') != SETS_SHA:
+        invalid('sets_index.json was not built from this events.json, or is not the index its counts file describes')
+    # (2) the events are the configuration's: window, lead bins, primary rule
+    lo, hi = utc_seconds(CONFIG['window']['finalFrom']), utc_seconds(CONFIG['window']['finalTo'])
+    labels = {b['label']: b for b in LEADS}
+    for e in events:
+        if not (lo <= e['tca_f'] < hi):
+            invalid('an event has a final closest approach outside the registered window')
+        if bool(e['strong']) != ((e['tca_f'] - e['c_last']) <= CONFIG['primaryHours'] * 3600):
+            invalid('an event carries a primary flag that is not the registered rule')
+        for label, mid in e['picks'].items():
+            m = MSG.get((e['idx'], mid))
+            lead = None if m is None else (e['tca_f'] - m['c']) / 86400.0
+            if label not in labels or lead is None or not (labels[label]['from'] <= lead < labels[label]['to']):
+                invalid('a chosen row lies outside its lead bin of the registered configuration')
+    # (3) files: headers, shards, identity
     shard_re = re.compile(r'-(\d+)of(\d+)\.jsonl$')
-    groups = [(a, 'rows', HEADS[a]) for a in ARMS] + [(a, 'fits', read_headers(FIT_FILES[a])) for a in CONFIG['arms']]
+    manifest_sha = sha_file(os.path.join(HERE, 'MANIFEST.sha256'))
+    roots = set()
+    groups = [(a, 'rows', HEADS[a]) for a in ARMS] + [(a, 'fits', FITS[a]) for a in CONFIG['arms']]
     for a, kind, heads in groups:
         if not heads:
             invalid('no %s file for arm %s in the store' % (kind, a))
@@ -134,18 +192,55 @@ if REGISTERED:
         for f, h in heads.items():
             if h is None:
                 invalid('%s of arm %s has no header' % (f, a))
+            m = shard_re.search(f)
+            if h.get('what') != '%s-%s' % (kind, 'sgp4' if a == 'S' else a) or h.get('shard') != ('%s/%s' % (m.group(1), m.group(2)) if m else '0/1'):
+                invalid('%s of arm %s has a header that names another file or shard' % (f, a))
             if h.get('moduleWasmSha256') != CONFIG['module']['wasmSha256']:
                 invalid('%s of arm %s names another module SHA-256' % (f, a))
             if h.get('configSha256') != CONFIG_SHA or not h.get('registered'):
                 invalid('%s of arm %s was made with another configuration' % (f, a))
+            if h.get('node') != 'v' + CONFIG['environment']['node']:
+                invalid('%s of arm %s was made with another Node version' % (f, a))
+            if h.get('manifestSha256') != manifest_sha:
+                invalid('%s of arm %s was made with another manifest of frozen files' % (f, a))
+            if h.get('eventsSha256') != EVENTS_SHA or h.get('setsIndexSha256') != SETS_SHA:
+                invalid('%s of arm %s was made with another event table or set index' % (f, a))
             if kind == 'fits' and h.get('limit'):
                 invalid('%s of arm %s was run with a limit' % (f, a))
             if kind == 'fits' and a == 'W' and h.get('forecasterSha256') != CONFIG['weatherForecaster']['sha256']:
                 invalid('%s of arm W names another weather forecaster SHA-256' % f)
-    say('every row file and fit file of the store has a header naming the registered module, configuration and (arm W) forecaster; shards complete and not mixed')
+            roots.add(h.get('archiveRoot'))
+    if roots != {ARCHIVE_ROOT}:
+        invalid('the headers name more than one archive root, or not the root this scoring runs with')
+    for a in CONFIG['arms']:
+        if FIT_STATUS[a].get('exception'):
+            invalid('arm %s has a fit row that records an exception' % a)
+    # (4) the rows of every arm are exactly the chosen rows
+    chosen = {(e['idx'], mid) for e in events for mid in e['picks'].values()}
+    for a in ARMS:
+        if DUPLICATES[a]:
+            invalid('arm %s has %d rows that appear twice' % (a, DUPLICATES[a]))
+    if set(ROWS['S']) - chosen:
+        invalid('arm S has rows that are not chosen rows')
+    for (ev_, mid), r in ROWS['S'].items():
+        m = MSG[(ev_, mid)]
+        if r.get('c') != m['c'] or r.get('tcaMsg') != m['tca'] or r.get('missMsg') != m['miss']:
+            invalid('arm S has a row that disagrees with the event table about its message')
+    have_sets = {k for k, r in ROWS['S'].items() if 'gpA' in r}
+    for a in CONFIG['arms']:
+        if set(ROWS[a]) - have_sets:
+            invalid('arm %s has rows that are not chosen rows with sets' % a)
+    say('every row file and fit file of the store has a header naming the registered module, configuration, manifest, Node version, event table, set index and (arm W) forecaster; shards complete and not mixed; the rows of every arm are the chosen rows, once each')
+
+
+if REGISTERED:
+    check_registered_store()
 for a in ARMS:
     hs = [h for h in HEADS[a].values() if h]
     say('arm %s: %d rows read from %d files; headers %s' % (a, len(ROWS[a]), len(HEADS[a]), 'present' if len(hs) == len(HEADS[a]) and hs else 'absent (development rows made before the headers existed)'))
+for a in CONFIG['arms']:
+    if FIT_STATUS[a]:
+        say('arm %s fits by status: %s' % (a, ', '.join('%s %d' % (k, v) for k, v in sorted(FIT_STATUS[a].items()))))
 for nm in ('inputs-messages.json', 'inputs-sets.json'):
     p = os.path.join(STORE, nm)
     if os.path.exists(p):
@@ -274,7 +369,7 @@ def cell_seed(ci, pi, name):
 
 
 CELLS = ['pooled'] + ['lead %s' % b['label'] for b in LEADS] + PERI + AGE + PT + ['%s | %s' % (b['label'], p) for b in LEADS for p in PERI]
-LOHI = [100 * (1 - ST['interval']) / 2, 100 * (1 + ST['interval']) / 2]
+LOHI = [round(100 * (1 - ST['interval']) / 2, 10), round(100 * (1 + ST['interval']) / 2, 10)]
 
 
 def binom_p(k, n):
@@ -472,10 +567,10 @@ if not ARGV.count('--rule-table'):
             else:
                 v = 'NOT CONFIRMED'
             note = ''
-            if v == 'NOT CONFIRMED' and n < ST['plannedPrimaryEvents']:
-                note = ' (under the planned size of about %d primary events; width of the H1 interval %.1f points)' % (ST['plannedPrimaryEvents'], 100 * (c['shareHi'] - c['shareLo']))
+            if v == 'NOT CONFIRMED' and n < ST['expectedPrimaryEvents']:
+                note = ' (under the expected size of about %d primary events; width of the H1 interval %.1f points)' % (ST['expectedPrimaryEvents'], 100 * (c['shareHi'] - c['shareLo']))
             say()
-            say('VERDICT %s (PRIMARY, %d events with a scored row): %s%s' % (cmp_['id'], n, v, note))
+            say('VERDICT %s (PRIMARY, %d events with a scored row): %s%s%s' % (cmp_['id'], n, v, note, '' if REGISTERED else ' (not the registered run)'))
             if c:
                 say('   H1 %s, H2 %s, H3 guard %s%s' % ('holds' if c['h1'] else 'does not hold', 'holds' if c['h2'] else 'does not hold', 'holds' if c['guard'] else 'fails',
                                                        ' (information only: INSUFFICIENT overrides every other verdict)' if v == 'INSUFFICIENT' else ''))
@@ -500,5 +595,7 @@ if not ARGV.count('--rule-table'):
 else:
     rule_table()
 
-json.dump(RESULT, open(os.path.join(STORE, 'results.json'), 'w'), indent=1, default=float)
+RESULT['registered'] = REGISTERED
+RESULT['configSha256'] = CONFIG_SHA
+json.dump(RESULT, open(os.path.join(STORE, 'results.json'), 'w'), indent=1, default=float)  # may contain the bare token NaN where a base median error is 0 (not strict JSON)
 open(os.path.join(STORE, 'results.txt'), 'w').write('\n'.join(OUT) + '\n')

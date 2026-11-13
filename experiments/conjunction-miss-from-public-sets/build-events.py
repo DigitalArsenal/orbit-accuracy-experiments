@@ -22,7 +22,7 @@ def arg(name, default=None):
 CONFIG_FILE = os.path.abspath(arg('--config', os.path.join(HERE, 'config.json')))
 CONFIG = json.load(open(CONFIG_FILE))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
-ARCHIVE = os.environ.get('SDN_ARCHIVE_ROOT', CONFIG['archive']['root'])
+ARCHIVE = os.environ.get('SDN_ARCHIVE_ROOT') or CONFIG['archive']['root']  # an empty value is not a root
 STORE = os.path.abspath(os.environ.get('CONJ_STORE', CONFIG['store'] if os.path.isabs(CONFIG['store']) else os.path.join(REPO, CONFIG['store'])))
 os.makedirs(STORE, exist_ok=True)
 UTC = datetime.timezone.utc
@@ -54,6 +54,12 @@ if os.path.realpath(CONFIG_FILE) == os.path.realpath(os.path.join(HERE, 'config.
     line = [l for l in open(os.path.join(HERE, 'MANIFEST.sha256')).read().split('\n') if l.endswith('/config.json')]
     if not line or line[0].split()[0] != hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest():
         sys.exit('config.json differs from its line in MANIFEST.sha256: the registered configuration is refused')
+    REGISTERED = True
+    if os.listdir(STORE):  # the store of the registered run starts empty (the overlap list is copied in after this step)
+        sys.exit('the store is not empty: the registered run starts into an empty store')
+else:
+    REGISTERED = False
+CONFIG_SHA = hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest()
 STRONG_SECONDS = CONFIG['primaryHours'] * 3600
 LEAD_BINS = CONFIG['leadBins']  # [{ "label", "from", "to", "middle" }] in days, half-open
 TCA_GAP = CONFIG['eventGapSeconds']
@@ -80,19 +86,20 @@ for f in files:
             continue
         key = r.get('CDM_ID')
         if key is None:
-            counts['messages without a message identifier (kept, each as its own message)'] += 1
-            key = 'noid-' + hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest()
+            counts['messages without a message identifier (all such messages share one key)'] += 1
         if key in seen and seen[key][1] != json.dumps(r, sort_keys=True):
             counts['identifiers seen again with different content (last copy kept)'] += 1
         seen[key] = (r, json.dumps(r, sort_keys=True))
 d0 = datetime.date.fromisoformat(MSG.get('from', files[0][:10] if files else '2026-01-01'))
 d1 = datetime.date.fromisoformat(MSG['through'])
 present = {f[:10] for f in files}
+if REGISTERED and MSG['through'] not in present:  # the file of the last day holds the messages created after the previous snapshot: it must exist before the run starts
+    sys.exit('the day file of %s does not exist: the registered run does not start before it does' % MSG['through'])
 missing = [(d0 + datetime.timedelta(days=k)).isoformat() for k in range((d1 - d0).days + 1) if (d0 + datetime.timedelta(days=k)).isoformat() not in present]
 counts['day files missing in the message range'] = len(missing)
 gaps = [(utc(m + 'T00:00:00Z'), utc(m + 'T00:00:00Z') + 4 * 86400) for m in missing]  # a missing day and the 3 days after it
 agg = hashlib.sha256(''.join('%s %s\n' % (i['file'], i['sha256']) for i in inputs).encode()).hexdigest()
-json.dump(dict(kind='messages', missingDays=missing, files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-messages.json'), 'w'), indent=1)
+json.dump(dict(kind='messages', configSha256=CONFIG_SHA, registered=REGISTERED, missingDays=missing, files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-messages.json'), 'w'), indent=1)
 
 pairs = collections.defaultdict(list)
 for key, (r, _) in seen.items():
@@ -168,4 +175,5 @@ json.dump(events, open(os.path.join(STORE, 'events.json'), 'w'))
 print(json.dumps(dict(configSha256=hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest(), inputAggregateSha256=agg, files=len(files)), indent=1))
 for k in sorted(counts):
     print('%8d  %s' % (counts[k], k))
-json.dump(dict(counts=counts, inputAggregateSha256=agg), open(os.path.join(STORE, 'events-counts.json'), 'w'), indent=1)
+json.dump(dict(counts=counts, inputAggregateSha256=agg, configSha256=CONFIG_SHA, registered=REGISTERED,
+               eventsSha256=hashlib.sha256(open(os.path.join(STORE, 'events.json'), 'rb').read()).hexdigest()), open(os.path.join(STORE, 'events-counts.json'), 'w'), indent=1)
