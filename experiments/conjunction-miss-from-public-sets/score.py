@@ -19,7 +19,7 @@ closest approach) and SECONDARY (all events). The statistics, the verdicts and e
   binomial test on the discordant events below 0.05); NOT CONFIRMED otherwise. --rule-table prints the development table of PLAN.md's last section.
 Writes results.json and results.txt to the store.
 """
-import sys, os, json, glob, math, hashlib, datetime
+import sys, os, re, json, glob, math, hashlib, datetime
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -39,11 +39,29 @@ BANDS = CONFIG['bands']
 LEADS = CONFIG['leadBins']
 OUT = []
 RESULT = {}
+CONFIG_SHA = hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest()
+# the registered configuration is this folder's own config.json; with it the run must be complete and consistent, or nothing is scored
+REGISTERED = os.path.realpath(CONFIG_FILE) == os.path.realpath(os.path.join(HERE, 'config.json'))
 
 
 def say(s=''):
     print(s)
     OUT.append(s)
+
+
+def invalid(reason):
+    """A run that cannot be the registered run is not scored: no verdict, exit 1. It is repeated into an empty store."""
+    say('INVALID: %s' % reason)
+    say('No verdict is stated. The run is repeated into an empty store.')
+    open(os.path.join(STORE, 'results.txt'), 'w').write('\n'.join(OUT) + '\n')
+    sys.exit(1)
+
+
+if REGISTERED:
+    mline = [l for l in open(os.path.join(HERE, 'MANIFEST.sha256')).read().split('\n') if l.endswith('/config.json')]
+    if not mline or mline[0].split()[0] != CONFIG_SHA:
+        sys.exit('config.json differs from its line in MANIFEST.sha256: the registered configuration is refused')
+say('archive root %s; store %s; configuration %s (%s); run date %s' % (os.environ.get('SDN_ARCHIVE_ROOT', CONFIG['archive']['root']), STORE, CONFIG_FILE, 'registered' if REGISTERED else 'not the registered configuration', CONFIG.get('runDateUtc', 'n/a')))
 
 
 # ------------------------------------------------------------------ inputs
@@ -57,40 +75,77 @@ MSG = {}
 for e in events:
     for m in e['msgs']:
         MSG[(e['idx'], m['id'])] = m
-CONFIG_SHA = hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest()
 ROW_FILES = CONFIG.get('rowFiles', {'S': 'rows-sgp4*.jsonl', **{a: 'rows-%s*.jsonl' % a for a in CONFIG['arms']}})
+FIT_FILES = {a: 'fits-%s*.jsonl' % a for a in CONFIG['arms']}
 
 
 def read_rows(arm):
-    rows, headers = {}, []
+    """rows by (event, message) and, per file, its header (None when absent)"""
+    rows, heads = {}, {}
     for f in sorted(glob.glob(os.path.join(STORE, ROW_FILES[arm]))):
+        heads[os.path.basename(f)] = None
         for line in open(f):
             if not line.strip():
                 continue
             r = json.loads(line)
             if '_header' in r:
-                headers.append(r['_header'])
+                heads[os.path.basename(f)] = r['_header']
                 continue
             if r.get('kind', 'msg') != 'msg' or 'id' not in r:
                 continue
             rows[(r['ev'], str(r['id']))] = r
-    return rows, headers
+    return rows, heads
+
+
+def read_headers(pattern):
+    heads = {}
+    for f in sorted(glob.glob(os.path.join(STORE, pattern))):
+        heads[os.path.basename(f)] = None
+        for line in open(f):
+            if '_header' in line[:12]:
+                heads[os.path.basename(f)] = json.loads(line)['_header']
+            break
+    return heads
 
 
 ARMS = ['S'] + [a for a in CONFIG['arms']]
-ROWS, HEADERS = {}, {}
+ROWS, HEADS = {}, {}
 for a in ARMS:
-    ROWS[a], HEADERS[a] = read_rows(a)
+    ROWS[a], HEADS[a] = read_rows(a)
 
-say('numpy %s; generator numpy.random.default_rng; percentile method %s' % (np.__version__, ST['percentileMethod']))
+say('numpy %s; generator %s; percentile method %s; interval %s; resamples %d; seed %d' % (np.__version__, ST['generator'], ST['percentileMethod'], ST['interval'], ST['resamples'], ST['seed']))
 say('configuration SHA-256 %s' % CONFIG_SHA)
 say('module version %s, wasm SHA-256 %s' % (CONFIG['module']['version'], CONFIG['module']['wasmSha256']))
+if REGISTERED:
+    # a store that cannot be the one complete run of this configuration is not scored
+    shard_re = re.compile(r'-(\d+)of(\d+)\.jsonl$')
+    groups = [(a, 'rows', HEADS[a]) for a in ARMS] + [(a, 'fits', read_headers(FIT_FILES[a])) for a in CONFIG['arms']]
+    for a, kind, heads in groups:
+        if not heads:
+            invalid('no %s file for arm %s in the store' % (kind, a))
+        sharded = [f for f in heads if shard_re.search(f)]
+        if sharded and len(sharded) != len(heads):
+            invalid('arm %s has both sharded and unsharded %s files' % (a, kind))
+        if sharded:
+            ns = {int(shard_re.search(f).group(2)) for f in sharded}
+            idxs = {int(shard_re.search(f).group(1)) for f in sharded}
+            if len(ns) != 1 or idxs != set(range(next(iter(ns)))):
+                invalid('arm %s %s files are an incomplete or mixed set of shards' % (a, kind))
+        for f, h in heads.items():
+            if h is None:
+                invalid('%s of arm %s has no header' % (f, a))
+            if h.get('moduleWasmSha256') != CONFIG['module']['wasmSha256']:
+                invalid('%s of arm %s names another module SHA-256' % (f, a))
+            if h.get('configSha256') != CONFIG_SHA or not h.get('registered'):
+                invalid('%s of arm %s was made with another configuration' % (f, a))
+            if kind == 'fits' and h.get('limit'):
+                invalid('%s of arm %s was run with a limit' % (f, a))
+            if kind == 'fits' and a == 'W' and h.get('forecasterSha256') != CONFIG['weatherForecaster']['sha256']:
+                invalid('%s of arm W names another weather forecaster SHA-256' % f)
+    say('every row file and fit file of the store has a header naming the registered module, configuration and (arm W) forecaster; shards complete and not mixed')
 for a in ARMS:
-    hs = HEADERS[a]
-    ok = bool(hs) and all(h.get('moduleWasmSha256') == CONFIG['module']['wasmSha256'] for h in hs)
-    say('arm %s: %d rows read; row-file headers %s' % (a, len(ROWS[a]), 'carry the registered module SHA-256' if ok else ('absent (rows made before the headers existed)' if not hs else 'DO NOT MATCH the registered module SHA-256')))
-    if hs and not ok:
-        RESULT.setdefault('errors', []).append('header mismatch in arm %s' % a)
+    hs = [h for h in HEADS[a].values() if h]
+    say('arm %s: %d rows read from %d files; headers %s' % (a, len(ROWS[a]), len(HEADS[a]), 'present' if len(hs) == len(HEADS[a]) and hs else 'absent (development rows made before the headers existed)'))
 for nm in ('inputs-messages.json', 'inputs-sets.json'):
     p = os.path.join(STORE, nm)
     if os.path.exists(p):
@@ -137,8 +192,10 @@ def status(arm, ev, mid):
         return None, 'row absent'
     if 'noset' in r:
         return None, 'no set for an object'
+    if 'notrun' in r:
+        return None, 'record missing: the fit was never run'
     if 'nofit' in r:
-        return None, 'record missing (fit refused or not run)'
+        return None, 'record missing: the module refused the fit'
     if 'error' in r:
         return None, 'flight refused'
     if 'miss' not in r:
@@ -156,6 +213,24 @@ for e in events:
         m = MSG[(e['idx'], mid)]
         PICKS.append(dict(ev=e['idx'], bin=b['label'], id=mid, strong=e['strong'], mf=e['miss_f'], tf=e['tca_f'], c=m['c'], ptype=ptype(e)))
 
+if REGISTERED:
+    # every chosen row of every registered arm must have been run: a row never run is not a failure of the arm, it is an incomplete run
+    never = {a: 0 for a in ARMS}
+    for p in PICKS:
+        rs = ROWS['S'].get((p['ev'], p['id']))
+        if rs is None:
+            never['S'] += 1
+            continue
+        if 'gpA' not in rs:
+            continue  # no set for an object: no arm row exists, counted as that
+        for a in CONFIG['arms']:
+            r = ROWS[a].get((p['ev'], p['id']))
+            if r is None or 'notrun' in r:
+                never[a] += 1
+    bad = ['%d chosen rows were never run in arm %s' % (n, a) for a, n in never.items() if n]
+    if bad:
+        invalid('; '.join(bad))
+
 
 def build(base, arm):
     """The rows of one comparison: both arms usable; the drops counted by reason and population."""
@@ -163,12 +238,12 @@ def build(base, arm):
     for p in PICKS:
         ra, why_a = status(arm, p['ev'], p['id'])
         rb, why_b = status(base, p['ev'], p['id'])
-        rs, why_s = status('S', p['ev'], p['id'])
-        # a row without sets is counted as that, whichever arm's file lacks it; then the arms in the order of the comparison
-        if why_s and why_s in ('no set for an object', 'row absent'):
-            why = 'no set for an object (S row: %s)' % why_s
+        rs = ROWS['S'].get((p['ev'], p['id']))  # the S row is used for the sets' facts; a failed S flight drops a row only where S is the arm or the base
+        # a row without sets is dropped from every comparison and counted as that; otherwise only a failure of this comparison's own arms drops it
+        if rs is None or 'noset' in rs or 'gpA' not in rs:
+            why = 'no set for an object' if rs is not None else 'no set for an object (S row absent)'
         else:
-            why = why_a and '%s: %s' % (arm, why_a) or why_b and '%s: %s' % (base, why_b) or why_s and 'S: %s' % why_s
+            why = why_a and '%s: %s' % (arm, why_a) or why_b and '%s: %s' % (base, why_b)
         if why:
             drops.setdefault((why, p['strong']), 0)
             drops[(why, p['strong'])] += 1
@@ -199,6 +274,7 @@ def cell_seed(ci, pi, name):
 
 
 CELLS = ['pooled'] + ['lead %s' % b['label'] for b in LEADS] + PERI + AGE + PT + ['%s | %s' % (b['label'], p) for b in LEADS for p in PERI]
+LOHI = [100 * (1 - ST['interval']) / 2, 100 * (1 + ST['interval']) / 2]
 
 
 def binom_p(k, n):
@@ -226,9 +302,10 @@ def analyze(rows, ci, pi, name, arm, base):
         sh.append(float(np.mean(eA[ix] < eB[ix])))
         mbm = float(np.median(eB[ix]))
         ra.append(float(np.median(eA[ix]) / mbm) if mbm > 0 else float('nan'))
-    lo_s, hi_s = [float(x) for x in np.percentile(sh, [2.5, 97.5], method=ST['percentileMethod'])]
+    lo_s, hi_s = [float(x) for x in np.percentile(sh, LOHI, method=ST['percentileMethod'])]
     ra = np.array(ra)
-    lo_r, hi_r = [float(x) for x in np.nanpercentile(ra, [2.5, 97.5], method=ST['percentileMethod'])] if np.isfinite(ra).any() else (float('nan'), float('nan'))
+    nan_resamples = int(np.sum(~np.isfinite(ra)))  # resamples whose base median error is 0: dropped from the H2 interval
+    lo_r, hi_r = [float(x) for x in np.nanpercentile(ra, LOHI, method=ST['percentileMethod'])] if np.isfinite(ra).any() else (float('nan'), float('nan'))
     wa = {rows[i]['ev'] for i in range(len(rows)) if mA[i] > ST['worseFactor'] * mB[i] and mA[i] > ST['worseMissMeters']}
     wb = {rows[i]['ev'] for i in range(len(rows)) if mB[i] > ST['worseFactor'] * mA[i] and mB[i] > ST['worseMissMeters']}
     nA, nB = len(wa), len(wb)
@@ -238,13 +315,14 @@ def analyze(rows, ci, pi, name, arm, base):
     guard = nA <= nB
     return dict(cell=name, events=len(evs), rows=len(rows), share=share, shareLo=lo_s, shareHi=hi_s, eventShare=evshare, ratio=ratio, ratioLo=lo_r, ratioHi=hi_r,
                 medianA=float(np.median(eA)), medianB=float(np.median(eB)), worseArm=nA, worseBase=nB, guardP=p, h1=h1, h2=h2, guard=guard,
-                guardFailsSignificantly=(not guard) and p < ST['guardAlpha'])
+                guardFailsSignificantly=(not guard) and p < ST['guardAlpha'], nanResamples=nan_resamples)
 
 
 def fmt(c, arm, base):
     return '%-28s n=%-4d rows=%-5d %s closer than %s in %.1f%% [%.1f..%.1f] (event-averaged %.1f%%); median error %d vs %d m, ratio %.2f [%.2f..%.2f]; events %s worse %d, %s worse %d (guard %s, p=%.3f)' % (
         c['cell'], c['events'], c['rows'], arm, base, 100 * c['share'], 100 * c['shareLo'], 100 * c['shareHi'], 100 * c['eventShare'], c['medianA'], c['medianB'],
-        c['ratio'], c['ratioLo'], c['ratioHi'], arm, c['worseArm'], base, c['worseBase'], 'holds' if c['guard'] else 'fails', c['guardP'])
+        c['ratio'], c['ratioLo'], c['ratioHi'], arm, c['worseArm'], base, c['worseBase'], 'holds' if c['guard'] else 'fails', c['guardP']) + (
+        '; %d resamples with a base median error of 0 left out of the ratio interval' % c['nanResamples'] if c['nanResamples'] else '')
 
 
 def distribution(rows, key, label, fewn):
@@ -334,6 +412,7 @@ for a in ARMS:
         sum(1 for r in rs if r.get('skipped')), sum(1 for r in rs if (r.get('outA') or 0) != 0 or (r.get('outB') or 0) != 0 or r.get('beyondA') or r.get('beyondB'))))
 
 if not ARGV.count('--rule-table'):
+    say('cells in the fixed list (the position is part of each cell\'s seed): ' + '; '.join('%d %s' % (i, c) for i, c in enumerate(CELLS)))
     for ci, cmp_ in enumerate(CONFIG['comparisons']):
         arm, base = cmp_['arm'], cmp_['base']
         rows, drops = build(base, arm)
@@ -364,9 +443,12 @@ if not ARGV.count('--rule-table'):
                     sub = selector(pr, nm)
                     say(distribution(sub, 'mA', '%s %s' % (arm, nm), ST['fewBelowEvents']))
                     say(distribution(sub, 'mB', '%s %s' % (base, nm), ST['fewBelowEvents']))
-                say(' report-only figures (no verdict role):')
-                say('  share of rows with %s miss under %s miss: %.1f%%; median of (miss - final miss): %s %+.0f m, %s %+.0f m' % (
-                    arm, base, 100 * float(np.mean([r['mA'] < r['mB'] for r in pr])), arm, float(np.median([r['mA'] - r['mf'] for r in pr])), base, float(np.median([r['mB'] - r['mf'] for r in pr]))))
+                say(' report-only figures (no verdict role; FEW under %d events):' % ST['fewBelowEvents'])
+                if len({r['ev'] for r in pr}) < ST['fewBelowEvents']:
+                    say('  pooled: FEW (%d events)' % len({r['ev'] for r in pr}))
+                else:
+                    say('  share of rows with %s miss under %s miss: %.1f%%; median of (miss - final miss): %s %+.0f m, %s %+.0f m' % (
+                        arm, base, 100 * float(np.mean([r['mA'] < r['mB'] for r in pr])), arm, float(np.median([r['mA'] - r['mf'] for r in pr])), base, float(np.median([r['mB'] - r['mf'] for r in pr]))))
                 for fm in FMB:
                     sub = [r for r in pr if r['fmb'] == fm]
                     nev = len({r['ev'] for r in sub})
@@ -395,20 +477,26 @@ if not ARGV.count('--rule-table'):
             say()
             say('VERDICT %s (PRIMARY, %d events with a scored row): %s%s' % (cmp_['id'], n, v, note))
             if c:
-                say('   H1 %s, H2 %s, H3 guard %s' % ('holds' if c['h1'] else 'does not hold', 'holds' if c['h2'] else 'does not hold', 'holds' if c['guard'] else 'fails'))
+                say('   H1 %s, H2 %s, H3 guard %s%s' % ('holds' if c['h1'] else 'does not hold', 'holds' if c['h2'] else 'does not hold', 'holds' if c['guard'] else 'fails',
+                                                       ' (information only: INSUFFICIENT overrides every other verdict)' if v == 'INSUFFICIENT' else ''))
             RESULT[cmp_['id']]['verdict'] = v
             RESULT[cmp_['id']]['note'] = note.strip()
 
     # overlap with the development events (report only)
     ov = CONFIG.get('overlap', {}).get('developmentObjectsFile')
     p = os.path.join(STORE, ov) if ov else None
+    say()
     if p and os.path.exists(p):
-        dev = json.load(open(p))
+        dev = json.load(open(p))  # {"objects": [object identifiers], "pairs": [[identifier, identifier], ...]}
         objs, prs = set(dev['objects']), {tuple(x) for x in dev['pairs']}
         prim = [e for e in events if e['strong']]
-        say()
-        say('primary events whose pair was in a development event: %.1f%%; with either object in a development event: %.1f%%' % (
-            100 * np.mean([tuple(e['pair']) in prs for e in prim]), 100 * np.mean([e['pair'][0] in objs or e['pair'][1] in objs for e in prim])))
+        if len(prim) < ST['fewBelowEvents']:
+            say('development overlap: FEW (%d primary events)' % len(prim))
+        else:
+            say('primary events whose pair was in a development event: %.1f%%; with either object in a development event: %.1f%%' % (
+                100 * np.mean([tuple(e['pair']) in prs for e in prim]), 100 * np.mean([e['pair'][0] in objs or e['pair'][1] in objs for e in prim])))
+    else:
+        say('development overlap: file absent')
 else:
     rule_table()
 

@@ -2,7 +2,7 @@
   "experiment": "conjunction-miss-from-public-sets",
   "frozen": true,
   "development": true,
-  "registeredUtc": "2026-11-14",
+  "environment": { "node": "25.4.0", "numpy": "2.5.2", "python": "3.14.7" },
   "archive": { "root": "/opt/data/sdn-archive" },
   "store": "runs/conjunction-miss-from-public-sets/development",
   "module": {

@@ -49,7 +49,11 @@ MSG = CONFIG['messages']
 WINDOW = CONFIG['window']
 CREATED_BEFORE = utc(MSG['createdBefore'])
 FINAL_FROM, FINAL_TO = utc(WINDOW['finalFrom']), utc(WINDOW['finalTo'])
-EARLY = utc(MSG['earlyExclusionCreatedThrough']) if MSG.get('earlyExclusionCreatedThrough') else None
+EARLY = utc(MSG['earlyExclusionCreatedBefore']) if MSG.get('earlyExclusionCreatedBefore') else None
+if os.path.realpath(CONFIG_FILE) == os.path.realpath(os.path.join(HERE, 'config.json')):  # the registered configuration must be the one in MANIFEST.sha256
+    line = [l for l in open(os.path.join(HERE, 'MANIFEST.sha256')).read().split('\n') if l.endswith('/config.json')]
+    if not line or line[0].split()[0] != hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest():
+        sys.exit('config.json differs from its line in MANIFEST.sha256: the registered configuration is refused')
 STRONG_SECONDS = CONFIG['primaryHours'] * 3600
 LEAD_BINS = CONFIG['leadBins']  # [{ "label", "from", "to", "middle" }] in days, half-open
 TCA_GAP = CONFIG['eventGapSeconds']
@@ -75,6 +79,9 @@ for f in files:
             counts['records created at or after the creation cutoff (not used)'] += 1
             continue
         key = r.get('CDM_ID')
+        if key is None:
+            counts['messages without a message identifier (kept, each as its own message)'] += 1
+            key = 'noid-' + hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest()
         if key in seen and seen[key][1] != json.dumps(r, sort_keys=True):
             counts['identifiers seen again with different content (last copy kept)'] += 1
         seen[key] = (r, json.dumps(r, sort_keys=True))
@@ -123,8 +130,8 @@ counts['events seen (any final closest approach)'] = len(events)
 events = [e for e in events if FINAL_FROM <= e['tca_f'] < FINAL_TO]
 counts['events with a final closest approach in the window'] = len(events)
 if EARLY is not None:
-    keep = [e for e in events if not any(m['c'] <= EARLY for m in e['msgs'])]
-    counts['events excluded: a message created at or before the early cutoff'] = len(events) - len(keep)
+    keep = [e for e in events if not any(m['c'] < EARLY for m in e['msgs'])]
+    counts['events excluded: a message created before the early cutoff'] = len(events) - len(keep)
     events = keep
 events.sort(key=lambda e: (e['tca_f'], e['pair']))
 for i, e in enumerate(events):
@@ -136,7 +143,7 @@ for i, e in enumerate(events):
         if lead < 0:
             counts['messages created after the final closest approach (not scored)'] += 1
         elif lead >= LEAD_BINS[-1]['to']:
-            counts['messages with a lead of 3 d or more (not scored)'] += 1
+            counts['messages with a lead of 3.0001 d or more (not scored)'] += 1
         else:
             cands.append((lead, m))
     e['nMessages'] = len(e['msgs'])

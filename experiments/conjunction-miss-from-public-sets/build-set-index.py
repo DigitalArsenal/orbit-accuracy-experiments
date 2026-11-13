@@ -4,9 +4,10 @@
 
 Reads the provider's element-set history (archive/spacetrack/gp_history/by-creation/<year>/, one file a day of creation date; partial windows are named
 <from>--<to>.json.gz) from the configuration's start day to the creation cutoff, keeps the rows of the objects of the events in the store's events.json,
-de-duplicates by set identifier, keeps sets of theory SGP4 created before the cutoff, and writes sets_index.json (object to its sets in order of creation
-time, then epoch) and inputs-sets.json (per file: name, record count, SHA-256; one aggregate hash). An object with no set created after the start day has no
-set for any of its rows; unreadable files and sets of another theory are counted.
+de-duplicates by set identifier, keeps sets of theory SGP4 and ephemeris type 0 created before the cutoff, and writes sets_index.json (object to its sets in order
+of creation time, epoch, then set identifier as text) and inputs-sets.json (per file: name, record count, SHA-256; one aggregate hash). Day files are chosen by
+the range their names cover. An object with no set created after the start day has no set for any of its rows; unreadable files, days without a file, sets
+of another theory or ephemeris type and sets with an unusable field are counted.
 """
 import sys, os, json, gzip, hashlib, datetime, collections
 
@@ -41,8 +42,37 @@ BEFORE = ts(SETS['createdBefore'])
 events = json.load(open(os.path.join(STORE, 'events.json')))
 want = {x for e in events for x in e['pair']}
 root = os.path.join(ARCHIVE, 'spacetrack', 'gp_history', 'by-creation', str(SETS['year']))
-files = sorted(f for f in os.listdir(root) if f.endswith('.json.gz') and SETS['startDay'] <= f[:10] <= SETS['createdBefore'][:10])
+if os.path.realpath(CONFIG_FILE) == os.path.realpath(os.path.join(HERE, 'config.json')):  # the registered configuration must be the one in MANIFEST.sha256
+    line = [l for l in open(os.path.join(HERE, 'MANIFEST.sha256')).read().split('\n') if l.endswith('/config.json')]
+    if not line or line[0].split()[0] != hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest():
+        sys.exit('config.json differs from its line in MANIFEST.sha256: the registered configuration is refused')
+
+
+def named_range(f):
+    """the first and last day a file's name covers: <day>.json.gz or <from>--<to>.json.gz"""
+    parts = f[:-len('.json.gz')].split('--')
+    return parts[0][:10], parts[-1][:10]
+
+
+files, skipped = [], []
+for f in sorted(os.listdir(root)):
+    if not f.endswith('.json.gz'):
+        continue
+    d0, d1 = named_range(f)
+    if d0 <= SETS['createdBefore'][:10] and d1 >= SETS['startDay']:  # the named range overlaps the read range
+        files.append(f)
+    else:
+        skipped.append(f)
 counts = collections.Counter()
+eph_objects = set()
+counts['day files outside the read range (not read)'] = len(skipped)
+covered = set()
+for f in files:
+    d0, d1 = named_range(f)
+    a, b = datetime.date.fromisoformat(d0), datetime.date.fromisoformat(d1)
+    covered.update((a + datetime.timedelta(days=k)).isoformat() for k in range((b - a).days + 1))
+r0, r1 = datetime.date.fromisoformat(SETS['startDay']), datetime.date.fromisoformat(SETS['createdBefore'][:10])
+counts['days in the read range with no file'] = sum(1 for k in range((r1 - r0).days + 1) if (r0 + datetime.timedelta(days=k)).isoformat() not in covered)
 idx = collections.defaultdict(dict)
 inputs = []
 for f in files:
@@ -69,12 +99,28 @@ for f in files:
         if r.get('MEAN_ELEMENT_THEORY') != SETS['theory']:
             counts['sets of event objects with another mean-element theory (dropped)'] += 1
             continue
-        idx[n][r['GP_ID']] = dict(
-            cr=r['CREATION_DATE'], ep=r['EPOCH'], gp=r['GP_ID'], file=f,
-            n=float(r['MEAN_MOTION']), e=float(r['ECCENTRICITY']), inc=float(r['INCLINATION']),
-            raan=float(r['RA_OF_ASC_NODE']), argp=float(r['ARG_OF_PERICENTER']), ma=float(r['MEAN_ANOMALY']),
-            bstar=float(r['BSTAR'] or 0), ndot=float(r['MEAN_MOTION_DOT'] or 0), nddot=float(r['MEAN_MOTION_DDOT'] or 0))
-out = {str(n): sorted(d.values(), key=lambda s: (s['cr'], s['ep'])) for n, d in idx.items()}
+        if r.get('EPHEMERIS_TYPE') not in (None, '', '0', 0):
+            counts['sets of event objects with an ephemeris type other than 0 (dropped)'] += 1
+            eph_objects.add(n)
+            continue
+        ep = ts(r.get('EPOCH'))
+        try:
+            s = dict(cr=r['CREATION_DATE'], ep=r['EPOCH'], gp=r['GP_ID'], file=f,
+                     n=float(r['MEAN_MOTION']), e=float(r['ECCENTRICITY']), inc=float(r['INCLINATION']),
+                     raan=float(r['RA_OF_ASC_NODE']), argp=float(r['ARG_OF_PERICENTER']), ma=float(r['MEAN_ANOMALY']),
+                     bstar=float(r['BSTAR'] or 0), ndot=float(r['MEAN_MOTION_DOT'] or 0), nddot=float(r['MEAN_MOTION_DDOT'] or 0))
+        except (KeyError, TypeError, ValueError):
+            s = None
+        if s is None or ep is None:
+            counts['sets of event objects with an unusable field or epoch (dropped)'] += 1
+            continue
+        s['crS'], s['epS'] = cr, ep
+        idx[n][r['GP_ID']] = s
+out = {str(n): sorted(d.values(), key=lambda s: (s['crS'], s['epS'], str(s['gp']))) for n, d in idx.items()}
+for L in out.values():
+    for s in L:
+        del s['crS'], s['epS']
+counts['event objects with a set of an ephemeris type other than 0'] = len(eph_objects)
 counts['event objects'] = len(want)
 counts['event objects with no set created after the start day'] = len(want) - len(out)
 counts['sets kept'] = sum(len(v) for v in out.values())

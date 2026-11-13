@@ -19,10 +19,21 @@ export function readConfig(argv = process.argv.slice(2)) {
   const config = JSON.parse(fs.readFileSync(file, 'utf8'));
   config.file = file;
   config.configSha256 = sha256(fs.readFileSync(file));
+  if (config.frozen !== true) throw new Error('config.json is not frozen: a step never reads a test window while the plan is not frozen');
   config.archiveRoot = process.env.SDN_ARCHIVE_ROOT ?? config.archive.root;
   config.storeDir = path.resolve(process.env.CONJ_STORE ?? (path.isAbsolute(config.store) ? config.store : path.join(REPO, config.store)));
+  // the registered configuration is this folder's own config.json: its SHA-256 must be the one in MANIFEST.sha256 and no option may change the run
+  config.registered = fs.realpathSync(file) === fs.realpathSync(path.join(HERE, 'config.json'));
+  if (config.registered) {
+    const line = fs.readFileSync(path.join(HERE, 'MANIFEST.sha256'), 'utf8').split('\n').find((l) => l.endsWith('/config.json'));
+    if (!line || line.split(/\s+/)[0] !== config.configSha256) throw new Error('config.json differs from its line in MANIFEST.sha256: the registered configuration is refused');
+    if (process.env.SDN_MODULES_ROOT) throw new Error('SDN_MODULES_ROOT is set: a non-default modules root is refused with the registered configuration');
+    if (argv.includes('--limit')) throw new Error('--limit is refused with the registered configuration');
+  }
   return config;
 }
+/** The shard of a run, "i/n" (default "0/1"). */
+export const shardOf = (argv = process.argv.slice(2)) => (argv.includes('--shard') ? argv[argv.indexOf('--shard') + 1] : '0/1');
 
 /** The module's bytes: SDN_AP_WASM, else the path in the configuration. Refuses any other SHA-256 than the registered one. */
 export function modulePath(config) {
@@ -38,11 +49,12 @@ export function verifyModule(config) {
 export async function loadHost(config) {
   return createStandaloneHarness('browser', verifyModule(config), { surface: 'direct' });
 }
-/** The header line of every output file. */
-export const header = (config, what, extra = {}) => ({ _header: { what, experiment: config.experiment, module: config.module.version, moduleWasmSha256: config.module.wasmSha256, configSha256: config.configSha256, ...extra } });
+/** The header line of every rows-*.jsonl and fits-*.jsonl file. */
+export const header = (config, what, extra = {}) => ({ _header: { what, experiment: config.experiment, module: config.module.version, moduleWasmSha256: config.module.wasmSha256, configSha256: config.configSha256,
+  registered: config.registered, shard: shardOf(), archiveRoot: config.archiveRoot, store: config.storeDir, ...extra } });
 
-/** The Space Data Standards bindings (SDS_ROOT overrides the stack checkout's). */
-export const SDS = process.env.SDS_ROOT ?? path.join(STACK, 'repos/main-packages/spacedatastandards.org/lib/js');
+/** The Space Data Standards bindings: the checkout's files at the relative path the repository's libraries import them from (one binding set, no override); BINDINGS.sha256 lists them. */
+export const SDS = path.join(STACK, 'repos/main-packages/spacedatastandards.org/lib/js');
 export const importFile = (p) => import(pathToFileURL(p).href);
 export const importFlatbuffers = () => importFile(createRequire(path.join(REPO, 'package.json')).resolve('flatbuffers'));
 

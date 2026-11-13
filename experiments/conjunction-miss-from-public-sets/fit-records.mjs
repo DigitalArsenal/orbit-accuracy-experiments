@@ -32,11 +32,20 @@ function weatherFiles(day) {
   const list = [path.join(config.archiveRoot, 'hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt')];
   const g = newest(path.join(config.archiveRoot, 'hac/gfz-kp/2026')), s = newest(path.join(config.archiveRoot, 'hac/noaa-swpc/2026'));
   if (g) list.push(path.join(config.archiveRoot, 'hac/gfz-kp/2026', g, 'Kp_ap_Ap_SN_F107_nowcast.txt'));
-  if (s) for (const f of ['daily-solar-indices.txt', 'daily-geomagnetic-indices.txt', 'sgarf.txt']) list.push(path.join(config.archiveRoot, 'hac/noaa-swpc/2026', s, f));
+  if (s) {
+    // the builder reads the 3-day forecast only when the newest directory is dated at most 2 days before the epoch day
+    const lag = Math.round((Date.parse(`${day}T00:00:00Z`) - Date.parse(`${s}T00:00:00Z`)) / DAY);
+    for (const f of ['daily-solar-indices.txt', 'daily-geomagnetic-indices.txt', ...(lag <= 2 ? ['sgarf.txt'] : [])]) list.push(path.join(config.archiveRoot, 'hac/noaa-swpc/2026', s, f));
+  }
   return list.filter((f) => fs.existsSync(f)).map((f) => ({ file: path.relative(config.archiveRoot, f), sha256: sha256(fs.readFileSync(f)) }));
 }
 let extraFor = () => [];
+let forecasterSha256 = null;
 if (ARM === 'W') {
+  // the forecaster's bytes are hashed before the weather builder imports (and so loads) them; another hash stops the run
+  const fcFile = path.join(REPO, config.weatherForecaster.file);
+  forecasterSha256 = fs.existsSync(fcFile) ? sha256(fs.readFileSync(fcFile)) : null;
+  if (forecasterSha256 !== config.weatherForecaster.sha256) throw new Error(`the weather forecaster ${config.weatherForecaster.file} is ${forecasterSha256 ?? 'absent'}; this experiment registers ${config.weatherForecaster.sha256}`);
   process.env.SDN_ARCHIVE_ROOT ??= config.archiveRoot;
   const five = path.join(REPO, 'experiments/ap-five-day-accuracy/lib');
   const { buildSpaceWeather } = await importFile(path.join(five, 'space-weather.mjs'));
@@ -69,7 +78,7 @@ for (const f of fs.readdirSync(config.storeDir).filter((x) => /^rows-sgp4(-\d+of
 const jobs = [...gps].sort();
 fs.mkdirSync(path.join(config.storeDir, 'ocm'), { recursive: true });
 const out = fs.createWriteStream(path.join(config.storeDir, sn > 1 ? `fits-${ARM}-${si}of${sn}.jsonl` : `fits-${ARM}.jsonl`));
-out.write(JSON.stringify(header(config, `fits-${ARM}`, { span: SPAN })) + '\n');
+out.write(JSON.stringify(header(config, `fits-${ARM}`, { span: SPAN, limit: LIMIT || null, forecasterSha256 })) + '\n');
 console.log(`arm ${ARM}: ${jobs.length} unique sets`);
 let k = 0;
 for (const gp of jobs.filter((_, i) => i % sn === si).slice(0, LIMIT || Infinity)) {
@@ -103,7 +112,7 @@ await new Promise((r) => out.end(r));
 if (weatherDays.size) {
   const days = Object.fromEntries([...weatherDays].sort());
   const lines = Object.entries(days).flatMap(([d, fs_]) => fs_.map((f) => `${d} ${f.file} ${f.sha256}\n`)).join('');
-  fs.writeFileSync(path.join(config.storeDir, sn > 1 ? `inputs-weather-${ARM}-${si}of${sn}.json` : `inputs-weather-${ARM}.json`), JSON.stringify({ kind: 'weather', forecasterSha256: config.weatherForecaster.sha256, days, aggregateSha256: sha256(lines) }, null, 1));
+  fs.writeFileSync(path.join(config.storeDir, sn > 1 ? `inputs-weather-${ARM}-${si}of${sn}.json` : `inputs-weather-${ARM}.json`), JSON.stringify({ kind: 'weather', forecasterSha256, days, aggregateSha256: sha256(lines) }, null, 1));
 }
 console.log(`finished ${k} fits`);
 process.exit(0);

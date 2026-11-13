@@ -3,7 +3,7 @@
 //   node fly-records.mjs --arm W|X [--config config.json] [--shard i/n]
 // Input: rows-sgp4*.jsonl (the chosen rows and their sets) and fits-<arm>*.jsonl with ocm/ of the store. Output: rows-<arm>*.jsonl (first line: header).
 // Row fields: ev, bin, id, miss, tca, wid, edge, conv, skipped, outA and outB (days the closest approach lies outside the fitted span of each record, 0 inside),
-// or nofit (a record of a set is missing: the fit was refused or not run) or error (the module refused a flight).
+// or nofit ([flags per object] the module refused the fit of a set) or notrun (the fit of a set was never run) or error (the module refused a flight).
 import fs from 'node:fs';
 import path from 'node:path';
 import { readConfig, loadHost, header, closestApproach, recordSource } from './lib/module.mjs';
@@ -26,7 +26,8 @@ const ocm = new Map();
 const ocmOf = (key) => { if (!ocm.has(key)) { if (ocm.size > 400) ocm.delete(ocm.keys().next().value); ocm.set(key, new Uint8Array(fs.readFileSync(path.join(config.storeDir, 'ocm', `${key}.bin`)))); } return ocm.get(key); };
 const source = (gp) => {
   const f = fits.get(`${ARM}-${gp}`);
-  if (!f?.ok) return null;
+  if (!f) return { notrun: true }; // no fit row: the fit of this set was never run
+  if (!f.ok) return { refused: true }; // the module refused the fit
   return { span: [f.spanFrom / 1000, f.spanTo / 1000], src: recordSource(host, lib, ocmOf(f.key)) };
 };
 const outside = (sp, t) => (t > sp[1] ? (t - sp[1]) / 86400 : t < sp[0] ? (t - sp[0]) / 86400 : 0);
@@ -43,7 +44,12 @@ for (const r of rows) {
   if (r.ev % sn !== si || !r.gpA) continue;
   const row = { ev: r.ev, bin: r.bin, id: r.id };
   const A = source(r.gpA), B = source(r.gpB);
-  if (!A || !B) { row.nofit = [!A, !B]; out.write(JSON.stringify(row) + '\n'); continue; }
+  if (!A.src || !B.src) {
+    if (A.notrun || B.notrun) row.notrun = [Boolean(A.notrun), Boolean(B.notrun)];
+    else row.nofit = [Boolean(A.refused), Boolean(B.refused)];
+    out.write(JSON.stringify(row) + '\n');
+    continue;
+  }
   const res = await closestApproach(A.src, B.src, r.tcaMsg);
   Object.assign(row, res);
   if (!res.error) { row.outA = outside(A.span, res.tca); row.outB = outside(B.span, res.tca); }

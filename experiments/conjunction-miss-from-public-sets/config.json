@@ -1,8 +1,9 @@
 {
   "experiment": "conjunction-miss-from-public-sets",
   "frozen": true,
-  "registeredUtc": "2026-11-14",
   "runDateUtc": "2026-12-15",
+  "environment": { "node": "25.4.0", "numpy": "2.5.2", "python": "3.14.7" },
+  "bindings": { "repository": "https://github.com/DigitalArsenal/spacedatastandards.org", "commit": "cb95255756b5d8947fa988ce1c879e886dd7d704", "list": "BINDINGS.sha256" },
   "archive": { "root": "/opt/data/sdn-archive" },
   "store": "runs/conjunction-miss-from-public-sets/test",
   "module": {
@@ -16,14 +17,14 @@
   "weatherForecaster": {
     "file": "experiments/ap-five-day-accuracy/wasm/tle-astrodynamics-upgrades.wasm",
     "sha256": "68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73",
-    "builtBy": "experiments/ap-five-day-accuracy/build-tle-upgrades-wasm.mjs (not in git: built locally)"
+    "builtBy": "experiments/ap-five-day-accuracy/build-tle-upgrades-wasm.mjs (the file is not in git)"
   },
   "messages": {
     "year": 2026,
     "from": "2026-10-11",
     "through": "2026-12-15",
     "createdBefore": "2026-12-15T00:00:00Z",
-    "earlyExclusionCreatedThrough": "2026-11-12T07:27:59Z"
+    "earlyExclusionCreatedBefore": "2026-11-12T07:28:00Z"
   },
   "window": { "finalFrom": "2026-11-16T00:00:00Z", "finalTo": "2026-12-14T00:00:00Z" },
   "sets": { "year": 2026, "startDay": "2026-10-14", "createdBefore": "2026-12-15T00:00:00Z", "theory": "SGP4" },
