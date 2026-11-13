@@ -69,6 +69,7 @@ import { fork, execFileSync } from 'node:child_process';
 import { REPO, MODULES_ROOT, usePackages, envRecord } from '../headline-loop/lib/env.mjs';
 import { cases as makeCases, termsOf, guardOf } from './cases.mjs';
 import { seedRecord } from './seed.mjs';
+import { RecordStream, recordsFileOf, withStreamedRecords } from './records.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = new URL(import.meta.url).pathname;
@@ -266,6 +267,7 @@ async function main() {
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
   console.error(`synthetic: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${MODE}${args.guard ? ', guard set' : ''}; fit ${FIT_LIST.join(', ')}, truth from ${TRUTH_START_H} h before the cutoff${RUNG ? `, rung ${RUNG}` : ''}; SGP4-XP ${FIT === 'arc72' || WITH_XP ? 'flown' : 'not flown'}; perigee scan ${PERIGEE_SCAN ? `on (definition ${SCAN_DIGEST}${SCAN_MIN_E !== WAYS.SCAN_MIN_E ? `, every case at e ${SCAN_MIN_E} and above` : ''})` : 'off'}; ${all.cases.length} cases (seed ${all.seed}, grid step ${all.gridStep}), ${todo.length} to fly on ${jobs} jobs`);
   const freeGiB = () => { const s = fs.statfsSync(path.dirname(rowsFile)); return (s.bavail * s.bsize) / 2 ** 30; };
+  const streams = new Map(), streamOf = (rowsPath) => { if (!streams.has(rowsPath)) streams.set(rowsPath, new RecordStream(recordsFileOf(rowsPath))); return streams.get(rowsPath); };
   let next = 0, flown = 0, stopped = null;
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
     const child = fork(SELF, ['--worker', '--wasm', file, '--ap-version', version, ...(args['force-zonal'] ? ['--force-zonal', args['force-zonal']] : []), ...(MODE === 'full' ? [] : MODE === 'no-drag' ? ['--no-drag'] : ['--no-drag', '--no-radiation']), ...(args.cost ? ['--cost'] : []), ...(truthOnly ? ['--truth-only'] : []), '--fit', FIT_LIST.join(','), '--truth-start-h', String(TRUTH_START_H), ...(RUNG ? ['--rung', RUNG] : []), ...(WITH_XP ? ['--xp'] : []), ...(PERIGEE_SCAN ? ['--perigee-scan'] : []), ...(PERIGEE_SCAN && SCAN_MIN_E !== WAYS.SCAN_MIN_E ? ['--scan-min-e', String(SCAN_MIN_E)] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
@@ -275,7 +277,8 @@ async function main() {
     };
     child.on('message', (m) => {
       if (m.rows) {
-        if (!truthOnly) for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...row, caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness, ...(PERIGEE_SCAN ? { scanDigest: SCAN_DIGEST } : {}) })}\n`);
+        // the fitted records go to the stream beside the rows file (records<suffix>.fsdata: [4-byte little-endian size][$OCM bytes] frames); the row names each by {file, offset, size, sha256}
+        if (!truthOnly) for (const [f, row] of Object.entries(m.rows)) fs.appendFileSync(rowsFiles[f], `${JSON.stringify({ ...withStreamedRecords(row, streamOf(rowsFiles[f])), caseHash: caseHash(m.c), version, modulesCommit: commit, wasmSha256: wasmSha, harness, ...(PERIGEE_SCAN ? { scanDigest: SCAN_DIGEST } : {}) })}\n`);
         flown += 1;
         cache[Object.values(m.rows)[0]?.truth?.cache ?? 'none'] += 1;
         const D = (r) => r.ap?.maxDistance?.maxM ?? r.ap?.error ?? r.error;
@@ -523,7 +526,7 @@ async function worker() {
             const settings = settingsOf(sent.pcf, sent.spw);
             row[t] = { pcf: labelOf(settings), settings, ...(made?.note ? { fitNote: made.note } : {}), fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, agom: info.agom ?? null, fitS, epoch: info.epoch ?? null, days: Object.fromEntries(Object.entries(d).map(([k, v]) => [k, r1(v.e * 1000)])),
               maxDistance: { maxM: r1(dist[at]), atH: hourOf(at), firstOver100mH: over < 0 ? null : hourOf(over), spanH: hourOf(dist.length - 1), pass: dist[at] <= PASS_M },
-              // the record itself (base64), so a later pass can fly it again without fitting
+              // the record itself (base64 across the process hop; the parent writes it to the stream beside the rows file, records.mjs), so a later pass can fly it again without fitting
               record: Buffer.from(ocm).toString('base64') };
             if (late.length) {
               const dl = (await fly(ocm, late.map((l) => l.epoch))).map((s, k) => Math.hypot(s.r[0] - late[k].r[0], s.r[1] - late[k].r[1], s.r[2] - late[k].r[2]) * 1000);
