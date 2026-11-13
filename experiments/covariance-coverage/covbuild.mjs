@@ -1,11 +1,12 @@
-// One build's stated covariance against its own errors on the window set. Each window is fitted by the build's own fit (the truth arc
-// thinned as the scoreboard thins it, the $PCF the build's version gives or --caps, the weather issued at the cutoff) and flown by its
+// One build's stated covariance against its own errors on the window set. Each window is fitted by the build's own fit by the headline loop
+// table's process (the truth arc thinned as the scoreboard thins it, the $PCF the build's version gives or --caps, the weather issued at the
+// cutoff; a 24 h fit carries its 72 h arc's terms where lib/arms.mjs carry24Fit says so, and states which in fitProcess) and flown by its
 // propagate in GCRF with its COVARIANCE_MATRIX_LINES on the scored epochs; errors and stated covariance in the truth's R, T, N axes by
 // analysis/gp-error-model pair_statistics.
 //   node covbuild.mjs <out> <build sha12> <shard k/n> [--caps T,Z]
 // --caps T,Z: every record fitted at tesseral degree T and zonal degree Z (FORCES.MAXIMUM_TESSERAL_DEGREE, MAXIMUM_DEGREE), its other
 // forces the row's own $PCF's.
-// Rows: <out>/covbuild-<sha12>[-capsT-Z]-<k>of<n>.jsonl, one per window: line, group, arcH, cutoff, pcf, cp (the record's
+// Rows: <out>/covbuild-<sha12>[-capsT-Z]-<k>of<n>.jsonl, one per window: line, group, arcH, cutoff, pcf, fitProcess, cp (the record's
 // COV_PROPAGATION as written), fitRmsKm, and every 30 min of the scored days: epochsS (seconds after the cutoff), e [R, T, N] km,
 // v [R, T, N] km^2 as stated. A window already in the file is skipped, so a stopped shard resumes.
 import fs from 'node:fs';
@@ -29,8 +30,8 @@ for (const k of lines) {
   const row = { line: k, key: w?.key, group: w?.group, name: w?.name, arcH: w?.arcH, cutoff: w?.date, build: sha12 };
   try {
     if (!w) throw new Error('unknown window');
-    const { ocm, record, pcf, sc } = await M.fitRecord(w);
-    row.pcf = pcf; row.cp = record.COV_PROPAGATION; row.fitRmsKm = record.ORBIT_DETERMINATION?.FIT_STATISTICS?.FIT_RMS_KM ?? null;
+    const { ocm, record, pcf, fitProcess, sc } = await M.fitRecord(w);
+    row.pcf = pcf; row.fitProcess = fitProcess; row.cp = record.COV_PROPAGATION; row.fitRmsKm = record.ORBIT_DETERMINATION?.FIT_STATISTICS?.FIT_RMS_KM ?? null;
     const f = await M.fly(ocm, sc);
     const keep = M.kept(sc, w);
     row.epochsS = M.seconds(sc, w, keep);
