@@ -3,7 +3,7 @@
 //
 //   node experiments/synthetic-orbits/truth-to-ocm.mjs <store>/synthetic [--ref-wasm <reference build .wasm>] [--limit <n>]
 //
-// Requires the installed packages and module builds (SDN_MODULES_ROOT and SDM_MODULE_UNSIGNED_BUILD=1), as run.mjs does.
+// Requires the installed packages and SDM_MODULE_UNSIGNED_BUILD=1; module paths are arguments.
 //
 // Writes <store>/synthetic/truth/seed-ocm.fsdata (one $OCM per case and truth start epoch: every case the generator makes, at the default start, and every
 // start epoch a stored row used) and <store>/synthetic/truth/truth-ocm.fsdata (one $OCM per flight with states). Both are written through StreamReplacement, new
@@ -16,7 +16,6 @@
 // A flight with no states (a decay, no truth) has no record. A flight no stored row names (so no case) has none either; both are counted.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline';
 import { createRequire } from 'node:module';
 import { StreamReplacement, frames } from './records.mjs';
@@ -27,11 +26,9 @@ import { statedSeed, truthRecord, seedMessageId, sha256hex } from './identity.mj
 const args = process.argv.slice(2), root = args[0];
 const opt = (k) => { const i = args.indexOf(`--${k}`); return i < 0 ? null : args[i + 1]; };
 if (!root) { console.error('usage: truth-to-ocm.mjs <store>/synthetic [--ref-wasm <file>] [--limit <n>]'); process.exit(2); }
-const REPO = fileURLToPath(new URL('../..', import.meta.url));
-const { usePackages } = await import(`${REPO}/experiments/headline-loop/lib/env.mjs`); usePackages();
-const A = await import(`${REPO}/experiments/headline-loop/lib/arms.mjs`), S = A.S, O = S.OCM, fb = S.flatbuffers;
-const { SETTINGS } = await import(`${REPO}/experiments/headline-loop/lib/settings.mjs`);
-const require = createRequire(`${REPO}/package.json`);
+const S = await import('./bindings.mjs'), O = S.OCM, fb = S.flatbuffers;
+const { SETTINGS } = await import('../headline-loop/lib/settings.mjs');
+const require = createRequire(import.meta.url);
 const { createStandaloneHarness } = await import(require.resolve('space-data-module-sdk/testing/isomorphic'));
 const iso = (ms) => new Date(ms).toISOString().replace('Z', '');
 const truthDir = path.join(root, 'truth'), seedFile = path.join(truthDir, 'seed-ocm.fsdata'), truthFile = path.join(truthDir, 'truth-ocm.fsdata'), limit = Number(opt('limit') ?? Infinity);

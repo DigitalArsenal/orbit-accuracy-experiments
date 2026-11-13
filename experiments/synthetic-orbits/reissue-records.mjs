@@ -4,7 +4,7 @@
 //
 //   node experiments/synthetic-orbits/reissue-records.mjs <store>/synthetic/<wasm sha12> --truth <store>/synthetic/truth/truth-ocm.fsdata --wasm <module.wasm> [--out <stream file>]
 //
-// Requires the installed packages and module builds (SDN_MODULES_ROOT and SDM_MODULE_UNSIGNED_BUILD=1), as run.mjs does.
+// Requires the installed packages and SDM_MODULE_UNSIGNED_BUILD=1; module paths are arguments.
 //
 // Every AP record the release's rows name (rows*.jsonl, through readRecord: a stream reference or an old string) is read, completed (the identity of its case from the
 // row's id; HEADER.MESSAGE_ID; PROVENANCE naming the truth flight the row names, by its MESSAGE_ID, with the SHA-256 and length of that flight's $OCM in the truth stream)
@@ -15,7 +15,6 @@
 // A record whose row names no flight in the truth stream (a flight with no states) is counted and not re-issued.
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
@@ -38,10 +37,8 @@ for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x))) {
   }
 }
 const stream = new StreamReplacement(outFile, inputs);
-const REPO = fileURLToPath(new URL('../..', import.meta.url));
-const { usePackages } = await import(`${REPO}/experiments/headline-loop/lib/env.mjs`); usePackages();
-const A = await import(`${REPO}/experiments/headline-loop/lib/arms.mjs`), S = A.S, O = S.OCM, fb = S.flatbuffers;
-const require = createRequire(`${REPO}/package.json`);
+const S = await import('./bindings.mjs'), O = S.OCM, fb = S.flatbuffers;
+const require = createRequire(import.meta.url);
 const { createStandaloneHarness } = await import(require.resolve('space-data-module-sdk/testing/isomorphic'));
 const iso = (ms) => new Date(ms).toISOString().replace('Z', '');
 const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
