@@ -3,21 +3,23 @@
 //
 //   node experiments/synthetic-orbits/truth-to-ocm.mjs <store>/synthetic [--ref-wasm <reference build .wasm>] [--limit <n>]
 //
-// Needs the headline-loop environment (SDN_MODULES_ROOT and SDM_MODULE_UNSIGNED_BUILD=1), as run.mjs does.
+// Requires the installed packages and module builds (SDN_MODULES_ROOT and SDM_MODULE_UNSIGNED_BUILD=1), as run.mjs does.
 //
 // Writes <store>/synthetic/truth/seed-ocm.fsdata (one $OCM per case and truth start epoch: every case the generator makes, at the default start, and every
-// start epoch a stored row used) and <store>/synthetic/truth/truth-ocm.fsdata (one $OCM per flight with states). Both are written through RecordStream, new
+// start epoch a stored row used) and <store>/synthetic/truth/truth-ocm.fsdata (one $OCM per flight with states). Both are written through StreamReplacement, new
 // files each run (an existing one is removed first). The .bin and .json files stay.
 //
 // Checked here, and the exit code says so:
 //   every seed: the reference build flies the stated seed to its epoch to the same state, bit for bit, as seedRecord's plain record (run.mjs flies the plain one);
 //   every truth: its states read back from the stream equal the .bin bit for bit, its PROVENANCE names the seed frame (id, SHA-256, length), and its first
-//   state is within a metre of the state the reference build gives for that seed (the truth was started from it).
+//   state is within a meter of the state the reference build gives for that seed (the truth was started from it).
 // A flight with no states (a decay, no truth) has no record. A flight no stored row names (so no case) has none either; both are counted.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createInterface } from 'node:readline';
 import { createRequire } from 'node:module';
-import { RecordStream, frames } from './records.mjs';
+import { StreamReplacement, frames } from './records.mjs';
 import { seedRecord } from './seed.mjs';
 import { cases as makeCases, termsOf } from './cases.mjs';
 import { statedSeed, truthRecord, seedMessageId, sha256hex } from './identity.mjs';
@@ -25,7 +27,7 @@ import { statedSeed, truthRecord, seedMessageId, sha256hex } from './identity.mj
 const args = process.argv.slice(2), root = args[0];
 const opt = (k) => { const i = args.indexOf(`--${k}`); return i < 0 ? null : args[i + 1]; };
 if (!root) { console.error('usage: truth-to-ocm.mjs <store>/synthetic [--ref-wasm <file>] [--limit <n>]'); process.exit(2); }
-const REPO = process.env.OAE_REPO ?? path.resolve(path.dirname(new URL(import.meta.url).pathname), '../..');
+const REPO = fileURLToPath(new URL('../..', import.meta.url));
 const { usePackages } = await import(`${REPO}/experiments/headline-loop/lib/env.mjs`); usePackages();
 const A = await import(`${REPO}/experiments/headline-loop/lib/arms.mjs`), S = A.S, O = S.OCM, fb = S.flatbuffers;
 const { SETTINGS } = await import(`${REPO}/experiments/headline-loop/lib/settings.mjs`);
@@ -41,11 +43,11 @@ for (const d of fs.readdirSync(root)) {
   const dir = path.join(root, d);
   if (!fs.statSync(dir).isDirectory() || ['truth', 'reference'].includes(d)) continue;
   for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x))) {
-    for (const line of fs.readFileSync(path.join(dir, n), 'utf8').split('\n')) {
+    for await (const line of createInterface({ input: fs.createReadStream(path.join(dir, n)), crlfDelay: Infinity })) {
       if (!line.includes('"hash"')) continue;
       const r = JSON.parse(line), h = r.truth?.hash;
       if (!h || !r.elements?.cutoff || !Number.isFinite(r.truthStartH)) continue;
-      const start = Date.parse(`${r.elements.cutoff}T00:00:00Z`) - r.truthStartH * 3600e3, e = byHash.get(h) ?? { starts: new Set(), ids: new Set(), row: r };
+      const start = Date.parse(`${r.elements.cutoff}T00:00:00Z`) - r.truthStartH * 3600e3, e = byHash.get(h) ?? { starts: new Set(), ids: new Set(), row: { truth: r.truth } };
       e.starts.add(start); e.ids.add(r.id); byHash.set(h, e);
       const k = seedMessageId(r.id, iso(start)); if (!startsOf.has(k)) startsOf.set(k, { id: r.id, start, el: r.elements, am: r.am });
     }
@@ -56,20 +58,20 @@ const universe = makeCases(498, { gridStep: 1 }).cases;
 for (const c of universe) { const start = Date.parse(`${c.cutoff}T00:00:00Z`) - 72 * 3600e3, k = seedMessageId(c.id, iso(start)); if (!startsOf.has(k)) startsOf.set(k, { id: c.id, start, el: c, am: c.am }); }
 
 // 2. the seeds
-const seedStream = (fs.rmSync(seedFile, { force: true }), new RecordStream(seedFile)), seeds = new Map(), creation = iso(Date.now());
+const seedStream = new StreamReplacement(seedFile), seeds = new Map();
 const refH = await createStandaloneHarness('browser', refFile, { surface: 'direct' });
 const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
 const refFly = async (ocm, epoch) => { const r = await refH.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf([`${epoch}Z`]) }] }); if (r.statusCode !== 0) throw new Error(`reference: ${r.errorMessage}`); return S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload))[0]; };
 const problems = [], refused = []; let seedsChecked = 0, seedOk = 0;
 for (const [k, s] of [...startsOf].sort(([a], [b]) => (a < b ? -1 : 1))) {
   const epoch = iso(s.start), el = { epoch, n: s.el.n, e: s.el.e, i: s.el.i, raan: s.el.raan, argp: s.el.argp, ma: s.el.ma }, t = termsOf(s.am);
-  const plain = seedRecord(S, el), bytes = statedSeed(O, fb, plain, { caseId: s.id, epoch, terms: [{ kind: 'DRAG_AREA_OVER_MASS', value: t.dragAreaOverMass }, { kind: 'SRP_AREA_OVER_MASS', value: t.srpAreaOverMass }], creation });
+  const plain = seedRecord(S, el), bytes = statedSeed(O, fb, plain, { caseId: s.id, epoch, terms: [{ kind: 'DRAG_AREA_OVER_MASS', value: t.dragAreaOverMass }, { kind: 'SRP_AREA_OVER_MASS', value: t.srpAreaOverMass }] });
   // a seed the reference build refuses ("describes no orbit": a case that has no truth) is refused, with the same message, stated or plain
   const tryFly = async (x) => { try { return await refFly(x, epoch); } catch (e) { return { refused: String(e.message) }; } };
   const a = await tryFly(plain), b = await tryFly(bytes);
   if (a.refused) refused.push(k);
   if (JSON.stringify(a.refused ? a : [a.r, a.v]) !== JSON.stringify(b.refused ? b : [b.r, b.v])) problems.push(`${k}: the stated seed flies to another state than the plain one`);
-  const ref = seedStream.append(bytes); seeds.set(k, { id: k, sha256: sha256hex(bytes), bytes: bytes.length, epoch, ref, state: a }); seedsChecked += 1;
+  const ref = seedStream.append(bytes, k); seeds.set(k, { id: k, sha256: sha256hex(bytes), bytes: bytes.length, epoch, ref, state: a }); seedsChecked += 1;
   if (!a.refused) seedOk += 1;
 }
 
@@ -77,7 +79,7 @@ for (const [k, s] of [...startsOf].sort(([a], [b]) => (a < b ? -1 : 1))) {
 const hashes = fs.readdirSync(truthDir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort();
 const tally = { flights: hashes.length, withStates: 0, converted: 0, noStates: 0, noRow: 0, startsDisagree: 0, sharedByCases: 0, bytesBin: 0, bytesStream: 0 };
 const made = new Map();
-const truthStream = (fs.rmSync(truthFile, { force: true }), new RecordStream(truthFile));
+const truthStream = new StreamReplacement(truthFile);
 for (const h of hashes) {
   if (made.size >= limit) break;
   const meta = JSON.parse(fs.readFileSync(path.join(truthDir, `${h}.json`), 'utf8'));
@@ -92,14 +94,14 @@ for (const h of hashes) {
   if (bin.length !== meta.count * 48) throw new Error(`${h}: ${bin.length} bytes for ${meta.count} states`);
   const states = new Float64Array(bin.buffer.slice(bin.byteOffset, bin.byteOffset + bin.length)), f = SETTINGS[String(r.truth.setting).split(' ')[0]]?.forces ?? {};
   const terms = [...(r.truth.dragAreaOverMass ? [{ kind: 'DRAG_AREA_OVER_MASS', value: r.truth.dragAreaOverMass }] : []), ...(r.truth.srpAreaOverMass ? [{ kind: 'SRP_AREA_OVER_MASS', value: r.truth.srpAreaOverMass }] : [])];
-  const bytes = truthRecord(O, fb, { hash: h, caseId, startMs: start, states, seed, terms, tolerance: r.truth.tolerance, degree: f.degree ?? 0, order: f.order ?? 0, creation: iso(fs.statSync(path.join(truthDir, `${h}.bin`)).mtimeMs) });
-  const ref = truthStream.append(bytes);
+  const bytes = truthRecord(O, fb, { hash: h, caseId, startMs: start, states, seed, terms, tolerance: r.truth.tolerance, degree: f.degree ?? 0, order: f.order ?? 0 });
+  const ref = truthStream.append(bytes, h);
   made.set(h, { start, count: meta.count, ref, seed, sha256: sha256hex(bytes) }); tally.bytesBin += bin.length; tally.bytesStream += 4 + ref.size; tally.converted += 1;
 }
 
 // 4. read every truth record back and compare it with the .bin; its provenance with the seed frame; its first state with the reference build's state for the seed
 let checked = 0, firstStateWorstM = 0;
-for (const fr of frames(truthFile)) {
+for (const fr of frames(truthStream.file)) {
   const o = O.OCM.getRootAsOCM(new fb.ByteBuffer(new Uint8Array(fr.bytes))).unpack(), h = o.HEADER.MESSAGE_ID, m = made.get(h);
   if (!m) { problems.push(`${h}: a frame no flight made`); continue; }
   const bin = fs.readFileSync(path.join(truthDir, `${h}.bin`)), want = new Float64Array(bin.buffer.slice(bin.byteOffset, bin.byteOffset + bin.length)), got = Float64Array.from(o.STATE_DATA);
@@ -116,4 +118,9 @@ for (const fr of frames(truthFile)) {
 if (checked !== made.size) problems.push(`${checked} frames for ${made.size} flights`);
 console.log(JSON.stringify({ ...tally, seeds: seeds.size, seedsFlownStatedEqualPlain: seedsChecked - problems.filter((p) => p.includes('stated seed')).length, seedsRefusedByReferenceBuild: refused.length, seedStream: seedFile, truthStream: truthFile, checked, firstStateWorstM: Math.round(firstStateWorstM * 1e6) / 1e6, problems: problems.length }));
 for (const p of problems.slice(0, 20)) console.error(p);
+if (!problems.length) {
+  const identityOf = (bytes) => O.OCM.getRootAsOCM(new fb.ByteBuffer(bytes)).HEADER().MESSAGE_ID();
+  seedStream.verify(identityOf); truthStream.verify(identityOf);
+  seedStream.publish(); truthStream.publish();
+}
 process.exit(problems.length ? 1 : 0);
