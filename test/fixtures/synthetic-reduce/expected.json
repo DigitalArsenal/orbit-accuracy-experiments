@@ -1,0 +1,163 @@
+{
+  "counts": {
+    "recordsRead": 13,
+    "selectedRecords": 13,
+    "supersededRecords": 0,
+    "accountedRecords": 13,
+    "classes": {
+      "within-bar": 4,
+      "outside-bar": 1,
+      "failed-flight": 4,
+      "no-truth": 2,
+      "short-truth": 1,
+      "at-or-after-decay": 1
+    },
+    "withApResult": 6,
+    "within100m": 4,
+    "within200m": 4,
+    "within500m": 4,
+    "outsideByGroup": {
+      "circLow": 1,
+      "circHigh": 0,
+      "eccLow": 0,
+      "eccHigh": 0,
+      "e08": 0
+    },
+    "outsideByGroupSum": 1,
+    "resultsWhoseTruthEndsBeforeSpan": 1,
+    "recordsWithNoTruthFlight": 2,
+    "seedsInStream": 12,
+    "truthFlightsInStream": 12
+  },
+  "cases": [
+    {
+      "record": "f233e3a7b056",
+      "caseId": "grid-hp500-e0.001-i55",
+      "technique": 5,
+      "class": "within-bar",
+      "e": 0.001,
+      "perigeeKm": 500,
+      "D": 56.1,
+      "spanH": 120,
+      "states": 1441
+    },
+    {
+      "record": "053d7253acc2",
+      "caseId": "grid-hp800-e0.05-i55",
+      "technique": 5,
+      "class": "within-bar",
+      "e": 0.05,
+      "perigeeKm": 800,
+      "D": 47.8,
+      "spanH": 120,
+      "states": 1441
+    },
+    {
+      "record": "51d472f6bdfd",
+      "caseId": "grid-hp20200-e0.001-i55",
+      "technique": 5,
+      "class": "within-bar",
+      "e": 0.001,
+      "perigeeKm": 20200,
+      "D": 6.6,
+      "spanH": 120,
+      "states": 1441
+    },
+    {
+      "record": "c675eb0074a9",
+      "caseId": "grid-hp35786-e0.001-i20",
+      "technique": 5,
+      "class": "within-bar",
+      "e": 0.001,
+      "perigeeKm": 35786,
+      "D": 2.9,
+      "spanH": 120,
+      "states": 1441
+    },
+    {
+      "record": "a7ab6c6099e5",
+      "caseId": "fixture-refused",
+      "technique": 5,
+      "class": "failed-flight",
+      "e": 0.001,
+      "perigeeKm": 500,
+      "status": "invalid-ocm",
+      "reason": "MEAN_ELEMENTS.MEAN_MOTION is not positive."
+    },
+    {
+      "record": "4b12760a5f2b",
+      "caseId": "fixture-no-truth",
+      "technique": 5,
+      "class": "no-truth",
+      "reason": "source-not-found"
+    },
+    {
+      "record": "7e8bb1ef2c90",
+      "caseId": "fixture-short",
+      "technique": 5,
+      "class": "short-truth",
+      "e": 0.001,
+      "perigeeKm": 500,
+      "D": 29.4,
+      "spanH": 1,
+      "states": 13
+    },
+    {
+      "record": "09868bd7da33",
+      "caseId": "fixture-decay",
+      "technique": 5,
+      "class": "at-or-after-decay",
+      "e": 0.001,
+      "perigeeKm": 500
+    },
+    {
+      "record": "19b12e507215",
+      "caseId": "fixture-outside",
+      "technique": 5,
+      "class": "outside-bar",
+      "e": 0.001,
+      "perigeeKm": 500,
+      "D": 1038.3,
+      "spanH": 120,
+      "states": 1441
+    },
+    {
+      "record": "c43f54dac3c3",
+      "caseId": "fixture-no-cutoff",
+      "technique": 5,
+      "class": "failed-flight",
+      "e": 0.001,
+      "perigeeKm": 500,
+      "status": "invalid-fit-span",
+      "reason": "invalid fit span"
+    },
+    {
+      "record": "3fa59b219396",
+      "caseId": "fixture-hash-mismatch",
+      "technique": 5,
+      "class": "no-truth",
+      "reason": "source-frame-mismatch"
+    },
+    {
+      "record": "799e9de8ea5f",
+      "caseId": "fixture-no-seed",
+      "technique": 5,
+      "class": "failed-flight",
+      "status": "seed-identity-mismatch",
+      "reason": "truth and seed identities differ"
+    },
+    {
+      "record": "5a1cc4b23024",
+      "caseId": "fixture-off-grid",
+      "technique": 5,
+      "class": "failed-flight",
+      "e": 0.001,
+      "perigeeKm": 500,
+      "status": "cutoff-off-grid",
+      "reason": "truth grid does not hold cutoff"
+    }
+  ],
+  "missing": [
+    "A fit refused before a fitted record exists is not an input record. A truth without a fitted record does not establish why the fit is absent."
+  ]
+}
