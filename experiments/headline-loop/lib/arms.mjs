@@ -112,7 +112,7 @@ export const atLeast = (v, w) => {
 //   where the 72 h fit solved it, ECOM2's Y0 (FORCES.ECOM2 Y0_M_S2, held on a 24 h arc);
 // - under the drag, the drag term only: BTERM with the 72 h record's stated sigma of ln B (FIT.DRAG_PRIOR LOG_NORMAL), where the plain 24 h
 //   fit states a sigma of ln BTERM at or above a gate (the arc does not see the term). The gate is CARRY24_DRAG_SIGMA (1); from
-//   CARRY24_CLEAN_SINCE it is CARRY24_DRAG_SIGMA_CLEAN (0.03) for an object that is not maneuvering at the cutoff by the burn lists
+//   CARRY24_CLEAN_SINCE it is CARRY24_DRAG_SIGMA_CLEAN (0.02) for an object that is not maneuvering at the cutoff by the burn lists
 //   (maneuverState), and stays 1 for one that is.
 // The 72 h fit is of the full 72 h arc, for an object that maneuvers (MANEUVER72, below) too: not its 72 h record, which is the arc after
 // its burn. Where the truth holds no 72 h arc before the cutoff, the 24 h fit is the plain one.
@@ -124,12 +124,13 @@ export const atLeast = (v, w) => {
 // has no 72 h arc, so none carries at 1) and 0.001 to 0.007 on the 236 of strong drag. Carried from the 72 h arc at a gate of 0.1 or less, the drag term lowers the day-5 in-track error from 2.58 to
 // 0.45 km on altimetry (15 of 15 better) and from 0.51 to 0.07 km on laser spheres (5 better, none worse, of the 6 with a 72 h arc); on
 // strong drag, carried, it raises it from 5.12 to 5.98 km (101 of 236 windows worse). In the table's stored rows of one build the plain
-// sigma of every strong-drag window is at most 0.011 and every other window's at least 0.040, so a gate of 0.03 carries no strong-drag
-// window.
+// sigma of every strong-drag window is at most 0.011 and every other window's at least 0.040, so a gate of 0.02, the middle of that gap in
+// the logarithm, carries no strong-drag window and leaves no other plain: the margin is on the low side because a weak-row window left plain
+// loses a five-fold gain, while a strong-drag window carried costs little.
 export const CARRY24_SINCE = '0.6.26';
 export const CARRY24_DRAG_SIGMA = 1;
 export const CARRY24_CLEAN_SINCE = '0.6.52';
-export const CARRY24_DRAG_SIGMA_CLEAN = 0.03;
+export const CARRY24_DRAG_SIGMA_CLEAN = 0.02;
 export const carry24 = (version) => atLeast(version, CARRY24_SINCE);
 /** The gate on the plain 24 h fit's stated sigma of ln BTERM for the drag term to be carried, at a build version and an object's maneuvering state. */
 export const carry24Gate = (version, maneuvering) => (!maneuvering && atLeast(version, CARRY24_CLEAN_SINCE) ? CARRY24_DRAG_SIGMA_CLEAN : CARRY24_DRAG_SIGMA);
