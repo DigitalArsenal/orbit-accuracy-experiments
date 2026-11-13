@@ -1,5 +1,5 @@
 // Writes truth/seed-ocm.fsdata and truth/truth-ocm.fsdata; failed writes are named stream-write-failed and counted by case.
-// Synthetic orbits over the whole orbit regime, each scored against the numerical propagator . For every case of cases.mjs
+// Synthetic orbits over the whole orbit regime, each scored against the numerical propagator. For every case of cases.mjs
 // (seeded): the state at the truth's start (D0 - 72 h) is made from the case's mean elements (the record seed.mjs writes) by ONE named
 // reference build, sdn-ap 0.6.26 (modules 7ed7cf88, wasm 9119284b8f97), whatever build is under test, so a case's starting state is a
 // function of the case and that build alone; the numerical propagator (FFM 2.2.0, pinned by hash in headline-loop/lib/ffm.mjs) flies it
@@ -24,7 +24,7 @@
 //   --no-drag --no-radiation    gravity, the solid tide, relativity and the Sun and Moon only; AP as above, with its radiation term
 //                               held at 0
 // --guard flies a fixed subset that spans every band (every 8th grid and area-to-mass case and every named edge case), for pull requests.
-// --perigee-scan : for every case at e 0.3 and above and every named case at e 0.1 and above, each theory's record is also
+// --perigee-scan: for every case at e 0.3 and above and every named case at e 0.1 and above, each theory's record is also
 // flown at 1 s for 120 s either side of each perigee passage over the scored span, and two distances off the record's own curve taken
 // (fits.mjs SCAN): each state within 80 s of the passage from the 8-point curve through the states 90, 100, 110 and 120 s either side
 // of the passage, and each state from the 8-point curve through its own neighbors 1 to 4 s either side, over the whole window. The
@@ -79,7 +79,7 @@ const HOUR = 3600e3, DAY = 864e5, STEP = 300e3, ARC_H = 72, LEAD_DAYS = 7, COST_
 const RE = 6378.137;
 // the truth's settings (lib/settings.mjs): drag where the perigee is under 2,500 km
 const DRAG_BELOW_KM = 2500;
-// the truth's setting where it has drag : the full drag setting at 1e-13 (lib/settings.mjs L70S13); at 1e-10 the integration
+// the truth's setting where it has drag: the full drag setting at 1e-13 (lib/settings.mjs L70S13); at 1e-10 the integration
 // after each change of the weather rows leaves the truth meters to hundreds of meters from the converged orbit (to 237 m over 0 to 120 h
 // at perigee 200 km, e 0.9). At 1e-13 a tenfold tighter flight moves it under 4 m, except on the cases whose perigee falls under 150 km
 // (15 to 34 m). Without drag the truth is the full setting at 1e-10, unchanged (exact there to the meter).
@@ -253,7 +253,7 @@ async function main() {
   // per way, the cases its file holds; a case flies the ways that lack it
   // (a row counts only if it is of the shared truth, truth.hash; rows from before the reference state are flown again)
   // (with --perigee-scan, only rows of this scan definition, scanDigest)
-  // (and, a row whose truth has drag counts only on the drag truth at 1e-13, DRAG_TRUTH; rows on the 1e-10 drag truth are
+  // (and a row whose truth has drag counts only on the drag truth at 1e-13, DRAG_TRUTH; rows on the 1e-10 drag truth are
   // flown again, the truth read from the cache once it is warm)
   const current = (r) => r.truth?.hash && (!r.truth.dragAreaOverMass || r.truth.setting === DRAG_TRUTH);
   // (and a row of the slot's headline settings counts only at the degrees the rule gives its case under this build's version, arms.mjs

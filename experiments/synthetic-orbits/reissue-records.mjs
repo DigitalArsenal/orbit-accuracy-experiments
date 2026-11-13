@@ -54,7 +54,8 @@ for (const fr of frames(truthFile)) {
 const originals = new Map();
 for (const file of new Set(inputs.filter((f) => f !== truthFile && f.endsWith('.fsdata')))) for (const fr of frames(file)) {
   const header = O.OCM.getRootAsOCM(new fb.ByteBuffer(fr.bytes)).HEADER();
-  putUnique(originals, header?.MESSAGE_ID(), { file, offset: fr.offset, size: fr.size, sha256: sha(fr.bytes) }, header?.CREATION_DATE(), args.includes('--newest'));
+  if (!header?.MESSAGE_ID()) continue; // Legacy fits receive their identity from the case row.
+  putUnique(originals, header.MESSAGE_ID(), { file, offset: fr.offset, size: fr.size, sha256: sha(fr.bytes) }, header?.CREATION_DATE(), args.includes('--newest'));
 }
 const h = await createStandaloneHarness('browser', wasm, { surface: 'direct' });
 const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
