@@ -30,7 +30,7 @@ export function makeFixtures(source, dir) {
     if (kind === 'short') truth.STATE_DATA = truth.STATE_DATA.slice(0, (k0 + 13) * 6);
     if (kind === 'decay') truth.STATE_DATA.splice(0, 3, 0, 0, 0);
     if (kind === 'outside') for (let k = 0; k < truth.STATE_DATA.length; k += 6) truth.STATE_DATA[k] += 1;
-    if (kind === 'no-cutoff') { fit.ORBIT_DETERMINATION.FIT_STATISTICS.FIT_START = null; fit.MEAN_ELEMENTS.EPOCH = null; }
+    if (kind === 'no-cutoff') { fit.ORBIT_DETERMINATION.FIT_STATISTICS.FIT_START = null; fit.MEAN_ELEMENTS.EPOCH = 'invalid'; }
     if (kind === 'off-grid') fit.ORBIT_DETERMINATION.FIT_STATISTICS.FIT_START = new Date(cutoff + 1000).toISOString().replace('Z', '');
     const sb = pack(seed);
     Object.assign(truth.PROVENANCE, { SOURCE_ID: seed.HEADER.MESSAGE_ID, SOURCE_SHA256: sha256hex(sb), SOURCE_BYTES: BigInt(sb.length) });
