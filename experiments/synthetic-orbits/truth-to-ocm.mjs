@@ -59,6 +59,7 @@ for (const c of universe) { const start = Date.parse(`${c.cutoff}T00:00:00Z`) - 
 
 // 2. the seeds
 const seedStream = new StreamReplacement(seedFile, [...sourceFiles, truthFile]), seeds = new Map();
+const truthStream = new StreamReplacement(truthFile, [...sourceFiles, seedFile]);
 const refH = await createStandaloneHarness('browser', refFile, { surface: 'direct' });
 const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
 const refFly = async (ocm, epoch) => { const r = await refH.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf([`${epoch}Z`]) }] }); if (r.statusCode !== 0) throw new Error(`reference: ${r.errorMessage}`); return S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload))[0]; };
@@ -79,7 +80,6 @@ for (const [k, s] of [...startsOf].sort(([a], [b]) => (a < b ? -1 : 1))) {
 const hashes = fs.readdirSync(truthDir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort();
 const tally = { flights: hashes.length, withStates: 0, converted: 0, noStates: 0, noRow: 0, startsDisagree: 0, sharedByCases: 0, bytesBin: 0, bytesStream: 0 };
 const made = new Map();
-const truthStream = new StreamReplacement(truthFile, [...sourceFiles, seedFile]);
 for (const h of hashes) {
   if (made.size >= limit) break;
   const meta = JSON.parse(fs.readFileSync(path.join(truthDir, `${h}.json`), 'utf8'));
