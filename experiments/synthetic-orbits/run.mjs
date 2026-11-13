@@ -69,6 +69,7 @@ import { fork, execFileSync } from 'node:child_process';
 import { REPO, MODULES_ROOT, usePackages, envRecord } from '../headline-loop/lib/env.mjs';
 import { cases as makeCases, termsOf, guardOf } from './cases.mjs';
 import { seedRecord } from './seed.mjs';
+import { FrameIndex, statedSeed, truthRecord, completeFit, seedMessageId } from './identity.mjs';
 import { RecordStream, recordsFileOf, withStreamedRecords } from './records.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
@@ -329,6 +330,9 @@ async function worker() {
   // the truth cache: <store>/synthetic/truth/<hash>.json (what it holds) and .bin (Float64 x, y, z km, vx, vy, vz km/s per state)
   const TRUTH_DIR = path.join(A.STORE_ROOT, 'synthetic', 'truth');
   fs.mkdirSync(TRUTH_DIR, { recursive: true });
+  // the seeds and the truth flights as $OCM frames (identity.mjs): each case's seed and each flight is written once, the fitted record names the flight it was fitted to
+  const seedIndex = new FrameIndex(S.OCM, S.flatbuffers, path.join(TRUTH_DIR, 'seed-ocm.fsdata')), truthIndex = new FrameIndex(S.OCM, S.flatbuffers, path.join(TRUTH_DIR, 'truth-ocm.fsdata'));
+  const wasm12 = sha256(fs.readFileSync(args.wasm)).slice(0, 12);
   const ffmBuild = { ffm: F.provenance.ffm.sha256, kernel: F.provenance.kernelSha256, eop: F.provenance.eopSha256 };
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   /** The truth of a key: read when cached, else flown by `flyIt` (once across processes: a lock, the others wait). */
@@ -424,7 +428,10 @@ async function worker() {
     try {
       // the state at the truth's start (D0 - 72 h, or --truth-start-h), made from the case's mean elements (seed.mjs's record) by the
       // reference build
-      const seed = seedRecord(S, { epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma });
+      // (the record carries the case's identity and its two numbers as held terms, which change no state: truth-to-ocm.mjs checks every seed)
+      const seedTerms = [{ kind: 'DRAG_AREA_OVER_MASS', value: terms.dragAreaOverMass }, { kind: 'SRP_AREA_OVER_MASS', value: terms.srpAreaOverMass }];
+      const seed = statedSeed(S.OCM, S.flatbuffers, seedRecord(S, { epoch: epoch.replace('Z', ''), n: c.n, e: c.e, i: c.i, raan: c.raan, argp: c.argp, ma: c.ma }), { caseId: c.id, epoch, terms: seedTerms });
+      const seedFrame = seedIndex.ensure(seedMessageId(c.id, epoch), () => seed);
       const [s0] = await refFly(seed, [epoch]);
       // the truth: FFM from that state, drag (NRLMSISE-00 on the weather known at the cutoff) where the perigee is under 2,500 km
       // (--no-drag: the full setting without drag on every orbit; --no-radiation as well: without radiation pressure either)
@@ -454,6 +461,9 @@ async function worker() {
       if (got.flownToDay != null) row.truth.flownToDay = got.flownToDay;
       if (got.cache === 'flown') row.truth.flightS = got.flightS;
       if (!got.states || got.flownToDay === 0) { row.truth.error = got.error ?? 'no state'; throw new Error('truth'); }
+      // the flight as an $OCM in the truth stream, named by its cache key, with the seed it started from (a flight with no states has no record)
+      const truthFrame = truthIndex.ensure(row.truth.hash, () => truthRecord(S.OCM, S.flatbuffers, { hash: row.truth.hash, caseId: c.id, startMs: tStart, states: Float64Array.from(got.states.flatMap((s) => [...s.r, ...s.v])),
+        seed: { id: seedMessageId(c.id, epoch), sha256: seedFrame.sha256, bytes: seedFrame.bytes, epoch: epoch.replace('Z', '') }, terms: parameters, tolerance: settings.integrator.tolerance, degree: settings.forces.degree ?? 0, order: settings.forces.order ?? 0 }));
       // --truth-only: the truth is in the cache; no fit
       if (args['truth-only']) throw new Error('truth');
       const states = got.states;
@@ -514,7 +524,8 @@ async function worker() {
           try {
             const tf = performance.now();
             const made = x.way ? await x.way.fit({ lines, D0, drag, radiation, wx: x.noWeather ? null : wx, terms, fitPcf: x.pcf, oemOf, fitOf: fitSent, S, A, APL }) : null;
-            const ocm = made ? made.ocm : await fitSent(oem, x.pcf, x.spw), info = APL.readOcm(ocm), fitS = r1((performance.now() - tf) / 1000);
+            // the record the module returned, completed after the fit with what it leaves out (identity.mjs completeFit): the case's identity and the flight it was fitted to; no state changes
+            const ocm = completeFit(S.OCM, S.flatbuffers, made ? made.ocm : await fitSent(oem, x.pcf, x.spw), { caseId: c.id, messageId: `${c.id}:${wasm12}${suffixOf(FIT)}:${t}`, truth: { id: row.truth.hash, ...truthFrame } }), info = APL.readOcm(ocm), fitS = r1((performance.now() - tf) / 1000);
             kepler.fit = keplerOf();
             const d = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes);
             // D: the largest 3D distance to the truth over the span, its hour, and the first hour above 100 m
