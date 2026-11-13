@@ -149,7 +149,7 @@ export async function openBuild(out, sha12, caps) {
     if (carrying) {
       const thin72 = WN.arcOf(truth.lines.filter((l) => { const t = WN.ms(l.epoch); return t >= D0 - 72 * HOUR && t <= D0; }), 72);
       const fitOnce = async ({ thin: t = thin, pcf: p, record }) => { const o = await fitBytes(t, p); return record ? { ocm: o } : { ocm: o, fit: { sigmaLnB: A.carriedTerms(o).sLnB } }; };
-      const kept = await A.carry24Fit({ x: await fitOnce({ pcf: choice.pcf }), fitOnce, thin72, pcf: choice.pcf, pcf72: capsOf(A.apPcfFor(w.group, build.version, !!G.vacuum, 72)).pcf });
+      const kept = await A.carry24Fit({ x: { ocm, fit: { sigmaLnB: A.carriedTerms(ocm).sLnB } }, fitOnce, thin72, pcf: choice.pcf, pcf72: capsOf(A.apPcfFor(w.group, build.version, !!G.vacuum, 72)).pcf });
       ocm = kept.x.ocm; fitProcess = kept.fitProcess;
     }
     return { ocm, record: S.OCM.OCM.getRootAsOCM(new S.flatbuffers.ByteBuffer(ocm)).unpack(), pcf: choice.label, fitProcess, sc };
