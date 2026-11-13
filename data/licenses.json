@@ -564,7 +564,7 @@
    "reproduce": "no",
    "credit": "Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).",
    "reason": "The terms would allow basic SSA data with a citation, but this repository keeps element sets and per-sample tables derived from them local (README rule 4, the owner's rule); results are aggregates and carry the citation.",
-   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts), ca-screen-recall (the daily GP snapshot of 2026-10-29: a 2,000-object LEO subset propagated for 72 h; aggregates and NORAD pairs only)",
+   "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts), ca-screen-recall (the daily GP snapshot of 2026-10-29: a 2,000-object LEO subset propagated for 72 h; aggregates and NORAD pairs only); conjunction-miss-from-public-sets (the element-set history of the objects of the provider's public conjunction messages, and those messages, 2026-09-10 to 2026-12-15: input to aggregate statistics only, no message or set published)",
    "obtain": "A Space-Track.org account (gp_history); each run manifest lists the SHA-256 of every element-set file read.",
    "notice": null,
    "reproducedAt": [
@@ -714,7 +714,7 @@
    "reproduce": "non-commercial",
    "credit": "Kp, ap, Ap: GFZ Helmholtz Centre for Geosciences, CC BY 4.0 (Matzka et al. 2021, GFZ Data Services, doi:10.5880/Kp.0001; Space Weather, doi:10.1029/2020SW002641). Sunspot number: WDC-SILSO, Royal Observatory of Belgium, Brussels, doi:10.24414/qnza-ac80, CC BY-NC 4.0. F10.7: Dominion Radio Astrophysical Observatory and Natural Resources Canada.",
    "reason": "Reproduced unmodified, with its license header, for the non-commercial purpose of checking the experiments. The sunspot column is CC BY-NC 4.0 and the F10.7 column rests on NRCan's non-commercial permission, so these copies must not be redistributed in a commercial product or service.",
-   "usedIn": "E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7), E8 (Kp regimes; Ap for the operational temperature driver), E13 (NRLMSISE-00 drivers of the Starlink pair fits); E16 (space-weather covariates and NRLMSISE-00 drivers as released)",
+   "usedIn": "E5 (NRLMSISE-00 drivers), E6, E7 (space weather: Kp, ap, F10.7), E8 (Kp regimes; Ap for the operational temperature driver), E13 (NRLMSISE-00 drivers of the Starlink pair fits); E16 (space-weather covariates and NRLMSISE-00 drivers as released); conjunction-miss-from-public-sets (arm W: the daily Kp, ap and F10.7 values read for the epoch day of each set; no file published)",
    "reproducedAt": [
     "data/e5/gfz-kp/Kp_ap_Ap_SN_F107_since_1932.txt.gz",
     "data/e7/Kp_ap_Ap_SN_F107_since_1932.txt.gz"
@@ -740,7 +740,7 @@
    "reproduce": "yes",
    "credit": "NOAA Space Weather Prediction Center, Report of Solar-Geophysical Activity (U.S. Government material, not subject to copyright protection).",
    "reason": "Public-domain U.S. Government material.",
-   "usedIn": "E7, E8 (F10.7 and Ap forecasts as issued); E16 (RSGA reports: drivers released at the cutoff)",
+   "usedIn": "E7, E8 (F10.7 and Ap forecasts as issued); E16 (RSGA reports: drivers released at the cutoff); conjunction-miss-from-public-sets (arm W: the daily indices and the 3-day forecast read for the epoch day of each set; no file published)",
    "reproducedAt": [
     "data/e7/swpc-rsga.tar.gz"
    ],

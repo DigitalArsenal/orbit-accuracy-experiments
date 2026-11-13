@@ -1,0 +1,25 @@
+# Space Data Standards bindings imported by the frozen scripts and the libraries they import.
+# Repository https://github.com/DigitalArsenal/spacedatastandards.org, commit cb95255756b5d8947fa988ce1c879e886dd7d704; paths relative to lib/js of a checkout,
+# which sits at repos/main-packages/spacedatastandards.org beside repos/ancillary-packages/orbit-accuracy-experiments (the relative path the libraries import from).
+# The line "closure" is the SHA-256 of the text made of one line "<SHA-256>  <path>" per file, in order of path, for every file reachable from the entry files below
+# by relative imports, followed by the number of those files. check.mjs recomputes it and compares every entry file.
+closure 4292f8154e9da44a3bbe9d5ae0a8a6a2cc19a68231c703cfb8690ce56c6c617f 934
+cd1dbc6f416f59f9ae28b261c308e1aa4e28e80e737977bee6668dc61e55b863  PCF/main.js
+86c5734a0c8979f5f528a5407e64aa53e05426d30faa7635bf31e29a2c94c7a2  OCM/main.js
+4bb8e040a3782b43278c7918191b3796c0ad0a951c460ac4ee762093b12e34df  OEM/main.js
+ebe5f85320fa09f711cdf4ebe14caa926b036d71c18634acffabb8a552c36faf  RFM/RFM.js
+8221725d9dc7428374a91921a77e0e5f2575283ff5f594dc59af0e2c66eb821f  RFM/CelestialFrameWrapper.js
+37e968d1faff3715cbf74272d6c25e8f74ec99faae0712fd1fc4c3a8163c73e8  RFM/CelestialFrame.js
+8be39ec865e837de484826574fec00bb76b4baba458dc03e4baa7b1c68df3a8f  RFM/RFMUnion.js
+116e6e349ad4c199af80c28d2944e5d6d63cc64ff775585b6233316fc340795f  SPW/SPW.js
+47d03877cfeab65eed78592e3f0ffcbe3f1a36d0c6dcfc5868587eb07c203a42  SPW/F107DataType.js
+583cfb516b3cb73fd79292b2e831088d418c764e9ed549e217b32699258d0d68  PVN/main.js
+fdfb602b75f4f0a5e1275a75f8438c44fe22cbb3c3237c1a33c6b594eb41eef5  DCL/main.js
+43d5c7063e7d1c0a3d20336ff4f70d1500e6aba3ef529da2c3fe87fd2745cc2f  PVN/PVN.js
+6537525e5adaa24ebf91a39a617d0b9e28d868acb5a42def5b184d964395fe05  FRM/main.js
+75c2111b26f1ab880bb2d54ec6551348260ef7ba6b4e851ad4aeb98538c3e1c4  PRW/main.js
+c2480a02a2752b0111995f92c327bbae4668b44812f56ff15a655382ca127887  EOP/main.js
+ceda14ab1b9aec3a28b5d94685a51af3714462b5ea5519f8186d028683e462fd  OCM/OCM.js
+1ead6540d3940ee85f35ce1dc009d19cc91f6f08e106f3bb17ccbad1fffd852c  OCM/CVR.js
+5ec8aec582f96503885001334201a229d6654a1940338a389ab65b60a5ce3037  OCM/covarianceRule.js
+e82f076cde6c4a2ed24c811c4631fb6f4729eae1e6726c9c8e84eea945e2d6ff  OCM/covarianceCalibration.js
