@@ -318,7 +318,7 @@ test('build-events: messages without an identifier are counted; the identity fil
 });
 
 
-test('looks: all dates, cutoffs, levels, floors and seeds are selected consistently in JavaScript', () => {
+test('looks: Python and JavaScript agree on every selected configuration value', { skip }, () => {
   for (const look of CONFIG.looks) {
     const c = readConfig(['--look', String(look.number)]);
     assert.equal(c.runDateUtc, look.runDateUtc);
@@ -329,6 +329,13 @@ test('looks: all dates, cutoffs, levels, floors and seeds are selected consisten
     assert.equal(c.statistics.interval, 1 - 0.05 / 3);
     assert.equal(c.statistics.seed, CONFIG.statistics.seed + 100000 * (look.number - 1));
     assert.equal(c.statistics.minimumPrimaryEvents, look.number < 3 ? 40 : 100);
+    const selected = spawnSync('python3', ['-c',
+      'import json,sys; sys.path.insert(0,sys.argv[1]); from look_config import select_look; c=json.load(open(sys.argv[2])); look=select_look(c,["--look",sys.argv[3]]); print(json.dumps(dict(config=c,look=look)))',
+      EXP, CONFIG_FILE, String(look.number)], { encoding: 'utf8' });
+    assert.equal(selected.status, 0, selected.stderr);
+    const python = JSON.parse(selected.stdout);
+    const { file, configSha256, archiveRoot, storeDir, registered, look: jsLook, ...jsConfig } = c;
+    assert.deepEqual(python, { config: jsConfig, look: jsLook });
   }
   for (const args of [[], ['--look'], ['--look', '0'], ['--look', '4'], ['--look', '1', '--look', '2']]) {
     assert.throws(() => readConfig(args), /--look/);
@@ -416,5 +423,187 @@ test('looks: each builder selects its exact half-open window and creation cutoff
     const sets = JSON.parse(fs.readFileSync(path.join(store, 'sets_index.json'), 'utf8'));
     assert.deepEqual(sets[String(ID0 + 2)].map((s) => s.gp), ['before']);
     assert.equal(JSON.parse(fs.readFileSync(path.join(store, 'sets-counts.json'), 'utf8')).look, look.number);
+  }
+});
+
+
+test('looks: the interval level changes confirmation and uses the registered percentile endpoints', { skip }, () => {
+  const dir = makeStore(100, (i) => win({ s: 100, x: 100, w: i < 61 ? 90 : 110 }), { look: 1 });
+  const amended = score(dir).result['W-vs-S'];
+  const config = structuredClone(CONFIG);
+  config.looks[0].interval = .95;
+  const file = path.join(dir, 'level-control.json');
+  fs.writeFileSync(file, JSON.stringify(config));
+  const control = spawnSync('python3', [path.join(EXP, 'score.py'), '--config', file, '--look', '1'], {
+    encoding: 'utf8', env: { ...process.env, CONJ_STORE: dir, SDN_ARCHIVE_ROOT: path.join(dir, 'archive') } });
+  assert.equal(control.status, 0, control.stderr);
+  const original = JSON.parse(fs.readFileSync(path.join(dir, 'results-look1.json'), 'utf8'))['W-vs-S'];
+  assert.equal(original.verdict, 'CONFIRMED EARLY');
+  assert.equal(amended.verdict, 'CONTINUE');
+  // An independent one-row-per-event bootstrap checks both H1 and H2 percentile endpoints.
+  const reference = spawnSync('python3', ['-c', `import json,numpy as np
+rng=np.random.default_rng(${CONFIG.statistics.seed})
+samples=rng.integers(0,100,size=(2000,100))
+shares=(samples<61).mean(axis=1)
+ratios=np.median(np.where(samples<61,90,110),axis=1)/100
+print(json.dumps([[np.percentile(values,q,method='linear').tolist() for values in (shares,ratios)] for q in ([2.5,97.5],[0.8333333333,99.1666666667])]))`], { encoding: 'utf8' });
+  assert.equal(reference.status, 0, reference.stderr);
+  const expected = JSON.parse(reference.stdout);
+  for (const [i, result] of [original, amended].entries()) {
+    const c = result.PRIMARY.cells.pooled;
+    assert.deepEqual([c.shareLo, c.shareHi], expected[i][0]);
+    assert.deepEqual([c.ratioLo, c.ratioHi], expected[i][1]);
+  }
+});
+
+test('looks: a failed guard or H2 at an eligible interim look yields CONTINUE', { skip }, () => {
+  const guarded = score(makeStore(40, (i) => win({ w: i === 0 ? 2400 : 100 }), { look: 1 })).result['W-vs-S'];
+  assert.equal(guarded.verdict, 'CONTINUE');
+  assert.equal(guarded.PRIMARY.cells.pooled.h1, true);
+  assert.equal(guarded.PRIMARY.cells.pooled.h2, true);
+  assert.equal(guarded.PRIMARY.cells.pooled.guard, false);
+  const h2 = score(makeStore(100, (i) => win(i < 40 ? { s: 400, w: 300 } : i < 80 ? { s: 100, w: 90 } : { s: 1, w: 500 }), { look: 2 })).result['W-vs-S'];
+  assert.equal(h2.verdict, 'CONTINUE');
+  assert.equal(h2.PRIMARY.cells.pooled.h1, true);
+  assert.equal(h2.PRIMARY.cells.pooled.h2, false);
+  assert.equal(h2.PRIMARY.cells.pooled.guard, true);
+});
+
+test('looks: the fit weather writer identifies its look and scoring rejects a foreign or absent look', { skip }, () => {
+  const dir = makeStore(40, () => win(), { look: 1 });
+  const config = { ...readConfig(['--look', '1']), storeDir: dir };
+  const days = new Map([['2026-11-16', [{ file: 'synthetic-weather.txt', sha256: sha('made-up weather') }]]]);
+  writeWeatherManifest(config, 'W', '0/1', CONFIG.weatherForecaster.sha256, days);
+  const file = path.join(dir, 'inputs-weather-W.json');
+  const manifest = JSON.parse(fs.readFileSync(file, 'utf8'));
+  assert.equal(manifest.look, 1);
+  assert.equal(score(dir).result['W-vs-S'].verdict, 'CONFIRMED EARLY');
+  for (const look of [2, undefined]) {
+    fs.writeFileSync(file, JSON.stringify({ ...manifest, look }));
+    const invalid = run(dir);
+    assert.equal(invalid.status, 1);
+    assert.match(invalid.stdout, /INVALID: inputs-weather-W.json names another look/);
+    assert.doesNotMatch(invalid.stdout, /VERDICT/);
+    assert.equal(fs.existsSync(path.join(dir, 'results-look1.json')), false);
+  }
+  fs.writeFileSync(file, JSON.stringify(manifest));
+  writeWeatherManifest(config, 'W', '1/2', CONFIG.weatherForecaster.sha256, days);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'inputs-weather-W-1of2.json'), 'utf8')).look, 1);
+});
+
+test('looks: combine actual early results with final confirmation, uncertainty, refutation and insufficiency', { skip }, () => {
+  const earlyDir = makeStore(40, () => win(), { look: 1 });
+  score(earlyDir);
+  const continueDir = makeStore(40, () => win({ w: 700 }), { look: 2 });
+  score(continueDir);
+  const cases = [
+    ['CONFIRMED', 'CONFIRMED', 120, () => win()],
+    ['NOT CONFIRMED', 'CONFIRMED', 120, (i) => win({ s: 100, w: i % 25 < 13 ? 90 : 110, x: 100 })],
+    ['REFUTED', 'CONFLICTING', 120, () => win({ w: 700 })],
+    ['INSUFFICIENT', 'CONFIRMED', 39, () => win()]
+  ];
+  for (const [final, combined, n, spec] of cases) {
+    const dir = makeStore(n, spec);
+    fs.copyFileSync(path.join(earlyDir, 'results-look1.json'), path.join(dir, 'earlier-look1.json'));
+    fs.copyFileSync(path.join(continueDir, 'results-look2.json'), path.join(dir, 'earlier-look2.json'));
+    const { result, out } = score(dir);
+    assert.equal(result['W-vs-S'].verdict, final);
+    assert.equal(result['W-vs-S'].combinedResult, combined);
+    assert.match(out, new RegExp(`COMBINED RESULT W-vs-S: ${combined}`));
+    if (combined === 'CONFLICTING') assert.match(out, /claim is not made/);
+    assert.deepEqual(result.earlierResults.map((r) => r.look), [1, 2]);
+    assert.equal(result.earlierResults[0].sha256, sha(fs.readFileSync(path.join(dir, 'earlier-look1.json'))));
+    assert.equal(result['X-vs-S'].combinedResult, undefined);
+    // With no early confirmation, the final verdict itself is the combined result.
+    const earlier = JSON.parse(fs.readFileSync(path.join(dir, 'earlier-look1.json'), 'utf8'));
+    earlier['W-vs-S'].verdict = 'CONTINUE';
+    fs.writeFileSync(path.join(dir, 'earlier-look1.json'), JSON.stringify(earlier));
+    assert.equal(score(dir).result['W-vs-S'].combinedResult, final);
+  }
+});
+
+test('looks: final scoring requires both valid interim results before any verdict', { skip }, () => {
+  const dir = makeStore(120, () => win());
+  const first = path.join(dir, 'earlier-look1.json'), second = path.join(dir, 'earlier-look2.json');
+  const baseline = fs.readFileSync(first);
+  bad(dir, 'requires both earlier results', ['--earlier', first]);
+  const none = spawnSync('python3', [path.join(EXP, 'score.py'), '--look', '3'], {
+    encoding: 'utf8', env: { ...process.env, CONJ_STORE: dir, SDN_ARCHIVE_ROOT: path.join(dir, 'archive') } });
+  assert.equal(none.status, 1);
+  assert.match(none.stdout, /requires both earlier results/);
+  assert.doesNotMatch(none.stdout, /VERDICT/);
+  bad(dir, 'distinct looks', ['--earlier', first, '--earlier', first]);
+  for (const [change, reason] of [
+    [(j) => { j.configSha256 = '0'.repeat(64); }, 'another configuration'],
+    [(j) => { j.look.number = 3; }, 'distinct looks'],
+    [(j) => { j.look.seed += 1; }, 'inconsistent look metadata'],
+    [(j) => { j['W-vs-S'].verdict = 'REFUTED'; }, 'valid interim verdict']
+  ]) {
+    const altered = JSON.parse(baseline); change(altered);
+    fs.writeFileSync(first, JSON.stringify(altered));
+    bad(dir, reason);
+  }
+  fs.writeFileSync(first, baseline);
+  assert.equal(run(dir, ['--earlier', second, '--earlier', first]).status, 0, 'input order does not matter');
+  fs.writeFileSync(first, 'not JSON');
+  bad(dir, 'missing or unreadable');
+  fs.rmSync(first);
+  bad(dir, 'missing or unreadable');
+  const interim = makeStore(40, () => win(), { look: 1 });
+  const invalid = run(interim, ['--earlier', second]);
+  assert.equal(invalid.status, 1);
+  assert.match(invalid.stdout, /only allowed at look 3/);
+});
+
+test('looks: later snapshots and a later-created duplicate do not change earlier event or set output hashes', { skip }, () => {
+  for (const look of CONFIG.looks.slice(0, 2)) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'conj-isolation-'));
+    const archive = path.join(dir, 'archive'), store = path.join(dir, 'store');
+    const messages = path.join(archive, 'spacetrack/cdm_public/2026');
+    const sets = path.join(archive, 'spacetrack/gp_history/by-creation/2026');
+    fs.mkdirSync(messages, { recursive: true }); fs.mkdirSync(sets, { recursive: true });
+    const rows = [message('chosen', .25, 400, ID0, ID0 + 1), message('reference', .02, 200, ID0, ID0 + 1)];
+    const snapshot = path.join(messages, `${look.runDateUtc}.json.gz`);
+    fs.writeFileSync(snapshot, zlib.gzipSync(JSON.stringify(rows)));
+    const base = { NORAD_CAT_ID: String(ID0), MEAN_ELEMENT_THEORY: 'SGP4', EPHEMERIS_TYPE: 0,
+      GP_ID: 'original', CREATION_DATE: '2026-11-16T00:00:00', EPOCH: '2026-11-16T00:00:00',
+      MEAN_MOTION: 15, ECCENTRICITY: .001, INCLINATION: 50, RA_OF_ASC_NODE: 0, ARG_OF_PERICENTER: 0,
+      MEAN_ANOMALY: 0, BSTAR: 0, MEAN_MOTION_DOT: 0, MEAN_MOTION_DDOT: 0 };
+    fs.writeFileSync(path.join(sets, '2026-11-16.json.gz'), zlib.gzipSync(JSON.stringify([base])));
+    const laterDay = look.number === 1 ? '2026-11-25' : '2026-12-02';
+    const laterMessage = path.join(messages, `${laterDay}.json.gz`), laterSet = path.join(sets, `${laterDay}.json.gz`);
+    // The audit hook fails even if a builder catches an ordinary read exception.
+    const audit = `import os,runpy,sys
+forbidden=set(sys.argv[2:4])
+def check(event,args):
+ if event=='open' and isinstance(args[0],str) and args[0] in forbidden: os._exit(91)
+sys.addaudithook(check)
+script=sys.argv[1]; sys.argv=[script,'--look',sys.argv[4]]; runpy.run_path(script,run_name='__main__')`;
+    const execute = () => {
+      for (const name of ['build-events.py', 'build-set-index.py']) {
+        const run = spawnSync('python3', ['-c', audit, path.join(EXP, name), laterMessage, laterSet, String(look.number)], {
+          encoding: 'utf8', env: { ...process.env, SDN_ARCHIVE_ROOT: archive, CONJ_STORE: store } });
+        assert.equal(run.status, 0, run.stderr);
+      }
+      return Object.fromEntries(['events.json', 'sets_index.json', 'inputs-messages.json', 'inputs-sets.json'].map((name) => [name, sha(fs.readFileSync(path.join(store, name)))]));
+    };
+    const clean = execute();
+    fs.rmSync(store, { recursive: true });
+    const duplicate = { ...rows[1], CREATED: `${laterDay} 00:00:00`, MIN_RNG: '9000' };
+    fs.writeFileSync(laterMessage, zlib.gzipSync(JSON.stringify([duplicate])));
+    fs.writeFileSync(laterSet, zlib.gzipSync(JSON.stringify([{ ...base, GP_ID: 'future', CREATION_DATE: `${laterDay}T00:00:00` }])));
+    const later = execute();
+    assert.deepEqual(later, clean, 'selected data and read-input manifest hashes are identical; later files are never opened');
+    const counts = JSON.parse(fs.readFileSync(path.join(store, 'sets-counts.json'), 'utf8'));
+    assert.equal(counts.counts['day files outside the read range (not read)'], 1);
+    // Also place the later-created copy inside the required snapshot: it is counted and filtered before deduplication.
+    fs.rmSync(store, { recursive: true });
+    fs.writeFileSync(snapshot, zlib.gzipSync(JSON.stringify([...rows, duplicate])));
+    const filtered = execute();
+    assert.equal(filtered['events.json'], clean['events.json']);
+    assert.equal(filtered['sets_index.json'], clean['sets_index.json']);
+    assert.notEqual(filtered['inputs-messages.json'], clean['inputs-messages.json'], 'the manifest records the changed input bytes');
+    const filteredCounts = JSON.parse(fs.readFileSync(path.join(store, 'events-counts.json'), 'utf8'));
+    assert.equal(filteredCounts.counts['records created at or after the creation cutoff (not used)'], 1);
   }
 });
