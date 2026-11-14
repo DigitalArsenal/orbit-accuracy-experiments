@@ -36,6 +36,7 @@ The frame index exposes the same policy as `{ newest: true }`.
 inputs. All counts, classes, case rows and missing-information statements must match,
 including circHigh. A mismatch exits nonzero. Module hash and elapsed time are not
 part of this table. Earlier partial aggregate tables fail this complete comparison.
+A refused or failed fit is a counted study result, so the default exit code is zero; `--fail-on` names the classes that fail a run.
 `--fail-on` takes comma-separated class names; an unknown name is an error.
 
 The converters build temporary streams beside their targets, verify frame tiling,
@@ -61,11 +62,13 @@ The record reducer and converters do not read environment variables directly.
 Their module SDK uses `SDM_MODULE_UNSIGNED_BUILD=1` to allow unsigned builds.
 Signing is not part of these commands.
 
-The verification test reads `SDN_AP_WASM` for an unsigned sdn-ap 0.6.57 or 0.6.58
-build, or `SDN_MODULES_ROOT` for its `propagator/sdn-ap/dist/isomorphic/module.wasm`.
-It fails with a prerequisite message when neither matching build exists. The test
+The verification test reads `SDN_AP_WASM` for an unsigned sdn-ap 0.6.58
+build whose SHA-256 is recorded in `test/fixtures/synthetic-reduce/module.sha256`, or `SDN_MODULES_ROOT` for its `propagator/sdn-ap/dist/isomorphic/module.wasm`.
+It fails with a prerequisite message when the matching build is absent. The test
 uses committed made-up records and deterministic variants described in
-`test/synthetic-fixtures.mjs`; the complete expected result is committed JSON.
+`test/synthetic-fixtures.mjs`; the complete expected result is committed JSON. Classifications and counts are also
+asserted independently from the fixture construction. A different build fails
+with the required SHA-256 before any scored comparison.
 
 The study's run, dense, claim and factorial tools also use these settings:
 

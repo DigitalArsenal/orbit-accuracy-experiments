@@ -8,16 +8,16 @@ import os from 'node:os';
 import test from 'node:test';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { makeFixtures, pack, unpack } from './synthetic-fixtures.mjs';
+import { makeFixtures, variantClasses, pack, unpack } from './synthetic-fixtures.mjs';
 import { frames, RecordStream, StreamReplacement } from '../experiments/synthetic-orbits/records.mjs';
 import { FrameIndex } from '../experiments/synthetic-orbits/identity.mjs';
 import * as S from '../experiments/synthetic-orbits/bindings.mjs';
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
-const WASM_SHAS = ['652fa229c89a565d688e6cf2384a38fb9cc9aa12e5f8178900bda5bf189b797c', 'a6095d2c66356bc9eb8b3e928e9e6a2ae102b34f64abe1cf65d2ac9394c8ee7a'];
-const candidates = [process.env.SDN_AP_WASM, process.env.SDN_MODULES_ROOT && path.join(process.env.SDN_MODULES_ROOT, 'propagator/sdn-ap/dist/isomorphic/module.wasm')].filter(Boolean);
-const found = candidates.filter((f) => fs.existsSync(f)).map((f) => ({ f, sha: crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex') })).find((x) => WASM_SHAS.includes(x.sha));
-assert.ok(found, 'Provide SDN_AP_WASM pointing to unsigned sdn-ap 0.6.57 (652fa229c89a) or 0.6.58 (a6095d2c6635); install locked dependencies before running this test.');
 const FIX = path.join(repoRoot, 'test/fixtures/synthetic-reduce');
+const expectedModuleSha = fs.readFileSync(path.join(FIX, 'module.sha256'), 'utf8').trim();
+const candidates = [process.env.SDN_AP_WASM, process.env.SDN_MODULES_ROOT && path.join(process.env.SDN_MODULES_ROOT, 'propagator/sdn-ap/dist/isomorphic/module.wasm')].filter(Boolean);
+const found = candidates.filter((f) => fs.existsSync(f)).map((f) => ({ f, sha: crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex') })).find((x) => x.sha === expectedModuleSha);
+assert.ok(found, `Provide SDN_AP_WASM pointing to the unsigned sdn-ap 0.6.58 build with SHA-256 ${expectedModuleSha}; the scored fixture table is only verified with this build. Install locked dependencies before running this test.`);
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'synthetic-reduce-'));
 process.on('exit', () => fs.rmSync(dir, { recursive: true, force: true }));
 makeFixtures(FIX, dir);
@@ -31,6 +31,19 @@ test('complete table includes every scored and unscored class; compare checks al
   const run = reduce(['--sha256', found.sha, '--compare', path.join(FIX, 'expected.json')]);
   assert.equal(run.status, 0, run.stderr);
   const out = JSON.parse(run.stdout);
+  const baseCount = [...frames(path.join(FIX, 'records.fsdata'))].length;
+  const classes = {'within-bar': baseCount, 'outside-bar': 0, 'failed-flight': 0, 'no-truth': 0, 'short-truth': 0, 'at-or-after-decay': 0};
+  for (const c of Object.values(variantClasses)) classes[c]++;
+  const total = baseCount + Object.keys(variantClasses).length;
+  assert.deepEqual(out.counts, {
+    recordsRead: total, selectedRecords: total, supersededRecords: 0, accountedRecords: total, classes,
+    withApResult: baseCount + 2, within100m: baseCount, within200m: baseCount, within500m: baseCount,
+    outsideByGroup: {circLow: 1, circHigh: 0, eccLow: 0, eccHigh: 0, e08: 0},
+    outsideByGroupSum: 1, resultsWhoseTruthEndsBeforeSpan: 1, recordsWithNoTruthFlight: 2,
+    seedsInStream: total - 1, truthFlightsInStream: total - 1,
+  });
+  for (const [kind, classification] of Object.entries(variantClasses))
+    assert.equal(out.cases.find(r => r.caseId === `fixture-${kind}`).class, classification);
   assert.deepEqual(table(out), expected); assert.equal(out.comparison.equal, true);
   assert.equal(Object.values(out.counts.classes).reduce((a,b) => a+b), out.counts.recordsRead);
   assert.equal(out.cases.find((r) => r.caseId === 'fixture-refused').status, 'invalid-ocm');

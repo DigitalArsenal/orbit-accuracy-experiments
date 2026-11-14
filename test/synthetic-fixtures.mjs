@@ -12,13 +12,19 @@ const require = createRequire(import.meta.url), fb = require('flatbuffers');
 const { OCM } = await import(require.resolve('spacedatastandards.org/lib/js/OCM/OCM.js'));
 export const unpack = (b) => OCM.getRootAsOCM(new fb.ByteBuffer(b)).unpack();
 export const pack = (o) => { const b = new fb.Builder(16384); OCM.finishOCMBuffer(b, o.pack(b)); return b.asUint8Array().slice(); };
+// Expected classifications follow the construction below, independently of reduce.mjs.
+export const variantClasses = {
+  refused: 'failed-flight', 'no-truth': 'no-truth', short: 'short-truth',
+  decay: 'at-or-after-decay', outside: 'outside-bar', 'no-cutoff': 'failed-flight',
+  'hash-mismatch': 'no-truth', 'no-seed': 'failed-flight', 'off-grid': 'failed-flight',
+};
 export function makeFixtures(source, dir) {
   fs.mkdirSync(dir, { recursive: true });
   const names = ['records.fsdata', 'truth-ocm.fsdata', 'seed-ocm.fsdata'];
   for (const n of names) fs.copyFileSync(path.join(source, n), path.join(dir, n));
   const base = names.map((n) => [...frames(path.join(source, n))][0].bytes);
   const streams = names.map((n) => new RecordStream(path.join(dir, n)));
-  for (const kind of ['refused', 'no-truth', 'short', 'decay', 'outside', 'no-cutoff', 'hash-mismatch', 'no-seed', 'off-grid']) {
+  for (const kind of Object.keys(variantClasses)) {
     const [fit, truth, seed] = base.map(unpack), objects = [fit, truth, seed];
     for (let i = 0; i < 3; i += 1) {
       objects[i].HEADER.MESSAGE_ID = `fixture-${kind}-${i}`;
