@@ -8,7 +8,7 @@
 // Identity matching checks METADATA.CATALOG_NAME (SYNTHETIC-ORBITS), OBJECT_NAME and OBJECT_DESIGNATOR (case id),
 // NORAD_CAT_ID (0), HEADER.MESSAGE_STATUS (EXERCISE), and PROVENANCE.SOURCE_ID, SOURCE_SHA256 and SOURCE_BYTES.
 // Both links (fit to truth, truth to seed) must agree on case identity and frame hash/length.
-// Repeated MESSAGE_ID or case/MEAN_ELEMENTS.MEAN_ELEMENT_THEORY is an error. --newest selects by CREATION_DATE;
+// Repeated MESSAGE_ID or case/theory/fit-suffix is an error. The fit suffix is read from HEADER.MESSAGE_ID. --newest selects by CREATION_DATE;
 // missing dates or ties are refused. Superseded frames are counted separately; one row remains per case and technique.
 // Each selected record has exactly one class. --fail-on <class>[,<class>...] exits nonzero for any named nonempty class.
 // A truth shorter than 120 hours is never within a bar. Scoring stops before the first state below 100 km.
@@ -18,6 +18,7 @@ import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
+import { fitSuffix } from './identity.mjs';
 import { putUnique } from './duplicates.mjs';
 import { frames, readFrame } from './records.mjs';
 
@@ -58,14 +59,14 @@ const index = (files) => {
   for (const file of files) for (const fr of frames(file)) {
     const o = ocmOf(fr.bytes).unpack(), caseId = identity(o);
     putUnique(map, o.HEADER.MESSAGE_ID, { file, offset: fr.offset, size: fr.size, sha256: sha(fr.bytes), caseId,
-      technique: o.MEAN_ELEMENTS?.MEAN_ELEMENT_THEORY }, o.HEADER.CREATION_DATE, newest);
+      technique: o.MEAN_ELEMENTS?.MEAN_ELEMENT_THEORY, fitSuffix: fitSuffix(o.HEADER.MESSAGE_ID, caseId) }, o.HEADER.CREATION_DATE, newest);
     count += 1;
   }
   return { map, count };
 };
 const { map: seeds } = index([seedFile]), { map: truthFrames } = index([truthFile]);
 const { map: byId, count: framesRead } = index(recordFiles), records = new Map();
-for (const [id, ref] of byId) putUnique(records, `${ref.caseId}:${ref.technique}`, { ...ref, id }, ref.creation, newest);
+for (const [id, ref] of byId) putUnique(records, JSON.stringify([ref.caseId, ref.technique, ref.fitSuffix]), { ...ref, id }, ref.creation, newest);
 const bytesOf = (f) => readFrame(f.file, f);
 const truthOf = (f) => {
   const o = ocmOf(bytesOf(f)).unpack(), data = Float64Array.from(o.STATE_DATA);

@@ -22,10 +22,14 @@ number, and both provenance links (identity, SHA-256 and byte length). Missing s
 identity is an error. The catalog is SYNTHETIC-ORBITS, object number is 0, and status
 is EXERCISE. Fit, truth and seed case names must agree.
 
-Repeated MESSAGE_IDs, or multiple fits for one case and mean-element theory, are
+Repeated MESSAGE_IDs, or multiple fits for one case, mean-element theory and fit suffix, are
 errors. `--newest` selects the greatest CREATION_DATE; missing dates or tied times
 are errors. Superseded frames are counted separately. Selected row classes sum to
 selected records; that sum plus superseded records equals physical input frames.
+The fit suffix is the part of HEADER.MESSAGE_ID between the 12-hex build hash
+and the final theory separator (`<case>:<build><fit suffix>:<theory>`).
+Different fit suffixes retain separate rows; identities without this format use
+an empty suffix. Build changes alone do not distinguish a technique.
 The frame index exposes the same policy as `{ newest: true }`.
 
 `--compare expected.json` checks a JSON result table; it does not supply reduction

@@ -58,7 +58,7 @@ test('duplicate identity and repeated case/technique are refused; newest selects
   assert.equal(run.status, 0, run.stderr); assert.equal(JSON.parse(run.stdout).counts.supersededRecords, 1);
   const idx = new FrameIndex(S.OCM, S.flatbuffers, file, { newest: true });
   assert.equal(idx.lookup(a.HEADER.MESSAGE_ID).sha256, crypto.createHash('sha256').update(pack(b)).digest('hex'));
-  b.HEADER.MESSAGE_ID += '-other-build'; write(pack(a), pack(b));
+  b.HEADER.MESSAGE_ID = b.HEADER.MESSAGE_ID.replace(/:[0-9a-f]{12}/, ':000000000000'); write(pack(a), pack(b));
   run = reduce(['--records', file], FIX); assert.notEqual(run.status, 0); assert.match(run.stderr, /duplicate record identity:/);
   run = reduce(['--records', file, '--newest'], FIX); assert.equal(run.status, 0, run.stderr); assert.equal(JSON.parse(run.stdout).counts.selectedRecords, 1);
   write(first, first); run = reduce(['--records', file, '--newest'], FIX); assert.notEqual(run.status, 0); assert.match(run.stderr, /missing or tied creation time/);
@@ -190,4 +190,21 @@ test('both replacements verify before publication and mismatched pairs name the 
   targets.forEach((f, i) => assert.deepEqual(fs.readFileSync(f), before[i]));
   const run = reduce(); assert.equal(run.status, 0, run.stderr);
   assert.match(JSON.parse(run.stdout).cases.find(r => r.caseId === 'fixture-no-seed').reason, /mismatched seed\/truth pair.*separate renames/);
+});
+
+
+test('two fit ways of the same case and theory survive together', () => {
+  const a = unpack([...frames(path.join(FIX, 'records.fsdata'))][0].bytes);
+  // Keep FlatBuffer object prototypes while changing only the fit suffix of the second record.
+  const second = unpack(pack(a));
+  second.HEADER.MESSAGE_ID = a.HEADER.MESSAGE_ID.replace('-fit-forecast-span-ts72', '-fit-cutoff72');
+  assert.notEqual(second.HEADER.MESSAGE_ID, a.HEADER.MESSAGE_ID);
+  const file = path.join(dir, 'two-ways.fsdata'), stream = new RecordStream(file);
+  stream.append(pack(a)); stream.append(pack(second));
+  for (const flags of [[], ['--newest']]) {
+    const run = reduce(['--records', file, ...flags], FIX); assert.equal(run.status, 0, run.stderr);
+    const out = JSON.parse(run.stdout);
+    assert.equal(out.counts.selectedRecords, 2); assert.equal(out.counts.supersededRecords, 0);
+    assert.equal(out.counts.classes['within-bar'], 2); assert.equal(out.cases[0].D, out.cases[1].D);
+  }
 });

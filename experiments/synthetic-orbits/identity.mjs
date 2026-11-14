@@ -107,3 +107,10 @@ export class FrameIndex {
     });
   }
 }
+
+/** run.mjs and reissue-records.mjs encode the fit suffix in HEADER.MESSAGE_ID:
+ * <case>:<12 hex build><fit suffix>:<theory>. Legacy identities without it share the empty suffix. */
+export function fitSuffix(messageId, caseId) {
+  if (!messageId?.startsWith(`${caseId}:`)) return '';
+  return /^[0-9a-f]{12}([^:]*):[^:]+$/.exec(messageId.slice(caseId.length + 1))?.[1] ?? '';
+}
