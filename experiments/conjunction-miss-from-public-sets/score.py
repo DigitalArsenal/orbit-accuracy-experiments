@@ -17,7 +17,7 @@ closest approach) and SECONDARY (all events). The statistics, the verdicts and e
   verdict (PRIMARY only): INSUFFICIENT (fewer than 100 events with a scored row after the drop) overrides all; CONFIRMED (H1, H2 and the guard hold);
   REFUTED (the top of the H1 interval at or below 50 %, or the bottom of the H2 interval at or above 1, or the guard failing with an exact one-sided
   binomial test on the discordant events below 0.05); NOT CONFIRMED otherwise. --rule-table prints the development table of PLAN.md's last section.
-Interim looks confirm early with at least 40 events and otherwise continue.
+Interim looks confirm early with at least 40 events and otherwise continue. Look 3 requires --earlier for each interim result JSON file and prints the combined result.
 Writes results-lookN.json and results-lookN.txt to the store (results.json and results.txt for a configuration without looks).
 """
 import sys, os, re, json, glob, math, hashlib, datetime
@@ -66,6 +66,49 @@ def invalid(reason):
 
 
 sha_file = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+
+
+def read_earlier_results():
+    """Validate both published interim results before stating any final verdict."""
+    positions = [i for i, value in enumerate(ARGV) if value == '--earlier']
+    if not LOOK or LOOK['number'] != 3:
+        if positions:
+            invalid('--earlier is only allowed at look 3')
+        return {}
+    if len(positions) != 2:
+        invalid('look 3 requires both earlier results: --earlier results-look1.json --earlier results-look2.json')
+    earlier = {}
+    for i in positions:
+        if i + 1 == len(ARGV) or ARGV[i + 1].startswith('--'):
+            invalid('--earlier requires a result file')
+        try:
+            raw = open(ARGV[i + 1], 'rb').read()
+            result = json.loads(raw)
+        except (OSError, ValueError):
+            invalid('an earlier result file is missing or unreadable')
+        if not isinstance(result, dict) or result.get('configSha256') != CONFIG_SHA or result.get('registered') != REGISTERED:
+            invalid('an earlier result names another configuration')
+        metadata = result.get('look')
+        number = metadata.get('number') if isinstance(metadata, dict) else None
+        if type(number) is not int or number not in (1, 2) or number in earlier:
+            invalid('earlier results must name distinct looks 1 and 2')
+        expected = next(x for x in CONFIG['looks'] if x['number'] == number)
+        base_seed = ST['seed'] - LOOK['seedOffset']
+        if metadata != dict(expected, seed=base_seed + expected['seedOffset']):
+            invalid('an earlier result has inconsistent look metadata')
+        verdicts = {}
+        for comparison in CONFIG['comparisons']:
+            if comparison['verdict']:
+                value = result.get(comparison['id'])
+                verdict = value.get('verdict') if isinstance(value, dict) else None
+                if verdict not in ('CONFIRMED EARLY', 'CONTINUE', 'CONTINUE (too few events)'):
+                    invalid('an earlier result lacks a valid interim verdict')
+                verdicts[comparison['id']] = verdict
+        earlier[number] = dict(look=number, sha256=hashlib.sha256(raw).hexdigest(), verdicts=verdicts)
+    return earlier
+
+
+EARLIER = read_earlier_results()
 if REGISTERED:
     mline = [l for l in open(os.path.join(HERE, 'MANIFEST.sha256')).read().split('\n') if l.endswith('/config.json')]
     if not mline or mline[0].split()[0] != CONFIG_SHA:
@@ -262,6 +305,8 @@ for nm in ('inputs-messages.json', 'inputs-sets.json'):
         say('input manifest %s: %d files, aggregate SHA-256 %s' % (nm, len(j['files']), j['aggregateSha256']))
 for p in sorted(glob.glob(os.path.join(STORE, 'inputs-weather-*.json'))):
     j = json.load(open(p))
+    if LOOK and j.get('look') != LOOK['number']:
+        invalid('%s names another look' % os.path.basename(p))
     say('input manifest %s: %d epoch days, aggregate SHA-256 %s, weather forecaster SHA-256 %s' % (os.path.basename(p), len(j['days']), j['aggregateSha256'], j['forecasterSha256']))
 for nm in ('events-counts.json', 'sets-counts.json'):
     p = os.path.join(STORE, nm)
@@ -597,6 +642,13 @@ if not ARGV.count('--rule-table'):
                                                        ' (information only: INSUFFICIENT overrides every other verdict)' if v == 'INSUFFICIENT' else ''))
             RESULT[cmp_['id']]['verdict'] = v
             RESULT[cmp_['id']]['note'] = note.strip()
+            if EARLIER:
+                early = any(result['verdicts'][cmp_['id']] == 'CONFIRMED EARLY' for result in EARLIER.values())
+                combined = 'CONFLICTING' if early and v == 'REFUTED' else 'CONFIRMED' if early or v == 'CONFIRMED' else v
+                RESULT[cmp_['id']]['combinedResult'] = combined
+                say('COMBINED RESULT %s: %s%s' % (cmp_['id'], combined, '' if REGISTERED else ' (not the registered run)'))
+                if combined == 'CONFLICTING':
+                    say('   An early confirmation conflicts with the final refutation; the claim is not made.')
 
     # overlap with the development events (report only)
     ov = CONFIG.get('overlap', {}).get('developmentObjectsFile')
@@ -616,6 +668,8 @@ if not ARGV.count('--rule-table'):
 else:
     rule_table()
 
+if EARLIER:
+    RESULT['earlierResults'] = [EARLIER[number] for number in (1, 2)]
 if LOOK:
     RESULT['look'] = dict(LOOK, seed=ST['seed'])
 RESULT['registered'] = REGISTERED

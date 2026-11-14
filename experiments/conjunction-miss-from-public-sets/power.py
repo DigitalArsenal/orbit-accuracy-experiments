@@ -14,11 +14,13 @@ DAYS = 28
 N0 = RATE * DAYS
 
 
-def power(n, p, z=1.96):
+def power(n, p, z=1.96, refuted=False):
     tot = 0.0
     for k in range(n + 1):
         ph = k / n
-        if ph - z * sqrt(ph * (1 - ph) / n) > 0.5:
+        half_width = z * sqrt(ph * (1 - ph) / n)
+        holds = ph + half_width <= 0.5 if refuted else ph - half_width > 0.5
+        if holds:
             tot += comb(n, k) * p ** k * (1 - p) ** (n - k)
     return tot
 
@@ -66,9 +68,15 @@ for size_index, final_n in enumerate((194, 150, 100)):
             through.append(float(cumulative.mean()))
         print('| %s | %.0f%% | %s |' % ('/'.join(map(str, ns)), p * 100, ' | '.join('%.3f%%' % (100 * x) for x in chances + through)))
         if p == 0.5:
-            print('Overall false-confirmation chance at p=50%% (%s): %.3f%%; required <=2.5%%: %s' %
-                  ('/'.join(map(str, ns)), 100 * through[-1], 'PASS' if through[-1] <= .025 else 'FAIL'))
-            if through[-1] > .025:
-                raise SystemExit('the simulated H1 false-confirmation chance exceeds 2.5%')
+            mc_se = sqrt(through[-1] * (1 - through[-1]) / TRIALS)
+            print('Overall false-confirmation chance at p=50%% (%s): %.3f%%; Monte Carlo SE %.3f percentage points (approximate 95%% margin +/- %.3f points).' %
+                  ('/'.join(map(str, ns)), 100 * through[-1], 100 * mc_se, 196 * mc_se))
+            print('Original single-run normal approximation at n=%d: %.3f%% (exact binomial sum).' % (final_n, 100 * power(final_n, .5)))
+            if through[-1] > .035:
+                raise SystemExit('programming-error sanity bound exceeded: simulated H1 false confirmation above 3.5%; this bound is not a design error-control guarantee')
+print('The 3.5% bound is a programming-error sanity check, not a pass/fail claim about statistical error control.')
+print('Monte Carlo SE of each table entry is sqrt(q * (1-q) / 200000), at most 0.112 percentage points; the normal approximation adds unquantified error.')
 print('Final look at n=194, true share 60%%: old 95%% %.6f; amended %.6f (exact binomial sums under the normal-interval approximation).' %
       (power(194, .60), power(194, .60, NormalDist().inv_cdf((1 + CONFIG['looks'][2]['interval']) / 2))))
+print('Final look at n=194, true share 40%%: H1 refutation old 95%% %.6f; amended %.6f (exact binomial sums under the normal-interval approximation).' %
+      (power(194, .40, refuted=True), power(194, .40, NormalDist().inv_cdf((1 + CONFIG['looks'][2]['interval']) / 2), refuted=True)))

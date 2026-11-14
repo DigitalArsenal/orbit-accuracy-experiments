@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { writeWeatherManifest } from '../experiments/conjunction-miss-from-public-sets/lib/weather-manifest.mjs';
 import { readConfig } from '../experiments/conjunction-miss-from-public-sets/lib/config.mjs';
 import zlib from 'node:zlib';
 import { spawnSync } from 'node:child_process';
@@ -76,6 +77,11 @@ function makeStore(n, spec, opts = {}) {
     fs.writeFileSync(path.join(dir, `fits-${arm}.jsonl`), [head(`fits-${arm}`, { limit: null, ...(arm === 'W' ? { forecasterSha256: CONFIG.weatherForecaster.sha256 } : {}), ...(opts.fitHeader ?? {}) }),
       ...(opts.fitRows ?? [])].join('\n') + '\n');
   }
+  for (const look of CONFIG.looks.slice(0, 2)) {
+    fs.writeFileSync(path.join(dir, `earlier-look${look.number}.json`), JSON.stringify({ registered: true, configSha256: CONFIG_SHA,
+      look: { ...look, seed: CONFIG.statistics.seed + look.seedOffset },
+      'W-vs-S': { verdict: 'CONTINUE' }, 'W-vs-X': { verdict: 'CONTINUE' } }));
+  }
   for (const f of opts.removeFiles ?? []) fs.rmSync(path.join(dir, f));
   return dir;
 }
@@ -86,6 +92,9 @@ function run(dir, extraArgs = []) {
   const countsFile = path.join(dir, 'events-counts.json');
   const look = fs.existsSync(countsFile) ? JSON.parse(fs.readFileSync(countsFile, 'utf8')).look : 3;
   if (!extraArgs.includes('--look')) extraArgs = ['--look', String(look), ...extraArgs];
+  if (extraArgs[extraArgs.indexOf('--look') + 1] === '3' && !extraArgs.includes('--earlier')) {
+    extraArgs = [...extraArgs, '--earlier', path.join(dir, 'earlier-look1.json'), '--earlier', path.join(dir, 'earlier-look2.json')];
+  }
   return spawnSync('python3', [path.join(EXP, 'score.py'), '--config', CONFIG_FILE, ...extraArgs], { encoding: 'utf8', env, maxBuffer: 1 << 26 });
 }
 function score(dir) {

@@ -1,3 +1,4 @@
+import { writeWeatherManifest } from './lib/weather-manifest.mjs';
 // Fits one record of arm W (AP) or arm X (SGP4-XP) to each set of the chosen rows, once per unique set, through the module's fit.
 //   node fit-records.mjs --arm W|X [--config config.json] [--shard i/n] [--limit k]
 // Input: rows-sgp4*.jsonl of the store (the sets of the chosen rows) and sets_index.json. Output: ocm/<arm>-<set>.bin and fits-<arm>*.jsonl (first line: header;
@@ -121,10 +122,6 @@ for (const gp of jobs.filter((_, i) => i % sn === si).slice(0, LIMIT || Infinity
   if (k % 100 === 0) console.log(`${k} fits`);
 }
 await new Promise((r) => out.end(r));
-if (weatherDays.size) {
-  const days = Object.fromEntries([...weatherDays].sort());
-  const lines = Object.entries(days).flatMap(([d, fs_]) => fs_.map((f) => `${d} ${f.file} ${f.sha256}\n`)).join('');
-  fs.writeFileSync(path.join(config.storeDir, sn > 1 ? `inputs-weather-${ARM}-${si}of${sn}.json` : `inputs-weather-${ARM}.json`), JSON.stringify({ kind: 'weather', forecasterSha256, days, aggregateSha256: sha256(lines) }, null, 1));
-}
+writeWeatherManifest(config, ARM, `${si}/${sn}`, forecasterSha256, weatherDays);
 console.log(`finished ${k} fits`);
 process.exit(0);
