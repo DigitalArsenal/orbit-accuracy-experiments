@@ -38,6 +38,10 @@ const SELF = new URL(import.meta.url).pathname;
 // --caps T,Z: the record's tesseral and zonal degrees for every fit (a study; the release's records are the row's $PCF as it is)
 const CAPS = args.caps ? args.caps.split(',').map(Number) : null;
 if (CAPS && !(CAPS.length === 2 && CAPS.every((x) => Number.isInteger(x) && x >= 2 && x <= 70))) throw new Error('--caps T,Z: two degrees, each 2 to 70');
+// --by-day (experiments/headline-loop/bar-byday.mjs): each flown row also records AP's RMS error against the reference orbit for each lead day 1 to 5
+// (daysM), and each row and group states, per day, the windows and the medians of AP's and the numerical forecast's figures (truthByDay).
+// The numerical figure of a day is the scoreboard's, so a day it does not score (day 4) has no numerical median.
+const BYDAY = args['by-day'] === 'true', DAYS = [1, 2, 3, 4, 5];
 const HOUR = 3600e3, DAY = 864e5, BAR_M = 100, BAR_H = 120, STEP_S = 300;
 const ALL = ['LS', 'DO', 'S1', 'P', 'T', 'GD', 'GN', 'GN_GAL', 'IG', 'GE', 'WA', 'HE72', 'HE', 'HX'];
 // the front page's four groups (the site's), and strong drag (both strong-drag rows) with the heights its windows' forecasts span
@@ -147,7 +151,7 @@ async function main() {
   if (carryFrom && !carriedAp.size) throw new Error(`the scoreboard carried rows from ${carryFrom}, and the store holds no AP row of that build`);
   if (board?.carriedFrom && [...carriedAp.values()].some((r) => r.ap?.version !== board.carriedFrom.version || r.ap?.sha256 !== board.carriedFrom.wasmSha256)) throw new Error(`the scoreboard carried rows from sdn-ap ${board.carriedFrom.version} (${carryFrom}), and the store's rows of that folder are of another build`);
   const apRowOf = (g, a, key) => apRows.get(`${key}|${a}`) ?? ((boardRow(g, a)?.carried?.ap?.carried ?? 0) > 0 ? carriedAp.get(`${key}|${a}`) : undefined);
-  const rowArm = new Map(), numDay5 = new Map(), scoredKeys = new Set(), rowTight = new Set(), rowTolerance = new Map(), rowAp = new Map(), rowWithout = new Map(), rowFit = new Map();
+  const rowArm = new Map(), numDay5 = new Map(), numDays = new Map(), scoredKeys = new Set(), rowTight = new Set(), rowTolerance = new Map(), rowAp = new Map(), rowWithout = new Map(), rowFit = new Map();
   for (const g of groups) for (const a of arcs) {
     const ws = listed.filter((w) => w.group === g && w.arcs.includes(a));
     if (!ws.length) continue;
@@ -185,7 +189,7 @@ async function main() {
       if (!apScored.includes(w)) return;
       if (!label || W.LEADS.some((d) => meters(bs[i], label, d) != null)) scoredKeys.add(`${w.key}|${a}`);
       else { why[whys[i] ?? 'fitFailed'] += 1; none.push(w); }
-      if (label) { numDay5.set(`${w.key}|${a}`, meters(bs[i], label, 5)); rowFit.set(`${w.key}|${a}`, rowFitOf(bs[i], label, w.cutoffMs, a)); }
+      if (label) { numDay5.set(`${w.key}|${a}`, meters(bs[i], label, 5)); numDays.set(`${w.key}|${a}`, Object.fromEntries(DAYS.map((d) => [d, meters(bs[i], label, d)]))); rowFit.set(`${w.key}|${a}`, rowFitOf(bs[i], label, w.cutoffMs, a)); }
     });
     const { armsOnDifferentArcs, ...reasons } = why;
     if (none.length) rowWithout.set(`${g}|${a}`, { windows: none.length, satellites: new Set(none.map((w) => w.name)).size, ...reasons, ...(armsOnDifferentArcs ? { armsOnDifferentArcs } : {}) });
@@ -216,13 +220,14 @@ async function main() {
   // each window's line is the last line of the numerical row's own fit (lineFor); a window whose row has no fit, or whose lines are of
   // other fits or of no known fit, gets none and is counted by why
   const wanted = listed.flatMap((w) => w.arcs.filter((a) => arcs.includes(a) && (!exact || scoredKeys.has(`${w.key}|${a}`))).map((a) => ({ w, a, ...lineFor(w.key, a, rowFit.get(`${w.key}|${a}`) ?? null) })));
-  const todo = wanted.filter((x) => hasTrajectory(x.m) && !stored.has(doneKey(x.m)));
+  // with --by-day a stored row that has no daysM (and no error) is flown again
+  const todo = wanted.filter((x) => hasTrajectory(x.m) && (!stored.has(doneKey(x.m)) || (BYDAY && !stored.get(doneKey(x.m)).error && !stored.get(doneKey(x.m)).daysM)));
   const jobs = Math.min(Number(args.jobs ?? 8), todo.length);
   console.error(`bar: sdn-ap ${version} (${wasmSha.slice(0, 12)}) at ${commit.slice(0, 12)}; ${wanted.length} window-arcs, ${wanted.filter((x) => hasTrajectory(x.m)).length} with a numerical trajectory, ${todo.length} to fly on ${jobs} jobs`);
   let next = 0, flown = 0;
   const unread = new Map();
   await Promise.all(Array.from({ length: jobs }, () => new Promise((resolve, reject) => {
-    const child = fork(SELF, ['--worker', '--wasm', file, '--version', version, '--groups', groups.join(','), ...(CAPS ? ['--caps', CAPS.join(',')] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
+    const child = fork(SELF, ['--worker', '--wasm', file, '--version', version, '--groups', groups.join(','), ...(CAPS ? ['--caps', CAPS.join(',')] : []), ...(BYDAY ? ['--by-day'] : [])], { stdio: ['ignore', 'inherit', 'inherit', 'ipc'] });
     const give = () => (next < todo.length ? child.send({ m: todo[next++].m }) : child.send({ stop: true }));
     child.on('message', (msg) => {
       if (msg.row?.unread) { unread.set(doneKey(msg.row), msg.row); console.error(`bar: ${msg.row.key} ${msg.row.arcH} h: its trajectory is not read (${msg.row.error}); nothing stored, read again on the next run`); }
@@ -249,11 +254,16 @@ async function main() {
     // of the flown windows whose row records its fit's convergence (rows flown before the field exist and are not flown again for it), those
     // whose fit ended unconverged
     const recorded = ok.filter((x) => typeof x.r.converged === 'boolean');
+    // --by-day: per lead day, the windows with AP's figure for the day and the medians of AP's and the numerical forecast's figures over them
+    const byDay = BYDAY ? Object.fromEntries(DAYS.map((d) => {
+      const v = ok.map((x) => [x.r.daysM?.[d], numDays.get(`${x.m.key}|${x.m.arcH}`)?.[d] ?? null]).filter(([a]) => Number.isFinite(a));
+      return [d, { windows: v.length, ap: { medianM: r1(quantile(v.map(([a]) => a), 0.5)) }, ffm: { medianM: r1(quantile(v.map(([, f]) => f).filter(Number.isFinite), 0.5)) } }];
+    }).filter(([, c]) => c.windows > 0)) : null;
     return { flown: ok.length, failed, withinBar: { windows: attempted, met, share: attempted ? Math.round((met / attempted) * 1000) / 1000 : null },
       unconverged: { windows: recorded.filter((x) => x.r.converged === false).length, recorded: recorded.length },
       maxDistanceM: { median: r1(quantile(D, 0.5)), worst: r1(D.length ? Math.max(...D) : null) },
       truthDay5: { windows: paired.length, unpaired: pairs.filter(([a, f]) => Number.isFinite(a) && !Number.isFinite(f)).length,
-        ap: { medianM: r1(quantile(paired.map(([a]) => a), 0.5)) }, ffm: { medianM: r1(quantile(paired.map(([, f]) => f), 0.5)) } } };
+        ap: { medianM: r1(quantile(paired.map(([a]) => a), 0.5)) }, ffm: { medianM: r1(quantile(paired.map(([, f]) => f), 0.5)) } }, ...(BYDAY ? { truthByDay: byDay } : {}) };
   };
   const rows = [], byGroup = new Map(), manifestUsed = [];
   for (const g of ALL.filter((x) => groups.includes(x))) {
@@ -319,7 +329,7 @@ async function main() {
     const pooled = parts.flatMap((p) => byGroup.get(`${p.g}|${p.a}`)), c = cells(pooled);
     const tol = (p) => rowTolerance.get(`${p.g}|${p.a}`) ?? null, tols = [...new Set(parts.map(tol).filter((x) => x != null))];
     return { key: G.key, name: G.name, regimes: [...new Set(G.regimes.filter((g) => groups.includes(g)).map((g) => W.GROUPS[g].label))],
-      rows: parts.map((p) => ({ regime: W.GROUPS[p.g].label, fitHours: p.a, numericalTolerance: tol(p) })), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5,
+      rows: parts.map((p) => ({ regime: W.GROUPS[p.g].label, fitHours: p.a, numericalTolerance: tol(p) })), flown: c.flown, failed: c.failed, met: c.withinBar.met, truthDay5: c.truthDay5, ...(BYDAY ? { truthByDay: c.truthByDay } : {}),
       ...(G.heights ? { heightsKm: heightsOf(pooled) } : {}),
       ...(tols.length > 1 ? { toleranceNote: `pools rows whose numerical arms are fitted and flown at different tolerances (${parts.map((p) => `${W.GROUPS[p.g].label} ${p.a} h ${tol(p) ? `at ${tol(p)}` : 'without a numerical arm'}`).join(', ')})` } : {}) };
   });
@@ -408,6 +418,11 @@ async function worker() {
       // the record's fit: its iterations and whether it converged (OD FIT_STATISTICS), as table.mjs's rows record them
       Object.assign(row, { maxDistanceM: r1(d[at]), atH: r1((span[at].t - D0) / HOUR), fitRmsM: r1(info.fitRmsKm * 1000), bterm: info.bterm ?? null, iterations: info.iterations ?? null, converged: info.o.ORBIT_DETERMINATION?.FIT_STATISTICS?.CONVERGED ?? null });
       if (sc.entered.includes(5)) { const days = W.byDay(await m.rtn(await fly(ocm, sc.epochs), sc.truth), sc.entered, sc.sizes); row.day5M = r1(days[5].e * 1000); }
+      // --by-day: the same flight's RMS error against the reference orbit in each lead day 1 to 5 (the days with a full enough bin)
+      if (BYDAY) {
+        const sd = W.scoredOf(truth.lines.filter((l) => W.ms(l.epoch) > D0), D0, DAYS), dd = sd.entered.length ? W.byDay(await m.rtn(await fly(ocm, sd.epochs), sd.truth), sd.entered, sd.sizes) : {};
+        row.daysM = Object.fromEntries(sd.entered.map((d) => [d, r1(dd[d].e * 1000)]));
+      }
     } catch (e) { row.error = String(e?.message ?? e).slice(0, 200); if (reading) row.unread = true; }
     row.wallS = r1((performance.now() - t1) / 1000);
     return row;
@@ -478,6 +493,18 @@ async function check() {
   const b2 = bar(), rows2 = barRows(), row2 = rowOfDoc(), b3 = bar(), rows3 = barRows();
   ok(b2.code === 0 && / 1 to fly/.test(b2.err) && rows2.length === 2 && !rows2.find((r) => r.key === full?.key)?.error && row2?.flown === 2 && !row2.trajectories.unread && b3.code === 0 && / 0 to fly/.test(b3.err) && rows3.length === 2,
     `the mended file read again, then nothing flown: ${b2.err.slice(-200)} ${rows2.length} ${b3.err.slice(-120)} ${rows3.length}`);
+  // bar-byday.mjs: the two stored rows lack daysM, so both are flown again; each then records its lead days, the row and the group state them, the
+  // row's day 5 equals its truthDay5, and the figures bar.mjs gives are the ones it gave
+  const plain = rowOfDoc(), plainFields = JSON.stringify({ ...plain, truthByDay: undefined });
+  const b4 = E2.run('bar-byday.mjs', ['--modules-commit', BUILD.commit, '--modules-root', modulesRoot, '--out', out, '--groups', 'HE72', '--arcs', '72', '--burns', lists, '--after-burn-store', folder, '--jobs', '1'], env);
+  const rows4 = barRows(), row4 = rowOfDoc(), doc4 = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, 'utf8')) : { groups: [] };
+  const t5 = row4?.truthByDay?.[5], d5 = row4?.truthDay5, heo = doc4.groups.find((g) => g.key === 'heo');
+  ok(b4.code === 0 && / 2 to fly/.test(b4.err) && rows4.filter((r) => r.daysM).length === 2 && rows4.filter((r) => r.daysM).every((r) => !r.error && Object.keys(r.daysM).length && r.daysM[5] === r.day5M)
+    && t5 && d5 && t5.windows === d5.windows && t5.ap.medianM === d5.ap.medianM && t5.ffm.medianM === d5.ffm.medianM && heo?.truthByDay?.[5]?.windows === heo?.truthDay5?.windows
+    && JSON.stringify({ ...row4, truthByDay: undefined }) === plainFields && plain.truthByDay === undefined,
+    `bar-byday.mjs: ${b4.err.slice(-200)} ${JSON.stringify([rows4.filter((r) => r.daysM).map((r) => r.daysM), t5, d5])}`);
+  const b5 = E2.run('bar-byday.mjs', ['--modules-commit', BUILD.commit, '--modules-root', modulesRoot, '--out', out, '--groups', 'HE72', '--arcs', '72', '--burns', lists, '--after-burn-store', folder, '--jobs', '1'], env);
+  ok(b5.code === 0 && / 0 to fly/.test(b5.err), `bar-byday.mjs a second time flies nothing: ${b5.err.slice(-120)}`);
   fs.rmSync(dir, { recursive: true, force: true });
   done('bar.mjs, on the 72 h TESS row, finds the line of a refit after a burn on an arc under 24 h (the row\'s fit, its arc start the row\'s) and flies it to a figure past a torn manifest line; a trajectory file whose sha256 is not its line\'s is not read and nothing is stored for it (counted unread, out of flown, failed and the share); a refit refused against the stored weighted RMS is counted in trajectories.failed; each flown row records its fit\'s iterations and convergence, and the row counts its unconverged fits; with the file mended that window alone is flown, and then nothing');
 }
