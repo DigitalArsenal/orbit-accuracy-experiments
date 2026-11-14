@@ -578,7 +578,7 @@ forbidden=set(sys.argv[2:4])
 def check(event,args):
  if event=='open' and isinstance(args[0],str) and args[0] in forbidden: os._exit(91)
 sys.addaudithook(check)
-script=sys.argv[1]; sys.argv=[script,'--look',sys.argv[4]]; runpy.run_path(script,run_name='__main__')`;
+script=sys.argv[1]; sys.path.insert(0,os.path.dirname(script)); sys.argv=[script,'--look',sys.argv[4]]; runpy.run_path(script,run_name='__main__')`;
     const execute = () => {
       for (const name of ['build-events.py', 'build-set-index.py']) {
         const run = spawnSync('python3', ['-c', audit, path.join(EXP, name), laterMessage, laterSet, String(look.number)], {
