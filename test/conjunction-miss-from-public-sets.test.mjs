@@ -510,6 +510,8 @@ test('looks: combine actual early results with final confirmation, uncertainty, 
     assert.equal(result['W-vs-S'].verdict, final);
     assert.equal(result['W-vs-S'].combinedResult, combined);
     assert.match(out, new RegExp(`COMBINED RESULT W-vs-S: ${combined}`));
+    assert.match(out, /Combined rule: confirmation at any look gives CONFIRMED/);
+    assert.match(out, /Earlier verdicts: look 1 CONFIRMED EARLY; look 2 CONTINUE/);
     if (combined === 'CONFLICTING') assert.match(out, /claim is not made/);
     assert.deepEqual(result.earlierResults.map((r) => r.look), [1, 2]);
     assert.equal(result.earlierResults[0].sha256, sha(fs.readFileSync(path.join(dir, 'earlier-look1.json'))));

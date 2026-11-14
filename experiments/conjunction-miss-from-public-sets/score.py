@@ -194,6 +194,8 @@ def utc_seconds(text):
 if LOOK:
     say('look %d; interval level %.12g%%; seed offset %d; minimum primary events %d' % (LOOK['number'], 100 * ST['interval'], LOOK['seedOffset'], ST['minimumPrimaryEvents']))
 say('numpy %s; generator %s; percentile method %s; interval %s; resamples %d; seed %d' % (np.__version__, ST['generator'], ST['percentileMethod'], ST['interval'], ST['resamples'], ST['seed']))
+if EARLIER:
+    say('Combined rule: confirmation at any look gives CONFIRMED, except early confirmation followed by final REFUTED gives CONFLICTING and no claim; otherwise the final verdict applies.')
 say('configuration SHA-256 %s' % CONFIG_SHA)
 say('module version %s, wasm SHA-256 %s' % (CONFIG['module']['version'], CONFIG['module']['wasmSha256']))
 def check_registered_store():
@@ -646,6 +648,7 @@ if not ARGV.count('--rule-table'):
                 early = any(result['verdicts'][cmp_['id']] == 'CONFIRMED EARLY' for result in EARLIER.values())
                 combined = 'CONFLICTING' if early and v == 'REFUTED' else 'CONFIRMED' if early or v == 'CONFIRMED' else v
                 RESULT[cmp_['id']]['combinedResult'] = combined
+                say('   Earlier verdicts: ' + '; '.join('look %d %s' % (number, EARLIER[number]['verdicts'][cmp_['id']]) for number in (1, 2)))
                 say('COMBINED RESULT %s: %s%s' % (cmp_['id'], combined, '' if REGISTERED else ' (not the registered run)'))
                 if combined == 'CONFLICTING':
                     say('   An early confirmation conflicts with the final refutation; the claim is not made.')
