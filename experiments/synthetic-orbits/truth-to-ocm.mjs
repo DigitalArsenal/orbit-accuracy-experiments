@@ -58,8 +58,8 @@ const universe = makeCases(498, { gridStep: 1 }).cases;
 for (const c of universe) { const start = Date.parse(`${c.cutoff}T00:00:00Z`) - 72 * 3600e3, k = seedMessageId(c.id, iso(start)); if (!startsOf.has(k)) startsOf.set(k, { id: c.id, start, el: c, am: c.am }); }
 
 // 2. the seeds
-const seedStream = new StreamReplacement(seedFile, [...sourceFiles, truthFile]), seeds = new Map();
-const truthStream = new StreamReplacement(truthFile, [...sourceFiles, seedFile]);
+const seedStream = new StreamReplacement(seedFile, [...sourceFiles, truthFile], { allowEmpty: args.includes('--allow-empty') }), seeds = new Map();
+const truthStream = new StreamReplacement(truthFile, [...sourceFiles, seedFile], { allowEmpty: args.includes('--allow-empty') });
 const refH = await createStandaloneHarness('browser', refFile, { surface: 'direct' });
 const flightPcf = (epochs) => { const t = new S.PCF.PCFT(); t.OUTPUT = Object.assign(new S.PCF.PCFOutputT(), { FRAME: S.PCF.pcfOutputFrame.GCRF, EPOCHS: epochs }); const b = new S.flatbuffers.Builder(1 << 14); S.PCF.PCF.finishPCFBuffer(b, t.pack(b)); return b.asUint8Array().slice(); };
 const refFly = async (ocm, epoch) => { const r = await refH.invoke({ methodId: 'propagate', inputs: [{ portId: 'ocm', typeRef: S.TYPE('OCM'), payload: ocm }, { portId: 'configuration', typeRef: S.TYPE('PCF'), payload: flightPcf([`${epoch}Z`]) }] }); if (r.statusCode !== 0) throw new Error(`reference: ${r.errorMessage}`); return S.oemLines(new Uint8Array(r.outputs.find((o) => o.portId === 'ephemeris').payload))[0]; };

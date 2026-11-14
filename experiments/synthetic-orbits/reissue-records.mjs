@@ -36,7 +36,7 @@ for (const n of fs.readdirSync(dir).filter((x) => /^rows.*\.jsonl$/.test(x))) {
     if (ref?.file) inputs.push(path.join(dir, ref.file));
   }
 }
-const stream = new StreamReplacement(outFile, inputs);
+const stream = new StreamReplacement(outFile, inputs, { allowEmpty: args.includes('--allow-empty') });
 const S = await import('./bindings.mjs'), O = S.OCM, fb = S.flatbuffers;
 const require = createRequire(import.meta.url);
 const { createStandaloneHarness } = await import(require.resolve('space-data-module-sdk/testing/isomorphic'));

@@ -9,7 +9,7 @@ import test from 'node:test';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { makeFixtures, pack, unpack } from './synthetic-fixtures.mjs';
-import { frames, RecordStream } from '../experiments/synthetic-orbits/records.mjs';
+import { frames, RecordStream, StreamReplacement } from '../experiments/synthetic-orbits/records.mjs';
 import { FrameIndex } from '../experiments/synthetic-orbits/identity.mjs';
 import * as S from '../experiments/synthetic-orbits/bindings.mjs';
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
@@ -164,4 +164,16 @@ test('temporary streams are cleaned on controlled exits and leftovers are report
     assert.deepEqual(fs.readdirSync(dir).filter(n => n.startsWith('cleanup.fsdata.')), [path.basename(leftover)]);
     assert.equal(fs.readFileSync(leftover, 'utf8'), 'preexisting');
   }
+});
+
+
+test('empty replacement preserves a nonempty stream unless explicitly allowed', () => {
+  const target = path.join(dir, 'empty.fsdata');
+  fs.copyFileSync(path.join(FIX, 'records.fsdata'), target);
+  const before = fs.readFileSync(target);
+  const empty = new StreamReplacement(target);
+  assert.throws(() => empty.verify(() => null), /requires --allow-empty/);
+  assert.deepEqual(fs.readFileSync(target), before);
+  const allowed = new StreamReplacement(target, [], {allowEmpty: true});
+  allowed.verify(() => null); allowed.publish(); assert.equal(fs.statSync(target).size, 0);
 });

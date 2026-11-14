@@ -36,7 +36,8 @@ part of this table. Earlier partial aggregate tables fail this complete comparis
 
 The converters build temporary streams beside their targets, verify frame tiling,
 count, identities and content, then rename. They reject an output that aliases an
-input. Truth conversion accepts `--out` and `--seeds-out`; a limited conversion
+input. An empty replacement of a non-empty target requires `--allow-empty`.
+Truth conversion accepts `--out` and `--seeds-out`; a limited conversion
 requires new output paths. Interruption before publication leaves existing targets
 intact. The two truth-converter renames are separate operations, not a transaction
 across both files. Stop concurrent stream appenders before conversion. Conversion

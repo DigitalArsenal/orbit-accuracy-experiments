@@ -116,7 +116,8 @@ function ownReplacement(file) {
 
 /** A replacement is published only after its frames tile the file and every identity reads back. */
 export class StreamReplacement {
-  constructor(target, inputs = []) {
+  constructor(target, inputs = [], { allowEmpty = false } = {}) {
+    this.allowEmpty = allowEmpty;
     const prefix = `${path.basename(target)}.`;
     for (const name of fs.readdirSync(path.dirname(target))) {
       if (name.startsWith(prefix) && /^\d+\.[0-9a-f-]+\.tmp$/.test(name.slice(prefix.length))) console.error(`leftover temporary stream: ${path.join(path.dirname(target), name)}`);
@@ -142,10 +143,16 @@ export class StreamReplacement {
       if (!want || identityOf(fr.bytes) !== want.identity || sha256(fr.bytes) !== want.sha) throw new Error('replacement identity or bytes differ');
     }
     if (count !== this.expected.length) throw new Error('replacement frame count differs');
+    this.checkEmpty();
     this.verified = true;
+  }
+  checkEmpty() {
+    if (!this.allowEmpty && this.expected.length === 0 && fs.existsSync(this.target) && fs.statSync(this.target).size > 0)
+      throw new Error('empty replacement of a non-empty stream requires --allow-empty');
   }
   publish() {
     if (!this.verified) throw new Error('replacement has not been verified');
+    this.checkEmpty();
     fs.renameSync(this.file, this.target);
     replacements.delete(this.file);
   }
