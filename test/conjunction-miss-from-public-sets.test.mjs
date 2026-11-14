@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { readConfig } from '../experiments/conjunction-miss-from-public-sets/lib/config.mjs';
 import zlib from 'node:zlib';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -62,12 +63,12 @@ function makeStore(n, spec, opts = {}) {
   const eventsJson = JSON.stringify(events), setsJson = JSON.stringify(sets);
   fs.writeFileSync(path.join(dir, 'events.json'), eventsJson);
   fs.writeFileSync(path.join(dir, 'sets_index.json'), setsJson);
-  const ident = { configSha256: CONFIG_SHA, registered: true };
+  const ident = { look: opts.look ?? 3, configSha256: CONFIG_SHA, registered: true };
   fs.writeFileSync(path.join(dir, 'events-counts.json'), JSON.stringify({ counts: {}, inputAggregateSha256: 'x', ...ident, eventsSha256: sha(eventsJson) }));
   fs.writeFileSync(path.join(dir, 'sets-counts.json'), JSON.stringify({ counts: {}, inputAggregateSha256: 'x', ...ident, builtFromEventsSha256: sha(eventsJson), setsIndexSha256: sha(setsJson) }));
   for (const nm of ['inputs-messages.json', 'inputs-sets.json']) fs.writeFileSync(path.join(dir, nm), JSON.stringify({ kind: nm, ...ident, files: [], aggregateSha256: 'x' }));
   const head = (what, over = {}) => JSON.stringify({ _header: { what, experiment: CONFIG.experiment, moduleWasmSha256: CONFIG.module.wasmSha256, configSha256: CONFIG_SHA, configName: 'config.json',
-    registered: true, shard: '0/1', node: `v${CONFIG.environment.node}`, manifestSha256: MANIFEST_SHA, eventsSha256: sha(eventsJson), setsIndexSha256: sha(setsJson), archiveRoot: CONFIG.archive.root, ...over } });
+    registered: true, look: opts.look ?? 3, shard: '0/1', node: `v${CONFIG.environment.node}`, manifestSha256: MANIFEST_SHA, eventsSha256: sha(eventsJson), setsIndexSha256: sha(setsJson), archiveRoot: path.join(dir, 'archive'), ...over } });
   const files = opts.files ?? { sgp4: 'rows-sgp4.jsonl', W: 'rows-W.jsonl', X: 'rows-X.jsonl' };
   const whats = { sgp4: 'rows-sgp4', W: 'rows-W', X: 'rows-X' };
   for (const [arm, f] of Object.entries(files)) fs.writeFileSync(path.join(dir, f), [head(whats[arm], arm === 'W' ? opts.headW : undefined), ...rows[arm]].join('\n') + '\n');
@@ -81,13 +82,17 @@ function makeStore(n, spec, opts = {}) {
 
 function run(dir, extraArgs = []) {
   const env = { ...process.env, CONJ_STORE: dir };
-  delete env.SDN_ARCHIVE_ROOT;
+  env.SDN_ARCHIVE_ROOT = path.join(dir, 'archive');
+  const countsFile = path.join(dir, 'events-counts.json');
+  const look = fs.existsSync(countsFile) ? JSON.parse(fs.readFileSync(countsFile, 'utf8')).look : 3;
+  if (!extraArgs.includes('--look')) extraArgs = ['--look', String(look), ...extraArgs];
   return spawnSync('python3', [path.join(EXP, 'score.py'), '--config', CONFIG_FILE, ...extraArgs], { encoding: 'utf8', env, maxBuffer: 1 << 26 });
 }
 function score(dir) {
   const r = run(dir);
   assert.equal(r.status, 0, r.stdout.slice(-300) + r.stderr);
-  return { out: r.stdout, result: JSON.parse(fs.readFileSync(path.join(dir, 'results.json'), 'utf8')) };
+  const look = JSON.parse(fs.readFileSync(path.join(dir, 'events-counts.json'), 'utf8')).look;
+  return { out: r.stdout, result: JSON.parse(fs.readFileSync(path.join(dir, `results-look${look}.json`), 'utf8')) };
 }
 const win = (extra = {}) => ({ strong: true, s: 400, w: 100, x: 300, ...extra });
 
@@ -188,7 +193,7 @@ const bad = (dir, text, extraArgs = []) => {
   assert.equal(r.status, 1, `${text}: ${r.stdout.slice(-200)}${r.stderr.slice(-200)}`);
   assert.match(r.stdout, new RegExp(`INVALID: .*${text}`));
   assert.doesNotMatch(r.stdout, /VERDICT/);
-  assert.equal(fs.existsSync(path.join(dir, 'results.json')), false, 'an invalid run leaves no results.json');
+  assert.equal(fs.existsSync(path.join(dir, 'results-look3.json')), false, 'an invalid run leaves no results.json');
 };
 
 test('INVALID: a store that cannot be the registered run is not scored (no verdict, exit 1)', { skip }, () => {
@@ -237,7 +242,7 @@ test('INVALID: a stale or foreign event table, a missing identity file, events o
 test('the registered configuration refuses --rule-table, and the results of an earlier run are removed when a later run is invalid', { skip }, () => {
   const dir = makeStore(120, () => win());
   assert.equal(run(dir).status, 0);
-  assert.equal(fs.existsSync(path.join(dir, 'results.json')), true);
+  assert.equal(fs.existsSync(path.join(dir, 'results-look3.json')), true);
   const r = run(dir, ['--rule-table']);
   assert.notEqual(r.status, 0);
   assert.match(r.stderr, /--rule-table is refused/);
@@ -251,6 +256,7 @@ function eventsFor(messages, { early, registered } = {}) {
   fs.mkdirSync(root, { recursive: true });
   fs.writeFileSync(path.join(root, '2026-11-20.json.gz'), zlib.gzipSync(JSON.stringify(messages)));
   const config = { ...CONFIG, archive: { root: path.join(dir, 'archive') }, store: path.join(dir, 'store'), messages: { ...CONFIG.messages, from: '2026-11-20', through: '2026-11-20', ...(early ? { earlyExclusionCreatedBefore: early } : {}) } };
+  delete config.looks; // The grouping controls use their original single-window configuration.
   fs.writeFileSync(path.join(dir, 'config.json'), JSON.stringify(config));
   const r = spawnSync('python3', [path.join(EXP, 'build-events.py'), '--config', path.join(dir, 'config.json')], { encoding: 'utf8' });
   assert.equal(r.status, 0, r.stderr);
@@ -300,4 +306,106 @@ test('build-events: messages without an identifier are counted; the identity fil
   const counts = JSON.parse(fs.readFileSync(path.join(dir, 'store/events-counts.json'), 'utf8'));
   assert.equal(counts.eventsSha256, sha(fs.readFileSync(path.join(dir, 'store/events.json'))));
   assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'store/inputs-messages.json'), 'utf8')).configSha256.length, 64);
+});
+
+
+test('looks: all dates, cutoffs, levels, floors and seeds are selected consistently in JavaScript', () => {
+  for (const look of CONFIG.looks) {
+    const c = readConfig(['--look', String(look.number)]);
+    assert.equal(c.runDateUtc, look.runDateUtc);
+    assert.equal(c.window.finalTo, look.finalTo);
+    assert.equal(c.messages.through, look.runDateUtc);
+    assert.equal(c.messages.createdBefore, look.createdBefore);
+    assert.equal(c.sets.createdBefore, look.createdBefore);
+    assert.equal(c.statistics.interval, 1 - 0.05 / 3);
+    assert.equal(c.statistics.seed, CONFIG.statistics.seed + 100000 * (look.number - 1));
+    assert.equal(c.statistics.minimumPrimaryEvents, look.number < 3 ? 40 : 100);
+  }
+  for (const args of [[], ['--look'], ['--look', '0'], ['--look', '4'], ['--look', '1', '--look', '2']]) {
+    assert.throws(() => readConfig(args), /--look/);
+  }
+});
+
+test('looks: early confirmation starts at 40 scored events; interim losses and uncertain results continue', { skip }, () => {
+  for (const look of [1, 2]) {
+    const early = score(makeStore(40, () => win(), { look }));
+    assert.equal(early.result['W-vs-S'].verdict, 'CONFIRMED EARLY');
+    assert.equal(early.result['W-vs-X'].verdict, 'CONFIRMED EARLY');
+    assert.equal(early.result.look.interval, 1 - 0.05 / 3);
+    assert.equal(early.result.look.seed, CONFIG.statistics.seed + 100000 * (look - 1));
+    assert.match(early.out, new RegExp(`look ${look}; interval level 98.3333333333%`));
+    const few = score(makeStore(40, (i) => win({ wState: i === 0 ? 'nofit' : undefined }), { look }));
+    assert.equal(few.result['W-vs-S'].verdict, 'CONTINUE (too few events)');
+    assert.equal(few.result['W-vs-X'].PRIMARY.events, 39);
+    const loss = score(makeStore(40, () => win({ w: 700 }), { look }));
+    assert.equal(loss.result['W-vs-S'].verdict, 'CONTINUE');
+    assert.doesNotMatch(loss.out, /: (NOT CONFIRMED|REFUTED|INSUFFICIENT)/);
+  }
+});
+
+test('looks: foreign stores and headers are invalid; a wrong look is refused', { skip }, () => {
+  bad(makeStore(40, () => win(), { look: 1 }), 'names another look', ['--look', '3']);
+  bad(makeStore(120, () => win(), { headW: { look: 1 } }), 'names another look');
+  for (const args of [['--look', '0'], ['--look', '4'], ['--look']]) {
+    const r = run(makeStore(1, () => win()), args);
+    assert.notEqual(r.status, 0);
+    assert.match(r.stderr, /--look/);
+    assert.doesNotMatch(r.stdout, /VERDICT/);
+  }
+});
+
+test('looks: each builder selects its exact half-open window and creation cutoff, and refuses incomplete starts', { skip }, () => {
+  for (const look of CONFIG.looks) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'conj-look-'));
+    const archive = path.join(dir, 'archive');
+    const root = path.join(archive, 'spacetrack/cdm_public/2026');
+    fs.mkdirSync(root, { recursive: true });
+    const store = path.join(dir, 'store');
+    const execute = (args = ['--look', String(look.number)]) => spawnSync('python3', [path.join(EXP, 'build-events.py'), ...args], {
+      encoding: 'utf8', env: { ...process.env, SDN_ARCHIVE_ROOT: archive, CONJ_STORE: store } });
+    const day = path.join(root, `${look.runDateUtc}.json.gz`);
+    const missing = execute();
+    assert.notEqual(missing.status, 0);
+    assert.match(missing.stderr, new RegExp(`day file of ${look.runDateUtc} does not exist`));
+    // A malformed earlier snapshot proves that the required-day refusal precedes reads.
+    fs.writeFileSync(path.join(root, '2026-11-16.json.gz'), 'not gzip');
+    const lo = Date.parse(CONFIG.window.finalFrom), hi = Date.parse(look.finalTo), cut = Date.parse(look.createdBefore);
+    const rows = [];
+    const tc = [lo - 1000, lo, hi - 1000, hi];
+    for (let i = 0; i < tc.length; i += 1) rows.push({ ...message(i, 0, 200, ID0 + 2*i, ID0 + 2*i + 1),
+      CREATED: iso(lo + 3600000), TCA: iso(tc[i]) });
+    rows.push({ ...message('at-cutoff', 0, 200, ID0 + 50, ID0 + 51), CREATED: iso(cut), TCA: iso(lo + 86400000) });
+    rows.push({ ...message('after-cutoff', 0, 200, ID0 + 52, ID0 + 53), CREATED: iso(cut + 1000), TCA: iso(lo + 86400000) });
+    rows.push({ ...message('before-cutoff', 0, 200, ID0 + 54, ID0 + 55), CREATED: iso(cut - 1000), TCA: iso(lo + 86400000) });
+    fs.writeFileSync(day, zlib.gzipSync(JSON.stringify(rows)));
+    const result = execute();
+    assert.equal(result.status, 0, result.stderr);
+    const events = JSON.parse(fs.readFileSync(path.join(store, 'events.json'), 'utf8'));
+    assert.deepEqual(events.map((e) => e.tca_f).sort((a,b) => a-b), [lo/1000, (lo + 86400000)/1000, (hi - 1000)/1000]);
+    assert.ok(events.every((e) => e.msgs.every((m) => m.c < cut/1000)));
+    const counts = JSON.parse(fs.readFileSync(path.join(store, 'events-counts.json'), 'utf8'));
+    assert.equal(counts.look, look.number);
+    assert.equal(counts.counts['records created at or after the creation cutoff (not used)'], 2);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(store, 'inputs-messages.json'), 'utf8')).look, look.number);
+    const repeat = execute();
+    assert.notEqual(repeat.status, 0);
+    assert.match(repeat.stderr, /store is not empty/);
+    const invalidLook = execute(['--look', '4']);
+    assert.notEqual(invalidLook.status, 0);
+    assert.match(invalidLook.stderr, /--look/);
+    const setsRoot = path.join(archive, 'spacetrack/gp_history/by-creation/2026');
+    fs.mkdirSync(setsRoot, { recursive: true });
+    const base = { NORAD_CAT_ID: String(ID0 + 2), MEAN_ELEMENT_THEORY: 'SGP4', EPHEMERIS_TYPE: 0,
+      EPOCH: '2026-11-16T00:00:00', MEAN_MOTION: 15, ECCENTRICITY: .001, INCLINATION: 50, RA_OF_ASC_NODE: 0,
+      ARG_OF_PERICENTER: 0, MEAN_ANOMALY: 0, BSTAR: 0, MEAN_MOTION_DOT: 0, MEAN_MOTION_DDOT: 0 };
+    fs.writeFileSync(path.join(setsRoot, `${look.runDateUtc}.json.gz`), zlib.gzipSync(JSON.stringify([
+      { ...base, GP_ID: 'before', CREATION_DATE: iso(cut - 1000) }, { ...base, GP_ID: 'at', CREATION_DATE: iso(cut) }
+    ])));
+    const index = spawnSync('python3', [path.join(EXP, 'build-set-index.py'), '--look', String(look.number)], {
+      encoding: 'utf8', env: { ...process.env, SDN_ARCHIVE_ROOT: archive, CONJ_STORE: store } });
+    assert.equal(index.status, 0, index.stderr);
+    const sets = JSON.parse(fs.readFileSync(path.join(store, 'sets_index.json'), 'utf8'));
+    assert.deepEqual(sets[String(ID0 + 2)].map((s) => s.gp), ['before']);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(store, 'sets-counts.json'), 'utf8')).look, look.number);
+  }
 });
