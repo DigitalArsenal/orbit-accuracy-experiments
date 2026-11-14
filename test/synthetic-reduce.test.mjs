@@ -177,3 +177,17 @@ test('empty replacement preserves a nonempty stream unless explicitly allowed', 
   const allowed = new StreamReplacement(target, [], {allowEmpty: true});
   allowed.verify(() => null); allowed.publish(); assert.equal(fs.statSync(target).size, 0);
 });
+
+
+test('both replacements verify before publication and mismatched pairs name the cause', () => {
+  const targets = ['pair-seeds.fsdata', 'pair-truth.fsdata'].map(n => path.join(dir, n));
+  for (const target of targets) fs.copyFileSync(path.join(FIX, 'records.fsdata'), target);
+  const before = targets.map(f => fs.readFileSync(f));
+  const a = new StreamReplacement(targets[0]), b = new StreamReplacement(targets[1]);
+  const bytes = [...frames(path.join(FIX, 'records.fsdata'))][0].bytes;
+  a.append(bytes, 'a'); b.append(bytes, 'b');
+  a.verify(() => 'a'); assert.throws(() => b.verify(() => 'wrong'), /identity or bytes differ/);
+  targets.forEach((f, i) => assert.deepEqual(fs.readFileSync(f), before[i]));
+  const run = reduce(); assert.equal(run.status, 0, run.stderr);
+  assert.match(JSON.parse(run.stdout).cases.find(r => r.caseId === 'fixture-no-seed').reason, /mismatched seed\/truth pair.*separate renames/);
+});

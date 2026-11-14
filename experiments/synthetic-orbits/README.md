@@ -40,7 +40,8 @@ input. An empty replacement of a non-empty target requires `--allow-empty`.
 Truth conversion accepts `--out` and `--seeds-out`; a limited conversion
 requires new output paths. Interruption before publication leaves existing targets
 intact. The two truth-converter renames are separate operations, not a transaction
-across both files. Stop concurrent stream appenders before conversion. Conversion
+across both files. Both streams are written and verified before either rename;
+seeds are renamed first, then truths. A mismatched-pair failure names this cause. Stop concurrent stream appenders before conversion. Conversion
 omits creation dates so equal seed/truth inputs produce deterministic records.
 Each converter removes its own temporary streams on normal exit, refusal, exception,
 SIGINT and SIGTERM. SIGKILL can leave temporary files. Startup reports each leftover

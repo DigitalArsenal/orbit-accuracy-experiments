@@ -103,7 +103,7 @@ for (const ref of records.values()) {
     if (!linked(pv, tf)) { finish('no-truth', { reason: tf ? 'source-frame-mismatch' : 'source-not-found' }); continue; }
     if (tf.caseId !== ref.caseId) throw Object.assign(new Error('fit and truth case identities differ'), { status: 'case-identity-mismatch' });
     const t = truthOf(tf), sf = seeds.get(t.o.PROVENANCE?.SOURCE_ID);
-    if (!linked(t.o.PROVENANCE, sf) || sf.caseId !== ref.caseId) throw Object.assign(new Error('truth and seed identities differ'), { status: 'seed-identity-mismatch' });
+    if (!linked(t.o.PROVENANCE, sf) || sf.caseId !== ref.caseId) throw Object.assign(new Error('truth and seed identities differ: mismatched seed/truth pair; conversion publishes seeds then truths in separate renames'), { status: 'seed-identity-mismatch' });
     const me = ocmOf(bytesOf(sf)).unpack().MEAN_ELEMENTS;
     const a = (MU / (((me.MEAN_MOTION * 2 * Math.PI) / 86400) ** 2)) ** (1 / 3);
     row.e = me.ECCENTRICITY; row.perigeeKm = Math.round(a * (1 - me.ECCENTRICITY) - RE_KM);

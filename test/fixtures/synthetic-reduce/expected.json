@@ -144,7 +144,7 @@
       "technique": 5,
       "class": "failed-flight",
       "status": "seed-identity-mismatch",
-      "reason": "truth and seed identities differ"
+      "reason": "truth and seed identities differ: mismatched seed/truth pair; conversion publishes seeds then truths in separate renames"
     },
     {
       "record": "5a1cc4b23024",
