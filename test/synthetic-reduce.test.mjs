@@ -93,14 +93,23 @@ test('reissue verifies complete streams, refuses input aliases and repeated trut
   const rows = [...frames(source)].map((fr) => { const o = unpack(fr.bytes); return { id: o.METADATA.OBJECT_NAME,
     ap: { record: { file: 'records.fsdata', offset: fr.offset, size: fr.size, sha256: hash(fr.bytes).slice(0, 16) } }, truth: { hash: o.PROVENANCE.SOURCE_ID } }; });
   fs.writeFileSync(path.join(local, 'rows.jsonl'), rows.map((r) => JSON.stringify(r)).join('\n'));
-  const run = (out) => spawnSync(process.execPath, [path.join(repoRoot, 'experiments/synthetic-orbits/reissue-records.mjs'), local,
-    '--truth', truth, '--wasm', found.f, '--out', out], { encoding: 'utf8', env: { ...process.env, SDM_MODULE_UNSIGNED_BUILD: '1' } });
+  const run = (out, flags = []) => spawnSync(process.execPath, [path.join(repoRoot, 'experiments/synthetic-orbits/reissue-records.mjs'), local,
+    '--truth', truth, '--wasm', found.f, '--out', out, ...flags], { encoding: 'utf8', env: { ...process.env, SDM_MODULE_UNSIGNED_BUILD: '1' } });
   const good = run(output); assert.equal(good.status, 0, good.stderr);
   const tally = JSON.parse(good.stdout); assert.equal(tally.records, 4); assert.equal(tally.flownEqual, 4); assert.equal(tally.otherFieldsEqual, 4); assert.equal(tally.problems, 0);
   const original = hash(fs.readFileSync(source)); const alias = run(source);
   assert.notEqual(alias.status, 0); assert.match(alias.stderr, /output equals input/); assert.equal(hash(fs.readFileSync(source)), original);
-  const preserved = hash(fs.readFileSync(output)); new RecordStream(truth).append([...frames(truth)][0].bytes);
-  const duplicate = run(output); assert.notEqual(duplicate.status, 0); assert.match(duplicate.stderr, /duplicate record identity:/); assert.equal(hash(fs.readFileSync(output)), preserved);
+  const preserved = hash(fs.readFileSync(output));
+  fs.writeFileSync(path.join(local, 'rows.jsonl'), rows.map(r => JSON.stringify({...r, truth: {hash: 'missing'}})).join('\n'));
+  const empty = run(output); assert.notEqual(empty.status, 0); assert.match(empty.stderr, /requires --allow-empty/);
+  assert.equal(hash(fs.readFileSync(output)), preserved);
+  assert.equal(fs.readdirSync(local).some(n => n.endsWith('.tmp')), false);
+  const allowed = run(output, ['--allow-empty']); assert.equal(allowed.status, 0, allowed.stderr); assert.equal(fs.statSync(output).size, 0);
+  fs.copyFileSync(source, output);
+  const restored = hash(fs.readFileSync(output));
+  new RecordStream(truth).append([...frames(truth)][0].bytes);
+  const duplicate = run(output); assert.notEqual(duplicate.status, 0); assert.match(duplicate.stderr, /duplicate record identity:/); assert.equal(hash(fs.readFileSync(output)), restored);
+  assert.equal(fs.readdirSync(local).some(n => n.endsWith('.tmp')), false);
 });
 
 
@@ -170,7 +179,11 @@ test('temporary streams are cleaned on controlled exits and leftovers are report
     await new Promise((resolve, reject) => {
       const child = spawn(process.execPath, ['--input-type=module', '-e', code, target, mode], {cwd: repoRoot});
       child.stderr.on('data', b => { stderr += b; });
-      child.stdout.once('data', () => child.kill(mode));
+      child.stdout.once('data', () => {
+        const command = spawnSync('ps', ['-p', String(child.pid), '-o', 'command='], {encoding: 'utf8'});
+        assert.match(command.stdout, /StreamReplacement/);
+        child.kill(mode);
+      });
       child.on('error', reject); child.on('exit', code => { assert.notEqual(code, 0); resolve(); });
     });
     assert.match(stderr, /leftover temporary stream:/);
