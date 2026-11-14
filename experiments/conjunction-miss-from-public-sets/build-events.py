@@ -1,6 +1,6 @@
 """Builds the event table from the provider's public conjunction messages and chooses the rows.
 
-  python3 build-events.py [--config config.json]
+  python3 build-events.py --look N [--config config.json]
 
 Reads the daily message files (archive/spacetrack/cdm_public/<year>/<day>.json.gz) named in the configuration, keeps only messages created before
 the configuration's creation cutoff, de-duplicates by message identifier (the last copy read is kept), groups messages of one pair whose closest-approach
@@ -20,7 +20,11 @@ def arg(name, default=None):
 
 
 CONFIG_FILE = os.path.abspath(arg('--config', os.path.join(HERE, 'config.json')))
+from look_config import select_look
+
 CONFIG = json.load(open(CONFIG_FILE))
+LOOK = select_look(CONFIG, ARGV)
+LOOK_FIELDS = {"look": LOOK["number"]} if LOOK else {}
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
 ARCHIVE = os.environ.get('SDN_ARCHIVE_ROOT') or CONFIG['archive']['root']  # an empty value is not a root
 STORE = os.path.abspath(os.environ.get('CONJ_STORE', CONFIG['store'] if os.path.isabs(CONFIG['store']) else os.path.join(REPO, CONFIG['store'])))
@@ -65,6 +69,8 @@ LEAD_BINS = CONFIG['leadBins']  # [{ "label", "from", "to", "middle" }] in days,
 TCA_GAP = CONFIG['eventGapSeconds']
 
 root = os.path.join(ARCHIVE, 'spacetrack', 'cdm_public', str(MSG['year']))
+if REGISTERED and not os.path.isfile(os.path.join(root, CONFIG['runDateUtc'] + '.json.gz')):
+    sys.exit('the day file of %s does not exist: the registered run does not start before it does' % CONFIG['runDateUtc'])
 files = sorted(f for f in os.listdir(root) if f.endswith('.json.gz') and f[:10] <= MSG['through'] and f[:10] >= MSG.get('from', '0000-00-00'))
 counts = collections.Counter()
 seen = {}
@@ -99,7 +105,7 @@ missing = [(d0 + datetime.timedelta(days=k)).isoformat() for k in range((d1 - d0
 counts['day files missing in the message range'] = len(missing)
 gaps = [(utc(m + 'T00:00:00Z'), utc(m + 'T00:00:00Z') + 4 * 86400) for m in missing]  # a missing day and the 3 days after it
 agg = hashlib.sha256(''.join('%s %s\n' % (i['file'], i['sha256']) for i in inputs).encode()).hexdigest()
-json.dump(dict(kind='messages', configSha256=CONFIG_SHA, registered=REGISTERED, missingDays=missing, files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-messages.json'), 'w'), indent=1)
+json.dump(dict(**LOOK_FIELDS, kind='messages', configSha256=CONFIG_SHA, registered=REGISTERED, missingDays=missing, files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-messages.json'), 'w'), indent=1)
 
 pairs = collections.defaultdict(list)
 for key, (r, _) in seen.items():
@@ -175,5 +181,5 @@ json.dump(events, open(os.path.join(STORE, 'events.json'), 'w'))
 print(json.dumps(dict(configSha256=hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest(), inputAggregateSha256=agg, files=len(files)), indent=1))
 for k in sorted(counts):
     print('%8d  %s' % (counts[k], k))
-json.dump(dict(counts=counts, inputAggregateSha256=agg, configSha256=CONFIG_SHA, registered=REGISTERED,
+json.dump(dict(**LOOK_FIELDS, counts=counts, inputAggregateSha256=agg, configSha256=CONFIG_SHA, registered=REGISTERED,
                eventsSha256=hashlib.sha256(open(os.path.join(STORE, 'events.json'), 'rb').read()).hexdigest()), open(os.path.join(STORE, 'events-counts.json'), 'w'), indent=1)

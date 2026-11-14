@@ -1,5 +1,5 @@
 // Verifies the frozen files, the standards bindings, the module, the weather forecaster and the environment before a run.
-//   node check.mjs [--config config.json]
+//   node check.mjs --look N [--config config.json] [--manifest-only]
 // Every line of MANIFEST.sha256 (SHA-256 and a path relative to the repository root) is compared with the file; every binding file of BINDINGS.sha256 and the
 // closure of the files they import are hashed at the path the repository's libraries import them from; the module's bytes are compared with the registered
 // SHA-256 (SDN_AP_WASM, else the configuration's path); the weather forecaster's bytes are compared with theirs; the installed versions of the packages are
@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { readConfig, HERE, REPO, SDS, sha256, verifyModule } from './lib/module.mjs';
+import { readConfig, HERE, REPO, SDS, sha256, verifyModule } from './lib/config.mjs';
 
 const config = readConfig();
 let bad = 0;
@@ -22,6 +22,13 @@ for (const line of manifest) {
   if (got !== want) fail(`DIFFERENT ${file}: ${got ?? 'absent'}, registered ${want}`);
 }
 console.log(`${manifest.length} manifest lines checked`);
+
+if (config.look) console.log(`look ${config.look.number}: run ${config.runDateUtc}, final approach before ${config.window.finalTo}, messages before ${config.messages.createdBefore}, interval ${config.statistics.interval}, seed ${config.statistics.seed}, floor ${config.statistics.minimumPrimaryEvents}`);
+// A portable registration check; module and environment verification is required for a run.
+if (process.argv.includes('--manifest-only')) {
+  console.log('manifest only: bindings, module, forecaster and environment NOT CHECKED');
+  process.exit(bad ? 1 : 0);
+}
 
 // the standards bindings
 const lines = fs.readFileSync(path.join(HERE, 'BINDINGS.sha256'), 'utf8').split('\n').filter((l) => l && !l.startsWith('#'));

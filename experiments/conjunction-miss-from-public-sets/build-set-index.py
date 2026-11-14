@@ -1,6 +1,6 @@
 """Builds the index of the public element sets of the event objects.
 
-  python3 build-set-index.py [--config config.json]
+  python3 build-set-index.py --look N [--config config.json]
 
 Reads the provider's element-set history (archive/spacetrack/gp_history/by-creation/<year>/, one file a day of creation date; partial windows are named
 <from>--<to>.json.gz) from the configuration's start day to the creation cutoff, keeps the rows of the objects of the events in the store's events.json,
@@ -20,7 +20,11 @@ def arg(name, default=None):
 
 
 CONFIG_FILE = os.path.abspath(arg('--config', os.path.join(HERE, 'config.json')))
+from look_config import select_look
+
 CONFIG = json.load(open(CONFIG_FILE))
+LOOK = select_look(CONFIG, ARGV)
+LOOK_FIELDS = {"look": LOOK["number"]} if LOOK else {}
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
 ARCHIVE = os.environ.get('SDN_ARCHIVE_ROOT') or CONFIG['archive']['root']  # an empty value is not a root
 STORE = os.path.abspath(os.environ.get('CONJ_STORE', CONFIG['store'] if os.path.isabs(CONFIG['store']) else os.path.join(REPO, CONFIG['store'])))
@@ -40,6 +44,10 @@ def ts(v):
 SETS = CONFIG['sets']
 BEFORE = ts(SETS['createdBefore'])
 START = ts(SETS['startDay'] + 'T00:00:00')
+if LOOK:
+    identity = json.load(open(os.path.join(STORE, 'events-counts.json')))
+    if identity.get('look') != LOOK['number'] or identity.get('configSha256') != hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest():
+        sys.exit('events-counts.json names another look or configuration')
 events = json.load(open(os.path.join(STORE, 'events.json')))
 want = {x for e in events for x in e['pair']}
 root = os.path.join(ARCHIVE, 'spacetrack', 'gp_history', 'by-creation', str(SETS['year']))
@@ -133,8 +141,8 @@ CONFIG_SHA = hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest()
 REGISTERED = os.path.realpath(CONFIG_FILE) == os.path.realpath(os.path.join(HERE, 'config.json'))
 json.dump(out, open(os.path.join(STORE, 'sets_index.json'), 'w'))
 sha = lambda p: hashlib.sha256(open(os.path.join(STORE, p), 'rb').read()).hexdigest()
-json.dump(dict(kind='sets', configSha256=CONFIG_SHA, registered=REGISTERED, files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-sets.json'), 'w'), indent=1)
-json.dump(dict(counts=counts, inputAggregateSha256=agg, configSha256=CONFIG_SHA, registered=REGISTERED, builtFromEventsSha256=sha('events.json'), setsIndexSha256=sha('sets_index.json')),
+json.dump(dict(**LOOK_FIELDS, kind='sets', configSha256=CONFIG_SHA, registered=REGISTERED, files=inputs, aggregateSha256=agg), open(os.path.join(STORE, 'inputs-sets.json'), 'w'), indent=1)
+json.dump(dict(**LOOK_FIELDS, counts=counts, inputAggregateSha256=agg, configSha256=CONFIG_SHA, registered=REGISTERED, builtFromEventsSha256=sha('events.json'), setsIndexSha256=sha('sets_index.json')),
           open(os.path.join(STORE, 'sets-counts.json'), 'w'), indent=1)
 print(json.dumps(dict(configSha256=hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest(), inputAggregateSha256=agg, files=len(files)), indent=1))
 for k in sorted(counts):
