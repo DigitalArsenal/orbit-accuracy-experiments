@@ -112,3 +112,31 @@ test('concurrent ensure appends each identity exactly once', async () => {
   const idx = new FrameIndex(S.OCM, S.flatbuffers, target); idx.scan();
   assert.equal(idx.map.size, 4); assert.equal([...frames(target)].length, 4);
 });
+
+
+test('a failed truth write is retried and completes its stream', () => {
+  const target = path.join(dir, 'retry.fsdata'), rowFile = path.join(dir, 'retry-row.json');
+  const code = `
+    import fs from 'node:fs';
+    import { FrameIndex } from './experiments/synthetic-orbits/identity.mjs';
+    import { frames, streamWrite, hasPersistedTruth } from './experiments/synthetic-orbits/records.mjs';
+    import * as S from './experiments/synthetic-orbits/bindings.mjs';
+    const [target, rowFile, source] = process.argv.slice(1);
+    const bytes = [...frames(source)][0].bytes;
+    const id = S.OCM.OCM.getRootAsOCM(new S.flatbuffers.ByteBuffer(bytes)).HEADER().MESSAGE_ID();
+    let row = fs.existsSync(rowFile) ? JSON.parse(fs.readFileSync(rowFile)) : {};
+    if (!hasPersistedTruth(row)) {
+      row = {truth: {hash: id}};
+      try { streamWrite('truth', () => new FrameIndex(S.OCM, S.flatbuffers, target).ensure(id, () => bytes)); }
+      catch (e) { row.error = e.message; row.streamWriteFailure = e.outcome; process.exitCode = 2; }
+      fs.writeFileSync(rowFile, JSON.stringify(row));
+    }
+  `;
+  const run = () => spawnSync(process.execPath, ['--input-type=module', '-e', code, target, rowFile, path.join(FIX, 'truth-ocm.fsdata')], {cwd: repoRoot, encoding: 'utf8'});
+  fs.mkdirSync(target); // A directory in place of the stream injects a real filesystem write failure.
+  const failed = run(); assert.equal(failed.status, 2, failed.stderr);
+  assert.equal(JSON.parse(fs.readFileSync(rowFile)).streamWriteFailure.name, 'stream-write-failed');
+  fs.rmdirSync(target);
+  const retried = run(); assert.equal(retried.status, 0, retried.stderr);
+  assert.equal([...frames(target)].length, 1); assert.equal(JSON.parse(fs.readFileSync(rowFile)).error, undefined);
+});

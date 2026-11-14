@@ -71,7 +71,7 @@ import { REPO, MODULES_ROOT, usePackages, envRecord } from '../headline-loop/lib
 import { cases as makeCases, termsOf, guardOf } from './cases.mjs';
 import { seedRecord } from './seed.mjs';
 import { FrameIndex, statedSeed, truthRecord, completeFit, seedMessageId } from './identity.mjs';
-import { streamWrite, RecordStream, recordsFileOf, withStreamedRecords } from './records.mjs';
+import { streamWrite, hasPersistedTruth, RecordStream, recordsFileOf, withStreamedRecords } from './records.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : 'true']] : acc), []));
 const SELF = new URL(import.meta.url).pathname;
@@ -255,7 +255,7 @@ async function main() {
   // (with --perigee-scan, only rows of this scan definition, scanDigest)
   // (and a row whose truth has drag counts only on the drag truth at 1e-13, DRAG_TRUTH; rows on the 1e-10 drag truth are
   // flown again, the truth read from the cache once it is warm)
-  const current = (r) => r.truth?.hash && (!r.truth.dragAreaOverMass || r.truth.setting === DRAG_TRUTH);
+  const current = (r) => hasPersistedTruth(r) && (!r.truth.dragAreaOverMass || r.truth.setting === DRAG_TRUTH);
   // (and a row of the slot's headline settings counts only at the degrees the rule gives its case under this build's version, arms.mjs
   // rowAtRuleDegrees: a row at other degrees stays as flown, is not read as done, and the case is flown again; a rung states its own degrees)
   const caseOf = new Map(all.cases.map((c) => [caseHash(c), c]));

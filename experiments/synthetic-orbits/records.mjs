@@ -137,3 +137,6 @@ export function streamWrite(stream, write) {
     throw error;
   }
 }
+
+/** A failed persistence attempt cannot complete a case, even when its truth hash exists. */
+export const hasPersistedTruth = (row) => Boolean(row.truth?.hash && !row.error && !row.streamWriteFailure);
