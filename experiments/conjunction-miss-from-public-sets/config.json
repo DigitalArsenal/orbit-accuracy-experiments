@@ -2,6 +2,35 @@
   "experiment": "conjunction-miss-from-public-sets",
   "frozen": true,
   "runDateUtc": "2026-12-15",
+  "looks": [
+    {
+      "number": 1,
+      "runDateUtc": "2026-11-24",
+      "finalTo": "2026-11-23T00:00:00Z",
+      "createdBefore": "2026-11-24T00:00:00Z",
+      "interval": 0.9833333333333333,
+      "minimumPrimaryEvents": 40,
+      "seedOffset": 0
+    },
+    {
+      "number": 2,
+      "runDateUtc": "2026-12-01",
+      "finalTo": "2026-11-30T00:00:00Z",
+      "createdBefore": "2026-12-01T00:00:00Z",
+      "interval": 0.9833333333333333,
+      "minimumPrimaryEvents": 40,
+      "seedOffset": 100000
+    },
+    {
+      "number": 3,
+      "runDateUtc": "2026-12-15",
+      "finalTo": "2026-12-14T00:00:00Z",
+      "createdBefore": "2026-12-15T00:00:00Z",
+      "interval": 0.9833333333333333,
+      "minimumPrimaryEvents": 100,
+      "seedOffset": 200000
+    }
+  ],
   "environment": { "node": "25.4.0", "numpy": "2.5.2", "python": "3.14.7" },
   "bindings": { "repository": "https://github.com/DigitalArsenal/spacedatastandards.org", "commit": "cb95255756b5d8947fa988ce1c879e886dd7d704", "list": "BINDINGS.sha256" },
   "archive": { "root": "/opt/data/sdn-archive" },

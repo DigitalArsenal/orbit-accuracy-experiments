@@ -1,6 +1,6 @@
 """Scores the registered comparisons and prints their verdicts.
 
-  python3 score.py [--config config.json] [--rule-table]
+  python3 score.py --look N [--config config.json] [--rule-table]
 
 Reads events.json, sets_index.json and the row files of the arms from the store, takes the chosen row of every event and lead bin (chosen by lead alone,
 before any arm's result is looked at), and for each registered comparison keeps the rows where both arms have a usable result (a row that fails in either
@@ -9,7 +9,7 @@ closest approach) and SECONDARY (all events). The statistics, the verdicts and e
 
   error of an arm on a row  = |arm miss - the event's final stated miss|
   H1  share of rows where the arm's error is smaller than the base's (equal errors count as not smaller), pooled over lead bins, above 50 % with the lower
-      end of its 95 % interval above 50 %; the event-averaged share is printed beside it
+      end of its configured interval above 50 %; the event-averaged share is printed beside it
   H2  ratio of the median error of the arm to the median error of the base below 1 with the upper end of its interval below 1 (undefined, so not held, when
       the base's median error is 0)
   H3  guard: events with a chosen row where the arm's miss is more than twice the base's and above 1 km, not more than events with such a row the other way
@@ -17,7 +17,8 @@ closest approach) and SECONDARY (all events). The statistics, the verdicts and e
   verdict (PRIMARY only): INSUFFICIENT (fewer than 100 events with a scored row after the drop) overrides all; CONFIRMED (H1, H2 and the guard hold);
   REFUTED (the top of the H1 interval at or below 50 %, or the bottom of the H2 interval at or above 1, or the guard failing with an exact one-sided
   binomial test on the discordant events below 0.05); NOT CONFIRMED otherwise. --rule-table prints the development table of PLAN.md's last section.
-Writes results.json and results.txt to the store.
+Interim looks confirm early with at least 40 events and otherwise continue. Look 3 requires --earlier for each interim result JSON file and prints the combined result.
+Writes results-lookN.json and results-lookN.txt to the store (results.json and results.txt for a configuration without looks).
 """
 import sys, os, re, json, glob, math, hashlib, datetime
 import numpy as np
@@ -31,7 +32,11 @@ def arg(name, default=None):
 
 
 CONFIG_FILE = os.path.abspath(arg('--config', os.path.join(HERE, 'config.json')))
+from look_config import select_look
+
 CONFIG = json.load(open(CONFIG_FILE))
+LOOK = select_look(CONFIG, ARGV)
+LOOK_FIELDS = {"look": LOOK["number"]} if LOOK else {}
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
 STORE = os.path.abspath(os.environ.get('CONJ_STORE', CONFIG['store'] if os.path.isabs(CONFIG['store']) else os.path.join(REPO, CONFIG['store'])))
 ST = CONFIG['statistics']
@@ -39,6 +44,7 @@ BANDS = CONFIG['bands']
 LEADS = CONFIG['leadBins']
 OUT = []
 RESULT = {}
+RESULT_STEM = 'results-look%d' % LOOK['number'] if LOOK else 'results'
 CONFIG_SHA = hashlib.sha256(open(CONFIG_FILE, 'rb').read()).hexdigest()
 # the registered configuration is this folder's own config.json; with it the run must be complete and consistent, or nothing is scored
 REGISTERED = os.path.realpath(CONFIG_FILE) == os.path.realpath(os.path.join(HERE, 'config.json'))
@@ -53,13 +59,56 @@ def invalid(reason):
     """A run that cannot be the registered run is not scored: no verdict, exit 1. It is repeated into an empty store; output of an earlier run is removed."""
     say('INVALID: %s' % reason)
     say('No verdict is stated. The run is repeated into an empty store.')
-    if os.path.exists(os.path.join(STORE, 'results.json')):
-        os.remove(os.path.join(STORE, 'results.json'))
-    open(os.path.join(STORE, 'results.txt'), 'w').write('\n'.join(OUT) + '\n')
+    if os.path.exists(os.path.join(STORE, RESULT_STEM + '.json')):
+        os.remove(os.path.join(STORE, RESULT_STEM + '.json'))
+    open(os.path.join(STORE, RESULT_STEM + '.txt'), 'w').write('\n'.join(OUT) + '\n')
     sys.exit(1)
 
 
 sha_file = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+
+
+def read_earlier_results():
+    """Validate both published interim results before stating any final verdict."""
+    positions = [i for i, value in enumerate(ARGV) if value == '--earlier']
+    if not LOOK or LOOK['number'] != 3:
+        if positions:
+            invalid('--earlier is only allowed at look 3')
+        return {}
+    if len(positions) != 2:
+        invalid('look 3 requires both earlier results: --earlier results-look1.json --earlier results-look2.json')
+    earlier = {}
+    for i in positions:
+        if i + 1 == len(ARGV) or ARGV[i + 1].startswith('--'):
+            invalid('--earlier requires a result file')
+        try:
+            raw = open(ARGV[i + 1], 'rb').read()
+            result = json.loads(raw)
+        except (OSError, ValueError):
+            invalid('an earlier result file is missing or unreadable')
+        if not isinstance(result, dict) or result.get('configSha256') != CONFIG_SHA or result.get('registered') != REGISTERED:
+            invalid('an earlier result names another configuration')
+        metadata = result.get('look')
+        number = metadata.get('number') if isinstance(metadata, dict) else None
+        if type(number) is not int or number not in (1, 2) or number in earlier:
+            invalid('earlier results must name distinct looks 1 and 2')
+        expected = next(x for x in CONFIG['looks'] if x['number'] == number)
+        base_seed = ST['seed'] - LOOK['seedOffset']
+        if metadata != dict(expected, seed=base_seed + expected['seedOffset']):
+            invalid('an earlier result has inconsistent look metadata')
+        verdicts = {}
+        for comparison in CONFIG['comparisons']:
+            if comparison['verdict']:
+                value = result.get(comparison['id'])
+                verdict = value.get('verdict') if isinstance(value, dict) else None
+                if verdict not in ('CONFIRMED EARLY', 'CONTINUE', 'CONTINUE (too few events)'):
+                    invalid('an earlier result lacks a valid interim verdict')
+                verdicts[comparison['id']] = verdict
+        earlier[number] = dict(look=number, sha256=hashlib.sha256(raw).hexdigest(), verdicts=verdicts)
+    return earlier
+
+
+EARLIER = read_earlier_results()
 if REGISTERED:
     mline = [l for l in open(os.path.join(HERE, 'MANIFEST.sha256')).read().split('\n') if l.endswith('/config.json')]
     if not mline or mline[0].split()[0] != CONFIG_SHA:
@@ -142,7 +191,11 @@ for a in CONFIG['arms']:
 def utc_seconds(text):
     return datetime.datetime.strptime(text.replace('Z', ''), '%Y-%m-%dT%H:%M:%S').replace(tzinfo=datetime.timezone.utc).timestamp()
 
+if LOOK:
+    say('look %d; interval level %.12g%%; seed offset %d; minimum primary events %d' % (LOOK['number'], 100 * ST['interval'], LOOK['seedOffset'], ST['minimumPrimaryEvents']))
 say('numpy %s; generator %s; percentile method %s; interval %s; resamples %d; seed %d' % (np.__version__, ST['generator'], ST['percentileMethod'], ST['interval'], ST['resamples'], ST['seed']))
+if EARLIER:
+    say('Combined rule: confirmation at any look gives CONFIRMED, except early confirmation followed by final REFUTED gives CONFLICTING and no claim; otherwise the final verdict applies.')
 say('configuration SHA-256 %s' % CONFIG_SHA)
 say('module version %s, wasm SHA-256 %s' % (CONFIG['module']['version'], CONFIG['module']['wasmSha256']))
 def check_registered_store():
@@ -153,6 +206,8 @@ def check_registered_store():
         if not os.path.exists(p):
             invalid('%s is missing from the store' % nm)
         j = json.load(open(p))
+        if LOOK and j.get('look') != LOOK['number']:
+            invalid('%s names another look' % nm)
         if j.get('configSha256') != CONFIG_SHA or not j.get('registered'):
             invalid('%s names another configuration' % nm)
     if json.load(open(os.path.join(STORE, 'events-counts.json'))).get('eventsSha256') != EVENTS_SHA:
@@ -168,6 +223,8 @@ def check_registered_store():
             invalid('an event has a final closest approach outside the registered window')
         if bool(e['strong']) != ((e['tca_f'] - e['c_last']) <= CONFIG['primaryHours'] * 3600):
             invalid('an event carries a primary flag that is not the registered rule')
+        if LOOK and any(m['c'] >= utc_seconds(CONFIG['messages']['createdBefore']) for m in e['msgs']):
+            invalid('an event contains a message at or after the look creation cutoff')
         for label, mid in e['picks'].items():
             m = MSG.get((e['idx'], mid))
             lead = None if m is None else (e['tca_f'] - m['c']) / 86400.0
@@ -197,6 +254,8 @@ def check_registered_store():
                 invalid('%s of arm %s has a header that names another file or shard' % (f, a))
             if h.get('moduleWasmSha256') != CONFIG['module']['wasmSha256']:
                 invalid('%s of arm %s names another module SHA-256' % (f, a))
+            if LOOK and h.get('look') != LOOK['number']:
+                invalid('%s of arm %s names another look' % (f, a))
             if h.get('configSha256') != CONFIG_SHA or not h.get('registered'):
                 invalid('%s of arm %s was made with another configuration' % (f, a))
             if h.get('node') != 'v' + CONFIG['environment']['node']:
@@ -248,6 +307,8 @@ for nm in ('inputs-messages.json', 'inputs-sets.json'):
         say('input manifest %s: %d files, aggregate SHA-256 %s' % (nm, len(j['files']), j['aggregateSha256']))
 for p in sorted(glob.glob(os.path.join(STORE, 'inputs-weather-*.json'))):
     j = json.load(open(p))
+    if LOOK and j.get('look') != LOOK['number']:
+        invalid('%s names another look' % os.path.basename(p))
     say('input manifest %s: %d epoch days, aggregate SHA-256 %s, weather forecaster SHA-256 %s' % (os.path.basename(p), len(j['days']), j['aggregateSha256'], j['forecasterSha256']))
 for nm in ('events-counts.json', 'sets-counts.json'):
     p = os.path.join(STORE, nm)
@@ -556,7 +617,14 @@ if not ARGV.count('--rule-table'):
             prim = RESULT[cmp_['id']]['PRIMARY']
             c = prim['cells'].get('pooled')
             n = prim['events']
-            if n < ST['minimumPrimaryEvents']:
+            if LOOK and LOOK['number'] < 3:
+                if n < ST['minimumPrimaryEvents']:
+                    v = 'CONTINUE (too few events)'
+                elif c and c['h1'] and c['h2'] and c['guard']:
+                    v = 'CONFIRMED EARLY'
+                else:
+                    v = 'CONTINUE'
+            elif n < ST['minimumPrimaryEvents']:
                 v = 'INSUFFICIENT'
             elif c is None:
                 v = 'INSUFFICIENT'
@@ -576,6 +644,14 @@ if not ARGV.count('--rule-table'):
                                                        ' (information only: INSUFFICIENT overrides every other verdict)' if v == 'INSUFFICIENT' else ''))
             RESULT[cmp_['id']]['verdict'] = v
             RESULT[cmp_['id']]['note'] = note.strip()
+            if EARLIER:
+                early = any(result['verdicts'][cmp_['id']] == 'CONFIRMED EARLY' for result in EARLIER.values())
+                combined = 'CONFLICTING' if early and v == 'REFUTED' else 'CONFIRMED' if early or v == 'CONFIRMED' else v
+                RESULT[cmp_['id']]['combinedResult'] = combined
+                say('   Earlier verdicts: ' + '; '.join('look %d %s' % (number, EARLIER[number]['verdicts'][cmp_['id']]) for number in (1, 2)))
+                say('COMBINED RESULT %s: %s%s' % (cmp_['id'], combined, '' if REGISTERED else ' (not the registered run)'))
+                if combined == 'CONFLICTING':
+                    say('   An early confirmation conflicts with the final refutation; the claim is not made.')
 
     # overlap with the development events (report only)
     ov = CONFIG.get('overlap', {}).get('developmentObjectsFile')
@@ -595,7 +671,11 @@ if not ARGV.count('--rule-table'):
 else:
     rule_table()
 
+if EARLIER:
+    RESULT['earlierResults'] = [EARLIER[number] for number in (1, 2)]
+if LOOK:
+    RESULT['look'] = dict(LOOK, seed=ST['seed'])
 RESULT['registered'] = REGISTERED
 RESULT['configSha256'] = CONFIG_SHA
-json.dump(RESULT, open(os.path.join(STORE, 'results.json'), 'w'), indent=1, default=float)  # may contain the bare token NaN where a base median error is 0 (not strict JSON)
-open(os.path.join(STORE, 'results.txt'), 'w').write('\n'.join(OUT) + '\n')
+json.dump(RESULT, open(os.path.join(STORE, RESULT_STEM + '.json'), 'w'), indent=1, default=float)  # may contain the bare token NaN where a base median error is 0 (not strict JSON)
+open(os.path.join(STORE, RESULT_STEM + '.txt'), 'w').write('\n'.join(OUT) + '\n')

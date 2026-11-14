@@ -1,6 +1,54 @@
 # Registered test: closest-approach misses of real conjunctions from public element sets, on SGP4 and on AP and SGP4-XP records
 
-Registered by the commit that merges this folder, before the test window opens at 2026-11-16T00:00Z. The platform's recorded merge time is the registration time. `config.json` holds the same numbers for the code; `MANIFEST.sha256` lists every frozen file with its SHA-256 and `BINDINGS.sha256` the standards bindings. An amendment is a dated section at the end of this file with its reason.
+## Amendment: three registered looks (2026-11-14)
+
+**The final look has wider intervals and less power than the original single run.** At 194 primary events and a true H1 share of 60 %, the chance of confirmation at the final look falls from 80.67 % to 66.60 % under the original normal-interval approximation (exact binomial sums, `power.py`). The final REFUTED rule uses the same wider intervals: at a true share of 40 % and 194 events, the chance of H1 correctly refuting also falls from 80.67 % to 66.60 % by the exact binomial sum. The same approximation in the nested simulation gives 66.600 % confirmation at the final look and 70.332 % at any of the three looks for a true share of 60 %. These figures concern H1 alone, not the joint H1/H2/H3 verdict.
+
+An answer earlier than 2026-12-15 is needed. This amendment is dated 2026-11-14, before the window opens at 2026-11-16T00:00Z and before any message created after the development cutoff of 2026-11-12T07:28:00Z was read. No real message or element-set data were read for this amendment. The merge timestamp records its registration.
+
+| look | run date (UTC) | final closest-approach window (UTC, end excluded) | message creation cutoff (UTC, excluded) | minimum primary events with a scored row | seed offset |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 2026-11-24 | 2026-11-16 to 2026-11-23 | 2026-11-24T00:00:00Z | 40 | 0 |
+| 2 | 2026-12-01 | 2026-11-16 to 2026-11-30 | 2026-12-01T00:00:00Z | 40 | 100000 |
+| 3 (final) | 2026-12-15 | 2026-11-16 to 2026-12-14 | 2026-12-15T00:00:00Z | 100 | 200000 |
+
+Each look is a complete, separate run from an empty store over all events in its window. No look reuses a previous look's store; final scoring reads only the two published interim result files to combine the verdicts. The file of that look's run date must exist before any message file is read. Messages are filtered by that look's creation-time cutoff; the element-set index uses the same cutoff and retains the original choice of sets available at each message's creation time. The final window and final message cutoff are unchanged.
+
+Every registered H1 and H2 interval, in every population and cell, has the two-sided level `1 - 0.05/3` (98.33333333333333 %), with percentile endpoints 0.8333333333 and 99.1666666667. The Bonferroni split over three looks does not require independence between looks. The three looks together have approximately the false-confirmation chance of the original single run. This is approximate error control: it inherits the coverage accuracy of the registered percentile bootstrap, and neither that bootstrap nor the normal approximation guarantees the nominal finite-sample rate. At particular event counts the combined rate can exceed the original single run's own rate; the simulation below describes only its listed counts. The event bootstrap, 2,000 resamples, linear percentile method, H3 guard, comparison and cell offsets, recipes, pinned module and environment, row choices, exclusions, drops and all other statistics are unchanged. The base seed at look N is `20261215 + 100000 * (N - 1)`, followed by the original comparison, population and cell offsets. In particular the final seed is 20461215, different from the original single run's 20261215.
+
+At looks 1 and 2 each registered comparison prints **CONFIRMED EARLY** if H1, H2 and H3 hold and at least 40 primary events have a scored row. Otherwise it prints **CONTINUE**, or **CONTINUE (too few events)** below 40; an interim look prints no negative verdict. At look 3 the original CONFIRMED, REFUTED, NOT CONFIRMED and INSUFFICIENT rules apply, with the wider intervals and the original floor of 100. Every later look is also run and published. Each comparison has one combined result: **CONFIRMED** if any interim look prints CONFIRMED EARLY or the final look prints CONFIRMED, except that an early confirmation followed by final REFUTED gives **CONFLICTING** and the claim is not made. Otherwise the combined result is the final look's verdict. A final NOT CONFIRMED or INSUFFICIENT is stated beside any early confirmation. The two registered comparisons retain separate verdicts; X against S has no verdict. Early confirmation selects an upward-biased share (at 45 events it needs an observed share of about 69 %) and a favorably biased ratio (toward smaller error ratios); these are not reported as estimates of the effect. The effect estimates are the final look's.
+
+`config.json` holds the dates, cutoffs, levels, floors and seed offsets. Its top-level `statistics.interval`, `statistics.seed` and `statistics.minimumPrimaryEvents` retain the original single-run values and are replaced by each selected look's values. Every configuration-dependent run command takes `--look N`; `score.py` prints the look, level, seed and verdict, and writes `results-lookN.txt` and `results-lookN.json`. At look 3, `score.py` requires two `--earlier <file>` arguments, for the published `results-look1.json` and `results-look2.json`. It verifies their configuration hashes, registered identity, distinct look numbers, selected metadata and interim verdicts before scoring, and prints each combined result beside its final verdict. The final JSON records the earlier files' SHA-256 values and verdicts; their order on the command line does not matter. Counts, input manifests, check output and power output also carry the look in their published filenames, as specified below. The unamended development configuration retains its original statistics and filenames.
+
+### Power of the looks
+
+`python3 power.py` retains the original table and simulates 200,000 nested tests per cell: one chosen row per event, independent Bernoulli trials with true share p, normal intervals as in the original power approximation. Independent increments give nested counts. The base seed is 20261114, plus 100 times the size index (194, 150, 100), plus the share index (50, 55, 60, 62, 64, 65 %). The expected counts for looks 1 and 2 are calendar scalings, not observed event counts; the early-exclusion rule lowers the first look's count. Counts for a final 150 or 100 are scaled from 45/95/194 and rounded to the nearest integer. The registered floors apply: look 1 has 35 or 23 events in the second and third scenarios and cannot confirm. Each look column is the chance of confirmation at that look, regardless of an earlier result; each cumulative column is the chance of at least one confirmation through that look. This is an approximation to H1's event-bootstrap power, not a simulation of H2 or H3.
+
+| events at looks 1/2/3 | true share | look 1 | look 2 | look 3 | through 1 | through 2 | through 3 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 45/95/194 | 50% | 0.816% | 1.209% | 0.893% | 0.816% | 1.762% | 2.364% |
+| 45/95/194 | 55% | 4.118% | 9.886% | 16.358% | 4.118% | 11.576% | 21.363% |
+| 45/95/194 | 60% | 14.297% | 38.014% | 66.600% | 14.297% | 40.343% | 70.332% |
+| 45/95/194 | 62% | 21.366% | 53.602% | 84.293% | 21.366% | 55.719% | 86.330% |
+| 45/95/194 | 64% | 30.428% | 68.975% | 94.331% | 30.428% | 70.593% | 95.115% |
+| 45/95/194 | 65% | 35.134% | 75.923% | 96.990% | 35.134% | 77.280% | 97.426% |
+| 35/73/150 | 50% | 0.000% | 0.912% | 0.872% | 0.000% | 0.912% | 1.555% |
+| 35/73/150 | 55% | 0.000% | 6.617% | 12.501% | 0.000% | 6.617% | 15.123% |
+| 35/73/150 | 60% | 0.000% | 26.144% | 53.656% | 0.000% | 26.144% | 56.571% |
+| 35/73/150 | 62% | 0.000% | 38.415% | 72.311% | 0.000% | 38.415% | 74.386% |
+| 35/73/150 | 64% | 0.000% | 52.536% | 86.481% | 0.000% | 52.536% | 87.633% |
+| 35/73/150 | 65% | 0.000% | 59.730% | 91.211% | 0.000% | 59.730% | 92.014% |
+| 23/49/100 | 50% | 0.000% | 1.063% | 1.075% | 0.000% | 1.063% | 1.829% |
+| 23/49/100 | 55% | 0.000% | 5.469% | 9.572% | 0.000% | 5.469% | 12.005% |
+| 23/49/100 | 60% | 0.000% | 18.366% | 38.224% | 0.000% | 18.366% | 41.584% |
+| 23/49/100 | 62% | 0.000% | 26.735% | 54.182% | 0.000% | 26.735% | 57.163% |
+| 23/49/100 | 64% | 0.000% | 37.197% | 69.889% | 0.000% | 37.197% | 72.149% |
+| 23/49/100 | 65% | 0.000% | 42.873% | 76.858% | 0.000% | 42.873% | 78.733% |
+
+At the listed counts, the p = 50 % rows give overall false-confirmation estimates of 2.364 %, 1.555 % and 1.829 %. Their Monte Carlo standard errors are 0.034, 0.028 and 0.030 percentage points (approximate 95 % margins ±0.067, ±0.054 and ±0.059 points). The original single-run normal approximation gives 2.614 %, 3.001 % and 2.844 % at the same final counts, by exact binomial sums. These figures do not establish an absolute 2.5 % bound or a universal improvement over the original rate. For any table entry q as a fraction, the Monte Carlo standard error is `sqrt(q * (1-q) / 200000)`, at most 0.112 percentage points; the normal approximation adds unquantified error. `power.py` stops above 3.5 % only as a programming-error sanity check, not a pass/fail test of the design's statistical error control. These are synthetic H1 calculations, not observed test results.
+
+
+Registered by the commit that merges this folder, before the test window opens at 2026-11-16T00:00Z. The platform's recorded merge time is the registration time. `config.json` holds the same numbers for the code; `MANIFEST.sha256` lists every frozen file with its SHA-256 and `BINDINGS.sha256` the standards bindings. Amendments are dated sections with their reasons; the three-look amendment is at the top of this file.
 
 ## Question
 
@@ -17,7 +65,7 @@ All development figures were read on events with final closest approaches from 2
 
 Arms F, K, C and W were defined and scored on the development events in that order; W was defined after F, K and C had been scored on the same events, so the development figures favor W. Arm X was run once, with no variant. The rule that chose W is in the last section. A test event may involve an object or pair seen in development; the share of primary events whose pair, or either object, was in a development event is reported (no verdict role).
 
-An event with any message created before 2026-11-12T07:28:00Z is excluded from the test and counted. No message created after that time was read before the run date.
+An event with any message created before 2026-11-12T07:28:00Z is excluded from the test and counted. No message created after that time was read before the registration and the three-look amendment.
 
 ## Sources
 
@@ -31,16 +79,16 @@ Every orbit propagation and every fit is done by this build. The closest-approac
 
 ## What makes a run invalid
 
-With the registered configuration (this folder's `config.json`, whose SHA-256 must equal its line in `MANIFEST.sha256`), `build-events.py` refuses to start unless the store is empty and unless the day file of 2026-12-15 exists, and `score.py` prints `INVALID: <reason>` and exits 1, before any verdict, if: a row file or fit file of the store has no header, or a header names another module SHA-256, another configuration, another manifest of frozen files, another Node version, another file or shard than its file name says, or (arm W fits) another weather forecaster SHA-256; the headers name more than one archive root, or a root other than the one `score.py` runs with; an arm has both sharded and unsharded files, or an incomplete set of shards; a chosen row of any registered arm was never run, or an arm's rows are not exactly the chosen rows, once each (a missing, extra or repeated row, or an S row that disagrees with the event table about its message); the fits were run with a limit, or a fit row records an exception; `events-counts.json`, `sets-counts.json`, `inputs-messages.json` or `inputs-sets.json` is missing or names another configuration; `events.json` or `sets_index.json` is not the file whose SHA-256 the counts files and every header carry (a stale store, or one built under another configuration, or a set index built from another event table); an event has a final closest approach outside the registered window, a primary flag that is not the registered rule, or a chosen row outside its lead bin. `--limit` and a non-default modules root are refused by the scripts with the registered configuration, `--rule-table` is refused by `score.py`, and `--shard` is allowed (the fits run in shards). An invalid run removes the `results.json` an earlier run left, and is repeated into an empty store; no amendment is needed, because nothing was scored. With any other configuration every verdict line ends with "(not the registered run)" and `results.json` records whether the run is the registered one. A fit refused by the module is a counted result, not an invalid run; every other error inside a fit stops the run with a non-zero exit (see Arms).
+With the registered configuration (this folder's `config.json`, whose SHA-256 must equal its line in `MANIFEST.sha256`), `build-events.py` refuses to start unless the store is empty and unless the day file of the selected look's run date exists, and `score.py` prints `INVALID: <reason>` and exits 1, before any verdict, if: a row file or fit file of the store has no header, or a header names another module SHA-256, another configuration, another manifest of frozen files, another Node version, another file or shard than its file name says, or (arm W fits) another weather forecaster SHA-256; the headers name more than one archive root, or a root other than the one `score.py` runs with; an arm has both sharded and unsharded files, or an incomplete set of shards; a chosen row of any registered arm was never run, or an arm's rows are not exactly the chosen rows, once each (a missing, extra or repeated row, or an S row that disagrees with the event table about its message); the fits were run with a limit, or a fit row records an exception; `events-counts.json`, `sets-counts.json`, `inputs-messages.json` or `inputs-sets.json` is missing or names another configuration or look; a row or fit header or a weather input manifest names another look; an event contains a message at or after the selected look's cutoff; `events.json` or `sets_index.json` is not the file whose SHA-256 the counts files and every header carry (a stale store, or one built under another configuration, or a set index built from another event table); an event has a final closest approach outside the registered window, a primary flag that is not the registered rule, or a chosen row outside its lead bin. `--limit` and a non-default modules root are refused by the scripts with the registered configuration, `--rule-table` is refused by `score.py`, and `--shard` is allowed (the fits run in shards). An invalid run removes the selected look's `results-lookN.json` an earlier run left, and is repeated into an empty store; no amendment is needed, because nothing was scored. With any other configuration every verdict line ends with "(not the registered run)" and `results-lookN.json` records whether the run is the registered one. A fit refused by the module is a counted result, not an invalid run; every other error inside a fit stops the run with a non-zero exit (see Arms).
 
 ## Events
 
-An event is a pair of objects and a closest approach in the provider's public conjunction messages (daily files `spacetrack/cdm_public/<year>/<day>.json.gz` of the archive's daily collection, which reads the provider's public conjunction-message class with a registered account; a day file is the snapshot taken after 17:00 UTC on its date, holding the messages of the last two days, and messages are chosen by their own creation time, not by the file's date; files from 2026-10-11 through 2026-12-15 are read. A message created before 2026-12-15T00:00Z is reachable in the file of 2026-12-14 or of 2026-12-15; the file of 2026-12-15 must exist before the run starts, and `build-events.py` refuses to start without it. A day without a file counts as a missing day).
+An event is a pair of objects and a closest approach in the provider's public conjunction messages (daily files `spacetrack/cdm_public/<year>/<day>.json.gz` of the archive's daily collection, which reads the provider's public conjunction-message class with a registered account; a day file is the snapshot taken after 17:00 UTC on its date, holding the messages of the last two days, and messages are chosen by their own creation time, not by the file's date; files from 2026-10-11 through the selected look's run date are read. A message created before the look's midnight cutoff is reachable in the day file before the run date or the day file of the run date; the latter must exist before the run starts, and `build-events.py` refuses to start without it. A day without a file counts as a missing day).
 
-- Only messages created before 2026-12-15T00:00Z are read, by a cutoff on creation time in `build-events.py`. Messages are de-duplicated by message identifier; the last copy read is kept and the number of identifiers seen again with different content is counted; messages without an identifier share one key and are counted (the development read counts none). Messages with an unparseable closest-approach time, creation time or miss are dropped and counted. Unreadable day files and days without a file in the message range are counted; an event with a message created within 3 days after a missing day is flagged and kept.
+- Only messages created before the selected look's cutoff are used, by a cutoff on creation time in `build-events.py`. Messages are de-duplicated by message identifier; the last copy read is kept and the number of identifiers seen again with different content is counted; messages without an identifier share one key and are counted (the development read counts none). Messages with an unparseable closest-approach time, creation time or miss are dropped and counted. Unreadable day files and days without a file in the message range are counted; an event with a message created within 3 days after a missing day is flagged and kept.
 - Messages of one pair, in order of closest-approach time, belong to one event while consecutive closest-approach times differ by 60 s or less. A conjunction whose predicted closest-approach time moves by more than 60 s between messages is two events, and an old message does not exclude an event it is not grouped with.
 - The reference message of an event is its last message by (creation time, message identifier); identifiers compare as text. Its closest-approach time and stated miss are the event's final values. The reference may be created after the final closest approach.
-- The test window is every event whose final closest approach lies from 2026-11-16T00:00Z up to 2026-12-14T00:00Z. The run date is 2026-12-15.
+- Each test window starts at 2026-11-16T00:00Z and excludes its end: 2026-11-23T00:00Z for look 1, 2026-11-30T00:00Z for look 2, and 2026-12-14T00:00Z for look 3. The run dates are 2026-11-24, 2026-12-01 and 2026-12-15, respectively.
 - Events with any message created before 2026-11-12T07:28:00Z are excluded and counted.
 
 Rows. The lead of a message is the final closest-approach time minus the message's creation time. The reference message is not scored (it cannot be scored against itself). A message with a negative lead is counted and not scored. Lead bins are half-open: 0 to 0.5 d, 0.5 to 1 d, 1 to 2 d and 2 to 3.0001 d (3 d plus 8.6 s, so a lead in [3, 3.0001) is scored in the last bin); a lead of 3.0001 d or more is counted and not scored. **The row of an event and lead bin is the message whose lead is nearest the bin's middle (0.25, 0.75, 1.5, 2.5 d), compared as floating-point numbers; on equal distance the earlier-created message is taken. The row is chosen by lead alone, before any set is looked up and before any arm is run.** A row that then fails in an arm (no set for an object, a refused fit, a refused flight) is left out of the comparisons that use that arm and counted by reason; no other message takes its place. A row without a set for an object is left out of every comparison. A refused S flight leaves a row out only of the comparisons whose arm or base is S; the sets' facts (epochs, set identifiers) are read from the S row whether or not its flight succeeded.
@@ -86,26 +134,26 @@ For a row, both objects' states are taken in one inertial frame every second ove
 
 Every statistic is computed by `score.py`, which also prints the verdicts. The three statistics are computed on the rows of one population, pooled over lead bins, for one comparison (an arm against a base).
 
-- **H1.** The share of rows in which the arm's error is smaller than the base's, above 50 % with the lower end of its 95 % interval above 50 %. A row with equal errors counts as not smaller. The share is over all paired rows (row-weighted); the event-averaged share is printed beside it.
-- **H2.** The ratio of the median error of the arm to the median error of the base, below 1 with the upper end of its 95 % interval below 1. If the base's median error is 0 the ratio is undefined and H2 is not held; resamples whose base median error is 0 are left out of the interval and counted.
+- **H1.** The share of rows in which the arm's error is smaller than the base's, above 50 % with the lower end of its 98.33333333333333 % interval above 50 %. A row with equal errors counts as not smaller. The share is over all paired rows (row-weighted); the event-averaged share is printed beside it.
+- **H2.** The ratio of the median error of the arm to the median error of the base, below 1 with the upper end of its 98.33333333333333 % interval below 1. If the base's median error is 0 the ratio is undefined and H2 is not held; resamples whose base median error is 0 are left out of the interval and counted.
 - **H3 (guard).** Let `nA` be the number of events with a chosen row in which the arm's miss is more than twice the base's miss and the arm's miss (the larger of the two) is above 1 km, and `nB` the number with such a row the other way round. An event counts once in `nA` and once in `nB` even if different rows qualify, so such an event is counted twice in `nA + nB`. The guard holds if `nA` is not more than `nB`.
 
-Intervals: 2,000 resamples of events with replacement (all rows of a drawn event kept together), percentile method linear (`numpy.percentile`; the `numpy` version is printed in every output and registered as 2.5.2), generator `numpy.random.default_rng` with the seed 20261215 plus 1,000 times the comparison's position (W against S 0, W against X 1, X against S 2) plus 100 times the population's position (PRIMARY 0, SECONDARY 1) plus the cell's index in the fixed list `CELLS` of `score.py` (printed with its indexes at the top of the comparisons).
+Intervals: 2,000 resamples of events with replacement (all rows of a drawn event kept together), percentile method linear (`numpy.percentile`; the `numpy` version is printed in every output and registered as 2.5.2), generator `numpy.random.default_rng` with the seed 20261215 plus 100,000 times (look number minus 1), plus 1,000 times the comparison's position (W against S 0, W against X 1, X against S 2) plus 100 times the population's position (PRIMARY 0, SECONDARY 1) plus the cell's index in the fixed list `CELLS` of `score.py` (printed with its indexes at the top of the comparisons).
 
-`results.json` can contain the bare token NaN where a base median error is 0; it is not strict JSON.
+`results-lookN.json` can contain the bare token NaN where a base median error is 0; it is not strict JSON.
 
-Verdicts, one per registered comparison, on the PRIMARY population:
+Final-look verdicts, one per registered comparison, on the PRIMARY population (interim verdicts follow the amendment above):
 
 - **INSUFFICIENT:** fewer than 100 primary events with a scored row, counted after the drop. This overrides every other outcome; the H1, H2 and guard values are printed as information only. The floor guards against a change in the provider's publication; it is not a power floor.
 - **CONFIRMED:** H1, H2 and the guard all hold.
 - **REFUTED:** the top of the H1 interval is at or below 50 % (an all-tie result reads REFUTED), or the bottom of the H2 interval is at or above 1, or the guard fails and an exact one-sided binomial test (probability 0.5) on the `nA + nB` discordant events gives a probability below 0.05.
 - **NOT CONFIRMED:** every other outcome, including a guard that fails without that significance. A NOT CONFIRMED on fewer than about 190 primary events is reported as under the expected size, with the width of the H1 interval.
 
-The SECONDARY population carries the same statistics and the H1, H2 and guard flags (`results.json`); it carries no verdict word. The X against S comparison carries the statistics and no verdict.
+The SECONDARY population carries the same statistics and the H1, H2 and guard flags (`results-lookN.json`); it carries no verdict word. The X against S comparison carries the statistics and no verdict.
 
 Tables. For each comparison and population: the three statistics for the pooled rows; by lead bin; by perigee band of the lower object (under 600, 600 to 1,000, 1,000 to 2,000 km, higher; perigee from each set's mean motion and eccentricity with radius 6,378.137 km); by set age (the older of the two sets' message creation time minus epoch; under 1 d, 1 to 2 d, over 2 d); by pair type (debris with debris, debris with payload, debris with rocket body, the rest); and the lead by perigee cross cells. **Everything printed for publication that is an analysis cell, a distribution, a report-only figure or an overlap share with fewer than 20 events prints FEW and its event count, and no figure.** Counts of rows, drops and flags are printed as counts. Also printed, for each arm, pooled and by lead bin: median, 68th, 90th and 95th percentile of the miss and of the error; the share of rows with a miss under 1, 2, 5, 10, 20 and 50 km; the median and 90th percentile of the difference of closest-approach times against the final message. Report-only figures with no verdict role: the share of rows where the arm's miss is under the base's miss; the median of (miss minus final miss) per arm; the H1 share by band of the final miss (under 100 m, 100 to 300 m, 300 to 1,000 m, over 1,000 m); the share of primary events whose pair or either object was in a development event. The last needs `development-objects.json` in the store, `{"objects": [object identifiers], "pairs": [[smaller identifier, larger identifier], ...]}`, kept outside the repository and copied into the store after `build-events.py` and before `score.py` (the store is otherwise empty when the run starts); with no file the script prints "development overlap: file absent".
 
-## Power
+## Original single-run power (95 % intervals; superseded by the amendment)
 
 For H1 alone. Method (`power.py`): one chosen row per event, each an independent trial that is "smaller" with probability `p` (the true share); H1 holds when the lower end of the normal 95 % interval of the observed share is above 50 %; the chance is the exact binomial sum over the outcomes that satisfy this. Rows of one event are not independent and the registered interval is an event bootstrap, so the figures are approximate. In development, 236 events with a strong reference in about 34 days of messages (6.9 a day) gave about 194 primary events for the 28-day window and about 480 events in all. The early-exclusion rule removes events with a message created before 2026-11-12T07:28:00Z, which are events whose closest approach falls in roughly the first days of the window, so the expected primary count is somewhat below 194; the power rows for 150 and 100 events apply.
 
@@ -116,7 +164,7 @@ For H1 alone. Method (`power.py`): one chosen row per event, each an independent
 | 194 | 0.29 | 0.81 | 0.93 | 0.98 |
 | 250 | 0.35 | 0.89 | 0.97 | 0.99 |
 
-At about 194 primary events and a true share of 60 % the chance that H1 holds is about 0.8. The development share of arm W on the primary population is 65 %, a figure read on the events that also chose the recipe.
+For the original single run, at about 194 primary events and a true share of 60 % the chance that H1 holds was about 0.8; the amended figures are above. The development share of arm W on the primary population is 65 %, a figure read on the events that also chose the recipe.
 
 ## What this cannot show
 
@@ -134,27 +182,33 @@ Frozen: every file listed in `MANIFEST.sha256` (this folder's scripts, configura
 
 The archive root and the run's store must not contain the substrings in `hold-gate.mjs` (including "udl"); otherwise arm W stops with HOLD_GATE_VIOLATION.
 
-Run, on 2026-12-15, each command from this folder with the module's bytes at `SDN_AP_WASM` (extracted with `git show 6a807990a2ed004295c0cfe80f612205fc28d784:propagator/sdn-ap/dist/isomorphic/module.wasm`), the forecaster in place, and the store `CONJ_STORE` empty:
+Run look 1 on 2026-11-24, look 2 on 2026-12-01, and look 3 on 2026-12-15. Set `LOOK` to the look number and `CONJ_STORE` to a separate empty store for each look. Run each command from this folder with the module's bytes at `SDN_AP_WASM` (extracted with `git show 6a807990a2ed004295c0cfe80f612205fc28d784:propagator/sdn-ap/dist/isomorphic/module.wasm`), the forecaster in place, and the store `CONJ_STORE` empty:
 
 ```
 npm ci
-node check.mjs
-python3 build-events.py
-python3 build-set-index.py
-node fly-sgp4.mjs
-node fit-records.mjs --arm W
-node fly-records.mjs --arm W
-node fit-records.mjs --arm X
-node fly-records.mjs --arm X
-python3 score.py
+node check.mjs --look "$LOOK"
+python3 build-events.py --look "$LOOK"
+python3 build-set-index.py --look "$LOOK"
+node fly-sgp4.mjs --look "$LOOK"
+node fit-records.mjs --arm W --look "$LOOK"
+node fly-records.mjs --arm W --look "$LOOK"
+node fit-records.mjs --arm X --look "$LOOK"
+node fly-records.mjs --arm X --look "$LOOK"
+if [ "$LOOK" = 3 ]; then
+  python3 score.py --look 3 --earlier "$LOOK1_RESULT" --earlier "$LOOK2_RESULT"
+else
+  python3 score.py --look "$LOOK"
+fi
 python3 power.py
 ```
 
-(`fit-records.mjs` may be run in shards, `--shard i/n`, one process each, before its `fly-records.mjs`. `SDN_ARCHIVE_ROOT` points every command at another archive path and must be the same for all commands of the run; the root is written into every header, and `score.py` stops on headers that disagree.) The run writes an input manifest per input kind (messages and sets: per day file the name, record count and SHA-256, and one aggregate SHA-256 of the text of one line `<file name> <SHA-256 of the file>` per day file in name order; weather: the files read per epoch day with their SHA-256). The 33 message files archived through 2026-11-12 have the aggregate SHA-256 `6b2d6e1e5138e3dd35fb1191481e43072880295bc66f9a321bcdc87df8799938`; the run's aggregate covers every day file in its range, so the registered value is checked against its own files with `python3 -c "import hashlib,json; j=json.load(open('inputs-messages.json')); print(hashlib.sha256(''.join('%s %s\n' % (f['file'], f['sha256']) for f in j['files'] if f['file'] <= '2026-11-12.json.gz').encode()).hexdigest())"`. Messages created before this registration's merge may belong to test inputs; that is allowed because the recipes are fixed.
+For look 3, `LOOK1_RESULT` and `LOOK2_RESULT` name the published `results-look1.json` and `results-look2.json`. These two aggregate files are required even when neither interim look confirmed; no earlier event, row, fit or index is reused.
 
-Published: `results.txt`, `results.json`, `events-counts.json`, `sets-counts.json`, `inputs-messages.json`, `inputs-sets.json`, every `inputs-weather-W*.json` and the outputs of `check.mjs` and `power.py`: aggregates only (counts, percentiles, shares, ratios, intervals; no row, no object identifier, no name of an object). Not published: every other file in the store.
+(`fit-records.mjs` may be run in shards, `--shard i/n`, one process each, before its `fly-records.mjs`. `SDN_ARCHIVE_ROOT` points every command at another archive path and must be the same for all commands of the run; the root is written into every header, and `score.py` stops on headers that disagree.) The run writes an input manifest per input kind (messages and sets: per day file the name, record count and SHA-256, and one aggregate SHA-256 of the text of one line `<file name> <SHA-256 of the file>` per day file in name order; weather: the look number and files read per epoch day with their SHA-256). The 33 message files archived through 2026-11-12 have the aggregate SHA-256 `6b2d6e1e5138e3dd35fb1191481e43072880295bc66f9a321bcdc87df8799938`; the run's aggregate covers every day file in its range, so the registered value is checked against its own files with `python3 -c "import hashlib,json; j=json.load(open('inputs-messages.json')); print(hashlib.sha256(''.join('%s %s\n' % (f['file'], f['sha256']) for f in j['files'] if f['file'] <= '2026-11-12.json.gz').encode()).hexdigest())"`. Messages created before this registration's merge may belong to test inputs; that is allowed because the recipes are fixed.
 
-Nothing in this folder changes between the merge and the run. A change after 2026-11-16T00:00Z is an amendment with its date and reason.
+Published per look N: `results-lookN.txt`, `results-lookN.json`, `events-counts-lookN.json`, `sets-counts-lookN.json`, `inputs-messages-lookN.json`, `inputs-sets-lookN.json`, every weather input manifest with `-lookN` inserted before `.json` (for example `inputs-weather-W-0of4-look1.json`), `check-lookN.txt` and `power-lookN.txt`. Counts and input manifests retain their original filenames inside each separate store; publication copies add the look suffix. All published outputs are aggregates only (counts, percentiles, shares, ratios, intervals; no row, no object identifier, no name of an object). Not published: every other file in the store.
+
+The amended files are frozen by the amendment merge before the window opens and remain identical through all three looks. A change after 2026-11-16T00:00Z is an amendment with its date and reason.
 
 ## Development figures and how W was chosen
 

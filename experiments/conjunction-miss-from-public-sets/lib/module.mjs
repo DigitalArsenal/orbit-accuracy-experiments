@@ -2,49 +2,13 @@
 // search over two flights. Every orbit propagation and every fit is done by the module; the search and the scoring are script code.
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
 import { createStandaloneHarness } from 'space-data-module-sdk/testing/isomorphic';
 
-export const HERE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const REPO = path.resolve(HERE, '../..');
-export const STACK = path.resolve(REPO, '../../..');
-export const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+import { HERE, REPO, SDS, sha256, shardOf, verifyModule } from './config.mjs';
+export { HERE, REPO, STACK, SDS, sha256, readConfig, shardOf, modulePath, verifyModule } from './config.mjs';
 
-/** The configuration of a run: --config <file> (default config.json beside the scripts); SDN_ARCHIVE_ROOT overrides the archive root. */
-export function readConfig(argv = process.argv.slice(2)) {
-  const i = argv.indexOf('--config');
-  const file = i >= 0 ? path.resolve(argv[i + 1]) : path.join(HERE, 'config.json');
-  const config = JSON.parse(fs.readFileSync(file, 'utf8'));
-  config.file = file;
-  config.configSha256 = sha256(fs.readFileSync(file));
-  if (config.frozen !== true) throw new Error('config.json is not frozen: a step never reads a test window while the plan is not frozen');
-  config.archiveRoot = process.env.SDN_ARCHIVE_ROOT || config.archive.root; // an empty value is not a root
-  config.storeDir = path.resolve(process.env.CONJ_STORE ?? (path.isAbsolute(config.store) ? config.store : path.join(REPO, config.store)));
-  // the registered configuration is this folder's own config.json: its SHA-256 must be the one in MANIFEST.sha256 and no option may change the run
-  config.registered = fs.realpathSync(file) === fs.realpathSync(path.join(HERE, 'config.json'));
-  if (config.registered) {
-    const line = fs.readFileSync(path.join(HERE, 'MANIFEST.sha256'), 'utf8').split('\n').find((l) => l.endsWith('/config.json'));
-    if (!line || line.split(/\s+/)[0] !== config.configSha256) throw new Error('config.json differs from its line in MANIFEST.sha256: the registered configuration is refused');
-    if (process.env.SDN_MODULES_ROOT) throw new Error('SDN_MODULES_ROOT is set: a non-default modules root is refused with the registered configuration');
-    if (argv.includes('--limit')) throw new Error('--limit is refused with the registered configuration');
-  }
-  return config;
-}
-/** The shard of a run, "i/n" (default "0/1"). */
-export const shardOf = (argv = process.argv.slice(2)) => (argv.includes('--shard') ? argv[argv.indexOf('--shard') + 1] : '0/1');
-
-/** The module's bytes: SDN_AP_WASM, else the path in the configuration. Refuses any other SHA-256 than the registered one. */
-export function modulePath(config) {
-  return process.env[config.module.wasmPathEnv] ?? path.resolve(REPO, config.module.wasmPath);
-}
-export function verifyModule(config) {
-  const file = modulePath(config);
-  const got = sha256(fs.readFileSync(file));
-  if (got !== config.module.wasmSha256) throw new Error(`the module at ${file} has SHA-256 ${got}; this experiment registers ${config.module.wasmSha256} (sdn-ap ${config.module.version})`);
-  return file;
-}
 /** Every load goes through here, so every load is checked. */
 export async function loadHost(config) {
   return createStandaloneHarness('browser', verifyModule(config), { surface: 'direct' });
@@ -54,10 +18,9 @@ const hashIfPresent = (file) => (fs.existsSync(file) ? sha256(fs.readFileSync(fi
 export const header = (config, what, extra = {}) => ({ _header: { what, experiment: config.experiment, module: config.module.version, moduleWasmSha256: config.module.wasmSha256, configSha256: config.configSha256,
   configName: path.basename(config.file), registered: config.registered, shard: shardOf(), node: process.version, manifestSha256: hashIfPresent(path.join(HERE, 'MANIFEST.sha256')),
   eventsSha256: hashIfPresent(path.join(config.storeDir, 'events.json')), setsIndexSha256: hashIfPresent(path.join(config.storeDir, 'sets_index.json')),
-  archiveRoot: config.archiveRoot, store: config.storeDir, ...extra } });
+  ...(config.look ? { look: config.look.number } : {}), archiveRoot: config.archiveRoot, store: config.storeDir, ...extra } });
 
 /** The Space Data Standards bindings: the checkout's files at the relative path the repository's libraries import them from (one binding set, no override); BINDINGS.sha256 lists them. */
-export const SDS = path.join(STACK, 'repos/main-packages/spacedatastandards.org/lib/js');
 export const importFile = (p) => import(pathToFileURL(p).href);
 export const importFlatbuffers = () => importFile(createRequire(path.join(REPO, 'package.json')).resolve('flatbuffers'));
 
