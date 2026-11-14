@@ -29,7 +29,7 @@ function withLock(file, fn) {
     try {
       const pid = Number(fs.readFileSync(holder, 'utf8'));
       if (pid) { try { process.kill(pid, 0); } catch (e) { gone = e.code === 'ESRCH'; } } else gone = Date.now() - fs.statSync(lock).mtimeMs > 60e3;
-    } catch { try { gone = Date.now() - fs.statSync(lock).mtimeMs > 60e3; } catch { continue; } }   // no holder file yet: the taker is between mkdir and its write
+    } catch { try { gone = Date.now() - fs.statSync(lock).mtimeMs > 60e3; } catch { continue; } }   // no holder file: the taker is between mkdir and its write
     if (gone) { fs.rmSync(lock, { recursive: true, force: true }); continue; }
     if (tries > 12000) throw new Error(`${file}: the stream's lock is held by another process (${fs.readFileSync(holder, 'utf8')}) for over a minute`);
     sleepMs(5);
@@ -40,17 +40,17 @@ function withLock(file, fn) {
 /** An append-only stream, safe whoever else writes it: append(bytes) takes the lock, takes the offset from the file's size at that moment, writes one frame, reads it back at that offset (its size prefix and its hash must be the frame just written, else it throws) and returns the row's reference to it. */
 export class RecordStream {
   constructor(file) { this.file = file; }
-  append(ocm) {
+  transaction(fn) { return withLock(this.file, () => fn((bytes) => this.appendLocked(bytes))); }
+  append(ocm) { return this.transaction((append) => append(ocm)); }
+  appendLocked(ocm) {
     const bytes = Buffer.from(ocm), frame = Buffer.alloc(4 + bytes.length), hash = sha256(bytes);
     frame.writeUInt32LE(bytes.length, 0); bytes.copy(frame, 4);
-    return withLock(this.file, () => {
       const offset = fs.existsSync(this.file) ? fs.statSync(this.file).size : 0;
       fs.appendFileSync(this.file, frame);
       const ref = { file: path.basename(this.file), offset, size: bytes.length, sha256: hash.slice(0, HASH_HEX) };
       const back = readFrame(this.file, ref);   // throws if the frame at the offset is not the one just written
       if (sha256(back) !== hash) throw new Error(`${this.file}: the frame read back at ${offset} is not the record just written`);
       return ref;
-    });
   }
 }
 
@@ -62,7 +62,7 @@ export function withStreamedRecords(row, stream) {
 }
 
 /** The $OCM bytes of the frame a reference names in a stream file: the size prefix and the hash must be the reference's, else it throws and reads nothing else (no search, no guess). */
-function readFrame(file, ref) {
+export function readFrame(file, ref) {
   const fd = fs.openSync(file, 'r');
   try {
     const frame = Buffer.alloc(4 + ref.size);
@@ -83,12 +83,89 @@ export function readRecord(dir, ref) {
 
 /** Every frame of a stream in order: { offset, size, bytes }. */
 export function* frames(file) {
-  const buf = fs.readFileSync(file);
-  for (let at = 0; at < buf.length;) {
-    if (at + 4 > buf.length) throw new Error(`${file}: a size prefix is cut off at ${at}`);
-    const size = buf.readUInt32LE(at);
-    if (at + 4 + size > buf.length) throw new Error(`${file}: the frame at ${at} runs past the end`);
-    yield { offset: at, size, bytes: buf.subarray(at + 4, at + 4 + size) };
-    at += 4 + size;
+  const fd = fs.openSync(file, 'r');
+  try {
+    const length = fs.fstatSync(fd).size, prefix = Buffer.alloc(4);
+    for (let at = 0; at < length;) {
+      if (fs.readSync(fd, prefix, 0, 4, at) !== 4) throw new Error(`${file}: a size prefix is cut off at ${at}`);
+      const size = prefix.readUInt32LE(0);
+      if (!size || at + 4 + size > length) throw new Error(`${file}: the frame at ${at} runs past the end or is empty`);
+      const bytes = Buffer.alloc(size);
+      if (fs.readSync(fd, bytes, 0, size, at + 4) !== size) throw new Error(`${file}: incomplete frame at ${at}`);
+      yield { offset: at, size, bytes };
+      at += 4 + size;
+    }
+  } finally { fs.closeSync(fd); }
+}
+
+// Only files created by this process belong to its cleanup set.
+const replacements = new Set();
+let cleanupInstalled = false;
+function ownReplacement(file) {
+  replacements.add(file);
+  if (cleanupInstalled) return;
+  cleanupInstalled = true;
+  const cleanup = () => {
+    for (const file of replacements) {
+      try { fs.rmSync(file, { force: true }); } catch (e) { console.error(`temporary stream cleanup failed: ${file}: ${e.message}`); }
+    }
+  };
+  process.on('exit', cleanup);
+  for (const [signal, code] of [['SIGINT', 130], ['SIGTERM', 143]]) process.once(signal, () => { cleanup(); process.exit(code); });
+}
+
+/** A replacement is published only after its frames tile the file and every identity reads back. */
+export class StreamReplacement {
+  constructor(target, inputs = [], { allowEmpty = false } = {}) {
+    this.allowEmpty = allowEmpty;
+    const prefix = `${path.basename(target)}.`;
+    for (const name of fs.readdirSync(path.dirname(target))) {
+      if (name.startsWith(prefix) && /^\d+\.[0-9a-f-]+\.tmp$/.test(name.slice(prefix.length))) console.error(`leftover temporary stream: ${path.join(path.dirname(target), name)}`);
+    }
+    const canonical = (f) => fs.existsSync(f) ? fs.realpathSync(f) : path.resolve(f);
+    if (inputs.some((f) => canonical(f) === canonical(target))) throw new Error(`output equals input: ${target}`);
+    this.target = target;
+    this.file = `${target}.${process.pid}.${crypto.randomUUID()}.tmp`;
+    fs.closeSync(fs.openSync(this.file, 'wx'));
+    ownReplacement(this.file);
+    this.stream = new RecordStream(this.file);
+    this.expected = [];
+  }
+  append(bytes, identity) {
+    const ref = this.stream.append(bytes);
+    this.expected.push({ identity, sha: sha256(bytes) });
+    return ref;
+  }
+  verify(identityOf) {
+    let count = 0;
+    for (const fr of frames(this.file)) {
+      const want = this.expected[count++];
+      if (!want || identityOf(fr.bytes) !== want.identity || sha256(fr.bytes) !== want.sha) throw new Error('replacement identity or bytes differ');
+    }
+    if (count !== this.expected.length) throw new Error('replacement frame count differs');
+    this.checkEmpty();
+    this.verified = true;
+  }
+  checkEmpty() {
+    if (!this.allowEmpty && this.expected.length === 0 && fs.existsSync(this.target) && fs.statSync(this.target).size > 0)
+      throw new Error('empty replacement of a non-empty stream requires --allow-empty');
+  }
+  publish() {
+    if (!this.verified) throw new Error('replacement has not been verified');
+    this.checkEmpty();
+    fs.renameSync(this.file, this.target);
+    replacements.delete(this.file);
   }
 }
+
+/** Attach a stable outcome to failed seed or truth stream writes. */
+export function streamWrite(stream, write) {
+  try { return write(); } catch (cause) {
+    const error = new Error(`stream-write-failed: ${stream}: ${cause.message}`, { cause });
+    error.outcome = { name: 'stream-write-failed', stream, code: cause.code ?? 'stream-error' };
+    throw error;
+  }
+}
+
+/** A failed persistence attempt cannot complete a case, even when its truth hash exists. */
+export const hasPersistedTruth = (row) => Boolean(row.truth?.hash && !row.error && !row.streamWriteFailure);
