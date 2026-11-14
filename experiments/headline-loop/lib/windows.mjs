@@ -212,14 +212,14 @@ export async function truthOf(w, fromMs, toMs, axes) {
 }
 
 /** The scored epochs after the cutoff (all-regimes.mjs): lead-day bins on the 300 s grid of the truth's own epochs, a bin entering at 90 % cover. */
-export function scoredOf(after, D0) {
+export function scoredOf(after, D0, leads = LEADS) {
   const stepMs = after.length > 1 ? ms(after[1].epoch) - ms(after[0].epoch) : GRID;
   const gridMs = Math.max(GRID, Math.ceil(GRID / stepMs) * stepMs);
   const minBin = Math.ceil((MIN_BIN / (DAY / GRID)) * (DAY / gridMs));
   const first = after.length ? ms(after[0].epoch) : 0;
   const grid = after.filter((l) => (ms(l.epoch) - first) % gridMs === 0);
-  const bins = Object.fromEntries(LEADS.map((k) => [k, grid.filter((l) => { const t = ms(l.epoch); return t > D0 + (k - 1) * DAY && t <= D0 + k * DAY; })]));
-  const entered = LEADS.filter((k) => bins[k].length >= minBin);
+  const bins = Object.fromEntries(leads.map((k) => [k, grid.filter((l) => { const t = ms(l.epoch); return t > D0 + (k - 1) * DAY && t <= D0 + k * DAY; })]));
+  const entered = leads.filter((k) => bins[k].length >= minBin);
   const scored = entered.flatMap((k) => bins[k]);
   return { entered, sizes: entered.map((k) => bins[k].length), epochs: scored.map((l) => l.epoch), truth: scored.map((l) => ({ r: l.r, v: l.v })) };
 }
