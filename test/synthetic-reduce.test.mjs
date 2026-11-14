@@ -140,3 +140,28 @@ test('a failed truth write is retried and completes its stream', () => {
   const retried = run(); assert.equal(retried.status, 0, retried.stderr);
   assert.equal([...frames(target)].length, 1); assert.equal(JSON.parse(fs.readFileSync(rowFile)).error, undefined);
 });
+
+
+test('temporary streams are cleaned on controlled exits and leftovers are reported', async () => {
+  const target = path.join(dir, 'cleanup.fsdata'), leftover = `${target}.123.abcdef.tmp`;
+  fs.writeFileSync(leftover, 'preexisting');
+  for (const mode of ['refuse', 'throw', 'SIGINT', 'SIGTERM']) {
+    const code = `
+      import { StreamReplacement } from './experiments/synthetic-orbits/records.mjs';
+      new StreamReplacement(process.argv[1]);
+      if (process.argv[2] === 'refuse') process.exit(1);
+      if (process.argv[2] === 'throw') throw new Error('injected exception');
+      console.log('ready'); setInterval(() => {}, 1000);
+    `;
+    let stderr = '';
+    await new Promise((resolve, reject) => {
+      const child = spawn(process.execPath, ['--input-type=module', '-e', code, target, mode], {cwd: repoRoot});
+      child.stderr.on('data', b => { stderr += b; });
+      child.stdout.once('data', () => child.kill(mode));
+      child.on('error', reject); child.on('exit', code => { assert.notEqual(code, 0); resolve(); });
+    });
+    assert.match(stderr, /leftover temporary stream:/);
+    assert.deepEqual(fs.readdirSync(dir).filter(n => n.startsWith('cleanup.fsdata.')), [path.basename(leftover)]);
+    assert.equal(fs.readFileSync(leftover, 'utf8'), 'preexisting');
+  }
+});

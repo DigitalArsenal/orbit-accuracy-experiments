@@ -41,6 +41,9 @@ requires new output paths. Interruption before publication leaves existing targe
 intact. The two truth-converter renames are separate operations, not a transaction
 across both files. Stop concurrent stream appenders before conversion. Conversion
 omits creation dates so equal seed/truth inputs produce deterministic records.
+Each converter removes its own temporary streams on normal exit, refusal, exception,
+SIGINT and SIGTERM. SIGKILL can leave temporary files. Startup reports each leftover
+for the same target; it deletes none of those preexisting files.
 
 `run.mjs` writes seed and truth streams as well as fitted streams and result rows.
 A failed seed/truth write produces `stream-write-failed`, recorded on the case,

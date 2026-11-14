@@ -98,14 +98,35 @@ export function* frames(file) {
   } finally { fs.closeSync(fd); }
 }
 
+// Only files created by this process belong to its cleanup set.
+const replacements = new Set();
+let cleanupInstalled = false;
+function ownReplacement(file) {
+  replacements.add(file);
+  if (cleanupInstalled) return;
+  cleanupInstalled = true;
+  const cleanup = () => {
+    for (const file of replacements) {
+      try { fs.rmSync(file, { force: true }); } catch (e) { console.error(`temporary stream cleanup failed: ${file}: ${e.message}`); }
+    }
+  };
+  process.on('exit', cleanup);
+  for (const [signal, code] of [['SIGINT', 130], ['SIGTERM', 143]]) process.once(signal, () => { cleanup(); process.exit(code); });
+}
+
 /** A replacement is published only after its frames tile the file and every identity reads back. */
 export class StreamReplacement {
   constructor(target, inputs = []) {
+    const prefix = `${path.basename(target)}.`;
+    for (const name of fs.readdirSync(path.dirname(target))) {
+      if (name.startsWith(prefix) && /^\d+\.[0-9a-f-]+\.tmp$/.test(name.slice(prefix.length))) console.error(`leftover temporary stream: ${path.join(path.dirname(target), name)}`);
+    }
     const canonical = (f) => fs.existsSync(f) ? fs.realpathSync(f) : path.resolve(f);
     if (inputs.some((f) => canonical(f) === canonical(target))) throw new Error(`output equals input: ${target}`);
     this.target = target;
     this.file = `${target}.${process.pid}.${crypto.randomUUID()}.tmp`;
     fs.closeSync(fs.openSync(this.file, 'wx'));
+    ownReplacement(this.file);
     this.stream = new RecordStream(this.file);
     this.expected = [];
   }
@@ -126,6 +147,7 @@ export class StreamReplacement {
   publish() {
     if (!this.verified) throw new Error('replacement has not been verified');
     fs.renameSync(this.file, this.target);
+    replacements.delete(this.file);
   }
 }
 
