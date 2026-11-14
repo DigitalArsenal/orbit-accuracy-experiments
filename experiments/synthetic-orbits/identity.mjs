@@ -98,5 +98,12 @@ export class FrameIndex {
     } finally { fs.closeSync(fd); }
   }
   lookup(id) { this.scan(); return this.map.get(id) ?? null; }
-  ensure(id, make) { let e = this.lookup(id); if (!e) { this.stream.append(make()); this.scan(); e = this.map.get(id); } if (!e) throw new Error(`${this.file}: the frame ${id} is not there after it was appended`); return e; }
+  ensure(id, make) {
+    return this.stream.transaction((append) => {
+      let e = this.lookup(id);
+      if (!e) { append(make()); this.scan(); e = this.map.get(id); }
+      if (!e) throw new Error(`${this.file}: the frame ${id} is not there after it was appended`);
+      return e;
+    });
+  }
 }

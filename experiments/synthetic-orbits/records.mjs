@@ -40,17 +40,17 @@ function withLock(file, fn) {
 /** An append-only stream, safe whoever else writes it: append(bytes) takes the lock, takes the offset from the file's size at that moment, writes one frame, reads it back at that offset (its size prefix and its hash must be the frame just written, else it throws) and returns the row's reference to it. */
 export class RecordStream {
   constructor(file) { this.file = file; }
-  append(ocm) {
+  transaction(fn) { return withLock(this.file, () => fn((bytes) => this.appendLocked(bytes))); }
+  append(ocm) { return this.transaction((append) => append(ocm)); }
+  appendLocked(ocm) {
     const bytes = Buffer.from(ocm), frame = Buffer.alloc(4 + bytes.length), hash = sha256(bytes);
     frame.writeUInt32LE(bytes.length, 0); bytes.copy(frame, 4);
-    return withLock(this.file, () => {
       const offset = fs.existsSync(this.file) ? fs.statSync(this.file).size : 0;
       fs.appendFileSync(this.file, frame);
       const ref = { file: path.basename(this.file), offset, size: bytes.length, sha256: hash.slice(0, HASH_HEX) };
       const back = readFrame(this.file, ref);   // throws if the frame at the offset is not the one just written
       if (sha256(back) !== hash) throw new Error(`${this.file}: the frame read back at ${offset} is not the record just written`);
       return ref;
-    });
   }
 }
 

@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import test from 'node:test';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { makeFixtures, pack, unpack } from './synthetic-fixtures.mjs';
 import { frames, RecordStream } from '../experiments/synthetic-orbits/records.mjs';
@@ -88,4 +88,27 @@ test('reissue verifies complete streams, refuses input aliases and repeated trut
   assert.notEqual(alias.status, 0); assert.match(alias.stderr, /output equals input/); assert.equal(hash(fs.readFileSync(source)), original);
   const preserved = hash(fs.readFileSync(output)); new RecordStream(truth).append([...frames(truth)][0].bytes);
   const duplicate = run(output); assert.notEqual(duplicate.status, 0); assert.match(duplicate.stderr, /duplicate record identity:/); assert.equal(hash(fs.readFileSync(output)), preserved);
+});
+
+
+test('concurrent ensure appends each identity exactly once', async () => {
+  const target = path.join(dir, 'concurrent.fsdata');
+  const code = `
+    import { FrameIndex } from './experiments/synthetic-orbits/identity.mjs';
+    import { frames } from './experiments/synthetic-orbits/records.mjs';
+    import * as S from './experiments/synthetic-orbits/bindings.mjs';
+    const idx = new FrameIndex(S.OCM, S.flatbuffers, process.argv[1]);
+    const records = [...frames(process.argv[2])];
+    for (let round = 0; round < 20; round++) for (const {bytes} of records) {
+      const id = S.OCM.OCM.getRootAsOCM(new S.flatbuffers.ByteBuffer(bytes)).HEADER().MESSAGE_ID();
+      idx.ensure(id, () => bytes);
+    }
+  `;
+  await Promise.all(Array.from({length: 4}, () => new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, ['--input-type=module', '-e', code, target, path.join(FIX, 'truth-ocm.fsdata')], {cwd: repoRoot});
+    let stderr = ''; child.stderr.on('data', b => { stderr += b; });
+    child.on('error', reject); child.on('exit', code => code === 0 ? resolve() : reject(new Error(stderr)));
+  })));
+  const idx = new FrameIndex(S.OCM, S.flatbuffers, target); idx.scan();
+  assert.equal(idx.map.size, 4); assert.equal([...frames(target)].length, 4);
 });
