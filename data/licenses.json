@@ -561,9 +561,9 @@
    "redistribution": "USSPACECOM has provided express blanket approval for transfer/redistribution of basic SSA data and services accessed via www.Space-Track.org conditioned on appropriate citation. … The User agrees not to transfer any data or technical information received from this website, or other U.S. Government source, including the analysis of data, to any other entity without prior express approval.",
    "attributionClause": "Publications of analysis based on USSPACECOM data also require appropriate citations.",
    "conditions": "Basic SSA data are element sets (TLE/OMM), SATCAT and decay/reentry data; other products (SP vectors, CDMs, numeric RCS) need USSPACECOM's approval. Repository rule (README rule 4): element sets and per-sample tables derived from them stay on the archive host.",
-   "reproduce": "no",
+   "reproduce": "yes",
    "credit": "Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org (https://www.space-track.org).",
-   "reason": "The terms would allow basic SSA data with a citation, but this repository keeps element sets and per-sample tables derived from them local (README rule 4, the owner's rule); results are aggregates and carry the citation.",
+   "reason": "USSPACECOM's blanket approval lets basic SSA data (element sets, SATCAT, decay and reentry data) be redistributed with citation; every copy carries the credit line. The experiments here keep the element sets they read, and per-sample tables derived from them, on the archive host (README rule 4); their results are aggregates and carry the citation.",
    "usedIn": "E1, E2, E2b, E3, E4, E6, E7, E8, E10 (element sets: baselines, histories, cut-off inputs; E8: the decay of its calibration objects); E16 (every regime's element sets, 2024-10 to 2026-08); G1 (M29: the decay and TIP snapshots of 2026-10-04 to 2026-10-24 and the element-set histories of the reentered objects, results only; every request made by the archive's own scripts), ca-screen-recall (the daily GP snapshot of 2026-10-29: a 2,000-object LEO subset propagated for 72 h; aggregates and NORAD pairs only); conjunction-miss-from-public-sets (the element-set history of the objects of the provider's public conjunction messages, and those messages, 2026-09-10 to 2026-12-15: input to aggregate statistics only, no message or set published)",
    "obtain": "A Space-Track.org account (gp_history); each run manifest lists the SHA-256 of every element-set file read.",
    "notice": null,
@@ -1493,6 +1493,34 @@
    "obtain": null
   },
   {
+   "id": "celestrak-gp",
+   "name": "CelesTrak GP element sets (OMM and TLE, by group or catalog number)",
+   "provider": "CelesTrak (celestrak.org), republishing USSPACECOM's GP element sets (18th Space Defense Squadron, via Space-Track.org)",
+   "license": "USSPACECOM basic SSA data: Space-Track User Agreement (2019), with USSPACECOM's blanket approval to redistribute basic SSA data (TLE/OMM, SATCAT, decay and reentry) with citation",
+   "terms": [
+    {
+     "title": "Space-Track.org documentation: User Agreement; Redistribution of Basic SSA Information",
+     "url": "https://www.space-track.org/documentation",
+     "retrieved": "2026-10-10"
+    },
+    {
+     "title": "CelesTrak: GP data formats",
+     "url": "https://celestrak.org/NORAD/documentation/gp-data-formats.php",
+     "retrieved": "2026-10-10"
+    }
+   ],
+   "redistribution": "USSPACECOM has provided express blanket approval for transfer/redistribution of basic SSA data and services accessed via www.Space-Track.org conditioned on appropriate citation.",
+   "attributionClause": "Publications of analysis based on USSPACECOM data also require appropriate citations.",
+   "conditions": "CelesTrak's GP element sets are the GP data it takes from Space-Track (CelesTrak: \"fresh GP data (which we get from Space Track)\"), so the blanket approval and its citation apply; CelesTrak's usage policy governs access (query rates), not reuse. A copy's credit names CelesTrak, the group and the download time, then the source, for example: \"Orbit data: CelesTrak (celestrak.org), active satellites, downloaded 2026-11-15 03:08 UTC. Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org.\" CelesTrak's own products (SupGP, SOCRATES) and its space-weather files are not basic SSA data ([CelesTrak](#celestrak)).",
+   "reproduce": "yes",
+   "credit": "Orbit data: CelesTrak (celestrak.org). Source: USSPACECOM / 18th Space Defense Squadron, via Space-Track.org.",
+   "reason": "USSPACECOM's blanket approval lets basic SSA data, CelesTrak's GP element sets among them, be redistributed with citation; every copy carries the credit line.",
+   "usedIn": "E3 lineage check L1 (CelesTrak GP against Space-Track GP): considered, not used (the capture of 2026-10-09 failed)",
+   "reproducedAt": [],
+   "obtain": "https://celestrak.org/NORAD/elements/ (GP by group or catalog number, JSON or TLE), within CelesTrak's usage policy.",
+   "notice": null
+  },
+  {
    "id": "celestrak",
    "name": "CelesTrak supplemental GP (SupGP), SOCRATES and space-weather files",
    "provider": "CelesTrak (T. S. Kelso)",
@@ -1511,7 +1539,7 @@
    ],
    "redistribution": "our long tradition of making data freely available to all users. … trying to get fresh GP data (which we get from Space Track)",
    "attributionClause": "(none stated)",
-   "conditions": "The usage policy governs access (query rates), not reuse. CelesTrak GP element sets are Space-Track basic SSA data (blanket approval with citation); SupGP fits inherit the operators' terms (none granted); SW-All carries SILSO's CC BY-NC sunspot numbers among its columns.",
+   "conditions": "The usage policy governs access (query rates), not reuse. CelesTrak GP element sets are Space-Track basic SSA data, reproducible with citation ([CelesTrak GP](#celestrak-gp)); SupGP fits inherit the operators' terms (none granted); SW-All carries SILSO's CC BY-NC sunspot numbers among its columns.",
    "reproduce": "no",
    "credit": "CelesTrak, https://celestrak.org (T. S. Kelso).",
    "reason": "CelesTrak grants no license for its own products (SupGP, SOCRATES); the upstream terms decide the rest.",
