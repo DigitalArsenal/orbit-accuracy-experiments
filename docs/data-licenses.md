@@ -85,6 +85,8 @@ Policy (owner, 2026-10-10): "We should only reproduce data with the correct lice
 | [JPL Horizons On-Line Ephemeris System: vector tables of CAPSTONE, Artemis I (Orion), Danuri (KPLO), Psyche, Lucy and Juno](#jpl-horizons) | Public NASA/JPL data service: no access restriction; JPL and NASA content is not copyrighted unless noted (JPL copyrights page); acknowledgment of Horizons and its citation (Giorgini et al. 1996) requested | Yes, with attribution | State vectors of CAPSTONE, Artemis I, Danuri, Psyche, Lucy and Juno from the JPL Horizons On-Line Ephemeris System (Giorgini et al. 1996, BAAS 28, 1158), NASA/JPL Solar System Dynamics Group; trajectories from the mission navigation teams as merged by JPL. | G1 (truth for the lunar, cislunar and heliocentric windows prepared for SDN-AP: Danuri, CAPSTONE, Artemis I, Psyche, Lucy, Juno) | cited only |
 | [TESS definitive spacecraft ephemeris (TESS_EPH_DEF_*.bsp), STScI MAST](#stsci-mast-tess) | MAST Data Use Policy: most data hosted at MAST are in the public domain and carry no restriction on use; the originating mission and STScI are acknowledged in scholarly publications | Yes, with attribution | TESS spacecraft ephemeris: this paper includes data collected with the TESS mission, obtained from the MAST data archive at the Space Telescope Science Institute (STScI). Funding for US Institutions for the TESS mission is provided by the NASA Explorer Program. STScI is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS5-26555. | G1 (TESS highly elliptical orbit windows, 2026-06-29 to 2026-09-17) | cited only |
 | [ILRS orbit products via NASA CDDIS (NSGF rapid orbits nsgf.orb.*, ILRS combined weekly orbits ilrsa.orb.*, analysis-center weekly orbits)](#ilrs-cddis) | ILRS: data and products not copyrighted, citation requested (as the ILRS rows); NASA ESDIS: observation data and products generally not copyrighted, NASA to be acknowledged; non-NASA data on ESDIS systems follow the sponsoring organization's license | Yes, with attribution | ILRS orbit products (Pearlman et al. 2019, J Geod 93:2161-2180, doi:10.1007/s00190-019-01241-1) from NASA CDDIS (Noll 2010, Adv. Space Res. 45:1421-1440, doi:10.1016/j.asr.2010.01.018); NSGF rapid orbits contain British Geological Survey materials © UKRI 2026, Open Government License v3.0. | G1 (current SLR truth after 2026-10-10: NSGF rapid arcs of the LEO spheres and LARES-2, ILRS combined weekly orbits of LAGEOS and Etalon; the scoring of COMSPOC's laser-ranged sets) | cited only |
+| [Fink broker ZTF tracklets (satellite and debris streaks in the Zwicky Transient Facility's public alerts)](#fink-ztf) | No license stated | No: cited only | This work was developed within the Fink community and made use of the Fink resources. Fink is supported by LSST-France and CNRS/IN2P3. Moller et al. 2021, MNRAS 501, 3272. Detections from the Zwicky Transient Facility public alert stream. | Collected for the catalog (third-party observations); hac/fink-ztf-tracklets | cited only |
+| [IAU CPS SatHub SCORE (Satellite Constellation Observation Repository): satellite brightness and position observations](#iau-cps-score) | CC BY 4.0 | Yes, with attribution | IAU CPS SatHub SCORE, https://score.cps.iau.org, CC BY 4.0, each observation's observer (ORCID in the record); NSF grant AST 2332736, hosted at NSF NOIRLab. | Collected for the catalog (third-party observations); hac/iau-cps-score | cited only |
 
 ## Sources
 
@@ -1587,6 +1589,53 @@ Used in: G1 (current SLR truth after 2026-10-10: NSGF rapid arcs of the LEO sphe
 Reproduced at: nowhere; cited only.
 
 How to obtain: https://cddis.nasa.gov/archive/slr/products/orbits/rapid/<satellite>/<yyyy>/<yymmdd>/nsgf.orb.<satellite>.<yymmdd>.v000.sp3.gz and .../orbits/TRF/<satellite>/<yyyy>/<yymmdd>/ilrsa.orb.<satellite>.<yymmdd>.v80.sp3.gz (Earthdata login)
+
+### Fink broker ZTF tracklets (satellite and debris streaks in the Zwicky Transient Facility's public alerts)
+
+<a id="fink-ztf"></a>Provider: the Fink collaboration (CNRS/IN2P3, IJCLab), processing the public alert stream of the Zwicky Transient Facility (Palomar, MPC code I41). License or terms: No license stated.
+
+- [Citing Fink](https://fink-broker.org/cite/) (fetched 2026-11-20)
+- [About Fink](https://fink-broker.org/about/) (fetched 2026-11-20)
+
+Redistribution: "(no license, copyright or reuse statement on the Fink site's About or Citing pages or on the API's landing page)"
+
+Attribution: ""If you use Fink in your work, we would be grateful if you could include a citation to the white paper" (Moller et al. 2021, MNRAS 501, 3272, doi:10.1093/mnras/staa3602). "In addition, all work using data or services provided by Fink should include the following acknowledgment: This work was developed within the Fink community and made use of the Fink resources. Fink is supported by LSST-France and CNRS/IN2P3.""
+
+**Reproduce: No: cited only.** No license grants redistribution; a citation and an acknowledgement are asked for.
+
+Credit line: This work was developed within the Fink community and made use of the Fink resources. Fink is supported by LSST-France and CNRS/IN2P3. Moller et al. 2021, MNRAS 501, 3272. Detections from the Zwicky Transient Facility public alert stream.
+
+Used in: Collected for the catalog (third-party observations); hac/fink-ztf-tracklets.
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://api.ztf.fink-portal.org/api/v1/tracklet?date=YYYY-MM-DD (anonymous); stack deployment/obs-archive/obs-archive.mjs fink-ztf
+
+### IAU CPS SatHub SCORE (Satellite Constellation Observation Repository): satellite brightness and position observations
+
+<a id="iau-cps-score"></a>Provider: the International Astronomical Union Centre for the Protection of the Dark and Quiet Sky from Satellite Constellation Interference (IAU CPS) SatHub, hosted at NSF NOIRLab; each observation is its observer's (by ORCID). License or terms: CC BY 4.0.
+
+- [SCORE Use Policy (last updated 2024-12-02)](https://score.cps.iau.org/policy) (fetched 2026-11-20)
+- [SCORE API overview](https://score.cps.iau.org/api-access) (fetched 2026-11-20)
+- [Creative Commons Attribution 4.0 International, legal code](https://creativecommons.org/licenses/by/4.0/legalcode.en) (fetched 2026-11-20)
+
+Redistribution: "Data will be shared under the Creative Commons Attribution (CC-BY) 4.0 licence. ... observation data submitted to SCORE may be used freely, indefinitely, and without prior consent by CPS Members and by the general public under the CC-BY licencing terms."
+
+Attribution: ""If you use data from SCORE, you must follow the CC-BY licences and credit the observers appropriately." Required statement on any publication, presentation, website or web service that uses SCORE data: "Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the NSF NOIRLab, the SKAO, the IAU, or any host or member institution of the IAU CPS." Acknowledgement: "This research made use of data and/or services provided by the International Astronomical Union Centre for the Protection of the Dark and Quiet Sky (IAU CPS) SatHub. The development of SCORE has been supported by the National Science Foundation (NSF) under grant number: AST 2332736. SCORE is hosted at the NSF NOIRLab.""
+
+Conditions: The API "is rate-limited to 10 requests per second". The site's full CSV download sits behind a CAPTCHA; the API pages are used instead.
+
+**Reproduce: Yes, with attribution.** CC BY 4.0, with the observers credited and the NSF statement shown.
+
+Credit line: IAU CPS SatHub SCORE, https://score.cps.iau.org, CC BY 4.0, each observation's observer (ORCID in the record); NSF grant AST 2332736, hosted at NSF NOIRLab.
+
+Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the NSF NOIRLab, the SKAO, the IAU, or any host or member institution of the IAU CPS.
+
+Used in: Collected for the catalog (third-party observations); hac/iau-cps-score.
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://score.cps.iau.org/api/observations/recent?limit=1000&offset=N and /api/observations?limit=1000&offset=N (anonymous); stack deployment/obs-archive/obs-archive.mjs iau-cps
 
 ## Credits by experiment
 
