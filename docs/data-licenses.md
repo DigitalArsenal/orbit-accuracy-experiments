@@ -87,6 +87,9 @@ Policy (owner, 2026-10-10): "We should only reproduce data with the correct lice
 | [ILRS orbit products via NASA CDDIS (NSGF rapid orbits nsgf.orb.*, ILRS combined weekly orbits ilrsa.orb.*, analysis-center weekly orbits)](#ilrs-cddis) | ILRS: data and products not copyrighted, citation requested (as the ILRS rows); NASA ESDIS: observation data and products generally not copyrighted, NASA to be acknowledged; non-NASA data on ESDIS systems follow the sponsoring organization's license | Yes, with attribution | ILRS orbit products (Pearlman et al. 2019, J Geod 93:2161-2180, doi:10.1007/s00190-019-01241-1) from NASA CDDIS (Noll 2010, Adv. Space Res. 45:1421-1440, doi:10.1016/j.asr.2010.01.018); NSGF rapid orbits contain British Geological Survey materials © UKRI 2026, Open Government License v3.0. | G1 (current SLR truth after 2026-10-10: NSGF rapid arcs of the LEO spheres and LARES-2, ILRS combined weekly orbits of LAGEOS and Etalon; the scoring of COMSPOC's laser-ranged sets) | cited only |
 | [Fink broker ZTF tracklets (satellite and debris streaks in the Zwicky Transient Facility's public alerts)](#fink-ztf) | No license stated | No: cited only | This work was developed within the Fink community and made use of the Fink resources. Fink is supported by LSST-France and CNRS/IN2P3. Moller et al. 2021, MNRAS 501, 3272. Detections from the Zwicky Transient Facility public alert stream. | Collected for the catalog (third-party observations); hac/fink-ztf-tracklets | cited only |
 | [IAU CPS SatHub SCORE (Satellite Constellation Observation Repository): satellite brightness and position observations](#iau-cps-score) | CC BY 4.0 | Yes, with attribution | IAU CPS SatHub SCORE, https://score.cps.iau.org, CC BY 4.0, each observation's observer (ORCID in the record); NSF grant AST 2332736, hosted at NSF NOIRLab. | Collected for the catalog (third-party observations); hac/iau-cps-score | cited only |
+| [Galileo Notice Advisory to Galileo Users (NAGU) messages: the active and archived user-notification lists and each NAGU page, European GNSS Service Centre](#gsc-galileo-nagu) | GSC website terms of use: downloading, reproduction and use of the materials and documents published on the website are authorised provided the source is acknowledged as (c) EU 2011-2026, unless otherwise stated; third-party material marked as such is excluded | Yes, with attribution | Galileo NAGU messages, European GNSS Service Centre (https://www.gsc-europa.eu/system-status/user-notifications), (c) EU 2011-2026. | the archive's operator-notice feed (truth-archive.mjs, spacedatanetwork-stack#959) | cited only |
+| [NASA SPDF Satellite Situation Center Web (SSCWeb) locations: THEMIS A, D and E, GEI J2000, 1 minute](#nasa-sscweb) | NASA SPDF data service: U.S. Government data, openly available without restriction; SSCWeb and the mission are acknowledged | Yes, with attribution | THEMIS orbits: NASA SPDF SSCWeb (https://sscweb.gsfc.nasa.gov/); THEMIS mission, UC Berkeley Space Sciences Laboratory. | the archive's mission-orbit feed (truth-archive.mjs, spacedatanetwork-stack#959); propagator-catalog-census | cited only |
+| [BeiDou notices of the China Satellite Navigation Office test and assessment center (CSNO-TARC), the notice index](#csno-tarc-beidou) | Not read: the site has not answered from the archive machine (2026-10-24 five attempts; checked daily since 2026-11-20) | No: cited only | BeiDou notices: China Satellite Navigation Office, Test and Assessment Research Center (www.csno-tarc.cn). | the archive's operator-notice feed (truth-archive.mjs, spacedatanetwork-stack#959) | cited only |
 
 ## Sources
 
@@ -1636,6 +1639,76 @@ Used in: Collected for the catalog (third-party observations); hac/iau-cps-score
 Reproduced at: nowhere; cited only.
 
 How to obtain: https://score.cps.iau.org/api/observations/recent?limit=1000&offset=N and /api/observations?limit=1000&offset=N (anonymous); stack deployment/obs-archive/obs-archive.mjs iau-cps
+
+### Galileo Notice Advisory to Galileo Users (NAGU) messages: the active and archived user-notification lists and each NAGU page, European GNSS Service Centre
+
+<a id="gsc-galileo-nagu"></a>Provider: European GNSS Service Centre (GSC), for the European Union Agency for the Space Programme (EUSPA) and the European Commission. License or terms: GSC website terms of use: downloading, reproduction and use of the materials and documents published on the website are authorised provided the source is acknowledged as (c) EU 2011-2026, unless otherwise stated; third-party material marked as such is excluded.
+
+- [GSC website terms of use, Copyright Notice](https://www.gsc-europa.eu/terms-of-use#copyright) (fetched 2026-11-20)
+- [NAGU information (definition, categories, templates)](https://www.gsc-europa.eu/system-service-status/nagu-information) (fetched 2026-11-20)
+- [Active user notifications (the NAGU list)](https://www.gsc-europa.eu/system-status/user-notifications) (fetched 2026-11-20)
+
+Redistribution: ""Unless otherwise stated, downloading, reproduction and use of all the materials and documents published on the Website are authorised provided the source is acknowledged as follow: (c) EU 2011-2026." (GSC terms of use, Copyright Notice)"
+
+Attribution: "(c) EU 2011-2026"
+
+Conditions: The list pages and each NAGU page are read as served (anonymous GET, one request at a time, 5 s apart), kept in the archive (hac/gnss-notices/galileo-nagu/) and used for local results: outages and maneuver notices of Galileo satellites.
+
+**Reproduce: Yes, with attribution.** null
+
+Credit line: Galileo NAGU messages, European GNSS Service Centre (https://www.gsc-europa.eu/system-status/user-notifications), (c) EU 2011-2026.
+
+Used in: the archive's operator-notice feed (truth-archive.mjs, spacedatanetwork-stack#959).
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://www.gsc-europa.eu/system-status/user-notifications and https://www.gsc-europa.eu/notice-advisory-to-galileo-users-nagu-<yyyynnn>
+
+### NASA SPDF Satellite Situation Center Web (SSCWeb) locations: THEMIS A, D and E, GEI J2000, 1 minute
+
+<a id="nasa-sscweb"></a>Provider: NASA Goddard Space Flight Center, Space Physics Data Facility (SPDF); THEMIS ephemerides from the mission (UC Berkeley Space Sciences Laboratory). License or terms: NASA SPDF data service: U.S. Government data, openly available without restriction; SSCWeb and the mission are acknowledged.
+
+- [SSCWeb](https://sscweb.gsfc.nasa.gov/) (fetched 2026-11-20)
+- [SSC Web Services (REST)](https://sscweb.gsfc.nasa.gov/WebServices/REST/) (fetched 2026-11-20)
+- [NASA Earth and space science data policy (full and open sharing)](https://science.nasa.gov/researchers/science-data/science-information-policy/) (fetched 2026-11-20)
+
+Redistribution: "U.S. Government data from a NASA open data service (no license statement on SSCWeb's pages; NASA's science information policy is full and open sharing)."
+
+Attribution: "Orbits from NASA's Satellite Situation Center Web (SSCWeb), Space Physics Data Facility, NASA GSFC; THEMIS mission, UC Berkeley Space Sciences Laboratory."
+
+Conditions: One 7-day window a week through the REST locations call, kept in the archive (hac/sscweb-themis/); used for local results.
+
+**Reproduce: Yes, with attribution.** null
+
+Credit line: THEMIS orbits: NASA SPDF SSCWeb (https://sscweb.gsfc.nasa.gov/); THEMIS mission, UC Berkeley Space Sciences Laboratory.
+
+Used in: the archive's mission-orbit feed (truth-archive.mjs, spacedatanetwork-stack#959); propagator-catalog-census.
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://sscweb.gsfc.nasa.gov/WS/sscr/2/locations/themisa,themisd,themise/<start>,<end>/geij2000/ (Accept: application/json)
+
+### BeiDou notices of the China Satellite Navigation Office test and assessment center (CSNO-TARC), the notice index
+
+<a id="csno-tarc-beidou"></a>Provider: China Satellite Navigation Office, Test and Assessment Research Center. License or terms: Not read: the site has not answered from the archive machine (2026-10-24 five attempts; checked daily since 2026-11-20).
+
+- [CSNO-TARC notices (did not answer)](http://www.csno-tarc.cn/en/notice/index) (fetched 2026-11-20)
+
+Redistribution: "(unknown: terms not read)"
+
+Attribution: "China Satellite Navigation Office, Test and Assessment Research Center (www.csno-tarc.cn)"
+
+Conditions: Local use only until the site's terms are read; the collector records each attempt and stores the index page when it answers.
+
+**Reproduce: No: cited only.** Terms not read; nothing is reproduced.
+
+Credit line: BeiDou notices: China Satellite Navigation Office, Test and Assessment Research Center (www.csno-tarc.cn).
+
+Used in: the archive's operator-notice feed (truth-archive.mjs, spacedatanetwork-stack#959).
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: http://www.csno-tarc.cn/en/notice/index
 
 ## Credits by experiment
 
