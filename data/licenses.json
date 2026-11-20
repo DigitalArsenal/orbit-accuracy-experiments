@@ -2251,6 +2251,95 @@
    "notice": "Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the NSF NOIRLab, the SKAO, the IAU, or any host or member institution of the IAU CPS.",
    "obtain": "https://score.cps.iau.org/api/observations/recent?limit=1000&offset=N and /api/observations?limit=1000&offset=N (anonymous); stack deployment/obs-archive/obs-archive.mjs iau-cps",
    "reproducedAt": []
+  },
+  {
+   "id": "gsc-galileo-nagu",
+   "name": "Galileo Notice Advisory to Galileo Users (NAGU) messages: the active and archived user-notification lists and each NAGU page, European GNSS Service Centre",
+   "provider": "European GNSS Service Centre (GSC), for the European Union Agency for the Space Programme (EUSPA) and the European Commission",
+   "license": "GSC website terms of use: downloading, reproduction and use of the materials and documents published on the website are authorised provided the source is acknowledged as (c) EU 2011-2026, unless otherwise stated; third-party material marked as such is excluded",
+   "terms": [
+    {
+     "title": "GSC website terms of use, Copyright Notice",
+     "url": "https://www.gsc-europa.eu/terms-of-use#copyright",
+     "retrieved": "2026-11-20"
+    },
+    {
+     "title": "NAGU information (definition, categories, templates)",
+     "url": "https://www.gsc-europa.eu/system-service-status/nagu-information",
+     "retrieved": "2026-11-20"
+    },
+    {
+     "title": "Active user notifications (the NAGU list)",
+     "url": "https://www.gsc-europa.eu/system-status/user-notifications",
+     "retrieved": "2026-11-20"
+    }
+   ],
+   "redistribution": "\"Unless otherwise stated, downloading, reproduction and use of all the materials and documents published on the Website are authorised provided the source is acknowledged as follow: (c) EU 2011-2026.\" (GSC terms of use, Copyright Notice)",
+   "attributionClause": "(c) EU 2011-2026",
+   "conditions": "The list pages and each NAGU page are read as served (anonymous GET, one request at a time, 5 s apart), kept in the archive (hac/gnss-notices/galileo-nagu/) and used for local results: outages and maneuver notices of Galileo satellites.",
+   "reproduce": "yes",
+   "credit": "Galileo NAGU messages, European GNSS Service Centre (https://www.gsc-europa.eu/system-status/user-notifications), (c) EU 2011-2026.",
+   "reason": null,
+   "usedIn": "the archive's operator-notice feed (truth-archive.mjs, spacedatanetwork-stack#959)",
+   "obtain": "https://www.gsc-europa.eu/system-status/user-notifications and https://www.gsc-europa.eu/notice-advisory-to-galileo-users-nagu-<yyyynnn>",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "nasa-sscweb",
+   "name": "NASA SPDF Satellite Situation Center Web (SSCWeb) locations: THEMIS A, D and E, GEI J2000, 1 minute",
+   "provider": "NASA Goddard Space Flight Center, Space Physics Data Facility (SPDF); THEMIS ephemerides from the mission (UC Berkeley Space Sciences Laboratory)",
+   "license": "NASA SPDF data service: U.S. Government data, openly available without restriction; SSCWeb and the mission are acknowledged",
+   "terms": [
+    {
+     "title": "SSCWeb",
+     "url": "https://sscweb.gsfc.nasa.gov/",
+     "retrieved": "2026-11-20"
+    },
+    {
+     "title": "SSC Web Services (REST)",
+     "url": "https://sscweb.gsfc.nasa.gov/WebServices/REST/",
+     "retrieved": "2026-11-20"
+    },
+    {
+     "title": "NASA Earth and space science data policy (full and open sharing)",
+     "url": "https://science.nasa.gov/researchers/science-data/science-information-policy/",
+     "retrieved": "2026-11-20"
+    }
+   ],
+   "redistribution": "U.S. Government data from a NASA open data service (no license statement on SSCWeb's pages; NASA's science information policy is full and open sharing).",
+   "attributionClause": "Orbits from NASA's Satellite Situation Center Web (SSCWeb), Space Physics Data Facility, NASA GSFC; THEMIS mission, UC Berkeley Space Sciences Laboratory.",
+   "conditions": "One 7-day window a week through the REST locations call, kept in the archive (hac/sscweb-themis/); used for local results.",
+   "reproduce": "yes",
+   "credit": "THEMIS orbits: NASA SPDF SSCWeb (https://sscweb.gsfc.nasa.gov/); THEMIS mission, UC Berkeley Space Sciences Laboratory.",
+   "reason": null,
+   "usedIn": "the archive's mission-orbit feed (truth-archive.mjs, spacedatanetwork-stack#959); propagator-catalog-census",
+   "obtain": "https://sscweb.gsfc.nasa.gov/WS/sscr/2/locations/themisa,themisd,themise/<start>,<end>/geij2000/ (Accept: application/json)",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
+   "id": "csno-tarc-beidou",
+   "name": "BeiDou notices of the China Satellite Navigation Office test and assessment center (CSNO-TARC), the notice index",
+   "provider": "China Satellite Navigation Office, Test and Assessment Research Center",
+   "license": "Not read: the site has not answered from the archive machine (2026-10-24 five attempts; checked daily since 2026-11-20)",
+   "terms": [
+    {
+     "title": "CSNO-TARC notices (did not answer)",
+     "url": "http://www.csno-tarc.cn/en/notice/index",
+     "retrieved": "2026-11-20"
+    }
+   ],
+   "redistribution": "(unknown: terms not read)",
+   "attributionClause": "China Satellite Navigation Office, Test and Assessment Research Center (www.csno-tarc.cn)",
+   "conditions": "Local use only until the site's terms are read; the collector records each attempt and stores the index page when it answers.",
+   "reproduce": "no",
+   "credit": "BeiDou notices: China Satellite Navigation Office, Test and Assessment Research Center (www.csno-tarc.cn).",
+   "reason": "Terms not read; nothing is reproduced.",
+   "usedIn": "the archive's operator-notice feed (truth-archive.mjs, spacedatanetwork-stack#959)",
+   "obtain": "http://www.csno-tarc.cn/en/notice/index",
+   "notice": null,
+   "reproducedAt": []
   }
  ],
  "bundles": [
