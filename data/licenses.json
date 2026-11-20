@@ -1689,6 +1689,29 @@
    "reproducedAt": []
   },
   {
+   "id": "telesat",
+   "name": "Telesat fleet ephemerides (FleetLong index and per-satellite COB files)",
+   "provider": "Telesat Corporation (app.telesat.com)",
+   "license": "No license; Telesat terms of use reserve all rights",
+   "terms": [
+    {
+     "title": "Telesat terms of use",
+     "url": "https://www.telesat.com/terms-of-use/",
+     "retrieved": "2026-11-20"
+    }
+   ],
+   "redistribution": "\"Copyright © 2026 Telesat Corporation (\"Telesat\"). All rights reserved.\" \"no one has permission to copy, use or distribute any of the information found on Telesat's website.\" \"You may copy content on this website for your personal, non-commercial use only.\"",
+   "attributionClause": "(none stated)",
+   "reproduce": "no",
+   "credit": "Telesat Corporation fleet ephemerides.",
+   "reason": "No license grants redistribution; use is personal and non-commercial.",
+   "usedIn": "Collected for local use by the Telesat provider node (stack deployment/ephemeris-provider-nodes, 2026-11-20); no experiment reads it yet.",
+   "obtain": "The Telesat provider node retrieves the FleetLong index and its COB files; plain copies in the archive's hac/ephemeris-node-telesat/.",
+   "conditions": "Local, non-commercial use only; never republished.",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
    "id": "planet",
    "name": "Planet Labs public ephemerides",
    "provider": "Planet Labs PBC (ephemerides.planet-labs.com)",

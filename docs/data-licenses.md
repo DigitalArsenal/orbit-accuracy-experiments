@@ -70,6 +70,7 @@ Policy (owner, 2026-10-10): "We should only reproduce data with the correct lice
 | [China Manned Space Engineering Office: Tiangong orbit data](#cmsa-tiangong) | All rights reserved (site footer); no license stated | No: cited only | China Manned Space Engineering Office, https://www.cmse.gov.cn/. | E4 (Tianhe: 7 files scored) | cited only |
 | [Intelsat public ephemerides (MyIntelsat)](#intelsat) | No license; SES terms of use reserve all rights | No: cited only | Intelsat (SES) public ephemerides, https://my.intelsat.com/ephemeris/public. | E4 (Intelsat: 83 of 89 files scored) | modules: data-source/intelsat-source/test/fixtures/i_aor_e_302.00_is-21_20260710_235300.sample.txt, analysis/od/tests/data/supgp-reference/intelsat/is-21.oem_ecef_utc.kvn (excerpts, committed before this audit) |
 | [SES eleven-parameter ephemerides (I11)](#ses) | No license; SES terms of use reserve all rights | No: cited only | SES S.A. eleven-parameter ephemerides. | E4, on the unmerged A4 branch only (main does not evaluate the I11 format) | cited only |
+| [Telesat fleet ephemerides (FleetLong index and per-satellite COB files)](#telesat) | No license; Telesat terms of use reserve all rights | No: cited only | Telesat Corporation fleet ephemerides. | Collected for local use by the Telesat provider node (stack deployment/ephemeris-provider-nodes, 2026-11-20); no experiment reads it yet. | cited only |
 | [Planet Labs public ephemerides](#planet) | CC BY-NC 4.0 | Yes, with attribution, for non-commercial use only | Planet Labs PBC orbital ephemerides, https://ephemerides.planet-labs.com/, © Planet Labs PBC, CC BY-NC 4.0. | E4 (Planet: 1,233 states of 89 objects), E13 (Planet: the daily states of the Doves of the Planet sample, October 2025 to July 2026; derived arcs only); E16 (LEO-PL truth: the daily orbit-determination states and the name crosswalk, 2025-10 to 2026-08; through E13, the Planet arcs of E13's correction) | data/e4/planet/ (28 files) |
 | [Eutelsat OneWeb ephemerides (LTEF)](#oneweb) | No license found | No: cited only | Eutelsat OneWeb, https://ephemeris.oneweb.net/. | Not used on main (no LTEF reader); space-data-network-modules tests | modules: data-source/oneweb-source/test/fixtures/ltef.sample.csv (5 rows, committed before this audit) |
 | [JSC Vimpel public orbit data](#vimpel) | User agreement for registered users; no public license | No: cited only | JSC Vimpel, http://spacedata.vimpel.ru/. | E3 (coverage count only: none of its rows names a truth object) | cited only |
@@ -1256,6 +1257,28 @@ Used in: E4, on the unmerged A4 branch only (main does not evaluate the I11 form
 Reproduced at: nowhere; cited only.
 
 How to obtain: SES and Intelsat ephemeris pages (weekly I11 sets).
+
+### Telesat fleet ephemerides (FleetLong index and per-satellite COB files)
+
+<a id="telesat"></a>Provider: Telesat Corporation (app.telesat.com). License or terms: No license; Telesat terms of use reserve all rights.
+
+- [Telesat terms of use](https://www.telesat.com/terms-of-use/) (fetched 2026-11-20)
+
+Redistribution: ""Copyright © 2026 Telesat Corporation ("Telesat"). All rights reserved." "no one has permission to copy, use or distribute any of the information found on Telesat's website." "You may copy content on this website for your personal, non-commercial use only.""
+
+Attribution: "(none stated)"
+
+Conditions: Local, non-commercial use only; never republished.
+
+**Reproduce: No: cited only.** No license grants redistribution; use is personal and non-commercial.
+
+Credit line: Telesat Corporation fleet ephemerides.
+
+Used in: Collected for local use by the Telesat provider node (stack deployment/ephemeris-provider-nodes, 2026-11-20); no experiment reads it yet..
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: The Telesat provider node retrieves the FleetLong index and its COB files; plain copies in the archive's hac/ephemeris-node-telesat/.
 
 ### Planet Labs public ephemerides
 
