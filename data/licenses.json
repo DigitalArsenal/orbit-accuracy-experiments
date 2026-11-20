@@ -2190,6 +2190,67 @@
    "reproducedAt": [],
    "notice": null,
    "obtain": "https://cddis.nasa.gov/archive/slr/products/orbits/rapid/<satellite>/<yyyy>/<yymmdd>/nsgf.orb.<satellite>.<yymmdd>.v000.sp3.gz and .../orbits/TRF/<satellite>/<yyyy>/<yymmdd>/ilrsa.orb.<satellite>.<yymmdd>.v80.sp3.gz (Earthdata login)"
+  },
+  {
+   "id": "fink-ztf",
+   "name": "Fink broker ZTF tracklets (satellite and debris streaks in the Zwicky Transient Facility's public alerts)",
+   "provider": "the Fink collaboration (CNRS/IN2P3, IJCLab), processing the public alert stream of the Zwicky Transient Facility (Palomar, MPC code I41)",
+   "license": "No license stated",
+   "terms": [
+    {
+     "title": "Citing Fink",
+     "url": "https://fink-broker.org/cite/",
+     "retrieved": "2026-11-20"
+    },
+    {
+     "title": "About Fink",
+     "url": "https://fink-broker.org/about/",
+     "retrieved": "2026-11-20"
+    }
+   ],
+   "redistribution": "(no license, copyright or reuse statement on the Fink site's About or Citing pages or on the API's landing page)",
+   "attributionClause": "\"If you use Fink in your work, we would be grateful if you could include a citation to the white paper\" (Moller et al. 2021, MNRAS 501, 3272, doi:10.1093/mnras/staa3602). \"In addition, all work using data or services provided by Fink should include the following acknowledgment: This work was developed within the Fink community and made use of the Fink resources. Fink is supported by LSST-France and CNRS/IN2P3.\"",
+   "conditions": "",
+   "reproduce": "no",
+   "credit": "This work was developed within the Fink community and made use of the Fink resources. Fink is supported by LSST-France and CNRS/IN2P3. Moller et al. 2021, MNRAS 501, 3272. Detections from the Zwicky Transient Facility public alert stream.",
+   "reason": "No license grants redistribution; a citation and an acknowledgement are asked for.",
+   "usedIn": "Collected for the catalog (third-party observations); hac/fink-ztf-tracklets",
+   "notice": null,
+   "obtain": "https://api.ztf.fink-portal.org/api/v1/tracklet?date=YYYY-MM-DD (anonymous); stack deployment/obs-archive/obs-archive.mjs fink-ztf",
+   "reproducedAt": []
+  },
+  {
+   "id": "iau-cps-score",
+   "name": "IAU CPS SatHub SCORE (Satellite Constellation Observation Repository): satellite brightness and position observations",
+   "provider": "the International Astronomical Union Centre for the Protection of the Dark and Quiet Sky from Satellite Constellation Interference (IAU CPS) SatHub, hosted at NSF NOIRLab; each observation is its observer's (by ORCID)",
+   "license": "CC BY 4.0",
+   "terms": [
+    {
+     "title": "SCORE Use Policy (last updated 2024-12-02)",
+     "url": "https://score.cps.iau.org/policy",
+     "retrieved": "2026-11-20"
+    },
+    {
+     "title": "SCORE API overview",
+     "url": "https://score.cps.iau.org/api-access",
+     "retrieved": "2026-11-20"
+    },
+    {
+     "title": "Creative Commons Attribution 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+     "retrieved": "2026-11-20"
+    }
+   ],
+   "redistribution": "Data will be shared under the Creative Commons Attribution (CC-BY) 4.0 licence. ... observation data submitted to SCORE may be used freely, indefinitely, and without prior consent by CPS Members and by the general public under the CC-BY licencing terms.",
+   "attributionClause": "\"If you use data from SCORE, you must follow the CC-BY licences and credit the observers appropriately.\" Required statement on any publication, presentation, website or web service that uses SCORE data: \"Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the NSF NOIRLab, the SKAO, the IAU, or any host or member institution of the IAU CPS.\" Acknowledgement: \"This research made use of data and/or services provided by the International Astronomical Union Centre for the Protection of the Dark and Quiet Sky (IAU CPS) SatHub. The development of SCORE has been supported by the National Science Foundation (NSF) under grant number: AST 2332736. SCORE is hosted at the NSF NOIRLab.\"",
+   "conditions": "The API \"is rate-limited to 10 requests per second\". The site's full CSV download sits behind a CAPTCHA; the API pages are used instead.",
+   "reproduce": "yes",
+   "credit": "IAU CPS SatHub SCORE, https://score.cps.iau.org, CC BY 4.0, each observation's observer (ORCID in the record); NSF grant AST 2332736, hosted at NSF NOIRLab.",
+   "reason": "CC BY 4.0, with the observers credited and the NSF statement shown.",
+   "usedIn": "Collected for the catalog (third-party observations); hac/iau-cps-score",
+   "notice": "Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the NSF NOIRLab, the SKAO, the IAU, or any host or member institution of the IAU CPS.",
+   "obtain": "https://score.cps.iau.org/api/observations/recent?limit=1000&offset=N and /api/observations?limit=1000&offset=N (anonymous); stack deployment/obs-archive/obs-archive.mjs iau-cps",
+   "reproducedAt": []
   }
  ],
  "bundles": [
