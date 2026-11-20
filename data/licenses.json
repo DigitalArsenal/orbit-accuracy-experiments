@@ -1790,6 +1790,29 @@
    "reproducedAt": []
   },
   {
+   "id": "comspoc-spacebook",
+   "name": "COMSPOC Spacebook: full-catalog SGP4-XP element sets, standard element sets, SynCoPate covariance ephemerides",
+   "provider": "COMSPOC Corporation (spacebook.com)",
+   "license": "No license: terms of use restrict the content",
+   "terms": [
+    {
+     "title": "COMSPOC terms of use, section 6",
+     "url": "https://www.comspoc.com/legal/terms-of-use",
+     "retrieved": "2026-11-20"
+    }
+   ],
+   "redistribution": "\"the COMSPOC Websites and Content may not be (i) used for Your commercial use, (ii) produced or copied in any form or by any means or translated into another language (iii) distributed to non-licensed users (iv) disassembled, decompiled, reverse-engineered, copied, translated, or used to make derivative works (v) used in any manner that could damage, disable, overburden, or impair the COMSPOC Websites\"",
+   "attributionClause": null,
+   "reproduce": "no",
+   "credit": "COMSPOC Spacebook, https://spacebook.com/.",
+   "reason": "The terms bar commercial use, copying, distribution and derivative works. Kept on the archive's machines on the owner's word (captures of 2026-10-23 and 2026-11-10; scheduled 2026-11-20, stack #957) for local scoring only: never an input or prior of a fit, never published; only aggregate statistics leave the archive.",
+   "usedIn": "sdn-gp-starlink-ffm-match (local scoring of COMSPOC's XP sets)",
+   "obtain": "https://spacebook.com/api/entity/{xp-tle,tle,satcat,synthetic-covariance/<id>}, anonymous; archived daily under /opt/data/sdn-archive/hac/comspoc-spacebook",
+   "conditions": "Local computation only; one request at a time, 3 s apart (term (v): do not overburden the site).",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
    "id": "or-library",
    "name": "OR-Library assignment problems",
    "provider": "J. E. Beasley, OR-Library (Brunel University)",

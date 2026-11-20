@@ -74,6 +74,7 @@ Policy (owner, 2026-10-10): "We should only reproduce data with the correct lice
 | [Eutelsat OneWeb ephemerides (LTEF)](#oneweb) | No license found | No: cited only | Eutelsat OneWeb, https://ephemeris.oneweb.net/. | Not used on main (no LTEF reader); space-data-network-modules tests | modules: data-source/oneweb-source/test/fixtures/ltef.sample.csv (5 rows, committed before this audit) |
 | [JSC Vimpel public orbit data](#vimpel) | User agreement for registered users; no public license | No: cited only | JSC Vimpel, http://spacedata.vimpel.ru/. | E3 (coverage count only: none of its rows names a truth object) | cited only |
 | [SpaceMapper AOE catalog and orbital database](#spacemapper-aoe) | No license stated | No: cited only | SpaceMapper, https://spacemapper.cn/. | E15 (AOE lineage beside Space-Track), the catalog paper section 4; modules data-source/spacemapper-aoe-source | cited only |
+| [COMSPOC Spacebook: full-catalog SGP4-XP element sets, standard element sets, SynCoPate covariance ephemerides](#comspoc-spacebook) | No license: terms of use restrict the content | No: cited only | COMSPOC Spacebook, https://spacebook.com/. | sdn-gp-starlink-ffm-match (local scoring of COMSPOC's XP sets) | cited only |
 | [OR-Library assignment problems](#or-library) | No license stated | No: cited only | Beasley, J. E. (1990), OR-Library: distributing test problems by electronic mail, J. Oper. Res. Soc. 41, 1069–1072. | space-data-network-modules tests only | modules: analysis/association/tests/fixtures/or-library/ (assign100, assign200, assignopt, assignp800; committed before this audit) |
 | [CCSDS Blue Book example messages](#ccsds) | No reproduction statement in the Blue Books | No: cited only | CCSDS Blue Books 503.0-B-2 (TDM) and 504.0-B-2 (ADM), annex examples. | space-data-network-modules tests only | modules: files/ccsds-messages/fixtures/ccsds-50{3,4}.0-B-2-figure-*.txt (5 excerpts) |
 | [Orekit test resources and reference outputs (and orekit-data)](#orekit) | Apache-2.0 (Orekit); files in orekit-data keep their upstream terms (IERS, CSSI/CelesTrak, SET) | Yes, with attribution | Orekit (CS GROUP), Apache-2.0, https://www.orekit.org. | The site's verification (63 FFM-against-Orekit cases) and OCM example; space-data-network-modules tests | site (gh-pages): data/orekit/orekit-reference.json, cases.json, data/ocm/ (OCM example from Orekit's test resources); modules: propagator/ffm/tests/fixtures/orekit/orekit-reference.json, files/orbit-products/fixtures/stk_02674_*.e, analysis/*/vectors and fixtures with Orekit values (no LICENSE or NOTICE copy) |
@@ -1334,6 +1335,28 @@ Used in: E15 (AOE lineage beside Space-Track), the catalog paper section 4; modu
 Reproduced at: nowhere; cited only.
 
 How to obtain: https://spacemapper.cn/ public pages; archived daily for local use under /opt/data/sdn-archive/hac/spacemapper-aoe
+
+### COMSPOC Spacebook: full-catalog SGP4-XP element sets, standard element sets, SynCoPate covariance ephemerides
+
+<a id="comspoc-spacebook"></a>Provider: COMSPOC Corporation (spacebook.com). License or terms: No license: terms of use restrict the content.
+
+- [COMSPOC terms of use, section 6](https://www.comspoc.com/legal/terms-of-use) (fetched 2026-11-20)
+
+Redistribution: ""the COMSPOC Websites and Content may not be (i) used for Your commercial use, (ii) produced or copied in any form or by any means or translated into another language (iii) distributed to non-licensed users (iv) disassembled, decompiled, reverse-engineered, copied, translated, or used to make derivative works (v) used in any manner that could damage, disable, overburden, or impair the COMSPOC Websites""
+
+Attribution: "null"
+
+Conditions: Local computation only; one request at a time, 3 s apart (term (v): do not overburden the site).
+
+**Reproduce: No: cited only.** The terms bar commercial use, copying, distribution and derivative works. Kept on the archive's machines on the owner's word (captures of 2026-10-23 and 2026-11-10; scheduled 2026-11-20, stack #957) for local scoring only: never an input or prior of a fit, never published; only aggregate statistics leave the archive.
+
+Credit line: COMSPOC Spacebook, https://spacebook.com/.
+
+Used in: sdn-gp-starlink-ffm-match (local scoring of COMSPOC's XP sets).
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://spacebook.com/api/entity/{xp-tle,tle,satcat,synthetic-covariance/<id>}, anonymous; archived daily under /opt/data/sdn-archive/hac/comspoc-spacebook
 
 ### OR-Library assignment problems
 
