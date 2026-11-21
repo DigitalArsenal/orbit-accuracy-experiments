@@ -274,14 +274,16 @@
    ],
    "redistribution": "(no license, copyright or reuse statement on the list home, its rules, the list information page, the FAQ or the archives)",
    "attributionClause": "(none stated)",
-   "conditions": "The list's own rule: \"Do Not Post Elements Originating from Space Track\".",
+   "conditions": "The list's own rule: \"Do Not Post Elements Originating from Space Track\". The owner raised SeeSat-L on 2026-11-21, about 13:50 UTC, in the same ruling as Mike McCants' sets (\"That is supposed to be included in this.\"; see the mccants entry). Since then host-02's node publishes the element sets posted to the list (the newest set per object, epoch and elements as posted) as OMM records in its lane seesat-l. Each record names the post's author and the archive message, and carries this credit line and the plain statement that the list states no licence. IOD observation lines are not published. The ruling is the owner's decision, not a licence from the list or its authors. If the list or an author objects, the lane, or that author's sets, are switched off as the archive README (\"Third-party element sets on host-02\") says. These experiments still never reproduce the posts.",
    "reproduce": "no",
    "credit": "SeeSat-L, http://www.satobs.org/seesat/ (each post's author).",
    "reason": "No license grants redistribution; posts are their authors' work.",
-   "usedIn": "E6 (H4: all 8,007 IOD lines counted; too few on truth objects to fit)",
-   "obtain": "Monthly archives June to October 2026 at http://www.satobs.org/seesat/; steps/01-capture-seesat.mjs rebuilds the IOD table.",
+   "usedIn": "E6 (H4: all 8,007 IOD lines counted; too few on truth objects to fit); host-02's node lane seesat-l (OMM records of the posted element sets)",
+   "obtain": "Monthly archives June to October 2026 at http://www.satobs.org/seesat/; steps/01-capture-seesat.mjs rebuilds the IOD table. This Mac's archive keeps every post under hac/seesat-l/ (launchd agent io.spacedatanetwork.obs-seesat-l).",
    "notice": null,
-   "reproducedAt": []
+   "reproducedAt": [
+    "host-02's node (space-data-network-02), lane OMM.fbs / space-data-network-02 / seesat-l, IPNS name k51qzi5uqu5dlvubqglr8ilt2iac9sf1m4myz08h4t47smm0zuhx8ukhxb97bf, from 2026-11-21 under the owner's ruling in conditions"
+   ]
   },
   {
    "id": "camras",
@@ -1189,20 +1191,21 @@
     {
      "title": "McCants: TLE files",
      "url": "https://mmccants.org/tles/index.html",
-     "retrieved": "2026-10-10"
+     "retrieved": "2026-11-21"
     }
    ],
-   "redistribution": "(no license or reuse statement)",
+   "redistribution": "(no license or reuse statement; the page was read again on 2026-11-21 and still has none)",
    "attributionClause": "(none stated)",
    "reproduce": "no",
    "credit": "Mike McCants, https://mmccants.org/tles/.",
-   "reason": "No license grants redistribution.",
+   "reason": "No license grants redistribution. Mike McCants states no licence for these files.",
    "reproducedAt": [
-    "modules: data-source/catalog-source/tests/mccants.test.mjs, tests/parity.test.mjs (two element sets inline)"
+    "modules: data-source/catalog-source/tests/mccants.test.mjs, tests/parity.test.mjs (two element sets inline)",
+    "host-02's node (space-data-network-02), lane OMM.fbs / space-data-network-02 / mccants, IPNS name k51qzi5uqu5dj8cxet9fj92jn5mn7invzxcj793ilyqs7awcvaam8gn2p5fhbl, from 2026-11-21 under the owner's ruling in conditions; read by the SpaceAware console (stack issues 917 and 1003)"
    ],
-   "obtain": "https://mmccants.org/tles/classfd.zip",
-   "usedIn": "space-data-network-modules tests only",
-   "conditions": "",
+   "obtain": "https://mmccants.org/tles/classfd.zip and https://mmccants.org/tles/inttles.zip; this Mac's archive keeps both under hac/mccants/ (launchd agent io.spacedatanetwork.mccants-archive).",
+   "usedIn": "space-data-network-modules tests; host-02's node lane mccants (OMM records for the SpaceAware console)",
+   "conditions": "The owner, 2026-11-21 about 13:50 UTC, about these element sets: \"That is supposed to be included in this.\" (He raised SeeSat-L in the same ruling.) Since then host-02's node publishes all of classfd.tle, and the inttles.tle objects that are absent from the public GP catalog, as OMM records in its lane mccants. The SpaceAware console reads that lane. Each record keeps McCants' epoch and elements as he gives them, carries this credit line and its source file, and says that Mike McCants states no licence. The ruling is the owner's decision, not a licence from McCants. If McCants or anyone for him objects, the lane is switched off as the archive README (\"Third-party element sets on host-02\") says. These experiments still never reproduce the sets.",
    "notice": null
   },
   {
