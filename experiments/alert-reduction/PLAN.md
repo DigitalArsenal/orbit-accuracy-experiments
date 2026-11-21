@@ -44,3 +44,13 @@ At the published alert limits, how many conjunction notifications per week does 
 
 - Aggregates: `/opt/data/sdn-archive/derived/alerts/<stamp>.json` (notifications per week, missed, reduction and interval per limit, lead and view; realism per stratum; inputs with hashes), shaped for the site's claims. Private rows (per regime pair and stratum): `/opt/data/sdn-archive/derived/alerts/rows-<stamp>.jsonl`. No satellite-with-date pair leaves the machine.
 - The fit method of SDN-AP is not described anywhere in the outputs.
+
+## Amendments
+
+### 1. 2026-11-21 about 22:00 UTC, before the full run: directions at the row's size rank
+
+What was seen first: the runner's check on one encounter in 50 (counts read on that sample) and the realism table on all rows. With a direction drawn independently of the row's size, an error as large as the largest in-track errors lands on radial directions, which no measured error does (the realism test then gives sizes up to hundreds of km). Changed: a band's directions are sorted by the size of the measured error each came from, and a row draws its direction at its own size's rank within its regime's rows (a window of 5 % of the band's rows). The covariance's shape is the second moment of the band's error vectors (trace 1), not of the unit directions. Everything else in Method 2 and 3 holds.
+
+### 2. 2026-11-21 about 22:00 UTC, before the full run: Starlink-on-Starlink encounters reported apart
+
+What was seen first: in the full week's screen, 851,641 of the 1,069,553 encounters under 5 km and 58,786 of the 68,065 under 1 km are between two Starlink satellites, 96 % of them at more than 1 km/s. Their "true" misses are SGP4's on public sets whose Starlink errors are many km a day out, so the screen does not hold the phasing SpaceX keeps between its own satellites, and SpaceX coordinates these among its own satellites. Changed: the headline view is every encounter except those between two Starlink satellites ("allButStarlinkPairs"); the other views are all encounters, Starlink with any other object (the Starlink operator's view of other objects), Starlink with Starlink, and no Starlink. Method 8's radius is computed on the headline view.
