@@ -433,6 +433,7 @@ async function child() {
   await ctx.pc?.close();
 }
 
+const matchedReduction = (m) => (m && m.notificationsPublicAt1Km > 0 ? 100 * (1 - m.notificationsOursAtRadius / m.notificationsPublicAt1Km) : NaN);
 function headlineOf(results) {
   const out = {};
   for (const L of LEADS) {
@@ -441,7 +442,7 @@ function headlineOf(results) {
     out[`${L}d`] = {
       view: 'allButStarlinkPairs',
       atPublishedMissLimits: typeof v.miss === 'object' ? { notificationsPerWeekPublic: v.miss.notificationsPerWeek.S, notificationsPerWeekOurs: v.miss.notificationsPerWeek.O, reductionPercent: v.miss.reductionPercent, reductionInterval95: v.miss.reductionInterval95, missedPublic: v.miss.missedRealCloseApproaches.S, missedOurs: v.miss.missedRealCloseApproaches.O, realCloseApproaches: v.miss.realCloseApproaches, claim: v.miss.claim } : v.miss,
-      atNoMoreMissedThanPublic1Km: m ? { radiusKm: m.radiusKm, radiusInterval95: mi.radiusKm, notificationsPerWeekPublicAt1Km: sig(m.notificationsPublicAt1Km), notificationsPerWeekOursAtRadius: sig(m.notificationsOursAtRadius), reductionPercent: sig(100 * (1 - m.notificationsOursAtRadius / m.notificationsPublicAt1Km), 3), missedPublicAt1Km: m.missedByPublicAt1Km, missedOursAtRadius: m.missedByOursAtRadius, realCloseApproaches: m.realCloseApproaches, scope: 'both objects below 2000 km perigee, true miss under 1 km' } : null,
+      atNoMoreMissedThanPublic1Km: m ? { radiusKm: m.radiusKm, radiusInterval95: mi.radiusKm, notificationsPerWeekPublicAt1Km: sig(m.notificationsPublicAt1Km), notificationsPerWeekOursAtRadius: sig(m.notificationsOursAtRadius), reductionPercent: sig(matchedReduction(m), 3), reductionInterval95: mi.reductionPercent, replicates: results[`${L}d`].matchedRadiusReplicates, missedPublicAt1Km: m.missedByPublicAt1Km, missedOursAtRadius: m.missedByOursAtRadius, realCloseApproaches: m.realCloseApproaches, scope: 'both objects below 2000 km perigee, true miss under 1 km' } : null,
       pc: Object.fromEntries(['pc1e-4', 'pc1e-5', 'pc3e-7'].map((k) => [k, typeof v[k] === 'object' ? { notificationsPerWeekPublic: v[k].notificationsPerWeek.S, notificationsPerWeekOurs: v[k].notificationsPerWeek.O, reductionPercent: v[k].reductionPercent, reductionInterval95: v[k].reductionInterval95, claim: v[k].claim } : v[k]])),
     };
   }
@@ -498,8 +499,9 @@ async function run(check) {
     results[`${L}d`] = {
       views: Object.fromEntries(VIEWS.map((v) => [v, summarize(reps, L, (r) => r.views[v])])),
       leftOut: reps[0].res[L].leftOut,
-      matchedRadius: reps[0].res[L].matchedRadius,
-      matchedRadiusInterval95: { radiusKm: interval(reps.slice(1).map((r) => r.res[L].matchedRadius?.radiusKm)), notificationsOursAtRadius: interval(reps.slice(1).map((r) => r.res[L].matchedRadius?.notificationsOursAtRadius)), notificationsPublicAt1Km: interval(reps.slice(1).map((r) => r.res[L].matchedRadius?.notificationsPublicAt1Km)) },
+      matchedRadius: { ...reps[0].res[L].matchedRadius, reductionPercent: sig(matchedReduction(reps[0].res[L].matchedRadius), 3), reductionInterval95: interval(reps.slice(1).map((r) => matchedReduction(r.res[L].matchedRadius))), replicates: reps.length - 1 },
+      matchedRadiusReplicates: reps.length - 1,
+      matchedRadiusInterval95: { reductionPercent: interval(reps.slice(1).map((r) => matchedReduction(r.res[L].matchedRadius))), radiusKm: interval(reps.slice(1).map((r) => r.res[L].matchedRadius?.radiusKm)), notificationsOursAtRadius: interval(reps.slice(1).map((r) => r.res[L].matchedRadius?.notificationsOursAtRadius)), notificationsPublicAt1Km: interval(reps.slice(1).map((r) => r.res[L].matchedRadius?.notificationsPublicAt1Km)) },
       pcModuleCalls: reps[0].res[L].views.all.pcCalls,
     };
   }
