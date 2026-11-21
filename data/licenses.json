@@ -1790,6 +1790,34 @@
    "reproducedAt": []
   },
   {
+   "id": "keeptrack",
+   "name": "KeepTrack satellite element sets (api.keeptrack.space)",
+   "provider": "KeepTrack (keeptrack.space)",
+   "license": "CC BY-NC 4.0",
+   "terms": [
+    {
+     "title": "KeepTrack API v4 documentation, License",
+     "url": "https://api.keeptrack.space/v4/docs",
+     "retrieved": "2026-11-21"
+    },
+    {
+     "title": "Creative Commons Attribution-NonCommercial 4.0 International, legal code",
+     "url": "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en",
+     "retrieved": "2026-11-21"
+    }
+   ],
+   "redistribution": "\"All data provided by this API is licensed under Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).\" \"Attribution is required. You must give appropriate credit to KeepTrack in any use of this data.\"",
+   "attributionClause": "\"You must give appropriate credit to KeepTrack in any use of this data.\"",
+   "conditions": "Non-commercial use; an API key from a KeepTrack account is required; one batch request per refresh, never one request per satellite. The owner, 2026-10-25: \"I know the webmaster it's fine just use it he means for it to be available\".",
+   "reproduce": "non-commercial",
+   "credit": "Orbit data: KeepTrack (keeptrack.space), CC BY-NC 4.0; originally JSC Vimpel.",
+   "reason": "Third-party element sets of objects the public catalog no longer carries (Luch-5X 55841, Shiyan-24C 03 58652; stack issue 981).",
+   "usedIn": "The catalog builder's third-party seeds (stack deployment/ephemeris-ocm, source keeptrack).",
+   "obtain": "https://api.keeptrack.space/v4/sats/tles?ids=55841,58652 with the account's API key (X-API-Key); the archive keeps each answer under hac/keeptrack/.",
+   "notice": null,
+   "reproducedAt": []
+  },
+  {
    "id": "spacemapper-aoe",
    "name": "SpaceMapper AOE catalog and orbital database",
    "provider": "Beijing Kaiyun United Information Technology (spacemapper.cn)",

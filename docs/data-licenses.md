@@ -74,6 +74,7 @@ Policy (owner, 2026-10-10): "We should only reproduce data with the correct lice
 | [Planet Labs public ephemerides](#planet) | CC BY-NC 4.0 | Yes, with attribution, for non-commercial use only | Planet Labs PBC orbital ephemerides, https://ephemerides.planet-labs.com/, © Planet Labs PBC, CC BY-NC 4.0. | E4 (Planet: 1,233 states of 89 objects), E13 (Planet: the daily states of the Doves of the Planet sample, October 2025 to July 2026; derived arcs only); E16 (LEO-PL truth: the daily orbit-determination states and the name crosswalk, 2025-10 to 2026-08; through E13, the Planet arcs of E13's correction) | data/e4/planet/ (28 files) |
 | [Eutelsat OneWeb ephemerides (LTEF)](#oneweb) | No license found | No: cited only | Eutelsat OneWeb, https://ephemeris.oneweb.net/. | Not used on main (no LTEF reader); space-data-network-modules tests | modules: data-source/oneweb-source/test/fixtures/ltef.sample.csv (5 rows, committed before this audit) |
 | [JSC Vimpel public orbit data](#vimpel) | User agreement for registered users; no public license | No: cited only | JSC Vimpel, http://spacedata.vimpel.ru/. | E3 (coverage count only: none of its rows names a truth object) | cited only |
+| [KeepTrack satellite element sets (api.keeptrack.space)](#keeptrack) | CC BY-NC 4.0 | Yes, with attribution, for non-commercial use only | Orbit data: KeepTrack (keeptrack.space), CC BY-NC 4.0; originally JSC Vimpel. | The catalog builder's third-party seeds (stack deployment/ephemeris-ocm, source keeptrack). | cited only |
 | [SpaceMapper AOE catalog and orbital database](#spacemapper-aoe) | No license stated | No: cited only | SpaceMapper, https://spacemapper.cn/. | E15 (AOE lineage beside Space-Track), the catalog paper section 4; modules data-source/spacemapper-aoe-source | cited only |
 | [COMSPOC Spacebook: full-catalog SGP4-XP element sets, standard element sets, SynCoPate covariance ephemerides](#comspoc-spacebook) | No license: terms of use restrict the content | No: cited only | COMSPOC Spacebook, https://spacebook.com/. | sdn-gp-starlink-ffm-match (local scoring of COMSPOC's XP sets) | cited only |
 | [OR-Library assignment problems](#or-library) | No license stated | No: cited only | Beasley, J. E. (1990), OR-Library: distributing test problems by electronic mail, J. Oper. Res. Soc. 41, 1069–1072. | space-data-network-modules tests only | modules: analysis/association/tests/fixtures/or-library/ (assign100, assign200, assignopt, assignp800; committed before this audit) |
@@ -1338,6 +1339,29 @@ Used in: E3 (coverage count only: none of its rows names a truth object).
 Reproduced at: nowhere; cited only.
 
 How to obtain: http://spacedata.vimpel.ru/ (registered users); data/e3/MANIFEST.json lists each file with its SHA-256.
+
+### KeepTrack satellite element sets (api.keeptrack.space)
+
+<a id="keeptrack"></a>Provider: KeepTrack (keeptrack.space). License or terms: CC BY-NC 4.0.
+
+- [KeepTrack API v4 documentation, License](https://api.keeptrack.space/v4/docs) (fetched 2026-11-21)
+- [Creative Commons Attribution-NonCommercial 4.0 International, legal code](https://creativecommons.org/licenses/by-nc/4.0/legalcode.en) (fetched 2026-11-21)
+
+Redistribution: ""All data provided by this API is licensed under Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)." "Attribution is required. You must give appropriate credit to KeepTrack in any use of this data.""
+
+Attribution: ""You must give appropriate credit to KeepTrack in any use of this data.""
+
+Conditions: Non-commercial use; an API key from a KeepTrack account is required; one batch request per refresh, never one request per satellite. The owner, 2026-10-25: "I know the webmaster it's fine just use it he means for it to be available".
+
+**Reproduce: Yes, with attribution, for non-commercial use only.** Third-party element sets of objects the public catalog no longer carries (Luch-5X 55841, Shiyan-24C 03 58652; stack issue 981).
+
+Credit line: Orbit data: KeepTrack (keeptrack.space), CC BY-NC 4.0; originally JSC Vimpel.
+
+Used in: The catalog builder's third-party seeds (stack deployment/ephemeris-ocm, source keeptrack)..
+
+Reproduced at: nowhere; cited only.
+
+How to obtain: https://api.keeptrack.space/v4/sats/tles?ids=55841,58652 with the account's API key (X-API-Key); the archive keeps each answer under hac/keeptrack/.
 
 ### SpaceMapper AOE catalog and orbital database
 
