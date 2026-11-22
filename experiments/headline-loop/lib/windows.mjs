@@ -14,7 +14,28 @@ export const { config: XP2F, root, HOUR, DAY, iso, ms, rms, XM } = xp2;
 XM.config.spaceWeather.rsgaDirs = [...XM.config.spaceWeather.rsgaDirs, '/opt/data/sdn-archive/hac/noaa-swpc/warehouse/2026/RSGA', '/opt/data/sdn-archive/hac/noaa-swpc/2026'];
 const R = await import(path.join(OT, 'lib/regimes.mjs'));
 export const T = await import(path.join(root, XP2F.xm.dir, 'lib/truth.mjs'));
+// GFZ Kp/Ap/F10.7: the newest whole-series file the daily collector stored (hac/gfz-kp/<year>/<day>/), else the 2026-10-09 snapshot
+{
+  const dir = '/opt/data/sdn-archive/hac/gfz-kp', name = 'Kp_ap_Ap_SN_F107_since_1932.txt';
+  const days = fs.existsSync(dir) ? fs.readdirSync(dir).filter((y) => /^\d{4}$/.test(y)).flatMap((y) => fs.readdirSync(path.join(dir, y)).map((d) => path.join(dir, y, d, name))).filter((f) => fs.existsSync(f)).sort() : [];
+  if (days.length) XM.config.spaceWeather.gfzHistory = days.at(-1);
+}
 export const W = await import(path.join(root, XP2F.xm.dir, 'lib/weather.mjs'));
+/** The newest as-issued weather the harness can read: the newest RSGA issue and the newest GFZ day, with their age in days. */
+export function weatherFreshness(nowMs = Date.now()) {
+  const rsga = W.rsgas().list.at(-1)?.issuedMs ?? 0;
+  const last = fs.readFileSync(XM.config.spaceWeather.gfzHistory, 'utf8').trimEnd().split('\n').filter((l) => l && !l.startsWith('#')).at(-1)?.split(/\s+/) ?? [];
+  const gfz = last.length >= 3 ? Date.UTC(Number(last[0]), Number(last[1]) - 1, Number(last[2])) : 0;
+  return { rsgaIssuedUtc: new Date(rsga).toISOString(), rsgaAgeDays: (nowMs - rsga) / DAY, gfzLastDayUtc: new Date(gfz).toISOString().slice(0, 10), gfzAgeDays: (nowMs - gfz) / DAY, gfzFile: XM.config.spaceWeather.gfzHistory };
+}
+// The weather must be current: a measurement with a start after the newest weather silently loses those tests (2026-11-22: the RSGA
+// series stopped at 2026-10-09 and every later start was excluded). HL_WEATHER_ALLOW_STALE=1 only to reproduce a frozen past run.
+{
+  const f = weatherFreshness();
+  if (process.env.HL_WEATHER_ALLOW_STALE !== '1' && (f.rsgaAgeDays > 3 || f.gfzAgeDays > 3)) {
+    throw new Error(`as-issued weather is stale: newest RSGA issued ${f.rsgaIssuedUtc} (${f.rsgaAgeDays.toFixed(1)} d), newest GFZ day ${f.gfzLastDayUtc} (${f.gfzAgeDays.toFixed(1)} d) in ${f.gfzFile}; more than 3 days. Fix the collector (stack deployment/spacetrack-archive/spaceweather-archive.mjs) or set HL_WEATHER_ALLOW_STALE=1 to reproduce a frozen past run`);
+  }
+}
 const SRC = await import(pathToFileURL(path.join(root, 'experiments/sdn-gp-starlink-ffm-match/lib/sources.mjs')).href);
 const { driverRows } = await import(path.join(OT, 'lib/xm3.mjs'));
 const APL = await import(path.join(OT, 'lib/ap.mjs'));
