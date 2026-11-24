@@ -1,0 +1,272 @@
+{
+ "kind": "weather",
+ "look": 1,
+ "forecasterSha256": "68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73",
+ "days": {
+  "2026-11-09": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-09/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "48df3fd5162ac7f5bc9b30103f95311fd442b173f8ca8adc50bfb923e5eb782c"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-09/daily-solar-indices.txt",
+    "sha256": "cd166343251cffb7992e4e7bb920c6cff8b0909bf307813c266f2488bf7685c9"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-09/daily-geomagnetic-indices.txt",
+    "sha256": "678321f97274346e5d2e587645713be192a986526da72ac2e05adcbbd70e2fdc"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-09/sgarf.txt",
+    "sha256": "a01849f7c616c3b92fc0a6083da8476c6d3a416fa46dcdab06252f3be6d26473"
+   }
+  ],
+  "2026-11-12": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-12/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "aabf10b6bc5c468c54390823ecad797f36602ded50e88da3de87ea233710b2ed"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-12/daily-solar-indices.txt",
+    "sha256": "85cc8d7334e26a5990e31afb882dd0f5dce10c953c127119d31e1a7712f1ed2a"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-12/daily-geomagnetic-indices.txt",
+    "sha256": "d37adcc1ae1f033e2e4865a2d7b04a77947a12c9979ffbda2d1e6794547cbbfd"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-12/sgarf.txt",
+    "sha256": "1745fd260ad91aab8d45257eec7221105ccbc6990051a9e3e307f50fdca1bf0c"
+   }
+  ],
+  "2026-11-13": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-13/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "e082ecb4df2d59517137e928846e77928706eaacb731277169a88b1123755f30"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-13/daily-solar-indices.txt",
+    "sha256": "26fd0eb70645a2dcf93c97c8ebf39f509a513921fc3369302725d66a61afbb6d"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-13/daily-geomagnetic-indices.txt",
+    "sha256": "c5afd9bc490afd89ef3539a5d6fb146cf28ea604815f65144cab4402ceaa43aa"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-13/sgarf.txt",
+    "sha256": "388a7ccd373567676c9d1d5748821f6fd94ea70cb4acb081ad58b421d223e680"
+   }
+  ],
+  "2026-11-14": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-14/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "a7f66766c3c9160761bcbb178a59dfcd4e88d8dce214673d8ba6e10462380f30"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-14/daily-solar-indices.txt",
+    "sha256": "9f82485d5634fb47fa7d9271a31411eb9d32bcd5fc2e3d639143869eeca24f30"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-14/daily-geomagnetic-indices.txt",
+    "sha256": "8d319ef70efe9df157b8d684e97b36f0a3f337db58dedf8625899612763965fe"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-14/sgarf.txt",
+    "sha256": "c82a865cfe3e2ea97a63667148e141530439697a510e067b5c33935c6753bed0"
+   }
+  ],
+  "2026-11-15": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-15/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "63109fbd4dab0d615f384411208553b875ad391d4d34924fd80879e44326a0a0"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-15/daily-solar-indices.txt",
+    "sha256": "120e95173ea39dfe60bda5b380b7da9e0ee9ad04ef43d1467483d9280a5b14c3"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-15/daily-geomagnetic-indices.txt",
+    "sha256": "d9b56b335a2b1dca6a69dd899f5c5cc516c195d1b7dec0962875a20cbddea671"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-15/sgarf.txt",
+    "sha256": "c213bc3d5ee51d6899c5e94d6588f02501696bcc8dabf13139053596d00cab9e"
+   }
+  ],
+  "2026-11-16": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-16/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "bb29dc1ffe2a336086295947cae6dc6a9c547b2bc3074879768ddf2b2952437b"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-16/daily-solar-indices.txt",
+    "sha256": "1abf8c96b338b55ac6ce5275792262a9883900a779a4778782bf42131c6dbe44"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-16/daily-geomagnetic-indices.txt",
+    "sha256": "37a613fdc36dbb78c8370f6a7fd03a38c63650599a2e88fbc2b4a5a10272e9b7"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-16/sgarf.txt",
+    "sha256": "92078bab9f436c555f40adf493dc186ff1757904ded907462245e07f19259b22"
+   }
+  ],
+  "2026-11-17": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-17/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "e89c90f065797f4b2ed3ebde6702ead7228ffcdf511b37ac91a0a4d83a838ee0"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-17/daily-solar-indices.txt",
+    "sha256": "e024f720f567e1290f00f5c0db901c2ead3b97165f534260a6a7be489d092d09"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-17/daily-geomagnetic-indices.txt",
+    "sha256": "7b9ecb81afb4d074c849c43afeeb65e6a73a5b49cef250792247cc81edab2704"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-17/sgarf.txt",
+    "sha256": "03afa16795bacbf1402c1f0f53ef1c110c5757abc6892e7128548b3ab4c1adc9"
+   }
+  ],
+  "2026-11-18": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-18/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "ebe0a82a59a41eca675247f2e5f47ed60003beebfa33e0e4df871e8c3fc1da44"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-18/daily-solar-indices.txt",
+    "sha256": "cf199fdcdb63ccee4a0b1f03acdcb1f56414feb40482801432835f9fb0e8e916"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-18/daily-geomagnetic-indices.txt",
+    "sha256": "9efdd3bb53128e2cbaa0855b3efb32f95d22ac916931ea90459b5304a9d4784d"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-18/sgarf.txt",
+    "sha256": "19ce4c35ac6a117f9fd75c00bad3910fd94bf8cf2f68a8806c0d90a48a829bad"
+   }
+  ],
+  "2026-11-19": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-19/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "58ddbbe13cd682c9888e8e263a41baf6f13b634584765b924baf545587e7f416"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-19/daily-solar-indices.txt",
+    "sha256": "a99e14b8d8af4350ffd4244a4a0344392ae9c2f0bec5d07d604105e9225b5587"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-19/daily-geomagnetic-indices.txt",
+    "sha256": "14fa322f135c4fdb759e93ac7746c5f698d3766d5dfce081221db6bc0d9d560a"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-19/sgarf.txt",
+    "sha256": "81bbdef99147931a3b4154203e01b429615e6c283545a6a36c10801c9edb2973"
+   }
+  ],
+  "2026-11-20": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-20/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "ac554c3c1cac3faaa9cfe1306db014afaf30d4d1463c6b4a6dd44ff770a416d4"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-20/daily-solar-indices.txt",
+    "sha256": "967b84d2fe6d1a6acce7befaf24c6c53e166756242bfa001cc34dd4dd8aee45d"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-20/daily-geomagnetic-indices.txt",
+    "sha256": "a50dedb53917074ab741ac7a79d6caeb75978b33594968de71b352942310f70c"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-20/sgarf.txt",
+    "sha256": "48ef87623ad94d3e4aa34e89dfd35d0cead5a1fa8baf5e0296b75d11634f9b2d"
+   }
+  ],
+  "2026-11-21": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-21/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "38800eecedecb75f7f2495e40373a5774e345a42f57100564b5d2c665451c3a7"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-21/daily-solar-indices.txt",
+    "sha256": "66f15a2abd837e0cd21accc7c46cf2fc50a7096aa17ae794114f5810339b3b25"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-21/daily-geomagnetic-indices.txt",
+    "sha256": "d811d54a8b56e8e4f880e8c5f762d55d297748a5d8586a8abf8c9f5335fbee71"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-21/sgarf.txt",
+    "sha256": "11997ff31eece00a9f99dcfc6567a58e428bc4c901c2b6ab950cc3a00527417d"
+   }
+  ],
+  "2026-11-22": [
+   {
+    "file": "hac/gfz-kp/20261009/Kp_ap_Ap_SN_F107_since_1932.txt",
+    "sha256": "b1887ab89a9230b571a21342d84e1c4687e754683ad7923bfe145855d933dc2e"
+   },
+   {
+    "file": "hac/gfz-kp/2026/2026-11-22/Kp_ap_Ap_SN_F107_nowcast.txt",
+    "sha256": "2034a2eeb40b1ea5fedf149195e6c267435a4afc4eb039d8d016619ee0ee6296"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-22/daily-solar-indices.txt",
+    "sha256": "2de2e381e0dd0f461f185399f2cf22e4709ca8690c29dbb2f781e8ad4148ce04"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-22/daily-geomagnetic-indices.txt",
+    "sha256": "acee8f05ff42218a1128be82c43907fe8fb5e5cc0f8795d5d9bae9e6ffbde95f"
+   },
+   {
+    "file": "hac/noaa-swpc/2026/2026-11-22/sgarf.txt",
+    "sha256": "e6ada83db873b37a05158f781be67da3a1628f62556d69d81f970381157e3837"
+   }
+  ]
+ },
+ "aggregateSha256": "f0f6b37532d368f533f1ccd755c7de84d43fe0c0bbf9eea078e8e51e7ded51d6"
+}

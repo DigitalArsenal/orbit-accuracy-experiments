@@ -1,0 +1,41 @@
+primary events expected in 28 days at 6.9 a day: about 194
+chance that H1 holds (lower end of the interval above 50 %), by primary events and true share:
+      events     55%     60%     62%     64%
+         100    0.18    0.54    0.70    0.83
+         150    0.26    0.72    0.86    0.95
+         194    0.29    0.81    0.93    0.98
+         250    0.35    0.89    0.97    0.99
+Nested looks: normal-interval approximation to H1 only, not joint H1/H2/H3 power.
+200000 simulated tests per cell; default_rng seed 20261114 + 100 * size index + share index.
+One row per event, independent Bernoulli trials; floors 40, 40, 100; scaled counts rounded to nearest integer.
+Each look uses the two-sided level 1 - 0.05/3. Cumulative means confirmation at any look through that look.
+| events at looks 1/2/3 | true share | look 1 | look 2 | look 3 | through 1 | through 2 | through 3 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 45/95/194 | 50% | 0.816% | 1.209% | 0.893% | 0.816% | 1.762% | 2.364% |
+Overall false-confirmation chance at p=50% (45/95/194): 2.364%; Monte Carlo SE 0.034 percentage points (approximate 95% margin +/- 0.067 points).
+Original single-run normal approximation at n=194: 2.614% (exact binomial sum).
+| 45/95/194 | 55% | 4.118% | 9.886% | 16.358% | 4.118% | 11.576% | 21.363% |
+| 45/95/194 | 60% | 14.297% | 38.014% | 66.600% | 14.297% | 40.343% | 70.332% |
+| 45/95/194 | 62% | 21.366% | 53.602% | 84.293% | 21.366% | 55.719% | 86.330% |
+| 45/95/194 | 64% | 30.428% | 68.975% | 94.331% | 30.428% | 70.593% | 95.115% |
+| 45/95/194 | 65% | 35.134% | 75.923% | 96.990% | 35.134% | 77.280% | 97.426% |
+| 35/73/150 | 50% | 0.000% | 0.912% | 0.872% | 0.000% | 0.912% | 1.555% |
+Overall false-confirmation chance at p=50% (35/73/150): 1.555%; Monte Carlo SE 0.028 percentage points (approximate 95% margin +/- 0.054 points).
+Original single-run normal approximation at n=150: 3.001% (exact binomial sum).
+| 35/73/150 | 55% | 0.000% | 6.617% | 12.501% | 0.000% | 6.617% | 15.123% |
+| 35/73/150 | 60% | 0.000% | 26.144% | 53.656% | 0.000% | 26.144% | 56.571% |
+| 35/73/150 | 62% | 0.000% | 38.415% | 72.311% | 0.000% | 38.415% | 74.386% |
+| 35/73/150 | 64% | 0.000% | 52.536% | 86.481% | 0.000% | 52.536% | 87.633% |
+| 35/73/150 | 65% | 0.000% | 59.730% | 91.211% | 0.000% | 59.730% | 92.014% |
+| 23/49/100 | 50% | 0.000% | 1.063% | 1.075% | 0.000% | 1.063% | 1.829% |
+Overall false-confirmation chance at p=50% (23/49/100): 1.829%; Monte Carlo SE 0.030 percentage points (approximate 95% margin +/- 0.059 points).
+Original single-run normal approximation at n=100: 2.844% (exact binomial sum).
+| 23/49/100 | 55% | 0.000% | 5.469% | 9.572% | 0.000% | 5.469% | 12.005% |
+| 23/49/100 | 60% | 0.000% | 18.366% | 38.224% | 0.000% | 18.366% | 41.584% |
+| 23/49/100 | 62% | 0.000% | 26.735% | 54.182% | 0.000% | 26.735% | 57.163% |
+| 23/49/100 | 64% | 0.000% | 37.197% | 69.889% | 0.000% | 37.197% | 72.149% |
+| 23/49/100 | 65% | 0.000% | 42.873% | 76.858% | 0.000% | 42.873% | 78.733% |
+The 3.5% bound is a programming-error sanity check, not a pass/fail claim about statistical error control.
+Monte Carlo SE of each table entry is sqrt(q * (1-q) / 200000), at most 0.112 percentage points; the normal approximation adds unquantified error.
+Final look at n=194, true share 60%: old 95% 0.806707; amended 0.665988 (exact binomial sums under the normal-interval approximation).
+Final look at n=194, true share 40%: H1 refutation old 95% 0.806707; amended 0.665988 (exact binomial sums under the normal-interval approximation).
