@@ -11,7 +11,7 @@ Primary population: 45 events (127 scored rows), above the look's floor of 40.
 | W against the public set on SGP4 | 72.4 % [56.4..86.7] of rows | 165 m vs 433 m | 0.38 [0.20..0.61] | CONFIRMED EARLY |
 | W against an SGP4-XP record fitted the same way | 73.2 % [59.1..85.6] of rows | 165 m vs 387 m | 0.43 [0.22..0.92] | CONFIRMED EARLY |
 
-No event was worse with W than with the other arm (the guard holds in both comparisons).
+Guard (H3), as registered: in no event did W predict a miss distance more than twice the other arm's and above 1 km; the other way round, 4 events against SGP4 and 3 against SGP4-XP. The guard holds in both comparisons. (It compares predicted miss distances, not errors.)
 
 What this does not show:
 - An early confirmation selects favorable fluctuations; the final look (2026-12-15) gives the effect estimates to use. Looks 2 and 3 still run and are published.
