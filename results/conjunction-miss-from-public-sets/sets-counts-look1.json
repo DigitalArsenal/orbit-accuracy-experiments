@@ -1,0 +1,18 @@
+{
+ "look": 1,
+ "counts": {
+  "day files outside the read range (not read)": 581,
+  "days in the read range with no file": 0,
+  "set records read": 3550691,
+  "sets of event objects created at or after the cutoff (not used)": 202,
+  "event objects with a set of an ephemeris type other than 0": 0,
+  "event objects": 233,
+  "event objects with no set created after the start day": 2,
+  "sets kept": 22392
+ },
+ "inputAggregateSha256": "4f33edb8a7b64e96237c275ccbd13e906f83f284ad84c0f2a24070284f763d35",
+ "configSha256": "427a36ac888e5b2820757efbe7727ddd8992d6f62120e20ed6c7bbe9b9c5e195",
+ "registered": true,
+ "builtFromEventsSha256": "eb583a3edb24ab0ce67a0674528f3c72dac11711bacf2dbda0987d16114b30ad",
+ "setsIndexSha256": "1690888535dbafd88b1f349b1032fda785cbad5eb8908ce719cb6a782c0eb4b1"
+}

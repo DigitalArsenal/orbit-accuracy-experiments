@@ -1,0 +1,235 @@
+{
+ "look": 1,
+ "kind": "messages",
+ "configSha256": "427a36ac888e5b2820757efbe7727ddd8992d6f62120e20ed6c7bbe9b9c5e195",
+ "registered": true,
+ "missingDays": [],
+ "files": [
+  {
+   "file": "2026-10-11.json.gz",
+   "records": 180,
+   "sha256": "2c5eff20fe9b6ee15e40e12b9f8bee370ed1d559d5d7eb324d34fa1aacb225f1"
+  },
+  {
+   "file": "2026-10-12.json.gz",
+   "records": 219,
+   "sha256": "a289c0e38cc52cd2779094e9bbb1d38f7021e7f17fe4c8b605ecd14d6ac916a8"
+  },
+  {
+   "file": "2026-10-13.json.gz",
+   "records": 228,
+   "sha256": "362d04ef71de5296615eca48560014ec2f7a9e7d9345d7f1216d5661294da85a"
+  },
+  {
+   "file": "2026-10-14.json.gz",
+   "records": 219,
+   "sha256": "456c6e5b5701270140c1802fb80441e9c4566d060357635e74f5492b95b38561"
+  },
+  {
+   "file": "2026-10-15.json.gz",
+   "records": 202,
+   "sha256": "aae31b5bd2dfcfb1d60586b9443fd5f5697af82b505a6b0cb797ac734d275511"
+  },
+  {
+   "file": "2026-10-16.json.gz",
+   "records": 192,
+   "sha256": "cf478ab27b74e0f3f2a94ca0b9ce214d65f326bea8613d41ef91b912b49edb48"
+  },
+  {
+   "file": "2026-10-17.json.gz",
+   "records": 177,
+   "sha256": "ee3bf31dfe73cc94187ef79825a49f1f6fa05f8ac5601afda0341ac649c450d2"
+  },
+  {
+   "file": "2026-10-18.json.gz",
+   "records": 173,
+   "sha256": "abe749da734b6d7466a0f09badeaffc51dfb632f7443773d681007d3e8b004ee"
+  },
+  {
+   "file": "2026-10-19.json.gz",
+   "records": 253,
+   "sha256": "4fea669ae01785c82de1bc4a5d13cd55d9a332b67eb4ae16952070a0db74683a"
+  },
+  {
+   "file": "2026-10-20.json.gz",
+   "records": 290,
+   "sha256": "1263d147a79ed3c7f048d452cf767c2c0b395eaddb3d41c6e5c8cdcb4b1c1aae"
+  },
+  {
+   "file": "2026-10-21.json.gz",
+   "records": 254,
+   "sha256": "3a7ef630d3d08c0814b4c530bf7f23d2920de7ef124e918e4a070c77e2eb97fc"
+  },
+  {
+   "file": "2026-10-22.json.gz",
+   "records": 252,
+   "sha256": "10bb5fb6c67fbbe50a2b3aa46e845fba629a8ad037c69070b7615ba7f45f94d4"
+  },
+  {
+   "file": "2026-10-23.json.gz",
+   "records": 229,
+   "sha256": "e480e0fa82766038c93bbea4ae5c0a3e095648fffd17af0879f73700c95a843b"
+  },
+  {
+   "file": "2026-10-24.json.gz",
+   "records": 267,
+   "sha256": "113092a10bd74d13c159c9f7d10e3303e4629c12307120f00719f6ea7c0d2df0"
+  },
+  {
+   "file": "2026-10-25.json.gz",
+   "records": 253,
+   "sha256": "83bea6151b95c8307c23e8121105ed3a6e69960c48d275bca79178fa1b312b62"
+  },
+  {
+   "file": "2026-10-26.json.gz",
+   "records": 173,
+   "sha256": "9a93cbe78934bc18c73336f23cbedb6450dd51ce2a4debf778c808cd2d6b3f3d"
+  },
+  {
+   "file": "2026-10-27.json.gz",
+   "records": 178,
+   "sha256": "20d66f40616542c0fd65761d925007a99f34284ded05b1ae9ff99ff219a788ad"
+  },
+  {
+   "file": "2026-10-28.json.gz",
+   "records": 204,
+   "sha256": "ab4489b22b528f04f93aea6fd9fbc5a482f21dd3cdf6efc20368bf92977965be"
+  },
+  {
+   "file": "2026-10-29.json.gz",
+   "records": 207,
+   "sha256": "bfcfad8529b84b7d3324272a57d99738acd93201b8b2d425ccc10a23c8b23764"
+  },
+  {
+   "file": "2026-10-30.json.gz",
+   "records": 194,
+   "sha256": "e1803bf0097ec2453eae7f35eb746e3b7b9d5bdeac2c45b29cfb96cd98f5317a"
+  },
+  {
+   "file": "2026-10-31.json.gz",
+   "records": 182,
+   "sha256": "753738ddf10419ef740d1341cf669f3e544f53db2f649dad4ec2ef1325c3e189"
+  },
+  {
+   "file": "2026-11-01.json.gz",
+   "records": 211,
+   "sha256": "fa859577a854b2aac96933756571adc3e176fc49e24e6a7be04f5bd0df085b3e"
+  },
+  {
+   "file": "2026-11-02.json.gz",
+   "records": 236,
+   "sha256": "88ea4161558d2d118a12b3d0d2bf9caedc6090847d231b0ff922caae2672d7f4"
+  },
+  {
+   "file": "2026-11-03.json.gz",
+   "records": 209,
+   "sha256": "3b5fb02c637c53de589fbeb377c9ba9aa39bdc8b66d575404974ea0933f5bb20"
+  },
+  {
+   "file": "2026-11-04.json.gz",
+   "records": 205,
+   "sha256": "3441088206b0c5346e9df6e02537a2eb01b1013c0df3af7bb39e720de33cc340"
+  },
+  {
+   "file": "2026-11-05.json.gz",
+   "records": 222,
+   "sha256": "753107c58af85a70daaf02aa36af84ec0c2099adfff606f5eef8e948f3807cbb"
+  },
+  {
+   "file": "2026-11-06.json.gz",
+   "records": 198,
+   "sha256": "03fcdc098b2226e215cb694d40b919d02594ad94802c79a6818502c4c3bf8f19"
+  },
+  {
+   "file": "2026-11-07.json.gz",
+   "records": 232,
+   "sha256": "60ff7faf73639b39de1b9907bde11323d719a0f3c11bb337c6b649199431ad1d"
+  },
+  {
+   "file": "2026-11-08.json.gz",
+   "records": 220,
+   "sha256": "7691b22d9a088227d1e36c64392b48b8a0ea220c312734ec501b2a9dbf77c3a6"
+  },
+  {
+   "file": "2026-11-09.json.gz",
+   "records": 215,
+   "sha256": "a1d8a32cfbb7ae2d01de8f563652a38b73b10154bba5fa82494a22cec77a4179"
+  },
+  {
+   "file": "2026-11-10.json.gz",
+   "records": 164,
+   "sha256": "49f2e7101c92b4f3054bf777fbe52135f1502817b1aa75acf41ad3ebb67819eb"
+  },
+  {
+   "file": "2026-11-11.json.gz",
+   "records": 201,
+   "sha256": "9abb5c3d93671737c518ddf173a9f07b9038301fec1a7c92f89ae19e207a41af"
+  },
+  {
+   "file": "2026-11-12.json.gz",
+   "records": 212,
+   "sha256": "458b7594420893a0ce7c050430c89f4de8cfad02bb9af86717037e67a5f2b93b"
+  },
+  {
+   "file": "2026-11-13.json.gz",
+   "records": 211,
+   "sha256": "00a896a71162077109c4fa8fb277daab56f357203ba4657b0e4ddd978fea5bcc"
+  },
+  {
+   "file": "2026-11-14.json.gz",
+   "records": 192,
+   "sha256": "2600000a07f2f46e25c827be55aa504a9ec2dcd7abaa54ffb6596dfc26c0bff7"
+  },
+  {
+   "file": "2026-11-15.json.gz",
+   "records": 244,
+   "sha256": "122dcd0577249151610a8bfafcc24a261b06442d756a4e9e3dcc09b4be988795"
+  },
+  {
+   "file": "2026-11-16.json.gz",
+   "records": 255,
+   "sha256": "f39282745181315a8c1a128c81e4759ddc0557d6d4cf79d3ea43993ab1c14e38"
+  },
+  {
+   "file": "2026-11-17.json.gz",
+   "records": 233,
+   "sha256": "ef2be0852a6cf72a33e23db24658ba457ae602ce6e403c5a141ddf3c6e6f294c"
+  },
+  {
+   "file": "2026-11-18.json.gz",
+   "records": 272,
+   "sha256": "07f1c65d238a5a999c992a6cd2318b817e9da83972283364183382c12c5d56ce"
+  },
+  {
+   "file": "2026-11-19.json.gz",
+   "records": 250,
+   "sha256": "6887efd161422ca89368536e6ce58ea919214c75ac6d1664db9e841f63ba8cfb"
+  },
+  {
+   "file": "2026-11-20.json.gz",
+   "records": 226,
+   "sha256": "62f0b0c6db012f98ec5050622946c0bb63d1a8cdea5a2a680fe25939ba32d24e"
+  },
+  {
+   "file": "2026-11-21.json.gz",
+   "records": 183,
+   "sha256": "2ed3ebe2d15403fb0d8dc848ba38e2b21ddf2b550e41ca61764b33a722d0381e"
+  },
+  {
+   "file": "2026-11-22.json.gz",
+   "records": 214,
+   "sha256": "97bca63a0114e6cf3741ef11cbff9977438520a872611e10a6efb79fc13f5afe"
+  },
+  {
+   "file": "2026-11-23.json.gz",
+   "records": 212,
+   "sha256": "612ab7d01e7df804f1de3eeb999fe94978ee3ab3330ee5f4a622fa7f8d2f6253"
+  },
+  {
+   "file": "2026-11-24.json.gz",
+   "records": 252,
+   "sha256": "f62823ffbb8d394a713f8721d0fa98b574f046925607fc695c83de3471657df9"
+  }
+ ],
+ "aggregateSha256": "95511cfee34b8247935df5c21cf22648b2758986db089ca191950452339b5ac9"
+}

@@ -1,0 +1,379 @@
+archive root /opt/data/sdn-archive; store test-look1; configuration config.json (registered); run date 2026-11-24
+look 1; interval level 98.3333333333%; seed offset 0; minimum primary events 40
+numpy 2.5.2; generator numpy.random.default_rng; percentile method linear; interval 0.9833333333333333; resamples 2000; seed 20261215
+configuration SHA-256 427a36ac888e5b2820757efbe7727ddd8992d6f62120e20ed6c7bbe9b9c5e195
+module version 0.6.57, wasm SHA-256 652fa229c89a565d688e6cf2384a38fb9cc9aa12e5f8178900bda5bf189b797c
+every row file and fit file of the store has a header naming the registered module, configuration, manifest, Node version, event table, set index and (arm W) forecaster; shards complete and not mixed; the rows of every arm are the chosen rows, once each
+arm S: 234 rows read from 1 files; headers present
+arm W: 231 rows read from 1 files; headers present
+arm X: 231 rows read from 1 files; headers present
+arm W fits by status: accepted 392
+arm X fits by status: accepted 392
+input manifest inputs-messages.json: 45 files, aggregate SHA-256 95511cfee34b8247935df5c21cf22648b2758986db089ca191950452339b5ac9
+input manifest inputs-sets.json: 826 files, aggregate SHA-256 4f33edb8a7b64e96237c275ccbd13e906f83f284ad84c0f2a24070284f763d35
+input manifest inputs-weather-W-0of3.json: 12 epoch days, aggregate SHA-256 c6264a684578c8efe5d3418b77352e2878f24a0efe11be61810f6f4548412780, weather forecaster SHA-256 68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73
+input manifest inputs-weather-W-1of3.json: 12 epoch days, aggregate SHA-256 f0f6b37532d368f533f1ccd755c7de84d43fe0c0bbf9eea078e8e51e7ded51d6, weather forecaster SHA-256 68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73
+input manifest inputs-weather-W-2of3.json: 12 epoch days, aggregate SHA-256 b1e2c07e159a306baf6afa1887bda01eb64fb93086486d9e0b38335ee4df08c8, weather forecaster SHA-256 68cb063ab3648ab502fc9f7e0eb7fda0978d7d5a010b941ce718164e9bea4a73
+        0  day files missing in the message range
+     5072  distinct messages kept
+        0  events excluded: a message created before the early cutoff
+      828  events seen (any final closest approach)
+      117  events with a final closest approach in the window
+        0  events with a message created within 3 days after a missing day file (flagged, kept)
+        3  events with a reference message created after the final closest approach
+       45  events with a reference message created within the primary rule (primary population)
+        5  events with a single message (no scored row)
+        5  events with no row chosen
+        4  events with two messages equal in creation time (identifier breaks the tie)
+     9795  message records read
+        3  messages created after the final closest approach (not scored)
+       96  records created at or after the creation cutoff (not used)
+      234  rows chosen (one per event and lead bin)
+      581  day files outside the read range (not read)
+        0  days in the read range with no file
+      233  event objects
+        0  event objects with a set of an ephemeris type other than 0
+        2  event objects with no set created after the start day
+  3550691  set records read
+    22392  sets kept
+      202  sets of event objects created at or after the cutoff (not used)
+
+=== CHOSEN ROWS ===
+PRIMARY: 45 events with a chosen row, 127 chosen rows
+   lead 0-0.5 d: 41 rows
+   lead 0.5-1 d: 38 rows
+   lead 1-2 d: 31 rows
+   lead 2-3 d: 17 rows
+SECONDARY: 112 events with a chosen row, 234 chosen rows
+   lead 0-0.5 d: 41 rows
+   lead 0.5-1 d: 48 rows
+   lead 1-2 d: 77 rows
+   lead 2-3 d: 68 rows
+chosen rows whose set choice had equal creation times (the later epoch is taken): 0
+arm S on chosen rows: 231 usable; windows widened 0; minimum still at an edge 0; refinement not converged 0; grid points skipped (status not zero) in 0 rows; closest approach outside a fitted span 0
+arm W on chosen rows: 231 usable; windows widened 0; minimum still at an edge 0; refinement not converged 0; grid points skipped (status not zero) in 0 rows; closest approach outside a fitted span 31
+arm X on chosen rows: 231 usable; windows widened 0; minimum still at an edge 0; refinement not converged 0; grid points skipped (status not zero) in 0 rows; closest approach outside a fitted span 31
+cells in the fixed list (the position is part of each cell's seed): 0 pooled; 1 lead 0-0.5 d; 2 lead 0.5-1 d; 3 lead 1-2 d; 4 lead 2-3 d; 5 perigee <600; 6 perigee 600-1000; 7 perigee 1000-2000; 8 perigee >2000; 9 age <1 d; 10 age 1-2 d; 11 age >2 d; 12 debris-debris; 13 debris-payload; 14 debris-rocket body; 15 other types; 16 0-0.5 d | perigee <600; 17 0-0.5 d | perigee 600-1000; 18 0-0.5 d | perigee 1000-2000; 19 0-0.5 d | perigee >2000; 20 0.5-1 d | perigee <600; 21 0.5-1 d | perigee 600-1000; 22 0.5-1 d | perigee 1000-2000; 23 0.5-1 d | perigee >2000; 24 1-2 d | perigee <600; 25 1-2 d | perigee 600-1000; 26 1-2 d | perigee 1000-2000; 27 1-2 d | perigee >2000; 28 2-3 d | perigee <600; 29 2-3 d | perigee 600-1000; 30 2-3 d | perigee 1000-2000; 31 2-3 d | perigee >2000
+
+############ COMPARISON W-vs-S: arm W against S (verdict registered) ############
+
+=== PRIMARY: 45 events, 127 rows after the drop ===
+  pooled                       n=45   rows=127   W closer than S in 72.4% [56.4..86.7] (event-averaged 69.4%); median error 165 vs 433 m, ratio 0.38 [0.20..0.61]; events W worse 0, S worse 4 (guard holds, p=1.000)
+  lead 0-0.5 d                 n=41   rows=41    W closer than S in 70.7% [53.7..85.4] (event-averaged 70.7%); median error 129 vs 378 m, ratio 0.34 [0.18..0.70]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  lead 0.5-1 d                 n=38   rows=38    W closer than S in 73.7% [55.3..89.5] (event-averaged 73.7%); median error 168 vs 473 m, ratio 0.35 [0.15..0.73]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  lead 1-2 d                   n=31   rows=31    W closer than S in 74.2% [53.7..90.3] (event-averaged 74.2%); median error 205 vs 493 m, ratio 0.42 [0.19..0.79]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  lead 2-3 d                   FEW (17 events)
+  perigee <600                 FEW (4 events)
+  perigee 600-1000             n=39   rows=105   W closer than S in 71.4% [53.2..87.7] (event-averaged 67.9%); median error 176 vs 437 m, ratio 0.40 [0.19..0.71]; events W worse 0, S worse 4 (guard holds, p=1.000)
+  perigee 1000-2000            FEW (2 events)
+  perigee >2000                FEW (0 events)
+  age <1 d                     n=29   rows=53    W closer than S in 77.4% [58.0..92.7] (event-averaged 73.3%); median error 113 vs 378 m, ratio 0.30 [0.18..0.89]; events W worse 0, S worse 1 (guard holds, p=1.000)
+  age 1-2 d                    FEW (18 events)
+  age >2 d                     n=21   rows=50    W closer than S in 68.0% [38.5..91.5] (event-averaged 64.3%); median error 222 vs 490 m, ratio 0.45 [0.15..1.11]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  debris-debris                n=20   rows=49    W closer than S in 71.4% [43.9..92.7] (event-averaged 65.0%); median error 254 vs 437 m, ratio 0.58 [0.15..1.22]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  debris-payload               FEW (13 events)
+  debris-rocket body           FEW (8 events)
+  other types                  FEW (4 events)
+  0-0.5 d | perigee <600       FEW (4 events)
+  0-0.5 d | perigee 600-1000   n=35   rows=35    W closer than S in 68.6% [51.4..85.7] (event-averaged 68.6%); median error 159 vs 367 m, ratio 0.43 [0.19..0.90]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  0-0.5 d | perigee 1000-2000  FEW (2 events)
+  0-0.5 d | perigee >2000      FEW (0 events)
+  0.5-1 d | perigee <600       FEW (4 events)
+  0.5-1 d | perigee 600-1000   n=32   rows=32    W closer than S in 68.8% [46.9..87.5] (event-averaged 68.8%); median error 222 vs 448 m, ratio 0.50 [0.19..0.87]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  0.5-1 d | perigee 1000-2000  FEW (2 events)
+  0.5-1 d | perigee >2000      FEW (0 events)
+  1-2 d | perigee <600         FEW (4 events)
+  1-2 d | perigee 600-1000     n=25   rows=25    W closer than S in 72.0% [48.0..92.0] (event-averaged 72.0%); median error 254 vs 487 m, ratio 0.52 [0.18..0.99]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  1-2 d | perigee 1000-2000    FEW (2 events)
+  1-2 d | perigee >2000        FEW (0 events)
+  2-3 d | perigee <600         FEW (2 events)
+  2-3 d | perigee 600-1000     FEW (13 events)
+  2-3 d | perigee 1000-2000    FEW (2 events)
+  2-3 d | perigee >2000        FEW (0 events)
+ distributions (pooled and by lead bin; FEW under 20 events):
+  W pooled                   n=45   miss med/68/90/95 362/532/1661/4168; error med/68/90/95 165/281/1229/2779; dTCA med/p90 0.05/0.37 s; miss under 1/2/5/10/20/50 km 88/91/96/96/97/100 %
+  S pooled                   n=45   miss med/68/90/95 621/708/1910/6703; error med/68/90/95 433/559/1708/4617; dTCA med/p90 0.09/0.45 s; miss under 1/2/5/10/20/50 km 85/90/92/96/97/100 %
+  W lead 0-0.5 d             n=41   miss med/68/90/95 304/524/870/2663; error med/68/90/95 129/223/588/1508; dTCA med/p90 0.03/0.21 s; miss under 1/2/5/10/20/50 km 90/93/98/98/98/100 %
+  S lead 0-0.5 d             n=41   miss med/68/90/95 547/672/1130/5109; error med/68/90/95 378/495/880/3249; dTCA med/p90 0.09/0.28 s; miss under 1/2/5/10/20/50 km 88/90/93/98/98/100 %
+  W lead 0.5-1 d             n=38   miss med/68/90/95 407/528/2111/5563; error med/68/90/95 168/355/1405/4663; dTCA med/p90 0.05/0.32 s; miss under 1/2/5/10/20/50 km 84/89/95/95/97/100 %
+  S lead 0.5-1 d             n=38   miss med/68/90/95 662/754/3536/7847; error med/68/90/95 473/608/3065/6149; dTCA med/p90 0.10/0.43 s; miss under 1/2/5/10/20/50 km 84/87/89/95/97/100 %
+  W lead 1-2 d               n=31   miss med/68/90/95 430/566/2135/3693; error med/68/90/95 205/341/1328/2376; dTCA med/p90 0.07/2.18 s; miss under 1/2/5/10/20/50 km 87/87/97/97/97/100 %
+  S lead 1-2 d               n=31   miss med/68/90/95 663/801/1671/4789; error med/68/90/95 493/592/1409/3199; dTCA med/p90 0.12/0.53 s; miss under 1/2/5/10/20/50 km 77/90/94/97/97/100 %
+  W lead 2-3 d               FEW (17 events)
+  S lead 2-3 d               FEW (17 events)
+ report-only figures (no verdict role; FEW under 20 events):
+  share of rows with W miss under S miss: 70.1%; median of (miss - final miss): W +159 m, S +424 m
+  final miss <100 m            FEW (12 events)
+  final miss 100-300 m         n=24   H1 share 64.7%
+  final miss 300-1000 m        FEW (8 events)
+  final miss >1000 m           FEW (1 events)
+
+=== SECONDARY: 110 events, 231 rows after the drop ===
+   dropped from this comparison: 3 rows, no set for an object
+  pooled                       n=110  rows=231   W closer than S in 67.1% [56.8..77.5] (event-averaged 63.7%); median error 176 vs 397 m, ratio 0.45 [0.29..0.70]; events W worse 2, S worse 7 (guard holds, p=1.000)
+  lead 0-0.5 d                 n=41   rows=41    W closer than S in 70.7% [53.7..87.8] (event-averaged 70.7%); median error 129 vs 378 m, ratio 0.34 [0.17..0.72]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  lead 0.5-1 d                 n=48   rows=48    W closer than S in 64.6% [47.9..79.2] (event-averaged 64.6%); median error 168 vs 398 m, ratio 0.42 [0.21..1.39]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  lead 1-2 d                   n=76   rows=76    W closer than S in 63.2% [50.0..76.3] (event-averaged 63.2%); median error 208 vs 439 m, ratio 0.47 [0.35..1.10]; events W worse 2, S worse 5 (guard holds, p=1.000)
+  lead 2-3 d                   n=66   rows=66    W closer than S in 71.2% [56.1..84.8] (event-averaged 71.2%); median error 156 vs 367 m, ratio 0.43 [0.24..0.82]; events W worse 0, S worse 3 (guard holds, p=1.000)
+  perigee <600                 FEW (16 events)
+  perigee 600-1000             n=89   rows=185   W closer than S in 68.6% [56.2..80.3] (event-averaged 66.1%); median error 178 vs 400 m, ratio 0.45 [0.28..0.72]; events W worse 1, S worse 7 (guard holds, p=1.000)
+  perigee 1000-2000            FEW (4 events)
+  perigee >2000                FEW (1 events)
+  age <1 d                     n=70   rows=111   W closer than S in 64.9% [52.2..77.0] (event-averaged 62.7%); median error 130 vs 277 m, ratio 0.47 [0.31..1.12]; events W worse 2, S worse 4 (guard holds, p=1.000)
+  age 1-2 d                    n=38   rows=48    W closer than S in 68.8% [50.0..85.5] (event-averaged 68.4%); median error 201 vs 448 m, ratio 0.45 [0.20..1.05]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  age >2 d                     n=36   rows=72    W closer than S in 69.4% [50.0..86.8] (event-averaged 67.1%); median error 259 vs 494 m, ratio 0.52 [0.25..0.96]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  debris-debris                n=34   rows=70    W closer than S in 70.0% [49.3..87.8] (event-averaged 64.7%); median error 192 vs 346 m, ratio 0.56 [0.24..1.45]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  debris-payload               n=36   rows=81    W closer than S in 65.4% [48.5..81.2] (event-averaged 66.7%); median error 130 vs 378 m, ratio 0.34 [0.17..1.15]; events W worse 1, S worse 3 (guard holds, p=1.000)
+  debris-rocket body           n=24   rows=52    W closer than S in 63.5% [41.7..84.0] (event-averaged 64.9%); median error 182 vs 363 m, ratio 0.50 [0.25..1.57]; events W worse 1, S worse 2 (guard holds, p=1.000)
+  other types                  FEW (16 events)
+  0-0.5 d | perigee <600       FEW (4 events)
+  0-0.5 d | perigee 600-1000   n=35   rows=35    W closer than S in 68.6% [48.6..85.7] (event-averaged 68.6%); median error 159 vs 367 m, ratio 0.43 [0.19..0.82]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  0-0.5 d | perigee 1000-2000  FEW (2 events)
+  0-0.5 d | perigee >2000      FEW (0 events)
+  0.5-1 d | perigee <600       FEW (6 events)
+  0.5-1 d | perigee 600-1000   n=40   rows=40    W closer than S in 62.5% [42.5..80.0] (event-averaged 62.5%); median error 222 vs 398 m, ratio 0.56 [0.24..1.38]; events W worse 0, S worse 2 (guard holds, p=1.000)
+  0.5-1 d | perigee 1000-2000  FEW (2 events)
+  0.5-1 d | perigee >2000      FEW (0 events)
+  1-2 d | perigee <600         FEW (12 events)
+  1-2 d | perigee 600-1000     n=59   rows=59    W closer than S in 66.1% [49.2..79.7] (event-averaged 66.1%); median error 231 vs 433 m, ratio 0.53 [0.36..1.22]; events W worse 1, S worse 5 (guard holds, p=1.000)
+  1-2 d | perigee 1000-2000    FEW (4 events)
+  1-2 d | perigee >2000        FEW (1 events)
+  2-3 d | perigee <600         FEW (11 events)
+  2-3 d | perigee 600-1000     n=51   rows=51    W closer than S in 76.5% [62.7..90.2] (event-averaged 76.5%); median error 123 vs 388 m, ratio 0.32 [0.18..0.73]; events W worse 0, S worse 3 (guard holds, p=1.000)
+  2-3 d | perigee 1000-2000    FEW (3 events)
+  2-3 d | perigee >2000        FEW (1 events)
+ distributions (pooled and by lead bin; FEW under 20 events):
+  W pooled                   n=110  miss med/68/90/95 404/598/1546/3075; error med/68/90/95 176/326/1041/1845; dTCA med/p90 0.06/0.26 s; miss under 1/2/5/10/20/50 km 84/92/97/98/98/100 %
+  S pooled                   n=110  miss med/68/90/95 595/735/1779/4166; error med/68/90/95 397/556/1406/2466; dTCA med/p90 0.09/0.37 s; miss under 1/2/5/10/20/50 km 81/91/95/98/98/100 %
+  W lead 0-0.5 d             n=41   miss med/68/90/95 304/524/870/2663; error med/68/90/95 129/223/588/1508; dTCA med/p90 0.03/0.21 s; miss under 1/2/5/10/20/50 km 90/93/98/98/98/100 %
+  S lead 0-0.5 d             n=41   miss med/68/90/95 547/672/1130/5109; error med/68/90/95 378/495/880/3249; dTCA med/p90 0.09/0.28 s; miss under 1/2/5/10/20/50 km 88/90/93/98/98/100 %
+  W lead 0.5-1 d             n=48   miss med/68/90/95 389/521/1568/3721; error med/68/90/95 168/294/1077/2510; dTCA med/p90 0.05/0.22 s; miss under 1/2/5/10/20/50 km 88/92/96/96/98/100 %
+  S lead 0.5-1 d             n=48   miss med/68/90/95 623/704/1592/6252; error med/68/90/95 398/539/1396/4551; dTCA med/p90 0.09/0.32 s; miss under 1/2/5/10/20/50 km 88/90/92/96/98/100 %
+  W lead 1-2 d               n=76   miss med/68/90/95 444/639/1393/2386; error med/68/90/95 208/367/982/1584; dTCA med/p90 0.07/0.27 s; miss under 1/2/5/10/20/50 km 79/92/97/99/99/100 %
+  S lead 1-2 d               n=76   miss med/68/90/95 594/808/1694/2103; error med/68/90/95 439/575/1335/1499; dTCA med/p90 0.11/0.35 s; miss under 1/2/5/10/20/50 km 75/95/96/99/99/100 %
+  W lead 2-3 d               n=66   miss med/68/90/95 436/716/1687/2819; error med/68/90/95 156/382/1158/1848; dTCA med/p90 0.06/0.44 s; miss under 1/2/5/10/20/50 km 82/91/97/98/98/100 %
+  S lead 2-3 d               n=66   miss med/68/90/95 626/829/2002/2922; error med/68/90/95 367/564/1444/2017; dTCA med/p90 0.08/0.47 s; miss under 1/2/5/10/20/50 km 77/89/97/98/98/100 %
+ report-only figures (no verdict role; FEW under 20 events):
+  share of rows with W miss under S miss: 66.7%; median of (miss - final miss): W +159 m, S +363 m
+  final miss <100 m            n=22   H1 share 89.8%
+  final miss 100-300 m         n=44   H1 share 63.3%
+  final miss 300-1000 m        n=42   H1 share 57.0%
+  final miss >1000 m           FEW (2 events)
+
+VERDICT W-vs-S (PRIMARY, 45 events with a scored row): CONFIRMED EARLY
+   H1 holds, H2 holds, H3 guard holds
+
+############ COMPARISON W-vs-X: arm W against X (verdict registered) ############
+
+=== PRIMARY: 45 events, 127 rows after the drop ===
+  pooled                       n=45   rows=127   W closer than X in 73.2% [59.1..85.6] (event-averaged 69.8%); median error 165 vs 387 m, ratio 0.43 [0.22..0.92]; events W worse 0, X worse 3 (guard holds, p=1.000)
+  lead 0-0.5 d                 n=41   rows=41    W closer than X in 65.9% [48.8..82.9] (event-averaged 65.9%); median error 129 vs 330 m, ratio 0.39 [0.18..1.06]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  lead 0.5-1 d                 n=38   rows=38    W closer than X in 81.6% [65.8..94.7] (event-averaged 81.6%); median error 168 vs 415 m, ratio 0.40 [0.17..0.84]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  lead 1-2 d                   n=31   rows=31    W closer than X in 74.2% [54.8..90.3] (event-averaged 74.2%); median error 205 vs 398 m, ratio 0.52 [0.20..1.66]; events W worse 0, X worse 2 (guard holds, p=1.000)
+  lead 2-3 d                   FEW (17 events)
+  perigee <600                 FEW (4 events)
+  perigee 600-1000             n=39   rows=105   W closer than X in 72.4% [56.1..86.6] (event-averaged 68.4%); median error 176 vs 387 m, ratio 0.46 [0.22..0.94]; events W worse 0, X worse 3 (guard holds, p=1.000)
+  perigee 1000-2000            FEW (2 events)
+  perigee >2000                FEW (0 events)
+  age <1 d                     n=29   rows=53    W closer than X in 81.1% [68.0..93.6] (event-averaged 78.7%); median error 113 vs 301 m, ratio 0.38 [0.19..0.93]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  age 1-2 d                    FEW (18 events)
+  age >2 d                     n=21   rows=50    W closer than X in 68.0% [41.7..88.5] (event-averaged 64.3%); median error 222 vs 396 m, ratio 0.56 [0.18..1.91]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  debris-debris                n=20   rows=49    W closer than X in 75.5% [51.1..92.6] (event-averaged 67.5%); median error 254 vs 387 m, ratio 0.66 [0.19..1.68]; events W worse 0, X worse 2 (guard holds, p=1.000)
+  debris-payload               FEW (13 events)
+  debris-rocket body           FEW (8 events)
+  other types                  FEW (4 events)
+  0-0.5 d | perigee <600       FEW (4 events)
+  0-0.5 d | perigee 600-1000   n=35   rows=35    W closer than X in 65.7% [45.7..82.9] (event-averaged 65.7%); median error 159 vs 330 m, ratio 0.48 [0.19..1.03]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  0-0.5 d | perigee 1000-2000  FEW (2 events)
+  0-0.5 d | perigee >2000      FEW (0 events)
+  0.5-1 d | perigee <600       FEW (4 events)
+  0.5-1 d | perigee 600-1000   n=32   rows=32    W closer than X in 78.1% [59.4..93.8] (event-averaged 78.1%); median error 222 vs 415 m, ratio 0.54 [0.21..1.03]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  0.5-1 d | perigee 1000-2000  FEW (2 events)
+  0.5-1 d | perigee >2000      FEW (0 events)
+  1-2 d | perigee <600         FEW (4 events)
+  1-2 d | perigee 600-1000     n=25   rows=25    W closer than X in 72.0% [48.0..92.0] (event-averaged 72.0%); median error 254 vs 398 m, ratio 0.64 [0.22..1.74]; events W worse 0, X worse 2 (guard holds, p=1.000)
+  1-2 d | perigee 1000-2000    FEW (2 events)
+  1-2 d | perigee >2000        FEW (0 events)
+  2-3 d | perigee <600         FEW (2 events)
+  2-3 d | perigee 600-1000     FEW (13 events)
+  2-3 d | perigee 1000-2000    FEW (2 events)
+  2-3 d | perigee >2000        FEW (0 events)
+ distributions (pooled and by lead bin; FEW under 20 events):
+  W pooled                   n=45   miss med/68/90/95 362/532/1661/4168; error med/68/90/95 165/281/1229/2779; dTCA med/p90 0.05/0.37 s; miss under 1/2/5/10/20/50 km 88/91/96/96/97/100 %
+  X pooled                   n=45   miss med/68/90/95 554/675/2042/4870; error med/68/90/95 387/527/1372/4268; dTCA med/p90 0.09/0.43 s; miss under 1/2/5/10/20/50 km 87/90/96/96/97/100 %
+  W lead 0-0.5 d             n=41   miss med/68/90/95 304/524/870/2663; error med/68/90/95 129/223/588/1508; dTCA med/p90 0.03/0.21 s; miss under 1/2/5/10/20/50 km 90/93/98/98/98/100 %
+  X lead 0-0.5 d             n=41   miss med/68/90/95 485/642/794/4424; error med/68/90/95 330/470/726/2505; dTCA med/p90 0.09/0.26 s; miss under 1/2/5/10/20/50 km 90/90/98/98/98/100 %
+  W lead 0.5-1 d             n=38   miss med/68/90/95 407/528/2111/5563; error med/68/90/95 168/355/1405/4663; dTCA med/p90 0.05/0.32 s; miss under 1/2/5/10/20/50 km 84/89/95/95/97/100 %
+  X lead 0.5-1 d             n=38   miss med/68/90/95 582/704/3577/6215; error med/68/90/95 415/586/1915/6012; dTCA med/p90 0.10/0.42 s; miss under 1/2/5/10/20/50 km 87/87/95/95/97/100 %
+  W lead 1-2 d               n=31   miss med/68/90/95 430/566/2135/3693; error med/68/90/95 205/341/1328/2376; dTCA med/p90 0.07/2.18 s; miss under 1/2/5/10/20/50 km 87/87/97/97/97/100 %
+  X lead 1-2 d               n=31   miss med/68/90/95 580/765/1659/3854; error med/68/90/95 398/545/1397/2264; dTCA med/p90 0.12/2.43 s; miss under 1/2/5/10/20/50 km 77/90/97/97/97/100 %
+  W lead 2-3 d               FEW (17 events)
+  X lead 2-3 d               FEW (17 events)
+ report-only figures (no verdict role; FEW under 20 events):
+  share of rows with W miss under X miss: 70.9%; median of (miss - final miss): W +159 m, X +388 m
+  final miss <100 m            FEW (12 events)
+  final miss 100-300 m         n=24   H1 share 67.6%
+  final miss 300-1000 m        FEW (8 events)
+  final miss >1000 m           FEW (1 events)
+
+=== SECONDARY: 110 events, 231 rows after the drop ===
+   dropped from this comparison: 3 rows, no set for an object
+  pooled                       n=110  rows=231   W closer than X in 65.8% [56.0..75.5] (event-averaged 61.4%); median error 176 vs 340 m, ratio 0.52 [0.33..0.82]; events W worse 1, X worse 6 (guard holds, p=1.000)
+  lead 0-0.5 d                 n=41   rows=41    W closer than X in 65.9% [48.8..81.3] (event-averaged 65.9%); median error 129 vs 330 m, ratio 0.39 [0.19..1.06]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  lead 0.5-1 d                 n=48   rows=48    W closer than X in 72.9% [58.3..87.5] (event-averaged 72.9%); median error 168 vs 346 m, ratio 0.48 [0.25..1.46]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  lead 1-2 d                   n=76   rows=76    W closer than X in 64.5% [50.9..77.6] (event-averaged 64.5%); median error 208 vs 336 m, ratio 0.62 [0.42..1.21]; events W worse 1, X worse 4 (guard holds, p=1.000)
+  lead 2-3 d                   n=66   rows=66    W closer than X in 62.1% [47.0..75.8] (event-averaged 62.1%); median error 156 vs 353 m, ratio 0.44 [0.25..0.88]; events W worse 0, X worse 2 (guard holds, p=1.000)
+  perigee <600                 FEW (16 events)
+  perigee 600-1000             n=89   rows=185   W closer than X in 65.9% [54.5..76.9] (event-averaged 62.2%); median error 178 vs 346 m, ratio 0.51 [0.31..0.91]; events W worse 0, X worse 6 (guard holds, p=1.000)
+  perigee 1000-2000            FEW (4 events)
+  perigee >2000                FEW (1 events)
+  age <1 d                     n=70   rows=111   W closer than X in 68.5% [57.4..78.5] (event-averaged 65.5%); median error 130 vs 249 m, ratio 0.52 [0.33..1.11]; events W worse 1, X worse 4 (guard holds, p=1.000)
+  age 1-2 d                    n=38   rows=48    W closer than X in 60.4% [41.1..77.6] (event-averaged 61.8%); median error 201 vs 387 m, ratio 0.52 [0.21..1.24]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  age >2 d                     n=36   rows=72    W closer than X in 65.3% [44.4..82.2] (event-averaged 61.6%); median error 259 vs 407 m, ratio 0.63 [0.31..1.15]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  debris-debris                n=34   rows=70    W closer than X in 71.4% [51.8..86.8] (event-averaged 63.2%); median error 192 vs 316 m, ratio 0.61 [0.27..1.55]; events W worse 0, X worse 2 (guard holds, p=1.000)
+  debris-payload               n=36   rows=81    W closer than X in 59.3% [42.1..74.8] (event-averaged 62.7%); median error 130 vs 191 m, ratio 0.68 [0.18..1.27]; events W worse 1, X worse 2 (guard holds, p=1.000)
+  debris-rocket body           n=24   rows=52    W closer than X in 65.4% [47.5..81.8] (event-averaged 62.5%); median error 182 vs 388 m, ratio 0.47 [0.26..1.40]; events W worse 0, X worse 2 (guard holds, p=1.000)
+  other types                  FEW (16 events)
+  0-0.5 d | perigee <600       FEW (4 events)
+  0-0.5 d | perigee 600-1000   n=35   rows=35    W closer than X in 65.7% [45.7..85.7] (event-averaged 65.7%); median error 159 vs 330 m, ratio 0.48 [0.20..1.04]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  0-0.5 d | perigee 1000-2000  FEW (2 events)
+  0-0.5 d | perigee >2000      FEW (0 events)
+  0.5-1 d | perigee <600       FEW (6 events)
+  0.5-1 d | perigee 600-1000   n=40   rows=40    W closer than X in 70.0% [51.6..85.0] (event-averaged 70.0%); median error 222 vs 389 m, ratio 0.57 [0.26..1.86]; events W worse 0, X worse 1 (guard holds, p=1.000)
+  0.5-1 d | perigee 1000-2000  FEW (2 events)
+  0.5-1 d | perigee >2000      FEW (0 events)
+  1-2 d | perigee <600         FEW (12 events)
+  1-2 d | perigee 600-1000     n=59   rows=59    W closer than X in 64.4% [50.3..78.0] (event-averaged 64.4%); median error 231 vs 331 m, ratio 0.70 [0.43..1.25]; events W worse 0, X worse 4 (guard holds, p=1.000)
+  1-2 d | perigee 1000-2000    FEW (4 events)
+  1-2 d | perigee >2000        FEW (1 events)
+  2-3 d | perigee <600         FEW (11 events)
+  2-3 d | perigee 600-1000     n=51   rows=51    W closer than X in 64.7% [47.1..80.4] (event-averaged 64.7%); median error 123 vs 378 m, ratio 0.33 [0.19..0.75]; events W worse 0, X worse 2 (guard holds, p=1.000)
+  2-3 d | perigee 1000-2000    FEW (3 events)
+  2-3 d | perigee >2000        FEW (1 events)
+ distributions (pooled and by lead bin; FEW under 20 events):
+  W pooled                   n=110  miss med/68/90/95 404/598/1546/3075; error med/68/90/95 176/326/1041/1845; dTCA med/p90 0.06/0.26 s; miss under 1/2/5/10/20/50 km 84/92/97/98/98/100 %
+  X pooled                   n=110  miss med/68/90/95 545/708/1771/3912; error med/68/90/95 340/527/1327/2049; dTCA med/p90 0.09/0.31 s; miss under 1/2/5/10/20/50 km 81/91/97/98/98/100 %
+  W lead 0-0.5 d             n=41   miss med/68/90/95 304/524/870/2663; error med/68/90/95 129/223/588/1508; dTCA med/p90 0.03/0.21 s; miss under 1/2/5/10/20/50 km 90/93/98/98/98/100 %
+  X lead 0-0.5 d             n=41   miss med/68/90/95 485/642/794/4424; error med/68/90/95 330/470/726/2505; dTCA med/p90 0.09/0.26 s; miss under 1/2/5/10/20/50 km 90/90/98/98/98/100 %
+  W lead 0.5-1 d             n=48   miss med/68/90/95 389/521/1568/3721; error med/68/90/95 168/294/1077/2510; dTCA med/p90 0.05/0.22 s; miss under 1/2/5/10/20/50 km 88/92/96/96/98/100 %
+  X lead 0.5-1 d             n=48   miss med/68/90/95 551/676/1622/4776; error med/68/90/95 346/503/1036/4183; dTCA med/p90 0.09/0.31 s; miss under 1/2/5/10/20/50 km 90/90/96/96/98/100 %
+  W lead 1-2 d               n=76   miss med/68/90/95 444/639/1393/2386; error med/68/90/95 208/367/982/1584; dTCA med/p90 0.07/0.27 s; miss under 1/2/5/10/20/50 km 79/92/97/99/99/100 %
+  X lead 1-2 d               n=76   miss med/68/90/95 564/775/1718/2336; error med/68/90/95 336/545/1273/1557; dTCA med/p90 0.10/0.34 s; miss under 1/2/5/10/20/50 km 75/93/97/99/99/100 %
+  W lead 2-3 d               n=66   miss med/68/90/95 436/716/1687/2819; error med/68/90/95 156/382/1158/1848; dTCA med/p90 0.06/0.44 s; miss under 1/2/5/10/20/50 km 82/91/97/98/98/100 %
+  X lead 2-3 d               n=66   miss med/68/90/95 591/868/2034/2885; error med/68/90/95 353/541/1476/1951; dTCA med/p90 0.08/0.42 s; miss under 1/2/5/10/20/50 km 77/89/97/98/98/100 %
+ report-only figures (no verdict role; FEW under 20 events):
+  share of rows with W miss under X miss: 64.5%; median of (miss - final miss): W +159 m, X +301 m
+  final miss <100 m            n=22   H1 share 77.6%
+  final miss 100-300 m         n=44   H1 share 65.3%
+  final miss 300-1000 m        n=42   H1 share 58.2%
+  final miss >1000 m           FEW (2 events)
+
+VERDICT W-vs-X (PRIMARY, 45 events with a scored row): CONFIRMED EARLY
+   H1 holds, H2 holds, H3 guard holds
+
+############ COMPARISON X-vs-S: arm X against S (reported, no verdict) ############
+
+=== PRIMARY: 45 events, 127 rows after the drop ===
+  pooled                       n=45   rows=127   X closer than S in 59.8% [42.9..75.6] (event-averaged 58.7%); median error 387 vs 433 m, ratio 0.89 [0.47..1.02]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 0-0.5 d                 n=41   rows=41    X closer than S in 58.5% [39.0..75.6] (event-averaged 58.5%); median error 330 vs 378 m, ratio 0.87 [0.45..1.06]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 0.5-1 d                 n=38   rows=38    X closer than S in 57.9% [39.5..76.3] (event-averaged 57.9%); median error 415 vs 473 m, ratio 0.88 [0.60..1.06]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 1-2 d                   n=31   rows=31    X closer than S in 58.1% [35.5..77.4] (event-averaged 58.1%); median error 398 vs 493 m, ratio 0.81 [0.32..1.07]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 2-3 d                   FEW (17 events)
+  perigee <600                 FEW (4 events)
+  perigee 600-1000             n=39   rows=105   X closer than S in 61.9% [43.7..78.7] (event-averaged 60.0%); median error 387 vs 437 m, ratio 0.89 [0.61..1.00]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  perigee 1000-2000            FEW (2 events)
+  perigee >2000                FEW (0 events)
+  age <1 d                     n=29   rows=53    X closer than S in 56.6% [36.3..75.9] (event-averaged 53.7%); median error 301 vs 378 m, ratio 0.80 [0.40..1.29]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  age 1-2 d                    FEW (18 events)
+  age >2 d                     n=21   rows=50    X closer than S in 68.0% [41.5..88.9] (event-averaged 61.9%); median error 396 vs 490 m, ratio 0.81 [0.42..1.09]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  debris-debris                n=20   rows=49    X closer than S in 67.3% [41.9..87.6] (event-averaged 62.9%); median error 387 vs 437 m, ratio 0.89 [0.68..1.06]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  debris-payload               FEW (13 events)
+  debris-rocket body           FEW (8 events)
+  other types                  FEW (4 events)
+  0-0.5 d | perigee <600       FEW (4 events)
+  0-0.5 d | perigee 600-1000   n=35   rows=35    X closer than S in 57.1% [37.1..77.1] (event-averaged 57.1%); median error 330 vs 367 m, ratio 0.90 [0.46..1.06]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  0-0.5 d | perigee 1000-2000  FEW (2 events)
+  0-0.5 d | perigee >2000      FEW (0 events)
+  0.5-1 d | perigee <600       FEW (4 events)
+  0.5-1 d | perigee 600-1000   n=32   rows=32    X closer than S in 59.4% [39.6..81.2] (event-averaged 59.4%); median error 415 vs 448 m, ratio 0.93 [0.61..1.04]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  0.5-1 d | perigee 1000-2000  FEW (2 events)
+  0.5-1 d | perigee >2000      FEW (0 events)
+  1-2 d | perigee <600         FEW (4 events)
+  1-2 d | perigee 600-1000     n=25   rows=25    X closer than S in 64.0% [40.0..84.0] (event-averaged 64.0%); median error 398 vs 487 m, ratio 0.82 [0.35..1.08]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  1-2 d | perigee 1000-2000    FEW (2 events)
+  1-2 d | perigee >2000        FEW (0 events)
+  2-3 d | perigee <600         FEW (2 events)
+  2-3 d | perigee 600-1000     FEW (13 events)
+  2-3 d | perigee 1000-2000    FEW (2 events)
+  2-3 d | perigee >2000        FEW (0 events)
+ distributions (pooled and by lead bin; FEW under 20 events):
+  X pooled                   n=45   miss med/68/90/95 554/675/2042/4870; error med/68/90/95 387/527/1372/4268; dTCA med/p90 0.09/0.43 s; miss under 1/2/5/10/20/50 km 87/90/96/96/97/100 %
+  S pooled                   n=45   miss med/68/90/95 621/708/1910/6703; error med/68/90/95 433/559/1708/4617; dTCA med/p90 0.09/0.45 s; miss under 1/2/5/10/20/50 km 85/90/92/96/97/100 %
+  X lead 0-0.5 d             n=41   miss med/68/90/95 485/642/794/4424; error med/68/90/95 330/470/726/2505; dTCA med/p90 0.09/0.26 s; miss under 1/2/5/10/20/50 km 90/90/98/98/98/100 %
+  S lead 0-0.5 d             n=41   miss med/68/90/95 547/672/1130/5109; error med/68/90/95 378/495/880/3249; dTCA med/p90 0.09/0.28 s; miss under 1/2/5/10/20/50 km 88/90/93/98/98/100 %
+  X lead 0.5-1 d             n=38   miss med/68/90/95 582/704/3577/6215; error med/68/90/95 415/586/1915/6012; dTCA med/p90 0.10/0.42 s; miss under 1/2/5/10/20/50 km 87/87/95/95/97/100 %
+  S lead 0.5-1 d             n=38   miss med/68/90/95 662/754/3536/7847; error med/68/90/95 473/608/3065/6149; dTCA med/p90 0.10/0.43 s; miss under 1/2/5/10/20/50 km 84/87/89/95/97/100 %
+  X lead 1-2 d               n=31   miss med/68/90/95 580/765/1659/3854; error med/68/90/95 398/545/1397/2264; dTCA med/p90 0.12/2.43 s; miss under 1/2/5/10/20/50 km 77/90/97/97/97/100 %
+  S lead 1-2 d               n=31   miss med/68/90/95 663/801/1671/4789; error med/68/90/95 493/592/1409/3199; dTCA med/p90 0.12/0.53 s; miss under 1/2/5/10/20/50 km 77/90/94/97/97/100 %
+  X lead 2-3 d               FEW (17 events)
+  S lead 2-3 d               FEW (17 events)
+ report-only figures (no verdict role; FEW under 20 events):
+  share of rows with X miss under S miss: 59.1%; median of (miss - final miss): X +388 m, S +424 m
+  final miss <100 m            FEW (12 events)
+  final miss 100-300 m         n=24   H1 share 64.7%
+  final miss 300-1000 m        FEW (8 events)
+  final miss >1000 m           FEW (1 events)
+
+=== SECONDARY: 110 events, 231 rows after the drop ===
+   dropped from this comparison: 3 rows, no set for an object
+  pooled                       n=110  rows=231   X closer than S in 55.8% [45.3..66.4] (event-averaged 55.1%); median error 340 vs 397 m, ratio 0.86 [0.69..1.00]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 0-0.5 d                 n=41   rows=41    X closer than S in 58.5% [39.0..75.6] (event-averaged 58.5%); median error 330 vs 378 m, ratio 0.87 [0.44..1.06]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 0.5-1 d                 n=48   rows=48    X closer than S in 50.0% [33.3..66.7] (event-averaged 50.0%); median error 346 vs 398 m, ratio 0.87 [0.54..1.26]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 1-2 d                   n=76   rows=76    X closer than S in 53.9% [39.5..67.1] (event-averaged 53.9%); median error 336 vs 439 m, ratio 0.76 [0.59..1.21]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  lead 2-3 d                   n=66   rows=66    X closer than S in 60.6% [45.5..74.2] (event-averaged 60.6%); median error 353 vs 367 m, ratio 0.96 [0.72..1.07]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  perigee <600                 FEW (16 events)
+  perigee 600-1000             n=89   rows=185   X closer than S in 56.8% [43.6..68.8] (event-averaged 55.1%); median error 346 vs 400 m, ratio 0.87 [0.69..1.00]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  perigee 1000-2000            FEW (4 events)
+  perigee >2000                FEW (1 events)
+  age <1 d                     n=70   rows=111   X closer than S in 52.3% [38.5..65.7] (event-averaged 52.0%); median error 249 vs 277 m, ratio 0.90 [0.61..1.37]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  age 1-2 d                    n=38   rows=48    X closer than S in 52.1% [33.3..70.5] (event-averaged 51.3%); median error 387 vs 448 m, ratio 0.87 [0.63..1.10]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  age >2 d                     n=36   rows=72    X closer than S in 63.9% [43.5..82.9] (event-averaged 62.5%); median error 407 vs 494 m, ratio 0.82 [0.66..1.05]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  debris-debris                n=34   rows=70    X closer than S in 61.4% [41.0..78.9] (event-averaged 56.1%); median error 316 vs 346 m, ratio 0.91 [0.72..1.48]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  debris-payload               n=36   rows=81    X closer than S in 48.1% [30.0..66.4] (event-averaged 47.7%); median error 191 vs 378 m, ratio 0.51 [0.35..1.20]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  debris-rocket body           n=24   rows=52    X closer than S in 51.9% [33.3..72.5] (event-averaged 56.6%); median error 388 vs 363 m, ratio 1.07 [0.74..1.45]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  other types                  FEW (16 events)
+  0-0.5 d | perigee <600       FEW (4 events)
+  0-0.5 d | perigee 600-1000   n=35   rows=35    X closer than S in 57.1% [37.1..77.1] (event-averaged 57.1%); median error 330 vs 367 m, ratio 0.90 [0.46..1.06]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  0-0.5 d | perigee 1000-2000  FEW (2 events)
+  0-0.5 d | perigee >2000      FEW (0 events)
+  0.5-1 d | perigee <600       FEW (6 events)
+  0.5-1 d | perigee 600-1000   n=40   rows=40    X closer than S in 52.5% [32.5..70.0] (event-averaged 52.5%); median error 389 vs 398 m, ratio 0.98 [0.42..1.09]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  0.5-1 d | perigee 1000-2000  FEW (2 events)
+  0.5-1 d | perigee >2000      FEW (0 events)
+  1-2 d | perigee <600         FEW (12 events)
+  1-2 d | perigee 600-1000     n=59   rows=59    X closer than S in 59.3% [44.1..74.6] (event-averaged 59.3%); median error 331 vs 433 m, ratio 0.77 [0.58..1.15]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  1-2 d | perigee 1000-2000    FEW (4 events)
+  1-2 d | perigee >2000        FEW (1 events)
+  2-3 d | perigee <600         FEW (11 events)
+  2-3 d | perigee 600-1000     n=51   rows=51    X closer than S in 56.9% [39.2..72.5] (event-averaged 56.9%); median error 378 vs 388 m, ratio 0.97 [0.69..1.10]; events X worse 0, S worse 0 (guard holds, p=1.000)
+  2-3 d | perigee 1000-2000    FEW (3 events)
+  2-3 d | perigee >2000        FEW (1 events)
+ distributions (pooled and by lead bin; FEW under 20 events):
+  X pooled                   n=110  miss med/68/90/95 545/708/1771/3912; error med/68/90/95 340/527/1327/2049; dTCA med/p90 0.09/0.31 s; miss under 1/2/5/10/20/50 km 81/91/97/98/98/100 %
+  S pooled                   n=110  miss med/68/90/95 595/735/1779/4166; error med/68/90/95 397/556/1406/2466; dTCA med/p90 0.09/0.37 s; miss under 1/2/5/10/20/50 km 81/91/95/98/98/100 %
+  X lead 0-0.5 d             n=41   miss med/68/90/95 485/642/794/4424; error med/68/90/95 330/470/726/2505; dTCA med/p90 0.09/0.26 s; miss under 1/2/5/10/20/50 km 90/90/98/98/98/100 %
+  S lead 0-0.5 d             n=41   miss med/68/90/95 547/672/1130/5109; error med/68/90/95 378/495/880/3249; dTCA med/p90 0.09/0.28 s; miss under 1/2/5/10/20/50 km 88/90/93/98/98/100 %
+  X lead 0.5-1 d             n=48   miss med/68/90/95 551/676/1622/4776; error med/68/90/95 346/503/1036/4183; dTCA med/p90 0.09/0.31 s; miss under 1/2/5/10/20/50 km 90/90/96/96/98/100 %
+  S lead 0.5-1 d             n=48   miss med/68/90/95 623/704/1592/6252; error med/68/90/95 398/539/1396/4551; dTCA med/p90 0.09/0.32 s; miss under 1/2/5/10/20/50 km 88/90/92/96/98/100 %
+  X lead 1-2 d               n=76   miss med/68/90/95 564/775/1718/2336; error med/68/90/95 336/545/1273/1557; dTCA med/p90 0.10/0.34 s; miss under 1/2/5/10/20/50 km 75/93/97/99/99/100 %
+  S lead 1-2 d               n=76   miss med/68/90/95 594/808/1694/2103; error med/68/90/95 439/575/1335/1499; dTCA med/p90 0.11/0.35 s; miss under 1/2/5/10/20/50 km 75/95/96/99/99/100 %
+  X lead 2-3 d               n=66   miss med/68/90/95 591/868/2034/2885; error med/68/90/95 353/541/1476/1951; dTCA med/p90 0.08/0.42 s; miss under 1/2/5/10/20/50 km 77/89/97/98/98/100 %
+  S lead 2-3 d               n=66   miss med/68/90/95 626/829/2002/2922; error med/68/90/95 367/564/1444/2017; dTCA med/p90 0.08/0.47 s; miss under 1/2/5/10/20/50 km 77/89/97/98/98/100 %
+ report-only figures (no verdict role; FEW under 20 events):
+  share of rows with X miss under S miss: 56.7%; median of (miss - final miss): X +301 m, S +363 m
+  final miss <100 m            n=22   H1 share 61.2%
+  final miss 100-300 m         n=44   H1 share 60.2%
+  final miss 300-1000 m        n=42   H1 share 45.6%
+  final miss >1000 m           FEW (2 events)
+
+primary events whose pair was in a development event: 0.0%; with either object in a development event: 26.7%

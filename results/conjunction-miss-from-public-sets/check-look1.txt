@@ -1,0 +1,9 @@
+25 manifest lines checked
+look 1: run 2026-11-24, final approach before 2026-11-23T00:00:00Z, messages before 2026-11-24T00:00:00Z, interval 0.9833333333333333, seed 20261215, floor 40
+19 binding entry files and the closure of 934 files checked at ../../main-packages/spacedatastandards.org/lib/js
+module: SHA-256 as registered (sdn-ap 0.6.57, commit 6a807990a2ed004295c0cfe80f612205fc28d784)
+configuration config.json: the registered configuration (SHA-256 427a36ac888e5b2820757efbe7727ddd8992d6f62120e20ed6c7bbe9b9c5e195)
+bindings: flatbuffers 25.9.23 resolved from the standards checkout, as locked; no dynamic import
+weather forecaster: SHA-256 as registered
+python 3.14.7 numpy 2.5.2
+node v25.4.0

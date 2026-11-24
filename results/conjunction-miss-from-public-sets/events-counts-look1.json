@@ -1,0 +1,24 @@
+{
+ "look": 1,
+ "counts": {
+  "message records read": 9795,
+  "records created at or after the creation cutoff (not used)": 96,
+  "day files missing in the message range": 0,
+  "distinct messages kept": 5072,
+  "events seen (any final closest approach)": 828,
+  "events with a final closest approach in the window": 117,
+  "events excluded: a message created before the early cutoff": 0,
+  "messages created after the final closest approach (not scored)": 3,
+  "events with a message created within 3 days after a missing day file (flagged, kept)": 0,
+  "events with a single message (no scored row)": 5,
+  "events with no row chosen": 5,
+  "events with a reference message created within the primary rule (primary population)": 45,
+  "events with a reference message created after the final closest approach": 3,
+  "events with two messages equal in creation time (identifier breaks the tie)": 4,
+  "rows chosen (one per event and lead bin)": 234
+ },
+ "inputAggregateSha256": "95511cfee34b8247935df5c21cf22648b2758986db089ca191950452339b5ac9",
+ "configSha256": "427a36ac888e5b2820757efbe7727ddd8992d6f62120e20ed6c7bbe9b9c5e195",
+ "registered": true,
+ "eventsSha256": "eb583a3edb24ab0ce67a0674528f3c72dac11711bacf2dbda0987d16114b30ad"
+}
