@@ -139,3 +139,55 @@ Landed in `DigitalArsenal/space-data-network-modules` PR #148 (`analysis/gp-erro
 - **`sdn-ap-072-ephemeris-v1`:** 42-stratum empirical 6×6 RTN covariance fitted on `13,928` samples across `445` satellites with monotonic early-bin back-scaling.
 - **Honest held-out-object `$CVR` realism verdicts:** `LEO-L` 1 d ephemeris (`mean d²/3 = 1.133`, `cov95 = 95.4%`, `n = 1,424`, `178` objects), `MEO` 5 d ephemeris (`mean d²/3 = 0.997`, `cov95 = 93.5%`, `n = 184`, `46` objects), and `LEO-H` epoch public (`mean d²/3 = 0.996`, `cov95 = 93.4%`, `n = 396`, `7` objects) pass as `CALIBRATED`; heavy-tailed cells are honestly labeled `UNCALIBRATED` rather than overstating Gaussian realism.
 - `flows/catalog-builder 0.2.4` routes 100% of `AP` branches through `annotate_population_flow` so every emitted `$OCM` carries its calibrated regime-and-age population covariance block (`all-regimes-022.e2e.mjs` 9/9 regimes with 7 `population/0..6` blocks; `annotation.test.mjs` 7/7 PASS).
+
+---
+
+## 5. Amendment 4: Fresh Forward Week, Unified 0.7.2/0.2.4 11k Starlink 7-Arm Suite, 90%/95% Recall & `Pc` ROC (`#1126`)
+
+Pre-registered and frozen BEFORE evaluation in [`experiments/ca-rollup-072/AMENDMENT-4.md`](../../experiments/ca-rollup-072/AMENDMENT-4.md) and [`amendment4-config.json`](../../experiments/ca-rollup-072/amendment4-config.json) (commit `f241989f7112c9629ecb5f675922c21859daba70`). All propagation, frame transforms, screening, and Foster 2-D `Pc` ran strictly in compiled WASM from `DigitalArsenal/space-data-network-modules` commit `2ad8433591bdd0fc0017fe769ecc8d60a0541605` (`sdn-ap 0.7.2`, `catalog-builder 0.2.4`, `gp-error-model 0.19.0`, `conjunction-assessment 0.19.1`), with strict pre-`T0` GP filtering (`CREATION_DATE <= T0 && EPOCH < T0`), causal forecast-only space weather, genuine signed RTN error vectors `[dR, dT, dN]` across all 8 regimes (`SD, S1, DO, GD, GN, GE, IG, SL` + `LS` sensitivity, `0` fallbacks), and strict temporal pre-`T0` covariance training (`train`/`eval` disjoint).
+
+### 5.1 Option 1: Unified `0.7.2` / `0.2.4` Full-Constellation Starlink 7-Arm Suite (`amendment4-starlink-11k.json`)
+
+Scored on `11,194` common active Starlink satellites (`eval` cycle `T0 = 2026-11-24T17:00:00Z`) against strictly unseen next-day SpaceX ephemeris cycles (`2026-11-25T00-57Z` & `08-57Z`; truth is SpaceX's subsequent published ephemeris, not independent laser/GNSS tracking). Identical `train` cycle (`2026-11-22 -> 2026-11-23`, `11,198` sats) used exclusively to fit `SL` covariance.
+
+| Lead | `S` (Space-Track GP) | `SupGP` (CelesTrak) | `Xp` (Public Hist) | `Op` (SDN-AP Public Hist) | `X` (XP SpaceX) | `O` (SDN-AP SpaceX) | `SpaceX_T0` Ref | `O` closer vs `S` / `SupGP` / `X` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| **0–6 h** med (p95) | 13.93 km (101.9) | 0.963 km (3.17) | 14.37 km (114.4) | 5.00 km (83.8) | 0.421 km (0.91) | **0.075 km** (0.75) | 0.041 km (`n=3,848`) | **99.7%** / **96.5%** / **92.6%** |
+| **6–12 h** med (p95) | 18.06 km (143.0) | 3.276 km (9.07) | 18.41 km (155.4) | 5.29 km (121.2) | 0.450 km (0.99) | **0.135 km** (0.94) | 0.086 km (`n=4,563`) | **99.7%** / **98.7%** / **92.2%** |
+| **12–18 h** med (p95) | 23.40 km (230.9) | 6.927 km (19.58) | 23.69 km (237.7) | **5.63 km** (203.7) | 1.043 km (4.20) | **0.388 km** (5.26) | 0.116 km (`n=1,191`) | **98.3%** / **95.3%** / **84.2%** |
+| **18–24 h** med (p95) | 29.41 km (333.9) | 13.142 km (36.83) | 29.65 km (342.2) | **6.08 km** (308.2) | 1.753 km (11.01) | **1.171 km** (17.64) | — | **94.9%** / **91.4%** / **68.4%** |
+
+- **Public GP history alone (`Op`):** At `12–18 h` and `18–24 h`, SDN-AP from 21-day Space-Track GP history alone (`5.63 km` / `6.08 km`) beats not only SGP4 (`23.40` / `29.41 km`) and SGP4-XP (`23.69` / `29.65 km`) but also CelesTrak SupGP (`6.93` / `13.14 km`) at the median (`p90` and `p95` remain tighter on `SupGP`, which incorporates SpaceX ephemeris fits).
+- **Honest tail disclosure:** While `O` beats `X` at median and `p90` in all four bins (`12–18 h` p90 `2.46 km` vs `3.03 km`; `18–24 h` p90 `7.01 km` vs `7.66 km`) and cuts `>1 km` errors sharply (`2,447` vs `5,832` at `12–18 h`; `6,167` vs `7,907` at `18–24 h`), `O` has a heavier `p95` tail than `X` in `12–18 h` (`5.26` vs `4.20 km`) and `18–24 h` (`17.64` vs `11.01 km`).
+
+### 5.2 Options 2 & 3: Fresh Unseen Forward Week (`2026-11-17` to `2026-11-24`, `amendment4-alerts-3arm.json`)
+
+Screened across `32,923` strictly causal objects (`928,174` tier-0 events `<5 km`, plus `t1..t3` up to `1,000 km`, `F10.7 = 88.3–121.1 sfu`, `Ap = 2–12`). Uncertainty intervals use paired cluster bootstrap (`200` miss replicates, `40` `Pc` replicates) resampling regime NORAD clusters, encounter days, and object-pair clusters simultaneously.
+
+#### Miss-Distance Conjunction Notifications (Matched Operator Recall & Safety-vs-Workload)
+
+| View & Horizon | Operating Point | `S` (SGP4) | `SupGP` | `Xp` (Pub) | `Op` (SDN-AP Pub) | `X` (XP + SpaceX) | `O` (SDN-AP + SpaceX) | `O` Reduction vs `S` (95% CI) / vs `X` |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| **allButSl (1 d)** | SGP4 `1 km` (`48.9%` rec) | 10,058 | 10,873 | 10,257 | **7,924** (`-21.2%`) | 7,922 (`-21.2%`) | **6,726** (`760 m`) | **-33.1%** (`-21.7%` to `-68.8%`) / **-15.1%** |
+| **allButSl (1 d)** | **90% operator recall** | 9,566,000 | 1,086,400 | 9,855,000 | **729,130** (`-92.4%`) | 52,550 (`-99.45%`) | **33,455** (`1.88 km`) | **-99.65%** (`-99.44%` to `-99.75%`) / **-36.3%** |
+| **allButSl (1 d)** | **95% operator recall** | 40,691,000 | 2,602,700 | 41,250,000 | **13,346,000** (`-67.2%`) | 143,180 (`-99.65%`) | **114,200** (`3.59 km`) | **-99.72%** (`-95.75%` to `-99.83%`) / **-20.2%** |
+| **noStarlink (1 d)** | SGP4 `1 km` (`68.9%` rec) | 6,809 | 6,809 | 6,900 | **5,831** (`-14.4%`) | 6,900 | **5,831** (`879 m`) | **-14.4%** (`-10.3%` to `-16.9%`) / **-15.5%** |
+| **noStarlink (1 d)** | **90% operator recall** | 14,624 | 14,624 | 14,884 | **10,338** (`-29.3%`) | 14,884 | **10,338** (`1.25 km`) | **-29.3%** (`-18.1%` to `-36.3%`) / **-30.5%** |
+| **noStarlink (1 d)** | **95% operator recall** | 24,795 | 24,795 | 25,821 | **17,427** (`-29.7%`) | 25,821 | **17,427** (`1.72 km`) | **-29.7%** (`+0.6%` to `-40.0%`) / **-32.5%** |
+| **allButSl (3 d)** | SGP4 `1 km` (`35.4%` rec) | 5,803 | 5,800 | 5,625 | **4,970** (`-14.4%`) | 5,625 | **4,970** (`910 m`) | **-14.4%** (`-9.3%` to `-24.5%`) / **-11.7%** |
+| **allButSl (3 d)** | **90% operator recall** | 205,830 | 205,830 | 203,380 | **171,710** (`-16.6%`) | 203,380 | **171,710** | **-16.6%** (`-0.3%` to `-32.7%`) / **-15.6%** |
+
+- **Fixed `1 km` safety win (1 d):** On `allButStarlinkPairs` (`11,395` real close passes), SDN-AP cuts missed real close approaches by **43.6%** (`3,217` missed vs `5,706` SGP4, `4,543` XP, `4,476` `Op`); on 100% public `noStarlink` (`7,750` real passes), SDN-AP cuts missed real close approaches by **35.8%** (`1,503` vs `2,342` SGP4 and `2,400` XP).
+- **Attribution waterfall (1 d `allButStarlinkPairs`, `90%` recall):** `S (9.57M) -> Xp (9.86M, -3.0%) -> Op (729k, +95.4% of SGP4 cut from SDN-AP public method) -> O (33.5k, +7.3% additional cut from SpaceX operator orbits; total -99.65%)`. At SGP4 `1 km` matched safety: `S (10,058) -> Xp (10,257, -2.0%) -> Op (7,924, +23.2% public method) -> O (6,726, +11.9% operator orbits; total -33.1%)`.
+
+#### Foster 2-D `Pc` Tiers, Tier Precision, Matched-Recall `Pc` ROC & Honest Covariance Findings (1 d)
+
+- **Fixed Foster `Pc >= 1e-5` (primary pre-registered mixture):**
+  - `allButStarlinkPairs`: **`O = 5,510/wk`** (**`-74.1%`**, CI `-62.0%` to `-86.6%`, **`-52.5%`** vs `X = 11,591`, **`41.9%`** precision vs `11.5%` SGP4 `21,277/wk` and `30.1%` `X`); **`Op` (100% public) = `17,564/wk`** (**`-17.5%`**, catching `2,625` real passes vs `2,456` for SGP4!).
+  - `noStarlink` (100% public): **`O/Op = 2,163/wk`** (`-9.8%` vs `S = 2,399`); at `Pc >= 3e-7`, **`O/Op = 6,190/wk`** (**`-32.7%`**, CI `-26.5%` to `-42.2%`, vs `S = 9,202`).
+  - Red tier (`Pc >= 1e-4`): Removing the 48 km `DO` burn outlier restores genuine red alerts (`noStarlink` `O/Op = 921/wk` with `775` real = **`84.2%`** precision vs `S = 756/wk` with `638` real = `84.4%` precision; `allButStarlinkPairs` `O = 2,176/wk` with `1,212` real vs `S = 792/wk` with `652` real).
+- **Matched-recall `Pc` ROC at SGP4 `1e-5` recall (`22.0%` recall, `allButStarlinkPairs`):** **`O = 6,151/wk`** (**`-71.1%`**, CI `-51.8%` to `-82.2%`, **`-10.8%`** below `X = 6,896`), **`Op = 15,563/wk`** (**`-26.8%`** vs `S = 21,273`).
+- **Honest disclosure — leptokurtic `O` covariance & bimodal mixture shelf in high-recall `Pc` ROC:**
+  - In the pre-registered 2-component mixture primary, `O`'s much sharper median core (`DO` `sigT = 0.18 km`, `SD` `0.43 km`, `SL` `3.04 km`) combined with `6–13%` unmodeled drag/maneuver tail rows makes median-matched `C_core` overconfident on held-out `eval` (`SD` 2σ containment `0.861` vs `S 0.987`, `SL` `0.789` vs `X 0.907`) and creates a flat `C_tail` plateau that degrades `Pc` ROC at high recall (`allButStarlinkPairs` PR-AUC `O = 0.183` vs `X = 0.238`, `S = 0.122`; `noStarlink` `O/Op = 0.370` vs `S = 0.496`; `3d` `Pc >= 1e-5` `+5.4%`).
+  - **Pre-registered `robust_core_only` sensitivity diagnoses the exact mechanism:** Dropping the flat `C_tail` shelf raises `O` `allButStarlinkPairs` PR-AUC to **`0.2957` (highest of all 6 arms**, vs `X = 0.2887`, `Op = 0.1438`, `SupGP = 0.1441`, `S = 0.1324`), yields **`-74.3%`** at SGP4 `1e-5` recall and **`-76.8%`** at SGP4 `3e-7` recall (`allButStarlinkPairs`), **`-8.0%`** at SGP4 `1e-5` recall on `noStarlink`, and lifts `noStarlink` `Pc` tier precision to **`86.4%`** at `1e-5` (`77.5%` SGP4) and **`82.4%`** at `3e-7` (`69.3%` SGP4), while high-recall (`90–95%`) `noStarlink` `Pc` ranking still trails miss-distance screening because of `O`'s heavier kurtosis relative to its tighter core. Post-diagnostic `q90_calibrated_core` confirms that inflating `C_core` alone without removing the bimodal `C_tail` shelf does not resolve mixture `Pc` ranking.
+- **Comparison against pre-registered predictions (`AMENDMENT-4.md` §6):** Starlink `12–18 h` (`0.388 km` vs predicted `~0.37 km`), `allButStarlinkPairs` `1 d` SGP4-1km (`-33.1%` vs predicted `-30%..-40%`), `noStarlink` `90%/95%` recall (`-29.3%/-29.7%` vs `-25%..-45%`), and red-tier restoration all landed inside pre-registered bands; `allButStarlinkPairs` `90%/95%` recall (`-99.65%/-99.72%`) exceeded predictions because SGP4's Starlink `p90/p95` tails (`158/334 km`) drove `r²` area to `9.6M/40.7M`; high-recall mixture `Pc` ROC underperformed predictions due to the median-matched core overconfidence and bimodal `C_tail` shelf documented above.
