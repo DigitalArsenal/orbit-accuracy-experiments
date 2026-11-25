@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Phase 6 (#1110): Live Whole-Catalog 3-Arm 5-Day Conjunction Assessment Screen (32,988 objects, 2026-11-24)
-// Screens all 3 arms through compiled analysis/conjunction-assessment WASM + public propagator/sdn-ap 0.7.2 WASM:
+// Item 5 (#1128 / #976): Live Whole-Catalog 3-Arm 5-Day Conjunction Assessment Screen (32,988 objects, 2026-11-24)
+// Screens all 3 arms through compiled analysis/conjunction-assessment 0.19.1 WASM + public propagator/sdn-ap 0.7.3 WASM:
 //   - SGP4 arm: 32,988 public GP $OMM records (sgp4Sources + e14-s3-kc.erm Foster 2-D)
-//   - SDN-AP 0.7.2 arm: catalog-builder 0.2.2 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
-//   - SGP4-XP arm: catalog-builder 0.2.2 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
+//   - SDN-AP 0.7.3 arm: catalog-builder 0.2.5 + gp-error-model 0.19.1 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
+//   - SGP4-XP arm: catalog-builder 0.2.5 + gp-error-model 0.19.1 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
 // Plus:
 //   - Exact Foster 2-D Pc via analysis/conjunction-assessment compute_pc with ESA DISCOS/SATCAT HBR and 10 m HBR
 //   - Pairwise arm overlap (SDN-AP vs SGP4, SDN-AP vs SGP4-XP, SGP4 vs SGP4-XP)
@@ -29,8 +29,8 @@ const MOD = arg('--modules', process.env.SDN_MODULES_ROOT || path.resolve(path.d
 const CA_DIR = path.join(MOD, 'analysis/conjunction-assessment');
 const AP_DIR = path.join(MOD, 'propagator/sdn-ap');
 const GP_MODEL_DIR = path.join(MOD, 'analysis/gp-error-model');
-const LIVE_DIR = arg('--live-dir', process.env.SDN_LIVE_CATALOG_DIR || path.resolve(path.dirname(SELF), '../../runs/ca-rollup-072/live-20261124'));
-const RESULTS_DIR = arg('--out-dir', path.resolve(path.dirname(SELF), '../../results/ca-rollup-072'));
+const LIVE_DIR = arg('--live-dir', process.env.SDN_LIVE_CATALOG_DIR || path.resolve(path.dirname(SELF), '../../runs/ca-rollup-073/live-20261124'));
+const RESULTS_DIR = arg('--out-dir', path.resolve(path.dirname(SELF), '../../results/ca-rollup-073'));
 const ARCHIVE = arg('--archive', process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive');
 const T0_ISO = '2026-11-24T17:00:00.000Z';
 const T0_MS = Date.parse(T0_ISO);
@@ -264,7 +264,7 @@ function buildPrwFramesForWindow({ arm, winStartMs, nSegs, segSec, statesByTime,
     const ppe = new PPE_MOD.PPET(
       [], null, 'EARTH', temeRfm, PPE_MOD.timingStandard.UTC,
       startIso, stopIso, PPE_MOD.polynomialBasisType.CHEBYSHEV,
-      recs, [], `sdn-ap-0.7.2-${arm}`, segSec, CHEB_M, null,
+      recs, [], `sdn-ap-0.7.3-${arm}`, segSec, CHEB_M, null,
     );
     const handle = idx + 1;
     sources.push(new CQR_MOD.CQRObjectSourceT(objectId, name, info.norad, null, handle));
@@ -273,6 +273,21 @@ function buildPrwFramesForWindow({ arm, winStartMs, nSegs, segSec, statesByTime,
   }
   flushBatch(true);
   return { sources, prwFrames, dropped };
+}
+
+function splitCatalogAuto(bytes) {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (bytes.length < 12) return [];
+  const le = view.getUint32(0, true);
+  const isLE = le >= 8 && le + 4 <= bytes.length;
+  const frames = [];
+  for (let at = 0; at + 4 <= bytes.length;) {
+    const n = view.getUint32(at, isLE);
+    if (n <= 0 || at + 4 + n > bytes.length) break;
+    frames.push(bytes.subarray(at + 4, at + 4 + n));
+    at += 4 + n;
+  }
+  return frames;
 }
 
 function sgp4SourcesNormalized(catalog) {
@@ -318,6 +333,12 @@ function allWindowEpochMs(nWin, nSegs, segSec) {
 async function runWidePreEvalWorker(shard, total, outDir, smoke = false) {
   const tStart = Date.now();
   fs.mkdirSync(outDir, { recursive: true });
+  const outJson = path.join(outDir, `wide-${shard}.json`);
+  const outBin = path.join(outDir, `wide-${shard}.f64`);
+  if (fs.existsSync(outJson) && fs.existsSync(outBin)) {
+    console.log(`[ap-wide ${shard}/${total}] cached`);
+    return;
+  }
   const nWin = smoke ? 1 : 30, segSec = 1200, nSegs = 12;
   const binPath = smoke ? path.join(LIVE_DIR, 'shard-2-ap.ocm.bin') : path.join(LIVE_DIR, 'ap-catalog.ocm.bin');
   const buf = fs.readFileSync(binPath);
@@ -383,7 +404,7 @@ async function runScreenWorker(arm, winIndices, outDir, smoke = false) {
     const winHours = smoke ? 4 : 6;
     const totalDays = smoke ? 4 / 24 : 5;
     const windows = CAT_SCR.screenWindows(T0_JD, totalDays, winHours);
-    let catalog = CAT_SCR.splitCatalog(fs.readFileSync(path.join(LIVE_DIR, 'sgp4-catalog.omm.bin')));
+    let catalog = splitCatalogAuto(fs.readFileSync(path.join(LIVE_DIR, 'sgp4-catalog.omm.bin')));
     if (smoke) {
       const meta = fs.readFileSync(path.join(LIVE_DIR, 'shard-2-meta.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l));
       const keep = new Set(meta.map((m) => m.norad));
@@ -476,7 +497,7 @@ async function runScreenWorker(arm, winIndices, outDir, smoke = false) {
     return;
   }
 
-  // AP or XP arm via public sdn-ap 0.7.2:
+  // AP or XP arm via public sdn-ap 0.7.3:
   //   - Fast orbits (~94% AP, 100% XP): evaluated via sdnap_epochs_at (0.008 ms/obj/epoch!)
   //   - Wide-branch eccentric AP orbits (~6% AP): loaded from pre-evaluated 5-day batch propagate() cache (110x faster!)
   //   - Full catalog loaded in a second epoch store (or same store) for exact TCA state + 6x6 TEME covariance -> compute_pc Foster 2-D
@@ -682,7 +703,10 @@ async function runScreenWorker(arm, winIndices, outDir, smoke = false) {
 
 // Score real 2026-11-24 Space-Track CDMs (TCA >= T0) across all 3 arms in compiled WASM (zero JS physics!)
 async function scoreLiveCdms(objects) {
-  const cdms = JSON.parse(zlib.gunzipSync(fs.readFileSync(`${ARCHIVE}/spacetrack/cdm_public/2026/2026-11-24.json.gz`)));
+  const cdms = [
+    ...JSON.parse(zlib.gunzipSync(fs.readFileSync(`${ARCHIVE}/spacetrack/cdm_public/2026/2026-11-24.json.gz`))),
+    ...JSON.parse(zlib.gunzipSync(fs.readFileSync(`${ARCHIVE}/spacetrack/cdm_public/2026/2026-11-25.json.gz`))),
+  ];
   const futureCdms = cdms.filter((c) => {
     const tcaMs = Date.parse(String(c.TCA).replace(' ', 'T') + (String(c.TCA).endsWith('Z') ? '' : 'Z'));
     return Number.isFinite(tcaMs) && tcaMs >= T0_MS && Number.isFinite(Number(c.MIN_RNG));
@@ -699,7 +723,7 @@ async function scoreLiveCdms(objects) {
   }
   const uniq = [...latestMap.values()];
   // Load all 3 catalogs (SGP4 $OMM map, AP epoch store, XP epoch store)
-  const sgp4Bytes = CAT_SCR.splitCatalog(fs.readFileSync(path.join(LIVE_DIR, 'sgp4-catalog.omm.bin')));
+  const sgp4Bytes = splitCatalogAuto(fs.readFileSync(path.join(LIVE_DIR, 'sgp4-catalog.omm.bin')));
   const sgp4Map = new Map();
   for (const b of sgp4Bytes) sgp4Map.set(OMM_MOD.OMM.getRootAsOMM(new fb.ByteBuffer(b)).NORAD_CAT_ID(), b);
 
@@ -821,7 +845,7 @@ async function scoreFutureStarlinkWorker(shard, total, outDir) {
   const sgp4Map = new Map();
   const sgp4Inputs = [];
   const sgp4Ids = [];
-  for (const b of CAT_SCR.splitCatalog(fs.readFileSync(path.join(LIVE_DIR, 'sgp4-catalog.omm.bin')))) {
+  for (const b of splitCatalogAuto(fs.readFileSync(path.join(LIVE_DIR, 'sgp4-catalog.omm.bin')))) {
     const omm = OMM_MOD.OMM.getRootAsOMM(new fb.ByteBuffer(b));
     if (want.has(omm.NORAD_CAT_ID())) {
       sgp4Ids.push(omm.NORAD_CAT_ID());
@@ -1081,6 +1105,7 @@ async function runParent(workers, smoke) {
   delete sanitizedBuildSummary.apBranches;
   const report = {
     schema: 'sdn-ap-live-3arm-ca-rollup-1',
+    version: '0.7.3',
     generatedUtc: new Date().toISOString(),
     t0: T0_ISO,
     screenDays: 5,
@@ -1117,7 +1142,7 @@ async function runParent(workers, smoke) {
     },
     totalWallMs: Date.now() - tStart,
   };
-  const outPath = path.join(RESULTS_DIR, 'phase6-live-3arm-ca.json');
+  const outPath = path.join(RESULTS_DIR, 'live-ca-screen-0.7.3.json');
   fs.writeFileSync(outPath, JSON.stringify(report, null, 2) + '\n');
   console.log(`PHASE 6 COMPLETE -> ${outPath}`);
   console.log(JSON.stringify({

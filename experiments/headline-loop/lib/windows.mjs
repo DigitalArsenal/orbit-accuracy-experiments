@@ -138,6 +138,7 @@ const GALILEO = { 43567: 'Galileo FOC 19', 37847: 'Galileo IOV 2', 41862: 'Galil
 let staticCache = null, mgexCache = new Map(), spkCache = new Map(), tessFileCache = new Map();
 const ADDED_WINDOWS = path.join(process.env.HEADLINE_LOOP_STORE ?? '/opt/data/sdn-archive/headline-loop', 'added-windows.json');
 async function spkOnGrid(lines, axes) {
+  if (!lines?.length) return [];
   const norm = lines.map((l) => ({ ...l, epoch: new Date(Date.parse(/Z$/.test(l.epoch) ? l.epoch : `${l.epoch}Z`)).toISOString() }));
   const first = Math.round(ms(norm[0].epoch) / 1000) * 1000;
   const thin = norm.filter((l) => (Math.round(ms(l.epoch) / 1000) * 1000 - first) % GRID === 0).map((l) => ({ ...l, epoch: new Date(Math.round(ms(l.epoch) / 1000) * 1000).toISOString() }));
@@ -206,7 +207,9 @@ export async function truthOf(w, fromMs, toMs, axes) {
     const spanFrom = w.cutoffMs - Math.max(...(GROUPS[w.group].arcs ?? w.arcs)) * HOUR - HOUR, spanTo = w.cutoffMs + 7 * DAY + HOUR;
     let chosen = null;
     for (const f of files.slice().reverse()) {
-      const s = await readOne(f), first = ms(s.lines[0].epoch), last = ms(s.lines.at(-1).epoch);
+      const s = await readOne(f);
+      if (!s.lines.length) continue;
+      const first = ms(s.lines[0].epoch), last = ms(s.lines.at(-1).epoch);
       if (first <= spanFrom + HOUR && last >= spanTo - HOUR) { chosen = { f, s }; break; }
     }
     if (!chosen) throw new Error(`no single definitive file covers ${new Date(spanFrom + HOUR).toISOString()} to ${new Date(spanTo - HOUR).toISOString()}`);

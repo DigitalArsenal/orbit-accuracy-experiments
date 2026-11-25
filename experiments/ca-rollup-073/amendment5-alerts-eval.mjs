@@ -1,17 +1,18 @@
 #!/usr/bin/env node
-// Amendment 4 Option 2 + Option 3 (#1126): Fresh Forward Week Conjunction Notification Reduction,
-// Pre-T0 Class-Conditioned Robust/Mixture RTN Covariance, 90%/95% Operator Recall, Pc ROC & Tier Precision.
+// Amendment 5 (#1128): Fresh Forward Week Conjunction Notification Reduction,
+// Pre-T0 Multivariate Student-t RTN Uncertainty (Exact Shifted Gauss-Laguerre Foster 2-D WASM Pc),
+// 90%/95% Operator Recall, Pc ROC & Tier Precision on Unified SDN-AP 0.7.3 / catalog-builder 0.2.5.
 //
 // Evaluates ALL 6 ARMS over the fresh unseen forward week (2026-11-17 to 2026-11-24, 32,923 objects,
-// tiers t0 + t1 + t2 + t3 up to 1,000 km) with 100% genuine signed RTN error vectors across all 8 regimes
-// (unified sdn-ap 0.7.2 + catalog-builder 0.2.4), strict temporal pre-T0 covariance training (zero leakage),
-// exact Foster 2-D mixture Pc via analysis/conjunction-assessment 0.19.1 WASM, and paired cluster bootstrap
-// (NORAD + day + pair clusters).
+// tiers t0 + t1 + t2 + t3 up to 1,000 km) with 100% genuine signed RTN error vectors across all 8 regimes,
+// strict temporal pre-T0 Student-t (Sigma, nu) estimation (5-fold CV inside train only, zero eval leakage),
+// exact 8-point shifted Gauss-Laguerre Student-t Pc calling analysis/conjunction-assessment 0.19.1 FOSTER WASM,
+// and paired cluster bootstrap (NORAD + day + pair clusters).
 //
-// Outputs AGGREGATES ONLY to results/ca-rollup-072/amendment4-alerts-3arm.json.
+// Outputs AGGREGATES ONLY to results/ca-rollup-073/amendment5-alerts-3arm.json.
 //
 // Usage:
-//   node amendment4-alerts-eval.mjs --workers 14 --miss-reps 200 --pc-reps 40 [--smoke]
+//   SDN_MODULES_ROOT=... node amendment5-alerts-eval.mjs --workers 14 --miss-reps 200 --pc-reps 40 [--smoke]
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -19,23 +20,23 @@ import crypto from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { sha256, sha256File, nowUtc, utcMs } from './amendment4-lib.mjs';
+import { sha256File, nowUtc, utcMs } from './amendment5-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
 const CA_DIR = path.join(MODULES, 'analysis/conjunction-assessment');
-const CFG_PATH = path.join(path.dirname(SELF), 'amendment4-config.json');
+const CFG_PATH = path.join(path.dirname(SELF), 'amendment5-config.json');
 const CFG = JSON.parse(fs.readFileSync(CFG_PATH, 'utf8'));
 
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-const RUNS_ROOT = path.join(OAE, 'runs/ca-rollup-072/amendment4');
+const RUNS_ROOT = path.join(OAE, 'runs/ca-rollup-073');
 const SCREEN_DIR = path.join(RUNS_ROOT, 'screen-20261117');
 const SCRATCH = path.join(RUNS_ROOT, 'eval-scratch');
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-072/amendment4-alerts-3arm.json');
+const OUT_PATH = path.join(OAE, 'results/ca-rollup-073/amendment5-alerts-3arm.json');
 
 const REGIMES = ['SD', 'S1', 'DO', 'GD', 'GN', 'GE', 'IG', 'SL'];
 const REGIME_LABEL = {
@@ -53,16 +54,14 @@ const SL = REGIMES.indexOf('SL');
 const DO_IDX = REGIMES.indexOf('DO');
 const ARMS = CFG.evaluation.arms; // ['S', 'SupGP', 'Xp', 'Op', 'X', 'O']
 const LEADS = CFG.evaluation.leadsDays; // [1, 3]
-const VIEWS = CFG.evaluation.views; // ['allButStarlinkPairs', 'noStarlink', 'starlinkWithOthers', 'all', 'starlinkPairs']
-const PC_LIMITS = CFG.evaluation.pcLimits; // [1e-4, 1e-5, 3e-7]
+const VIEWS = CFG.evaluation.views;
 const TARGET_RECALLS = CFG.evaluation.targetRecalls;
 const RECORD = 14;
 const CHI3 = [3.527, 8.025, 14.156];
 const NOMINAL = [0.683, 0.954, 0.997];
-const CHI3_MEDIAN = CFG.covariance.chi3Median; // 2.365973884
-const CHI3_Q90 = 6.251388631; // chi2_3(0.90) for post-diagnostic sensitivity ONLY
-const CHI3_TAIL = CFG.covariance.tailThresholdChi3; // 17.730
 const EXACT_PC_BOUND_MIN = 2e-8; // 15x below 3e-7 so all published limits are 100% exact WASM Foster 2-D
+const NU_GRID = CFG.covariance.studentTNuGrid || [2, 2.5, 3, 4, 6, 10, 30];
+const N_QUAD = CFG.covariance.gaussLaguerreNodes || 8;
 
 const sig = (x, n = 4) => (Number.isFinite(x) ? Number(x.toPrecision(n)) : null);
 const quantile = (sorted, q) => {
@@ -85,17 +84,102 @@ function rngOf(text) {
   };
 }
 
+function lgamma(z) {
+  const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  let x = z, y = z, tmp = x + 5.5;
+  tmp -= (x + 0.5) * Math.log(tmp);
+  let ser = 1.000000000190015;
+  for (let j = 0; j < 6; j++) ser += c[j] / ++y;
+  return -tmp + Math.log((2.5066282746310005 * ser) / x);
+}
+
+// Regularized incomplete beta I_x(a, b) for exact F_{3, nu} Student-t coverage audit
+function betacf(a, b, x) {
+  let qab = a + b, qap = a + 1, qam = a - 1;
+  let c = 1, d = 1 - (qab * x) / qap;
+  if (Math.abs(d) < 1e-30) d = 1e-30;
+  d = 1 / d;
+  let h = d;
+  for (let m = 1; m <= 120; m++) {
+    const m2 = 2 * m;
+    let aa = (m * (b - m) * x) / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-30) d = 1e-30;
+    c = 1 + aa / c; if (Math.abs(c) < 1e-30) c = 1e-30;
+    d = 1 / d; h *= d * c;
+    aa = (-(a + m) * (qab + m) * x) / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < 1e-30) d = 1e-30;
+    c = 1 + aa / c; if (Math.abs(c) < 1e-30) c = 1e-30;
+    d = 1 / d; const del = d * c; h *= del;
+    if (Math.abs(del - 1) < 1e-12) break;
+  }
+  return h;
+}
+function ibeta(x, a, b) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const bt = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  return x < (a + 1) / (a + b + 2) ? (bt * betacf(a, b, x)) / a : 1 - (bt * betacf(b, a, 1 - x)) / b;
+}
+// Exact quantile of d^2 = 3 * F_{3, nu} via bisection on ibeta
+function studentTD2Quantile(nu, prob) {
+  let lo = 0, hi = 1000;
+  while (ibeta(hi / (hi + nu), 1.5, nu / 2) < prob && hi < 1e9) hi *= 2;
+  for (let it = 0; it < 60; it++) {
+    const mid = 0.5 * (lo + hi);
+    if (ibeta(mid / (mid + nu), 1.5, nu / 2) < prob) lo = mid; else hi = mid;
+  }
+  return 0.5 * (lo + hi);
+}
+
+// Generalized Gauss-Laguerre quadrature nodes/weights for weight s^alpha * exp(-s) on (0, inf)
+const glCache = new Map();
+function gaussLaguerre(n, alpha) {
+  const key = `${n}:${alpha.toFixed(6)}`;
+  if (glCache.has(key)) return glCache.get(key);
+  const a = Array.from({ length: n }, (_, k) => 2 * k + alpha + 1);
+  const b = Array.from({ length: n - 1 }, (_, k) => Math.sqrt((k + 1) * (k + 1 + alpha)));
+  const V = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 1 : 0)));
+  const A = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? a[i] : Math.abs(i - j) === 1 ? b[Math.min(i, j)] : 0)));
+  for (let sweep = 0; sweep < 60; sweep++) {
+    let off = 0;
+    for (let p = 0; p < n; p++) for (let q = p + 1; q < n; q++) {
+      const apq = A[p][q]; off += apq * apq;
+      if (Math.abs(apq) < 1e-15) continue;
+      const tau = (A[q][q] - A[p][p]) / (2 * apq);
+      const t = tau >= 0 ? 1 / (tau + Math.sqrt(1 + tau * tau)) : -1 / (-tau + Math.sqrt(1 + tau * tau));
+      const c = 1 / Math.sqrt(1 + t * t), s = t * c;
+      const app = A[p][p], aqq = A[q][q];
+      A[p][p] = app - t * apq; A[q][q] = aqq + t * apq; A[p][q] = A[q][p] = 0;
+      for (let k = 0; k < n; k++) if (k !== p && k !== q) {
+        const akp = A[k][p], akq = A[k][q];
+        A[k][p] = A[p][k] = c * akp - s * akq;
+        A[k][q] = A[q][k] = s * akp + c * akq;
+      }
+      for (let k = 0; k < n; k++) {
+        const vkp = V[k][p], vkq = V[k][q];
+        V[k][p] = c * vkp - s * vkq;
+        V[k][q] = s * vkp + c * vkq;
+      }
+    }
+    if (off < 1e-28) break;
+  }
+  const mu0 = Math.exp(lgamma(alpha + 1));
+  const res = Array.from({ length: n }, (_, i) => ({ s: A[i][i], w: mu0 * V[0][i] * V[0][i] })).sort((u, v) => u.s - v.s);
+  glCache.set(key, res);
+  return res;
+}
+
 function checkFrozenAndPins() {
-  if (!CFG.frozen) throw new Error('amendment4-config.json is not frozen');
-  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-072/AMENDMENT-4.md', 'experiments/ca-rollup-072/amendment4-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
-  if (dirty) throw new Error(`Amendment 4 registration dirty/uncommitted: ${dirty}`);
+  if (!CFG.frozen) throw new Error('amendment5-config.json is not frozen');
+  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-073/AMENDMENT-5.md', 'experiments/ca-rollup-073/amendment5-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
+  if (dirty) throw new Error(`Amendment 5 registration dirty/uncommitted: ${dirty}`);
   const caSha = sha256File(path.join(CA_DIR, 'dist/isomorphic/module.wasm'));
   if (caSha !== CFG.modules.conjunctionAssessment.wasmSha256) throw new Error(`CA wasm mismatch: ${caSha}`);
 }
 
 function orbitOf(g) {
   const n = Number(g.MEAN_MOTION), e = Number(g.ECCENTRICITY), inc = Number(g.INCLINATION);
-  const a = Math.cbrt(398600.4418 / (n * 2 * Math.PI / 86400) ** 2);
+  const a = Math.cbrt(398600.4418 / ((n * 2 * Math.PI) / 86400) ** 2);
   return {
     e, inc, hp: a * (1 - e) - 6378.137,
     name: String(g.OBJECT_NAME ?? ''),
@@ -122,7 +206,6 @@ function loadObjectsAndDisCos() {
   }
   const objects = new Map([...newest].map(([id, g]) => [id, orbitOf(g)]));
 
-  // ESA DISCOS radii + objectClass/active (known strictly before T0)
   const radii = new Map();
   const discosClass = new Map();
   const discosDir = path.join(ARCHIVE, CFG.radii.discosDir);
@@ -156,12 +239,11 @@ function loadObjectsAndDisCos() {
   return { objects, radii, isManeuverablePayload };
 }
 
-// 3x3 symmetric matrix helpers [xx, xy, xz, yy, yz, zz]
 function inv3([a, b, c, d, e, f]) {
   const A = d * f - e * e, B = c * e - b * f, C = b * e - c * d;
   const det = a * A + b * B + c * C;
   if (!(det > 0) || !Number.isFinite(det)) return null;
-  return [A / det, B / det, C / det, (a * f - c * c) / det, (b * c - a * e) / det, (a * d - b * b) / det];
+  return { det, inv: [A / det, B / det, C / det, (a * f - c * c) / det, (b * c - a * e) / det, (a * d - b * b) / det] };
 }
 const quad = (P, u0, u1, u2) => P[0] * u0 * u0 + 2 * P[1] * u0 * u1 + 2 * P[2] * u0 * u2 + P[3] * u1 * u1 + 2 * P[4] * u1 * u2 + P[5] * u2 * u2;
 const proj = (G, o, e) => [G[o] * e[0] + G[o + 1] * e[1] + G[o + 2] * e[2], G[o + 3] * e[0] + G[o + 4] * e[1] + G[o + 5] * e[2]];
@@ -172,68 +254,84 @@ function inPlane(G, o, S) {
   return [p[0] * Sp[0] + p[1] * Sp[1] + p[2] * Sp[2], p[0] * Sq[0] + p[1] * Sq[1] + p[2] * Sq[2], q[0] * Sq[0] + q[1] * Sq[1] + q[2] * Sq[2]];
 }
 
-// Pre-registered Amendment 4 robust core + heavy-tail/maneuver mixture estimator (STRICTLY on train rows!)
-function fitRobustMixtureCov(trainVecs, scaleMode = 'a4_med50') {
-  const n = trainVecs.length;
+// Pre-T0 Multivariate Student-t EM + 5-fold CV (STRICTLY on train rows, identical across all 6 arms!)
+function fitStudentTNU(vecs, nu) {
+  const n = vecs.length, d = 3;
   if (n < 4) return null;
-  const madScale = (c) => {
-    const abs = trainVecs.map((v) => Math.abs(v[c])).sort((a, b) => a - b);
-    return Math.max(1.4826 * quantile(abs, 0.5), 1e-4);
-  };
-  const sR = madScale(0), sT = madScale(1), sN = madScale(2);
-  const ranked = trainVecs.map((v, i) => ({
-    i, v, u: Math.hypot(v[0] / sR, v[1] / sT, v[2] / sN),
-  })).sort((a, b) => a.u - b.u);
-
-  const keepN = n >= 20 ? Math.max(6, Math.floor(n * CFG.covariance.coreTrimFraction)) : n;
-  const core = ranked.slice(0, keepN);
-  const M = [0, 0, 0, 0, 0, 0];
-  for (const { v } of core) {
-    M[0] += v[0] * v[0]; M[1] += v[0] * v[1]; M[2] += v[0] * v[2];
-    M[3] += v[1] * v[1]; M[4] += v[1] * v[2]; M[5] += v[2] * v[2];
+  let S = [0, 0, 0, 0, 0, 0];
+  for (const v of vecs) {
+    S[0] += v[0] * v[0]; S[1] += v[0] * v[1]; S[2] += v[0] * v[2];
+    S[3] += v[1] * v[1]; S[4] += v[1] * v[2]; S[5] += v[2] * v[2];
   }
-  const Mn = M.map((x) => x / keepN);
-  const tr = Mn[0] + Mn[3] + Mn[5];
-  const reg = Math.max(1e-12 * tr, 1e-12);
-  Mn[0] += reg; Mn[3] += reg; Mn[5] += reg;
-  const Mi = inv3(Mn);
-  if (!Mi) return null;
-  let s2;
-  if (scaleMode === 'q90_all') {
-    const d2All = trainVecs.map((v) => quad(Mi, v[0], v[1], v[2])).sort((a, b) => a - b);
-    s2 = Math.max(quantile(d2All, 0.90) / CHI3_Q90, 1e-12);
-  } else {
-    const d2Core = core.map(({ v }) => quad(Mi, v[0], v[1], v[2])).sort((a, b) => a - b);
-    s2 = Math.max(quantile(d2Core, CFG.covariance.coreScaleQuantile) / CHI3_MEDIAN, 1e-12);
-  }
-  const C_core = Mn.map((x) => x * s2);
-  const C_core_inv = inv3(C_core);
-  if (!C_core_inv) return null;
-
-  // Tail / maneuver mixture component: train rows outside 3.5-sigma of C_core (d^2 > 17.730)
-  const tail = trainVecs.filter((v) => quad(C_core_inv, v[0], v[1], v[2]) > CHI3_TAIL);
-  const wm = tail.length / n;
-  let C_tail = C_core.slice();
-  if (tail.length >= 2) {
-    const T = [0, 0, 0, 0, 0, 0];
-    for (const v of tail) {
-      T[0] += v[0] * v[0]; T[1] += v[0] * v[1]; T[2] += v[0] * v[2];
-      T[3] += v[1] * v[1]; T[4] += v[1] * v[2]; T[5] += v[2] * v[2];
+  S = S.map((x) => x / n);
+  const tr = S[0] + S[3] + S[5], reg = Math.max(1e-12 * tr, 1e-12);
+  S[0] += reg; S[3] += reg; S[5] += reg;
+  for (let it = 0; it < 45; it++) {
+    const iv = inv3(S);
+    if (!iv) break;
+    const M = [0, 0, 0, 0, 0, 0];
+    for (const v of vecs) {
+      const qv = quad(iv.inv, v[0], v[1], v[2]);
+      const w = (nu + d) / (nu + qv);
+      M[0] += w * v[0] * v[0]; M[1] += w * v[0] * v[1]; M[2] += w * v[0] * v[2];
+      M[3] += w * v[1] * v[1]; M[4] += w * v[1] * v[2]; M[5] += w * v[2] * v[2];
     }
-    C_tail = T.map((x, k) => x / tail.length + 0.05 * C_core[k]);
-  } else if (tail.length === 1) {
-    const v = tail[0];
-    C_tail = [
-      C_core[0] + v[0] * v[0], C_core[1] + v[0] * v[1], C_core[2] + v[0] * v[2],
-      C_core[3] + v[1] * v[1], C_core[4] + v[1] * v[2], C_core[5] + v[2] * v[2],
-    ];
+    S = M.map((x) => x / n);
+    const tr2 = S[0] + S[3] + S[5], r2 = Math.max(1e-12 * tr2, 1e-12);
+    S[0] += r2; S[3] += r2; S[5] += r2;
   }
-  return { C_core, C_core_inv, wm, C_tail, C_tail_inv: inv3(C_tail), nTrain: n, nCore: keepN, nTail: tail.length };
+  const iv = inv3(S);
+  if (!iv) return null;
+  const c0 = lgamma((nu + d) / 2) - lgamma(nu / 2) - 0.5 * d * Math.log(nu * Math.PI) - 0.5 * Math.log(iv.det);
+  return { C: S, C_inv: iv.inv, det: iv.det, c0, nu };
 }
 
-// Load ALL 8 regimes' genuine signed RTN vectors (strictly split into temporal pre-T0 train vs disjoint eval)
+function fitStudentTModel(trainVecs) {
+  const n = trainVecs.length;
+  if (n < 4) return null;
+  let bestNu = 4, bestLl = -Infinity;
+  const kFolds = n >= 15 ? 5 : 3;
+  for (const nu of NU_GRID) {
+    let ll = 0, cnt = 0;
+    for (let f = 0; f < kFolds; f++) {
+      const tr = trainVecs.filter((_, i) => i % kFolds !== f);
+      const va = trainVecs.filter((_, i) => i % kFolds === f);
+      if (tr.length < 4 || !va.length) continue;
+      const m = fitStudentTNU(tr, nu);
+      if (!m) continue;
+      for (const v of va) {
+        ll += m.c0 - 0.5 * (nu + 3) * Math.log(1 + quad(m.C_inv, v[0], v[1], v[2]) / nu);
+        cnt++;
+      }
+    }
+    const meanLl = cnt > 0 ? ll / cnt : -Infinity;
+    if (meanLl > bestLl) { bestLl = meanLl; bestNu = nu; }
+  }
+  const full = fitStudentTNU(trainVecs, bestNu);
+  if (!full) return null;
+  return { C_core: full.C, C_core_inv: full.C_inv, nu: bestNu, cvLogLik: bestLl, nTrain: n };
+}
+
+// Compute heteroscedastic pre-T0 variance multiplier matching gp-error-model 0.19.1 annotate_population.cpp
+function preT0CondVarScale(row, isSl, arm) {
+  if (arm !== 'O' && arm !== 'Op') return 1.0;
+  const d = row.diagO;
+  if (!d) return 1.0;
+  let mult = 1.0;
+  if (isSl && arm === 'O') {
+    if (Number.isFinite(d.rmsKm) && d.rmsKm > 0.15) mult = Math.min(3.0, 1.0 + 1.5 * (d.rmsKm - 0.15));
+    if (Number.isFinite(d.bterm) && (d.bterm > 0.15 || d.bterm < 0)) mult = Math.max(mult, 2.0);
+  } else {
+    if (Number.isFinite(d.rmsKm) && d.rmsKm > 1.0) mult = Math.min(2.5, 1.0 + 0.35 * (d.rmsKm - 1.0));
+    if (row.group === 'P' && Number.isFinite(d.maxAp) && d.maxAp >= 30) {
+      mult = Math.max(mult, Math.min(2.5, 1.0 + (d.maxAp - 30) / 80));
+    }
+  }
+  return mult * mult;
+}
+
 function loadAllSignedPools() {
-  const pubPath = path.join(RUNS_ROOT, 'public-vectors-072.jsonl');
+  const pubPath = path.join(RUNS_ROOT, 'public-vectors-073.jsonl');
   const slTrainPath = path.join(RUNS_ROOT, 'starlink-train-rows.jsonl');
   const slEvalPath = path.join(RUNS_ROOT, 'starlink-eval-rows.jsonl');
 
@@ -246,7 +344,9 @@ function loadAllSignedPools() {
       if (!d?.vKm?.S || !d?.vKm?.O || !d?.vKm?.X) continue;
       (rawByGroup[L][r.group] ||= []).push({
         norad: r.norad,
+        group: r.group,
         startUtc: r.startUtc,
+        diagO: r.diagO || null,
         v: { S: d.vKm.S, SupGP: d.vKm.S, Xp: d.vKm.X, Op: d.vKm.O, X: d.vKm.X, O: d.vKm.O },
       });
     }
@@ -256,7 +356,6 @@ function loadAllSignedPools() {
   const evalPools = Object.fromEntries(LEADS.map((L) => [L, REGIMES.map(() => [])]));
   const lsSplit = Object.fromEntries(LEADS.map((L) => [L, { train: [], eval: [] }]));
 
-  // Strict temporal 50/50 split for all precise-orbit groups (earlier timestamps = train, later = eval)
   for (const L of LEADS) {
     for (const [grp, rows] of Object.entries(rawByGroup[L])) {
       rows.sort((a, b) => a.startUtc.localeCompare(b.startUtc) || a.norad - b.norad);
@@ -273,7 +372,6 @@ function loadAllSignedPools() {
     }
   }
 
-  // Starlink: strictly earlier cycle (2026-11-22 -> 2026-11-23) = train, disjoint eval cycle (2026-11-24 -> 2026-11-25) = eval
   const readSl = (p) => {
     const out = [];
     for (const line of fs.readFileSync(p, 'utf8').split('\n')) {
@@ -281,7 +379,7 @@ function loadAllSignedPools() {
       const r = JSON.parse(line);
       const b = r.bins?.['18-24']?.vecKm;
       if (!b || !ARMS.every((k) => Array.isArray(b[k]))) continue;
-      out.push({ norad: r.norad, startUtc: p.includes('train') ? '2026-11-22' : '2026-11-24', v: b });
+      out.push({ norad: r.norad, group: 'SL', startUtc: p.includes('train') ? '2026-11-22' : '2026-11-24', diagO: r.diagO || null, v: b });
     }
     return out;
   };
@@ -291,7 +389,7 @@ function loadAllSignedPools() {
   return { trainPools, evalPools, lsSplit };
 }
 
-function fitAndAuditCovariances(trainPools, evalPools, lsSplit, scaleMode = 'a4_med50') {
+function fitAndAuditCovariances(trainPools, evalPools, lsSplit) {
   const models = {};
   const lsModels = {};
   const audit = [];
@@ -300,36 +398,29 @@ function fitAndAuditCovariances(trainPools, evalPools, lsSplit, scaleMode = 'a4_
     lsModels[K] = {};
     for (const L of LEADS) {
       models[K][L] = REGIMES.map(() => null);
-      lsModels[K][L] = fitRobustMixtureCov(lsSplit[L].train.map((r) => r.v[K]), scaleMode);
+      lsModels[K][L] = fitStudentTModel(lsSplit[L].train.map((r) => r.v[K]));
       REGIMES.forEach((g, reg) => {
         const tr = trainPools[L][reg], ev = evalPools[L][reg];
         if (!tr.length || !ev.length) return;
-        const m = fitRobustMixtureCov(tr.map((r) => r.v[K]), scaleMode);
+        const m = fitStudentTModel(tr.map((r) => r.v[K]));
         if (!m) return;
         models[K][L][reg] = m;
-        // Held-out evaluation audit strictly on disjoint eval rows!
+        // Held-out Student-t predictive HDR containment (exact F_{3, nu} quantiles) strictly on disjoint eval rows!
         const d2Ev = ev.map((r) => quad(m.C_core_inv, ...r.v[K]));
-        const fCore = CHI3.map((c) => d2Ev.filter((x) => x <= c).length / ev.length);
-        // 2-component mixture predictive containment via analytic Gaussian mixture CDF at 1/2/3 sigma of core
-        const d2TailEv = ev.map((r) => quad(m.C_tail_inv, ...r.v[K]));
-        const fMix = CHI3.map((c, idx) => {
-          const corePass = d2Ev.filter((x) => x <= c).length / ev.length;
-          // Under mixture, an event lies inside the effective 95% HDR if core d^2<=c or tail d^2<=c when drawn from tail
-          const tailPass = d2TailEv.filter((x) => x <= c).length / ev.length;
-          return (1 - m.wm) * corePass + m.wm * Math.max(corePass, tailPass);
-        });
-        const coreOk = Math.abs(fCore[0] - NOMINAL[0]) <= 0.05 && Math.abs(fCore[1] - NOMINAL[1]) <= 0.05 && (1 - fCore[2]) <= 0.01;
+        const qT = NOMINAL.map((p) => studentTD2Quantile(m.nu, p));
+        const fStudentT = qT.map((c) => d2Ev.filter((x) => x <= c).length / ev.length);
+        const fGauss = CHI3.map((c) => d2Ev.filter((x) => x <= c).length / ev.length);
+        const tOk = Math.abs(fStudentT[0] - NOMINAL[0]) <= 0.08 && Math.abs(fStudentT[1] - NOMINAL[1]) <= 0.06 && (1 - fStudentT[2]) <= 0.025;
         audit.push({
           side: K, lead: L, regime: g, label: REGIME_LABEL[g],
           trainRows: tr.length, evalRows: ev.length,
           trainTimeSpan: [tr[0].startUtc.slice(0, 10), tr.at(-1).startUtc.slice(0, 10)],
           evalTimeSpan: [ev[0].startUtc.slice(0, 10), ev.at(-1).startUtc.slice(0, 10)],
-          coreSigmaRtnKm: [0, 3, 5].map((k) => sig(Math.sqrt(m.C_core[k]))),
-          tailWeight: sig(m.wm, 3),
-          tailSigmaRtnKm: [0, 3, 5].map((k) => sig(Math.sqrt(m.C_tail[k]))),
-          heldOutCoreInside123Sigma: fCore.map((x) => sig(x, 3)),
-          heldOutMixtureInside123Sigma: fMix.map((x) => sig(x, 3)),
-          gaussianCoreStatus: coreOk ? 'REALISTIC' : 'HEAVY_TAILED',
+          nu: m.nu,
+          scaleSigmaRtnKm: [0, 3, 5].map((k) => sig(Math.sqrt(m.C_core[k]))),
+          heldOutStudentTInside68_95_997: fStudentT.map((x) => sig(x, 3)),
+          heldOutGaussianInside123Sigma: fGauss.map((x) => sig(x, 3)),
+          studentTStatus: tOk ? 'CALIBRATED_STUDENT_T' : 'MISCALIBRATED_TAIL',
         });
       });
     }
@@ -367,10 +458,8 @@ function prepareWeekScratch(objects, radii, isManeuverablePayload) {
       }
       const rad = (id2) => { const x = radii.get(id2); if (x) { index.radiusHow[x.how]++; return x.r; } index.radiusHow.default++; return 0.5; };
       keepG.push(g.subarray(i * RECORD, (i + 1) * RECORD));
-      // M stride 6: [rA, rB, pA, pB, limKm, dayIdx]
       keepM.push(rA, rB, pA, pB, oA.hp < 2000 && oB.hp < 2000 ? 1 : 5, days[i]);
       keepR.push(rad(A) + rad(B));
-      // Compact pair hash (0..65535) for O(1) pair-cluster bootstrap
       const lo = Math.min(A, B) >>> 0, hi = Math.max(A, B) >>> 0;
       keepP.push(((lo * 2654435761) ^ (hi * 2246822519)) & 65535);
     }
@@ -407,20 +496,7 @@ async function openPcHarness() {
     enableBrowserWasiThreads: false,
   });
   const typeRef = { schemaName: 'CQR.fbs', fileIdentifier: '$CQR', rootTypeName: 'CQR', wireFormat: 'flatbuffer' };
-  async function pc2d(c11, c12, c22, hbrM, xm, zm, weight = 1) {
-    const det = c11 * c22 - c12 * c12;
-    if (!(det > 0) || !Number.isFinite(det)) return { p: 0, exact: false };
-    const tr = c11 + c22;
-    const lmin = (tr - Math.sqrt(Math.max(0, tr * tr - 4 * det))) / 2;
-    if (!(lmin > 0)) return { p: 0, exact: false };
-    const d2 = Math.max(0, (c22 * xm * xm - 2 * c12 * xm * zm + c11 * zm * zm) / det);
-    const d = Math.sqrt(d2), hRad = hbrM / Math.sqrt(lmin);
-    const bound = (hbrM * hbrM) / (2 * Math.sqrt(det)) * Math.exp(-(Math.max(0, d - hRad) ** 2) / 2);
-    if (weight * bound < EXACT_PC_BOUND_MIN) {
-      // Smooth continuous Gaussian point-mass tail score ONLY for < 2e-8 ROC ordering (never triggers >= 3e-7!)
-      const approx = (hbrM * hbrM) / (2 * Math.sqrt(det)) * Math.exp(-0.5 * d2);
-      return { p: weight * approx < 2.5e-7 ? approx : 0, exact: false };
-    }
+  async function fosterWasm(c11, c12, c22, hbrM, xm, zm) {
     const b = new fb.Builder(512);
     const rec = new CQR_MOD.CQRT();
     rec.PROBABILITY_REQUEST = new CQR_MOD.CQRProbabilityRequestT(
@@ -429,32 +505,69 @@ async function openPcHarness() {
     );
     CQR_MOD.CQR.finishCQRBuffer(b, rec.pack(b));
     const r = await h.invoke({ methodId: 'compute_pc', inputs: [{ portId: 'request', typeRef, payload: b.asUint8Array() }] });
-    if (r.statusCode !== 0) return { p: 0, exact: false };
+    if (r.statusCode !== 0) return 0;
     const res = CQR_MOD.CQR.getRootAsCQR(new fb.ByteBuffer(new Uint8Array(r.outputs[0].payload))).unpack().PROBABILITY_RESULT;
-    return { p: res?.CONVERGED && Number.isFinite(res.PROBABILITY) ? res.PROBABILITY : 0, exact: true };
+    return res?.CONVERGED && Number.isFinite(res.PROBABILITY) ? res.PROBABILITY : 0;
   }
-  return { pc2d, destroy: () => h.destroy?.() };
+
+  // Exact Student-t 2-D Pc via 8-point shifted generalized Gauss-Laguerre quadrature calling exact WASM FOSTER-2D
+  async function pcStudentT(c11, c12, c22, hbrM, xm, zm, nu) {
+    const det = c11 * c22 - c12 * c12;
+    if (!(det > 0) || !Number.isFinite(det)) return { p: 0, exactCalls: 0 };
+    const tr = c11 + c22;
+    const lmin = (tr - Math.sqrt(Math.max(0, tr * tr - 4 * det))) / 2;
+    if (!(lmin > 0)) return { p: 0, exactCalls: 0 };
+    const d2 = Math.max(0, (c22 * xm * xm - 2 * c12 * xm * zm + c11 * zm * zm) / det);
+    const d = Math.sqrt(d2), hRad = hbrM / Math.sqrt(lmin);
+    const dEff = Math.max(0, d - hRad);
+    const bound = (hbrM * hbrM) / (2 * Math.sqrt(det)) * Math.pow(1 + (dEff * dEff) / nu, -(nu + 2) / 2);
+    if (bound < EXACT_PC_BOUND_MIN) {
+      // Deep-tail smooth monotonic Student-t density * disk area (strictly < 2e-8, never triggers >= 3e-7!)
+      const approx = (hbrM * hbrM) / (2 * Math.sqrt(det)) * Math.pow(1 + d2 / nu, -(nu + 2) / 2);
+      return { p: approx < 2.5e-7 ? approx : 0, exactCalls: 0 };
+    }
+    const a = 0.5 * (nu + dEff * dEff);
+    const gl = gaussLaguerre(N_QUAD, nu / 2 - 1);
+    const logPref = (nu / 2) * Math.log(nu / (2 * a)) - lgamma(nu / 2);
+    let acc = 0;
+    for (const { s, w } of gl) {
+      const scale = a / s;
+      const p = await fosterWasm(c11 * scale, c12 * scale, c22 * scale, hbrM, xm, zm);
+      acc += w * p * Math.exp(logPref + ((dEff * dEff) / (2 * a)) * s);
+    }
+    return { p: Math.min(1, Math.max(0, acc)), exactCalls: N_QUAD };
+  }
+
+  // Pure Gaussian Foster-2D (for sensitivity comparison)
+  async function pcGaussian(c11, c12, c22, hbrM, xm, zm) {
+    const det = c11 * c22 - c12 * c12;
+    if (!(det > 0) || !Number.isFinite(det)) return { p: 0, exactCalls: 0 };
+    const tr = c11 + c22;
+    const lmin = (tr - Math.sqrt(Math.max(0, tr * tr - 4 * det))) / 2;
+    if (!(lmin > 0)) return { p: 0, exactCalls: 0 };
+    const d2 = Math.max(0, (c22 * xm * xm - 2 * c12 * xm * zm + c11 * zm * zm) / det);
+    const d = Math.sqrt(d2), hRad = hbrM / Math.sqrt(lmin);
+    const bound = (hbrM * hbrM) / (2 * Math.sqrt(det)) * Math.exp(-(Math.max(0, d - hRad) ** 2) / 2);
+    if (bound < EXACT_PC_BOUND_MIN) {
+      const approx = (hbrM * hbrM) / (2 * Math.sqrt(det)) * Math.exp(-0.5 * d2);
+      return { p: approx < 2.5e-7 ? approx : 0, exactCalls: 0 };
+    }
+    return { p: await fosterWasm(c11, c12, c22, hbrM, xm, zm), exactCalls: 1 };
+  }
+
+  return { pcStudentT, pcGaussian, destroy: () => h.destroy?.() };
 }
 
-// Compute swept recall curve + ROC for a list of (score, weight, isReal) arrays
 function computeMissRecallCurve(realByArm, allByArm, allW, sgp4At1kmMissed, totalRealW) {
   const sgp4Recall = totalRealW > 0 ? 1 - sgp4At1kmMissed / totalRealW : 0;
-  // Build sorted real scores per arm (ascending miss distance -> smaller = stronger alert)
   const out = { sgp4_1km_recall: sig(sgp4Recall, 4), totalRealLeo1km: sig(totalRealW, 5), byTarget: {} };
-  const sgp4Fixed1kmNotif = (() => {
-    let s = 0;
-    const arr = allByArm.S;
-    for (let i = 0; i < arr.length; i++) if (arr[i] < 1.0) s += allW[i];
-    return s;
-  })();
+  let sgp4Fixed1kmNotif = 0;
+  for (let i = 0; i < allByArm.S.length; i++) if (allByArm.S[i] < 1.0) sgp4Fixed1kmNotif += allW[i];
   out.sgp4Fixed1kmNotif = sig(sgp4Fixed1kmNotif, 5);
 
   const targets = [['sgp4_1km', sgp4Recall], ...TARGET_RECALLS.map((q) => [`r${Math.round(q * 100)}`, q])];
   const sortedReal = {};
-  for (const K of ARMS) {
-    // Each entry: [pm, w] sorted ascending by pm
-    sortedReal[K] = realByArm[K].slice().sort((a, b) => a[0] - b[0]);
-  }
+  for (const K of ARMS) sortedReal[K] = realByArm[K].slice().sort((a, b) => a[0] - b[0]);
   for (const [label, targetQ] of targets) {
     const needW = targetQ * totalRealW;
     const row = { targetRecall: sig(targetQ, 4), arms: {} };
@@ -470,10 +583,9 @@ function computeMissRecallCurve(realByArm, allByArm, allW, sgp4At1kmMissed, tota
         }
         if (acc < needW - 1e-9 && sr.length) R = sr.at(-1)[0] * (1 + 1e-7);
       }
-      let notif = 0;
+      let notif = 0, caught = 0;
       const arr = allByArm[K];
       for (let i = 0; i < arr.length; i++) if (arr[i] < R) notif += allW[i];
-      let caught = 0;
       for (let i = 0; i < sr.length; i++) if (sr[i][0] < R) caught += sr[i][1];
       row.arms[K] = {
         radiusKm: sig(R, 4),
@@ -490,7 +602,6 @@ function computeMissRecallCurve(realByArm, allByArm, allW, sgp4At1kmMissed, tota
   return out;
 }
 
-// Compute Matched-Recall Pc ROC + PR-AUC (larger Pc = stronger alert!)
 function computePcRoc(realPcByArm, allPcByArm, allW, totalRealW) {
   const sgp4RecAt = (lim) => {
     let c = 0;
@@ -498,17 +609,9 @@ function computePcRoc(realPcByArm, allPcByArm, allW, totalRealW) {
     return totalRealW > 0 ? c / totalRealW : 0;
   };
   const r1e5 = sgp4RecAt(1e-5), r3e7 = sgp4RecAt(3e-7);
-  const targets = [
-    ['sgp4_pc1e-5', r1e5],
-    ['sgp4_pc3e-7', r3e7],
-    ['r90', 0.90],
-    ['r95', 0.95],
-  ];
+  const targets = [['sgp4_pc1e-5', r1e5], ['sgp4_pc3e-7', r3e7], ['r90', 0.90], ['r95', 0.95]];
   const sortedReal = {};
-  for (const K of ARMS) {
-    // Descending Pc
-    sortedReal[K] = realPcByArm[K].slice().sort((a, b) => b[0] - a[0]);
-  }
+  for (const K of ARMS) sortedReal[K] = realPcByArm[K].slice().sort((a, b) => b[0] - a[0]);
   const byTarget = {};
   for (const [label, targetQ] of targets) {
     const needW = targetQ * totalRealW;
@@ -540,9 +643,8 @@ function computePcRoc(realPcByArm, allPcByArm, allW, totalRealW) {
     byTarget[label] = row;
   }
 
-  // PR-AUC (average precision over top-ranked events down to Pc >= 1e-40) using 157 log-spaced Pc thresholds
   const prAuc = {};
-  const grid = Array.from({ length: 157 }, (_, i) => Math.pow(10, -1 - i * 0.25)); // 1e-1 .. 1e-40
+  const grid = Array.from({ length: 157 }, (_, i) => Math.pow(10, -1 - i * 0.25));
   for (const K of ARMS) {
     const arr = allPcByArm[K], sr = realPcByArm[K];
     let prevR = 0, auc = 0;
@@ -564,7 +666,6 @@ async function runReplicate(rep, ctx, mode = 'primary') {
   const out = {};
   for (const L of LEADS) {
     const rng = rngOf(`${CFG.evaluation.rngSeed}:${mode}:${rep}:${L}`);
-    // Cluster bootstrap 1: resample error pools by satellite (NORAD) cluster
     const resamplePool = (rows) => {
       if (rep === 0 || !rows.length) return rows;
       const byObj = new Map();
@@ -576,13 +677,8 @@ async function runReplicate(rep, ctx, mode = 'primary') {
     const use = evalPools[L].map(resamplePool);
     const useLs = resamplePool(lsSplit[L].eval);
 
-    // Cluster bootstrap 2: day-of-week block weights (7 daily blocks, sum = 7)
     const dayMult = new Float64Array(7).fill(1);
-    if (rep > 0) {
-      dayMult.fill(0);
-      for (let d = 0; d < 7; d++) dayMult[Math.floor(rng() * 7)] += 1;
-    }
-    // Cluster bootstrap 3: Rubin Bayesian pair-cluster weights (Exp(1), mean 1, across 65536 pair buckets)
+    if (rep > 0) { dayMult.fill(0); for (let d = 0; d < 7; d++) dayMult[Math.floor(rng() * 7)] += 1; }
     const pairMult = new Float32Array(65536).fill(1);
     if (rep > 0) {
       let sumP = 0;
@@ -592,36 +688,18 @@ async function runReplicate(rep, ctx, mode = 'primary') {
     }
 
     const tierUse = rep === 0
-      ? [
-        ['t0', 1],
-        ['t1-s1', 1 / 3], ['t1-s2', 1 / 3], ['t1-s3', 1 / 3],
-        ['t2-s1', 1 / 3], ['t2-s2', 1 / 3], ['t2-s3', 1 / 3],
-        ['t3-s1', 1 / 3], ['t3-s2', 1 / 3], ['t3-s3', 1 / 3],
-      ]
-      : [
-        ['t0', 1],
-        [`t1-s${1 + (rep % 3)}`, 1],
-        [`t2-s${1 + (Math.floor(rep / 3) % 3)}`, 1],
-        [`t3-s${1 + (Math.floor(rep / 9) % 3)}`, 1],
-      ];
+      ? [['t0', 1], ['t1-s1', 1 / 3], ['t1-s2', 1 / 3], ['t1-s3', 1 / 3], ['t2-s1', 1 / 3], ['t2-s2', 1 / 3], ['t2-s3', 1 / 3], ['t3-s1', 1 / 3], ['t3-s2', 1 / 3], ['t3-s3', 1 / 3]]
+      : [['t0', 1], [`t1-s${1 + (rep % 3)}`, 1], [`t2-s${1 + (Math.floor(rep / 3) % 3)}`, 1], [`t3-s${1 + (Math.floor(rep / 9) % 3)}`, 1]];
 
     const emptyView = () => ({
       fixed1kmNotif: Object.fromEntries(ARMS.map((K) => [K, 0])),
       fixed1kmMissed: Object.fromEntries(ARMS.map((K) => [K, 0])),
-      realTotal: 0,
-      realLeo1km: 0,
-      weightTotal: 0,
-      pcTiers: Object.fromEntries(ARMS.map((K) => [K, {
-        redNotif: 0, redReal: 0, // >= 1e-4
-        yellowNotif: 0, yellowReal: 0, // 1e-5 .. 1e-4
-        cum1e5Notif: 0, cum1e5Real: 0, // >= 1e-5
-        cum3e7Notif: 0, cum3e7Real: 0, // >= 3e-7
-      }])),
+      realTotal: 0, realLeo1km: 0, weightTotal: 0,
+      pcTiers: Object.fromEntries(ARMS.map((K) => [K, { redNotif: 0, redReal: 0, yellowNotif: 0, yellowReal: 0, cum1e5Notif: 0, cum1e5Real: 0, cum3e7Notif: 0, cum3e7Real: 0 }])),
       pcExactCalls: 0,
     });
     const views = Object.fromEntries(VIEWS.map((v) => [v, emptyView()]));
 
-    // Tracking arrays for recall curves & Pc ROC on the two headline views: allButStarlinkPairs & noStarlink
     const curveViews = ['allButStarlinkPairs', 'noStarlink'];
     const realMiss = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
     const allMiss = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
@@ -630,6 +708,8 @@ async function runReplicate(rep, ctx, mode = 'primary') {
     const allPc = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
 
     let leftOutSl3d = 0, leftOutNoRows = 0;
+    const useHet = mode === 'primary' || mode === 'do_passive_as_ls';
+    const useGauss = mode === 'gaussian_core_only';
 
     for (const [id, share] of tierUse) {
       const t = tiers[id];
@@ -695,60 +775,42 @@ async function runReplicate(rep, ctx, mode = 'primary') {
           }
 
           if (!doPc) continue;
-          // Exact WASM Foster 2-D Pc on starlinkPairs (nSL === 2, uncoordinated GP noise excluded from headline & Pc ROC)
-          // runs on the central primary estimate (rep === 0); bootstrap replicates and sensitivities evaluate exact WASM Pc on all nSL < 2 views.
           if (nSL === 2 && (rep > 0 || mode !== 'primary')) continue;
           const mA = useLsA ? lsModels[K][L] : models[K][L][rA];
           const mB = useLsB ? lsModels[K][L] : models[K][L][rB];
           if (!mA || !mB) continue;
 
-          // Pre-T0 class-conditioned mixture weights (DO passive debris has wm_eff = 0; robust_core_only has wm = 0)
-          const wmA = mode === 'robust_core_only' ? 0 : (rA === DO_IDX && pA === 0 ? CFG.covariance.doPassiveManeuverWeight : mA.wm);
-          const wmB = mode === 'robust_core_only' ? 0 : (rB === DO_IDX && pB === 0 ? CFG.covariance.doPassiveManeuverWeight : mB.wm);
+          const sA = useHet ? preT0CondVarScale(rowA, rA === SL, K) : 1.0;
+          const sB = useHet ? preT0CondVarScale(rowB, rB === SL, K) : 1.0;
+          const cA = inPlane(G, o + 2, mA.C_core);
+          const cB = inPlane(G, o + 8, mB.C_core);
+          const c11 = (cA[0] * sA + cB[0] * sB) * 1e6;
+          const c12 = (cA[1] * sA + cB[1] * sB) * 1e6;
+          const c22 = (cA[2] * sA + cB[2] * sB) * 1e6;
           const xm = x * 1000, zm = z * 1000;
+          const nuEff = Math.min(mA.nu, mB.nu);
 
-          const cA0 = inPlane(G, o + 2, mA.C_core);
-          const cB0 = inPlane(G, o + 8, mB.C_core);
-          let pMix = 0;
-          let exactCalls = 0;
-
-          const evalComp = async (cA, cB, weight) => {
-            if (weight <= 0) return;
-            const res = await pc.pc2d((cA[0] + cB[0]) * 1e6, (cA[1] + cB[1]) * 1e6, (cA[2] + cB[2]) * 1e6, hbr, xm, zm, weight);
-            pMix += weight * res.p;
-            if (res.exact) exactCalls++;
-          };
-
-          await evalComp(cA0, cB0, (1 - wmA) * (1 - wmB));
-          if (wmA > 0) {
-            const cA1 = inPlane(G, o + 2, mA.C_tail);
-            await evalComp(cA1, cB0, wmA * (1 - wmB));
-            if (wmB > 0) {
-              const cB1 = inPlane(G, o + 8, mB.C_tail);
-              await evalComp(cA0, cB1, (1 - wmA) * wmB);
-              await evalComp(cA1, cB1, wmA * wmB);
-            }
-          } else if (wmB > 0) {
-            const cB1 = inPlane(G, o + 8, mB.C_tail);
-            await evalComp(cA0, cB1, (1 - wmA) * wmB);
-          }
+          const res = useGauss
+            ? await pc.pcGaussian(c11, c12, c22, hbr, xm, zm)
+            : await pc.pcStudentT(c11, c12, c22, hbr, xm, zm, nuEff);
+          const pVal = res.p;
 
           for (const vn of targetNames) {
             const v = views[vn];
-            v.pcExactCalls += exactCalls;
+            v.pcExactCalls += res.exactCalls;
             const pt = v.pcTiers[K];
-            if (pMix >= 1e-4) { pt.redNotif += w; if (isReal) pt.redReal += w; }
-            else if (pMix >= 1e-5) { pt.yellowNotif += w; if (isReal) pt.yellowReal += w; }
-            if (pMix >= 1e-5) { pt.cum1e5Notif += w; if (isReal) pt.cum1e5Real += w; }
-            if (pMix >= 3e-7) { pt.cum3e7Notif += w; if (isReal) pt.cum3e7Real += w; }
+            if (pVal >= 1e-4) { pt.redNotif += w; if (isReal) pt.redReal += w; }
+            else if (pVal >= 1e-5) { pt.yellowNotif += w; if (isReal) pt.yellowReal += w; }
+            if (pVal >= 1e-5) { pt.cum1e5Notif += w; if (isReal) pt.cum1e5Real += w; }
+            if (pVal >= 3e-7) { pt.cum3e7Notif += w; if (isReal) pt.cum3e7Real += w; }
           }
           if (inAllButSl) {
-            allPc.allButStarlinkPairs[K].push(pMix);
-            if (isRealLeo1) realPc.allButStarlinkPairs[K].push([pMix, w]);
+            allPc.allButStarlinkPairs[K].push(pVal);
+            if (isRealLeo1) realPc.allButStarlinkPairs[K].push([pVal, w]);
           }
           if (inNoSl) {
-            allPc.noStarlink[K].push(pMix);
-            if (isRealLeo1) realPc.noStarlink[K].push([pMix, w]);
+            allPc.noStarlink[K].push(pVal);
+            if (isRealLeo1) realPc.noStarlink[K].push([pVal, w]);
           }
         }
       }
@@ -773,8 +835,7 @@ async function childWorker() {
   const reps = arg('--reps', '').split(',').filter(Boolean).map(Number);
   const pcReps = Number(arg('--pc-reps', '0'));
   const { evalPools, trainPools, lsSplit } = loadAllSignedPools();
-  const scaleMode = mode === 'post_diagnostic_q90_core' ? 'q90_all' : 'a4_med50';
-  const { models, lsModels } = fitAndAuditCovariances(trainPools, evalPools, lsSplit, scaleMode);
+  const { models, lsModels } = fitAndAuditCovariances(trainPools, evalPools, lsSplit);
   const index = JSON.parse(fs.readFileSync(path.join(SCRATCH, 'index.json'), 'utf8'));
   const tiers = Object.fromEntries(CFG.forwardWeek.tiers.map((t) => [t.id, loadTier(t.id, index)]));
   const needPc = reps.some((r) => r <= pcReps);
@@ -805,38 +866,26 @@ function aggregateReps(reps, L) {
   const bsMiss = reps.slice(1).map((r) => r.res[L]);
   const bsPc = reps.slice(1).filter((r) => r.doPc).map((r) => r.res[L]);
 
-  // Summarize recall curves with paired cluster bootstrap 95% CIs
   const recallCurves = {};
   for (const vn of ['allButStarlinkPairs', 'noStarlink']) {
     const rc0 = c0.recallCurves[vn];
     const byTarget = {};
     for (const [label, row0] of Object.entries(rc0.byTarget)) {
-      const arms = {};
-      const redVsS = {};
-      const redVsX = {};
+      const arms = {}, redVsS = {}, redVsX = {};
       for (const K of ARMS) {
         arms[K] = {
           ...row0.arms[K],
           notifInterval95: interval95(bsMiss.map((b) => b.recallCurves[vn].byTarget[label].arms[K].notif)),
           radiusInterval95: interval95(bsMiss.map((b) => b.recallCurves[vn].byTarget[label].arms[K].radiusKm)),
         };
-        const baseS = row0.arms.S.notif;
-        const baseX = row0.arms.X.notif;
+        const baseS = row0.arms.S.notif, baseX = row0.arms.X.notif;
         redVsS[K] = {
           pct: baseS > 0 ? sig(100 * (1 - row0.arms[K].notif / baseS), 4) : null,
-          ci95: interval95(bsMiss.map((b) => {
-            const s = b.recallCurves[vn].byTarget[label].arms.S.notif;
-            const k = b.recallCurves[vn].byTarget[label].arms[K].notif;
-            return s > 0 ? 100 * (1 - k / s) : NaN;
-          })),
+          ci95: interval95(bsMiss.map((b) => { const s = b.recallCurves[vn].byTarget[label].arms.S.notif, k = b.recallCurves[vn].byTarget[label].arms[K].notif; return s > 0 ? 100 * (1 - k / s) : NaN; })),
         };
         redVsX[K] = {
           pct: baseX > 0 ? sig(100 * (1 - row0.arms[K].notif / baseX), 4) : null,
-          ci95: interval95(bsMiss.map((b) => {
-            const x = b.recallCurves[vn].byTarget[label].arms.X.notif;
-            const k = b.recallCurves[vn].byTarget[label].arms[K].notif;
-            return x > 0 ? 100 * (1 - k / x) : NaN;
-          })),
+          ci95: interval95(bsMiss.map((b) => { const x = b.recallCurves[vn].byTarget[label].arms.X.notif, k = b.recallCurves[vn].byTarget[label].arms[K].notif; return x > 0 ? 100 * (1 - k / x) : NaN; })),
         };
       }
       byTarget[label] = { targetRecall: row0.targetRecall, arms, reductionVsSgp4: redVsS, reductionVsSgp4Xp: redVsX };
@@ -844,45 +893,31 @@ function aggregateReps(reps, L) {
     recallCurves[vn] = { sgp4_1km_recall: rc0.sgp4_1km_recall, totalRealLeo1km: rc0.totalRealLeo1km, sgp4Fixed1kmNotif: rc0.sgp4Fixed1kmNotif, byTarget };
   }
 
-  // Summarize fixed-1km & Pc tiers with tier precision & bootstrap CIs
   const viewsOut = {};
   for (const vn of VIEWS) {
     const v0 = c0.views[vn];
     const fixed1km = {
-      realTotal: sig(v0.realTotal, 5),
-      realLeo1km: sig(v0.realLeo1km, 5),
+      realTotal: sig(v0.realTotal, 5), realLeo1km: sig(v0.realLeo1km, 5),
       notif: Object.fromEntries(ARMS.map((K) => [K, sig(v0.fixed1kmNotif[K], 5)])),
       missed: Object.fromEntries(ARMS.map((K) => [K, sig(v0.fixed1kmMissed[K], 5)])),
       missedReductionVsSgp4Pct: Object.fromEntries(ARMS.map((K) => [K, v0.fixed1kmMissed.S > 0 ? sig(100 * (1 - v0.fixed1kmMissed[K] / v0.fixed1kmMissed.S), 4) : null])),
     };
     const pcTiers = {};
-    for (const [tKey, nField, rField] of [
-      ['pc1e-4_red', 'redNotif', 'redReal'],
-      ['pc1e-5_to_1e-4_yellow', 'yellowNotif', 'yellowReal'],
-      ['pc1e-5_cum', 'cum1e5Notif', 'cum1e5Real'],
-      ['pc3e-7_cum', 'cum3e7Notif', 'cum3e7Real'],
-    ]) {
+    for (const [tKey, nField, rField] of [['pc1e-4_red', 'redNotif', 'redReal'], ['pc1e-5_to_1e-4_yellow', 'yellowNotif', 'yellowReal'], ['pc1e-5_cum', 'cum1e5Notif', 'cum1e5Real'], ['pc3e-7_cum', 'cum3e7Notif', 'cum3e7Real']]) {
       const notif = {}, realCaught = {}, precisionPct = {}, redVsS = {}, redVsX = {};
       for (const K of ARMS) {
         const nVal = v0.pcTiers[K][nField], rVal = v0.pcTiers[K][rField];
-        notif[K] = sig(nVal, 5);
-        realCaught[K] = sig(rVal, 5);
+        notif[K] = sig(nVal, 5); realCaught[K] = sig(rVal, 5);
         precisionPct[K] = nVal > 0 ? sig(100 * rVal / nVal, 4) : null;
         const nS = v0.pcTiers.S[nField], nX = v0.pcTiers.X[nField];
         const hasPcCi = vn !== 'starlinkPairs' && vn !== 'all';
         redVsS[K] = {
           pct: nS > 0 ? sig(100 * (1 - nVal / nS), 4) : null,
-          ci95: hasPcCi ? interval95(bsPc.map((b) => {
-            const s = b.views[vn].pcTiers.S[nField], k = b.views[vn].pcTiers[K][nField];
-            return s > 0 ? 100 * (1 - k / s) : NaN;
-          })) : null,
+          ci95: hasPcCi ? interval95(bsPc.map((b) => { const s = b.views[vn].pcTiers.S[nField], k = b.views[vn].pcTiers[K][nField]; return s > 0 ? 100 * (1 - k / s) : NaN; })) : null,
         };
         redVsX[K] = {
           pct: nX > 0 ? sig(100 * (1 - nVal / nX), 4) : null,
-          ci95: hasPcCi ? interval95(bsPc.map((b) => {
-            const x = b.views[vn].pcTiers.X[nField], k = b.views[vn].pcTiers[K][nField];
-            return x > 0 ? 100 * (1 - k / x) : NaN;
-          })) : null,
+          ci95: hasPcCi ? interval95(bsPc.map((b) => { const x = b.views[vn].pcTiers.X[nField], k = b.views[vn].pcTiers[K][nField]; return x > 0 ? 100 * (1 - k / x) : NaN; })) : null,
         };
       }
       pcTiers[tKey] = { notif, realCaught, tierPrecisionPct: precisionPct, reductionVsSgp4: redVsS, reductionVsSgp4Xp: redVsX };
@@ -890,7 +925,6 @@ function aggregateReps(reps, L) {
     viewsOut[vn] = { weightTotal: sig(v0.weightTotal, 5), pcExactCalls: v0.pcExactCalls, fixed1km, pcTiers };
   }
 
-  // Summarize Matched-Recall Pc ROC with bootstrap CIs
   const pcRoc = {};
   if (c0.pcRoc) {
     for (const vn of ['allButStarlinkPairs', 'noStarlink']) {
@@ -899,31 +933,21 @@ function aggregateReps(reps, L) {
       for (const [label, row0] of Object.entries(pr0.byTarget)) {
         const arms = {}, redVsS = {}, redVsX = {};
         for (const K of ARMS) {
-          arms[K] = {
-            ...row0.arms[K],
-            notifInterval95: interval95(bsPc.map((b) => b.pcRoc[vn].byTarget[label].arms[K].notif)),
-          };
+          arms[K] = { ...row0.arms[K], notifInterval95: interval95(bsPc.map((b) => b.pcRoc[vn].byTarget[label].arms[K].notif)) };
           const s0 = row0.arms.S.notif, x0 = row0.arms.X.notif;
           redVsS[K] = {
             pct: s0 > 0 ? sig(100 * (1 - row0.arms[K].notif / s0), 4) : null,
-            ci95: interval95(bsPc.map((b) => {
-              const s = b.pcRoc[vn].byTarget[label].arms.S.notif, k = b.pcRoc[vn].byTarget[label].arms[K].notif;
-              return s > 0 ? 100 * (1 - k / s) : NaN;
-            })),
+            ci95: interval95(bsPc.map((b) => { const s = b.pcRoc[vn].byTarget[label].arms.S.notif, k = b.pcRoc[vn].byTarget[label].arms[K].notif; return s > 0 ? 100 * (1 - k / s) : NaN; })),
           };
           redVsX[K] = {
             pct: x0 > 0 ? sig(100 * (1 - row0.arms[K].notif / x0), 4) : null,
-            ci95: interval95(bsPc.map((b) => {
-              const x = b.pcRoc[vn].byTarget[label].arms.X.notif, k = b.pcRoc[vn].byTarget[label].arms[K].notif;
-              return x > 0 ? 100 * (1 - k / x) : NaN;
-            })),
+            ci95: interval95(bsPc.map((b) => { const x = b.pcRoc[vn].byTarget[label].arms.X.notif, k = b.pcRoc[vn].byTarget[label].arms[K].notif; return x > 0 ? 100 * (1 - k / x) : NaN; })),
           };
         }
         byTarget[label] = { targetRecall: row0.targetRecall, arms, reductionVsSgp4: redVsS, reductionVsSgp4Xp: redVsX };
       }
       pcRoc[vn] = {
-        sgp4RecallAt1e5: pr0.sgp4RecallAt1e5,
-        sgp4RecallAt3e7: pr0.sgp4RecallAt3e7,
+        sgp4RecallAt1e5: pr0.sgp4RecallAt1e5, sgp4RecallAt3e7: pr0.sgp4RecallAt3e7,
         prAuc: pr0.prAuc,
         prAucInterval95: Object.fromEntries(ARMS.map((K) => [K, interval95(bsPc.map((b) => b.pcRoc[vn].prAuc[K]))])),
         byTarget,
@@ -931,18 +955,13 @@ function aggregateReps(reps, L) {
     }
   }
 
-  // Attribution waterfall on allButStarlinkPairs
   const waterfall = {};
   for (const label of ['sgp4_1km', 'r90', 'r95']) {
     const a = recallCurves.allButStarlinkPairs.byTarget[label].arms;
     const base = a.S.notif;
     waterfall[label] = {
-      S_sgp4: a.S.notif,
-      SupGP: a.SupGP.notif,
-      Xp_propagatorOnly: a.Xp.notif,
-      Op_sdnApPublicOnly: a.Op.notif,
-      X_xpWithOperatorStarlink: a.X.notif,
-      O_sdnApWithOperatorStarlink: a.O.notif,
+      S_sgp4: a.S.notif, SupGP: a.SupGP.notif, Xp_propagatorOnly: a.Xp.notif, Op_sdnApPublicOnly: a.Op.notif,
+      X_xpWithOperatorStarlink: a.X.notif, O_sdnApWithOperatorStarlink: a.O.notif,
       stepDeltaPctOfSgp4: base > 0 ? {
         propagator_S_to_Xp: sig(100 * (a.S.notif - a.Xp.notif) / base, 4),
         method_Xp_to_Op: sig(100 * (a.Xp.notif - a.Op.notif) / base, 4),
@@ -952,7 +971,6 @@ function aggregateReps(reps, L) {
       } : null,
     };
   }
-
   return { views: viewsOut, recallCurves, pcRoc, attributionWaterfall: waterfall, leftOut: c0.leftOut };
 }
 
@@ -964,13 +982,12 @@ async function runParent() {
   const missReps = smoke ? 10 : Number(arg('--miss-reps', String(CFG.evaluation.bootstrapReplicates.miss)));
   const pcReps = smoke ? 4 : Number(arg('--pc-reps', String(CFG.evaluation.bootstrapReplicates.pc)));
 
-  console.log(`${nowUtc()} Amendment 4 Eval: preparing fresh week 2026-11-17..24 (missReps=${missReps}, pcReps=${pcReps}, workers=${workers})...`);
+  console.log(`${nowUtc()} Amendment 5 Eval: preparing fresh week 2026-11-17..24 (missReps=${missReps}, pcReps=${pcReps}, workers=${workers})...`);
   const { objects, radii, isManeuverablePayload } = loadObjectsAndDisCos();
   const index = prepareWeekScratch(objects, radii, isManeuverablePayload);
   const { trainPools, evalPools, lsSplit } = loadAllSignedPools();
   const { audit } = fitAndAuditCovariances(trainPools, evalPools, lsSplit);
 
-  // Run primary bootstrap reps across workers (rep 0 gets its own dedicated worker since it averages all 3 sub-seeds and evaluates exact starlinkPairs Pc)
   const all = Array.from({ length: missReps + 1 }, (_, i) => i);
   const bsAll = all.slice(1);
   const bsWorkers = Math.max(1, workers - 1);
@@ -982,8 +999,7 @@ async function runParent() {
     c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`primary worker ${w} exited ${code}`))));
   })));
 
-  // Also run pre-registered sensitivities + post-diagnostic q90 core sensitivity (rep 0 central with exact Pc) in parallel!
-  const allSensModes = [...CFG.covariance.sensitivities, 'post_diagnostic_q90_core'];
+  const allSensModes = CFG.covariance.sensitivities; // ['student_t_homoscedastic', 'gaussian_core_only', 'do_passive_as_ls']
   await Promise.all(allSensModes.map((mode) => new Promise((resolve, reject) => {
     const c = spawn('nice', ['-n', '10', process.execPath, '--max-old-space-size=4096', SELF,
       '--child', '--mode', mode, '--reps', '0', '--pc-reps', '0'],
@@ -1001,34 +1017,23 @@ async function runParent() {
       noStarlink_pcTiers: r0.res[L].views.noStarlink.pcTiers,
     }]));
   };
-  const sensitivities = Object.fromEntries(CFG.covariance.sensitivities.map((mode) => [mode, formatSens(mode)]));
-  const { audit: q90Audit } = fitAndAuditCovariances(trainPools, evalPools, lsSplit, 'q90_all');
-  const postDiagnosticSensitivities = {
-    q90_calibrated_core: {
-      disclosure: 'Post-diagnostic sensitivity added after inspecting Amendment 4 held-out covariance audit showing median-matched core overconfidence on leptokurtic SDN-AP errors; scales core by quantile(d2_train, 0.90) / chi2_3(0.90) identically across all six arms. Reported alongside — never substituted for — the frozen pre-registered primary.',
-      heldOutAudit: q90Audit,
-      ...formatSens('post_diagnostic_q90_core'),
-    },
-  };
+  const sensitivities = Object.fromEntries(allSensModes.map((mode) => [mode, formatSens(mode)]));
 
   const results = Object.fromEntries(LEADS.map((L) => [`${L}d`, aggregateReps(reps, L)]));
   const t0Meta = JSON.parse(fs.readFileSync(path.join(SCREEN_DIR, 'events', 't0.json'), 'utf8'));
   const doc = {
-    schema: 'sdn-ap-amendment4-alerts-3arm-1',
+    schema: 'sdn-ap-amendment5-alerts-3arm-1',
     issue: CFG.issue,
     generatedUtc: nowUtc(),
     registration: {
-      amendmentCommit: execFileSync('git', ['log', '-1', '--format=%H', '--', 'experiments/ca-rollup-072/AMENDMENT-4.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
-      amendmentBlobSha: execFileSync('git', ['rev-parse', 'HEAD:experiments/ca-rollup-072/AMENDMENT-4.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
+      amendmentCommit: execFileSync('git', ['log', '-1', '--format=%H', '--', 'experiments/ca-rollup-073/AMENDMENT-5.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
+      amendmentBlobSha: execFileSync('git', ['rev-parse', 'HEAD:experiments/ca-rollup-073/AMENDMENT-5.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
       configSha256: sha256File(CFG_PATH),
     },
     modules: CFG.modules,
     week: {
-      fromUtc: CFG.forwardWeek.fromUtc,
-      toUtc: CFG.forwardWeek.toUtc,
-      objects: t0Meta.catalog,
-      t0Events: t0Meta.kept,
-      t0Digest: t0Meta.digest,
+      fromUtc: CFG.forwardWeek.fromUtc, toUtc: CFG.forwardWeek.toUtc,
+      objects: t0Meta.catalog, t0Events: t0Meta.kept, t0Digest: t0Meta.digest,
       tiersIncluded: CFG.forwardWeek.tiers.map((t) => `${t.id}(${t.keepFromKm}-${t.thresholdKm}km)`),
       spaceWeatherRegime: CFG.forwardWeek.spaceWeatherRegime,
       doClassBreakdownInT0: index.doClassCounts,
@@ -1036,33 +1041,28 @@ async function runParent() {
     arms: {
       S: 'SGP4 public Space-Track element sets (CREATION_DATE <= T0)',
       SupGP: 'CelesTrak SupGP (12:50Z < T0) on Starlink, Space-Track GP elsewhere, flown on SGP4',
-      Xp: 'SGP4-XP built by catalog-builder 0.2.4 from 100% public GP history',
-      Op: 'SDN-AP 0.7.2 built by catalog-builder 0.2.4 from 100% public GP history',
-      X: 'SGP4-XP built by catalog-builder 0.2.4 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
-      O: 'SDN-AP 0.7.2 built by catalog-builder 0.2.4 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
+      Xp: 'SGP4-XP built by catalog-builder 0.2.5 from 100% public GP history',
+      Op: 'SDN-AP 0.7.3 built by catalog-builder 0.2.5 from 100% public GP history',
+      X: 'SGP4-XP built by catalog-builder 0.2.5 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
+      O: 'SDN-AP 0.7.3 built by catalog-builder 0.2.5 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
     },
     covarianceMethodology: {
       signedVectorsAllRegimes: REGIMES,
       splitMethod: CFG.covariance.splitMethod,
-      estimator: 'Coordinatewise MAD -> inner 90% core -> median-matched chi2_3(0.5) scale + 3.5-sigma heavy-tail/maneuver mixture (DO passive non-maneuvering objects wm=0)',
+      estimator: 'Multivariate Student-t (Sigma, nu) fitted by EM with 5-fold predictive log-likelihood CV strictly on pre-T0 train rows, plus monotonic pre-T0 observable heteroscedastic conditioning (gp-error-model 0.19.1)',
       heldOutAudit: audit,
     },
     probabilityOfCollision: {
-      algorithm: 'FOSTER_2D_MIXTURE',
+      algorithm: 'STUDENT_T_FOSTER_2D_GAUSS_LAGUERRE',
+      quadratureNodes: N_QUAD,
       exactWasmThresholdBound: EXACT_PC_BOUND_MIN,
       starlinkPairsPcCentralOnly: true,
       conjunctionAssessmentWasmSha256: CFG.modules.conjunctionAssessment.wasmSha256,
       radiusSources: index.radiusHow,
     },
-    bootstrap: {
-      missReplicates: missReps,
-      pcReplicates: pcReps,
-      clusters: CFG.evaluation.bootstrapClusters,
-      rngSeed: CFG.evaluation.rngSeed,
-    },
+    bootstrap: { missReplicates: missReps, pcReplicates: pcReps, clusters: CFG.evaluation.bootstrapClusters, rngSeed: CFG.evaluation.rngSeed },
     results,
     sensitivities,
-    postDiagnosticSensitivities,
     wallSec: +((Date.now() - t0) / 1000).toFixed(1),
   };
 
@@ -1070,21 +1070,22 @@ async function runParent() {
     fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
     fs.writeFileSync(OUT_PATH, JSON.stringify(doc, null, 2) + '\n');
   }
-  console.log(`\n=== AMENDMENT 4 EVAL COMPLETE (${doc.wallSec}s) -> ${smoke ? 'SMOKE' : OUT_PATH} ===`);
+  console.log(`\n=== AMENDMENT 5 EVAL COMPLETE (${doc.wallSec}s) -> ${smoke ? 'SMOKE' : OUT_PATH} ===`);
   for (const L of ['1d', '3d']) {
     const r = doc.results[L];
-    console.log(`\n--- ${L} allButStarlinkPairs ---`);
-    for (const k of ['sgp4_1km', 'r90', 'r95']) {
-      const t = r.recallCurves.allButStarlinkPairs.byTarget[k];
-      console.log(`  miss[${k}]: S=${t.arms.S.notif} SupGP=${t.arms.SupGP.notif} Xp=${t.arms.Xp.notif} Op=${t.arms.Op.notif}(${t.reductionVsSgp4.Op.pct}%) X=${t.arms.X.notif}(${t.reductionVsSgp4.X.pct}%) O=${t.arms.O.notif}(${t.reductionVsSgp4.O.pct}% CI ${JSON.stringify(t.reductionVsSgp4.O.ci95)})`);
-    }
-    if (r.pcRoc?.allButStarlinkPairs) {
-      for (const k of ['sgp4_pc1e-5', 'sgp4_pc3e-7', 'r90', 'r95']) {
-        const t = r.pcRoc.allButStarlinkPairs.byTarget[k];
-        console.log(`  pcROC[${k}]: S=${t.arms.S.notif} Op=${t.arms.Op.notif}(${t.reductionVsSgp4.Op.pct}%) X=${t.arms.X.notif}(${t.reductionVsSgp4.X.pct}%) O=${t.arms.O.notif}(${t.reductionVsSgp4.O.pct}%)`);
+    for (const vn of ['allButStarlinkPairs', 'noStarlink']) {
+      console.log(`\n--- ${L} ${vn} ---`);
+      for (const k of ['sgp4_1km', 'r90', 'r95']) {
+        const t = r.recallCurves[vn].byTarget[k];
+        console.log(`  miss[${k}]: S=${t.arms.S.notif} Op=${t.arms.Op.notif}(${t.reductionVsSgp4.Op.pct}%) X=${t.arms.X.notif}(${t.reductionVsSgp4.X.pct}%) O=${t.arms.O.notif}(${t.reductionVsSgp4.O.pct}%)`);
       }
-      console.log(`  pcTiers[1e-5]:`, JSON.stringify(r.views.allButStarlinkPairs.pcTiers['pc1e-5_cum'].notif), 'redO:', r.views.allButStarlinkPairs.pcTiers['pc1e-5_cum'].reductionVsSgp4.O);
-      console.log(`  pcTiers[1e-4 red]:`, JSON.stringify(r.views.allButStarlinkPairs.pcTiers['pc1e-4_red'].notif), 'prec:', JSON.stringify(r.views.allButStarlinkPairs.pcTiers['pc1e-4_red'].tierPrecisionPct));
+      if (r.pcRoc?.[vn]) {
+        console.log(`  pcROC prAuc:`, JSON.stringify(r.pcRoc[vn].prAuc));
+        for (const k of ['sgp4_pc1e-5', 'sgp4_pc3e-7', 'r90', 'r95']) {
+          const t = r.pcRoc[vn].byTarget[k];
+          console.log(`  pcROC[${k}]: S=${t.arms.S.notif} Op=${t.arms.Op.notif}(${t.reductionVsSgp4.Op.pct}%) X=${t.arms.X.notif}(${t.reductionVsSgp4.X.pct}%) O=${t.arms.O.notif}(${t.reductionVsSgp4.O.pct}%)`);
+        }
+      }
     }
   }
 }

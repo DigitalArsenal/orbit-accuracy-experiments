@@ -1,38 +1,56 @@
 #!/usr/bin/env node
-// Amendment 4 Option 2 (#1126): All-8-Group Unified 0.7.2 / 0.2.4 Signed RTN Vector Generator
+// Amendment 5 (#1128): All-8-Group Unified 0.7.3 / 0.2.5 Signed RTN Vector & Public-History Generator
 // Runs ALL 2,045 in-aggregate tests from work-fifthday/sets-all.json (LS, DO, S1, P/SD, GD, GN, IG, GE)
-// through compiled flows/catalog-builder 0.2.4 + propagator/sdn-ap 0.7.2 with strictly causal forecast-only
+// through compiled flows/catalog-builder 0.2.5 + propagator/sdn-ap 0.7.3 with strictly causal forecast-only
 // space weather, scoring against independent GCRF truth $OEMs in /opt/data/sdn-archive/reference-states/.
-// Records genuine signed RTN error vectors [dR, dT, dN] (km) at Day 1 and Day 3 midpoints + daily RMS
-// for S (SGP4), O/Op (SDN-AP 0.7.2), and X/Xp (SGP4-XP), eliminating ALL borrowed band directions!
+// Records genuine signed 3-D and 6-D RTN error vectors + daily RMS + pre-T0 fit diagnostics (fitRmsKm, bterm, maxAp)
+// for S (SGP4), O/Op (SDN-AP 0.7.3), and X/Xp (SGP4-XP).
 //
 // Usage:
-//   node amendment4-public-vectors.mjs --workers 14 [--smoke]
+//   SDN_MODULES_ROOT=... node amendment5-public-vectors.mjs --workers 14 [--smoke]
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync, spawn } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
-  DAY_MS, sha256File, nowUtc, isoNoZ, utcMs, dayStr,
+  DAY_MS, nowUtc, isoNoZ, utcMs, dayStr,
   loadSdsAndSdk, gpJsonToOmm, buildCausalSpwRecords, signedRtnErrorKm, buildCatalogBatch,
-} from './amendment4-lib.mjs';
+} from './amendment5-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
-const CFG_PATH = path.join(path.dirname(SELF), 'amendment4-config.json');
-const CFG = JSON.parse(fs.readFileSync(CFG_PATH, 'utf8'));
+const SITE_JSONL = process.env.SDN_SITE_JSONL || path.join(OAE, 'results/ca-rollup-073/public-only-tests-0.7.3.jsonl');
 
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-072/amendment4/pub-vectors');
+const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-073/pub-vectors');
 const SETS_PATH = path.join(ARCHIVE, 'derived/site-measure/work-fifthday/sets-all.json');
-const SITE_JSONL = process.env.SDN_SITE_JSONL || path.resolve(OAE, '../sdn-ap/rigor/results/site/public-only-tests-20261125T102259Z.jsonl');
 const STEP_MS = 300000; // 5-min scoring grid
 
-// Build fast truth file index across reference-states/{reference,reference-leo-pod-2} (skipping leoOrb_*)
+function signedRtn6Km(pState, tR, tV) {
+  const dx = pState[0] - tR[0], dy = pState[1] - tR[1], dz = pState[2] - tR[2];
+  const dvx = pState[3] - tV[0], dvy = pState[4] - tV[1], dvz = pState[5] - tV[2];
+  const rMag = Math.hypot(tR[0], tR[1], tR[2]);
+  const rx = tR[0] / rMag, ry = tR[1] / rMag, rz = tR[2] / rMag;
+  const hx = tR[1] * tV[2] - tR[2] * tV[1];
+  const hy = tR[2] * tV[0] - tR[0] * tV[2];
+  const hz = tR[0] * tV[1] - tR[1] * tV[0];
+  const hMag = Math.hypot(hx, hy, hz);
+  const nx = hx / hMag, ny = hy / hMag, nz = hz / hMag;
+  const tx = ny * rz - nz * ry, ty = nz * rx - nx * rz, tz = nx * ry - ny * rx;
+  return [
+    dx * rx + dy * ry + dz * rz,
+    dx * tx + dy * ty + dz * tz,
+    dx * nx + dy * ny + dz * nz,
+    dvx * rx + dvy * ry + dvz * rz,
+    dvx * tx + dvy * ty + dvz * tz,
+    dvx * nx + dvy * ny + dvz * nz,
+  ];
+}
+
 function buildTruthIndex(wantNorads) {
   const index = new Map();
   const roots = [
@@ -65,7 +83,6 @@ function prepareTests(smoke) {
   const cachePath = path.join(RUNS_DIR, `prep${smoke ? '-smoke' : ''}.json`);
   if (fs.existsSync(cachePath)) return JSON.parse(fs.readFileSync(cachePath, 'utf8'));
 
-  // Determine exact inAggregates keys from site's verified public-only-tests-20261125T102259Z.jsonl
   const inAgg = new Set();
   if (fs.existsSync(SITE_JSONL)) {
     for (const line of fs.readFileSync(SITE_JSONL, 'utf8').split('\n')) {
@@ -80,7 +97,6 @@ function prepareTests(smoke) {
   if (inAgg.size > 0) {
     allTests = allTests.filter((t) => inAgg.has(`${t.group}|${t.norad}|${dayStr(t.cutoffMs)}`));
   }
-  // Sort deterministically by group, norad, cutoffMs
   allTests.sort((a, b) => a.group.localeCompare(b.group) || a.norad - b.norad || a.cutoffMs - b.cutoffMs);
   if (smoke) {
     const byG = new Map();
@@ -98,7 +114,7 @@ function prepareTests(smoke) {
   const meta = { count: allTests.length, norads: wantNorads.size, truthFilesByNorad };
   fs.writeFileSync(path.join(RUNS_DIR, `tests${smoke ? '-smoke' : ''}.json`), JSON.stringify(allTests));
   fs.writeFileSync(cachePath, JSON.stringify(meta));
-  console.log(`${nowUtc()} [pub-vec] Prepared ${allTests.length} tests across ${wantNorads.size} satellites`);
+  console.log(`${nowUtc()} [pub-vec-073] Prepared ${allTests.length} tests across ${wantNorads.size} satellites`);
   return meta;
 }
 
@@ -106,7 +122,7 @@ async function runWorker(shard, workers, smoke) {
   const t0 = Date.now();
   const outFile = path.join(RUNS_DIR, `rows${smoke ? '-smoke' : ''}-${shard}.jsonl`);
   if (fs.existsSync(outFile)) {
-    console.log(`[pub-vec w${shard}] cached -> skipping`);
+    console.log(`[pub-vec-073 w${shard}] cached -> skipping`);
     return;
   }
 
@@ -115,7 +131,7 @@ async function runWorker(shard, workers, smoke) {
   const mine = allTests.filter((_, i) => i % workers === shard);
 
   const sds = await loadSdsAndSdk(MODULES);
-  const { fb, sdkBrowser, sdkIso, OEM_MOD, PCF_MOD, frame, pack } = sds;
+  const { fb, sdkBrowser, sdkIso, OCM_MOD, OEM_MOD, PCF_MOD, frame, pack } = sds;
   const manifest = (dir) => JSON.parse(fs.readFileSync(path.join(MODULES, dir, 'plugin-manifest.json'), 'utf8'));
 
   const chain = await sdkIso.createStandaloneHarness('browser', path.join(MODULES, 'flows/catalog-builder/dist/isomorphic/module.wasm'), { surface: 'direct', enableBrowserWasiThreads: false });
@@ -124,8 +140,6 @@ async function runWorker(shard, workers, smoke) {
   const apEval = await sdkBrowser.createBrowserModuleHarness({ wasmSource: fs.readFileSync(path.join(MODULES, 'propagator/sdn-ap/dist/isomorphic/module.wasm')), surface: 'direct', initialMemoryBytes: 64 * 1024 * 1024 });
   const reusable = { chain, gp: gpH, composer: compH };
 
-  // Precompute [minStartMs, maxEndMs] per NORAD in this worker so we never load out-of-window truth epochs,
-  // and sort `mine` by norad so truthCache only needs 1 satellite at a time (~2 MB instead of 4 GB!).
   mine.sort((a, b) => a.norad - b.norad || a.cutoffMs - b.cutoffMs);
   const spanByNorad = new Map();
   for (const t of mine) {
@@ -148,14 +162,12 @@ async function runWorker(shard, workers, smoke) {
       } catch { continue; }
       const blk = oem.EPHEMERIS_DATA_BLOCK?.[0];
       if (!blk) continue;
-      // Fast block time-span skip before unpacking lines
       const bStart = blk.START_TIME ? utcMs(blk.START_TIME) : -Infinity;
       const bStop = blk.STOP_TIME ? utcMs(blk.STOP_TIME) : Infinity;
       if (bStop < span.lo - DAY_MS || bStart > span.hi + DAY_MS) continue;
       for (const L of blk.EPHEMERIS_DATA_LINES || []) {
         const ms = utcMs(L.EPOCH);
         if (!Number.isFinite(ms) || ms < span.lo - 60000 || ms > span.hi + 60000) continue;
-        // Thin to 5-min buckets on ingest (30x smaller for 10s SWARM/GRACE-FO files!)
         const bkt = Math.round(ms / STEP_MS);
         if (!byBucket.has(bkt)) {
           byBucket.set(bkt, { ms, iso: isoNoZ(ms), r: [L.X, L.Y, L.Z], v: [L.X_DOT, L.Y_DOT, L.Z_DOT] });
@@ -169,7 +181,6 @@ async function runWorker(shard, workers, smoke) {
 
   function sliceTruth(norad, startMs) {
     const all = loadTruthForNorad(norad);
-    // Binary search for startMs
     let lo = 0, hi = all.length;
     while (lo < hi) { const mid = (lo + hi) >> 1; if (all[mid].ms <= startMs) lo = mid + 1; else hi = mid; }
     const out = [];
@@ -199,7 +210,7 @@ async function runWorker(shard, workers, smoke) {
     const r = await apEval.invoke({ methodId: 'ingest_omm', inputs: [frame('omm', 'OMM', ommRaw)] });
     return r.statusCode === 0 ? Buffer.from(r.outputs.find((o) => o.portId === 'ocm').payload) : null;
   };
-  const propGcrf = async (ocmBytes, epochs) => {
+  const propGcrf6 = async (ocmBytes, epochs) => {
     const cfg = Object.assign(new PCF_MOD.PCFT(), {
       OUTPUT: Object.assign(new PCF_MOD.PCFOutputT(), { FRAME: PCF_MOD.pcfOutputFrame.GCRF, STEP_SECONDS: 60, MAXIMUM_STATES: 500000, EPOCHS: epochs }),
     });
@@ -210,7 +221,7 @@ async function runWorker(shard, workers, smoke) {
     const out = new Array(epochs.length);
     for (let i = 0; i < epochs.length; i++) {
       const L = blk.EPHEMERIS_DATA_LINES(i);
-      out[i] = [L.X(), L.Y(), L.Z()];
+      out[i] = [L.X(), L.Y(), L.Z(), L.X_DOT(), L.Y_DOT(), L.Z_DOT()];
     }
     return out;
   };
@@ -220,7 +231,6 @@ async function runWorker(shard, workers, smoke) {
     const t = mine[idx];
     const startMs = t.cutoffMs;
     const cutoffDate = dayStr(startMs);
-    // Strict look-ahead filter: CREATION_DATE <= startMs && EPOCH < startMs
     const causalSets = (t.sets || []).filter((s) => s.creationMs <= startMs && s.epochMs < startMs).sort((a, b) => a.epochMs - b.epochMs);
     if (!causalSets.length) continue;
     const seedRow = causalSets.at(-1).row;
@@ -237,10 +247,20 @@ async function runWorker(shard, workers, smoke) {
     const oS = await ingestOmm(gpJsonToOmm(seedRow, sds, false));
     if (!oO || !oX || !oS) continue;
 
+    // Pre-T0 fit diagnostics from O's $OCM (for heteroscedastic covariance conditioning audit)
+    let fitRmsKm = null, btermO = null, maxApNear = null;
+    try {
+      const unpO = OCM_MOD.OCM.getRootAsOCM(new fb.ByteBuffer(new Uint8Array(oO.ocmBuf))).unpack();
+      fitRmsKm = unpO.ORBIT_DETERMINATION?.FIT_STATISTICS?.FIT_RMS_KM ?? null;
+      btermO = unpO.MEAN_ELEMENTS?.BTERM ?? null;
+      const spw = unpO.PERTURBATIONS?.SPACE_WEATHER || [];
+      maxApNear = spw.slice(0, 9).reduce((m, w) => Math.max(m, Number(w.AP_AVG) || 0), 0);
+    } catch {}
+
     const epochs = truth.map((p) => p.iso);
-    const pS = await propGcrf(oS, epochs);
-    const pO = await propGcrf(oO.ocmBuf, epochs);
-    const pX = await propGcrf(oX.ocmBuf, epochs);
+    const pS = await propGcrf6(oS, epochs);
+    const pO = await propGcrf6(oO.ocmBuf, epochs);
+    const pX = await propGcrf6(oX.ocmBuf, epochs);
     if (!pS || !pO || !pX) continue;
 
     const byDay = { 1: [], 2: [], 3: [], 4: [], 5: [] };
@@ -270,14 +290,31 @@ async function runWorker(shard, workers, smoke) {
           O: signedRtnErrorKm(pO[midI], truth[midI].r, truth[midI].v).map((z) => +z.toFixed(5)),
           X: signedRtnErrorKm(pX[midI], truth[midI].r, truth[midI].v).map((z) => +z.toFixed(5)),
         },
+        v6O: signedRtn6Km(pO[midI], truth[midI].r, truth[midI].v).map((z) => +z.toPrecision(6)),
       };
     }
+    // Also capture age-bin 0 (0.125 d = 3h) and age-bin 1 (0.5 d = 12h) 6-D RTN for ERM calibration
+    const earlyV6O = {};
+    for (const [lbl, h] of [['0.125', 3], ['0.5', 12]]) {
+      const targetMs = startMs + h * 3600000;
+      let bestI = -1, bestD = Infinity;
+      for (let i = 0; i < truth.length; i++) {
+        const dd = Math.abs(truth[i].ms - targetMs);
+        if (dd < bestD) { bestD = dd; bestI = i; }
+      }
+      if (bestI >= 0 && bestD <= 1800000) {
+        earlyV6O[lbl] = signedRtn6Km(pO[bestI], truth[bestI].r, truth[bestI].v).map((z) => +z.toPrecision(6));
+      }
+    }
+
     rowsOut.push(JSON.stringify({
       key: t.key, group: t.group, norad: t.norad, startUtc: new Date(startMs).toISOString(),
-      fb: { O: oO.isFallback, X: oX.isFallback }, days,
+      fb: { O: oO.isFallback, X: oX.isFallback },
+      diagO: { rmsKm: fitRmsKm != null ? +fitRmsKm.toFixed(4) : null, bterm: btermO != null ? +btermO.toPrecision(4) : null, maxAp: maxApNear, branch: oO.reason },
+      days, earlyV6O,
     }));
     if ((idx + 1) % 25 === 0 || idx + 1 === mine.length) {
-      console.log(`${nowUtc()} [pub-vec w${shard}/${workers}] ${idx + 1}/${mine.length} (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+      console.log(`${nowUtc()} [pub-vec-073 w${shard}/${workers}] ${idx + 1}/${mine.length} (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
     }
   }
   fs.writeFileSync(`${outFile}.tmp`, rowsOut.join('\n') + '\n');
@@ -297,30 +334,35 @@ async function main() {
   const wCount = smoke ? Math.min(2, workers) : workers;
   await Promise.all(Array.from({ length: wCount }, (_, w) => new Promise((resolve, reject) => {
     const c = spawn('nice', ['-n', '10', process.execPath, '--max-old-space-size=4096', SELF, '--worker', String(w), '--workers', String(wCount), ...(smoke ? ['--smoke'] : [])], { stdio: 'inherit', env: process.env });
-    c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`pub-vec worker ${w} exited ${code}`))));
+    c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`pub-vec-073 worker ${w} exited ${code}`))));
   })));
   const merged = [];
   for (let w = 0; w < wCount; w++) {
     const txt = fs.readFileSync(path.join(RUNS_DIR, `rows${smoke ? '-smoke' : ''}-${w}.jsonl`), 'utf8').trim();
     if (txt) for (const l of txt.split('\n')) merged.push(JSON.parse(l));
   }
-  const outPath = path.join(OAE, `runs/ca-rollup-072/amendment4/public-vectors-072${smoke ? '-smoke' : ''}.jsonl`);
+  const outPath = path.join(OAE, `runs/ca-rollup-073/public-vectors-073${smoke ? '-smoke' : ''}.jsonl`);
   fs.writeFileSync(outPath, merged.map((r) => JSON.stringify(r)).join('\n') + '\n');
   const byG = {};
+  let totL5 = 0, totN5 = 0, totW5 = 0;
   for (const r of merged) {
-    const g = byG[r.group] ||= { n: 0, d1S: [], d1O: [], d1X: [], fbO: 0 };
+    const g = byG[r.group] ||= { n: 0, d1S: [], d1O: [], d1X: [], d5S: [], d5O: [], d5X: [], l5: 0, w5: 0, fbO: 0 };
     g.n++;
     if (r.fb?.O) g.fbO++;
-    if (r.days?.['1']) {
-      g.d1S.push(r.days['1'].rmsKm.S * 1000);
-      g.d1O.push(r.days['1'].rmsKm.O * 1000);
-      g.d1X.push(r.days['1'].rmsKm.X * 1000);
+    if (r.days?.['1']) { g.d1S.push(r.days['1'].rmsKm.S * 1000); g.d1O.push(r.days['1'].rmsKm.O * 1000); g.d1X.push(r.days['1'].rmsKm.X * 1000); }
+    if (r.days?.['5']) {
+      const s5 = r.days['5'].rmsKm.S, o5 = r.days['5'].rmsKm.O, x5 = r.days['5'].rmsKm.X;
+      g.d5S.push(s5 * 1000); g.d5O.push(o5 * 1000); g.d5X.push(x5 * 1000);
+      totN5++;
+      if (o5 - s5 >= 1.0) { g.l5++; totL5++; }
+      if (o5 - s5 <= -1.0) { g.w5++; totW5++; }
     }
   }
   const med = (a) => { const s = a.slice().sort((x, y) => x - y); return s.length ? Math.round(s[Math.floor(s.length / 2)]) : null; };
-  console.log(`\n${nowUtc()} [pub-vec] COMPLETE: ${merged.length} rows in ${((Date.now() - t0) / 1000).toFixed(1)}s -> ${outPath}`);
+  console.log(`\n${nowUtc()} [pub-vec-073] COMPLETE: ${merged.length} rows in ${((Date.now() - t0) / 1000).toFixed(1)}s -> ${outPath}`);
+  console.log(`TOTAL DAY 5: N=${totN5} Loss>=1km=${totL5} (was 216 in 0.7.2!) Win<=-1km=${totW5}`);
   for (const [k, v] of Object.entries(byG)) {
-    console.log(`  ${k}: n=${v.n} fbO=${v.fbO} d1 med (m) S=${med(v.d1S)} X=${med(v.d1X)} O=${med(v.d1O)}`);
+    console.log(`  ${k.padEnd(2)}: n=${String(v.n).padStart(3)} fbO=${v.fbO} | D1 med(m): S=${med(v.d1S)} X=${med(v.d1X)} O=${med(v.d1O)} | D5 med(m): S=${med(v.d5S)} X=${med(v.d5X)} O=${med(v.d5O)} | L5>=1km=${v.l5} W5<=-1km=${v.w5}`);
   }
 }
 

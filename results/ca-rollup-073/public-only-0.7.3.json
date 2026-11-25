@@ -1,0 +1,732 @@
+{
+ "schema": "sdn-ap-site-public-only-1",
+ "version": "0.7.3",
+ "measurement": "M7",
+ "what": "Eight groups on SDN-AP 0.7.3 and catalog-builder 0.2.5: SDN-AP and SGP4-XP started from public element sets alone against SGP4 from the newest public set, alongside SDN-AP and the numerical propagator from precise positions on the exact same tests; aggregates only.",
+ "builder": {
+  "modulesCommit": "0b0a3eaf768a6c48f9086eeaf9cafe01816f0e13",
+  "publicModuleFlown": "79d493e08e1c80611c30a464e4b71a9ac54605a5a81f9d29115972b8c19768f9"
+ },
+ "rows": [
+  {
+   "row": "Low orbit, laser spheres",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 65,
+     "sdnApFromPublicSets": {
+      "medianM": 102.44,
+      "p95M": 177.48
+     },
+     "sgp4PublicSet": {
+      "medianM": 453.11,
+      "p95M": 627.31
+     },
+     "sdnApCloserThanSgp4PublicSet": 65,
+     "sgp4XpFromPublicSets": {
+      "medianM": 448.51,
+      "p95M": 623.87
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 65,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 55,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 10.3,
+       "p95M": 22.62
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 1.62,
+       "p95M": 22.56
+      }
+     }
+    },
+    "3": {
+     "tests": 57,
+     "sdnApFromPublicSets": {
+      "medianM": 121.51,
+      "p95M": 339.78
+     },
+     "sgp4PublicSet": {
+      "medianM": 540.1,
+      "p95M": 689.11
+     },
+     "sdnApCloserThanSgp4PublicSet": 57,
+     "sgp4XpFromPublicSets": {
+      "medianM": 517.61,
+      "p95M": 679.79
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 57,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 44,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 18.04,
+       "p95M": 122.3
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 9.52,
+       "p95M": 152.32
+      }
+     }
+    },
+    "5": {
+     "tests": 56,
+     "sdnApFromPublicSets": {
+      "medianM": 189.55,
+      "p95M": 696.71
+     },
+     "sgp4PublicSet": {
+      "medianM": 625.04,
+      "p95M": 995.83
+     },
+     "sdnApCloserThanSgp4PublicSet": 56,
+     "sgp4XpFromPublicSets": {
+      "medianM": 614.43,
+      "p95M": 958.6
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 56,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 35,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 38.86,
+       "p95M": 264.39
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 19.48,
+       "p95M": 398.99
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Low orbit, altimetry",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 135,
+     "sdnApFromPublicSets": {
+      "medianM": 172.13,
+      "p95M": 1025.72
+     },
+     "sgp4PublicSet": {
+      "medianM": 579,
+      "p95M": 1176.75
+     },
+     "sdnApCloserThanSgp4PublicSet": 132,
+     "sgp4XpFromPublicSets": {
+      "medianM": 578.52,
+      "p95M": 1169.19
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 132,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 72,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 13.52,
+       "p95M": 448.81
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 5.55,
+       "p95M": 442
+      }
+     }
+    },
+    "3": {
+     "tests": 120,
+     "sdnApFromPublicSets": {
+      "medianM": 294.05,
+      "p95M": 8001.5
+     },
+     "sgp4PublicSet": {
+      "medianM": 661.21,
+      "p95M": 8033.81
+     },
+     "sdnApCloserThanSgp4PublicSet": 115,
+     "sgp4XpFromPublicSets": {
+      "medianM": 646.73,
+      "p95M": 8022.2
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 117,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 108,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 76.27,
+       "p95M": 5664.06
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 70.69,
+       "p95M": 5663.16
+      }
+     }
+    },
+    "5": {
+     "tests": 111,
+     "sdnApFromPublicSets": {
+      "medianM": 621.41,
+      "p95M": 16308.91
+     },
+     "sgp4PublicSet": {
+      "medianM": 951.94,
+      "p95M": 16390.67
+     },
+     "sdnApCloserThanSgp4PublicSet": 99,
+     "sgp4XpFromPublicSets": {
+      "medianM": 905.9,
+      "p95M": 16374.47
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 98,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 94,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 236.79,
+       "p95M": 15258.02
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 239.37,
+       "p95M": 15303.71
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Near 700 km",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 259,
+     "sdnApFromPublicSets": {
+      "medianM": 459.82,
+      "p95M": 2108.85
+     },
+     "sgp4PublicSet": {
+      "medianM": 734.25,
+      "p95M": 2179.14
+     },
+     "sdnApCloserThanSgp4PublicSet": 256,
+     "sgp4XpFromPublicSets": {
+      "medianM": 753.67,
+      "p95M": 2325.81
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 255,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 106,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 28.74,
+       "p95M": 746.27
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 19.74,
+       "p95M": 742.12
+      }
+     }
+    },
+    "3": {
+     "tests": 258,
+     "sdnApFromPublicSets": {
+      "medianM": 1181.68,
+      "p95M": 5590.69
+     },
+     "sgp4PublicSet": {
+      "medianM": 1333.33,
+      "p95M": 5649.37
+     },
+     "sdnApCloserThanSgp4PublicSet": 248,
+     "sgp4XpFromPublicSets": {
+      "medianM": 1350.82,
+      "p95M": 5559.22
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 245,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 181,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 745.62,
+       "p95M": 3265.49
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 700.37,
+       "p95M": 3247.3
+      }
+     }
+    },
+    "5": {
+     "tests": 257,
+     "sdnApFromPublicSets": {
+      "medianM": 2326.73,
+      "p95M": 10916.58
+     },
+     "sgp4PublicSet": {
+      "medianM": 2448.8,
+      "p95M": 10853.26
+     },
+     "sdnApCloserThanSgp4PublicSet": 226,
+     "sgp4XpFromPublicSets": {
+      "medianM": 2369.72,
+      "p95M": 9806.4
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 191,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 215,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 2369.66,
+       "p95M": 7722.29
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 2159.58,
+       "p95M": 7666.47
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Strong drag, 2026",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 250,
+     "sdnApFromPublicSets": {
+      "medianM": 607.62,
+      "p95M": 2811.59
+     },
+     "sgp4PublicSet": {
+      "medianM": 775.79,
+      "p95M": 2629.77
+     },
+     "sdnApCloserThanSgp4PublicSet": 192,
+     "sgp4XpFromPublicSets": {
+      "medianM": 787.24,
+      "p95M": 2640.76
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 193,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 54,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 327.61,
+       "p95M": 2170.96
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 330.63,
+       "p95M": 2171.38
+      }
+     }
+    },
+    "3": {
+     "tests": 250,
+     "sdnApFromPublicSets": {
+      "medianM": 2850.06,
+      "p95M": 14110.8
+     },
+     "sgp4PublicSet": {
+      "medianM": 3208.59,
+      "p95M": 16135.73
+     },
+     "sdnApCloserThanSgp4PublicSet": 179,
+     "sgp4XpFromPublicSets": {
+      "medianM": 3249.16,
+      "p95M": 16123.3
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 179,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 156,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 2742.09,
+       "p95M": 15002.05
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 2731.56,
+       "p95M": 14998.29
+      }
+     }
+    },
+    "5": {
+     "tests": 250,
+     "sdnApFromPublicSets": {
+      "medianM": 8750.39,
+      "p95M": 43838.35
+     },
+     "sgp4PublicSet": {
+      "medianM": 8851.92,
+      "p95M": 45402.07
+     },
+     "sdnApCloserThanSgp4PublicSet": 152,
+     "sgp4XpFromPublicSets": {
+      "medianM": 8850.48,
+      "p95M": 45438.19
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 144,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 161,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 6718.9,
+       "p95M": 47540.16
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 6689.13,
+       "p95M": 47337.99
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Laser geodetic",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 39,
+     "sdnApFromPublicSets": {
+      "medianM": 50.85,
+      "p95M": 374.91
+     },
+     "sgp4PublicSet": {
+      "medianM": 634.24,
+      "p95M": 1536.81
+     },
+     "sdnApCloserThanSgp4PublicSet": 38,
+     "sgp4XpFromPublicSets": {
+      "medianM": 502.52,
+      "p95M": 1360.03
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 38,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 34,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 2.43,
+       "p95M": 3.49
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 0.18,
+       "p95M": 0.33
+      }
+     }
+    },
+    "3": {
+     "tests": 39,
+     "sdnApFromPublicSets": {
+      "medianM": 65.3,
+      "p95M": 508.81
+     },
+     "sgp4PublicSet": {
+      "medianM": 764.23,
+      "p95M": 1204.46
+     },
+     "sdnApCloserThanSgp4PublicSet": 39,
+     "sgp4XpFromPublicSets": {
+      "medianM": 701.17,
+      "p95M": 1119.32
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 38,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 34,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 2.98,
+       "p95M": 4.58
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 0.45,
+       "p95M": 1.31
+      }
+     }
+    },
+    "5": {
+     "tests": 39,
+     "sdnApFromPublicSets": {
+      "medianM": 78.37,
+      "p95M": 679.43
+     },
+     "sgp4PublicSet": {
+      "medianM": 575.98,
+      "p95M": 1157.82
+     },
+     "sdnApCloserThanSgp4PublicSet": 37,
+     "sgp4XpFromPublicSets": {
+      "medianM": 617.12,
+      "p95M": 1578.24
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 38,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 10,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 3.35,
+       "p95M": 7.96
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 0.64,
+       "p95M": 2.94
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Medium Earth orbit",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 692,
+     "sdnApFromPublicSets": {
+      "medianM": 616.81,
+      "p95M": 3665.99
+     },
+     "sgp4PublicSet": {
+      "medianM": 1612.2,
+      "p95M": 4302.34
+     },
+     "sdnApCloserThanSgp4PublicSet": 609,
+     "sgp4XpFromPublicSets": {
+      "medianM": 1476.11,
+      "p95M": 3811.41
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 571,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 558,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 1.62,
+       "p95M": 2.61
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 0.18,
+       "p95M": 0.42
+      }
+     }
+    },
+    "3": {
+     "tests": 692,
+     "sdnApFromPublicSets": {
+      "medianM": 810.77,
+      "p95M": 4231.57
+     },
+     "sgp4PublicSet": {
+      "medianM": 1727.18,
+      "p95M": 4511.72
+     },
+     "sdnApCloserThanSgp4PublicSet": 602,
+     "sgp4XpFromPublicSets": {
+      "medianM": 1696.19,
+      "p95M": 4359.63
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 566,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 507,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 2.86,
+       "p95M": 9.22
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 0.86,
+       "p95M": 2.58
+      }
+     }
+    },
+    "5": {
+     "tests": 692,
+     "sdnApFromPublicSets": {
+      "medianM": 1008.14,
+      "p95M": 5124.28
+     },
+     "sgp4PublicSet": {
+      "medianM": 1662.62,
+      "p95M": 5712.66
+     },
+     "sdnApCloserThanSgp4PublicSet": 542,
+     "sgp4XpFromPublicSets": {
+      "medianM": 1952.81,
+      "p95M": 5450.13
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 556,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 296,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 5.74,
+       "p95M": 19.88
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 2.38,
+       "p95M": 10.42
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Inclined geosynchronous",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 50,
+     "sdnApFromPublicSets": {
+      "medianM": 784.01,
+      "p95M": 6510.15
+     },
+     "sgp4PublicSet": {
+      "medianM": 2019.75,
+      "p95M": 8496.89
+     },
+     "sdnApCloserThanSgp4PublicSet": 46,
+     "sgp4XpFromPublicSets": {
+      "medianM": 677.96,
+      "p95M": 7804.91
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 20,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 49,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 1.34,
+       "p95M": 3.78
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 0.35,
+       "p95M": 0.81
+      }
+     }
+    },
+    "3": {
+     "tests": 50,
+     "sdnApFromPublicSets": {
+      "medianM": 1138.85,
+      "p95M": 6948.33
+     },
+     "sgp4PublicSet": {
+      "medianM": 2269.07,
+      "p95M": 7752.99
+     },
+     "sdnApCloserThanSgp4PublicSet": 47,
+     "sgp4XpFromPublicSets": {
+      "medianM": 986.23,
+      "p95M": 7818.81
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 17,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 47,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 2.47,
+       "p95M": 4.38
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 1.4,
+       "p95M": 2.7
+      }
+     }
+    },
+    "5": {
+     "tests": 49,
+     "sdnApFromPublicSets": {
+      "medianM": 1695.48,
+      "p95M": 8413.52
+     },
+     "sgp4PublicSet": {
+      "medianM": 3772.38,
+      "p95M": 7848.11
+     },
+     "sdnApCloserThanSgp4PublicSet": 44,
+     "sgp4XpFromPublicSets": {
+      "medianM": 1871.25,
+      "p95M": 9560.04
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 28,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 42,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 4.72,
+       "p95M": 9.22
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 3.25,
+       "p95M": 7.56
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Geostationary",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 32,
+     "sdnApFromPublicSets": {
+      "medianM": 521.44,
+      "p95M": 1026.18
+     },
+     "sgp4PublicSet": {
+      "medianM": 1953.2,
+      "p95M": 2763.68
+     },
+     "sdnApCloserThanSgp4PublicSet": 32,
+     "sgp4XpFromPublicSets": {
+      "medianM": 1165.89,
+      "p95M": 1966.24
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 31,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 32,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 2.49,
+       "p95M": 4.59
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 2.05,
+       "p95M": 4.11
+      }
+     }
+    },
+    "3": {
+     "tests": 30,
+     "sdnApFromPublicSets": {
+      "medianM": 977.55,
+      "p95M": 5578.33
+     },
+     "sgp4PublicSet": {
+      "medianM": 3220.67,
+      "p95M": 7324.91
+     },
+     "sdnApCloserThanSgp4PublicSet": 29,
+     "sgp4XpFromPublicSets": {
+      "medianM": 1667.66,
+      "p95M": 5845.23
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 27,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 29,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 6.28,
+       "p95M": 4636.56
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 5.96,
+       "p95M": 4634.84
+      }
+     }
+    },
+    "5": {
+     "tests": 32,
+     "sdnApFromPublicSets": {
+      "medianM": 1659.41,
+      "p95M": 57161.67
+     },
+     "sgp4PublicSet": {
+      "medianM": 5707.01,
+      "p95M": 55849.89
+     },
+     "sdnApCloserThanSgp4PublicSet": 30,
+     "sgp4XpFromPublicSets": {
+      "medianM": 2738.77,
+      "p95M": 56741.09
+     },
+     "sdnApCloserThanSgp4XpFromPublicSets": 26,
+     "sgp4XpFromPublicSetsCloserThanSgp4PublicSet": 31,
+     "reference": {
+      "sdnApFromPrecisePositions": {
+       "medianM": 16.12,
+       "p95M": 57429.83
+      },
+      "numericalFromPrecisePositions": {
+       "medianM": 20.31,
+       "p95M": 57429.29
+      }
+     }
+    }
+   }
+  }
+ ]
+}
