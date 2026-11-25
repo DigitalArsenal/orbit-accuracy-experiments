@@ -1,0 +1,26 @@
+{
+  "id": "ca-rollup-072",
+  "issue": "DigitalArsenal/spacedatanetwork-stack#1110",
+  "frozen": true,
+  "modules": {
+    "sdnApVersion": "0.7.2",
+    "catalogBuilderVersion": "0.2.3"
+  },
+  "liveScreen": {
+    "snapshotDate": "2026-11-24",
+    "t0Utc": "2026-11-24T17:00:00.000Z",
+    "horizonDays": 5,
+    "arms": ["SGP4", "SDN-AP-0.7.2", "SGP4-XP"],
+    "missThresholdsKm": { "leoLeo": 1.0, "other": 5.0 },
+    "pcThresholds": [1e-4, 1e-5, 3e-7],
+    "hbrModes": ["discos-satcat", "fixed-10m"]
+  },
+  "weeklyAlerts": {
+    "weekFromUtc": "2026-11-06T00:00:00Z",
+    "weekToUtc": "2026-11-13T00:00:00Z",
+    "t0Events": 1069553,
+    "t0Digest": "ef114fe59487d57ffc7c92be81fe22d01f443c564e3fce362897837ebb8f4eb7",
+    "leadsDays": [1, 3],
+    "bootstrapReplicates": { "miss": 200, "pc": 40 }
+  }
+}

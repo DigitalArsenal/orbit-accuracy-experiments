@@ -1,0 +1,4441 @@
+{
+  "schema": "sdn-ap-alert-reduction-3arm-1",
+  "generatedUtc": "2026-11-25T10:24:16Z",
+  "week": {
+    "from": "2026-11-06T00:00:00Z",
+    "to": "2026-11-13T00:00:00Z",
+    "objects": 32863,
+    "t0Events": 1069553,
+    "t0Digest": "ef114fe59487d57ffc7c92be81fe22d01f443c564e3fce362897837ebb8f4eb7"
+  },
+  "arms": {
+    "S": "SGP4 public Space-Track element sets",
+    "O": "SDN-AP 0.7.2 (catalog-builder 0.2.2: operator ephemerides for Starlink, public element-set history for all others)",
+    "X": "SGP4-XP (catalog-builder 0.2.2: operator ephemerides for Starlink, public element-set history for all others)",
+    "Op": "SDN-AP 0.7.2 (catalog-builder 0.2.2: 100% public element-set history for every regime including Starlink)",
+    "Xp": "SGP4-XP (catalog-builder 0.2.2: 100% public element-set history for every regime including Starlink)"
+  },
+  "covarianceRealism": {
+    "amendment3SignedVectors": [
+      "S1",
+      "DO",
+      "GD",
+      "GN",
+      "GE",
+      "IG"
+    ],
+    "realisticCoreRegimes": {
+      "1": [],
+      "3": []
+    },
+    "strata": [
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 1.929,
+        "insideOneTwoThreeSigma": [
+          0.753,
+          0.951,
+          0.994
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 130,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1508,
+          0.7374,
+          0.3796
+        ],
+        "insideOneTwoThreeSigma": [
+          0.831,
+          0.9,
+          0.938
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 64,
+        "testRows": 71,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          2.878,
+          43.78,
+          3.589
+        ],
+        "insideOneTwoThreeSigma": [
+          0.915,
+          0.972,
+          1
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.08317,
+          0.7953,
+          0.18
+        ],
+        "insideOneTwoThreeSigma": [
+          0.72,
+          0.84,
+          0.96
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6294,
+          3.373,
+          0.2428
+        ],
+        "insideOneTwoThreeSigma": [
+          0.854,
+          0.973,
+          0.977
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 14,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.608,
+          1.013,
+          0.4731
+        ],
+        "insideOneTwoThreeSigma": [
+          0.222,
+          0.5,
+          0.722
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.8006,
+          1.634,
+          0.4092
+        ],
+        "insideOneTwoThreeSigma": [
+          0.486,
+          0.743,
+          0.829
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 1,
+        "regime": "SL",
+        "label": "Starlink",
+        "fitObjects": 50,
+        "testObjects": 49,
+        "fitRows": 50,
+        "testRows": 49,
+        "status": "FAILED",
+        "rmsKm": 109.4,
+        "insideOneTwoThreeSigma": [
+          0.866,
+          0.95,
+          0.973
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 3,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 8.153,
+        "insideOneTwoThreeSigma": [
+          0.826,
+          0.949,
+          0.982
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 3,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 129,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.2127,
+          2.289,
+          0.2528
+        ],
+        "insideOneTwoThreeSigma": [
+          0.829,
+          0.922,
+          0.961
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 3,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 60,
+        "testRows": 60,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          84.81,
+          528.2,
+          26.72
+        ],
+        "insideOneTwoThreeSigma": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 3,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.106,
+          0.833,
+          0.2111
+        ],
+        "insideOneTwoThreeSigma": [
+          0.72,
+          0.8,
+          0.96
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 3,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6144,
+          2.932,
+          0.2585
+        ],
+        "insideOneTwoThreeSigma": [
+          0.678,
+          0.966,
+          0.977
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 3,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 12,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          1.144,
+          21.52,
+          1.406
+        ],
+        "insideOneTwoThreeSigma": [
+          0.667,
+          0.722,
+          0.833
+        ]
+      },
+      {
+        "side": "S",
+        "lead": 3,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.8151,
+          2.866,
+          0.6792
+        ],
+        "insideOneTwoThreeSigma": [
+          0.571,
+          0.829,
+          0.971
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 0.9248,
+        "insideOneTwoThreeSigma": [
+          0.823,
+          0.949,
+          0.98
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 130,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.11,
+          0.6877,
+          0.3157
+        ],
+        "insideOneTwoThreeSigma": [
+          0.846,
+          0.892,
+          0.938
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 64,
+        "testRows": 71,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          3.144,
+          48.09,
+          3.9
+        ],
+        "insideOneTwoThreeSigma": [
+          0.986,
+          0.986,
+          0.986
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.01528,
+          0.2262,
+          0.1049
+        ],
+        "insideOneTwoThreeSigma": [
+          0.92,
+          0.92,
+          0.96
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6846,
+          2.767,
+          0.2315
+        ],
+        "insideOneTwoThreeSigma": [
+          0.927,
+          0.973,
+          0.973
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 14,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1714,
+          0.6362,
+          0.1035
+        ],
+        "insideOneTwoThreeSigma": [
+          0.667,
+          0.889,
+          1
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.775,
+          2.574,
+          0.2485
+        ],
+        "insideOneTwoThreeSigma": [
+          0.8,
+          0.886,
+          0.943
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 1,
+        "regime": "SL",
+        "label": "Starlink",
+        "fitObjects": 50,
+        "testObjects": 49,
+        "fitRows": 50,
+        "testRows": 49,
+        "status": "FAILED",
+        "rmsKm": 52.4,
+        "insideOneTwoThreeSigma": [
+          0.878,
+          0.947,
+          0.981
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 3,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 9.562,
+        "insideOneTwoThreeSigma": [
+          0.897,
+          0.958,
+          0.978
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 3,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 129,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1227,
+          2.179,
+          0.1271
+        ],
+        "insideOneTwoThreeSigma": [
+          0.822,
+          0.907,
+          0.946
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 3,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 60,
+        "testRows": 60,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          84.83,
+          528.4,
+          26.68
+        ],
+        "insideOneTwoThreeSigma": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 3,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.02335,
+          0.286,
+          0.1108
+        ],
+        "insideOneTwoThreeSigma": [
+          0.96,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 3,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6775,
+          2.708,
+          0.2251
+        ],
+        "insideOneTwoThreeSigma": [
+          0.874,
+          0.969,
+          0.977
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 3,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 12,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.8932,
+          20.86,
+          0.1247
+        ],
+        "insideOneTwoThreeSigma": [
+          0.889,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "O",
+        "lead": 3,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.8498,
+          2.686,
+          0.2292
+        ],
+        "insideOneTwoThreeSigma": [
+          0.8,
+          0.857,
+          0.943
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 1.967,
+        "insideOneTwoThreeSigma": [
+          0.756,
+          0.951,
+          0.995
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 130,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1691,
+          0.8588,
+          0.4322
+        ],
+        "insideOneTwoThreeSigma": [
+          0.846,
+          0.923,
+          0.938
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 64,
+        "testRows": 71,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          2.893,
+          44.02,
+          3.609
+        ],
+        "insideOneTwoThreeSigma": [
+          0.915,
+          0.972,
+          1
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.07121,
+          0.6641,
+          0.1284
+        ],
+        "insideOneTwoThreeSigma": [
+          0.68,
+          0.76,
+          0.84
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.667,
+          3.521,
+          0.2486
+        ],
+        "insideOneTwoThreeSigma": [
+          0.912,
+          0.973,
+          0.977
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 14,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.2883,
+          0.7593,
+          0.4931
+        ],
+        "insideOneTwoThreeSigma": [
+          0.167,
+          0.667,
+          0.722
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.5463,
+          1.525,
+          0.2536
+        ],
+        "insideOneTwoThreeSigma": [
+          0.743,
+          0.829,
+          0.829
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 1,
+        "regime": "SL",
+        "label": "Starlink",
+        "fitObjects": 50,
+        "testObjects": 49,
+        "fitRows": 50,
+        "testRows": 49,
+        "status": "FAILED",
+        "rmsKm": 51.1,
+        "insideOneTwoThreeSigma": [
+          0.866,
+          0.945,
+          0.98
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 3,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 7.796,
+        "insideOneTwoThreeSigma": [
+          0.822,
+          0.951,
+          0.982
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 3,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 129,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1948,
+          2.302,
+          0.2328
+        ],
+        "insideOneTwoThreeSigma": [
+          0.814,
+          0.922,
+          0.961
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 3,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 60,
+        "testRows": 60,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          84.82,
+          528.3,
+          26.73
+        ],
+        "insideOneTwoThreeSigma": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 3,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.0996,
+          0.8005,
+          0.1428
+        ],
+        "insideOneTwoThreeSigma": [
+          0.76,
+          0.84,
+          0.92
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 3,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6227,
+          3.119,
+          0.2336
+        ],
+        "insideOneTwoThreeSigma": [
+          0.785,
+          0.969,
+          0.977
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 3,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 12,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          1.096,
+          20.63,
+          0.5503
+        ],
+        "insideOneTwoThreeSigma": [
+          0.556,
+          0.722,
+          0.722
+        ]
+      },
+      {
+        "side": "X",
+        "lead": 3,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.4951,
+          1.739,
+          0.1943
+        ],
+        "insideOneTwoThreeSigma": [
+          0.571,
+          0.771,
+          0.829
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 0.9248,
+        "insideOneTwoThreeSigma": [
+          0.823,
+          0.949,
+          0.98
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 130,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.11,
+          0.6877,
+          0.3157
+        ],
+        "insideOneTwoThreeSigma": [
+          0.846,
+          0.892,
+          0.938
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 64,
+        "testRows": 71,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          3.144,
+          48.09,
+          3.9
+        ],
+        "insideOneTwoThreeSigma": [
+          0.986,
+          0.986,
+          0.986
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.01528,
+          0.2262,
+          0.1049
+        ],
+        "insideOneTwoThreeSigma": [
+          0.92,
+          0.92,
+          0.96
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6846,
+          2.767,
+          0.2315
+        ],
+        "insideOneTwoThreeSigma": [
+          0.927,
+          0.973,
+          0.973
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 14,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1714,
+          0.6362,
+          0.1035
+        ],
+        "insideOneTwoThreeSigma": [
+          0.667,
+          0.889,
+          1
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.775,
+          2.574,
+          0.2485
+        ],
+        "insideOneTwoThreeSigma": [
+          0.8,
+          0.886,
+          0.943
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 1,
+        "regime": "SL",
+        "label": "Starlink",
+        "fitObjects": 50,
+        "testObjects": 49,
+        "fitRows": 50,
+        "testRows": 49,
+        "status": "FAILED",
+        "rmsKm": 107.9,
+        "insideOneTwoThreeSigma": [
+          0.863,
+          0.949,
+          0.973
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 3,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 9.562,
+        "insideOneTwoThreeSigma": [
+          0.897,
+          0.958,
+          0.978
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 3,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 129,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1227,
+          2.179,
+          0.1271
+        ],
+        "insideOneTwoThreeSigma": [
+          0.822,
+          0.907,
+          0.946
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 3,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 60,
+        "testRows": 60,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          84.83,
+          528.4,
+          26.68
+        ],
+        "insideOneTwoThreeSigma": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 3,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.02335,
+          0.286,
+          0.1108
+        ],
+        "insideOneTwoThreeSigma": [
+          0.96,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 3,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6775,
+          2.708,
+          0.2251
+        ],
+        "insideOneTwoThreeSigma": [
+          0.874,
+          0.969,
+          0.977
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 3,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 12,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.8932,
+          20.86,
+          0.1247
+        ],
+        "insideOneTwoThreeSigma": [
+          0.889,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "Op",
+        "lead": 3,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.8498,
+          2.686,
+          0.2292
+        ],
+        "insideOneTwoThreeSigma": [
+          0.8,
+          0.857,
+          0.943
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 1.967,
+        "insideOneTwoThreeSigma": [
+          0.756,
+          0.951,
+          0.995
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 130,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1691,
+          0.8588,
+          0.4322
+        ],
+        "insideOneTwoThreeSigma": [
+          0.846,
+          0.923,
+          0.938
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 64,
+        "testRows": 71,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          2.893,
+          44.02,
+          3.609
+        ],
+        "insideOneTwoThreeSigma": [
+          0.915,
+          0.972,
+          1
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.07121,
+          0.6641,
+          0.1284
+        ],
+        "insideOneTwoThreeSigma": [
+          0.68,
+          0.76,
+          0.84
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.667,
+          3.521,
+          0.2486
+        ],
+        "insideOneTwoThreeSigma": [
+          0.912,
+          0.973,
+          0.977
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 14,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.2883,
+          0.7593,
+          0.4931
+        ],
+        "insideOneTwoThreeSigma": [
+          0.167,
+          0.667,
+          0.722
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.5463,
+          1.525,
+          0.2536
+        ],
+        "insideOneTwoThreeSigma": [
+          0.743,
+          0.829,
+          0.829
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 1,
+        "regime": "SL",
+        "label": "Starlink",
+        "fitObjects": 50,
+        "testObjects": 49,
+        "fitRows": 50,
+        "testRows": 49,
+        "status": "FAILED",
+        "rmsKm": 117.4,
+        "insideOneTwoThreeSigma": [
+          0.867,
+          0.945,
+          0.972
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 3,
+        "regime": "SD",
+        "label": "perigee under 600 km",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 300,
+        "testRows": 445,
+        "status": "FAILED",
+        "rmsKm": 7.796,
+        "insideOneTwoThreeSigma": [
+          0.822,
+          0.951,
+          0.982
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 3,
+        "regime": "S1",
+        "label": "perigee 600 to 750 km",
+        "errors": "signed vectors",
+        "fitObjects": 1,
+        "testObjects": 1,
+        "fitRows": 129,
+        "testRows": 129,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.1948,
+          2.302,
+          0.2328
+        ],
+        "insideOneTwoThreeSigma": [
+          0.814,
+          0.922,
+          0.961
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 3,
+        "regime": "DO",
+        "label": "perigee 750 to 2000 km",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 5,
+        "fitRows": 60,
+        "testRows": 60,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          84.82,
+          528.3,
+          26.73
+        ],
+        "insideOneTwoThreeSigma": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 3,
+        "regime": "GD",
+        "label": "perigee 2000 to 15000 km",
+        "errors": "signed vectors",
+        "fitObjects": 2,
+        "testObjects": 3,
+        "fitRows": 14,
+        "testRows": 25,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.0996,
+          0.8005,
+          0.1428
+        ],
+        "insideOneTwoThreeSigma": [
+          0.76,
+          0.84,
+          0.92
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 3,
+        "regime": "GN",
+        "label": "perigee 15000 to 30000 km",
+        "errors": "signed vectors",
+        "fitObjects": 3,
+        "testObjects": 2,
+        "fitRows": 431,
+        "testRows": 261,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.6227,
+          3.119,
+          0.2336
+        ],
+        "insideOneTwoThreeSigma": [
+          0.785,
+          0.969,
+          0.977
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 3,
+        "regime": "GE",
+        "label": "geostationary",
+        "errors": "signed vectors",
+        "fitObjects": 5,
+        "testObjects": 4,
+        "fitRows": 12,
+        "testRows": 18,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          1.096,
+          20.63,
+          0.5503
+        ],
+        "insideOneTwoThreeSigma": [
+          0.556,
+          0.722,
+          0.722
+        ]
+      },
+      {
+        "side": "Xp",
+        "lead": 3,
+        "regime": "IG",
+        "label": "inclined geosynchronous",
+        "errors": "signed vectors",
+        "fitObjects": 4,
+        "testObjects": 8,
+        "fitRows": 15,
+        "testRows": 35,
+        "status": "FAILED",
+        "sigmaRtnKm": [
+          0.4951,
+          1.739,
+          0.1943
+        ],
+        "insideOneTwoThreeSigma": [
+          0.571,
+          0.771,
+          0.829
+        ]
+      }
+    ]
+  },
+  "probabilityOfCollision": {
+    "algorithm": "FOSTER",
+    "conjunctionAssessmentWasmSha256": "7f4ff2469f7f88ff040562d6031b94084965bdfc69860465a8174ad5adbde906",
+    "radiusSources": {
+      "discosDimension": 5980554,
+      "discosSection": 197,
+      "rcs": 911111,
+      "default": 43864
+    }
+  },
+  "results": {
+    "1d": {
+      "views": {
+        "allButStarlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 8806,
+              "interval_S": [
+                8186,
+                9791
+              ],
+              "O": 9374,
+              "interval_O": [
+                8677,
+                9864
+              ],
+              "X": 9078,
+              "interval_X": [
+                8597,
+                9860
+              ],
+              "Op": 8791,
+              "interval_Op": [
+                8199,
+                9821
+              ],
+              "Xp": 8992,
+              "interval_Xp": [
+                8103,
+                9799
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5130,
+              "O": 3724,
+              "X": 4965,
+              "Op": 4396,
+              "Xp": 5147
+            },
+            "realCloseApproaches": 9433,
+            "reductionSdnApVsSgp4Pct": -6.46,
+            "reductionSdnApVsSgp4Interval95": [
+              -13.82,
+              6.818
+            ],
+            "reductionSdnApVsSgp4XpPct": -3.26,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -8.119,
+              6.653
+            ],
+            "reductionSgp4XpVsSgp4Pct": -3.09,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 0.167,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -7.191,
+              6.915
+            ],
+            "encountersCounted": 22430000,
+            "encountersInView": 22430000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "all": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 29260,
+              "interval_S": [
+                25560,
+                33480
+              ],
+              "O": 42490,
+              "interval_O": [
+                38530,
+                48180
+              ],
+              "X": 38730,
+              "interval_X": [
+                34810,
+                43190
+              ],
+              "Op": 29600,
+              "interval_Op": [
+                25560,
+                34410
+              ],
+              "Xp": 28490,
+              "interval_Xp": [
+                24570,
+                32520
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 62950,
+              "O": 56330,
+              "X": 61610,
+              "Op": 61860,
+              "Xp": 63020
+            },
+            "realCloseApproaches": 68220,
+            "reductionSdnApVsSgp4Pct": -45.2,
+            "reductionSdnApVsSgp4Interval95": [
+              -59.89,
+              -31.66
+            ],
+            "reductionSdnApVsSgp4XpPct": -9.71,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -19.68,
+              -2.859
+            ],
+            "reductionSgp4XpVsSgp4Pct": -32.4,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.16,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -7.701,
+              6.229
+            ],
+            "encountersCounted": 52280000,
+            "encountersInView": 52280000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "starlinkWithOthers": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 2916,
+              "interval_S": [
+                2380,
+                4037
+              ],
+              "O": 3467,
+              "interval_O": [
+                2868,
+                4035
+              ],
+              "X": 3164,
+              "interval_X": [
+                2811,
+                4063
+              ],
+              "Op": 2884,
+              "interval_Op": [
+                2353,
+                3933
+              ],
+              "Xp": 3078,
+              "interval_Xp": [
+                2313,
+                4032
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3214,
+              "O": 2442,
+              "X": 3034,
+              "Op": 3114,
+              "Xp": 3216
+            },
+            "realCloseApproaches": 3538,
+            "reductionSdnApVsSgp4Pct": -18.9,
+            "reductionSdnApVsSgp4Interval95": [
+              -42.08,
+              16.9
+            ],
+            "reductionSdnApVsSgp4XpPct": -9.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -23.43,
+              16.18
+            ],
+            "reductionSgp4XpVsSgp4Pct": -8.51,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 1.07,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -19.91,
+              16.08
+            ],
+            "encountersCounted": 10280000,
+            "encountersInView": 10280000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "starlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 20460,
+              "interval_S": [
+                17080,
+                24330
+              ],
+              "O": 33120,
+              "interval_O": [
+                28830,
+                38600
+              ],
+              "X": 29650,
+              "interval_X": [
+                25600,
+                34150
+              ],
+              "Op": 20810,
+              "interval_Op": [
+                16970,
+                24670
+              ],
+              "Xp": 19500,
+              "interval_Xp": [
+                15620,
+                23540
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 57820,
+              "O": 52610,
+              "X": 56650,
+              "Op": 57470,
+              "Xp": 57870
+            },
+            "realCloseApproaches": 58790,
+            "reductionSdnApVsSgp4Pct": -61.9,
+            "reductionSdnApVsSgp4Interval95": [
+              -86.72,
+              -43.36
+            ],
+            "reductionSdnApVsSgp4XpPct": -11.7,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -25.83,
+              -4.174
+            ],
+            "reductionSgp4XpVsSgp4Pct": -44.9,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.74,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -10.98,
+              8.178
+            ],
+            "encountersCounted": 29860000,
+            "encountersInView": 29860000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "noStarlink": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5890,
+              "interval_S": [
+                5557,
+                5967
+              ],
+              "O": 5907,
+              "interval_O": [
+                5560,
+                6004
+              ],
+              "X": 5914,
+              "interval_X": [
+                5545,
+                5971
+              ],
+              "Op": 5907,
+              "interval_Op": [
+                5560,
+                6004
+              ],
+              "Xp": 5914,
+              "interval_Xp": [
+                5545,
+                5971
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 1916,
+              "O": 1282,
+              "X": 1931,
+              "Op": 1282,
+              "Xp": 1931
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -0.283,
+            "reductionSdnApVsSgp4Interval95": [
+              -3.022,
+              2.145
+            ],
+            "reductionSdnApVsSgp4XpPct": 0.124,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -3.022,
+              1.886
+            ],
+            "reductionSgp4XpVsSgp4Pct": -0.407,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -0.283,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -3.022,
+              2.145
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        }
+      },
+      "leftOut": {
+        "starlinkAt3Days": 0,
+        "noRows": 0
+      },
+      "matchedRadius": {
+        "O": {
+          "radiusKm": 0.8136,
+          "notificationsAtRadius": 6110.433975740009,
+          "notificationsPublicAt1Km": 8533.906909830976,
+          "missedAtRadius": 5119,
+          "missedPublicAt1Km": 5119,
+          "realCloseApproaches": 9193,
+          "reductionPercent": 28.4,
+          "reductionInterval95": [
+            20.67,
+            37.64
+          ],
+          "radiusInterval95": [
+            0.7931,
+            0.8469
+          ]
+        },
+        "X": {
+          "radiusKm": 0.9712,
+          "notificationsAtRadius": 8303.146093816138,
+          "notificationsPublicAt1Km": 8533.906909830976,
+          "missedAtRadius": 5119,
+          "missedPublicAt1Km": 5119,
+          "realCloseApproaches": 9193,
+          "reductionPercent": 2.7,
+          "reductionInterval95": [
+            -8.593,
+            11.87
+          ],
+          "radiusInterval95": [
+            0.9449,
+            1.005
+          ]
+        },
+        "Op": {
+          "radiusKm": 0.8863,
+          "notificationsAtRadius": 6661.848472304533,
+          "notificationsPublicAt1Km": 8533.906909830976,
+          "missedAtRadius": 5119,
+          "missedPublicAt1Km": 5119,
+          "realCloseApproaches": 9193,
+          "reductionPercent": 21.9,
+          "reductionInterval95": [
+            14.69,
+            28.27
+          ],
+          "radiusInterval95": [
+            0.8555,
+            0.8996
+          ]
+        },
+        "Xp": {
+          "radiusKm": 1.005,
+          "notificationsAtRadius": 8776.599548731612,
+          "notificationsPublicAt1Km": 8533.906909830976,
+          "missedAtRadius": 5119,
+          "missedPublicAt1Km": 5119,
+          "realCloseApproaches": 9193,
+          "reductionPercent": -2.84,
+          "reductionInterval95": [
+            -5.446,
+            3.277
+          ],
+          "radiusInterval95": [
+            1.002,
+            1.015
+          ]
+        }
+      },
+      "pcModuleCalls": 0
+    },
+    "3d": {
+      "views": {
+        "allButStarlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5550,
+              "interval_S": [
+                5194,
+                6156
+              ],
+              "O": 5636,
+              "interval_O": [
+                5208,
+                6148
+              ],
+              "X": 5547,
+              "interval_X": [
+                5179,
+                6155
+              ],
+              "Op": 5636,
+              "interval_Op": [
+                5208,
+                6148
+              ],
+              "Xp": 5547,
+              "interval_Xp": [
+                5179,
+                6155
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3201,
+              "O": 2850,
+              "X": 3155,
+              "Op": 2850,
+              "Xp": 3155
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -1.55,
+            "reductionSdnApVsSgp4Interval95": [
+              -6.665,
+              5.025
+            ],
+            "reductionSdnApVsSgp4XpPct": -1.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -6.043,
+              5.001
+            ],
+            "reductionSgp4XpVsSgp4Pct": 0.048,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.55,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -6.665,
+              5.025
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "all": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5550,
+              "interval_S": [
+                5194,
+                6156
+              ],
+              "O": 5636,
+              "interval_O": [
+                5208,
+                6148
+              ],
+              "X": 5547,
+              "interval_X": [
+                5179,
+                6155
+              ],
+              "Op": 5636,
+              "interval_Op": [
+                5208,
+                6148
+              ],
+              "Xp": 5547,
+              "interval_Xp": [
+                5179,
+                6155
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3201,
+              "O": 2850,
+              "X": 3155,
+              "Op": 2850,
+              "Xp": 3155
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -1.55,
+            "reductionSdnApVsSgp4Interval95": [
+              -6.665,
+              5.025
+            ],
+            "reductionSdnApVsSgp4XpPct": -1.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -6.043,
+              5.001
+            ],
+            "reductionSgp4XpVsSgp4Pct": 0.048,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.55,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -6.665,
+              5.025
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "starlinkWithOthers": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 0,
+              "interval_S": [
+                0,
+                0
+              ],
+              "O": 0,
+              "interval_O": [
+                0,
+                0
+              ],
+              "X": 0,
+              "interval_X": [
+                0,
+                0
+              ],
+              "Op": 0,
+              "interval_Op": [
+                0,
+                0
+              ],
+              "Xp": 0,
+              "interval_Xp": [
+                0,
+                0
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 0,
+              "O": 0,
+              "X": 0,
+              "Op": 0,
+              "Xp": 0
+            },
+            "realCloseApproaches": 0,
+            "reductionSdnApVsSgp4Pct": null,
+            "reductionSdnApVsSgp4Interval95": null,
+            "reductionSdnApVsSgp4XpPct": null,
+            "reductionSdnApVsSgp4XpInterval95": null,
+            "reductionSgp4XpVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": null,
+            "encountersCounted": 0,
+            "encountersInView": 0,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "starlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 0,
+              "interval_S": [
+                0,
+                0
+              ],
+              "O": 0,
+              "interval_O": [
+                0,
+                0
+              ],
+              "X": 0,
+              "interval_X": [
+                0,
+                0
+              ],
+              "Op": 0,
+              "interval_Op": [
+                0,
+                0
+              ],
+              "Xp": 0,
+              "interval_Xp": [
+                0,
+                0
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 0,
+              "O": 0,
+              "X": 0,
+              "Op": 0,
+              "Xp": 0
+            },
+            "realCloseApproaches": 0,
+            "reductionSdnApVsSgp4Pct": null,
+            "reductionSdnApVsSgp4Interval95": null,
+            "reductionSdnApVsSgp4XpPct": null,
+            "reductionSdnApVsSgp4XpInterval95": null,
+            "reductionSgp4XpVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": null,
+            "encountersCounted": 0,
+            "encountersInView": 0,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "noStarlink": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5550,
+              "interval_S": [
+                5194,
+                6156
+              ],
+              "O": 5636,
+              "interval_O": [
+                5208,
+                6148
+              ],
+              "X": 5547,
+              "interval_X": [
+                5179,
+                6155
+              ],
+              "Op": 5636,
+              "interval_Op": [
+                5208,
+                6148
+              ],
+              "Xp": 5547,
+              "interval_Xp": [
+                5179,
+                6155
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3201,
+              "O": 2850,
+              "X": 3155,
+              "Op": 2850,
+              "Xp": 3155
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -1.55,
+            "reductionSdnApVsSgp4Interval95": [
+              -6.665,
+              5.025
+            ],
+            "reductionSdnApVsSgp4XpPct": -1.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -6.043,
+              5.001
+            ],
+            "reductionSgp4XpVsSgp4Pct": 0.048,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.55,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -6.665,
+              5.025
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 200
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        }
+      },
+      "leftOut": {
+        "starlinkAt3Days": 40140208.386696085,
+        "noRows": 0
+      },
+      "matchedRadius": {
+        "O": {
+          "radiusKm": 0.9077,
+          "notificationsAtRadius": 4527.395017389038,
+          "notificationsPublicAt1Km": 5325.731597251619,
+          "missedAtRadius": 3185,
+          "missedPublicAt1Km": 3185,
+          "realCloseApproaches": 5655,
+          "reductionPercent": 15,
+          "reductionInterval95": [
+            10.16,
+            22.13
+          ],
+          "radiusInterval95": [
+            0.8899,
+            0.931
+          ]
+        },
+        "X": {
+          "radiusKm": 0.9864,
+          "notificationsAtRadius": 5179.731597251619,
+          "notificationsPublicAt1Km": 5325.731597251619,
+          "missedAtRadius": 3185,
+          "missedPublicAt1Km": 3185,
+          "realCloseApproaches": 5655,
+          "reductionPercent": 2.74,
+          "reductionInterval95": [
+            1.096,
+            5.426
+          ],
+          "radiusInterval95": [
+            0.9754,
+            0.9931
+          ]
+        },
+        "Op": {
+          "radiusKm": 0.9077,
+          "notificationsAtRadius": 4527.395017389038,
+          "notificationsPublicAt1Km": 5325.731597251619,
+          "missedAtRadius": 3185,
+          "missedPublicAt1Km": 3185,
+          "realCloseApproaches": 5655,
+          "reductionPercent": 15,
+          "reductionInterval95": [
+            10.16,
+            22.13
+          ],
+          "radiusInterval95": [
+            0.8899,
+            0.931
+          ]
+        },
+        "Xp": {
+          "radiusKm": 0.9864,
+          "notificationsAtRadius": 5179.731597251619,
+          "notificationsPublicAt1Km": 5325.731597251619,
+          "missedAtRadius": 3185,
+          "missedPublicAt1Km": 3185,
+          "realCloseApproaches": 5655,
+          "reductionPercent": 2.74,
+          "reductionInterval95": [
+            1.096,
+            5.426
+          ],
+          "radiusInterval95": [
+            0.9754,
+            0.9931
+          ]
+        }
+      },
+      "pcModuleCalls": 0
+    }
+  },
+  "replicates": {
+    "miss": 200,
+    "pc": 40
+  },
+  "empiricalCalibratedPc": {
+    "note": "Supplementary empirical Foster 2-D Pc CDM notification counts using each arm own empirically measured 95.4%-2sigma covariance across all 8 regimes (registered Amendment 3 strict realism-gated results above remain unchanged).",
+    "replicates": 40,
+    "1d": {
+      "views": {
+        "allButStarlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 8806,
+              "interval_S": [
+                8101,
+                9702
+              ],
+              "O": 9374,
+              "interval_O": [
+                8790,
+                9640
+              ],
+              "X": 9078,
+              "interval_X": [
+                8598,
+                9851
+              ],
+              "Op": 8791,
+              "interval_Op": [
+                8316,
+                9823
+              ],
+              "Xp": 8992,
+              "interval_Xp": [
+                7922,
+                9700
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5130,
+              "O": 3724,
+              "X": 4965,
+              "Op": 4396,
+              "Xp": 5147
+            },
+            "realCloseApproaches": 9433,
+            "reductionSdnApVsSgp4Pct": -6.46,
+            "reductionSdnApVsSgp4Interval95": [
+              -10.15,
+              3.771
+            ],
+            "reductionSdnApVsSgp4XpPct": -3.26,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -5.243,
+              5.518
+            ],
+            "reductionSgp4XpVsSgp4Pct": -3.09,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 0.167,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -7.721,
+              5.215
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 2.24,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -8.526,
+              4.386
+            ],
+            "encountersCounted": 22430000,
+            "encountersInView": 22430000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 144,
+              "interval_S": [
+                115.9,
+                145.1
+              ],
+              "O": 165,
+              "interval_O": [
+                142.9,
+                170.1
+              ],
+              "X": 110,
+              "interval_X": [
+                96.97,
+                133
+              ],
+              "Op": 167,
+              "interval_Op": [
+                144.9,
+                170.1
+              ],
+              "Xp": 111,
+              "interval_Xp": [
+                96.97,
+                133
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 9317,
+              "O": 9293,
+              "X": 9347,
+              "Op": 9293,
+              "Xp": 9347
+            },
+            "realCloseApproaches": 9433,
+            "reductionSdnApVsSgp4Pct": -14.6,
+            "reductionSdnApVsSgp4Interval95": [
+              -32.91,
+              -8.261
+            ],
+            "reductionSdnApVsSgp4XpPct": -50,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -59.99,
+              -20.06
+            ],
+            "reductionSgp4XpVsSgp4Pct": 23.6,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -16,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -32.05,
+              -9.615
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -50.5,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -60.53,
+              -20.1
+            ],
+            "encountersCounted": 22430000,
+            "encountersInView": 22430000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 682,
+              "interval_S": [
+                639.6,
+                754.5
+              ],
+              "O": 569,
+              "interval_O": [
+                551.5,
+                626
+              ],
+              "X": 727,
+              "interval_X": [
+                679.9,
+                773.4
+              ],
+              "Op": 566,
+              "interval_Op": [
+                546.6,
+                620
+              ],
+              "Xp": 718,
+              "interval_Xp": [
+                675.8,
+                766.5
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 9013,
+              "O": 9020,
+              "X": 9003,
+              "Op": 9022,
+              "Xp": 9005
+            },
+            "realCloseApproaches": 9433,
+            "reductionSdnApVsSgp4Pct": 16.6,
+            "reductionSdnApVsSgp4Interval95": [
+              10.01,
+              23.23
+            ],
+            "reductionSdnApVsSgp4XpPct": 21.7,
+            "reductionSdnApVsSgp4XpInterval95": [
+              13.03,
+              25.63
+            ],
+            "reductionSgp4XpVsSgp4Pct": -6.6,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 17,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              10.88,
+              24.58
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 21.2,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              13.36,
+              26.03
+            ],
+            "encountersCounted": 22430000,
+            "encountersInView": 22430000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 86750,
+              "interval_S": [
+                67640,
+                119500
+              ],
+              "O": 617800,
+              "interval_O": [
+                545900,
+                754800
+              ],
+              "X": 636700,
+              "interval_X": [
+                559800,
+                773900
+              ],
+              "Op": 85850,
+              "interval_Op": [
+                65930,
+                118300
+              ],
+              "Xp": 65480,
+              "interval_Xp": [
+                50820,
+                89180
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 7751,
+              "O": 6117,
+              "X": 5803,
+              "Op": 8020,
+              "Xp": 7802
+            },
+            "realCloseApproaches": 9433,
+            "reductionSdnApVsSgp4Pct": -612,
+            "reductionSdnApVsSgp4Interval95": [
+              -721.7,
+              -518.6
+            ],
+            "reductionSdnApVsSgp4XpPct": 2.97,
+            "reductionSdnApVsSgp4XpInterval95": [
+              1.994,
+              3.877
+            ],
+            "reductionSgp4XpVsSgp4Pct": -634,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 1.03,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -1.626,
+              4.741
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -31.1,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -33.93,
+              -24.27
+            ],
+            "encountersCounted": 22430000,
+            "encountersInView": 22430000,
+            "replicates": 40
+          }
+        },
+        "all": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 29260,
+              "interval_S": [
+                25730,
+                33510
+              ],
+              "O": 42490,
+              "interval_O": [
+                36050,
+                47590
+              ],
+              "X": 38730,
+              "interval_X": [
+                34830,
+                42230
+              ],
+              "Op": 29600,
+              "interval_Op": [
+                25240,
+                35390
+              ],
+              "Xp": 28490,
+              "interval_Xp": [
+                24910,
+                33430
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 62950,
+              "O": 56330,
+              "X": 61610,
+              "Op": 61860,
+              "Xp": 63020
+            },
+            "realCloseApproaches": 68220,
+            "reductionSdnApVsSgp4Pct": -45.2,
+            "reductionSdnApVsSgp4Interval95": [
+              -60.38,
+              -32.64
+            ],
+            "reductionSdnApVsSgp4XpPct": -9.71,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -19.7,
+              -3.068
+            ],
+            "reductionSgp4XpVsSgp4Pct": -32.4,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.16,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -5.939,
+              4.483
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -3.9,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -8.925,
+              2.649
+            ],
+            "encountersCounted": 52280000,
+            "encountersInView": 52280000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 144,
+              "interval_S": [
+                115.9,
+                145.1
+              ],
+              "O": 165,
+              "interval_O": [
+                142.9,
+                170.1
+              ],
+              "X": 110,
+              "interval_X": [
+                96.97,
+                133
+              ],
+              "Op": 167,
+              "interval_Op": [
+                144.9,
+                170.1
+              ],
+              "Xp": 111,
+              "interval_Xp": [
+                96.97,
+                133
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 68100,
+              "O": 68080,
+              "X": 68130,
+              "Op": 68080,
+              "Xp": 68130
+            },
+            "realCloseApproaches": 68220,
+            "reductionSdnApVsSgp4Pct": -14.6,
+            "reductionSdnApVsSgp4Interval95": [
+              -32.91,
+              -8.261
+            ],
+            "reductionSdnApVsSgp4XpPct": -50,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -59.99,
+              -20.06
+            ],
+            "reductionSgp4XpVsSgp4Pct": 23.6,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -16,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -32.05,
+              -9.615
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -50.5,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -60.53,
+              -20.1
+            ],
+            "encountersCounted": 52280000,
+            "encountersInView": 52280000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 682,
+              "interval_S": [
+                639.6,
+                754.5
+              ],
+              "O": 569,
+              "interval_O": [
+                551.5,
+                626
+              ],
+              "X": 727,
+              "interval_X": [
+                679.9,
+                773.4
+              ],
+              "Op": 566,
+              "interval_Op": [
+                546.6,
+                620
+              ],
+              "Xp": 718,
+              "interval_Xp": [
+                675.8,
+                766.5
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 67800,
+              "O": 67810,
+              "X": 67790,
+              "Op": 67810,
+              "Xp": 67790
+            },
+            "realCloseApproaches": 68220,
+            "reductionSdnApVsSgp4Pct": 16.6,
+            "reductionSdnApVsSgp4Interval95": [
+              10.01,
+              23.23
+            ],
+            "reductionSdnApVsSgp4XpPct": 21.7,
+            "reductionSdnApVsSgp4XpInterval95": [
+              13.03,
+              25.63
+            ],
+            "reductionSgp4XpVsSgp4Pct": -6.6,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 17,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              10.88,
+              24.58
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 21.2,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              13.36,
+              26.03
+            ],
+            "encountersCounted": 52280000,
+            "encountersInView": 52280000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 1813000,
+              "interval_S": [
+                1576000,
+                2017000
+              ],
+              "O": 10600000,
+              "interval_O": [
+                9573000,
+                11350000
+              ],
+              "X": 10820000,
+              "interval_X": [
+                9834000,
+                11610000
+              ],
+              "Op": 1892000,
+              "interval_Op": [
+                1648000,
+                2104000
+              ],
+              "Xp": 1394000,
+              "interval_Xp": [
+                1232000,
+                1540000
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 63720,
+              "O": 24130,
+              "X": 21910,
+              "Op": 63950,
+              "Xp": 64000
+            },
+            "realCloseApproaches": 68220,
+            "reductionSdnApVsSgp4Pct": -485,
+            "reductionSdnApVsSgp4Interval95": [
+              -534.4,
+              -423.8
+            ],
+            "reductionSdnApVsSgp4XpPct": 1.97,
+            "reductionSdnApVsSgp4XpInterval95": [
+              1.225,
+              2.692
+            ],
+            "reductionSgp4XpVsSgp4Pct": -497,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -4.31,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -4.756,
+              -3.952
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -35.7,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -37.45,
+              -31.32
+            ],
+            "encountersCounted": 52280000,
+            "encountersInView": 52280000,
+            "replicates": 40
+          }
+        },
+        "starlinkWithOthers": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 2916,
+              "interval_S": [
+                2355,
+                4030
+              ],
+              "O": 3467,
+              "interval_O": [
+                3055,
+                3928
+              ],
+              "X": 3164,
+              "interval_X": [
+                2911,
+                4040
+              ],
+              "Op": 2884,
+              "interval_Op": [
+                2514,
+                3997
+              ],
+              "Xp": 3078,
+              "interval_Xp": [
+                2208,
+                3963
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3214,
+              "O": 2442,
+              "X": 3034,
+              "Op": 3114,
+              "Xp": 3216
+            },
+            "realCloseApproaches": 3538,
+            "reductionSdnApVsSgp4Pct": -18.9,
+            "reductionSdnApVsSgp4Interval95": [
+              -35.45,
+              12.03
+            ],
+            "reductionSdnApVsSgp4XpPct": -9.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -10.88,
+              13.38
+            ],
+            "reductionSgp4XpVsSgp4Pct": -8.51,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 1.07,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -24.7,
+              13.67
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 6.3,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -27.28,
+              12.27
+            ],
+            "encountersCounted": 10280000,
+            "encountersInView": 10280000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 2,
+              "interval_S": [
+                1,
+                3
+              ],
+              "O": 0,
+              "interval_O": [
+                1,
+                3
+              ],
+              "X": 1,
+              "interval_X": [
+                0.975,
+                3
+              ],
+              "Op": 2,
+              "interval_Op": [
+                1,
+                3
+              ],
+              "Xp": 2,
+              "interval_Xp": [
+                1,
+                3
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3538,
+              "O": 3538,
+              "X": 3538,
+              "Op": 3538,
+              "Xp": 3538
+            },
+            "realCloseApproaches": 3538,
+            "reductionSdnApVsSgp4Pct": 100,
+            "reductionSdnApVsSgp4Interval95": [
+              -200,
+              50.42
+            ],
+            "reductionSdnApVsSgp4XpPct": 100,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -200,
+              2.5
+            ],
+            "reductionSgp4XpVsSgp4Pct": 50,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 0,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -50,
+              0.8333
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 0,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -50,
+              0.8333
+            ],
+            "encountersCounted": 10280000,
+            "encountersInView": 10280000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 2,
+              "interval_S": [
+                1,
+                3
+              ],
+              "O": 5,
+              "interval_O": [
+                4.975,
+                10.07
+              ],
+              "X": 11,
+              "interval_X": [
+                4.975,
+                11
+              ],
+              "Op": 2,
+              "interval_Op": [
+                1,
+                3
+              ],
+              "Xp": 2,
+              "interval_Xp": [
+                1,
+                3
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3538,
+              "O": 3536,
+              "X": 3536,
+              "Op": 3538,
+              "Xp": 3538
+            },
+            "realCloseApproaches": 3538,
+            "reductionSdnApVsSgp4Pct": -150,
+            "reductionSdnApVsSgp4Interval95": [
+              -600,
+              -100
+            ],
+            "reductionSdnApVsSgp4XpPct": 54.5,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -50.75,
+              33.75
+            ],
+            "reductionSgp4XpVsSgp4Pct": -450,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 0,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -51.25,
+              1.25
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 0,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -50,
+              33.75
+            ],
+            "encountersCounted": 10280000,
+            "encountersInView": 10280000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 70640,
+              "interval_S": [
+                52230,
+                100000
+              ],
+              "O": 607400,
+              "interval_O": [
+                536000,
+                743700
+              ],
+              "X": 620700,
+              "interval_X": [
+                544500,
+                755700
+              ],
+              "Op": 75400,
+              "interval_Op": [
+                56350,
+                106500
+              ],
+              "Xp": 49440,
+              "interval_Xp": [
+                34890,
+                70080
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3286,
+              "O": 1362,
+              "X": 1368,
+              "Op": 3265,
+              "Xp": 3367
+            },
+            "realCloseApproaches": 3538,
+            "reductionSdnApVsSgp4Pct": -760,
+            "reductionSdnApVsSgp4Interval95": [
+              -943.2,
+              -630.4
+            ],
+            "reductionSdnApVsSgp4XpPct": 2.15,
+            "reductionSdnApVsSgp4XpInterval95": [
+              1.187,
+              2.984
+            ],
+            "reductionSgp4XpVsSgp4Pct": -779,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -6.75,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -9.291,
+              -5.02
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -52.5,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -63.74,
+              -41.28
+            ],
+            "encountersCounted": 10280000,
+            "encountersInView": 10280000,
+            "replicates": 40
+          }
+        },
+        "starlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 20460,
+              "interval_S": [
+                17120,
+                24380
+              ],
+              "O": 33120,
+              "interval_O": [
+                27020,
+                38610
+              ],
+              "X": 29650,
+              "interval_X": [
+                25550,
+                32860
+              ],
+              "Op": 20810,
+              "interval_Op": [
+                16790,
+                25850
+              ],
+              "Xp": 19500,
+              "interval_Xp": [
+                16210,
+                24360
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 57820,
+              "O": 52610,
+              "X": 56650,
+              "Op": 57470,
+              "Xp": 57870
+            },
+            "realCloseApproaches": 58790,
+            "reductionSdnApVsSgp4Pct": -61.9,
+            "reductionSdnApVsSgp4Interval95": [
+              -89.78,
+              -42.43
+            ],
+            "reductionSdnApVsSgp4XpPct": -11.7,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -27.01,
+              -4.166
+            ],
+            "reductionSgp4XpVsSgp4Pct": -44.9,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.74,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -7.861,
+              7.384
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -6.73,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -15.41,
+              5.995
+            ],
+            "encountersCounted": 29860000,
+            "encountersInView": 29860000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 0,
+              "interval_S": [
+                0,
+                0
+              ],
+              "O": 0,
+              "interval_O": [
+                0,
+                0
+              ],
+              "X": 0,
+              "interval_X": [
+                0,
+                0
+              ],
+              "Op": 0,
+              "interval_Op": [
+                0,
+                0
+              ],
+              "Xp": 0,
+              "interval_Xp": [
+                0,
+                0
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 58790,
+              "O": 58790,
+              "X": 58790,
+              "Op": 58790,
+              "Xp": 58790
+            },
+            "realCloseApproaches": 58790,
+            "reductionSdnApVsSgp4Pct": null,
+            "reductionSdnApVsSgp4Interval95": null,
+            "reductionSdnApVsSgp4XpPct": null,
+            "reductionSdnApVsSgp4XpInterval95": null,
+            "reductionSgp4XpVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": null,
+            "encountersCounted": 29860000,
+            "encountersInView": 29860000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 0,
+              "interval_S": [
+                0,
+                0
+              ],
+              "O": 0,
+              "interval_O": [
+                0,
+                0
+              ],
+              "X": 0,
+              "interval_X": [
+                0,
+                0
+              ],
+              "Op": 0,
+              "interval_Op": [
+                0,
+                0
+              ],
+              "Xp": 0,
+              "interval_Xp": [
+                0,
+                0
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 58790,
+              "O": 58790,
+              "X": 58790,
+              "Op": 58790,
+              "Xp": 58790
+            },
+            "realCloseApproaches": 58790,
+            "reductionSdnApVsSgp4Pct": null,
+            "reductionSdnApVsSgp4Interval95": null,
+            "reductionSdnApVsSgp4XpPct": null,
+            "reductionSdnApVsSgp4XpInterval95": null,
+            "reductionSgp4XpVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": null,
+            "encountersCounted": 29860000,
+            "encountersInView": 29860000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 1727000,
+              "interval_S": [
+                1507000,
+                1946000
+              ],
+              "O": 9987000,
+              "interval_O": [
+                9024000,
+                10590000
+              ],
+              "X": 10180000,
+              "interval_X": [
+                9268000,
+                10840000
+              ],
+              "Op": 1806000,
+              "interval_Op": [
+                1578000,
+                2035000
+              ],
+              "Xp": 1328000,
+              "interval_Xp": [
+                1174000,
+                1487000
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 55970,
+              "O": 18020,
+              "X": 16110,
+              "Op": 55930,
+              "Xp": 56200
+            },
+            "realCloseApproaches": 58790,
+            "reductionSdnApVsSgp4Pct": -478,
+            "reductionSdnApVsSgp4Interval95": [
+              -529.2,
+              -414.1
+            ],
+            "reductionSdnApVsSgp4XpPct": 1.91,
+            "reductionSdnApVsSgp4XpInterval95": [
+              1.131,
+              2.667
+            ],
+            "reductionSgp4XpVsSgp4Pct": -490,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -4.58,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -4.964,
+              -4.179
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -36,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -37.79,
+              -31.68
+            ],
+            "encountersCounted": 29860000,
+            "encountersInView": 29860000,
+            "replicates": 40
+          }
+        },
+        "noStarlink": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5890,
+              "interval_S": [
+                5513,
+                5929
+              ],
+              "O": 5907,
+              "interval_O": [
+                5534,
+                5986
+              ],
+              "X": 5914,
+              "interval_X": [
+                5508,
+                5958
+              ],
+              "Op": 5907,
+              "interval_Op": [
+                5534,
+                5986
+              ],
+              "Xp": 5914,
+              "interval_Xp": [
+                5508,
+                5958
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 1916,
+              "O": 1282,
+              "X": 1931,
+              "Op": 1282,
+              "Xp": 1931
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -0.283,
+            "reductionSdnApVsSgp4Interval95": [
+              -2.986,
+              1.94
+            ],
+            "reductionSdnApVsSgp4XpPct": 0.124,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -2.655,
+              1.793
+            ],
+            "reductionSgp4XpVsSgp4Pct": -0.407,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -0.283,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -2.986,
+              1.94
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 0.124,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -2.655,
+              1.793
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 142,
+              "interval_S": [
+                112.9,
+                142.1
+              ],
+              "O": 165,
+              "interval_O": [
+                141.9,
+                169.1
+              ],
+              "X": 109,
+              "interval_X": [
+                94,
+                131
+              ],
+              "Op": 165,
+              "interval_Op": [
+                141.9,
+                169.1
+              ],
+              "Xp": 109,
+              "interval_Xp": [
+                94,
+                131
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5779,
+              "O": 5755,
+              "X": 5809,
+              "Op": 5755,
+              "Xp": 5809
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -16.2,
+            "reductionSdnApVsSgp4Interval95": [
+              -32.64,
+              -9.065
+            ],
+            "reductionSdnApVsSgp4XpPct": -51.4,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -61.86,
+              -20.55
+            ],
+            "reductionSgp4XpVsSgp4Pct": 23.2,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -16.2,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -32.64,
+              -9.065
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -51.4,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -61.86,
+              -20.55
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 680,
+              "interval_S": [
+                638.6,
+                752.5
+              ],
+              "O": 564,
+              "interval_O": [
+                543.6,
+                617.1
+              ],
+              "X": 716,
+              "interval_X": [
+                673.8,
+                763.5
+              ],
+              "Op": 564,
+              "interval_Op": [
+                543.6,
+                617.1
+              ],
+              "Xp": 716,
+              "interval_Xp": [
+                673.8,
+                763.5
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5475,
+              "O": 5484,
+              "X": 5467,
+              "Op": 5484,
+              "Xp": 5467
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": 17.1,
+            "reductionSdnApVsSgp4Interval95": [
+              10.92,
+              24.68
+            ],
+            "reductionSdnApVsSgp4XpPct": 21.2,
+            "reductionSdnApVsSgp4XpInterval95": [
+              13.42,
+              26
+            ],
+            "reductionSgp4XpVsSgp4Pct": -5.29,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 17.1,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              10.92,
+              24.68
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 21.2,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              13.42,
+              26
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 16110,
+              "interval_S": [
+                12790,
+                19680
+              ],
+              "O": 10450,
+              "interval_O": [
+                9047,
+                12290
+              ],
+              "X": 16040,
+              "interval_X": [
+                13070,
+                19360
+              ],
+              "Op": 10450,
+              "interval_Op": [
+                9047,
+                12290
+              ],
+              "Xp": 16040,
+              "interval_Xp": [
+                13070,
+                19360
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 4465,
+              "O": 4755,
+              "X": 4435,
+              "Op": 4755,
+              "Xp": 4435
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": 35.1,
+            "reductionSdnApVsSgp4Interval95": [
+              23.49,
+              42.13
+            ],
+            "reductionSdnApVsSgp4XpPct": 34.8,
+            "reductionSdnApVsSgp4XpInterval95": [
+              24.28,
+              42.77
+            ],
+            "reductionSgp4XpVsSgp4Pct": 0.433,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 35.1,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              23.49,
+              42.13
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 34.8,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              24.28,
+              42.77
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          }
+        }
+      },
+      "pcModuleCalls": 2752753
+    },
+    "3d": {
+      "views": {
+        "allButStarlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5550,
+              "interval_S": [
+                5225,
+                6000
+              ],
+              "O": 5636,
+              "interval_O": [
+                5244,
+                6119
+              ],
+              "X": 5547,
+              "interval_X": [
+                5256,
+                6131
+              ],
+              "Op": 5636,
+              "interval_Op": [
+                5244,
+                6119
+              ],
+              "Xp": 5547,
+              "interval_Xp": [
+                5256,
+                6131
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3201,
+              "O": 2850,
+              "X": 3155,
+              "Op": 2850,
+              "Xp": 3155
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -1.55,
+            "reductionSdnApVsSgp4Interval95": [
+              -6.664,
+              5.775
+            ],
+            "reductionSdnApVsSgp4XpPct": -1.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -6.179,
+              4.297
+            ],
+            "reductionSgp4XpVsSgp4Pct": 0.048,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.55,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -6.664,
+              5.775
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -1.6,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -6.179,
+              4.297
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 18,
+              "interval_S": [
+                9.9,
+                21.1
+              ],
+              "O": 97,
+              "interval_O": [
+                80.88,
+                111
+              ],
+              "X": 20,
+              "interval_X": [
+                14.85,
+                27.02
+              ],
+              "Op": 97,
+              "interval_Op": [
+                80.88,
+                111
+              ],
+              "Xp": 20,
+              "interval_Xp": [
+                14.85,
+                27.02
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5890,
+              "O": 5816,
+              "X": 5887,
+              "Op": 5816,
+              "Xp": 5887
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -439,
+            "reductionSdnApVsSgp4Interval95": [
+              -806.1,
+              -323.4
+            ],
+            "reductionSdnApVsSgp4XpPct": -385,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -532.9,
+              -232.6
+            ],
+            "reductionSgp4XpVsSgp4Pct": -11.1,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -439,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -806.1,
+              -323.4
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -385,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -532.9,
+              -232.6
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 563.7,
+              "interval_S": [
+                505.9,
+                792.8
+              ],
+              "O": 587,
+              "interval_O": [
+                507.8,
+                673
+              ],
+              "X": 601,
+              "interval_X": [
+                514,
+                750.8
+              ],
+              "Op": 587,
+              "interval_Op": [
+                507.8,
+                673
+              ],
+              "Xp": 601,
+              "interval_Xp": [
+                514,
+                750.8
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5629,
+              "O": 5635,
+              "X": 5626,
+              "Op": 5635,
+              "Xp": 5626
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -4.14,
+            "reductionSdnApVsSgp4Interval95": [
+              -16.31,
+              24.99
+            ],
+            "reductionSdnApVsSgp4XpPct": 2.33,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -22.05,
+              20.04
+            ],
+            "reductionSgp4XpVsSgp4Pct": -6.62,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -4.14,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -16.31,
+              24.99
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 2.33,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -22.05,
+              20.04
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 8487,
+              "interval_S": [
+                7854,
+                9510
+              ],
+              "O": 8408,
+              "interval_O": [
+                7364,
+                9342
+              ],
+              "X": 8243,
+              "interval_X": [
+                7337,
+                9072
+              ],
+              "Op": 8408,
+              "interval_Op": [
+                7364,
+                9342
+              ],
+              "Xp": 8243,
+              "interval_Xp": [
+                7337,
+                9072
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 4832,
+              "O": 4952,
+              "X": 4844,
+              "Op": 4952,
+              "Xp": 4844
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": 0.926,
+            "reductionSdnApVsSgp4Interval95": [
+              -5.224,
+              9.256
+            ],
+            "reductionSdnApVsSgp4XpPct": -2,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -9.996,
+              4.983
+            ],
+            "reductionSgp4XpVsSgp4Pct": 2.87,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 0.926,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -5.224,
+              9.256
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -2,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -9.996,
+              4.983
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          }
+        },
+        "all": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5550,
+              "interval_S": [
+                5225,
+                6000
+              ],
+              "O": 5636,
+              "interval_O": [
+                5244,
+                6119
+              ],
+              "X": 5547,
+              "interval_X": [
+                5256,
+                6131
+              ],
+              "Op": 5636,
+              "interval_Op": [
+                5244,
+                6119
+              ],
+              "Xp": 5547,
+              "interval_Xp": [
+                5256,
+                6131
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3201,
+              "O": 2850,
+              "X": 3155,
+              "Op": 2850,
+              "Xp": 3155
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -1.55,
+            "reductionSdnApVsSgp4Interval95": [
+              -6.664,
+              5.775
+            ],
+            "reductionSdnApVsSgp4XpPct": -1.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -6.179,
+              4.297
+            ],
+            "reductionSgp4XpVsSgp4Pct": 0.048,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.55,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -6.664,
+              5.775
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -1.6,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -6.179,
+              4.297
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 18,
+              "interval_S": [
+                9.9,
+                21.1
+              ],
+              "O": 97,
+              "interval_O": [
+                80.88,
+                111
+              ],
+              "X": 20,
+              "interval_X": [
+                14.85,
+                27.02
+              ],
+              "Op": 97,
+              "interval_Op": [
+                80.88,
+                111
+              ],
+              "Xp": 20,
+              "interval_Xp": [
+                14.85,
+                27.02
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5890,
+              "O": 5816,
+              "X": 5887,
+              "Op": 5816,
+              "Xp": 5887
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -439,
+            "reductionSdnApVsSgp4Interval95": [
+              -806.1,
+              -323.4
+            ],
+            "reductionSdnApVsSgp4XpPct": -385,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -532.9,
+              -232.6
+            ],
+            "reductionSgp4XpVsSgp4Pct": -11.1,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -439,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -806.1,
+              -323.4
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -385,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -532.9,
+              -232.6
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 563.7,
+              "interval_S": [
+                505.9,
+                792.8
+              ],
+              "O": 587,
+              "interval_O": [
+                507.8,
+                673
+              ],
+              "X": 601,
+              "interval_X": [
+                514,
+                750.8
+              ],
+              "Op": 587,
+              "interval_Op": [
+                507.8,
+                673
+              ],
+              "Xp": 601,
+              "interval_Xp": [
+                514,
+                750.8
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5629,
+              "O": 5635,
+              "X": 5626,
+              "Op": 5635,
+              "Xp": 5626
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -4.14,
+            "reductionSdnApVsSgp4Interval95": [
+              -16.31,
+              24.99
+            ],
+            "reductionSdnApVsSgp4XpPct": 2.33,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -22.05,
+              20.04
+            ],
+            "reductionSgp4XpVsSgp4Pct": -6.62,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -4.14,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -16.31,
+              24.99
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 2.33,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -22.05,
+              20.04
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 8487,
+              "interval_S": [
+                7854,
+                9510
+              ],
+              "O": 8408,
+              "interval_O": [
+                7364,
+                9342
+              ],
+              "X": 8243,
+              "interval_X": [
+                7337,
+                9072
+              ],
+              "Op": 8408,
+              "interval_Op": [
+                7364,
+                9342
+              ],
+              "Xp": 8243,
+              "interval_Xp": [
+                7337,
+                9072
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 4832,
+              "O": 4952,
+              "X": 4844,
+              "Op": 4952,
+              "Xp": 4844
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": 0.926,
+            "reductionSdnApVsSgp4Interval95": [
+              -5.224,
+              9.256
+            ],
+            "reductionSdnApVsSgp4XpPct": -2,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -9.996,
+              4.983
+            ],
+            "reductionSgp4XpVsSgp4Pct": 2.87,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 0.926,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -5.224,
+              9.256
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -2,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -9.996,
+              4.983
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          }
+        },
+        "starlinkWithOthers": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 0,
+              "interval_S": [
+                0,
+                0
+              ],
+              "O": 0,
+              "interval_O": [
+                0,
+                0
+              ],
+              "X": 0,
+              "interval_X": [
+                0,
+                0
+              ],
+              "Op": 0,
+              "interval_Op": [
+                0,
+                0
+              ],
+              "Xp": 0,
+              "interval_Xp": [
+                0,
+                0
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 0,
+              "O": 0,
+              "X": 0,
+              "Op": 0,
+              "Xp": 0
+            },
+            "realCloseApproaches": 0,
+            "reductionSdnApVsSgp4Pct": null,
+            "reductionSdnApVsSgp4Interval95": null,
+            "reductionSdnApVsSgp4XpPct": null,
+            "reductionSdnApVsSgp4XpInterval95": null,
+            "reductionSgp4XpVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": null,
+            "encountersCounted": 0,
+            "encountersInView": 0,
+            "replicates": 40
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "starlinkPairs": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 0,
+              "interval_S": [
+                0,
+                0
+              ],
+              "O": 0,
+              "interval_O": [
+                0,
+                0
+              ],
+              "X": 0,
+              "interval_X": [
+                0,
+                0
+              ],
+              "Op": 0,
+              "interval_Op": [
+                0,
+                0
+              ],
+              "Xp": 0,
+              "interval_Xp": [
+                0,
+                0
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 0,
+              "O": 0,
+              "X": 0,
+              "Op": 0,
+              "Xp": 0
+            },
+            "realCloseApproaches": 0,
+            "reductionSdnApVsSgp4Pct": null,
+            "reductionSdnApVsSgp4Interval95": null,
+            "reductionSdnApVsSgp4XpPct": null,
+            "reductionSdnApVsSgp4XpInterval95": null,
+            "reductionSgp4XpVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Pct": null,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": null,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": null,
+            "encountersCounted": 0,
+            "encountersInView": 0,
+            "replicates": 40
+          },
+          "pc1e-4": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc1e-5": "not measured: no encounter in this view has realistic covariance across all three core arms",
+          "pc3e-7": "not measured: no encounter in this view has realistic covariance across all three core arms"
+        },
+        "noStarlink": {
+          "miss": {
+            "notificationsPerWeek": {
+              "S": 5550,
+              "interval_S": [
+                5225,
+                6000
+              ],
+              "O": 5636,
+              "interval_O": [
+                5244,
+                6119
+              ],
+              "X": 5547,
+              "interval_X": [
+                5256,
+                6131
+              ],
+              "Op": 5636,
+              "interval_Op": [
+                5244,
+                6119
+              ],
+              "Xp": 5547,
+              "interval_Xp": [
+                5256,
+                6131
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 3201,
+              "O": 2850,
+              "X": 3155,
+              "Op": 2850,
+              "Xp": 3155
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -1.55,
+            "reductionSdnApVsSgp4Interval95": [
+              -6.664,
+              5.775
+            ],
+            "reductionSdnApVsSgp4XpPct": -1.6,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -6.179,
+              4.297
+            ],
+            "reductionSgp4XpVsSgp4Pct": 0.048,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -1.55,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -6.664,
+              5.775
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -1.6,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -6.179,
+              4.297
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-4": {
+            "notificationsPerWeek": {
+              "S": 18,
+              "interval_S": [
+                9.9,
+                21.1
+              ],
+              "O": 97,
+              "interval_O": [
+                80.88,
+                111
+              ],
+              "X": 20,
+              "interval_X": [
+                14.85,
+                27.02
+              ],
+              "Op": 97,
+              "interval_Op": [
+                80.88,
+                111
+              ],
+              "Xp": 20,
+              "interval_Xp": [
+                14.85,
+                27.02
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5890,
+              "O": 5816,
+              "X": 5887,
+              "Op": 5816,
+              "Xp": 5887
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -439,
+            "reductionSdnApVsSgp4Interval95": [
+              -806.1,
+              -323.4
+            ],
+            "reductionSdnApVsSgp4XpPct": -385,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -532.9,
+              -232.6
+            ],
+            "reductionSgp4XpVsSgp4Pct": -11.1,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -439,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -806.1,
+              -323.4
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -385,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -532.9,
+              -232.6
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc1e-5": {
+            "notificationsPerWeek": {
+              "S": 563.7,
+              "interval_S": [
+                505.9,
+                792.8
+              ],
+              "O": 587,
+              "interval_O": [
+                507.8,
+                673
+              ],
+              "X": 601,
+              "interval_X": [
+                514,
+                750.8
+              ],
+              "Op": 587,
+              "interval_Op": [
+                507.8,
+                673
+              ],
+              "Xp": 601,
+              "interval_Xp": [
+                514,
+                750.8
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 5629,
+              "O": 5635,
+              "X": 5626,
+              "Op": 5635,
+              "Xp": 5626
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": -4.14,
+            "reductionSdnApVsSgp4Interval95": [
+              -16.31,
+              24.99
+            ],
+            "reductionSdnApVsSgp4XpPct": 2.33,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -22.05,
+              20.04
+            ],
+            "reductionSgp4XpVsSgp4Pct": -6.62,
+            "reductionSdnApPublicOnlyVsSgp4Pct": -4.14,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -16.31,
+              24.99
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": 2.33,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -22.05,
+              20.04
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          },
+          "pc3e-7": {
+            "notificationsPerWeek": {
+              "S": 8487,
+              "interval_S": [
+                7854,
+                9510
+              ],
+              "O": 8408,
+              "interval_O": [
+                7364,
+                9342
+              ],
+              "X": 8243,
+              "interval_X": [
+                7337,
+                9072
+              ],
+              "Op": 8408,
+              "interval_Op": [
+                7364,
+                9342
+              ],
+              "Xp": 8243,
+              "interval_Xp": [
+                7337,
+                9072
+              ]
+            },
+            "missedRealCloseApproaches": {
+              "S": 4832,
+              "O": 4952,
+              "X": 4844,
+              "Op": 4952,
+              "Xp": 4844
+            },
+            "realCloseApproaches": 5895,
+            "reductionSdnApVsSgp4Pct": 0.926,
+            "reductionSdnApVsSgp4Interval95": [
+              -5.224,
+              9.256
+            ],
+            "reductionSdnApVsSgp4XpPct": -2,
+            "reductionSdnApVsSgp4XpInterval95": [
+              -9.996,
+              4.983
+            ],
+            "reductionSgp4XpVsSgp4Pct": 2.87,
+            "reductionSdnApPublicOnlyVsSgp4Pct": 0.926,
+            "reductionSdnApPublicOnlyVsSgp4Interval95": [
+              -5.224,
+              9.256
+            ],
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyPct": -2,
+            "reductionSdnApPublicOnlyVsSgp4XpPublicOnlyInterval95": [
+              -9.996,
+              4.983
+            ],
+            "encountersCounted": 12140000,
+            "encountersInView": 12140000,
+            "replicates": 40
+          }
+        }
+      },
+      "pcModuleCalls": 25177
+    }
+  }
+}
