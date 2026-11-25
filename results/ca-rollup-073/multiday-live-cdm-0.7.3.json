@@ -1,0 +1,89 @@
+{
+  "schema": "sdn-ap-multiday-live-cdm-1",
+  "version": "0.7.3",
+  "generatedUtc": "2026-11-25T20:56:23.043Z",
+  "days": "2026-11-16..2026-11-25",
+  "totalCdmsRead": 2362,
+  "uniqueEventsEligible": 166,
+  "scoredAllThreeArms": 164,
+  "medianAbsMissErrM": {
+    "sgp4": 423.8,
+    "sdnAp": 257.3,
+    "sgp4Xp": 371.8
+  },
+  "p95AbsMissErrM": {
+    "sgp4": 2377.6,
+    "sdnAp": 2186.1,
+    "sgp4Xp": 2277.8
+  },
+  "sdnApCloserThanSgp4Share": 0.6646,
+  "sdnApCloserThanSgp4XpShare": 0.6646,
+  "sgp4XpCloserThanSgp4Share": 0.5244,
+  "perDay": {
+    "2026-11-16": {
+      "uniqueEvents": 12,
+      "scored": 12,
+      "apWinS": 5,
+      "apWinX": 8
+    },
+    "2026-11-17": {
+      "uniqueEvents": 20,
+      "scored": 20,
+      "apWinS": 14,
+      "apWinX": 14
+    },
+    "2026-11-18": {
+      "uniqueEvents": 16,
+      "scored": 16,
+      "apWinS": 11,
+      "apWinX": 12
+    },
+    "2026-11-19": {
+      "uniqueEvents": 20,
+      "scored": 19,
+      "apWinS": 14,
+      "apWinX": 12
+    },
+    "2026-11-20": {
+      "uniqueEvents": 14,
+      "scored": 14,
+      "apWinS": 9,
+      "apWinX": 8
+    },
+    "2026-11-21": {
+      "uniqueEvents": 18,
+      "scored": 18,
+      "apWinS": 10,
+      "apWinX": 9
+    },
+    "2026-11-22": {
+      "uniqueEvents": 14,
+      "scored": 14,
+      "apWinS": 12,
+      "apWinX": 11
+    },
+    "2026-11-23": {
+      "uniqueEvents": 16,
+      "scored": 15,
+      "apWinS": 9,
+      "apWinX": 10
+    },
+    "2026-11-24": {
+      "uniqueEvents": 20,
+      "scored": 20,
+      "apWinS": 18,
+      "apWinX": 17
+    },
+    "2026-11-25": {
+      "uniqueEvents": 16,
+      "scored": 16,
+      "apWinS": 7,
+      "apWinX": 8
+    }
+  },
+  "artifacts": {
+    "sdnApWasmSha256": "79d493e08e1c80611c30a464e4b71a9ac54605a5a81f9d29115972b8c19768f9",
+    "chainWasmSha256": "33b9afa23c7e27c1ac70d965c3bda7bc06806e992ba1e5bd6da671b20cccae94",
+    "conjunctionAssessmentWasmSha256": "7f4ff2469f7f88ff040562d6031b94084965bdfc69860465a8174ad5adbde906"
+  }
+}

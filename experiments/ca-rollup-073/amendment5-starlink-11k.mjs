@@ -1,54 +1,80 @@
 #!/usr/bin/env node
-// Amendment 4 Option 1 (#1126): Unified 0.7.2 / 0.2.4 Full-Constellation Starlink 7-Arm Suite
+// Amendment 5 (#1128): Unified 0.7.3 / 0.2.5 Full-Constellation Starlink 7-Arm Suite
 // Evaluates ALL 7 ARMS on the exact same ~11,195 Starlink satellites with strict pre-T0 causality:
 //   S:         Space-Track public GP (CREATION_DATE <= T0) flown on SGP4
 //   SupGP:     CelesTrak SupGP (125002Z.json.gz < T0) flown on SGP4
-//   Xp:        SGP4-XP built by catalog-builder 0.2.4 from 21-day Space-Track GP history (CREATION_DATE <= T0)
-//   Op:        SDN-AP 0.7.2 built by catalog-builder 0.2.4 from 21-day Space-Track GP history (CREATION_DATE <= T0)
-//   X:         SGP4-XP built by catalog-builder 0.2.4 from SpaceX T0 ephemeris
-//   O:         SDN-AP 0.7.2 built by catalog-builder 0.2.4 from SpaceX T0 ephemeris
+//   Xp:        SGP4-XP built by catalog-builder 0.2.5 from 21-day Space-Track GP history (CREATION_DATE <= T0)
+//   Op:        SDN-AP 0.7.3 built by catalog-builder 0.2.5 from 21-day Space-Track GP history (CREATION_DATE <= T0)
+//   X:         SGP4-XP built by catalog-builder 0.2.5 from SpaceX T0 ephemeris
+//   O:         SDN-AP 0.7.3 built by catalog-builder 0.2.5 from SpaceX T0 ephemeris
 //   SpaceX_T0: SpaceX's own T0 OCM forecast where defined (0-6 h, 6-10.5 h)
 // Scores against stitched strictly unseen next-day SpaceX OCM truth cycles (00-57Z + 08-57Z) over 0-24 h,
-// saving private per-sat signed RTN vectors to runs/ca-rollup-072/amendment4/ and aggregate-only JSON to results/.
+// saving private per-sat signed 3-D/6-D RTN vectors to runs/ca-rollup-073/ and aggregate-only JSON to results/.
 //
 // Usage:
-//   node amendment4-starlink-11k.mjs --cycle eval --workers 14 [--smoke]
-//   node amendment4-starlink-11k.mjs --cycle train --workers 14
+//   SDN_MODULES_ROOT=... node amendment5-starlink-11k.mjs --cycle train --pre-freeze-train --workers 14
+//   SDN_MODULES_ROOT=... node amendment5-starlink-11k.mjs --cycle eval --workers 14
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { execFileSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
-  DAY_MS, HOUR_MS, sha256, sha256File, nowUtc, isoNoZ, utcMs, dayStr,
+  DAY_MS, HOUR_MS, sha256File, nowUtc, isoNoZ, utcMs, dayStr,
   loadSdsAndSdk, gpJsonToOmm, buildCausalSpwRecords, signedRtnErrorKm, buildCatalogBatch,
-} from './amendment4-lib.mjs';
+} from './amendment5-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
-const CFG_PATH = path.join(path.dirname(SELF), 'amendment4-config.json');
+const CFG_PATH = fs.existsSync(path.join(path.dirname(SELF), 'amendment5-config.json'))
+  ? path.join(path.dirname(SELF), 'amendment5-config.json')
+  : path.join(OAE, 'experiments/ca-rollup-073/amendment5-config.json');
 const CFG = JSON.parse(fs.readFileSync(CFG_PATH, 'utf8'));
 
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-072/amendment4');
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-072/amendment4-starlink-11k.json');
+const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-073');
+const OUT_PATH = path.join(OAE, 'results/ca-rollup-073/amendment5-starlink-11k.json');
 const BINS = [['0-6', 0, 6], ['6-12', 6, 12], ['12-18', 12, 18], ['18-24', 18, 24]];
 
-function checkFrozenAndPins() {
-  if (!CFG.frozen) throw new Error('amendment4-config.json is not frozen');
-  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-072/AMENDMENT-4.md', 'experiments/ca-rollup-072/amendment4-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
-  if (dirty) throw new Error(`Amendment 4 registration dirty/uncommitted: ${dirty}`);
+function signedRtn6Km(pState, tR, tV) {
+  const dx = pState[0] - tR[0], dy = pState[1] - tR[1], dz = pState[2] - tR[2];
+  const dvx = pState[3] - tV[0], dvy = pState[4] - tV[1], dvz = pState[5] - tV[2];
+  const rMag = Math.hypot(tR[0], tR[1], tR[2]);
+  const rx = tR[0] / rMag, ry = tR[1] / rMag, rz = tR[2] / rMag;
+  const hx = tR[1] * tV[2] - tR[2] * tV[1];
+  const hy = tR[2] * tV[0] - tR[0] * tV[2];
+  const hz = tR[0] * tV[1] - tR[1] * tV[0];
+  const hMag = Math.hypot(hx, hy, hz);
+  const nx = hx / hMag, ny = hy / hMag, nz = hz / hMag;
+  const tx = ny * rz - nz * ry, ty = nz * rx - nx * rz, tz = nx * ry - ny * rx;
+  return [
+    dx * rx + dy * ry + dz * rz,
+    dx * tx + dy * ty + dz * tz,
+    dx * nx + dy * ny + dz * nz,
+    dvx * rx + dvy * ry + dvz * rz,
+    dvx * tx + dvy * ty + dvz * tz,
+    dvx * nx + dvy * ny + dvz * nz,
+  ];
+}
+
+function checkFrozenAndPins(cycleName, preFreezeTrain) {
+  if (preFreezeTrain) {
+    if (cycleName !== 'train') throw new Error('--pre-freeze-train is ONLY allowed for --cycle train!');
+    return;
+  }
+  if (!CFG.frozen || !CFG_PATH.endsWith('amendment5-config.json')) throw new Error('amendment5-config.json is not frozen');
+  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-073/AMENDMENT-5.md', 'experiments/ca-rollup-073/amendment5-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
+  if (dirty) throw new Error(`Amendment 5 registration dirty/uncommitted: ${dirty}`);
   const apSha = sha256File(path.join(MODULES, 'propagator/sdn-ap/dist/isomorphic/module.wasm'));
   if (apSha !== CFG.modules.sdnAp.wasmSha256) throw new Error(`sdn-ap wasm mismatch: ${apSha}`);
   const chSha = sha256File(path.join(MODULES, 'flows/catalog-builder/dist/isomorphic/module.wasm'));
   if (chSha !== CFG.modules.catalogBuilder.chainWasmSha256) throw new Error(`catalog-builder chain mismatch: ${chSha}`);
 }
 
-// Extract causal 21-day Starlink GP history once for a cycle and shard into worker files
 function prepareCycleCache(cycleName, workers, smoke) {
   const spec = CFG.starlinkSuite[`${cycleName}Cycle`];
   const t0Ms = Date.parse(spec.t0Utc);
@@ -69,7 +95,6 @@ function prepareCycleCache(cycleName, workers, smoke) {
   const set0 = new Set(fs.readdirSync(trDir0).filter((f) => f.endsWith('.ocm')).map((f) => Number(f.slice(0, -4))));
   const set1 = new Set(fs.readdirSync(trDir1).filter((f) => f.endsWith('.ocm')).map((f) => Number(f.slice(0, -4))));
 
-  // Load GP snapshot (strictly filtered by CREATION_DATE <= T0 && EPOCH < T0)
   const gpSnap = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(ARCHIVE, spec.gpSnapshot))));
   const seedByNorad = new Map();
   let filteredFutureGp = 0;
@@ -81,7 +106,6 @@ function prepareCycleCache(cycleName, workers, smoke) {
     if (!prev || eMs > utcMs(prev.EPOCH)) seedByNorad.set(id, r);
   }
 
-  // Load CelesTrak SupGP (published 12:50:02Z < T0 = 17:00:00Z)
   const supPath = path.join(ARCHIVE, spec.supGpFile);
   if (sha256File(supPath) !== spec.supGpSha256) throw new Error(`SupGP SHA mismatch: ${supPath}`);
   const supArr = JSON.parse(zlib.gunzipSync(fs.readFileSync(supPath)));
@@ -91,7 +115,6 @@ function prepareCycleCache(cycleName, workers, smoke) {
     if (utcMs(r.EPOCH) < t0Ms) supByNorad.set(id, r);
   }
 
-  // Common intersection: input OCM + both unseen truth OCMs + Space-Track GP + CelesTrak SupGP
   let norads = fs.readdirSync(inDir)
     .filter((f) => f.endsWith('.ocm'))
     .map((f) => Number(f.slice(0, -4)))
@@ -101,7 +124,6 @@ function prepareCycleCache(cycleName, workers, smoke) {
   const wantSet = new Set(norads);
   console.log(`${nowUtc()} [${cycleName}] Common intersection: ${norads.length} Starlinks (filteredFutureGp=${filteredFutureGp})`);
 
-  // Scan 21-day GP history from by-creation/2026 strictly filtered by CREATION_DATE <= T0 && EPOCH < T0
   const histDir = path.join(ARCHIVE, 'spacetrack/gp_history/by-creation/2026');
   const fromDay = dayStr(fromMs - DAY_MS);
   const toDay = dayStr(t0Ms);
@@ -120,7 +142,6 @@ function prepareCycleCache(cycleName, workers, smoke) {
   }
   let histFilesRead = 0, histRowsKept = 0;
   for (const f of files) {
-    // Quick filename end-time check: skip files starting strictly after T0
     const mStart = /^(\d{4}-\d{2}-\d{2}T\d{2}\d{2}\d{2}Z)/.exec(f);
     if (mStart) {
       const sIso = mStart[1].replace(/(\d{2})(\d{2})(\d{2})Z$/, '$1:$2:$3Z');
@@ -138,7 +159,6 @@ function prepareCycleCache(cycleName, workers, smoke) {
       histRowsKept++;
     }
   }
-  // Also scan daily GP snapshots over lookback in case by-creation has any gap
   const snapDir = path.join(ARCHIVE, 'spacetrack/gp/2026');
   for (const f of fs.readdirSync(snapDir).filter((x) => x.endsWith('.json.gz')).sort()) {
     const d = f.slice(0, 10);
@@ -154,12 +174,10 @@ function prepareCycleCache(cycleName, workers, smoke) {
     }
   }
 
-  // Write sharded input bundles for workers
   for (let w = 0; w < workers; w++) {
     const mine = norads.filter((_, i) => i % workers === w);
     const shardData = mine.map((id) => {
       const hist = [...histByNorad.get(id).values()].sort((a, b) => utcMs(a.EPOCH) - utcMs(b.EPOCH));
-      // Use newest strictly causal GP from history + snapshot as seed
       const seed = hist.at(-1) ?? seedByNorad.get(id);
       return { id, seed, sup: supByNorad.get(id), hist };
     });
@@ -199,7 +217,6 @@ async function runWorker(cycleName, shard, workers, smoke) {
     sds,
   });
 
-  // Reusable WASM harnesses for this worker
   const chain = await sdkIso.createStandaloneHarness('browser', path.join(MODULES, 'flows/catalog-builder/dist/isomorphic/module.wasm'), { surface: 'direct', enableBrowserWasiThreads: false });
   const gpH = await sdkBrowser.createBrowserModuleHarness({ wasmSource: fs.readFileSync(path.join(MODULES, 'analysis/gp-error-model/dist/isomorphic/module.wasm')), manifest: manifest('analysis/gp-error-model'), surface: 'direct' });
   const compH = await sdkBrowser.createBrowserModuleHarness({ wasmSource: fs.readFileSync(path.join(MODULES, 'analysis/catalog-composer/dist/isomorphic/module.wasm')), manifest: manifest('analysis/catalog-composer'), surface: 'direct' });
@@ -214,7 +231,7 @@ async function runWorker(cycleName, shard, workers, smoke) {
     const r = await apEval.invoke({ methodId: 'ingest_omm', inputs: [frame('omm', 'OMM', ommRaw)] });
     return r.statusCode === 0 ? Buffer.from(r.outputs.find((o) => o.portId === 'ocm').payload) : null;
   };
-  const propGcrf = async (ocmBytes, epochs) => {
+  const propGcrf6 = async (ocmBytes, epochs) => {
     const cfg = Object.assign(new PCF_MOD.PCFT(), {
       OUTPUT: Object.assign(new PCF_MOD.PCFOutputT(), { FRAME: PCF_MOD.pcfOutputFrame.GCRF, STEP_SECONDS: 60, MAXIMUM_STATES: 500000, EPOCHS: epochs }),
     });
@@ -225,21 +242,17 @@ async function runWorker(cycleName, shard, workers, smoke) {
     const out = new Array(epochs.length);
     for (let i = 0; i < epochs.length; i++) {
       const L = blk.EPHEMERIS_DATA_LINES(i);
-      out[i] = [L.X(), L.Y(), L.Z()];
+      out[i] = [L.X(), L.Y(), L.Z(), L.X_DOT(), L.Y_DOT(), L.Z_DOT()];
     }
     return out;
   };
 
-  // Process in batches of 48 satellites so catalog-builder controller stays small & fast
   const BATCH = 48;
   const rowsOut = [];
   let done = 0;
   for (let b0 = 0; b0 < shardItems.length; b0 += BATCH) {
     const chunk = shardItems.slice(b0, b0 + BATCH);
-    const seeds = new Map();
-    const histMap = new Map();
-    const ephMap = new Map();
-    const ephUnpacked = new Map();
+    const seeds = new Map(), histMap = new Map(), ephMap = new Map(), ephUnpacked = new Map();
 
     for (const item of chunk) {
       seeds.set(item.id, gpJsonToOmm(item.seed, sds, true));
@@ -249,7 +262,6 @@ async function runWorker(cycleName, shard, workers, smoke) {
       ephUnpacked.set(item.id, OCM_MOD.OCM.getSizePrefixedRootAsOCM(new fb.ByteBuffer(new Uint8Array(ephBuf))).unpack());
     }
 
-    // Build 4 catalog-builder arms: O (AP+eph), X (XP+eph), Op (AP+pubHist), Xp (XP+pubHist)
     const [resO, resX, resOp, resXp] = [
       await buildCatalogBatch({ modulesRoot: MODULES, sds, kind: 'sdn-ap', nowMs: t0Ms, seeds, historyByNorad: histMap, ephemeridesByNorad: ephMap, weatherRecords, reusable }),
       await buildCatalogBatch({ modulesRoot: MODULES, sds, kind: 'sgp4-xp', nowMs: t0Ms, seeds, historyByNorad: histMap, ephemeridesByNorad: ephMap, weatherRecords, reusable }),
@@ -265,7 +277,16 @@ async function runWorker(cycleName, shard, workers, smoke) {
       const oSup = await ingestOmm(gpJsonToOmm(item.sup, sds, false));
       if (!oS || !oSup) continue;
 
-      // Stitch strictly unseen truth cycles (00-57Z then 08-57Z) at 15-min stride across (T0, T0 + 24 h]
+      let fitRmsO = null, btermO = null, hpKm = null;
+      try {
+        const unpO = OCM_MOD.OCM.getRootAsOCM(new fb.ByteBuffer(new Uint8Array(oO.ocmBuf))).unpack();
+        fitRmsO = unpO.ORBIT_DETERMINATION?.FIT_STATISTICS?.FIT_RMS_KM ?? null;
+        btermO = unpO.MEAN_ELEMENTS?.BTERM ?? null;
+        const nRev = Number(item.seed.MEAN_MOTION), e = Number(item.seed.ECCENTRICITY);
+        const aKm = Math.cbrt(398600.4418 / ((nRev * 2 * Math.PI) / 86400) ** 2);
+        hpKm = +(aKm * (1 - e) - 6378.137).toFixed(1);
+      } catch {}
+
       const tr0 = OCM_MOD.OCM.getSizePrefixedRootAsOCM(new fb.ByteBuffer(new Uint8Array(fs.readFileSync(path.join(trDir0, `${id}.ocm`))))).unpack();
       const tr1 = OCM_MOD.OCM.getSizePrefixedRootAsOCM(new fb.ByteBuffer(new Uint8Array(fs.readFileSync(path.join(trDir1, `${id}.ocm`))))).unpack();
       const byMs = new Map();
@@ -279,7 +300,6 @@ async function runWorker(cycleName, shard, workers, smoke) {
           }
         }
       };
-      // Earliest unseen cycle (00-57Z) covers 0..17h; next unseen cycle (08-57Z) extends 17..24h
       addTruth(tr0, true);
       addTruth(tr1, false);
       const sortedAll = [...byMs.values()].sort((a, b) => a.ms - b.ms);
@@ -290,7 +310,6 @@ async function runWorker(cycleName, shard, workers, smoke) {
       }
       if (pts.length < 16) continue;
 
-      // Build SpaceX_T0 forecast lookup map by exact epoch ms (from input T0 OCM) against raw 600s truth states
       const eph0 = ephUnpacked.get(id);
       const ephMapMs = new Map();
       {
@@ -303,12 +322,12 @@ async function runWorker(cycleName, shard, workers, smoke) {
 
       const epochs = pts.map((p) => p.iso);
       const preds = {
-        S: await propGcrf(oS, epochs),
-        SupGP: await propGcrf(oSup, epochs),
-        Xp: await propGcrf(oXp.ocmBuf, epochs),
-        Op: await propGcrf(oOp.ocmBuf, epochs),
-        X: await propGcrf(oX.ocmBuf, epochs),
-        O: await propGcrf(oO.ocmBuf, epochs),
+        S: await propGcrf6(oS, epochs),
+        SupGP: await propGcrf6(oSup, epochs),
+        Xp: await propGcrf6(oXp.ocmBuf, epochs),
+        Op: await propGcrf6(oOp.ocmBuf, epochs),
+        X: await propGcrf6(oX.ocmBuf, epochs),
+        O: await propGcrf6(oO.ocmBuf, epochs),
       };
       if (Object.values(preds).some((p) => !p)) continue;
 
@@ -328,22 +347,20 @@ async function runWorker(cycleName, shard, workers, smoke) {
           meanKm[arm] = +(sum / idxs.length).toFixed(5);
           vecKm[arm] = signedRtnErrorKm(preds[arm][midI], pts[midI].r, pts[midI].v).map((z) => +z.toFixed(5));
         }
-        // SpaceX_T0 forecast reference on exact overlapping raw 600s epochs in this bin (zero interpolation)
+        const v6O = signedRtn6Km(preds.O[midI], pts[midI].r, pts[midI].v).map((z) => +z.toPrecision(6));
         let sxSum = 0, sxCnt = 0;
         for (const p of sortedAll) {
           if (p.hr >= lo && p.hr < hi) {
             const r0 = ephMapMs.get(p.ms);
-            if (r0) {
-              sxSum += Math.hypot(r0[0] - p.r[0], r0[1] - p.r[1], r0[2] - p.r[2]);
-              sxCnt++;
-            }
+            if (r0) { sxSum += Math.hypot(r0[0] - p.r[0], r0[1] - p.r[1], r0[2] - p.r[2]); sxCnt++; }
           }
         }
         if (sxCnt >= 4) meanKm.SpaceX_T0 = +(sxSum / sxCnt).toFixed(5);
-        bins[bn] = { n: idxs.length, meanKm, vecKm };
+        bins[bn] = { n: idxs.length, meanKm, vecKm, v6O };
       }
       rowsOut.push(JSON.stringify({
-        norad: id,
+        norad: id, hpKm,
+        diagO: { rmsKm: fitRmsO != null ? +fitRmsO.toFixed(4) : null, bterm: btermO != null ? +btermO.toPrecision(4) : null },
         fb: { O: oO.isFallback, X: oX.isFallback, Op: oOp.isFallback, Xp: oXp.isFallback },
         bins,
       }));
@@ -368,7 +385,6 @@ function aggregateCycle(cycleName, workers, smoke) {
     if (!txt) continue;
     for (const l of txt.split('\n')) rows.push(JSON.parse(l));
   }
-  // Guard against silent partial batch scoring
   if (rows.length < Math.floor(prepMeta.norads * 0.98)) {
     throw new Error(`[${cycleName}] incomplete scoring: ${rows.length}/${prepMeta.norads} satellites (<98%)`);
   }
@@ -402,9 +418,7 @@ function aggregateCycle(cycleName, workers, smoke) {
     const sxSub = sub.filter((r) => Number.isFinite(r.bins[bn].meanKm.SpaceX_T0));
     if (sxSub.length) {
       const vals = sxSub.map((r) => r.bins[bn].meanKm.SpaceX_T0);
-      med.SpaceX_T0 = q(vals, 0.5);
-      p90.SpaceX_T0 = q(vals, 0.9);
-      p95.SpaceX_T0 = q(vals, 0.95);
+      med.SpaceX_T0 = q(vals, 0.5); p90.SpaceX_T0 = q(vals, 0.9); p95.SpaceX_T0 = q(vals, 0.95);
       over1.SpaceX_T0 = vals.filter((v) => v > 1).length;
       over5.SpaceX_T0 = vals.filter((v) => v > 5).length;
       over10.SpaceX_T0 = vals.filter((v) => v > 10).length;
@@ -413,26 +427,16 @@ function aggregateCycle(cycleName, workers, smoke) {
     binsOut[bn] = {
       satellites: sub.length,
       spaceXT0Satellites: sxSub.length,
-      medianKm: med,
-      p90Km: p90,
-      p95Km: p95,
-      over1km: over1,
-      over5km: over5,
-      over10km: over10,
+      medianKm: med, p90Km: p90, p95Km: p95,
+      over1km: over1, over5km: over5, over10km: over10,
       closerShare: {
-        O_vs_S: win('O', 'S'),
-        O_vs_SupGP: win('O', 'SupGP'),
-        O_vs_X: win('O', 'X'),
-        O_vs_Op: win('O', 'Op'),
-        Op_vs_S: win('Op', 'S'),
-        Op_vs_Xp: win('Op', 'Xp'),
-        SupGP_vs_S: win('SupGP', 'S'),
+        O_vs_S: win('O', 'S'), O_vs_SupGP: win('O', 'SupGP'), O_vs_X: win('O', 'X'),
+        O_vs_Op: win('O', 'Op'), Op_vs_S: win('Op', 'S'), Op_vs_Xp: win('Op', 'Xp'), SupGP_vs_S: win('SupGP', 'S'),
       },
     };
   }
   return {
-    cycleName,
-    t0Utc: prepMeta.t0Utc,
+    cycleName, t0Utc: prepMeta.t0Utc,
     inputCycle: CFG.starlinkSuite[`${cycleName}Cycle`].inputCycle,
     truthCycles: CFG.starlinkSuite[`${cycleName}Cycle`].truthCycles,
     truthDisclosure: 'Truth is SpaceX subsequent published ephemeris cycles (00-57Z and 08-57Z), not independent laser/GNSS tracking.',
@@ -444,18 +448,19 @@ function aggregateCycle(cycleName, workers, smoke) {
 }
 
 async function main() {
-  checkFrozenAndPins();
   const cycle = arg('--cycle', 'eval');
   const workers = Number(arg('--workers', '14'));
   const smoke = has('--smoke');
+  const preFreezeTrain = has('--pre-freeze-train');
+  checkFrozenAndPins(cycle, preFreezeTrain);
   if (arg('--worker') !== null) {
     await runWorker(cycle, Number(arg('--worker')), workers, smoke);
     return;
   }
   const t0 = Date.now();
   const cycles = cycle === 'both' ? ['train', 'eval'] : [cycle];
-  const existing = fs.existsSync(OUT_PATH) && !smoke ? JSON.parse(fs.readFileSync(OUT_PATH, 'utf8')) : {
-    schema: 'sdn-ap-amendment4-starlink-11k-1',
+  const existing = fs.existsSync(OUT_PATH) && !smoke && !preFreezeTrain ? JSON.parse(fs.readFileSync(OUT_PATH, 'utf8')) : {
+    schema: 'sdn-ap-amendment5-starlink-11k-1',
     issue: CFG.issue,
     registrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: OAE, encoding: 'utf8' }).trim(),
     configSha256: sha256File(CFG_PATH),
@@ -466,13 +471,14 @@ async function main() {
     prepareCycleCache(cyc, workers, smoke);
     await Promise.all(Array.from({ length: workers }, (_, w) => new Promise((resolve, reject) => {
       const c = spawn('nice', ['-n', '10', process.execPath, '--max-old-space-size=4096', SELF,
-        '--cycle', cyc, '--worker', String(w), '--workers', String(workers), ...(smoke ? ['--smoke'] : [])],
+        '--cycle', cyc, '--worker', String(w), '--workers', String(workers),
+        ...(smoke ? ['--smoke'] : []), ...(preFreezeTrain ? ['--pre-freeze-train'] : [])],
         { stdio: 'inherit', env: process.env });
       c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`${cyc} worker ${w} exited ${code}`))));
     })));
     const agg = aggregateCycle(cyc, workers, smoke);
-    if (smoke) {
-      console.log('SMOKE PASS:', JSON.stringify(agg, null, 2));
+    if (smoke || preFreezeTrain) {
+      console.log(`${preFreezeTrain ? 'PRE-FREEZE TRAIN' : 'SMOKE'} PASS:`, JSON.stringify(agg.bins, null, 2));
       return;
     }
     existing.cycles[cyc] = agg;

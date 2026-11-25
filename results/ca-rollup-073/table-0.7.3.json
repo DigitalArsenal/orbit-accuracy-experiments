@@ -1,0 +1,5759 @@
+{
+ "schema": "sdn-ap-scoreboard/2",
+ "measured": "2026-11-25",
+ "statistic": "For each window (one satellite, one cutoff) and lead, the root mean square of the 3D position error against the truth over the 24 hours that end at the lead, on the truth's 300 s grid (a day counts when the truth covers 90 % of it). The median and the 95th percentile (linear interpolation) of each column are taken over the lead's windows where that column has a figure: a lead's windows are those where AP was scored, AP's column is over all of them, the numerical propagator's over those of them where it was scored too (with its own windows where the two differ), and each other theory's as stated below. xp is SGP4-XP, our clean-room build in the same module as AP (THEORY SGP4XP), fitted to the same arc by the same fit call and flown in the module's own GCRF output. xpUssf is the Space Force's SGP4-XP (propagator/sgp4-xp 0.2.1, its library the unmodified Sgp4Prop 9.1.1.0 XP build), fitted to the same arc by that module's own fitter, which searches two-line-element digits with every evaluation running the library, and flown by its propagate in its own GCRF output. sgp4 is SGP4 fitted to the same arc by analysis/gp-error-model (its own SGP4 in improved mode, B* fitted) and flown by propagator/sgp4 (AFSPC mode), its TEME output turned to GCRF by foundation/frames, the path its fit uses. Each is null until it has a row on every window of the row; a window where its fit or flight failed counts as flown. Its median and 95th percentile are taken over the lead's windows where it was scored (windows); failed counts the lead's windows where its fit or flight failed. From sdn-ap 0.6.15 the two medium Earth orbit rows of navigation satellites (GN and Galileo), and from sdn-ap 0.6.19 the geostationary, inclined geosynchronous and commercial geostationary rows, fit AP with $PCF FORCES.ECOM2 on fits of 72 h or more; from sdn-ap 0.6.26 a 24 h fit carries the terms of its 72 h fit where above drag or drag sigma >= 1; from sdn-ap 0.6.20 every row's AP fit states $PCF FORCES.SOLID_TIDES IERS 2010. within100mOfFfm counts, at the 120 hour lead and over the windows where AP and the numerical propagator both have a figure, the windows where AP's error is less than 100 m above the numerical propagator's (AP better than it counts as met); share is met over windows. apFfmRank is Spearman's rank correlation of AP's and the numerical propagator's errors over the lead's windows where both have a figure. Columns by build: ap and xp come from sdn-ap 0.7.3 (modules 0b0a3eaf768a, wasm c7a41715db74), xpUssf from propagator/sgp4-xp 0.2.1, sgp4 from analysis/gp-error-model + propagator/sgp4 + foundation/frames. Over the table's 4,526 window-arcs, ap scored 4,426, failed 0; xp scored 4,422, failed 0.",
+ "ffmSelection": "Each row's numerical propagator is its fullest stored FFM setting, named in the row's configuration sentence and not chosen on the outcome: on the laser geodetic spheres the full setting with ocean tides and Earth radiation pressure, else the full setting (degree and order 70, solid tides, relativity, RK78 at 1e-10, or with drag at 1e-13 where every armed window has a 1e-13 row and no window is refitted after a burn).",
+ "windows": "The table holds 2,823 windows (one satellite and one cutoff each), cutoffs from 2013-02-11 to 2026-10-26; the second pass (the windows whose fit arc or 7-day forecast touches March to May 2026) is in for Near 700 km (198 windows), Medium Earth orbit (495 windows), Medium Earth orbit, Galileo (suite) (30 windows), and its 495 windows of the other rows are not in this table (a regime's second pass is in this table where its numerical rows are all in the store).",
+ "module": {
+  "version": "0.7.3",
+  "modulesCommit": "0b0a3eaf768a6c48f9086eeaf9cafe01816f0e13",
+  "wasmSha256": "c7a41715db740659ebc5e78a87fde8edc6587dd8fe0c5d6b60f891c79fd52692"
+ },
+ "burnLists": {
+  "digest": "d21467bc3ef7",
+  "afterBurnStore": "f0b8352a43f3-after-burn-d21467bc3ef7-arcs"
+ },
+ "harness": {
+  "repo": "orbit-accuracy-experiments",
+  "commit": "b59dec746461eafc6b5f49d720af373dac0ee690",
+  "command": "node experiments/ca-rollup-073/measure-table-and-replay-073.mjs --jobs 14"
+ },
+ "frame": "GCRF, the module's own output",
+ "rows": [
+  {
+   "regime": "Low orbit, laser spheres",
+   "truth": "ILRS (NSGF)",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 6,
+   "windows": 72,
+   "apForces": "Gravity to degree 70 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass. Two flights of this same fit that differ only in the integrator's step sequence part by up to 0.9 m at 24 h, 2.8 m at 72 h and 8.4 m at 168 h (40, 33 and 38 windows)."
+   },
+   "within100mOfFfm": {
+    "windows": 50,
+    "met": 36,
+    "share": 0.72,
+    "rowWindows": 72,
+    "shareOfWindowsWithForecast": 0.72,
+    "shareOfAllWindows": 0.5
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 59,
+     "ap": {
+      "medianM": 9.64,
+      "p95M": 146.8,
+      "cleanToLead": {
+       "windows": 59,
+       "medianM": 9.64,
+       "p95M": 146.8
+      }
+     },
+     "ffm": {
+      "medianM": 1.38,
+      "p95M": 7.96,
+      "cleanToLead": {
+       "windows": 59,
+       "medianM": 1.38,
+       "p95M": 7.96
+      }
+     },
+     "xp": {
+      "medianM": 670.6,
+      "p95M": 935.03,
+      "windows": 59,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 59,
+       "medianM": 670.6,
+       "p95M": 935.03
+      }
+     },
+     "xpUssf": {
+      "medianM": 833.99,
+      "p95M": 1404.98,
+      "windows": 59,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1163.53,
+      "p95M": 3114.2,
+      "windows": 59,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 59,
+      "apBetter": 59,
+      "medianApOverXp": 0.021
+     },
+     "apBeatsXpUssf": {
+      "windows": 59,
+      "apBetter": 59,
+      "medianApOverXp": 0.013
+     },
+     "apFfmRank": {
+      "windows": 59,
+      "rho": 0.467
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 49,
+     "ap": {
+      "medianM": 20.44,
+      "p95M": 1538.94,
+      "cleanToLead": {
+       "windows": 49,
+       "medianM": 20.44,
+       "p95M": 1538.94
+      }
+     },
+     "ffm": {
+      "medianM": 13.6,
+      "p95M": 79.32,
+      "cleanToLead": {
+       "windows": 49,
+       "medianM": 13.6,
+       "p95M": 79.32
+      }
+     },
+     "xp": {
+      "medianM": 1311.03,
+      "p95M": 2550.37,
+      "windows": 49,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 49,
+       "medianM": 1311.03,
+       "p95M": 2550.37
+      }
+     },
+     "xpUssf": {
+      "medianM": 2503.99,
+      "p95M": 11623.01,
+      "windows": 49,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 7009.49,
+      "p95M": 27316.33,
+      "windows": 49,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 49,
+      "apBetter": 48,
+      "medianApOverXp": 0.021
+     },
+     "apBeatsXpUssf": {
+      "windows": 49,
+      "apBetter": 47,
+      "medianApOverXp": 0.009
+     },
+     "apFfmRank": {
+      "windows": 49,
+      "rho": 0.638
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 50,
+     "ap": {
+      "medianM": 40.21,
+      "p95M": 3510.53,
+      "cleanToLead": {
+       "windows": 50,
+       "medianM": 40.21,
+       "p95M": 3510.53
+      }
+     },
+     "ffm": {
+      "medianM": 37.32,
+      "p95M": 237.11,
+      "cleanToLead": {
+       "windows": 50,
+       "medianM": 37.32,
+       "p95M": 237.11
+      }
+     },
+     "xp": {
+      "medianM": 2081.3,
+      "p95M": 4331.85,
+      "windows": 50,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 50,
+       "medianM": 2081.3,
+       "p95M": 4331.85
+      }
+     },
+     "xpUssf": {
+      "medianM": 8730.11,
+      "p95M": 32742.02,
+      "windows": 50,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 20317.98,
+      "p95M": 78006.82,
+      "windows": 50,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 50,
+      "apBetter": 45,
+      "medianApOverXp": 0.03
+     },
+     "apBeatsXpUssf": {
+      "windows": 50,
+      "apBetter": 44,
+      "medianApOverXp": 0.012
+     },
+     "apFfmRank": {
+      "windows": 50,
+      "rho": 0.471
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 56,
+     "ap": {
+      "medianM": 74,
+      "p95M": 6244.07,
+      "cleanToLead": {
+       "windows": 56,
+       "medianM": 74,
+       "p95M": 6244.07
+      }
+     },
+     "ffm": {
+      "medianM": 72.72,
+      "p95M": 704.76,
+      "cleanToLead": {
+       "windows": 56,
+       "medianM": 72.72,
+       "p95M": 704.76
+      }
+     },
+     "xp": {
+      "medianM": 2910.13,
+      "p95M": 6823.92,
+      "windows": 56,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 56,
+       "medianM": 2910.13,
+       "p95M": 6823.92
+      }
+     },
+     "xpUssf": {
+      "medianM": 10783.43,
+      "p95M": 63991.66,
+      "windows": 56,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 40884.12,
+      "p95M": 143070.28,
+      "windows": 56,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 56,
+      "apBetter": 49,
+      "medianApOverXp": 0.038
+     },
+     "apBeatsXpUssf": {
+      "windows": 56,
+      "apBetter": 48,
+      "medianApOverXp": 0.009
+     },
+     "apFfmRank": {
+      "windows": 56,
+      "rho": 0.699
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 50,
+    "met": 36,
+    "share": 0.72
+   }
+  },
+  {
+   "regime": "Low orbit, laser spheres",
+   "truth": "ILRS (NSGF)",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 6,
+   "windows": 78,
+   "apForces": "Gravity to degree 70 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 56,
+    "met": 55,
+    "share": 0.982,
+    "rowWindows": 78,
+    "shareOfWindowsWithForecast": 0.982,
+    "shareOfAllWindows": 0.705
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 65,
+     "ap": {
+      "medianM": 10.3,
+      "p95M": 22.62,
+      "cleanToLead": {
+       "windows": 65,
+       "medianM": 10.3,
+       "p95M": 22.62
+      }
+     },
+     "ffm": {
+      "medianM": 1.62,
+      "p95M": 22.56,
+      "cleanToLead": {
+       "windows": 65,
+       "medianM": 1.62,
+       "p95M": 22.56
+      }
+     },
+     "xp": {
+      "medianM": 489.74,
+      "p95M": 692.36,
+      "windows": 65,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 65,
+       "medianM": 489.74,
+       "p95M": 692.36
+      }
+     },
+     "xpUssf": {
+      "medianM": 482.62,
+      "p95M": 675.3,
+      "windows": 65,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 570.51,
+      "p95M": 799.71,
+      "windows": 65,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 65,
+      "apBetter": 65,
+      "medianApOverXp": 0.021
+     },
+     "apBeatsXpUssf": {
+      "windows": 65,
+      "apBetter": 65,
+      "medianApOverXp": 0.022
+     },
+     "apFfmRank": {
+      "windows": 65,
+      "rho": 0.786
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 57,
+     "ap": {
+      "medianM": 18.04,
+      "p95M": 122.3,
+      "cleanToLead": {
+       "windows": 57,
+       "medianM": 18.04,
+       "p95M": 122.3
+      }
+     },
+     "ffm": {
+      "medianM": 9.52,
+      "p95M": 152.32,
+      "cleanToLead": {
+       "windows": 57,
+       "medianM": 9.52,
+       "p95M": 152.32
+      }
+     },
+     "xp": {
+      "medianM": 621.89,
+      "p95M": 1855.06,
+      "windows": 57,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 57,
+       "medianM": 621.89,
+       "p95M": 1855.06
+      }
+     },
+     "xpUssf": {
+      "medianM": 625.59,
+      "p95M": 1879.72,
+      "windows": 57,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 824.15,
+      "p95M": 2179.96,
+      "windows": 57,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 57,
+      "apBetter": 57,
+      "medianApOverXp": 0.027
+     },
+     "apBeatsXpUssf": {
+      "windows": 57,
+      "apBetter": 57,
+      "medianApOverXp": 0.027
+     },
+     "apFfmRank": {
+      "windows": 57,
+      "rho": 0.84
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 56,
+     "ap": {
+      "medianM": 38.86,
+      "p95M": 264.39,
+      "cleanToLead": {
+       "windows": 56,
+       "medianM": 38.86,
+       "p95M": 264.39
+      }
+     },
+     "ffm": {
+      "medianM": 19.48,
+      "p95M": 398.99,
+      "cleanToLead": {
+       "windows": 56,
+       "medianM": 19.48,
+       "p95M": 398.99
+      }
+     },
+     "xp": {
+      "medianM": 896.3,
+      "p95M": 3269.48,
+      "windows": 56,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 56,
+       "medianM": 896.3,
+       "p95M": 3269.48
+      }
+     },
+     "xpUssf": {
+      "medianM": 1009.41,
+      "p95M": 3238.31,
+      "windows": 56,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1608.48,
+      "p95M": 4488.8,
+      "windows": 56,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 56,
+      "apBetter": 56,
+      "medianApOverXp": 0.038
+     },
+     "apBeatsXpUssf": {
+      "windows": 56,
+      "apBetter": 56,
+      "medianApOverXp": 0.038
+     },
+     "apFfmRank": {
+      "windows": 56,
+      "rho": 0.765
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 64,
+     "ap": {
+      "medianM": 55.45,
+      "p95M": 731.06,
+      "cleanToLead": {
+       "windows": 64,
+       "medianM": 55.45,
+       "p95M": 731.06
+      }
+     },
+     "ffm": {
+      "medianM": 47.83,
+      "p95M": 960.74,
+      "cleanToLead": {
+       "windows": 64,
+       "medianM": 47.83,
+       "p95M": 960.74
+      }
+     },
+     "xp": {
+      "medianM": 1243.01,
+      "p95M": 6666.48,
+      "windows": 64,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 64,
+       "medianM": 1243.01,
+       "p95M": 6666.48
+      }
+     },
+     "xpUssf": {
+      "medianM": 1249.05,
+      "p95M": 6741.6,
+      "windows": 64,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 2884.52,
+      "p95M": 7970.45,
+      "windows": 64,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 64,
+      "apBetter": 64,
+      "medianApOverXp": 0.048
+     },
+     "apBeatsXpUssf": {
+      "windows": 64,
+      "apBetter": 64,
+      "medianApOverXp": 0.046
+     },
+     "apFfmRank": {
+      "windows": 64,
+      "rho": 0.812
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 56,
+    "met": 54,
+    "share": 0.964
+   }
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "truth": "Data E",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 10,
+   "windows": 136,
+   "apForces": "Gravity to degree 70 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 112,
+    "met": 60,
+    "share": 0.536,
+    "rowWindows": 136,
+    "shareOfWindowsWithForecast": 0.536,
+    "shareOfAllWindows": 0.441
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 136,
+     "ap": {
+      "medianM": 20.04,
+      "p95M": 433.4,
+      "cleanToLead": {
+       "windows": 131,
+       "medianM": 19.32,
+       "p95M": 175.59
+      }
+     },
+     "ffm": {
+      "medianM": 3.07,
+      "p95M": 51.04,
+      "cleanToLead": {
+       "windows": 131,
+       "medianM": 2.82,
+       "p95M": 24.17
+      }
+     },
+     "xp": {
+      "medianM": 768.94,
+      "p95M": 1179.54,
+      "windows": 136,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 131,
+       "medianM": 746.95,
+       "p95M": 1175.86
+      }
+     },
+     "xpUssf": {
+      "medianM": 923.31,
+      "p95M": 1983.93,
+      "windows": 136,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1178.73,
+      "p95M": 3574.92,
+      "windows": 136,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 136,
+      "apBetter": 134,
+      "medianApOverXp": 0.032
+     },
+     "apBeatsXpUssf": {
+      "windows": 136,
+      "apBetter": 134,
+      "medianApOverXp": 0.025
+     },
+     "apFfmRank": {
+      "windows": 136,
+      "rho": 0.498
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 121,
+     "ap": {
+      "medianM": 167.39,
+      "p95M": 5248.46,
+      "cleanToLead": {
+       "windows": 104,
+       "medianM": 108.22,
+       "p95M": 1005.65
+      }
+     },
+     "ffm": {
+      "medianM": 40.71,
+      "p95M": 5637.43,
+      "cleanToLead": {
+       "windows": 104,
+       "medianM": 33.29,
+       "p95M": 178.55
+      }
+     },
+     "xp": {
+      "medianM": 1995.87,
+      "p95M": 5127.64,
+      "windows": 121,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 104,
+       "medianM": 1855.75,
+       "p95M": 3475.32
+      }
+     },
+     "xpUssf": {
+      "medianM": 3069.44,
+      "p95M": 15357.94,
+      "windows": 121,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 7946.08,
+      "p95M": 32239.56,
+      "windows": 121,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 121,
+      "apBetter": 109,
+      "medianApOverXp": 0.126
+     },
+     "apBeatsXpUssf": {
+      "windows": 121,
+      "apBetter": 115,
+      "medianApOverXp": 0.071
+     },
+     "apFfmRank": {
+      "windows": 121,
+      "rho": 0.637
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 112,
+     "ap": {
+      "medianM": 695.45,
+      "p95M": 14659.95,
+      "cleanToLead": {
+       "windows": 89,
+       "medianM": 354.62,
+       "p95M": 2670.63
+      }
+     },
+     "ffm": {
+      "medianM": 222.65,
+      "p95M": 14937.07,
+      "cleanToLead": {
+       "windows": 89,
+       "medianM": 135.1,
+       "p95M": 632.91
+      }
+     },
+     "xp": {
+      "medianM": 3388.21,
+      "p95M": 13875.65,
+      "windows": 112,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 89,
+       "medianM": 3075.9,
+       "p95M": 6229.25
+      }
+     },
+     "xpUssf": {
+      "medianM": 7828.32,
+      "p95M": 40107.45,
+      "windows": 112,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 21925.01,
+      "p95M": 81540.93,
+      "windows": 112,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 112,
+      "apBetter": 96,
+      "medianApOverXp": 0.201
+     },
+     "apBeatsXpUssf": {
+      "windows": 112,
+      "apBetter": 99,
+      "medianApOverXp": 0.084
+     },
+     "apFfmRank": {
+      "windows": 112,
+      "rho": 0.736
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 103,
+     "ap": {
+      "medianM": 2264.3,
+      "p95M": 27537.81,
+      "cleanToLead": {
+       "windows": 74,
+       "medianM": 722.36,
+       "p95M": 5338.39
+      }
+     },
+     "ffm": {
+      "medianM": 693.13,
+      "p95M": 28378.75,
+      "cleanToLead": {
+       "windows": 74,
+       "medianM": 359.64,
+       "p95M": 1847.57
+      }
+     },
+     "xp": {
+      "medianM": 5581.61,
+      "p95M": 34134.17,
+      "windows": 103,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 74,
+       "medianM": 4485.62,
+       "p95M": 10218.87
+      }
+     },
+     "xpUssf": {
+      "medianM": 15021.5,
+      "p95M": 76687.49,
+      "windows": 103,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 38188.43,
+      "p95M": 175205.31,
+      "windows": 103,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 103,
+      "apBetter": 75,
+      "medianApOverXp": 0.41
+     },
+     "apBeatsXpUssf": {
+      "windows": 103,
+      "apBetter": 84,
+      "medianApOverXp": 0.135
+     },
+     "apFfmRank": {
+      "windows": 103,
+      "rho": 0.799
+     }
+    }
+   ],
+   "burnSplit": {
+    "burnInFitArc": {
+     "windows": 5,
+     "met": 1
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 22,
+     "met": 20
+    },
+    "noBurn": {
+     "windows": 85,
+     "met": 39
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    },
+    "partlyCovered": 2,
+    "label": "Of the 112 windows on the pass line, a burn is found in the truth in the fit arc on 5 (met on 1), between the cutoff and day 5 alone on 22 (on 20) and in neither on 85 (on 39)."
+   },
+   "within100mEitherWay": {
+    "windows": 112,
+    "met": 40,
+    "share": 0.357
+   },
+   "within100mEitherWayBurnSplit": {
+    "burnInFitArc": {
+     "windows": 5,
+     "met": 0
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 22,
+     "met": 7
+    },
+    "noBurn": {
+     "windows": 85,
+     "met": 33
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    }
+   }
+  },
+  {
+   "regime": "Low orbit, altimetry",
+   "truth": "Data E",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 10,
+   "windows": 136,
+   "apForces": "Gravity to degree 70 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 112,
+    "met": 102,
+    "share": 0.911,
+    "rowWindows": 136,
+    "shareOfWindowsWithForecast": 0.911,
+    "shareOfAllWindows": 0.75
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 136,
+     "ap": {
+      "medianM": 13.4,
+      "p95M": 443.76,
+      "cleanToLead": {
+       "windows": 131,
+       "medianM": 13.04,
+       "p95M": 197.94
+      }
+     },
+     "ffm": {
+      "medianM": 5.46,
+      "p95M": 437.58,
+      "cleanToLead": {
+       "windows": 131,
+       "medianM": 5.26,
+       "p95M": 193.59
+      }
+     },
+     "xp": {
+      "medianM": 587.64,
+      "p95M": 2547.97,
+      "windows": 136,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 131,
+       "medianM": 584.16,
+       "p95M": 2292.29
+      }
+     },
+     "xpUssf": {
+      "medianM": 590.84,
+      "p95M": 2584.91,
+      "windows": 136,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 614.03,
+      "p95M": 1440.58,
+      "windows": 136,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 136,
+      "apBetter": 135,
+      "medianApOverXp": 0.022
+     },
+     "apBeatsXpUssf": {
+      "windows": 136,
+      "apBetter": 135,
+      "medianApOverXp": 0.022
+     },
+     "apFfmRank": {
+      "windows": 136,
+      "rho": 0.846
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 121,
+     "ap": {
+      "medianM": 73.54,
+      "p95M": 5656.83,
+      "cleanToLead": {
+       "windows": 104,
+       "medianM": 54.65,
+       "p95M": 1069.49
+      }
+     },
+     "ffm": {
+      "medianM": 70.06,
+      "p95M": 5656.08,
+      "cleanToLead": {
+       "windows": 104,
+       "medianM": 55.61,
+       "p95M": 952.51
+      }
+     },
+     "xp": {
+      "medianM": 978.02,
+      "p95M": 7437.66,
+      "windows": 121,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 104,
+       "medianM": 900.23,
+       "p95M": 2873.53
+      }
+     },
+     "xpUssf": {
+      "medianM": 1008.65,
+      "p95M": 7594.02,
+      "windows": 121,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1221.08,
+      "p95M": 10435.78,
+      "windows": 121,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 121,
+      "apBetter": 114,
+      "medianApOverXp": 0.069
+     },
+     "apBeatsXpUssf": {
+      "windows": 121,
+      "apBetter": 115,
+      "medianApOverXp": 0.07
+     },
+     "apFfmRank": {
+      "windows": 121,
+      "rho": 0.952
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 112,
+     "ap": {
+      "medianM": 233.93,
+      "p95M": 15234.78,
+      "cleanToLead": {
+       "windows": 89,
+       "medianM": 168.97,
+       "p95M": 2001.4
+      }
+     },
+     "ffm": {
+      "medianM": 239.05,
+      "p95M": 15277.32,
+      "cleanToLead": {
+       "windows": 89,
+       "medianM": 155.66,
+       "p95M": 1406.72
+      }
+     },
+     "xp": {
+      "medianM": 2040.94,
+      "p95M": 16227.97,
+      "windows": 112,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 89,
+       "medianM": 1680.95,
+       "p95M": 8577.33
+      }
+     },
+     "xpUssf": {
+      "medianM": 1972.28,
+      "p95M": 16408.03,
+      "windows": 112,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 2591.51,
+      "p95M": 25039.54,
+      "windows": 112,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 112,
+      "apBetter": 102,
+      "medianApOverXp": 0.152
+     },
+     "apBeatsXpUssf": {
+      "windows": 112,
+      "apBetter": 102,
+      "medianApOverXp": 0.154
+     },
+     "apFfmRank": {
+      "windows": 112,
+      "rho": 0.937
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 103,
+     "ap": {
+      "medianM": 670.26,
+      "p95M": 28201.06,
+      "cleanToLead": {
+       "windows": 74,
+       "medianM": 384.7,
+       "p95M": 2337.63
+      }
+     },
+     "ffm": {
+      "medianM": 731.98,
+      "p95M": 28241.97,
+      "cleanToLead": {
+       "windows": 74,
+       "medianM": 352.21,
+       "p95M": 1844.27
+      }
+     },
+     "xp": {
+      "medianM": 3725.39,
+      "p95M": 30101.82,
+      "windows": 103,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 74,
+       "medianM": 2685.44,
+       "p95M": 11821.03
+      }
+     },
+     "xpUssf": {
+      "medianM": 3831,
+      "p95M": 30247.87,
+      "windows": 103,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 5178.61,
+      "p95M": 49625.93,
+      "windows": 103,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 103,
+      "apBetter": 89,
+      "medianApOverXp": 0.186
+     },
+     "apBeatsXpUssf": {
+      "windows": 103,
+      "apBetter": 89,
+      "medianApOverXp": 0.207
+     },
+     "apFfmRank": {
+      "windows": 103,
+      "rho": 0.928
+     }
+    }
+   ],
+   "burnSplit": {
+    "burnInFitArc": {
+     "windows": 16,
+     "met": 8
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 20,
+     "met": 20
+    },
+    "noBurn": {
+     "windows": 76,
+     "met": 74
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    },
+    "partlyCovered": 3,
+    "label": "Of the 112 windows on the pass line, a burn is found in the truth in the fit arc on 16 (met on 8), between the cutoff and day 5 alone on 20 (on 20) and in neither on 76 (on 74)."
+   },
+   "within100mEitherWay": {
+    "windows": 112,
+    "met": 95,
+    "share": 0.848
+   },
+   "within100mEitherWayBurnSplit": {
+    "burnInFitArc": {
+     "windows": 16,
+     "met": 3
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 20,
+     "met": 20
+    },
+    "noBurn": {
+     "windows": 76,
+     "met": 72
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    }
+   }
+  },
+  {
+   "regime": "Near 700 km",
+   "truth": "Copernicus",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 2,
+   "windows": 287,
+   "apForces": "Gravity to degree 70 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 274,
+    "met": 77,
+    "share": 0.281,
+    "rowWindows": 287,
+    "shareOfWindowsWithForecast": 0.281,
+    "shareOfAllWindows": 0.268
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 276,
+     "ap": {
+      "medianM": 36.05,
+      "p95M": 863.15,
+      "cleanToLead": {
+       "windows": 181,
+       "medianM": 30.97,
+       "p95M": 607.7
+      }
+     },
+     "ffm": {
+      "medianM": 12.96,
+      "p95M": 769.01,
+      "cleanToLead": {
+       "windows": 181,
+       "medianM": 8.56,
+       "p95M": 542.28
+      }
+     },
+     "xp": {
+      "medianM": 2366.91,
+      "p95M": 3312.38,
+      "windows": 276,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 181,
+       "medianM": 2330.16,
+       "p95M": 2886.76
+      }
+     },
+     "xpUssf": {
+      "medianM": 2627.5,
+      "p95M": 3584.81,
+      "windows": 276,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 2588.51,
+      "p95M": 3518.76,
+      "windows": 276,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 276,
+      "apBetter": 272,
+      "medianApOverXp": 0.016
+     },
+     "apBeatsXpUssf": {
+      "windows": 276,
+      "apBetter": 272,
+      "medianApOverXp": 0.015
+     },
+     "apFfmRank": {
+      "windows": 276,
+      "rho": 0.581
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 275,
+     "ap": {
+      "medianM": 842.13,
+      "p95M": 3793.1,
+      "cleanToLead": {
+       "windows": 66,
+       "medianM": 263.23,
+       "p95M": 3370.95
+      }
+     },
+     "ffm": {
+      "medianM": 644.53,
+      "p95M": 3667.13,
+      "cleanToLead": {
+       "windows": 66,
+       "medianM": 113.56,
+       "p95M": 3178.49
+      }
+     },
+     "xp": {
+      "medianM": 17124.56,
+      "p95M": 22391.14,
+      "windows": 275,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 66,
+       "medianM": 15929.74,
+       "p95M": 21044.79
+      }
+     },
+     "xpUssf": {
+      "medianM": 19317.37,
+      "p95M": 24777.32,
+      "windows": 275,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 18888.62,
+      "p95M": 24211.64,
+      "windows": 275,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 275,
+      "apBetter": 274,
+      "medianApOverXp": 0.053
+     },
+     "apBeatsXpUssf": {
+      "windows": 275,
+      "apBetter": 274,
+      "medianApOverXp": 0.046
+     },
+     "apFfmRank": {
+      "windows": 275,
+      "rho": 0.941
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 274,
+     "ap": {
+      "medianM": 2666.14,
+      "p95M": 9603.68,
+      "cleanToLead": {
+       "windows": 23,
+       "medianM": 634.94,
+       "p95M": 3414.11
+      }
+     },
+     "ffm": {
+      "medianM": 2170.13,
+      "p95M": 9141.76,
+      "cleanToLead": {
+       "windows": 23,
+       "medianM": 182.65,
+       "p95M": 2825.89
+      }
+     },
+     "xp": {
+      "medianM": 45929.68,
+      "p95M": 59023.4,
+      "windows": 274,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 23,
+       "medianM": 46720.62,
+       "p95M": 54390.04
+      }
+     },
+     "xpUssf": {
+      "medianM": 52206.97,
+      "p95M": 65277.49,
+      "windows": 274,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 50865.11,
+      "p95M": 63923.38,
+      "windows": 274,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 274,
+      "apBetter": 272,
+      "medianApOverXp": 0.062
+     },
+     "apBeatsXpUssf": {
+      "windows": 274,
+      "apBetter": 272,
+      "medianApOverXp": 0.056
+     },
+     "apFfmRank": {
+      "windows": 274,
+      "rho": 0.924
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 274,
+     "ap": {
+      "medianM": 5585.13,
+      "p95M": 17693.07,
+      "cleanToLead": {
+       "windows": 6,
+       "medianM": 870.02,
+       "p95M": 1579.72
+      }
+     },
+     "ffm": {
+      "medianM": 4528.29,
+      "p95M": 14927.38,
+      "cleanToLead": {
+       "windows": 6,
+       "medianM": 392.65,
+       "p95M": 1460.31
+      }
+     },
+     "xp": {
+      "medianM": 86486.88,
+      "p95M": 113329.2,
+      "windows": 274,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 6,
+       "medianM": 95329.12,
+       "p95M": 104019.69
+      }
+     },
+     "xpUssf": {
+      "medianM": 99395.19,
+      "p95M": 126272.96,
+      "windows": 274,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 97905.82,
+      "p95M": 122572.48,
+      "windows": 274,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 274,
+      "apBetter": 272,
+      "medianApOverXp": 0.065
+     },
+     "apBeatsXpUssf": {
+      "windows": 274,
+      "apBetter": 272,
+      "medianApOverXp": 0.057
+     },
+     "apFfmRank": {
+      "windows": 274,
+      "rho": 0.931
+     }
+    }
+   ],
+   "burnSplit": {
+    "burnInFitArc": {
+     "windows": 94,
+     "met": 23
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 167,
+     "met": 52
+    },
+    "noBurn": {
+     "windows": 13,
+     "met": 2
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    },
+    "partlyCovered": 8,
+    "label": "Of the 274 windows on the pass line, a burn is found in the truth in the fit arc on 94 (met on 23), between the cutoff and day 5 alone on 167 (on 52) and in neither on 13 (on 2)."
+   },
+   "within100mEitherWay": {
+    "windows": 274,
+    "met": 33,
+    "share": 0.12
+   },
+   "within100mEitherWayBurnSplit": {
+    "burnInFitArc": {
+     "windows": 94,
+     "met": 8
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 167,
+     "met": 23
+    },
+    "noBurn": {
+     "windows": 13,
+     "met": 2
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    }
+   }
+  },
+  {
+   "regime": "Near 700 km",
+   "truth": "Copernicus",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 2,
+   "windows": 274,
+   "withoutNumericalFigure": {
+    "windows": 4,
+    "satellites": 2,
+    "ruleLeavesNoArm": 0,
+    "fitFailed": 0,
+    "noTruthOrCoverage": 4
+   },
+   "apForces": "Gravity to degree 70 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 257,
+    "met": 160,
+    "share": 0.623,
+    "rowWindows": 274,
+    "shareOfWindowsWithForecast": 0.623,
+    "shareOfAllWindows": 0.584
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 263,
+     "ap": {
+      "medianM": 28.74,
+      "p95M": 744.63,
+      "cleanToLead": {
+       "windows": 176,
+       "medianM": 24.12,
+       "p95M": 437.76
+      }
+     },
+     "ffm": {
+      "medianM": 19.74,
+      "p95M": 742.12,
+      "windows": 259,
+      "cleanToLead": {
+       "windows": 172,
+       "medianM": 15.21,
+       "p95M": 446.01
+      }
+     },
+     "xp": {
+      "medianM": 678.79,
+      "p95M": 1366.99,
+      "windows": 259,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 172,
+       "medianM": 675.53,
+       "p95M": 1247.48
+      }
+     },
+     "xpUssf": {
+      "medianM": 688.48,
+      "p95M": 1403.67,
+      "windows": 259,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 713.96,
+      "p95M": 1446.15,
+      "windows": 259,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 259,
+      "apBetter": 257,
+      "medianApOverXp": 0.043
+     },
+     "apBeatsXpUssf": {
+      "windows": 259,
+      "apBetter": 256,
+      "medianApOverXp": 0.043
+     },
+     "apFfmRank": {
+      "windows": 259,
+      "rho": 0.698
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 262,
+     "ap": {
+      "medianM": 722.5,
+      "p95M": 3254.83,
+      "cleanToLead": {
+       "windows": 66,
+       "medianM": 192.57,
+       "p95M": 2914.03
+      }
+     },
+     "ffm": {
+      "medianM": 700.37,
+      "p95M": 3247.3,
+      "windows": 258,
+      "cleanToLead": {
+       "windows": 64,
+       "medianM": 169.1,
+       "p95M": 2857.34
+      }
+     },
+     "xp": {
+      "medianM": 1337.88,
+      "p95M": 5966.13,
+      "windows": 258,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 64,
+       "medianM": 979.97,
+       "p95M": 3975.77
+      }
+     },
+     "xpUssf": {
+      "medianM": 1351.58,
+      "p95M": 6030.79,
+      "windows": 258,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1726.3,
+      "p95M": 6491.21,
+      "windows": 258,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 258,
+      "apBetter": 203,
+      "medianApOverXp": 0.495
+     },
+     "apBeatsXpUssf": {
+      "windows": 258,
+      "apBetter": 209,
+      "medianApOverXp": 0.476
+     },
+     "apFfmRank": {
+      "windows": 258,
+      "rho": 0.943
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 261,
+     "ap": {
+      "medianM": 2369.66,
+      "p95M": 7703.14,
+      "cleanToLead": {
+       "windows": 23,
+       "medianM": 567.21,
+       "p95M": 3364.9
+      }
+     },
+     "ffm": {
+      "medianM": 2159.58,
+      "p95M": 7666.47,
+      "windows": 257,
+      "cleanToLead": {
+       "windows": 23,
+       "medianM": 272.48,
+       "p95M": 2775.61
+      }
+     },
+     "xp": {
+      "medianM": 2525.57,
+      "p95M": 10504.47,
+      "windows": 257,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 23,
+       "medianM": 1386.26,
+       "p95M": 7225.63
+      }
+     },
+     "xpUssf": {
+      "medianM": 2694.33,
+      "p95M": 10747.58,
+      "windows": 257,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 4125.53,
+      "p95M": 16058.17,
+      "windows": 257,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 257,
+      "apBetter": 156,
+      "medianApOverXp": 0.845
+     },
+     "apBeatsXpUssf": {
+      "windows": 257,
+      "apBetter": 164,
+      "medianApOverXp": 0.8
+     },
+     "apFfmRank": {
+      "windows": 257,
+      "rho": 0.94
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 261,
+     "ap": {
+      "medianM": 4962.76,
+      "p95M": 12893.72,
+      "cleanToLead": {
+       "windows": 6,
+       "medianM": 687.01,
+       "p95M": 1579.72
+      }
+     },
+     "ffm": {
+      "medianM": 4471.02,
+      "p95M": 12948.23,
+      "windows": 257,
+      "cleanToLead": {
+       "windows": 6,
+       "medianM": 755.84,
+       "p95M": 4315.83
+      }
+     },
+     "xp": {
+      "medianM": 4488.86,
+      "p95M": 16575.38,
+      "windows": 257,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 6,
+       "medianM": 2523.36,
+       "p95M": 8042.31
+      }
+     },
+     "xpUssf": {
+      "medianM": 4351.23,
+      "p95M": 17001.15,
+      "windows": 257,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 7666.98,
+      "p95M": 25768.7,
+      "windows": 257,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 257,
+      "apBetter": 127,
+      "medianApOverXp": 1.022
+     },
+     "apBeatsXpUssf": {
+      "windows": 257,
+      "apBetter": 131,
+      "medianApOverXp": 0.976
+     },
+     "apFfmRank": {
+      "windows": 257,
+      "rho": 0.936
+     }
+    }
+   ],
+   "burnSplit": {
+    "burnInFitArc": {
+     "windows": 201,
+     "met": 116
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 52,
+     "met": 40
+    },
+    "noBurn": {
+     "windows": 4,
+     "met": 4
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    },
+    "partlyCovered": 6,
+    "label": "Of the 257 windows on the pass line, a burn is found in the truth in the fit arc on 201 (met on 116), between the cutoff and day 5 alone on 52 (on 40) and in neither on 4 (on 4)."
+   },
+   "within100mEitherWay": {
+    "windows": 257,
+    "met": 128,
+    "share": 0.498
+   },
+   "within100mEitherWayBurnSplit": {
+    "burnInFitArc": {
+     "windows": 201,
+     "met": 84
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 52,
+     "met": 40
+    },
+    "noBurn": {
+     "windows": 4,
+     "met": 4
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    }
+   }
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "truth": "ESA; Data E",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 5,
+   "windows": 255,
+   "apForces": "Gravity to degree 70 in the zonal terms and 70 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-13 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 255,
+    "met": 164,
+    "share": 0.643,
+    "rowWindows": 255,
+    "shareOfWindowsWithForecast": 0.643,
+    "shareOfAllWindows": 0.643
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 255,
+     "ap": {
+      "medianM": 191.71,
+      "p95M": 790.59,
+      "cleanToLead": {
+       "windows": 254,
+       "medianM": 191.79,
+       "p95M": 791.04
+      }
+     },
+     "ffm": {
+      "medianM": 179.59,
+      "p95M": 783.67,
+      "cleanToLead": {
+       "windows": 254,
+       "medianM": 180.25,
+       "p95M": 783.9
+      }
+     },
+     "xp": {
+      "medianM": 1401.79,
+      "p95M": 2678.03,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 254,
+       "medianM": 1400.23,
+       "p95M": 2678.35
+      }
+     },
+     "xpUssf": {
+      "medianM": 1523.11,
+      "p95M": 2841.74,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1481.58,
+      "p95M": 2710.32,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 250,
+      "medianApOverXp": 0.129
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 250,
+      "medianApOverXp": 0.122
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.971
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 255,
+     "ap": {
+      "medianM": 1919.71,
+      "p95M": 11076.34,
+      "cleanToLead": {
+       "windows": 252,
+       "medianM": 1918.2,
+       "p95M": 11217
+      }
+     },
+     "ffm": {
+      "medianM": 1924.28,
+      "p95M": 11303.06,
+      "cleanToLead": {
+       "windows": 252,
+       "medianM": 1923.87,
+       "p95M": 11394.65
+      }
+     },
+     "xp": {
+      "medianM": 9967.46,
+      "p95M": 21542.67,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 252,
+       "medianM": 9799.43,
+       "p95M": 21547.21
+      }
+     },
+     "xpUssf": {
+      "medianM": 11007.3,
+      "p95M": 22844,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 10295.34,
+      "p95M": 22555.33,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 216,
+      "medianApOverXp": 0.189
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 221,
+      "medianApOverXp": 0.17
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.981
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 255,
+     "ap": {
+      "medianM": 5860.31,
+      "p95M": 38196.23,
+      "cleanToLead": {
+       "windows": 250,
+       "medianM": 5905.41,
+       "p95M": 38867.84
+      }
+     },
+     "ffm": {
+      "medianM": 5852.44,
+      "p95M": 38895.85,
+      "cleanToLead": {
+       "windows": 250,
+       "medianM": 5901.02,
+       "p95M": 39387.57
+      }
+     },
+     "xp": {
+      "medianM": 28125.04,
+      "p95M": 61283.87,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 250,
+       "medianM": 28024.85,
+       "p95M": 60749.1
+      }
+     },
+     "xpUssf": {
+      "medianM": 29882.42,
+      "p95M": 65416.35,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 28081.9,
+      "p95M": 64246.61,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 210,
+      "medianApOverXp": 0.247
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 216,
+      "medianApOverXp": 0.24
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.986
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 255,
+     "ap": {
+      "medianM": 13584.72,
+      "p95M": 88440.67,
+      "cleanToLead": {
+       "windows": 248,
+       "medianM": 13967.56,
+       "p95M": 88538.44
+      }
+     },
+     "ffm": {
+      "medianM": 13709.24,
+      "p95M": 89669.42,
+      "cleanToLead": {
+       "windows": 248,
+       "medianM": 13903.18,
+       "p95M": 90179.03
+      }
+     },
+     "xp": {
+      "medianM": 53273.87,
+      "p95M": 130131.82,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 248,
+       "medianM": 53214.85,
+       "p95M": 129098.36
+      }
+     },
+     "xpUssf": {
+      "medianM": 57296.59,
+      "p95M": 137959.69,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 52499.64,
+      "p95M": 133675.12,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 196,
+      "medianApOverXp": 0.291
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 208,
+      "medianApOverXp": 0.279
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.989
+     }
+    }
+   ],
+   "burnSplit": {
+    "burnInFitArc": {
+     "windows": 1,
+     "met": 1
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 5,
+     "met": 3
+    },
+    "noBurn": {
+     "windows": 249,
+     "met": 160
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    },
+    "partlyCovered": 0,
+    "label": "Of the 255 windows on the pass line, a burn is found in the truth in the fit arc on 1 (met on 1), between the cutoff and day 5 alone on 5 (on 3) and in neither on 249 (on 160)."
+   },
+   "within100mEitherWay": {
+    "windows": 255,
+    "met": 17,
+    "share": 0.067
+   },
+   "within100mEitherWayBurnSplit": {
+    "burnInFitArc": {
+     "windows": 1,
+     "met": 0
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 5,
+     "met": 0
+    },
+    "noBurn": {
+     "windows": 249,
+     "met": 17
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    }
+   }
+  },
+  {
+   "regime": "Strong drag, 2026",
+   "truth": "ESA; Data E",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 5,
+   "windows": 255,
+   "apForces": "Gravity to degree 70 in the zonal terms and 70 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-13 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 255,
+    "met": 194,
+    "share": 0.761,
+    "rowWindows": 255,
+    "shareOfWindowsWithForecast": 0.761,
+    "shareOfAllWindows": 0.761
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 255,
+     "ap": {
+      "medianM": 318.48,
+      "p95M": 2102.58,
+      "cleanToLead": {
+       "windows": 254,
+       "medianM": 316.9,
+       "p95M": 2116.25
+      }
+     },
+     "ffm": {
+      "medianM": 312.98,
+      "p95M": 2093.66,
+      "cleanToLead": {
+       "windows": 254,
+       "medianM": 312.5,
+       "p95M": 2109.2
+      }
+     },
+     "xp": {
+      "medianM": 895.45,
+      "p95M": 2954.45,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 254,
+       "medianM": 893.48,
+       "p95M": 2957.3
+      }
+     },
+     "xpUssf": {
+      "medianM": 897.61,
+      "p95M": 2935.76,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 944.97,
+      "p95M": 2974.79,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 237,
+      "medianApOverXp": 0.382
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 237,
+      "medianApOverXp": 0.378
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.999
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 255,
+     "ap": {
+      "medianM": 2724.61,
+      "p95M": 14887.05,
+      "cleanToLead": {
+       "windows": 252,
+       "medianM": 2742.09,
+       "p95M": 14956.05
+      }
+     },
+     "ffm": {
+      "medianM": 2708.34,
+      "p95M": 14860.1,
+      "cleanToLead": {
+       "windows": 252,
+       "medianM": 2731.56,
+       "p95M": 14943.01
+      }
+     },
+     "xp": {
+      "medianM": 3646.33,
+      "p95M": 19401.55,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 252,
+       "medianM": 3640.06,
+       "p95M": 19449.52
+      }
+     },
+     "xpUssf": {
+      "medianM": 3716.69,
+      "p95M": 19317.94,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 3906.81,
+      "p95M": 19114.67,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 166,
+      "medianApOverXp": 0.699
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 168,
+      "medianApOverXp": 0.682
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.999
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 255,
+     "ap": {
+      "medianM": 6697.75,
+      "p95M": 47502.31,
+      "cleanToLead": {
+       "windows": 250,
+       "medianM": 6878.94,
+       "p95M": 47540.16
+      }
+     },
+     "ffm": {
+      "medianM": 6629.81,
+      "p95M": 47303.5,
+      "cleanToLead": {
+       "windows": 250,
+       "medianM": 6825.38,
+       "p95M": 47337.99
+      }
+     },
+     "xp": {
+      "medianM": 11029.73,
+      "p95M": 48610.43,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 250,
+       "medianM": 11043.29,
+       "p95M": 48888.51
+      }
+     },
+     "xpUssf": {
+      "medianM": 11101.87,
+      "p95M": 48499.33,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 10816.98,
+      "p95M": 49082.61,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 165,
+      "medianApOverXp": 0.653
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 164,
+      "medianApOverXp": 0.657
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.999
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 255,
+     "ap": {
+      "medianM": 14933.35,
+      "p95M": 88511.77,
+      "cleanToLead": {
+       "windows": 248,
+       "medianM": 15495.03,
+       "p95M": 88838.23
+      }
+     },
+     "ffm": {
+      "medianM": 15104.62,
+      "p95M": 88426.93,
+      "cleanToLead": {
+       "windows": 248,
+       "medianM": 15376.09,
+       "p95M": 88739.63
+      }
+     },
+     "xp": {
+      "medianM": 21675.74,
+      "p95M": 108721.36,
+      "windows": 255,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 248,
+       "medianM": 21693.1,
+       "p95M": 108781.26
+      }
+     },
+     "xpUssf": {
+      "medianM": 20861.32,
+      "p95M": 108397.76,
+      "windows": 255,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 21198.81,
+      "p95M": 106441.33,
+      "windows": 255,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 255,
+      "apBetter": 161,
+      "medianApOverXp": 0.711
+     },
+     "apBeatsXpUssf": {
+      "windows": 255,
+      "apBetter": 161,
+      "medianApOverXp": 0.701
+     },
+     "apFfmRank": {
+      "windows": 255,
+      "rho": 0.999
+     }
+    }
+   ],
+   "burnSplit": {
+    "burnInFitArc": {
+     "windows": 2,
+     "met": 2
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 5,
+     "met": 4
+    },
+    "noBurn": {
+     "windows": 248,
+     "met": 188
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    },
+    "partlyCovered": 0,
+    "label": "Of the 255 windows on the pass line, a burn is found in the truth in the fit arc on 2 (met on 2), between the cutoff and day 5 alone on 5 (on 4) and in neither on 248 (on 188)."
+   },
+   "within100mEitherWay": {
+    "windows": 255,
+    "met": 115,
+    "share": 0.451
+   },
+   "within100mEitherWayBurnSplit": {
+    "burnInFitArc": {
+     "windows": 2,
+     "met": 2
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 5,
+     "met": 1
+    },
+    "noBurn": {
+     "windows": 248,
+     "met": 112
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    }
+   }
+  },
+  {
+   "regime": "Strong drag, 2025",
+   "truth": "ESA; Data E",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 5,
+   "windows": 944,
+   "apForces": "Gravity to degree 70 in the zonal terms and 70 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff (GFZ observed F10.7 and Ap, then the NOAA SWPC forecast issued before it); solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-13 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state, the drag area to mass and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 944,
+    "met": 608,
+    "share": 0.644,
+    "rowWindows": 944,
+    "shareOfWindowsWithForecast": 0.644,
+    "shareOfAllWindows": 0.644
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 944,
+     "ap": {
+      "medianM": 151.57,
+      "p95M": 606.16,
+      "cleanToLead": {
+       "windows": 938,
+       "medianM": 150.93,
+       "p95M": 603.61
+      }
+     },
+     "ffm": {
+      "medianM": 141.16,
+      "p95M": 645.7,
+      "cleanToLead": {
+       "windows": 938,
+       "medianM": 140.09,
+       "p95M": 643.25
+      }
+     },
+     "xp": {
+      "medianM": 1612.61,
+      "p95M": 2946.93,
+      "windows": 944,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 938,
+       "medianM": 1609.87,
+       "p95M": 2936.49
+      }
+     },
+     "xpUssf": {
+      "medianM": 1722.17,
+      "p95M": 3178.41,
+      "windows": 944,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1714.88,
+      "p95M": 3121.86,
+      "windows": 944,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 944,
+      "apBetter": 941,
+      "medianApOverXp": 0.098
+     },
+     "apBeatsXpUssf": {
+      "windows": 944,
+      "apBetter": 942,
+      "medianApOverXp": 0.092
+     },
+     "apFfmRank": {
+      "windows": 944,
+      "rho": 0.96
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 944,
+     "ap": {
+      "medianM": 1709.4,
+      "p95M": 8419.81,
+      "cleanToLead": {
+       "windows": 926,
+       "medianM": 1702.45,
+       "p95M": 8479.76
+      }
+     },
+     "ffm": {
+      "medianM": 1707.93,
+      "p95M": 8275.63,
+      "cleanToLead": {
+       "windows": 926,
+       "medianM": 1704.23,
+       "p95M": 8303.96
+      }
+     },
+     "xp": {
+      "medianM": 11210.54,
+      "p95M": 24102.9,
+      "windows": 944,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 926,
+       "medianM": 11192.08,
+       "p95M": 24060.01
+      }
+     },
+     "xpUssf": {
+      "medianM": 12426.17,
+      "p95M": 26308.9,
+      "windows": 944,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 12204.92,
+      "p95M": 25525.65,
+      "windows": 944,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 944,
+      "apBetter": 846,
+      "medianApOverXp": 0.169
+     },
+     "apBeatsXpUssf": {
+      "windows": 944,
+      "apBetter": 857,
+      "medianApOverXp": 0.153
+     },
+     "apFfmRank": {
+      "windows": 944,
+      "rho": 0.979
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 944,
+     "ap": {
+      "medianM": 5407.38,
+      "p95M": 22856.93,
+      "cleanToLead": {
+       "windows": 914,
+       "medianM": 5370.36,
+       "p95M": 23003.22
+      }
+     },
+     "ffm": {
+      "medianM": 5548.08,
+      "p95M": 23214.63,
+      "cleanToLead": {
+       "windows": 914,
+       "medianM": 5470.76,
+       "p95M": 23288.64
+      }
+     },
+     "xp": {
+      "medianM": 30310.01,
+      "p95M": 66990.13,
+      "windows": 944,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 914,
+       "medianM": 30269.85,
+       "p95M": 66802.15
+      }
+     },
+     "xpUssf": {
+      "medianM": 33268.2,
+      "p95M": 72299.13,
+      "windows": 944,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 32193.42,
+      "p95M": 69811.29,
+      "windows": 944,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 944,
+      "apBetter": 835,
+      "medianApOverXp": 0.208
+     },
+     "apBeatsXpUssf": {
+      "windows": 944,
+      "apBetter": 843,
+      "medianApOverXp": 0.193
+     },
+     "apFfmRank": {
+      "windows": 944,
+      "rho": 0.984
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 944,
+     "ap": {
+      "medianM": 12022.39,
+      "p95M": 47824.12,
+      "cleanToLead": {
+       "windows": 902,
+       "medianM": 11791.38,
+       "p95M": 48359.56
+      }
+     },
+     "ffm": {
+      "medianM": 12463.31,
+      "p95M": 48405.54,
+      "cleanToLead": {
+       "windows": 902,
+       "medianM": 12435.43,
+       "p95M": 48860.51
+      }
+     },
+     "xp": {
+      "medianM": 58748.34,
+      "p95M": 135401.38,
+      "windows": 944,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 902,
+       "medianM": 58748.34,
+       "p95M": 135910.78
+      }
+     },
+     "xpUssf": {
+      "medianM": 63873.58,
+      "p95M": 142314.36,
+      "windows": 944,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 62612.75,
+      "p95M": 138901.52,
+      "windows": 944,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 944,
+      "apBetter": 823,
+      "medianApOverXp": 0.227
+     },
+     "apBeatsXpUssf": {
+      "windows": 944,
+      "apBetter": 827,
+      "medianApOverXp": 0.21
+     },
+     "apFfmRank": {
+      "windows": 944,
+      "rho": 0.987
+     }
+    }
+   ],
+   "burnSplit": {
+    "burnInFitArc": {
+     "windows": 6,
+     "met": 3
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 30,
+     "met": 16
+    },
+    "noBurn": {
+     "windows": 908,
+     "met": 589
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    },
+    "partlyCovered": 0,
+    "label": "Of the 944 windows on the pass line, a burn is found in the truth in the fit arc on 6 (met on 3), between the cutoff and day 5 alone on 30 (on 16) and in neither on 908 (on 589)."
+   },
+   "within100mEitherWay": {
+    "windows": 944,
+    "met": 125,
+    "share": 0.132
+   },
+   "within100mEitherWayBurnSplit": {
+    "burnInFitArc": {
+     "windows": 6,
+     "met": 1
+    },
+    "burnCutoffToDay5Only": {
+     "windows": 30,
+     "met": 3
+    },
+    "noBurn": {
+     "windows": 908,
+     "met": 121
+    },
+    "unflagged": {
+     "windows": 0,
+     "met": 0
+    }
+   }
+  },
+  {
+   "regime": "Laser geodetic",
+   "truth": "ILRS",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 5,
+   "windows": 54,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure on a sphere; Earth radiation pressure (Knocke); the Sun and Moon; solid Earth tides and ocean tides (FES2004 to degree 30); general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 53,
+    "met": 53,
+    "share": 1,
+    "rowWindows": 54,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 0.981
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 54,
+     "ap": {
+      "medianM": 2.91,
+      "p95M": 3.51
+     },
+     "ffm": {
+      "medianM": 0.16,
+      "p95M": 0.33
+     },
+     "xp": {
+      "medianM": 104.17,
+      "p95M": 143.04,
+      "windows": 54,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 103.87,
+      "p95M": 142.2,
+      "windows": 54,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 208.46,
+      "p95M": 359.43,
+      "windows": 54,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 54,
+      "apBetter": 54,
+      "medianApOverXp": 0.029
+     },
+     "apBeatsXpUssf": {
+      "windows": 54,
+      "apBetter": 54,
+      "medianApOverXp": 0.029
+     },
+     "apFfmRank": {
+      "windows": 54,
+      "rho": -0.037
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 54,
+     "ap": {
+      "medianM": 3.16,
+      "p95M": 4.41
+     },
+     "ffm": {
+      "medianM": 0.44,
+      "p95M": 1.33
+     },
+     "xp": {
+      "medianM": 108.17,
+      "p95M": 163.67,
+      "windows": 54,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 108.72,
+      "p95M": 166.25,
+      "windows": 54,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 417.37,
+      "p95M": 939.33,
+      "windows": 54,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 54,
+      "apBetter": 54,
+      "medianApOverXp": 0.031
+     },
+     "apBeatsXpUssf": {
+      "windows": 54,
+      "apBetter": 54,
+      "medianApOverXp": 0.03
+     },
+     "apFfmRank": {
+      "windows": 54,
+      "rho": -0.055
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 53,
+     "ap": {
+      "medianM": 3.43,
+      "p95M": 7.47
+     },
+     "ffm": {
+      "medianM": 0.65,
+      "p95M": 2.94
+     },
+     "xp": {
+      "medianM": 134.04,
+      "p95M": 196.62,
+      "windows": 53,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 128.56,
+      "p95M": 199.95,
+      "windows": 53,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 756.5,
+      "p95M": 2686.17,
+      "windows": 53,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 53,
+      "apBetter": 53,
+      "medianApOverXp": 0.028
+     },
+     "apBeatsXpUssf": {
+      "windows": 53,
+      "apBetter": 53,
+      "medianApOverXp": 0.027
+     },
+     "apFfmRank": {
+      "windows": 53,
+      "rho": 0.069
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 54,
+     "ap": {
+      "medianM": 4.12,
+      "p95M": 11.8
+     },
+     "ffm": {
+      "medianM": 0.97,
+      "p95M": 5.05
+     },
+     "xp": {
+      "medianM": 154.95,
+      "p95M": 245.04,
+      "windows": 54,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 147.1,
+      "p95M": 260.2,
+      "windows": 54,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1088.06,
+      "p95M": 5335.72,
+      "windows": 54,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 54,
+      "apBetter": 54,
+      "medianApOverXp": 0.028
+     },
+     "apBeatsXpUssf": {
+      "windows": 54,
+      "apBetter": 54,
+      "medianApOverXp": 0.028
+     },
+     "apFfmRank": {
+      "windows": 54,
+      "rho": 0.161
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 53,
+    "met": 53,
+    "share": 1
+   }
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "truth": "ESA navigation",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 5,
+   "windows": 749,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 748,
+    "met": 748,
+    "share": 1,
+    "rowWindows": 749,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 0.999
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 748,
+     "ap": {
+      "medianM": 2.33,
+      "p95M": 4.15
+     },
+     "ffm": {
+      "medianM": 0.27,
+      "p95M": 0.65
+     },
+     "xp": {
+      "medianM": 52.78,
+      "p95M": 81.57,
+      "windows": 748,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 53.45,
+      "p95M": 104.16,
+      "windows": 748,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 367.15,
+      "p95M": 877.54,
+      "windows": 694,
+      "failed": 54
+     },
+     "apBeatsXp": {
+      "windows": 748,
+      "apBetter": 748,
+      "medianApOverXp": 0.045
+     },
+     "apBeatsXpUssf": {
+      "windows": 748,
+      "apBetter": 748,
+      "medianApOverXp": 0.043
+     },
+     "apFfmRank": {
+      "windows": 748,
+      "rho": -0.066
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 748,
+     "ap": {
+      "medianM": 6.14,
+      "p95M": 13.63
+     },
+     "ffm": {
+      "medianM": 1.84,
+      "p95M": 5.05
+     },
+     "xp": {
+      "medianM": 145.31,
+      "p95M": 228.98,
+      "windows": 748,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 147.67,
+      "p95M": 323.94,
+      "windows": 748,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1970.34,
+      "p95M": 6346.02,
+      "windows": 693,
+      "failed": 55
+     },
+     "apBeatsXp": {
+      "windows": 748,
+      "apBetter": 747,
+      "medianApOverXp": 0.043
+     },
+     "apBeatsXpUssf": {
+      "windows": 748,
+      "apBetter": 746,
+      "medianApOverXp": 0.039
+     },
+     "apFfmRank": {
+      "windows": 748,
+      "rho": 0.012
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 748,
+     "ap": {
+      "medianM": 11.14,
+      "p95M": 25.73
+     },
+     "ffm": {
+      "medianM": 5.02,
+      "p95M": 14.68
+     },
+     "xp": {
+      "medianM": 244.98,
+      "p95M": 392.43,
+      "windows": 748,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 247.55,
+      "p95M": 543.81,
+      "windows": 748,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 5279.45,
+      "p95M": 17091.6,
+      "windows": 693,
+      "failed": 55
+     },
+     "apBeatsXp": {
+      "windows": 748,
+      "apBetter": 747,
+      "medianApOverXp": 0.046
+     },
+     "apBeatsXpUssf": {
+      "windows": 748,
+      "apBetter": 746,
+      "medianApOverXp": 0.042
+     },
+     "apFfmRank": {
+      "windows": 748,
+      "rho": 0.057
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 748,
+     "ap": {
+      "medianM": 17.14,
+      "p95M": 41.69
+     },
+     "ffm": {
+      "medianM": 9.95,
+      "p95M": 30.99
+     },
+     "xp": {
+      "medianM": 353.58,
+      "p95M": 570.4,
+      "windows": 748,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 351.71,
+      "p95M": 767.27,
+      "windows": 748,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 10427.47,
+      "p95M": 33528.18,
+      "windows": 693,
+      "failed": 55
+     },
+     "apBeatsXp": {
+      "windows": 748,
+      "apBetter": 747,
+      "medianApOverXp": 0.049
+     },
+     "apBeatsXpUssf": {
+      "windows": 748,
+      "apBetter": 746,
+      "medianApOverXp": 0.046
+     },
+     "apFfmRank": {
+      "windows": 748,
+      "rho": 0.086
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 748,
+    "met": 748,
+    "share": 1
+   }
+  },
+  {
+   "regime": "Medium Earth orbit",
+   "truth": "ESA navigation",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 5,
+   "windows": 747,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors, and the ECOM2 Y0 radiation term solved as well.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 746,
+    "met": 746,
+    "share": 1,
+    "rowWindows": 747,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 0.999
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 746,
+     "ap": {
+      "medianM": 1.64,
+      "p95M": 2.68
+     },
+     "ffm": {
+      "medianM": 0.19,
+      "p95M": 0.43
+     },
+     "xp": {
+      "medianM": 39.68,
+      "p95M": 74.43,
+      "windows": 746,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 41.03,
+      "p95M": 73.53,
+      "windows": 746,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 416.23,
+      "p95M": 788.33,
+      "windows": 745,
+      "failed": 1
+     },
+     "apBeatsXp": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.047
+     },
+     "apBeatsXpUssf": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.045
+     },
+     "apFfmRank": {
+      "windows": 746,
+      "rho": 0.339
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 746,
+     "ap": {
+      "medianM": 2.93,
+      "p95M": 9.27
+     },
+     "ffm": {
+      "medianM": 0.87,
+      "p95M": 2.6
+     },
+     "xp": {
+      "medianM": 73.61,
+      "p95M": 152.81,
+      "windows": 746,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 74.53,
+      "p95M": 151.33,
+      "windows": 746,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 918.33,
+      "p95M": 1881.13,
+      "windows": 745,
+      "failed": 1
+     },
+     "apBeatsXp": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.042
+     },
+     "apBeatsXpUssf": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.042
+     },
+     "apFfmRank": {
+      "windows": 746,
+      "rho": 0.292
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 746,
+     "ap": {
+      "medianM": 5.94,
+      "p95M": 20.16
+     },
+     "ffm": {
+      "medianM": 2.4,
+      "p95M": 10.31
+     },
+     "xp": {
+      "medianM": 111.38,
+      "p95M": 312.9,
+      "windows": 746,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 113.02,
+      "p95M": 307.03,
+      "windows": 746,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1660.92,
+      "p95M": 4273.97,
+      "windows": 745,
+      "failed": 1
+     },
+     "apBeatsXp": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.05
+     },
+     "apBeatsXpUssf": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.051
+     },
+     "apFfmRank": {
+      "windows": 746,
+      "rho": 0.271
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 746,
+     "ap": {
+      "medianM": 10.49,
+      "p95M": 36.53
+     },
+     "ffm": {
+      "medianM": 4.66,
+      "p95M": 24.16
+     },
+     "xp": {
+      "medianM": 148.87,
+      "p95M": 468.16,
+      "windows": 746,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 152.24,
+      "p95M": 464.29,
+      "windows": 746,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 2694.79,
+      "p95M": 7377.18,
+      "windows": 745,
+      "failed": 1
+     },
+     "apBeatsXp": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.063
+     },
+     "apBeatsXpUssf": {
+      "windows": 746,
+      "apBetter": 746,
+      "medianApOverXp": 0.063
+     },
+     "apFfmRank": {
+      "windows": 746,
+      "rho": 0.272
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 746,
+    "met": 746,
+    "share": 1
+   }
+  },
+  {
+   "regime": "Medium Earth orbit, Galileo (suite)",
+   "truth": "ESA navigation",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 6,
+   "windows": 72,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 72,
+    "met": 72,
+    "share": 1,
+    "rowWindows": 72,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 1
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 72,
+     "ap": {
+      "medianM": 1.7,
+      "p95M": 2.78
+     },
+     "ffm": {
+      "medianM": 0.38,
+      "p95M": 1.23
+     },
+     "xp": {
+      "medianM": 52.27,
+      "p95M": 90.75,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 49.56,
+      "p95M": 91.87,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 516.85,
+      "p95M": 1775.97,
+      "windows": 48,
+      "failed": 24
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.036
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.035
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": -0.123
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 72,
+     "ap": {
+      "medianM": 3.89,
+      "p95M": 11.41
+     },
+     "ffm": {
+      "medianM": 2.11,
+      "p95M": 10.05
+     },
+     "xp": {
+      "medianM": 124.72,
+      "p95M": 212.04,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 126.15,
+      "p95M": 222.49,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 2694.15,
+      "p95M": 12370.12,
+      "windows": 48,
+      "failed": 24
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.03
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.031
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": 0.05
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 72,
+     "ap": {
+      "medianM": 7.86,
+      "p95M": 28.52
+     },
+     "ffm": {
+      "medianM": 5.64,
+      "p95M": 27.23
+     },
+     "xp": {
+      "medianM": 211.02,
+      "p95M": 408.25,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 231.13,
+      "p95M": 402.53,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 7432.31,
+      "p95M": 34234.9,
+      "windows": 48,
+      "failed": 24
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.038
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.034
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": 0.181
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 72,
+     "ap": {
+      "medianM": 13.41,
+      "p95M": 50.77
+     },
+     "ffm": {
+      "medianM": 12.49,
+      "p95M": 47.94
+     },
+     "xp": {
+      "medianM": 329.97,
+      "p95M": 645.94,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 331.95,
+      "p95M": 632.7,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 15016.23,
+      "p95M": 66522.27,
+      "windows": 48,
+      "failed": 24
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.039
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.036
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": 0.248
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 72,
+    "met": 72,
+    "share": 1
+   }
+  },
+  {
+   "regime": "Medium Earth orbit, Galileo (suite)",
+   "truth": "ESA navigation",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 6,
+   "windows": 72,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors, and the ECOM2 Y0 radiation term solved as well.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 72,
+    "met": 72,
+    "share": 1,
+    "rowWindows": 72,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 1
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 72,
+     "ap": {
+      "medianM": 1.5,
+      "p95M": 2.28
+     },
+     "ffm": {
+      "medianM": 0.31,
+      "p95M": 0.57
+     },
+     "xp": {
+      "medianM": 56.75,
+      "p95M": 86.27,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 60.33,
+      "p95M": 89.66,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 563.15,
+      "p95M": 985.83,
+      "windows": 72,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.026
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.025
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": 0.084
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 72,
+     "ap": {
+      "medianM": 2.96,
+      "p95M": 10.53
+     },
+     "ffm": {
+      "medianM": 1.37,
+      "p95M": 7.13
+     },
+     "xp": {
+      "medianM": 98.98,
+      "p95M": 167.8,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 98.57,
+      "p95M": 170.39,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1210.52,
+      "p95M": 2412.35,
+      "windows": 72,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.031
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.032
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": 0.182
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 72,
+     "ap": {
+      "medianM": 6.09,
+      "p95M": 28.05
+     },
+     "ffm": {
+      "medianM": 3.41,
+      "p95M": 19.56
+     },
+     "xp": {
+      "medianM": 181.9,
+      "p95M": 370.65,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 192.23,
+      "p95M": 379.51,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 2272.34,
+      "p95M": 5637.11,
+      "windows": 72,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.033
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.033
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": 0.155
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 72,
+     "ap": {
+      "medianM": 10.33,
+      "p95M": 48.6
+     },
+     "ffm": {
+      "medianM": 6.11,
+      "p95M": 33.37
+     },
+     "xp": {
+      "medianM": 263.49,
+      "p95M": 604.54,
+      "windows": 72,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 278.91,
+      "p95M": 600.28,
+      "windows": 72,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 3813.49,
+      "p95M": 9263.98,
+      "windows": 72,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.041
+     },
+     "apBeatsXpUssf": {
+      "windows": 72,
+      "apBetter": 72,
+      "medianApOverXp": 0.04
+     },
+     "apFfmRank": {
+      "windows": 72,
+      "rho": 0.217
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 72,
+    "met": 72,
+    "share": 1
+   }
+  },
+  {
+   "regime": "Inclined geosynchronous",
+   "truth": "GFZ",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 12,
+   "windows": 60,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors, and the ECOM2 Y0 radiation term solved as well.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 59,
+    "met": 59,
+    "share": 1,
+    "rowWindows": 60,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 0.983
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 60,
+     "ap": {
+      "medianM": 1.38,
+      "p95M": 4.48
+     },
+     "ffm": {
+      "medianM": 0.39,
+      "p95M": 1.21
+     },
+     "xp": {
+      "medianM": 40.66,
+      "p95M": 56.82,
+      "windows": 60,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 45.35,
+      "p95M": 71.37,
+      "windows": 60,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1919.32,
+      "p95M": 3034.34,
+      "windows": 49,
+      "failed": 11
+     },
+     "apBeatsXp": {
+      "windows": 60,
+      "apBetter": 60,
+      "medianApOverXp": 0.038
+     },
+     "apBeatsXpUssf": {
+      "windows": 60,
+      "apBetter": 60,
+      "medianApOverXp": 0.033
+     },
+     "apFfmRank": {
+      "windows": 60,
+      "rho": 0.331
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 60,
+     "ap": {
+      "medianM": 2.61,
+      "p95M": 8.18
+     },
+     "ffm": {
+      "medianM": 1.45,
+      "p95M": 3.38
+     },
+     "xp": {
+      "medianM": 79.6,
+      "p95M": 141.25,
+      "windows": 60,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 88.3,
+      "p95M": 143.95,
+      "windows": 60,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 5763.68,
+      "p95M": 9222.53,
+      "windows": 49,
+      "failed": 11
+     },
+     "apBeatsXp": {
+      "windows": 60,
+      "apBetter": 60,
+      "medianApOverXp": 0.033
+     },
+     "apBeatsXpUssf": {
+      "windows": 60,
+      "apBetter": 60,
+      "medianApOverXp": 0.031
+     },
+     "apFfmRank": {
+      "windows": 60,
+      "rho": 0.523
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 59,
+     "ap": {
+      "medianM": 4.72,
+      "p95M": 12.09
+     },
+     "ffm": {
+      "medianM": 3.49,
+      "p95M": 7.9
+     },
+     "xp": {
+      "medianM": 120.3,
+      "p95M": 261.61,
+      "windows": 59,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 132.47,
+      "p95M": 236.62,
+      "windows": 59,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 11322.09,
+      "p95M": 21115.97,
+      "windows": 48,
+      "failed": 11
+     },
+     "apBeatsXp": {
+      "windows": 59,
+      "apBetter": 59,
+      "medianApOverXp": 0.041
+     },
+     "apBeatsXpUssf": {
+      "windows": 59,
+      "apBetter": 59,
+      "medianApOverXp": 0.036
+     },
+     "apFfmRank": {
+      "windows": 59,
+      "rho": 0.408
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 59,
+     "ap": {
+      "medianM": 7.95,
+      "p95M": 18.61
+     },
+     "ffm": {
+      "medianM": 6.29,
+      "p95M": 19.49
+     },
+     "xp": {
+      "medianM": 164.97,
+      "p95M": 505.8,
+      "windows": 59,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 186.39,
+      "p95M": 465.37,
+      "windows": 59,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 23333.1,
+      "p95M": 45869.69,
+      "windows": 48,
+      "failed": 11
+     },
+     "apBeatsXp": {
+      "windows": 59,
+      "apBetter": 58,
+      "medianApOverXp": 0.043
+     },
+     "apBeatsXpUssf": {
+      "windows": 59,
+      "apBetter": 59,
+      "medianApOverXp": 0.04
+     },
+     "apFfmRank": {
+      "windows": 59,
+      "rho": 0.405
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 59,
+    "met": 59,
+    "share": 1
+   }
+  },
+  {
+   "regime": "Geostationary",
+   "truth": "GFZ",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 9,
+   "windows": 35,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by NRLMSISE-00 driven by the space weather known at the cutoff; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors, and the ECOM2 Y0 radiation term solved as well.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 32,
+    "met": 32,
+    "share": 1,
+    "rowWindows": 35,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 0.914
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 32,
+     "ap": {
+      "medianM": 2.49,
+      "p95M": 4.59
+     },
+     "ffm": {
+      "medianM": 2.05,
+      "p95M": 4.11
+     },
+     "xp": {
+      "medianM": 30.52,
+      "p95M": 47.79,
+      "windows": 32,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 38.66,
+      "p95M": 61.28,
+      "windows": 32,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 2439.44,
+      "p95M": 3653.66,
+      "windows": 32,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 32,
+      "apBetter": 32,
+      "medianApOverXp": 0.082
+     },
+     "apBeatsXpUssf": {
+      "windows": 32,
+      "apBetter": 32,
+      "medianApOverXp": 0.061
+     },
+     "apFfmRank": {
+      "windows": 32,
+      "rho": 0.956
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 30,
+     "ap": {
+      "medianM": 6.28,
+      "p95M": 4636.56
+     },
+     "ffm": {
+      "medianM": 5.96,
+      "p95M": 4634.84
+     },
+     "xp": {
+      "medianM": 76.68,
+      "p95M": 4696.92,
+      "windows": 30,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 89.01,
+      "p95M": 4729.86,
+      "windows": 30,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 5526.94,
+      "p95M": 10032.26,
+      "windows": 30,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 30,
+      "apBetter": 29,
+      "medianApOverXp": 0.11
+     },
+     "apBeatsXpUssf": {
+      "windows": 30,
+      "apBetter": 29,
+      "medianApOverXp": 0.079
+     },
+     "apFfmRank": {
+      "windows": 30,
+      "rho": 0.915
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 32,
+     "ap": {
+      "medianM": 16.12,
+      "p95M": 57429.83
+     },
+     "ffm": {
+      "medianM": 20.31,
+      "p95M": 57429.29
+     },
+     "xp": {
+      "medianM": 134.84,
+      "p95M": 57399.94,
+      "windows": 32,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 157.05,
+      "p95M": 57397.42,
+      "windows": 32,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 9106.42,
+      "p95M": 51309.24,
+      "windows": 32,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 32,
+      "apBetter": 30,
+      "medianApOverXp": 0.18
+     },
+     "apBeatsXpUssf": {
+      "windows": 32,
+      "apBetter": 30,
+      "medianApOverXp": 0.126
+     },
+     "apFfmRank": {
+      "windows": 32,
+      "rho": 0.954
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 32,
+     "ap": {
+      "medianM": 40.9,
+      "p95M": 112082.21
+     },
+     "ffm": {
+      "medianM": 47.57,
+      "p95M": 112081.26
+     },
+     "xp": {
+      "medianM": 226.34,
+      "p95M": 112032.25,
+      "windows": 32,
+      "failed": 0
+     },
+     "xpUssf": {
+      "medianM": 268.57,
+      "p95M": 112028.61,
+      "windows": 32,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 14756.69,
+      "p95M": 101350,
+      "windows": 32,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 32,
+      "apBetter": 28,
+      "medianApOverXp": 0.276
+     },
+     "apBeatsXpUssf": {
+      "windows": 32,
+      "apBetter": 28,
+      "medianApOverXp": 0.216
+     },
+     "apFfmRank": {
+      "windows": 32,
+      "rho": 0.983
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 32,
+    "met": 32,
+    "share": 1
+   }
+  },
+  {
+   "regime": "Geostationary, commercial",
+   "truth": "WAAS broadcast",
+   "fitData": "the truth's states over the 24 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 24,
+   "satellites": 3,
+   "windows": 79,
+   "withoutNumericalFigure": {
+    "windows": 58,
+    "satellites": 3,
+    "ruleLeavesNoArm": 58,
+    "fitFailed": 0,
+    "noTruthOrCoverage": 0
+   },
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by the theory's own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 21,
+    "met": 20,
+    "share": 0.952,
+    "rowWindows": 79,
+    "shareOfWindowsWithForecast": 0.952,
+    "shareOfAllWindows": 0.253
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 77,
+     "ap": {
+      "medianM": 2152.82,
+      "p95M": 6967.91,
+      "cleanToLead": {
+       "windows": 72,
+       "medianM": 1714,
+       "p95M": 7044.15
+      }
+     },
+     "ffm": {
+      "medianM": 52.47,
+      "p95M": 6893.61,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 16,
+       "medianM": 48.16,
+       "p95M": 288.96
+      }
+     },
+     "xp": {
+      "medianM": 2138.27,
+      "p95M": 6981.69,
+      "windows": 77,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 72,
+       "medianM": 1764.92,
+       "p95M": 7062.16
+      }
+     },
+     "xpUssf": {
+      "medianM": 2093.14,
+      "p95M": 7032.21,
+      "windows": 77,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 6399.23,
+      "p95M": 20721.44,
+      "windows": 62,
+      "failed": 15
+     },
+     "apBeatsXp": {
+      "windows": 77,
+      "apBetter": 61,
+      "medianApOverXp": 0.998
+     },
+     "apBeatsXpUssf": {
+      "windows": 77,
+      "apBetter": 58,
+      "medianApOverXp": 0.992
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 0.905
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 78,
+     "ap": {
+      "medianM": 9316.05,
+      "p95M": 19626.03,
+      "cleanToLead": {
+       "windows": 65,
+       "medianM": 8828.19,
+       "p95M": 19743.1
+      }
+     },
+     "ffm": {
+      "medianM": 6761.49,
+      "p95M": 10646.16,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 182.22,
+       "p95M": 9555.28
+      }
+     },
+     "xp": {
+      "medianM": 9341.18,
+      "p95M": 19709.35,
+      "windows": 78,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 65,
+       "medianM": 8783.36,
+       "p95M": 19843.7
+      }
+     },
+     "xpUssf": {
+      "medianM": 9355.93,
+      "p95M": 19948.12,
+      "windows": 78,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 16862.09,
+      "p95M": 162488.04,
+      "windows": 63,
+      "failed": 15
+     },
+     "apBeatsXp": {
+      "windows": 78,
+      "apBetter": 53,
+      "medianApOverXp": 0.996
+     },
+     "apBeatsXpUssf": {
+      "windows": 78,
+      "apBetter": 50,
+      "medianApOverXp": 0.993
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 0.997
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 76,
+     "ap": {
+      "medianM": 15829.52,
+      "p95M": 31656.38,
+      "cleanToLead": {
+       "windows": 55,
+       "medianM": 16418.77,
+       "p95M": 32358.11
+      }
+     },
+     "ffm": {
+      "medianM": 10705.48,
+      "p95M": 20122.15,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 4,
+       "medianM": 261.72,
+       "p95M": 5704.57
+      }
+     },
+     "xp": {
+      "medianM": 15935.89,
+      "p95M": 31771.45,
+      "windows": 76,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 55,
+       "medianM": 16492.35,
+       "p95M": 32516.88
+      }
+     },
+     "xpUssf": {
+      "medianM": 15898.36,
+      "p95M": 32222.77,
+      "windows": 76,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 27171.54,
+      "p95M": 442834.08,
+      "windows": 60,
+      "failed": 16
+     },
+     "apBeatsXp": {
+      "windows": 76,
+      "apBetter": 46,
+      "medianApOverXp": 0.996
+     },
+     "apBeatsXpUssf": {
+      "windows": 76,
+      "apBetter": 44,
+      "medianApOverXp": 0.996
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 0.997
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 76,
+     "ap": {
+      "medianM": 21600.69,
+      "p95M": 42212.67,
+      "cleanToLead": {
+       "windows": 48,
+       "medianM": 23338.07,
+       "p95M": 44499.22
+      }
+     },
+     "ffm": {
+      "medianM": 17038.12,
+      "p95M": 35672.08,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xp": {
+      "medianM": 21604.11,
+      "p95M": 42457.99,
+      "windows": 76,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 48,
+       "medianM": 23450.65,
+       "p95M": 44291.5
+      }
+     },
+     "xpUssf": {
+      "medianM": 22042.97,
+      "p95M": 42957.21,
+      "windows": 76,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 38754.46,
+      "p95M": 848301.85,
+      "windows": 62,
+      "failed": 14
+     },
+     "apBeatsXp": {
+      "windows": 76,
+      "apBetter": 49,
+      "medianApOverXp": 0.995
+     },
+     "apBeatsXpUssf": {
+      "windows": 76,
+      "apBetter": 48,
+      "medianApOverXp": 0.991
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 1
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 21,
+    "met": 19,
+    "share": 0.905
+   }
+  },
+  {
+   "regime": "Geostationary, commercial",
+   "truth": "WAAS broadcast",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 3,
+   "windows": 77,
+   "withoutNumericalFigure": {
+    "windows": 56,
+    "satellites": 3,
+    "ruleLeavesNoArm": 56,
+    "fitFailed": 0,
+    "noTruthOrCoverage": 0
+   },
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by the theory's own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors, and the ECOM2 Y0 radiation term solved as well.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure by the ECOM2 model (D0, Y0, B0, B1 cos, B1 sin); the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the five ECOM2 terms."
+   },
+   "within100mOfFfm": {
+    "windows": 21,
+    "met": 16,
+    "share": 0.762,
+    "rowWindows": 77,
+    "shareOfWindowsWithForecast": 0.762,
+    "shareOfAllWindows": 0.208
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 76,
+     "ap": {
+      "medianM": 3894.34,
+      "p95M": 6871.31,
+      "cleanToLead": {
+       "windows": 71,
+       "medianM": 3100.27,
+       "p95M": 6646.53
+      }
+     },
+     "ffm": {
+      "medianM": 32.39,
+      "p95M": 6895.34,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 16,
+       "medianM": 29.02,
+       "p95M": 280.39
+      }
+     },
+     "xp": {
+      "medianM": 5248.03,
+      "p95M": 7300.98,
+      "windows": 76,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 71,
+       "medianM": 5114.8,
+       "p95M": 7419.11
+      }
+     },
+     "xpUssf": {
+      "medianM": 5225.48,
+      "p95M": 7253.03,
+      "windows": 76,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 8161.31,
+      "p95M": 16551.63,
+      "windows": 60,
+      "failed": 16
+     },
+     "apBeatsXp": {
+      "windows": 76,
+      "apBetter": 60,
+      "medianApOverXp": 0.995
+     },
+     "apBeatsXpUssf": {
+      "windows": 76,
+      "apBetter": 45,
+      "medianApOverXp": 0.997
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 0.945
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 75,
+     "ap": {
+      "medianM": 9270.7,
+      "p95M": 14566.33,
+      "cleanToLead": {
+       "windows": 62,
+       "medianM": 8953.01,
+       "p95M": 14407.24
+      }
+     },
+     "ffm": {
+      "medianM": 6762.57,
+      "p95M": 10651.49,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 182.22,
+       "p95M": 9562.09
+      }
+     },
+     "xp": {
+      "medianM": 9600.08,
+      "p95M": 14908.52,
+      "windows": 75,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 62,
+       "medianM": 9332.03,
+       "p95M": 14371.89
+      }
+     },
+     "xpUssf": {
+      "medianM": 9590.98,
+      "p95M": 14746.55,
+      "windows": 75,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 21720.06,
+      "p95M": 46708.55,
+      "windows": 59,
+      "failed": 16
+     },
+     "apBeatsXp": {
+      "windows": 75,
+      "apBetter": 49,
+      "medianApOverXp": 0.998
+     },
+     "apBeatsXpUssf": {
+      "windows": 75,
+      "apBetter": 40,
+      "medianApOverXp": 1
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 0.995
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 74,
+     "ap": {
+      "medianM": 15381.18,
+      "p95M": 25455.33,
+      "cleanToLead": {
+       "windows": 53,
+       "medianM": 17182.09,
+       "p95M": 26039.65
+      }
+     },
+     "ffm": {
+      "medianM": 10748.86,
+      "p95M": 20125.43,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 4,
+       "medianM": 261.72,
+       "p95M": 5704.57
+      }
+     },
+     "xp": {
+      "medianM": 16872.08,
+      "p95M": 26273.73,
+      "windows": 74,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 53,
+       "medianM": 17635.94,
+       "p95M": 25971.44
+      }
+     },
+     "xpUssf": {
+      "medianM": 16850.26,
+      "p95M": 26069.93,
+      "windows": 74,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 28124.71,
+      "p95M": 103586.7,
+      "windows": 59,
+      "failed": 15
+     },
+     "apBeatsXp": {
+      "windows": 74,
+      "apBetter": 39,
+      "medianApOverXp": 1
+     },
+     "apBeatsXpUssf": {
+      "windows": 74,
+      "apBetter": 34,
+      "medianApOverXp": 1.002
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 0.999
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 74,
+     "ap": {
+      "medianM": 25086.7,
+      "p95M": 41047.11,
+      "cleanToLead": {
+       "windows": 46,
+       "medianM": 28463.57,
+       "p95M": 41327.29
+      }
+     },
+     "ffm": {
+      "medianM": 17014.27,
+      "p95M": 35589.64,
+      "windows": 21,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xp": {
+      "medianM": 27209.26,
+      "p95M": 43059.44,
+      "windows": 74,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 46,
+       "medianM": 28460.3,
+       "p95M": 41190
+      }
+     },
+     "xpUssf": {
+      "medianM": 27057.19,
+      "p95M": 42828.9,
+      "windows": 74,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 44565.3,
+      "p95M": 184203.11,
+      "windows": 59,
+      "failed": 15
+     },
+     "apBeatsXp": {
+      "windows": 74,
+      "apBetter": 33,
+      "medianApOverXp": 1.001
+     },
+     "apBeatsXpUssf": {
+      "windows": 74,
+      "apBetter": 34,
+      "medianApOverXp": 1.003
+     },
+     "apFfmRank": {
+      "windows": 21,
+      "rho": 1
+     }
+    }
+   ],
+   "within100mEitherWay": {
+    "windows": 21,
+    "met": 15,
+    "share": 0.714
+   }
+  },
+  {
+   "regime": "Highly elliptical",
+   "truth": "MAST (TESS_EPH_DEF)",
+   "truthNote": "TESS's definitive ephemeris files as MAST names them (TESS_EPH_DEF, archive.stsci.edu/missions/tess/models), each one 14-day solution; each window of this row is read from the newest one file that covers its fit arc and 7 days, so no join of two solutions falls inside it.",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 1,
+   "windows": 11,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by the theory's own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 11,
+    "met": 9,
+    "share": 0.818,
+    "rowWindows": 11,
+    "shareOfWindowsWithForecast": 0.818,
+    "shareOfAllWindows": 0.818
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 11,
+     "ap": {
+      "medianM": 8.49,
+      "p95M": 325.81,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 7.99,
+       "p95M": 299.49
+      }
+     },
+     "ffm": {
+      "medianM": 7.55,
+      "p95M": 325,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 7.32,
+       "p95M": 297.39
+      }
+     },
+     "xp": {
+      "medianM": 780.43,
+      "p95M": 1241.01,
+      "windows": 11,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 780.43,
+       "p95M": 1273.93
+      }
+     },
+     "xpUssf": {
+      "medianM": 1291.84,
+      "p95M": 3634.54,
+      "windows": 11,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 1293496.33,
+      "p95M": 3346511.13,
+      "windows": 11,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 11,
+      "apBetter": 11,
+      "medianApOverXp": 0.028
+     },
+     "apBeatsXpUssf": {
+      "windows": 11,
+      "apBetter": 11,
+      "medianApOverXp": 0.01
+     },
+     "apFfmRank": {
+      "windows": 11,
+      "rho": 0.936
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 11,
+     "ap": {
+      "medianM": 110.32,
+      "p95M": 2628.15,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 88.4,
+       "p95M": 1861.84
+      }
+     },
+     "ffm": {
+      "medianM": 83.03,
+      "p95M": 2636.46,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 73.89,
+       "p95M": 1830.67
+      }
+     },
+     "xp": {
+      "medianM": 2616.49,
+      "p95M": 6591.57,
+      "windows": 11,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 2616.49,
+       "p95M": 6579.62
+      }
+     },
+     "xpUssf": {
+      "medianM": 5029.93,
+      "p95M": 16438.69,
+      "windows": 11,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 4381618.22,
+      "p95M": 12542134.85,
+      "windows": 11,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 11,
+      "apBetter": 10,
+      "medianApOverXp": 0.125
+     },
+     "apBeatsXpUssf": {
+      "windows": 11,
+      "apBetter": 11,
+      "medianApOverXp": 0.026
+     },
+     "apFfmRank": {
+      "windows": 11,
+      "rho": 0.882
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 11,
+     "ap": {
+      "medianM": 372.65,
+      "p95M": 7060.1,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 293.2,
+       "p95M": 4785.42
+      }
+     },
+     "ffm": {
+      "medianM": 266.78,
+      "p95M": 7035.27,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 205.84,
+       "p95M": 4662.88
+      }
+     },
+     "xp": {
+      "medianM": 5840.86,
+      "p95M": 14738.54,
+      "windows": 11,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 9,
+       "medianM": 5840.86,
+       "p95M": 14286.36
+      }
+     },
+     "xpUssf": {
+      "medianM": 13076.01,
+      "p95M": 34678.7,
+      "windows": 11,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 11577006.44,
+      "p95M": 24882211.79,
+      "windows": 11,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 11,
+      "apBetter": 9,
+      "medianApOverXp": 0.165
+     },
+     "apBeatsXpUssf": {
+      "windows": 11,
+      "apBetter": 11,
+      "medianApOverXp": 0.049
+     },
+     "apFfmRank": {
+      "windows": 11,
+      "rho": 0.873
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 11,
+     "ap": {
+      "medianM": 700.92,
+      "p95M": 16458.06,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 4624.37,
+       "p95M": 8155.47
+      }
+     },
+     "ffm": {
+      "medianM": 700.53,
+      "p95M": 16086.04,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 4385.24,
+       "p95M": 8121.4
+      }
+     },
+     "xp": {
+      "medianM": 9288.21,
+      "p95M": 23165.46,
+      "windows": 11,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 16993.58,
+       "p95M": 24191.41
+      }
+     },
+     "xpUssf": {
+      "medianM": 42877.51,
+      "p95M": 55908.47,
+      "windows": 11,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 28170082.36,
+      "p95M": 40762254.94,
+      "windows": 11,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 11,
+      "apBetter": 10,
+      "medianApOverXp": 0.342
+     },
+     "apBeatsXpUssf": {
+      "windows": 11,
+      "apBetter": 11,
+      "medianApOverXp": 0.069
+     },
+     "apFfmRank": {
+      "windows": 11,
+      "rho": 0.9
+     }
+    }
+   ],
+   "perigeeScan": {
+    "windows": 11,
+    "passages": 1,
+    "largestM": 0,
+    "medianM": 0
+   },
+   "within100mEitherWay": {
+    "windows": 11,
+    "met": 9,
+    "share": 0.818
+   }
+  },
+  {
+   "regime": "Highly elliptical",
+   "truth": "MAST (TESS_EPH_DEF)",
+   "truthNote": "TESS's definitive ephemeris files as MAST names them (TESS_EPH_DEF), each one 14-day solution; this row's windows (a 336 h arc and 7 days) are longer than any one file, so they read the files merged, each epoch from the newest file. A join of two solutions after the cutoff is flagged at the leads it falls in; the joins inside the 336 h fit arc are neither cut nor flagged.",
+   "fitData": "the truth's states over the 336 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 336,
+   "satellites": 1,
+   "windows": 7,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by the theory's own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 7,
+    "met": 6,
+    "share": 0.857,
+    "rowWindows": 7,
+    "shareOfWindowsWithForecast": 0.857,
+    "shareOfAllWindows": 0.857
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 7,
+     "ap": {
+      "medianM": 227.57,
+      "p95M": 725.96,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 62.48,
+       "p95M": 87.12
+      }
+     },
+     "ffm": {
+      "medianM": 232.51,
+      "p95M": 713.39,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 58.81,
+       "p95M": 81.38
+      }
+     },
+     "xp": {
+      "medianM": 1829.69,
+      "p95M": 8085.07,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 4337.74,
+       "p95M": 7870.88
+      }
+     },
+     "xpUssf": {
+      "medianM": 1853.32,
+      "p95M": 7671.84,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 5765801.76,
+      "p95M": 8027943.77,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 7,
+      "medianApOverXp": 0.16
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 7,
+      "medianApOverXp": 0.158
+     },
+     "apFfmRank": null
+    },
+    {
+     "hours": 72,
+     "windows": 7,
+     "ap": {
+      "medianM": 1607.86,
+      "p95M": 3035.55,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 727.58,
+       "p95M": 1279.92
+      }
+     },
+     "ffm": {
+      "medianM": 1594.31,
+      "p95M": 3074.22,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 682.62,
+       "p95M": 1207.05
+      }
+     },
+     "xp": {
+      "medianM": 8094.94,
+      "p95M": 21186.43,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 2,
+       "medianM": 9948.26,
+       "p95M": 18090.85
+      }
+     },
+     "xpUssf": {
+      "medianM": 8033.13,
+      "p95M": 18355.97,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 10547554.74,
+      "p95M": 16288696.78,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 7,
+      "medianApOverXp": 0.249
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 7,
+      "medianApOverXp": 0.253
+     },
+     "apFfmRank": null
+    },
+    {
+     "hours": 120,
+     "windows": 7,
+     "ap": {
+      "medianM": 4607.9,
+      "p95M": 8543.41,
+      "cleanToLead": {
+       "windows": 1,
+       "medianM": 4850.6,
+       "p95M": 4850.6
+      }
+     },
+     "ffm": {
+      "medianM": 4584.51,
+      "p95M": 8581.93,
+      "cleanToLead": {
+       "windows": 1,
+       "medianM": 4584.51,
+       "p95M": 4584.51
+      }
+     },
+     "xp": {
+      "medianM": 12328.22,
+      "p95M": 41436.01,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 1,
+       "medianM": 43635.09,
+       "p95M": 43635.09
+      }
+     },
+     "xpUssf": {
+      "medianM": 12239.86,
+      "p95M": 38581.11,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 15381147.87,
+      "p95M": 27848394.56,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 7,
+      "medianApOverXp": 0.268
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 7,
+      "medianApOverXp": 0.273
+     },
+     "apFfmRank": null
+    },
+    {
+     "hours": 168,
+     "windows": 7,
+     "ap": {
+      "medianM": 8563.25,
+      "p95M": 17950.45,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "ffm": {
+      "medianM": 8551.93,
+      "p95M": 17816.06,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xp": {
+      "medianM": 26718.32,
+      "p95M": 87710.01,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xpUssf": {
+      "medianM": 26267.91,
+      "p95M": 83656.27,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 16641515.89,
+      "p95M": 55825011.25,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 6,
+      "medianApOverXp": 0.321
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 6,
+      "medianApOverXp": 0.326
+     },
+     "apFfmRank": null
+    }
+   ],
+   "perigeeScan": {
+    "windows": 7,
+    "passages": 1,
+    "largestM": 0,
+    "medianM": 0
+   },
+   "within100mEitherWay": {
+    "windows": 7,
+    "met": 5,
+    "share": 0.714
+   }
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "truth": "UCB SSL (THEMIS kernels); JPL Horizons (chandra_merged.bsp)",
+   "truthNote": "Chandra: the merged file JPL's Solar System Dynamics Group provided for Horizons (chandra_merged.bsp, \"the historical Chandra trajectory ... with the trajectory data being supplied by CFA\"), solutions joined one to the next; a 72 h fit arc starts after the last join known at the cutoff (9 h at least), and a join after the cutoff is flagged at the leads it falls in. THEMIS A, D and E: the kernels as the mission's flight dynamics wrote them (PRODUCER_ID 'UCB SSL'), on the first day of their 16-day span, so every window is scored against the operator's prediction.",
+   "fitData": "the truth's states over the 72 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 72,
+   "satellites": 4,
+   "windows": 19,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by the theory's own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 19,
+    "met": 17,
+    "share": 0.895,
+    "rowWindows": 19,
+    "shareOfWindowsWithForecast": 0.895,
+    "shareOfAllWindows": 0.895
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 19,
+     "ap": {
+      "medianM": 50.32,
+      "p95M": 56.54,
+      "cleanToLead": {
+       "windows": 19,
+       "medianM": 50.32,
+       "p95M": 56.54
+      }
+     },
+     "ffm": {
+      "medianM": 3.7,
+      "p95M": 10.61,
+      "cleanToLead": {
+       "windows": 19,
+       "medianM": 3.7,
+       "p95M": 10.61
+      }
+     },
+     "xp": {
+      "medianM": 627.13,
+      "p95M": 2884.78,
+      "windows": 19,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 19,
+       "medianM": 627.13,
+       "p95M": 2884.78
+      }
+     },
+     "xpUssf": {
+      "medianM": 618.48,
+      "p95M": 2894.6,
+      "windows": 19,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 17722.19,
+      "p95M": 105668.43,
+      "windows": 19,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 19,
+      "apBetter": 19,
+      "medianApOverXp": 0.05
+     },
+     "apBeatsXpUssf": {
+      "windows": 19,
+      "apBetter": 19,
+      "medianApOverXp": 0.044
+     },
+     "apFfmRank": {
+      "windows": 19,
+      "rho": 0.837
+     }
+    },
+    {
+     "hours": 72,
+     "windows": 19,
+     "ap": {
+      "medianM": 58.1,
+      "p95M": 98.85,
+      "cleanToLead": {
+       "windows": 19,
+       "medianM": 58.1,
+       "p95M": 98.85
+      }
+     },
+     "ffm": {
+      "medianM": 11.91,
+      "p95M": 32.61,
+      "cleanToLead": {
+       "windows": 19,
+       "medianM": 11.91,
+       "p95M": 32.61
+      }
+     },
+     "xp": {
+      "medianM": 2185.27,
+      "p95M": 4945.68,
+      "windows": 19,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 19,
+       "medianM": 2185.27,
+       "p95M": 4945.68
+      }
+     },
+     "xpUssf": {
+      "medianM": 2991.78,
+      "p95M": 4949.85,
+      "windows": 19,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 56380.68,
+      "p95M": 374597.09,
+      "windows": 19,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 19,
+      "apBetter": 19,
+      "medianApOverXp": 0.021
+     },
+     "apBeatsXpUssf": {
+      "windows": 19,
+      "apBetter": 19,
+      "medianApOverXp": 0.019
+     },
+     "apFfmRank": {
+      "windows": 19,
+      "rho": 0.858
+     }
+    },
+    {
+     "hours": 120,
+     "windows": 19,
+     "ap": {
+      "medianM": 138.14,
+      "p95M": 11394.98,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 109.18,
+       "p95M": 168.82
+      }
+     },
+     "ffm": {
+      "medianM": 54.55,
+      "p95M": 11394.34,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 45.84,
+       "p95M": 63.37
+      }
+     },
+     "xp": {
+      "medianM": 6513.16,
+      "p95M": 12292.31,
+      "windows": 19,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 6193.02,
+       "p95M": 10545.53
+      }
+     },
+     "xpUssf": {
+      "medianM": 5879.78,
+      "p95M": 11816.7,
+      "windows": 19,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 126512.84,
+      "p95M": 917711.83,
+      "windows": 19,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 19,
+      "apBetter": 18,
+      "medianApOverXp": 0.033
+     },
+     "apBeatsXpUssf": {
+      "windows": 19,
+      "apBetter": 18,
+      "medianApOverXp": 0.036
+     },
+     "apFfmRank": {
+      "windows": 19,
+      "rho": 0.907
+     }
+    },
+    {
+     "hours": 168,
+     "windows": 19,
+     "ap": {
+      "medianM": 193.89,
+      "p95M": 14819.04,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 139.66,
+       "p95M": 241.24
+      }
+     },
+     "ffm": {
+      "medianM": 87.38,
+      "p95M": 14823.67,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 75.9,
+       "p95M": 100.94
+      }
+     },
+     "xp": {
+      "medianM": 9576.55,
+      "p95M": 23263.34,
+      "windows": 19,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 12,
+       "medianM": 9352.73,
+       "p95M": 21109.94
+      }
+     },
+     "xpUssf": {
+      "medianM": 9623.17,
+      "p95M": 22273.29,
+      "windows": 19,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 247831.56,
+      "p95M": 1050794.5,
+      "windows": 19,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 19,
+      "apBetter": 17,
+      "medianApOverXp": 0.027
+     },
+     "apBeatsXpUssf": {
+      "windows": 19,
+      "apBetter": 16,
+      "medianApOverXp": 0.031
+     },
+     "apFfmRank": {
+      "windows": 19,
+      "rho": 0.898
+     }
+    }
+   ],
+   "perigeeScan": {
+    "windows": 19,
+    "passages": 75,
+    "largestM": 0,
+    "medianM": 0
+   },
+   "within100mEitherWay": {
+    "windows": 19,
+    "met": 17,
+    "share": 0.895
+   }
+  },
+  {
+   "regime": "Highly elliptical, THEMIS and Chandra",
+   "truth": "JPL Horizons (chandra_merged.bsp)",
+   "truthNote": "Chandra: the merged file JPL's Solar System Dynamics Group provided for Horizons (chandra_merged.bsp, \"the historical Chandra trajectory ... with the trajectory data being supplied by CFA\"), solutions joined one to the next; the 168 h fit arc is not cut, so the joins inside it are neither cut nor flagged, and a join after the cutoff is flagged at the leads it falls in.",
+   "fitData": "the truth's states over the 168 h before the cutoff, one every 300 s (GCRF)",
+   "fitHours": 168,
+   "satellites": 1,
+   "windows": 7,
+   "apForces": "Gravity to degree 20 in the zonal terms and 31 in the tesseral terms; the solid Earth tide (IERS 2010); atmospheric drag by the theory's own Jacchia 1970 atmosphere, with no space weather; fitted for the mean elements, the drag coefficient and the radiation coefficient, with the module's stated priors.",
+   "ffm": {
+    "version": "2.2.0",
+    "wasmSha256": "d635a3d57a2c9ca91d111f74aad38b9d748d6c16199b22c6922af21c92fe2153",
+    "modulesCommit": "f1517ef68e9f586048841e34ab553715111a94de",
+    "configuration": "Earth gravity to degree and order 70; no atmospheric drag; solar radiation pressure on a sphere; the Sun and Moon; solid Earth tides; general relativity (IERS 2010); integrated by RK78 at a tolerance of 1e-10 with steps up to 120 s; fitted by batch least squares (analysis/estimation) for the initial state and the radiation area to mass."
+   },
+   "within100mOfFfm": {
+    "windows": 7,
+    "met": 7,
+    "share": 1,
+    "rowWindows": 7,
+    "shareOfWindowsWithForecast": 1,
+    "shareOfAllWindows": 1
+   },
+   "leads": [
+    {
+     "hours": 24,
+     "windows": 7,
+     "ap": {
+      "medianM": 1.92,
+      "p95M": 1567.15,
+      "cleanToLead": {
+       "windows": 7,
+       "medianM": 1.92,
+       "p95M": 1567.15
+      }
+     },
+     "ffm": {
+      "medianM": 0.24,
+      "p95M": 1566.23,
+      "cleanToLead": {
+       "windows": 7,
+       "medianM": 0.24,
+       "p95M": 1566.23
+      }
+     },
+     "xp": {
+      "medianM": 2076.92,
+      "p95M": 11184.69,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 7,
+       "medianM": 2076.92,
+       "p95M": 11184.69
+      }
+     },
+     "xpUssf": {
+      "medianM": 2129.68,
+      "p95M": 10939.98,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 66840.81,
+      "p95M": 101850.98,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 6,
+      "medianApOverXp": 0.001
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 6,
+      "medianApOverXp": 0.001
+     },
+     "apFfmRank": null
+    },
+    {
+     "hours": 72,
+     "windows": 7,
+     "ap": {
+      "medianM": 2.79,
+      "p95M": 7237.05,
+      "cleanToLead": {
+       "windows": 7,
+       "medianM": 2.79,
+       "p95M": 7237.05
+      }
+     },
+     "ffm": {
+      "medianM": 0.42,
+      "p95M": 7235.7,
+      "cleanToLead": {
+       "windows": 7,
+       "medianM": 0.42,
+       "p95M": 7235.7
+      }
+     },
+     "xp": {
+      "medianM": 3500.19,
+      "p95M": 14222.06,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 7,
+       "medianM": 3500.19,
+       "p95M": 14222.06
+      }
+     },
+     "xpUssf": {
+      "medianM": 3632.45,
+      "p95M": 14185.6,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 66224.6,
+      "p95M": 154902.6,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 6,
+      "medianApOverXp": 0.001
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 6,
+      "medianApOverXp": 0.001
+     },
+     "apFfmRank": null
+    },
+    {
+     "hours": 120,
+     "windows": 7,
+     "ap": {
+      "medianM": 3372.87,
+      "p95M": 23176.42,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "ffm": {
+      "medianM": 3365.47,
+      "p95M": 23174.83,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xp": {
+      "medianM": 13908.84,
+      "p95M": 27812.18,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xpUssf": {
+      "medianM": 13634.3,
+      "p95M": 27908.67,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 105022.87,
+      "p95M": 194251.94,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 5,
+      "medianApOverXp": 0.76
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 5,
+      "medianApOverXp": 0.774
+     },
+     "apFfmRank": null
+    },
+    {
+     "hours": 168,
+     "windows": 7,
+     "ap": {
+      "medianM": 4811.8,
+      "p95M": 20425.54,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "ffm": {
+      "medianM": 4811.35,
+      "p95M": 20424.41,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xp": {
+      "medianM": 17946.05,
+      "p95M": 45282.36,
+      "windows": 7,
+      "failed": 0,
+      "cleanToLead": {
+       "windows": 0,
+       "medianM": null,
+       "p95M": null
+      }
+     },
+     "xpUssf": {
+      "medianM": 17884.76,
+      "p95M": 44498.23,
+      "windows": 7,
+      "failed": 0
+     },
+     "sgp4": {
+      "medianM": 174492.87,
+      "p95M": 258221.06,
+      "windows": 7,
+      "failed": 0
+     },
+     "apBeatsXp": {
+      "windows": 7,
+      "apBetter": 5,
+      "medianApOverXp": 0.5
+     },
+     "apBeatsXpUssf": {
+      "windows": 7,
+      "apBetter": 5,
+      "medianApOverXp": 0.499
+     },
+     "apFfmRank": null
+    }
+   ],
+   "perigeeScan": {
+    "windows": 7,
+    "passages": 14,
+    "largestM": 0,
+    "medianM": 0
+   },
+   "within100mEitherWay": {
+    "windows": 7,
+    "met": 7,
+    "share": 1
+   }
+  }
+ ]
+}

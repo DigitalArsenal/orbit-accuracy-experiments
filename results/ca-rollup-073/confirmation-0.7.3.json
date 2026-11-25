@@ -1,0 +1,351 @@
+{
+  "version": "0.7.3",
+  "date": "2026-11-25",
+  "module": {
+    "version": "0.7.3",
+    "canonicalSha256": "9ddf12dd7f074dc3c616b83939e4c3d76c2a47e4fac486ef870c544624c1e258",
+    "signedBundleSha256": "79d493e08e1c80611c30a464e4b71a9ac54605a5a81f9d29115972b8c19768f9"
+  },
+  "registrationSha256": "4aecbfcfe4a5ca1df3add7ac045d1e18debd5618596ac1161a984de8a4e4820d",
+  "rowsSha256": "262ffd95dfde2fdc9e45a059872b233a20f3ce04ffcd94672d9357d61a01d030",
+  "totals": {
+    "regimes": 6,
+    "distinctSats": 130,
+    "independentSats": 80,
+    "forecasts": 1246,
+    "samples": 11144,
+    "pdRate6d": 1.0,
+    "denseSmoothRegimes": 6,
+    "denseTotalRegimes": 6
+  },
+  "regimes": {
+    "leo_under_600": {
+      "spanHours": 24,
+      "totalForecasts": 84,
+      "excludedForecasts": 6,
+      "screened": {
+        "nSats": 3,
+        "nWindows": 78,
+        "nSamples": 390,
+        "pdRate": 1.0,
+        "medErrM": 499.419,
+        "p95ErrM": 3893.383,
+        "meanD2Over3": 1.4756,
+        "cov95": 0.8769,
+        "f3": 0.9667,
+        "meanD6Over6": 1.1356,
+        "cov95_6d": 0.9128,
+        "f3_6d": 0.9744
+      },
+      "raw": {
+        "nSats": 3,
+        "nWindows": 84,
+        "nSamples": 420,
+        "pdRate": 1.0,
+        "medErrM": 555.065,
+        "p95ErrM": 50528.464,
+        "meanD2Over3": 83463.0752,
+        "cov95": 0.8238,
+        "f3": 0.9143,
+        "meanD6Over6": 1344662.9427,
+        "cov95_6d": 0.8571,
+        "f3_6d": 0.9167
+      }
+    },
+    "leo_600_750": {
+      "spanHours": 24,
+      "totalForecasts": 54,
+      "excludedForecasts": 33,
+      "screened": {
+        "nSats": 3,
+        "nWindows": 21,
+        "nSamples": 105,
+        "pdRate": 1.0,
+        "medErrM": 31.429,
+        "p95ErrM": 148.26,
+        "meanD2Over3": 2.0576,
+        "cov95": 0.9048,
+        "f3": 0.9714,
+        "meanD6Over6": 2.2744,
+        "cov95_6d": 0.9048,
+        "f3_6d": 0.9619
+      },
+      "raw": {
+        "nSats": 3,
+        "nWindows": 54,
+        "nSamples": 270,
+        "pdRate": 1.0,
+        "medErrM": 79.988,
+        "p95ErrM": 2336.936,
+        "meanD2Over3": 7682.4928,
+        "cov95": 0.5444,
+        "f3": 0.5926,
+        "meanD6Over6": 6048.1911,
+        "cov95_6d": 0.5333,
+        "f3_6d": 0.5926
+      }
+    },
+    "spheres_750_2000": {
+      "spanHours": 24,
+      "totalForecasts": 5,
+      "excludedForecasts": 0,
+      "screened": {
+        "nSats": 5,
+        "nWindows": 5,
+        "nSamples": 24,
+        "pdRate": 1.0,
+        "medErrM": 9.405,
+        "p95ErrM": 28.23,
+        "meanD2Over3": 0.8041,
+        "cov95": 1.0,
+        "f3": 1.0,
+        "meanD6Over6": 0.9207,
+        "cov95_6d": 0.9167,
+        "f3_6d": 1.0
+      },
+      "raw": {
+        "nSats": 5,
+        "nWindows": 5,
+        "nSamples": 24,
+        "pdRate": 1.0,
+        "medErrM": 9.405,
+        "p95ErrM": 28.23,
+        "meanD2Over3": 0.8041,
+        "cov95": 1.0,
+        "f3": 1.0,
+        "meanD6Over6": 0.9207,
+        "cov95_6d": 0.9167,
+        "f3_6d": 1.0
+      }
+    },
+    "medium_2000_15000": {
+      "spanHours": 24,
+      "totalForecasts": 46,
+      "excludedForecasts": 6,
+      "screened": {
+        "nSats": 3,
+        "nWindows": 40,
+        "nSamples": 184,
+        "pdRate": 1.0,
+        "medErrM": 3.637,
+        "p95ErrM": 8.283,
+        "meanD2Over3": 1.1871,
+        "cov95": 0.9185,
+        "f3": 0.9837,
+        "meanD6Over6": 0.9474,
+        "cov95_6d": 0.9348,
+        "f3_6d": 0.9837
+      },
+      "raw": {
+        "nSats": 3,
+        "nWindows": 46,
+        "nSamples": 214,
+        "pdRate": 1.0,
+        "medErrM": 3.623,
+        "p95ErrM": 8.744,
+        "meanD2Over3": 33652888220.8877,
+        "cov95": 0.9112,
+        "f3": 0.972,
+        "meanD6Over6": 120213416329.4633,
+        "cov95_6d": 0.8925,
+        "f3_6d": 0.9346
+      }
+    },
+    "gnss_meo_72h": {
+      "spanHours": 72,
+      "independentSats": 73,
+      "totalForecasts": 455,
+      "excludedForecasts": 2,
+      "screened": {
+        "nSats": 108,
+        "nWindows": 453,
+        "nSamples": 2263,
+        "pdRate": 1.0,
+        "medErrM": 2.02,
+        "p95ErrM": 7.098,
+        "meanD2Over3": 0.924,
+        "cov95": 0.9567,
+        "f3": 0.9938,
+        "meanD6Over6": 1.4036,
+        "cov95_6d": 0.8197,
+        "f3_6d": 0.9527
+      },
+      "raw": {
+        "nSats": 108,
+        "nWindows": 455,
+        "nSamples": 2272,
+        "pdRate": 1.0,
+        "medErrM": 2.025,
+        "p95ErrM": 7.306,
+        "meanD2Over3": 62709.5527,
+        "cov95": 0.9533,
+        "f3": 0.9903,
+        "meanD6Over6": 31849.703,
+        "cov95_6d": 0.8169,
+        "f3_6d": 0.9494
+      }
+    },
+    "gnss_meo_24h": {
+      "spanHours": 24,
+      "independentSats": 73,
+      "totalForecasts": 445,
+      "excludedForecasts": 1,
+      "screened": {
+        "nSats": 108,
+        "nWindows": 444,
+        "nSamples": 2220,
+        "pdRate": 1.0,
+        "medErrM": 9.725,
+        "p95ErrM": 61.21,
+        "meanD2Over3": 1.4461,
+        "cov95": 0.8468,
+        "f3": 0.9505,
+        "meanD6Over6": 1.6118,
+        "cov95_6d": 0.7441,
+        "f3_6d": 0.9113
+      },
+      "raw": {
+        "nSats": 108,
+        "nWindows": 445,
+        "nSamples": 2224,
+        "pdRate": 1.0,
+        "medErrM": 9.732,
+        "p95ErrM": 61.535,
+        "meanD2Over3": 4217.3337,
+        "cov95": 0.8458,
+        "f3": 0.9492,
+        "meanD6Over6": 2496.3953,
+        "cov95_6d": 0.7433,
+        "f3_6d": 0.9101
+      }
+    },
+    "geostationary_24h": {
+      "spanHours": 24,
+      "independentSats": 7,
+      "totalForecasts": 53,
+      "excludedForecasts": 0,
+      "screened": {
+        "nSats": 8,
+        "nWindows": 53,
+        "nSamples": 261,
+        "pdRate": 1.0,
+        "medErrM": 16.96,
+        "p95ErrM": 84.436,
+        "meanD2Over3": 0.853,
+        "cov95": 0.9885,
+        "f3": 1.0,
+        "meanD6Over6": 1.2088,
+        "cov95_6d": 0.8467,
+        "f3_6d": 0.9502
+      },
+      "raw": {
+        "nSats": 8,
+        "nWindows": 53,
+        "nSamples": 261,
+        "pdRate": 1.0,
+        "medErrM": 16.96,
+        "p95ErrM": 84.436,
+        "meanD2Over3": 0.853,
+        "cov95": 0.9885,
+        "f3": 1.0,
+        "meanD6Over6": 1.2088,
+        "cov95_6d": 0.8467,
+        "f3_6d": 0.9502
+      },
+      "byLead": {
+        "24": {
+          "nSats": 8,
+          "nWindows": 53,
+          "nSamples": 53,
+          "pdRate": 1.0,
+          "medErrM": 6.608,
+          "p95ErrM": 21.814,
+          "meanD2Over3": 0.6443,
+          "cov95": 1.0,
+          "f3": 1.0,
+          "meanD6Over6": 1.3895,
+          "cov95_6d": 0.8491,
+          "f3_6d": 0.9245
+        },
+        "48": {
+          "nSats": 8,
+          "nWindows": 52,
+          "nSamples": 52,
+          "pdRate": 1.0,
+          "medErrM": 15.903,
+          "p95ErrM": 49.136,
+          "meanD2Over3": 0.8591,
+          "cov95": 1.0,
+          "f3": 1.0,
+          "meanD6Over6": 1.3342,
+          "cov95_6d": 0.8269,
+          "f3_6d": 0.9423
+        },
+        "72": {
+          "nSats": 8,
+          "nWindows": 52,
+          "nSamples": 52,
+          "pdRate": 1.0,
+          "medErrM": 29.199,
+          "p95ErrM": 89.548,
+          "meanD2Over3": 1.0183,
+          "cov95": 0.9808,
+          "f3": 1.0,
+          "meanD6Over6": 1.2244,
+          "cov95_6d": 0.8462,
+          "f3_6d": 0.9423
+        }
+      }
+    },
+    "geostationary_72h": {
+      "spanHours": 72,
+      "independentSats": 7,
+      "totalForecasts": 53,
+      "excludedForecasts": 1,
+      "screened": {
+        "nSats": 8,
+        "nWindows": 52,
+        "nSamples": 256,
+        "pdRate": 1.0,
+        "medErrM": 2.875,
+        "p95ErrM": 20.422,
+        "meanD2Over3": 1.3657,
+        "cov95": 0.9297,
+        "f3": 0.9453,
+        "meanD6Over6": 3.0527,
+        "cov95_6d": 0.6094,
+        "f3_6d": 0.7227
+      },
+      "raw": {
+        "nSats": 8,
+        "nWindows": 53,
+        "nSamples": 261,
+        "pdRate": 1.0,
+        "medErrM": 2.89,
+        "p95ErrM": 39.163,
+        "meanD2Over3": 418.9919,
+        "cov95": 0.9119,
+        "f3": 0.9272,
+        "meanD6Over6": 216.3787,
+        "cov95_6d": 0.5977,
+        "f3_6d": 0.7088
+      }
+    }
+  },
+  "leoWeather": {
+    "stormAp30": {
+      "nSamples": 15,
+      "medErrM": 3569.442,
+      "cov95": 1.0,
+      "f3": 1.0,
+      "meanD2Over3": 1.0961
+    },
+    "quietAp15": {
+      "nSamples": 375,
+      "medErrM": 562.278,
+      "cov95": 0.8027,
+      "f3": 0.904,
+      "meanD2Over3": 93478.5599
+    }
+  }
+}
