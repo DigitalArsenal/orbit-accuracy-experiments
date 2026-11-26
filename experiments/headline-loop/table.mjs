@@ -460,7 +460,7 @@ async function main() {
       // an outside theory's column stands only once that theory has a row (flown or failed) on every window of the row
       const flownAll = (t) => ws.every((w) => rowOf(t, w, arc));
       const failedOn = (t, w) => !!rowOf(t, w, arc)?.apError;
-      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day), xF: failedOn('SGP4XP', w), uF: failedOn('USSFXP', w), sF: failedOn('SGP4', w) })).filter((p) => p.a != null);
+      const pairsAt = (day) => ws.map((w, i) => ({ w, a: meters(rowOf('AP', w, arc), null, day), f: label ? meters(bs[i], label, day) : null, x: meters(rowOf('SGP4XP', w, arc), null, day), u: meters(rowOf('USSFXP', w, arc), null, day), s: meters(rowOf('SGP4', w, arc), null, day), xF: failedOn('SGP4XP', w), uF: failedOn('USSFXP', w), sF: failedOn('SGP4', w), burnInArc: !!bs[i]?.burnInArc })).filter((p) => p.a != null);
       // --burns (stack issue 462): the burns in the truth, every one of the burn detector's lists that it does not reject, known at the cutoff
       // or not. On a row whose satellites all have lists, each lead's AP, numerical and SGP4-XP figures are also given over the windows with no
       // burn between the cutoff and that lead (cleanToLead), beside the figures over all windows; no window leaves any count
@@ -489,7 +489,7 @@ async function main() {
           apFfmRank: label && armed.length >= 10 ? { windows: armed.length, rho: round3(spearman(armed.map((p) => p.a), armed.map((p) => p.f))) } : null,
         };
         if (withLists) {
-          const clean = pairs.filter((p) => !burnsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length && !joinsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length);
+          const clean = pairs.filter((p) => !p.burnInArc && !burnsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length && !joinsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length);
           const fig = (v) => ({ windows: v.length, ...stats(v) });
           if (lead.ap) lead.ap.cleanToLead = fig(clean.map((p) => p.a));
           if (lead.ffm) lead.ffm.cleanToLead = fig(clean.filter((p) => p.f != null).map((p) => p.f));

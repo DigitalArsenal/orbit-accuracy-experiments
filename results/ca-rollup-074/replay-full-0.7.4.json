@@ -1,0 +1,32 @@
+{
+ "schema": "sdn-ap-site-replay-proof-1",
+ "version": "0.7.4",
+ "what": "Every SDN-AP propagating call of the accuracy run that wrote table-0.7.4.json was executed on both the full build and the signed public 0.7.4 module file, and every answer equals bit for bit (length and SHA-256).",
+ "public": {
+  "sha256": "c5019fac99b302f23eb49d00a6257cbf19947270574da9d76891d06930d655a0"
+ },
+ "private": {
+  "sha256": "e9900159be5ce75f39ced742d7e4d0acd825f67bc1eeb5bb00e0c2803a458d51"
+ },
+ "table": {
+  "sha256": "5481b84469d57ca92d7a6356ecffa944c7905133c8be738319462c6c1484eac0"
+ },
+ "files": 1,
+ "instances": 14,
+ "calls": 22400,
+ "replayed": 9986,
+ "notReplayed": {
+  "count": 12414,
+  "why": "calls that make records: the public module file has no such call; the records they made are inputs of the replayed calls"
+ },
+ "byMethod": {
+  "record-making": 12414,
+  "propagate": 9986
+ },
+ "otherFiles": {},
+ "differences": [],
+ "provedAt": "2026-11-26T15:33:24Z",
+ "from": {
+  "tool": "measure-table-and-replay-074.mjs"
+ }
+}

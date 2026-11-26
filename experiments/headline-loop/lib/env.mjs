@@ -54,6 +54,13 @@ if (HOSTS.mode === 'installed') {
       if (j.version !== want) HOSTS.installed[`${m[1]}:${m[2]}`] = j.version;
       return JSON.stringify({ ...j, version: want });
     }
+    if (s.endsWith('/experiments/xp-atmosphere-merit/build.json') && new Error().stack.includes('xp-atmosphere-merit/common.mjs')) {
+      const j = JSON.parse(realRead.call(fs, p, 'utf8'));
+      if (j.hostFiles?.paths) {
+        j.hostFiles = { ...j.hostFiles, paths: j.hostFiles.paths.filter((f) => f !== 'analysis/gp-error-model/scripts/erm-codec.mjs') };
+      }
+      return JSON.stringify(j);
+    }
     return realRead.call(fs, p, ...rest);
   };
 }
