@@ -1,0 +1,74 @@
+{
+  "version": "0.7.4",
+  "date": "2026-11-26",
+  "module": {
+    "bytes": 1998671,
+    "sha256": "c5019fac99b302f23eb49d00a6257cbf19947270574da9d76891d06930d655a0",
+    "canonicalSha256": "fb6097b6281dd89cb984174ded599f95d384fab1319d077884caf4542670826b",
+    "simd128": true,
+    "relaxedSimd": false
+  },
+  "prebuiltRows": {
+    "objects": 400,
+    "node": {
+      "prebuiltFirstFrameMs": 12.5,
+      "coldFirstFrameMs": 795.1,
+      "prebuiltSpeedup": 63.608,
+      "prebuiltIngestMs": 3.6,
+      "steadyFrameMs": 0.02,
+      "prebuiltDisplayMB": 20.97,
+      "coldDisplayMB": 29.36,
+      "rowsAdmitted": 400,
+      "rowsNotStored": 0
+    },
+    "chromium": {
+      "prebuiltFirstFrameMs": 19.6,
+      "coldSerialFirstFrameMs": 833.6,
+      "coldPool3FirstFrameMs": 228.5,
+      "prebuiltSpeedupSerial": 42.531,
+      "pool3Speedup": 3.648,
+      "prebuiltIngestMs": 6.7,
+      "steadyFrameMs": 0.022,
+      "prebuiltDisplayMB": 20.97,
+      "coldSerialDisplayMB": 29.36,
+      "coldPool3DisplayMB": 71.11,
+      "cappedFirstFrameMs": 7,
+      "cappedDisplayMB": 20.97,
+      "poolThreads": 3,
+      "rowsAdmitted": 400,
+      "rowsNotStored": 0,
+      "pageErrors": 0,
+      "failedAssets": 0
+    }
+  },
+  "scale100k": {
+    "objects": 100000,
+    "publicPeakMB": 103.3,
+    "publicCellMB": 62.7,
+    "publicUnserved": 0,
+    "eccDragPeakMB": 118.2,
+    "eccDragCellMB": 69.2,
+    "eccDragUnserved": 0,
+    "leo500PeakMB": 113.1,
+    "leo500CellMB": 68.3,
+    "leo500Unserved": 0
+  },
+  "atmosphere": {
+    "orbits": 20,
+    "days": 7,
+    "elapsedMs": 76.5
+  },
+  "widePool": {
+    "workers": 4,
+    "speedup": 3.6,
+    "reserveMiB": 64,
+    "refused": 0,
+    "deferred": 0
+  },
+  "stability": {
+    "highEccOrbits": 50,
+    "highEccFailures": 0,
+    "fallbackChecks": 3166,
+    "maxNormalizedD2": 0.9987
+  }
+}
