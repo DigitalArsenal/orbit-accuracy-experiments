@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent verifier & clean aggregate exporter for the 6-regime held-out confirmation of sdn-ap 0.7.3 & gp-error-model 0.19.1."""
+"""Independent verifier & clean aggregate exporter for the 6-regime held-out confirmation of sdn-ap 0.7.4."""
 import gzip
 import hashlib
 import json
@@ -9,13 +9,14 @@ from pathlib import Path
 import numpy as np
 
 OAE = Path(__file__).resolve().parents[2]
-CONF_DIR = OAE / 'runs/ca-rollup-073/confirmation-073'
+CONF_DIR = OAE / 'runs/ca-rollup-074/confirmation-074'
 REG_PATH = CONF_DIR / 'REGISTRATION.json'
 ROWS_PATH = CONF_DIR / 'conf_rows.jsonl.gz'
+XP_ROWS_PATH = CONF_DIR / 'conf_xp_rows.jsonl.gz'
 DENSE_PATH = CONF_DIR / 'conf_dense60s.json'
 GP_PATH = CONF_DIR / 'conf_gp_sgp4.json'
 SUMMARY_PATH = CONF_DIR / 'SUMMARY.json'
-OUT_SITE_JSON = OAE / 'results/ca-rollup-073/confirmation-0.7.3.json'
+OUT_SITE_JSON = OAE / 'results/ca-rollup-074/confirmation-0.7.4.json'
 
 CHI2_3_95 = 7.814727903251179
 CHI2_3_3SIG = 14.156403
@@ -75,6 +76,7 @@ def score_samples(samples):
         'medErrM': round(float(np.median(err3)), 3),
         'p95ErrM': round(float(np.percentile(err3, 95)), 3),
         'maxErrM': round(float(np.max(err3)), 3),
+        'medSigIM': round(float(np.median([s['sigIM'] for s in samples])), 2),
         'biasRtnM': [round(float(x), 3) for x in np.mean(e_pos, axis=0)],
         'rmsRtnM': [round(float(x), 3) for x in np.sqrt(np.mean(e_pos ** 2, axis=0))],
         'meanD2Over3': round(float(np.mean(d3v) / 3.0), 4) if len(d3v) else None,
@@ -99,6 +101,7 @@ def pick_site(o):
         'pdRate': o['pdRate'],
         'medErrM': o['medErrM'],
         'p95ErrM': o['p95ErrM'],
+        'medSigIM': o['medSigIM'],
         'meanD2Over3': o['meanD2Over3'],
         'cov95': o['cov95'],
         'f3': o['f3'],
@@ -108,16 +111,7 @@ def pick_site(o):
     }
 
 
-def main():
-    reg = json.loads(REG_PATH.read_text())
-    rows = []
-    with gzip.open(ROWS_PATH, 'rt', encoding='utf-8') as f:
-        for line in f:
-            if line.strip():
-                rows.append(json.loads(line))
-    dense = json.loads(DENSE_PATH.read_text())
-    gp = json.loads(GP_PATH.read_text())
-
+def expand_rows(rows):
     all_samples = []
     for r in rows:
         for ld in r['leads']:
@@ -161,28 +155,10 @@ def main():
                 'z_abs': z_abs.tolist(),
                 'pd': pd,
             })
+    return all_samples
 
-    regimes = ['leo_under_600', 'leo_600_750', 'spheres_750_2000', 'medium_2000_15000', 'gnss_meo', 'geostationary']
-    by_regime = {}
-    for reg_name in regimes:
-        sub = [s for s in all_samples if s['regime'] == reg_name]
-        if not sub:
-            continue
-        by_arc = {}
-        for arc_h in sorted({s['arcH'] for s in sub}):
-            asub = [s for s in sub if s['arcH'] == arc_h]
-            pooled_24_72 = [s for s in asub if 24 <= s['h'] <= 72]
-            by_lead = {str(h): score_samples([s for s in asub if s['h'] == h]) for h in sorted({s['h'] for s in asub})}
-            by_split = {sp: score_samples([s for s in asub if s['split'] == sp and 24 <= s['h'] <= 72]) for sp in sorted({s['split'] for s in asub})}
-            by_arc[f'{arc_h}h'] = {
-                'pooled_24_72h': score_samples(pooled_24_72),
-                'bySplit_24_72h': by_split,
-                'byLead': by_lead,
-            }
-        by_regime[reg_name] = by_arc
 
-    # Burn & truth-fault screening (exact read-only rule from #1100 confirmation)
-    burn_screened = {}
+def burn_flags_of(rows):
     win_flags = {}
     for r in rows:
         key = (r['regime'], r['norad'], r['startUtc'], r['arcH'])
@@ -206,7 +182,39 @@ def main():
         elif r['regime'] in ('gnss_meo', 'geostationary', 'spheres_750_2000') and max_pos > 500.0:
             flag = f'maneuver({max_pos:.0f}m)'
         win_flags[key] = flag
+    return win_flags
 
+
+def main():
+    reg = json.loads(REG_PATH.read_text())
+    rows = [json.loads(line) for line in gzip.open(ROWS_PATH, 'rt', encoding='utf-8') if line.strip()]
+    xp_rows = [json.loads(line) for line in gzip.open(XP_ROWS_PATH, 'rt', encoding='utf-8') if line.strip()] if XP_ROWS_PATH.exists() else []
+    dense = json.loads(DENSE_PATH.read_text())
+    gp = json.loads(GP_PATH.read_text())
+
+    all_samples = expand_rows(rows)
+    win_flags = burn_flags_of(rows)
+
+    regimes = ['leo_under_600', 'leo_600_750', 'spheres_750_2000', 'medium_2000_15000', 'gnss_meo', 'geostationary']
+    by_regime = {}
+    for reg_name in regimes:
+        sub = [s for s in all_samples if s['regime'] == reg_name]
+        if not sub:
+            continue
+        by_arc = {}
+        for arc_h in sorted({s['arcH'] for s in sub}):
+            asub = [s for s in sub if s['arcH'] == arc_h]
+            pooled_24_72 = [s for s in asub if 24 <= s['h'] <= 72]
+            by_lead = {str(h): score_samples([s for s in asub if s['h'] == h]) for h in sorted({s['h'] for s in asub})}
+            by_split = {sp: score_samples([s for s in asub if s['split'] == sp and 24 <= s['h'] <= 72]) for sp in sorted({s['split'] for s in asub})}
+            by_arc[f'{arc_h}h'] = {
+                'pooled_24_72h': score_samples(pooled_24_72),
+                'bySplit_24_72h': by_split,
+                'byLead': by_lead,
+            }
+        by_regime[reg_name] = by_arc
+
+    burn_screened = {}
     for reg_name in regimes:
         sub = [s for s in all_samples if s['regime'] == reg_name]
         if not sub:
@@ -217,21 +225,32 @@ def main():
             clean = [s for s in asub if win_flags.get((s['regime'], s['norad'], s['startUtc'], s['arcH'])) is None]
             flagged_wins = sorted({(s['norad'], s['name'], s['startUtc'][:10], win_flags[(s['regime'], s['norad'], s['startUtc'], s['arcH'])])
                                    for s in asub if win_flags.get((s['regime'], s['norad'], s['startUtc'], s['arcH'])) is not None})
+            clean_by_lead = {str(h): score_samples([s for s in clean if s['h'] == h]) for h in [24, 48, 72] if any(s['h'] == h for s in clean)}
             burn_screened[reg_name][f'{arc_h}h'] = {
                 'totalWindows': len({(s['norad'], s['startUtc']) for s in asub}),
                 'flaggedWindowsCount': len(flagged_wins),
                 'clean_24_72h': score_samples(clean),
+                'cleanByLead': clean_by_lead,
             }
 
-    # LEO weather stratification (leo_under_600, 24h..72h leads)
-    leo_sub = [s for s in all_samples if s['regime'] == 'leo_under_600' and 24 <= s['h'] <= 72]
+    # SGP4-XP held-out realism on the 3 demo regimes (screened by the same AP maneuver flags!)
+    xp_samples = expand_rows(xp_rows)
+    xp_screened = {}
+    for reg_name in ['spheres_750_2000', 'gnss_meo', 'geostationary']:
+        sub = [s for s in xp_samples if s['regime'] == reg_name and s['arcH'] == 24 and 24 <= s['h'] <= 72]
+        if not sub:
+            continue
+        clean = [s for s in sub if win_flags.get((s['regime'], s['norad'], s['startUtc'], s['arcH'])) is None]
+        xp_screened[reg_name] = {
+            'clean_24_72h': score_samples(clean),
+            'byLead': {str(h): score_samples([s for s in clean if s['h'] == h]) for h in [24, 48, 72] if any(s['h'] == h for s in clean)},
+        }
+
+    leo_sub = [s for s in all_samples if s['regime'] == 'leo_under_600' and 24 <= s['h'] <= 72 and win_flags.get((s['regime'], s['norad'], s['startUtc'], s['arcH'])) is None]
     leo_wx = {}
     for label, fn in [('quiet_Ap<15', lambda s: s['apMean3d'] < 15), ('moderate_Ap_15_30', lambda s: 15 <= s['apMean3d'] < 30), ('storm_Ap>=30', lambda s: s['apMean3d'] >= 30)]:
         grp = [s for s in leo_sub if fn(s)]
-        sc = score_samples(grp)
-        if sc:
-            sc['medSigIM'] = round(float(np.median([s['sigIM'] for s in grp])), 2)
-        leo_wx[label] = sc
+        leo_wx[label] = score_samples(grp)
 
     dense_smooth = sum(1 for w in dense['windows'] if not w.get('error') and w.get('nonFinite') == 0 and w.get('nonPd') == 0 and w.get('parityDiff') == 0 and w.get('monotonicSecular'))
     unseen_gnss = len({r['norad'] for r in rows if r['regime'] == 'gnss_meo' and r['split'] == 'unseen_sat'})
@@ -255,13 +274,13 @@ def main():
         },
         'byRegime': by_regime,
         'byRegimeBurnAndFaultScreened': burn_screened,
+        'xpDemoRegimesScreened': xp_screened,
         'leoWeatherStratified_24_72h': leo_wx,
         'dense60sAudit': dense['windows'],
         'gpErrorModelConfirmation': {k: v for k, v in gp.items() if k != 'rows'},
     }
     SUMMARY_PATH.write_text(json.dumps(summary, indent=2) + '\n')
 
-    # Clean aggregate-only site JSON (zero satellite-with-date pairs, zero private paths)
     storm = leo_wx.get('storm_Ap>=30')
     quiet = leo_wx.get('quiet_Ap<15')
     site_doc = {
@@ -301,10 +320,11 @@ def main():
             },
             'spheres_750_2000': {
                 'spanHours': 24,
-                'totalForecasts': by_regime['spheres_750_2000']['24h']['pooled_24_72h']['nWindows'],
+                'totalForecasts': burn_screened['spheres_750_2000']['24h']['totalWindows'],
                 'excludedForecasts': burn_screened['spheres_750_2000']['24h']['flaggedWindowsCount'],
                 'screened': pick_site(burn_screened['spheres_750_2000']['24h']['clean_24_72h']),
                 'raw': pick_site(by_regime['spheres_750_2000']['24h']['pooled_24_72h']),
+                'byLead': {k: pick_site(v) for k, v in burn_screened['spheres_750_2000']['24h']['cleanByLead'].items()},
             },
             'medium_2000_15000': {
                 'spanHours': 24,
@@ -328,6 +348,7 @@ def main():
                 'excludedForecasts': burn_screened['gnss_meo']['24h']['flaggedWindowsCount'],
                 'screened': pick_site(burn_screened['gnss_meo']['24h']['clean_24_72h']),
                 'raw': pick_site(by_regime['gnss_meo']['24h']['pooled_24_72h']),
+                'byLead': {k: pick_site(v) for k, v in burn_screened['gnss_meo']['24h']['cleanByLead'].items()},
             },
             'geostationary_24h': {
                 'spanHours': 24,
@@ -336,11 +357,7 @@ def main():
                 'excludedForecasts': burn_screened['geostationary']['24h']['flaggedWindowsCount'],
                 'screened': pick_site(burn_screened['geostationary']['24h']['clean_24_72h']),
                 'raw': pick_site(by_regime['geostationary']['24h']['pooled_24_72h']),
-                'byLead': {
-                    '24': pick_site(by_regime['geostationary']['24h']['byLead']['24']),
-                    '48': pick_site(by_regime['geostationary']['24h']['byLead']['48']),
-                    '72': pick_site(by_regime['geostationary']['24h']['byLead']['72']),
-                },
+                'byLead': {k: pick_site(v) for k, v in burn_screened['geostationary']['24h']['cleanByLead'].items()},
             },
             'geostationary_72h': {
                 'spanHours': 72,
@@ -351,6 +368,7 @@ def main():
                 'raw': pick_site(by_regime['geostationary']['72h']['pooled_24_72h']),
             },
         },
+        'xpDemoRegimes': {rn: {'screened': pick_site(v['clean_24_72h']), 'byLead': {k: pick_site(x) for k, x in v['byLead'].items()}} for rn, v in xp_screened.items() if v['clean_24_72h']},
         'leoWeather': {
             'stormAp30': {'nSamples': storm['nSamples'], 'medErrM': storm['medErrM'], 'cov95': storm['cov95'], 'f3': storm['f3'], 'meanD2Over3': storm['meanD2Over3']} if storm else None,
             'quietAp15': {'nSamples': quiet['nSamples'], 'medErrM': quiet['medErrM'], 'cov95': quiet['cov95'], 'f3': quiet['f3'], 'meanD2Over3': quiet['meanD2Over3']} if quiet else None,
@@ -365,8 +383,26 @@ def main():
         for arc, blk in burn_screened.get(rn, {}).items():
             c = blk['clean_24_72h']
             if c:
-                print(f"  {rn:20s} {arc:4s} clean={blk['totalWindows']-blk['flaggedWindowsCount']:3d}/{blk['totalWindows']:3d} med={c['medErrM']:7.2f}m p95={c['p95ErrM']:8.2f}m d2/3={c['meanD2Over3']:.3f} cov95={c['cov95']:.4f} f3={c['f3']:.4f}")
-    print(f"Wrote {SUMMARY_PATH} and {OUT_SITE_JSON} (sha256 {sha256_file(OUT_SITE_JSON)[:12]})")
+                print(f"  AP {rn:20s} {arc:4s} sats={c['nSats']:2d} n={c['nSamples']:4d} clean={blk['totalWindows']-blk['flaggedWindowsCount']:3d}/{blk['totalWindows']:3d} med={c['medErrM']:7.2f}m sigI={c['medSigIM']:7.2f}m d2/3={c['meanD2Over3']:.3f} cov95={c['cov95']:.4f} f3={c['f3']:.4f} d6/6={c['meanD6Over6']:.3f} cov95_6={c['cov95_6d']:.4f}")
+                if rn in ('spheres_750_2000', 'gnss_meo', 'geostationary') and arc == '24h':
+                    for h in ['24', '48', '72']:
+                        lh = blk['cleanByLead'].get(h)
+                        if lh:
+                            print(f"     @{h}h: sats={lh['nSats']:2d} n={lh['nSamples']:3d} med={lh['medErrM']:6.2f}m sigI={lh['medSigIM']:6.2f}m d2/3={lh['meanD2Over3']:.3f} cov95={lh['cov95']:.4f} d6/6={lh['meanD6Over6']:.3f} cov95_6={lh['cov95_6d']:.4f}")
+    print("--- SGP4-XP Demo Regimes (24h fit, held-out) ---")
+    for rn, blk in xp_screened.items():
+        c = blk['clean_24_72h']
+        if c:
+            print(f"  XP {rn:20s} 24h  sats={c['nSats']:2d} n={c['nSamples']:4d} med={c['medErrM']:7.2f}m sigI={c['medSigIM']:7.2f}m d2/3={c['meanD2Over3']:.3f} cov95={c['cov95']:.4f} f3={c['f3']:.4f} d6/6={c['meanD6Over6']:.3f} cov95_6={c['cov95_6d']:.4f}")
+            for h in ['24', '48', '72']:
+                lh = blk['byLead'].get(h)
+                if lh:
+                    print(f"     @{h}h: sats={lh['nSats']:2d} n={lh['nSamples']:3d} med={lh['medErrM']:6.2f}m sigI={lh['medSigIM']:6.2f}m d2/3={lh['meanD2Over3']:.3f} cov95={lh['cov95']:.4f}")
+    print("--- LEO Weather Stratified ---")
+    for lbl, sc in leo_wx.items():
+        if sc:
+            print(f"  {lbl:20s} n={sc['nSamples']:4d} med={sc['medErrM']:7.2f}m sigI={sc['medSigIM']:7.2f}m d2/3={sc['meanD2Over3']:.3f} cov95={sc['cov95']:.4f} f3={sc['f3']:.4f} cov95_6={sc['cov95_6d']:.4f}")
+    print(f"Wrote {SUMMARY_PATH} and {OUT_SITE_JSON}")
 
 
 if __name__ == '__main__':

@@ -14,20 +14,20 @@ import zlib from 'node:zlib';
 import { execFileSync, spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { DAY_MS, sha256, sha256File, nowUtc, utcMs, loadSdsAndSdk, gpJsonToOmm } from './amendment5-lib.mjs';
+import { DAY_MS, sha256, sha256File, nowUtc, utcMs, loadSdsAndSdk, gpJsonToOmm } from './amendment6-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
 const CA_DIR = path.join(MODULES, 'analysis/conjunction-assessment');
-const CFG_PATH = path.join(path.dirname(SELF), 'amendment5-config.json');
+const CFG_PATH = path.join(path.dirname(SELF), 'amendment6-config.json');
 const CFG = JSON.parse(fs.readFileSync(CFG_PATH, 'utf8'));
 
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-const SCREEN_DIR = path.join(OAE, 'runs/ca-rollup-073/screen-20261117');
+const SCREEN_DIR = path.join(OAE, 'runs/ca-rollup-074/screen-20261117');
 const START_MS = Date.parse(CFG.forwardWeek.fromUtc);
 const START_JD = START_MS / DAY_MS + 2440587.5;
 const RECORD = 14;

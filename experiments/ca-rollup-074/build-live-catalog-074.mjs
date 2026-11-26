@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // Item 5 (#1128 / #976): Build Live Full-Catalog 3-Arm Snapshot (32,988 objects, T0 = 2026-11-24T17:00:00Z)
-// Runs every object through compiled flows/catalog-builder 0.2.5 + analysis/gp-error-model 0.19.1
+// Runs every object through compiled flows/catalog-builder 0.2.6 + analysis/gp-error-model 0.19.2
 // (capturing the ANNOTATED $OCM with native empirical covariance on ALL AP and SGP4-XP branches!)
 // plus stock Space-Track public GP $OMM for SGP4.
 // Strict pre-T0 causality: GP snapshot <= T0, 21-day gp_history <= T0, SpaceX 16-57Z cycle < T0, causal SPW.
 //
 // Usage:
-//   SDN_MODULES_ROOT=... node build-live-catalog-073.mjs --workers 14 [--smoke]
+//   SDN_MODULES_ROOT=... node build-live-catalog-074.mjs --workers 14 [--smoke]
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -15,13 +15,13 @@ import { fileURLToPath } from 'node:url';
 import {
   DAY_MS, nowUtc, utcMs, dayStr, sha256File,
   loadSdsAndSdk, gpJsonToOmm, buildCausalSpwRecords,
-} from './amendment5-lib.mjs';
+} from './amendment6-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
-const LIVE_DIR = process.env.SDN_LIVE_CATALOG_DIR || path.join(OAE, 'runs/ca-rollup-073/live-20261124');
+const LIVE_DIR = process.env.SDN_LIVE_CATALOG_DIR || path.join(OAE, 'runs/ca-rollup-074/live-20261124');
 const T0_ISO = '2026-11-24T17:00:00.000Z';
 const T0_MS = Date.parse(T0_ISO);
 const SL_CYCLE = '2026-11-24T16-57-57-960Z';
@@ -30,13 +30,13 @@ const WEATHER_CUTOFF = '2026-11-24';
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-// Drive catalog-builder 0.2.5 + gp-error-model 0.19.1 capturing the FINAL ANNOTATED $OCM (with native covariance!)
+// Drive catalog-builder 0.2.6 + gp-error-model 0.19.2 capturing the FINAL ANNOTATED $OCM (with native covariance!)
 async function buildAnnotatedBatch({ sds, kind, nowMs, seeds, historyByNorad, ephemeridesByNorad, weatherRecords, reusable }) {
   const { fb, sdkBrowser, sdkRuntime, OMM_MOD, OCM_MOD, CAT_MOD, QRP_MOD, pack, frame, splitPrefixed } = sds;
   const controlDir = path.join(MODULES, 'flows/catalog-builder/dist/flow/control');
   const manifest = (dir) => JSON.parse(fs.readFileSync(path.join(dir, 'plugin-manifest.json'), 'utf8'));
   const cfg = {
-    'catalog.provider': `live073-${kind}`,
+    'catalog.provider': `live074-${kind}`,
     'catalog.identity_provider': 'local',
     'catalog.identity_source': 'identities',
     'catalog.weather_provider': 'local',
@@ -349,9 +349,9 @@ async function runParent(workers, smoke) {
     xpOk: 0, xpFallback: 0, xpAnnotated: 0, xpFromEph: 0,
     apCpuMs: 0, xpCpuMs: 0,
     wallMs: Date.now() - tStart,
-    catalogBuilderVersion: '0.2.5',
+    catalogBuilderVersion: '0.2.6',
     gpErrorModelVersion: '0.19.1',
-    sdnApVersion: '0.7.3',
+    sdnApVersion: '0.7.4',
     chainWasmSha256: sha256File(path.join(MODULES, 'flows/catalog-builder/dist/isomorphic/module.wasm')),
     gpErrorModelWasmSha256: sha256File(path.join(MODULES, 'analysis/gp-error-model/dist/isomorphic/module.wasm')),
   };
@@ -366,7 +366,7 @@ async function runParent(workers, smoke) {
   fs.writeFileSync(path.join(LIVE_DIR, 'ap-catalog.ocm.bin'), Buffer.concat(apOut));
   fs.writeFileSync(path.join(LIVE_DIR, 'xp-catalog.ocm.bin'), Buffer.concat(xpOut));
   fs.writeFileSync(path.join(LIVE_DIR, 'build-summary.json'), JSON.stringify(summary, null, 2) + '\n');
-  console.log('LIVE CATALOG 0.7.3 COMPLETE:', JSON.stringify(summary, null, 2));
+  console.log('LIVE CATALOG 0.7.4 COMPLETE:', JSON.stringify(summary, null, 2));
 }
 
 if (arg('--worker') !== null) {

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-// Amendment 5 (#1128): All-8-Group Unified 0.7.3 / 0.2.5 Signed RTN Vector & Public-History Generator
+// Amendment 6 (#1128): All-8-Group Unified 0.7.4 / 0.2.6 Signed RTN Vector & Public-History Generator
 // Runs ALL 2,045 in-aggregate tests from work-fifthday/sets-all.json (LS, DO, S1, P/SD, GD, GN, IG, GE)
-// through compiled flows/catalog-builder 0.2.5 + propagator/sdn-ap 0.7.3 with strictly causal forecast-only
+// through compiled flows/catalog-builder 0.2.6 + propagator/sdn-ap 0.7.4 with strictly causal forecast-only
 // space weather, scoring against independent GCRF truth $OEMs in /opt/data/sdn-archive/reference-states/.
 // Records genuine signed 3-D and 6-D RTN error vectors + daily RMS + pre-T0 fit diagnostics (fitRmsKm, bterm, maxAp)
-// for S (SGP4), O/Op (SDN-AP 0.7.3), and X/Xp (SGP4-XP).
+// for S (SGP4), O/Op (SDN-AP 0.7.4), and X/Xp (SGP4-XP).
 //
 // Usage:
-//   SDN_MODULES_ROOT=... node amendment5-public-vectors.mjs --workers 14 [--smoke]
+//   SDN_MODULES_ROOT=... node amendment6-public-vectors.mjs --workers 14 [--smoke]
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -15,18 +15,18 @@ import { fileURLToPath } from 'node:url';
 import {
   DAY_MS, nowUtc, isoNoZ, utcMs, dayStr,
   loadSdsAndSdk, gpJsonToOmm, buildCausalSpwRecords, signedRtnErrorKm, buildCatalogBatch,
-} from './amendment5-lib.mjs';
+} from './amendment6-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
-const SITE_JSONL = process.env.SDN_SITE_JSONL || path.join(OAE, 'results/ca-rollup-073/public-only-tests-0.7.3.jsonl');
+const SITE_JSONL = process.env.SDN_SITE_JSONL || path.join(OAE, 'runs/ca-rollup-074/public-only-tests-ref.jsonl');
 
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-073/pub-vectors');
+const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-074/pub-vectors');
 const SETS_PATH = path.join(ARCHIVE, 'derived/site-measure/work-fifthday/sets-all.json');
 const STEP_MS = 300000; // 5-min scoring grid
 
@@ -114,7 +114,7 @@ function prepareTests(smoke) {
   const meta = { count: allTests.length, norads: wantNorads.size, truthFilesByNorad };
   fs.writeFileSync(path.join(RUNS_DIR, `tests${smoke ? '-smoke' : ''}.json`), JSON.stringify(allTests));
   fs.writeFileSync(cachePath, JSON.stringify(meta));
-  console.log(`${nowUtc()} [pub-vec-073] Prepared ${allTests.length} tests across ${wantNorads.size} satellites`);
+  console.log(`${nowUtc()} [pub-vec-074] Prepared ${allTests.length} tests across ${wantNorads.size} satellites`);
   return meta;
 }
 
@@ -122,7 +122,7 @@ async function runWorker(shard, workers, smoke) {
   const t0 = Date.now();
   const outFile = path.join(RUNS_DIR, `rows${smoke ? '-smoke' : ''}-${shard}.jsonl`);
   if (fs.existsSync(outFile)) {
-    console.log(`[pub-vec-073 w${shard}] cached -> skipping`);
+    console.log(`[pub-vec-074 w${shard}] cached -> skipping`);
     return;
   }
 
@@ -314,7 +314,7 @@ async function runWorker(shard, workers, smoke) {
       days, earlyV6O,
     }));
     if ((idx + 1) % 25 === 0 || idx + 1 === mine.length) {
-      console.log(`${nowUtc()} [pub-vec-073 w${shard}/${workers}] ${idx + 1}/${mine.length} (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+      console.log(`${nowUtc()} [pub-vec-074 w${shard}/${workers}] ${idx + 1}/${mine.length} (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
     }
   }
   fs.writeFileSync(`${outFile}.tmp`, rowsOut.join('\n') + '\n');
@@ -334,14 +334,14 @@ async function main() {
   const wCount = smoke ? Math.min(2, workers) : workers;
   await Promise.all(Array.from({ length: wCount }, (_, w) => new Promise((resolve, reject) => {
     const c = spawn('nice', ['-n', '10', process.execPath, '--max-old-space-size=4096', SELF, '--worker', String(w), '--workers', String(wCount), ...(smoke ? ['--smoke'] : [])], { stdio: 'inherit', env: process.env });
-    c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`pub-vec-073 worker ${w} exited ${code}`))));
+    c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`pub-vec-074 worker ${w} exited ${code}`))));
   })));
   const merged = [];
   for (let w = 0; w < wCount; w++) {
     const txt = fs.readFileSync(path.join(RUNS_DIR, `rows${smoke ? '-smoke' : ''}-${w}.jsonl`), 'utf8').trim();
     if (txt) for (const l of txt.split('\n')) merged.push(JSON.parse(l));
   }
-  const outPath = path.join(OAE, `runs/ca-rollup-073/public-vectors-073${smoke ? '-smoke' : ''}.jsonl`);
+  const outPath = path.join(OAE, `runs/ca-rollup-074/public-vectors-074${smoke ? '-smoke' : ''}.jsonl`);
   fs.writeFileSync(outPath, merged.map((r) => JSON.stringify(r)).join('\n') + '\n');
   const byG = {};
   let totL5 = 0, totN5 = 0, totW5 = 0;
@@ -359,7 +359,7 @@ async function main() {
     }
   }
   const med = (a) => { const s = a.slice().sort((x, y) => x - y); return s.length ? Math.round(s[Math.floor(s.length / 2)]) : null; };
-  console.log(`\n${nowUtc()} [pub-vec-073] COMPLETE: ${merged.length} rows in ${((Date.now() - t0) / 1000).toFixed(1)}s -> ${outPath}`);
+  console.log(`\n${nowUtc()} [pub-vec-074] COMPLETE: ${merged.length} rows in ${((Date.now() - t0) / 1000).toFixed(1)}s -> ${outPath}`);
   console.log(`TOTAL DAY 5: N=${totN5} Loss>=1km=${totL5} (was 216 in 0.7.2!) Win<=-1km=${totW5}`);
   for (const [k, v] of Object.entries(byG)) {
     console.log(`  ${k.padEnd(2)}: n=${String(v.n).padStart(3)} fbO=${v.fbO} | D1 med(m): S=${med(v.d1S)} X=${med(v.d1X)} O=${med(v.d1O)} | D5 med(m): S=${med(v.d5S)} X=${med(v.d5X)} O=${med(v.d5O)} | L5>=1km=${v.l5} W5<=-1km=${v.w5}`);

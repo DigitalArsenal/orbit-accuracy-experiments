@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// Unified SDN-AP 0.7.3 precise-orbit scoreboard (table-0.7.3.json), bit-exact public-module replay proof
-// (replay-full-0.7.3.json), and paired public-set / recount / allarms-xp / public-only derivations
-// (sgp4-public-sets-0.7.3.json, recount-0.7.3.json, allarms-xp-0.7.3.json, public-only-0.7.3.json).
+// Unified SDN-AP 0.7.4 precise-orbit scoreboard (table-0.7.4.json), bit-exact public-module replay proof
+// (replay-full-0.7.4.json), and paired public-set / recount / allarms-xp / public-only derivations
+// (sgp4-public-sets-0.7.4.json, recount-0.7.4.json, allarms-xp-0.7.4.json, public-only-0.7.4.json).
 //
-// Fits use the full 0.7.3 build (.build-full/dist/isomorphic/module.wasm); EVERY propagate call
+// Fits use the full 0.7.4 build (.build-full/dist/isomorphic/module.wasm); EVERY propagate call
 // (AP, SGP4-XP, carry24, perigeeScan) is executed on BOTH the full build and the signed public
-// 0.7.3 module (dist/isomorphic/module.wasm) and verified bit-for-bit (length + SHA-256).
+// 0.7.4 module (dist/isomorphic/module.wasm) and verified bit-for-bit (length + SHA-256).
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -255,14 +255,14 @@ async function main() {
   const burnsDir = args.burns || path.join(A.STORE_ROOT, 'lists-0647');
   const burnFlagsDir = args['burn-flags'] || path.join(A.STORE_ROOT, 'burn-flags-dfb137bd1c4f');
   const afterBurnStoreArg = args['after-burn-store'] || 'f0b8352a43f3-after-burn-d21467bc3ef7-arcs';
-  const workDir = path.join(REPO, 'runs/ca-rollup-073/table-073');
-  const outDir = path.join(REPO, 'results/ca-rollup-073');
+  const workDir = path.join(REPO, 'runs/ca-rollup-074/table-074');
+  const outDir = path.join(REPO, 'results/ca-rollup-074');
   fs.mkdirSync(workDir, { recursive: true });
   fs.mkdirSync(outDir, { recursive: true });
 
   const pkg = JSON.parse(fs.readFileSync(path.join(MODULES_ROOT, 'propagator/sdn-ap/package.json'), 'utf8'));
   const version = pkg.version;
-  assert.equal(version, '0.7.3', `expected sdn-ap 0.7.3, got ${version}`);
+  assert.equal(version, '0.7.4', `expected sdn-ap 0.7.4, got ${version}`);
   const modulesCommit = git(MODULES_ROOT, 'rev-parse', 'HEAD').toString().trim();
   const harnessCommit = git(REPO, 'rev-parse', 'HEAD').toString().trim();
   const fullSha = shaFile(fullWasm);
@@ -317,7 +317,7 @@ async function main() {
   const needOf = (w) => ['AP', 'SGP4XP'].flatMap((t) => w.arcs.filter((a) => !rowOf(t, w, a) || !replayMap.has(`${t}|${w.key}|${a}`)).map((a) => [t, a]));
   const todo = args['derive-only'] ? [] : listed.filter((w) => needOf(w).length)
     .sort((a, b) => HEAVY.indexOf(a.group) - HEAVY.indexOf(b.group) || Math.max(...b.arcs) - Math.max(...a.arcs) || a.key.localeCompare(b.key));
-  console.log(`table-073: sdn-ap ${version} full=${fullSha.slice(0, 12)} pub=${pubSha.slice(0, 12)}; listed=${listed.length}, todo=${todo.length}, jobs=${Math.min(jobs, Math.max(1, todo.length))}`);
+  console.log(`table-074: sdn-ap ${version} full=${fullSha.slice(0, 12)} pub=${pubSha.slice(0, 12)}; listed=${listed.length}, todo=${todo.length}, jobs=${Math.min(jobs, Math.max(1, todo.length))}`);
 
   if (todo.length > 0) {
     let next = 0, flown = 0;
@@ -345,7 +345,7 @@ async function main() {
           }
           flown += 1;
           if (flown % 100 === 0 || flown === todo.length) {
-            console.log(`  table-073 progress ${flown}/${todo.length} windows (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
+            console.log(`  table-074 progress ${flown}/${todo.length} windows (${((Date.now() - t0) / 1000).toFixed(0)} s)`);
           }
         }
         give();
@@ -354,7 +354,7 @@ async function main() {
     })));
   }
 
-  // Build table-0.7.3.json (exact sdn-ap-scoreboard/2 schema)
+  // Build table-0.7.4.json (exact sdn-ap-scoreboard/2 schema)
   const meters = (row, arm, day) => { const e = arm ? row?.arms?.[arm]?.ok && row.arms[arm].days?.[day]?.e : row?.days?.[day]?.e; return Number.isFinite(e) ? e * 1000 : null; };
   const stats = (v) => { const s = v.slice().sort((a, b) => a - b); return { medianM: round(quantile(s, 0.5)), p95M: round(quantile(s, 0.95)) }; };
   const median = (v) => quantile(v.slice().sort((a, b) => a - b), 0.5);
@@ -407,6 +407,7 @@ async function main() {
         xF: failedOn('SGP4XP', w),
         uF: failedOn('USSFXP', w),
         sF: failedOn('SGP4', w),
+        burnInArc: !!bs[i]?.burnInArc,
       })).filter((p) => p.a != null);
 
       rowContext.push({ g, regime: W.GROUPS[g].label, arc, ws, bs, label, pairsAt });
@@ -433,7 +434,9 @@ async function main() {
           apFfmRank: label && armed.length >= 10 ? { windows: armed.length, rho: round3(spearman(armed.map((p) => p.a), armed.map((p) => p.f))) } : null,
         };
         if (withLists) {
-          const clean = pairs.filter((p) => !burnsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length && !joinsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length);
+          // Exclude continuous-thrust / burnInArc windows (ruleLeavesNoArm, e.g. all-electric GEO satellites) from cleanToLead
+          // so AP, XP and FFM are compared on the same ballistic burn-free windows rather than mixing 49 continuous-thrust windows into AP alone.
+          const clean = pairs.filter((p) => !p.burnInArc && !burnsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length && !joinsIn(p.w, p.w.cutoffMs, p.w.cutoffMs + hours * W.HOUR).length);
           const fig = (v) => ({ windows: v.length, ...stats(v) });
           if (lead.ap) lead.ap.cleanToLead = fig(clean.map((p) => p.a));
           if (lead.ffm) lead.ffm.cleanToLead = fig(clean.filter((p) => p.f != null).map((p) => p.f));
@@ -501,16 +504,16 @@ async function main() {
     windows: windowsText,
     module: { version, modulesCommit, wasmSha256: fullSha },
     burnLists: { digest: A.listsDigest(burnsDir).slice(0, 12), afterBurnStore: afterBurnGroups.size ? afterBurnStore : null },
-    harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: 'node experiments/ca-rollup-073/measure-table-and-replay-073.mjs --jobs 14' },
+    harness: { repo: 'orbit-accuracy-experiments', commit: harnessCommit, command: 'node experiments/ca-rollup-074/measure-table-and-replay-074.mjs --jobs 14' },
     frame: 'GCRF, the module\'s own output',
     rows,
   };
-  const tablePath = path.join(outDir, 'table-0.7.3.json');
+  const tablePath = path.join(outDir, 'table-0.7.4.json');
   fs.writeFileSync(tablePath, `${JSON.stringify(tableDoc, null, 1)}\n`);
   const tableSha = shaFile(tablePath);
   console.log(`Wrote ${tablePath} (sha256 ${tableSha.slice(0, 12)})`);
 
-  // Build replay-full-0.7.3.json (exact sdn-ap-site-replay-proof-1 schema)
+  // Build replay-full-0.7.4.json (exact sdn-ap-site-replay-proof-1 schema)
   let totalRecordMaking = 0, totalPropagate = 0, totalReplayed = 0;
   const allDiffs = [];
   for (const w of listed) {
@@ -530,7 +533,7 @@ async function main() {
   const replayDoc = {
     schema: 'sdn-ap-site-replay-proof-1',
     version,
-    what: 'Every SDN-AP propagating call of the accuracy run that wrote table-0.7.3.json was executed on both the full build and the signed public 0.7.3 module file, and every answer equals bit for bit (length and SHA-256).',
+    what: 'Every SDN-AP propagating call of the accuracy run that wrote table-0.7.4.json was executed on both the full build and the signed public 0.7.4 module file, and every answer equals bit for bit (length and SHA-256).',
     public: { sha256: pubSha },
     private: { sha256: fullSha },
     table: { sha256: tableSha },
@@ -550,16 +553,16 @@ async function main() {
     differences: allDiffs,
     provedAt: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
     from: {
-      tool: 'measure-table-and-replay-073.mjs',
+      tool: 'measure-table-and-replay-074.mjs',
     },
   };
-  const replayPath = path.join(outDir, 'replay-full-0.7.3.json');
+  const replayPath = path.join(outDir, 'replay-full-0.7.4.json');
   fs.writeFileSync(replayPath, `${JSON.stringify(replayDoc, null, 1)}\n`);
   console.log(`Wrote ${replayPath}: replayed=${totalReplayed}/${totalPropagate}, recordMaking=${totalRecordMaking}, diffs=0`);
 
-  // Derive G (sgp4-public-sets-0.7.3.json), R (recount-0.7.3.json), X (allarms-xp-0.7.3.json), Y (public-only-0.7.3.json)
+  // Derive G (sgp4-public-sets-0.7.4.json), R (recount-0.7.4.json), X (allarms-xp-0.7.4.json), Y (public-only-0.7.4.json)
   deriveSiteTables({ outDir, version, tablePath, tableSha, pubSha, modulesCommit, rowContext, W });
-  console.log(`table-073 ALL DONE in ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+  console.log(`table-074 ALL DONE in ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   process.exit(0);
 }
 
@@ -570,16 +573,16 @@ function deriveSiteTables({ outDir, version, tablePath, tableSha, pubSha, module
     .flatMap((f) => fs.readFileSync(path.join(wfDir, f), 'utf8').trim().split('\n').map(JSON.parse));
   const wfByKey = new Map(wfRows.map((r) => [r.key, r]));
 
-  // Load fresh 0.7.3 public-only-tests rows for Y (public-only-0.7.3.json)
-  const po073Path = path.join(outDir, 'public-only-tests-0.7.3.jsonl');
-  const po073Rows = fs.existsSync(po073Path)
-    ? fs.readFileSync(po073Path, 'utf8').trim().split('\n').map(JSON.parse).filter((r) => r.inAggregates)
+  // Load fresh 0.7.4 public-only-tests rows for Y (public-only-0.7.4.json)
+  const po074Path = path.join(outDir, 'public-only-tests-0.7.4.jsonl');
+  const po074Rows = fs.existsSync(po074Path)
+    ? fs.readFileSync(po074Path, 'utf8').trim().split('\n').map(JSON.parse).filter((r) => r.inAggregates)
     : [];
-  const po073ByGroupKey = new Map();
-  for (const r of po073Rows) {
-    const arr = po073ByGroupKey.get(r.groupKey) || [];
+  const po074ByGroupKey = new Map();
+  for (const r of po074Rows) {
+    const arr = po074ByGroupKey.get(r.groupKey) || [];
     arr.push(r);
-    po073ByGroupKey.set(r.groupKey, arr);
+    po074ByGroupKey.set(r.groupKey, arr);
   }
 
   // Single HEO-A public-set SGP4 baseline (1 of 11 tests; independent of SDN-AP version; site claims no median from 1 test)
@@ -601,7 +604,7 @@ function deriveSiteTables({ outDir, version, tablePath, tableSha, pubSha, module
     HX: 'its windows date from before the archive\'s daily files',
   };
 
-  // 1. G: sgp4-public-sets-0.7.3.json
+  // 1. G: sgp4-public-sets-0.7.4.json
   const gRows = [];
   const xRows = [];
   const ctx72 = rowContext.filter((c) => c.arc === 72);
@@ -687,24 +690,24 @@ function deriveSiteTables({ outDir, version, tablePath, tableSha, pubSha, module
     schema: 'sdn-ap-site-sgp4-public-sets-1',
     version,
     measurement: 'M3',
-    what: 'For each forecast of the real-object table\'s 72 h rows, the public element set with the latest epoch before the cutoff, among the sets created at or before the cutoff (no older than 3 days), flown by propagator/sgp4 in AFSPC mode and scored on the table\'s own epochs against the table\'s own truth, paired against SDN-AP 0.7.3.',
+    what: 'For each forecast of the real-object table\'s 72 h rows, the public element set with the latest epoch before the cutoff, among the sets created at or before the cutoff (no older than 3 days), flown by propagator/sgp4 in AFSPC mode and scored on the table\'s own epochs against the table\'s own truth, paired against SDN-AP 0.7.4.',
     statistic: 'Median and 95th percentile (linear interpolation) in meters to the centimeter.',
     rows: gRows,
   };
-  const gPath = path.join(outDir, 'sgp4-public-sets-0.7.3.json');
+  const gPath = path.join(outDir, 'sgp4-public-sets-0.7.4.json');
   fs.writeFileSync(gPath, `${JSON.stringify(gDoc, null, 1)}\n`);
 
   const xDoc = {
     schema: 'sdn-ap-site-allarms-xp-1',
     version,
     measurement: 'M3b',
-    what: 'Per 72 h row and day, on the exact forecasts where the public element set was flown and SDN-AP 0.7.3 (and where present, the numerical propagator) was scored: publicSetSgp4, sdnAp, numerical, sgp4Xp, and sgp4XpUssf.',
+    what: 'Per 72 h row and day, on the exact forecasts where the public element set was flown and SDN-AP 0.7.4 (and where present, the numerical propagator) was scored: publicSetSgp4, sdnAp, numerical, sgp4Xp, and sgp4XpUssf.',
     rows: xRows,
   };
-  const xPath = path.join(outDir, 'allarms-xp-0.7.3.json');
+  const xPath = path.join(outDir, 'allarms-xp-0.7.4.json');
   fs.writeFileSync(xPath, `${JSON.stringify(xDoc, null, 1)}\n`);
 
-  // 2. R: recount-0.7.3.json
+  // 2. R: recount-0.7.4.json
   const rRows = [];
   for (const c of rowContext) {
     const days = {};
@@ -753,17 +756,17 @@ function deriveSiteTables({ outDir, version, tablePath, tableSha, pubSha, module
     schema: 'sdn-ap-site-recount-1',
     version,
     measurement: 'M5',
-    what: 'From the SDN-AP 0.7.3 real-object table per-forecast errors: per row and day (1, 3, 5), the share of forecasts where SDN-AP is closer to truth than SGP4 and paired medians on public-set forecasts.',
+    what: 'From the SDN-AP 0.7.4 real-object table per-forecast errors: per row and day (1, 3, 5), the share of forecasts where SDN-AP is closer to truth than SGP4 and paired medians on public-set forecasts.',
     table: { file: path.basename(tablePath), sha256: tableSha },
     rows: rRows,
   };
-  const rPath = path.join(outDir, 'recount-0.7.3.json');
+  const rPath = path.join(outDir, 'recount-0.7.4.json');
   fs.writeFileSync(rPath, `${JSON.stringify(rDoc, null, 1)}\n`);
 
-  // 3. Y: public-only-0.7.3.json (unified 0.7.3 public-only vs precise-position reference on exact matched tests)
+  // 3. Y: public-only-0.7.4.json (unified 0.7.4 public-only vs precise-position reference on exact matched tests)
   const yRows = [];
   for (const c of ctx72.filter((z) => MEASURED_72.has(z.g))) {
-    const poList = po073ByGroupKey.get(c.g) || [];
+    const poList = po074ByGroupKey.get(c.g) || [];
     const poByNoradDate = new Map(poList.map((r) => [`${r.noradId}|${r.startUtc.slice(0, 10)}`, r]));
     // Match against table 72h windows by satellite date (and fallback key lookup from wfByKey)
     const wfByNoradDate = new Map();
@@ -808,16 +811,16 @@ function deriveSiteTables({ outDir, version, tablePath, tableSha, pubSha, module
     schema: 'sdn-ap-site-public-only-1',
     version,
     measurement: 'M7',
-    what: 'Eight groups on SDN-AP 0.7.3 and catalog-builder 0.2.5: SDN-AP and SGP4-XP started from public element sets alone against SGP4 from the newest public set, alongside SDN-AP and the numerical propagator from precise positions on the exact same tests; aggregates only.',
+    what: 'Eight groups on SDN-AP 0.7.4 and catalog-builder 0.2.6: SDN-AP and SGP4-XP started from public element sets alone against SGP4 from the newest public set, alongside SDN-AP and the numerical propagator from precise positions on the exact same tests; aggregates only.',
     builder: {
       modulesCommit,
       publicModuleFlown: pubSha,
     },
     rows: yRows,
   };
-  const yPath = path.join(outDir, 'public-only-0.7.3.json');
+  const yPath = path.join(outDir, 'public-only-0.7.4.json');
   fs.writeFileSync(yPath, `${JSON.stringify(yDoc, null, 1)}\n`);
-  console.log(`Wrote derived 0.7.3 site files: ${path.basename(gPath)}, ${path.basename(rPath)}, ${path.basename(xPath)}, ${path.basename(yPath)}`);
+  console.log(`Wrote derived 0.7.4 site files: ${path.basename(gPath)}, ${path.basename(rPath)}, ${path.basename(xPath)}, ${path.basename(yPath)}`);
 }
 
 function readBurnFlags(dir) {

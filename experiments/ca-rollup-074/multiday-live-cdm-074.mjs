@@ -2,8 +2,8 @@
 // Item 5 (#1128 / #976): Multi-Day Causal Live Space-Track Public CDM Evaluation (2026-11-16..25)
 // Scores ALL unique Space-Track public CDM events over 10 consecutive days (~216 unique events)
 // causally at T0 = day 00:00Z (strictly prior GP snapshot, 21d gp_history, prior SpaceX cycle, causal SPW)
-// across all 3 arms (SGP4, SDN-AP 0.7.3, SGP4-XP) through compiled catalog-builder 0.2.5 + sdn-ap 0.7.3 + conjunction-assessment 0.19.1 WASM!
-// Outputs aggregate-only JSON to results/ca-rollup-073/multiday-live-cdm-0.7.3.json (zero NORAD/CDM rows published).
+// across all 3 arms (SGP4, SDN-AP 0.7.4, SGP4-XP) through compiled catalog-builder 0.2.6 + sdn-ap 0.7.4 + conjunction-assessment 0.19.1 WASM!
+// Outputs aggregate-only JSON to results/ca-rollup-074/multiday-live-cdm-0.7.4.json (zero NORAD/CDM rows published).
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -12,7 +12,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   DAY_MS, nowUtc, utcMs, dayStr, sha256File,
   loadSdsAndSdk, gpJsonToOmm, buildCausalSpwRecords, buildCatalogBatch,
-} from './amendment5-lib.mjs';
+} from './amendment6-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
@@ -22,7 +22,7 @@ const CA_DIR = path.join(MODULES, 'analysis/conjunction-assessment');
 const AP_WASM = path.join(MODULES, 'propagator/sdn-ap/dist/isomorphic/module.wasm');
 const CA_WASM = path.join(CA_DIR, 'dist/isomorphic/module.wasm');
 const CA_MAN = JSON.parse(fs.readFileSync(path.join(CA_DIR, 'plugin-manifest.json'), 'utf8'));
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-073/multiday-live-cdm-0.7.3.json');
+const OUT_PATH = path.join(OAE, 'results/ca-rollup-074/multiday-live-cdm-0.7.4.json');
 
 const sds = await loadSdsAndSdk(MODULES);
 const { fb, sdkBrowser, sdkIso, OMM_MOD, CQR_MOD, PRW_MOD, PPE_MOD, typeRef } = sds;
@@ -137,7 +137,7 @@ async function screenPairOcm(apEval, arm, bufA, bufB, aId, bId, tcaMs) {
       c[ch][k] = sum;
     }
     const rec = new PPE_M.PPEPositionRecordT(midIso, 60, CHEB_M, PPE_M.polynomialBasisType.CHEBYSHEV, c[0], c[1], c[2], true, c[3], c[4], c[5], 0, 0);
-    return new PPE_M.PPET([], null, 'EARTH', temeRfmPpe, PPE_M.timingStandard.UTC, startIso, stopIso, PPE_M.polynomialBasisType.CHEBYSHEV, [rec], [], `sdn-ap-0.7.3-${arm}`, 120, CHEB_M, null);
+    return new PPE_M.PPET([], null, 'EARTH', temeRfmPpe, PPE_M.timingStandard.UTC, startIso, stopIso, PPE_M.polynomialBasisType.CHEBYSHEV, [rec], [], `sdn-ap-0.7.4-${arm}`, 120, CHEB_M, null);
   };
   const sources = [
     new CQR_MOD.CQRObjectSourceT(String(aId), `OBJ-${aId}`, aId, null, 1),
@@ -243,7 +243,7 @@ await reusable.composer.destroy?.();
 const q = (arr, p) => { const s = arr.slice().sort((a, b) => a - b); return s.length ? +s[Math.floor(p * (s.length - 1))].toFixed(1) : null; };
 const report = {
   schema: 'sdn-ap-multiday-live-cdm-1',
-  version: '0.7.3',
+  version: '0.7.4',
   generatedUtc: new Date().toISOString(),
   days: '2026-11-16..2026-11-25',
   totalCdmsRead,

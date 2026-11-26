@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Measure runtime speed, WebAssembly memory, prebuilt frame rows (Node + cross-origin-isolated headless Chromium),
-// 100k-object mixes, 20x7d SIMD128 3-h ap atmosphere, 4-worker wide-grid pool, and stability on signed sdn-ap 0.7.3.
-// Outputs results/ca-rollup-073/wave1-0.7.3.json.
+// 100k-object mixes, 20x7d SIMD128 3-h ap atmosphere, 4-worker wide-grid pool, and stability on signed sdn-ap 0.7.4.
+// Outputs results/ca-rollup-074/wave1-0.7.4.json.
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -18,7 +18,7 @@ const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-pa
 const AP_DIR = path.join(MODULES, 'propagator/sdn-ap');
 const CB_DIR = path.join(MODULES, 'flows/catalog-builder');
 const WASM_PATH = path.join(AP_DIR, 'dist/isomorphic/module.wasm');
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-073/wave1-0.7.3.json');
+const OUT_PATH = path.join(OAE, 'results/ca-rollup-074/wave1-0.7.4.json');
 
 const apReq = createRequire(path.join(AP_DIR, 'package.json'));
 const cbReq = createRequire(path.join(CB_DIR, 'package.json'));
@@ -38,7 +38,7 @@ const wasmBytes = fs.readFileSync(WASM_PATH);
 const loadable = toLoadableWasmBytes(wasmBytes);
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 
-// 1. Run wave1-071.e2e.mjs on signed 0.7.3 to collect A1 (atmosphere), A2 (100k mixes), B1a (50 high-e), C1a (maxD2)
+// 1. Run wave1-071.e2e.mjs on signed 0.7.4 to collect A1 (atmosphere), A2 (100k mixes), B1a (50 high-e), C1a (maxD2)
 const w1Out = execFileSync(process.execPath, [path.join(AP_DIR, 'test/wave1-071.e2e.mjs')], { cwd: AP_DIR, encoding: 'utf8', env: { ...process.env, SDNAP_WASM: WASM_PATH } });
 const parseJsonLines = (txt) => txt.trim().split('\n').map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
 const w1Objs = Object.assign({}, ...parseJsonLines(w1Out));
@@ -48,7 +48,7 @@ const fbOut = execFileSync(process.execPath, [path.join(AP_DIR, 'test/fallback-c
 const fbMatch = /(\d+)\s+checks/.exec(fbOut);
 const fallbackChecks = fbMatch ? Number(fbMatch[1]) : 3166;
 
-// 3. Measure 4-worker wide-grid pool speedup on signed 0.7.3 (same mix as frames-wide-pool.e2e.mjs)
+// 3. Measure 4-worker wide-grid pool speedup on signed 0.7.4 (same mix as frames-wide-pool.e2e.mjs)
 let widePool;
 {
   const objects = population([['leo500', 60], ['meo', 12], ['geo', 12], ['ecc', 12], ['wide', 32]], 20261124, 47);
@@ -94,7 +94,7 @@ const records400 = objs400.map((o) => {
 
 const startMs = EPOCH_MS + 3600000;
 const digest = hostDigest(wasmBytes);
-const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'wave1-073-route-'));
+const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'wave1-074-route-'));
 let prebuiltBuf, statement;
 try {
   const env = { ...process.env, SDM_MODULE_UNSIGNED_BUILD: '1', CATALOG_FLOW_BUILD_DIR: scratch, SDNAP_DIST_DIR: path.join(scratch, 'sdnap') };
@@ -323,7 +323,7 @@ const server = http.createServer((req, res) => {
 });
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const port = server.address().port;
-const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'wave1-073-chr-'));
+const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'wave1-074-chr-'));
 const proc = spawn(shellBin, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', `--user-data-dir=${profile}`, `http://127.0.0.1:${port}/`], { detached: true, stdio: 'ignore' });
 let chrRes;
 try {
@@ -340,7 +340,7 @@ assert.equal(chrRes.cold3.planeHash, nodeCold.planeHash, 'Chromium cold 3-thread
 assert.equal(chrRes.capRes.planeHash, nodeCold.planeHash, 'Chromium capped prebuilt must match Node cold bit-for-bit');
 
 const report = {
-  version: '0.7.3',
+  version: '0.7.4',
   date: new Date().toISOString().slice(0, 10),
   module: {
     bytes: wasmBytes.length,
@@ -409,5 +409,5 @@ const report = {
 };
 fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
 fs.writeFileSync(OUT_PATH, JSON.stringify(report, null, 2) + '\n');
-console.log('WAVE1-0.7.3 PASS:', JSON.stringify(report, null, 2));
+console.log('WAVE1-0.7.4 PASS:', JSON.stringify(report, null, 2));
 process.exit(0);

@@ -1,23 +1,23 @@
 {
-  "id": "ca-rollup-073-amendment-5",
-  "issue": "DigitalArsenal/spacedatanetwork-stack#1128",
+  "id": "ca-rollup-074-amendment-6",
+  "issue": "DigitalArsenal/spacedatanetwork-stack#1146",
   "frozen": true,
-  "registeredUtc": "2026-11-25T19:43:00Z",
+  "registeredUtc": "2026-11-26T02:16:00Z",
   "modules": {
-    "commit": "1d2cb6da1ad820a8a619771833c10d238673622f",
+    "commit": "76139668410aae17caaf06bab0fd0a3cfca5cede",
     "sdnAp": {
-      "version": "0.7.3",
-      "wasmSha256": "79d493e08e1c80611c30a464e4b71a9ac54605a5a81f9d29115972b8c19768f9",
-      "canonicalSha256": "9ddf12dd7f074dc3c616b83939e4c3d76c2a47e4fac486ef870c544624c1e258"
+      "version": "0.7.4",
+      "wasmSha256": "1367e44c518cadae33753728288efe0f30aa3775f58f568e9dd762f09d92c3b5",
+      "canonicalSha256": "0a8c20bb298d2e1bca2dc1ec8c671165a154c45a2f9dcbf28c8adffb5e5661b6"
     },
     "catalogBuilder": {
-      "version": "0.2.5",
-      "chainWasmSha256": "33b9afa23c7e27c1ac70d965c3bda7bc06806e992ba1e5bd6da671b20cccae94",
-      "controlWasmSha256": "55b9c783ad72ff14291813d826a1d291332840e633ac424697d6499cb374aee1"
+      "version": "0.2.6",
+      "chainWasmSha256": "92203eab4274ace68cc38b35b8f10ae8585f28731cc1bac2cb2f6406dcfed12f",
+      "controlWasmSha256": "33110d5269a5d9ce98a21917eb99205644cdb285c17fd45ed7611a01a55258b1"
     },
     "gpErrorModel": {
-      "version": "0.19.1",
-      "wasmSha256": "9bc15aa6dd0d726154e03220aeecef79cf51c69f59994098010c339a764db8a6"
+      "version": "0.19.2",
+      "wasmSha256": "5b2bdc61910c94dfcc0f3eb2d162e4e612f81483404987163cb5390fee30fbb0"
     },
     "conjunctionAssessment": {
       "version": "0.19.1",
@@ -33,7 +33,7 @@
     "gpSnapshot": "spacetrack/gp/2026/2026-11-16.json.gz",
     "gpSnapshotSha256": "4993721ad8f31c6324c110820dff5189a14a92bf054cd0970b7ba8484265d54f",
     "maxCreationUtc": "2026-11-17T00:00:00Z",
-    "seed": "amendment5-forward-week-20261117",
+    "seed": "amendment6-forward-week-20261117",
     "tiers": [
       { "id": "t0", "fraction": 1, "seed": null, "keepFromKm": 0, "thresholdKm": 5 },
       { "id": "t1-s1", "fraction": 0.125, "seed": 1, "keepFromKm": 5, "thresholdKm": 50 },
@@ -100,7 +100,7 @@
     "pcRocTargets": ["sgp4_pc1e-5", "sgp4_pc3e-7", 0.90, 0.95],
     "bootstrapReplicates": { "miss": 200, "pc": 40 },
     "bootstrapClusters": ["regime_norad", "encounter_day", "encounter_pair"],
-    "rngSeed": "amendment5-eval-20261125"
+    "rngSeed": "amendment6-eval-20261126"
   },
   "radii": {
     "discosDir": "hac/esa-discos/2026/2026-11",

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Amendment 5 (#1128): Fresh Forward Week Conjunction Notification Reduction,
+// Amendment 6 (#1128): Fresh Forward Week Conjunction Notification Reduction,
 // Pre-T0 Multivariate Student-t RTN Uncertainty (Exact Shifted Gauss-Laguerre Foster 2-D WASM Pc),
-// 90%/95% Operator Recall, Pc ROC & Tier Precision on Unified SDN-AP 0.7.3 / catalog-builder 0.2.5.
+// 90%/95% Operator Recall, Pc ROC & Tier Precision on Unified SDN-AP 0.7.4 / catalog-builder 0.2.6.
 //
 // Evaluates ALL 6 ARMS over the fresh unseen forward week (2026-11-17 to 2026-11-24, 32,923 objects,
 // tiers t0 + t1 + t2 + t3 up to 1,000 km) with 100% genuine signed RTN error vectors across all 8 regimes,
@@ -9,10 +9,10 @@
 // exact 8-point shifted Gauss-Laguerre Student-t Pc calling analysis/conjunction-assessment 0.19.1 FOSTER WASM,
 // and paired cluster bootstrap (NORAD + day + pair clusters).
 //
-// Outputs AGGREGATES ONLY to results/ca-rollup-073/amendment5-alerts-3arm.json.
+// Outputs AGGREGATES ONLY to results/ca-rollup-074/amendment6-alerts-3arm.json.
 //
 // Usage:
-//   SDN_MODULES_ROOT=... node amendment5-alerts-eval.mjs --workers 14 --miss-reps 200 --pc-reps 40 [--smoke]
+//   SDN_MODULES_ROOT=... node amendment6-alerts-eval.mjs --workers 14 --miss-reps 200 --pc-reps 40 [--smoke]
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -20,23 +20,23 @@ import crypto from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { sha256File, nowUtc, utcMs } from './amendment5-lib.mjs';
+import { sha256File, nowUtc, utcMs } from './amendment6-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
 const CA_DIR = path.join(MODULES, 'analysis/conjunction-assessment');
-const CFG_PATH = path.join(path.dirname(SELF), 'amendment5-config.json');
+const CFG_PATH = path.join(path.dirname(SELF), 'amendment6-config.json');
 const CFG = JSON.parse(fs.readFileSync(CFG_PATH, 'utf8'));
 
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-const RUNS_ROOT = path.join(OAE, 'runs/ca-rollup-073');
+const RUNS_ROOT = path.join(OAE, 'runs/ca-rollup-074');
 const SCREEN_DIR = path.join(RUNS_ROOT, 'screen-20261117');
 const SCRATCH = path.join(RUNS_ROOT, 'eval-scratch');
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-073/amendment5-alerts-3arm.json');
+const OUT_PATH = path.join(OAE, 'results/ca-rollup-074/amendment6-alerts-3arm.json');
 
 const REGIMES = ['SD', 'S1', 'DO', 'GD', 'GN', 'GE', 'IG', 'SL'];
 const REGIME_LABEL = {
@@ -170,9 +170,9 @@ function gaussLaguerre(n, alpha) {
 }
 
 function checkFrozenAndPins() {
-  if (!CFG.frozen) throw new Error('amendment5-config.json is not frozen');
-  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-073/AMENDMENT-5.md', 'experiments/ca-rollup-073/amendment5-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
-  if (dirty) throw new Error(`Amendment 5 registration dirty/uncommitted: ${dirty}`);
+  if (!CFG.frozen) throw new Error('amendment6-config.json is not frozen');
+  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-074/AMENDMENT-6.md', 'experiments/ca-rollup-074/amendment6-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
+  if (dirty) throw new Error(`Amendment 6 registration dirty/uncommitted: ${dirty}`);
   const caSha = sha256File(path.join(CA_DIR, 'dist/isomorphic/module.wasm'));
   if (caSha !== CFG.modules.conjunctionAssessment.wasmSha256) throw new Error(`CA wasm mismatch: ${caSha}`);
 }
@@ -312,7 +312,7 @@ function fitStudentTModel(trainVecs) {
   return { C_core: full.C, C_core_inv: full.C_inv, nu: bestNu, cvLogLik: bestLl, nTrain: n };
 }
 
-// Compute heteroscedastic pre-T0 variance multiplier matching gp-error-model 0.19.1 annotate_population.cpp
+// Compute heteroscedastic pre-T0 variance multiplier matching gp-error-model 0.19.2 annotate_population.cpp
 function preT0CondVarScale(row, isSl, arm) {
   if (arm !== 'O' && arm !== 'Op') return 1.0;
   const d = row.diagO;
@@ -331,7 +331,7 @@ function preT0CondVarScale(row, isSl, arm) {
 }
 
 function loadAllSignedPools() {
-  const pubPath = path.join(RUNS_ROOT, 'public-vectors-073.jsonl');
+  const pubPath = path.join(RUNS_ROOT, 'public-vectors-074.jsonl');
   const slTrainPath = path.join(RUNS_ROOT, 'starlink-train-rows.jsonl');
   const slEvalPath = path.join(RUNS_ROOT, 'starlink-eval-rows.jsonl');
 
@@ -694,7 +694,7 @@ async function runReplicate(rep, ctx, mode = 'primary') {
     const emptyView = () => ({
       fixed1kmNotif: Object.fromEntries(ARMS.map((K) => [K, 0])),
       fixed1kmMissed: Object.fromEntries(ARMS.map((K) => [K, 0])),
-      realTotal: 0, realLeo1km: 0, weightTotal: 0,
+      realTotal: 0, realLeo1km: 0, realLeo250m: 0, realLeo100m: 0, weightTotal: 0,
       pcTiers: Object.fromEntries(ARMS.map((K) => [K, { redNotif: 0, redReal: 0, yellowNotif: 0, yellowReal: 0, cum1e5Notif: 0, cum1e5Real: 0, cum3e7Notif: 0, cum3e7Real: 0 }])),
       pcExactCalls: 0,
     });
@@ -705,6 +705,8 @@ async function runReplicate(rep, ctx, mode = 'primary') {
     const allMiss = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
     const allW = Object.fromEntries(curveViews.map((v) => [v, []]));
     const realPc = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
+    const realPc250 = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
+    const realPc100 = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
     const allPc = Object.fromEntries(curveViews.map((v) => [v, Object.fromEntries(ARMS.map((K) => [K, []]))]));
 
     let leftOutSl3d = 0, leftOutNoRows = 0;
@@ -736,6 +738,8 @@ async function runReplicate(rep, ctx, mode = 'primary') {
         const o = i * RECORD, miss = G[o];
         const isReal = isT0 && miss < lim;
         const isRealLeo1 = isT0 && lim === 1 && miss < 1;
+        const isRealLeo250 = isT0 && lim === 1 && miss < 0.25;
+        const isRealLeo100 = isT0 && lim === 1 && miss < 0.1;
         const nSL = (rA === SL) + (rB === SL);
 
         const targetNames = ['all', nSL === 2 ? 'starlinkPairs' : 'allButStarlinkPairs'];
@@ -747,6 +751,8 @@ async function runReplicate(rep, ctx, mode = 'primary') {
           v.weightTotal += w;
           if (isReal) v.realTotal += w;
           if (isRealLeo1) v.realLeo1km += w;
+          if (isRealLeo250) v.realLeo250m += w;
+          if (isRealLeo100) v.realLeo100m += w;
         }
         const inAllButSl = nSL < 2 && lim === 1;
         const inNoSl = nSL === 0 && lim === 1;
@@ -807,10 +813,14 @@ async function runReplicate(rep, ctx, mode = 'primary') {
           if (inAllButSl) {
             allPc.allButStarlinkPairs[K].push(pVal);
             if (isRealLeo1) realPc.allButStarlinkPairs[K].push([pVal, w]);
+            if (rep === 0 && isRealLeo250) realPc250.allButStarlinkPairs[K].push([pVal, w]);
+            if (rep === 0 && isRealLeo100) realPc100.allButStarlinkPairs[K].push([pVal, w]);
           }
           if (inNoSl) {
             allPc.noStarlink[K].push(pVal);
             if (isRealLeo1) realPc.noStarlink[K].push([pVal, w]);
+            if (rep === 0 && isRealLeo250) realPc250.noStarlink[K].push([pVal, w]);
+            if (rep === 0 && isRealLeo100) realPc100.noStarlink[K].push([pVal, w]);
           }
         }
       }
@@ -818,14 +828,23 @@ async function runReplicate(rep, ctx, mode = 'primary') {
 
     const recallCurves = {};
     const pcRoc = {};
+    const matchedPcRoc = {};
     for (const vn of curveViews) {
       const v = views[vn];
       const sgp4MissedLeo1 = realMiss[vn].S.reduce((s, [pm, w]) => s + (pm >= 1.0 ? w : 0), 0);
       recallCurves[vn] = computeMissRecallCurve(realMiss[vn], allMiss[vn], allW[vn], sgp4MissedLeo1, v.realLeo1km);
-      if (doPc) pcRoc[vn] = computePcRoc(realPc[vn], allPc[vn], allW[vn], v.realLeo1km);
+      if (doPc) {
+        pcRoc[vn] = computePcRoc(realPc[vn], allPc[vn], allW[vn], v.realLeo1km);
+        if (rep === 0) {
+          matchedPcRoc[vn] = {
+            lt250m: computePcRoc(realPc250[vn], allPc[vn], allW[vn], v.realLeo250m),
+            lt100m: computePcRoc(realPc100[vn], allPc[vn], allW[vn], v.realLeo100m),
+          };
+        }
+      }
     }
 
-    out[L] = { views, recallCurves, pcRoc: doPc ? pcRoc : null, leftOut: { starlinkAt3Days: sig(leftOutSl3d, 5), noRows: sig(leftOutNoRows, 5) } };
+    out[L] = { views, recallCurves, pcRoc: doPc ? pcRoc : null, matchedPcRoc: doPc && rep === 0 ? matchedPcRoc : null, leftOut: { starlinkAt3Days: sig(leftOutSl3d, 5), noRows: sig(leftOutNoRows, 5) } };
   }
   return out;
 }
@@ -971,7 +990,7 @@ function aggregateReps(reps, L) {
       } : null,
     };
   }
-  return { views: viewsOut, recallCurves, pcRoc, attributionWaterfall: waterfall, leftOut: c0.leftOut };
+  return { views: viewsOut, recallCurves, pcRoc, matchedPcRoc: c0.matchedPcRoc || null, attributionWaterfall: waterfall, leftOut: c0.leftOut };
 }
 
 async function runParent() {
@@ -982,7 +1001,7 @@ async function runParent() {
   const missReps = smoke ? 10 : Number(arg('--miss-reps', String(CFG.evaluation.bootstrapReplicates.miss)));
   const pcReps = smoke ? 4 : Number(arg('--pc-reps', String(CFG.evaluation.bootstrapReplicates.pc)));
 
-  console.log(`${nowUtc()} Amendment 5 Eval: preparing fresh week 2026-11-17..24 (missReps=${missReps}, pcReps=${pcReps}, workers=${workers})...`);
+  console.log(`${nowUtc()} Amendment 6 Eval: preparing fresh week 2026-11-17..24 (missReps=${missReps}, pcReps=${pcReps}, workers=${workers})...`);
   const { objects, radii, isManeuverablePayload } = loadObjectsAndDisCos();
   const index = prepareWeekScratch(objects, radii, isManeuverablePayload);
   const { trainPools, evalPools, lsSplit } = loadAllSignedPools();
@@ -1022,12 +1041,12 @@ async function runParent() {
   const results = Object.fromEntries(LEADS.map((L) => [`${L}d`, aggregateReps(reps, L)]));
   const t0Meta = JSON.parse(fs.readFileSync(path.join(SCREEN_DIR, 'events', 't0.json'), 'utf8'));
   const doc = {
-    schema: 'sdn-ap-amendment5-alerts-3arm-1',
+    schema: 'sdn-ap-amendment6-alerts-3arm-1',
     issue: CFG.issue,
     generatedUtc: nowUtc(),
     registration: {
-      amendmentCommit: execFileSync('git', ['log', '-1', '--format=%H', '--', 'experiments/ca-rollup-073/AMENDMENT-5.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
-      amendmentBlobSha: execFileSync('git', ['rev-parse', 'HEAD:experiments/ca-rollup-073/AMENDMENT-5.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
+      amendmentCommit: execFileSync('git', ['log', '-1', '--format=%H', '--', 'experiments/ca-rollup-074/AMENDMENT-6.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
+      amendmentBlobSha: execFileSync('git', ['rev-parse', 'HEAD:experiments/ca-rollup-074/AMENDMENT-6.md'], { cwd: OAE, encoding: 'utf8' }).trim(),
       configSha256: sha256File(CFG_PATH),
     },
     modules: CFG.modules,
@@ -1041,15 +1060,15 @@ async function runParent() {
     arms: {
       S: 'SGP4 public Space-Track element sets (CREATION_DATE <= T0)',
       SupGP: 'CelesTrak SupGP (12:50Z < T0) on Starlink, Space-Track GP elsewhere, flown on SGP4',
-      Xp: 'SGP4-XP built by catalog-builder 0.2.5 from 100% public GP history',
-      Op: 'SDN-AP 0.7.3 built by catalog-builder 0.2.5 from 100% public GP history',
-      X: 'SGP4-XP built by catalog-builder 0.2.5 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
-      O: 'SDN-AP 0.7.3 built by catalog-builder 0.2.5 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
+      Xp: 'SGP4-XP built by catalog-builder 0.2.6 from 100% public GP history',
+      Op: 'SDN-AP 0.7.4 built by catalog-builder 0.2.6 from 100% public GP history',
+      X: 'SGP4-XP built by catalog-builder 0.2.6 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
+      O: 'SDN-AP 0.7.4 built by catalog-builder 0.2.6 (SpaceX ephemerides for Starlink, public GP history elsewhere)',
     },
     covarianceMethodology: {
       signedVectorsAllRegimes: REGIMES,
       splitMethod: CFG.covariance.splitMethod,
-      estimator: 'Multivariate Student-t (Sigma, nu) fitted by EM with 5-fold predictive log-likelihood CV strictly on pre-T0 train rows, plus monotonic pre-T0 observable heteroscedastic conditioning (gp-error-model 0.19.1)',
+      estimator: 'Multivariate Student-t (Sigma, nu) fitted by EM with 5-fold predictive log-likelihood CV strictly on pre-T0 train rows, plus monotonic pre-T0 observable heteroscedastic conditioning (gp-error-model 0.19.2)',
       heldOutAudit: audit,
     },
     probabilityOfCollision: {
@@ -1070,7 +1089,7 @@ async function runParent() {
     fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
     fs.writeFileSync(OUT_PATH, JSON.stringify(doc, null, 2) + '\n');
   }
-  console.log(`\n=== AMENDMENT 5 EVAL COMPLETE (${doc.wallSec}s) -> ${smoke ? 'SMOKE' : OUT_PATH} ===`);
+  console.log(`\n=== AMENDMENT 6 EVAL COMPLETE (${doc.wallSec}s) -> ${smoke ? 'SMOKE' : OUT_PATH} ===`);
   for (const L of ['1d', '3d']) {
     const r = doc.results[L];
     for (const vn of ['allButStarlinkPairs', 'noStarlink']) {

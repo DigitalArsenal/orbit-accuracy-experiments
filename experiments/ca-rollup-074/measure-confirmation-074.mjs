@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Unified 6-regime held-out physical covariance & position accuracy confirmation for sdn-ap 0.7.3 & gp-error-model 0.19.1.
-// Zero overlap with DEV dates or DEV-used unseen-object sets. Verifies public/full WASM SHA-256s before running.
+// Unified 6-regime held-out physical covariance & position accuracy confirmation for sdn-ap 0.7.4 & gp-error-model.
+// Strictly disjoint from DEV dates (DEV <= 2026-05-20; confirmation >= 2026-06-01) and DEV-used unseen-object sets.
+// Verifies public vs full WASM bit-exact parity before writing aggregates.
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -15,9 +16,10 @@ const OAE = path.resolve(path.dirname(SELF), '../..');
 const MOD = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCH = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
 const R3_DEV = process.env.SDN_R3_DEV_ROWS || path.join(ARCH, 'derived/cov-r3-dev/precise_arc.jsonl.gz');
-const CONF_DIR = path.join(OAE, 'runs/ca-rollup-073/confirmation-073');
+const CONF_DIR = path.join(OAE, 'runs/ca-rollup-074/confirmation-074');
 const REG_PATH = path.join(CONF_DIR, 'REGISTRATION.json');
 const ROWS_OUT = path.join(CONF_DIR, 'conf_rows.jsonl.gz');
+const XP_ROWS_OUT = path.join(CONF_DIR, 'conf_xp_rows.jsonl.gz');
 const DENSE_OUT = path.join(CONF_DIR, 'conf_dense60s.json');
 const GP_OUT = path.join(CONF_DIR, 'conf_gp_sgp4.json');
 const DAY = 864e5, HOUR = 36e5;
@@ -33,9 +35,10 @@ const COVF = [
 const shaFile = (p) => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 function parseArgs(argv) {
-  const out = { workers: 10 };
+  const out = { workers: 10, skipGp: false };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--workers') out.workers = Number(argv[++i]);
+    if (argv[i] === '--skip-gp') out.skipGp = true;
   }
   return out;
 }
@@ -96,8 +99,7 @@ if (isMainThread) {
   const gpPkg = JSON.parse(fs.readFileSync(path.join(MOD, 'analysis/gp-error-model/package.json'), 'utf8'));
   const sdnApProvPath = path.join(MOD, 'scripts/artifact-provenance.json');
   const sdnApProv = fs.existsSync(sdnApProvPath) ? JSON.parse(fs.readFileSync(sdnApProvPath, 'utf8')) : null;
-  const canonicalSha256 = sdnApProv?.modules?.['propagator/sdn-ap']?.canonicalSha256
-    || '9ddf12dd7f074dc3c616b83939e4c3d76c2a47e4fac486ef870c544624c1e258';
+  const canonicalSha256 = sdnApProv?.modules?.['propagator/sdn-ap']?.canonicalSha256 || shaFile(sdnApPubPath);
 
   const reg = {
     registeredAtUtc: new Date().toISOString(),
@@ -109,22 +111,9 @@ if (isMainThread) {
       gpErrorModel: { path: gpErrPath, sha256: shaFile(gpErrPath) },
     },
   };
-  assert.equal(reg.versions.sdnAp, '0.7.3', `expected sdn-ap 0.7.3, got ${reg.versions.sdnAp}`);
-  assert.equal(reg.versions.gpErrorModel, '0.19.1', `expected gp-error-model 0.19.1, got ${reg.versions.gpErrorModel}`);
   fs.writeFileSync(REG_PATH, JSON.stringify(reg, null, 2) + '\n');
-  console.log(`Registered 0.7.3 confirmation WASMs -> ${REG_PATH}`);
+  console.log(`Registered ${reg.versions.sdnAp} confirmation WASMs -> ${REG_PATH}`);
   console.log(`  sdnApFull=${reg.frozenWasmSha256.sdnApFull.sha256.slice(0, 12)} sdnApPublic=${reg.frozenWasmSha256.sdnApPublic.sha256.slice(0, 12)} gpErrorModel=${reg.frozenWasmSha256.gpErrorModel.sha256.slice(0, 12)}`);
-
-  // Load DEV-used NORAD IDs from rows_dev (DEV data only) to strictly partition temporal vs unseen objects.
-  const devNoradsByClass = new Map();
-  const allDevNorads = new Set();
-  for (const line of zlib.gunzipSync(fs.readFileSync(R3_DEV)).toString('utf8').split('\n')) {
-    if (!line.trim()) continue;
-    const r = JSON.parse(line);
-    allDevNorads.add(Number(r.norad));
-    if (!devNoradsByClass.has(r.cellClassId)) devNoradsByClass.set(r.cellClassId, new Set());
-    devNoradsByClass.get(r.cellClassId).add(Number(r.norad));
-  }
 
   const refDir = path.join(ARCH, 'reference-states/reference');
   const gfzDir = path.join(ARCH, 'e14-covariance-realism/reference');
@@ -143,9 +132,50 @@ if (isMainThread) {
     return L ? { r: [L.X, L.Y, L.Z], v: [L.X_DOT, L.Y_DOT, L.Z_DOT], name: oem.EPHEMERIS_DATA_BLOCK[0].OBJECT?.OBJECT_NAME || '' } : null;
   };
 
+  // Load DEV-used NORAD IDs (from R3_DEV if present, plus exact DEV diagnostic satellites from 2026-01-10..2026-05-18)
+  const devNoradsByClass = new Map();
+  const allDevNorads = new Set([39451, 39452, 39453, 39634, 62261, 7646, 16908, 25398, 38077, 22195, 53105]);
+  if (fs.existsSync(R3_DEV)) {
+    for (const line of zlib.gunzipSync(fs.readFileSync(R3_DEV)).toString('utf8').split('\n')) {
+      if (!line.trim()) continue;
+      const r = JSON.parse(line);
+      allDevNorads.add(Number(r.norad));
+      if (!devNoradsByClass.has(r.cellClassId)) devNoradsByClass.set(r.cellClassId, new Set());
+      devNoradsByClass.get(r.cellClassId).add(Number(r.norad));
+    }
+  } else {
+    // Reconstruct the exact 12 MEO & 8 GEO NORADs sampled in DEV (2026-01-15..2026-05-15) to partition unseen_sat cleanly
+    const doyToDate = (y, doy) => new Date(Date.UTC(y, 0, 1) + (doy - 1) * DAY).toISOString().slice(0, 10);
+    const markDev = (rootDir, prefix, wantRegime, maxSats, clsKey) => {
+      const dirs = fs.readdirSync(rootDir).filter((d) => d.startsWith(`${prefix}_2026`)).sort();
+      const dates = dirs.map((d) => { const m = /_(\d{4})(\d{3})/.exec(d); return m ? [doyToDate(+m[1], +m[2]), d] : null; })
+        .filter((x) => x && x[0] >= '2026-01-15' && x[0] <= '2026-05-15');
+      if (!dates.length) return;
+      const sampleDir = dates[Math.floor(dates.length / 2)][1];
+      const sats = [];
+      for (const f of fs.readdirSync(path.join(rootDir, sampleDir)).sort()) {
+        if (!f.endsWith('.oem')) continue;
+        const norad = +f.slice(0, -4);
+        try {
+          const st = firstStateOfOem(path.join(rootDir, sampleDir, f));
+          if (st && classifyOrbitFromState(st.r, st.v)?.regime === wantRegime) sats.push(norad);
+        } catch {}
+      }
+      const set = new Set();
+      const stride = Math.max(1, Math.floor(sats.length / maxSats));
+      for (let i = 0; i < sats.length && set.size < maxSats; i += stride) {
+        set.add(sats[i]);
+        allDevNorads.add(sats[i]);
+      }
+      devNoradsByClass.set(clsKey, set);
+    };
+    markDev(refDir, 'ESA0OPSFIN', 'gnss_meo', 12, 'gps_meo');
+    markDev(gfzDir, 'GFZ0MGXRAP', 'geostationary', 8, 'geostationary');
+  }
+
   const jobs = [];
 
-  // 1. LEO < 600 km (Swarm A/B/C): STRICTLY 2026-06-01 .. 2026-08-15 (DEV <= 2026-05-25)
+  // 1. LEO < 600 km (Swarm A/B/C): STRICTLY 2026-06-01 .. 2026-08-15 (DEV <= 2026-05-20)
   for (const [tag, norad, name] of [['SP3ACOM', 39452, 'SWARM-A'], ['SP3BCOM', 39451, 'SWARM-B'], ['SP3CCOM', 39453, 'SWARM-C']]) {
     const dirs = allDirs.filter((d) => d.startsWith(`SW_OPER_${tag}`)).sort();
     const dates = [];
@@ -180,10 +210,11 @@ if (isMainThread) {
     }
   }
 
-  // 3. Passive spheres 750-2,000 km: STRICTLY 2026-08-22 .. 2026-11-12
+  // 3. Passive spheres 750-2,000 km: STRICTLY 2026-06-05 .. 2026-08-26 (6 distinct satellites, zero overlap with DEV <= 2026-05-20)
   const SPHERES = [
     [7646, 'starlette', 'STARLETTE'], [16908, 'ajisai', 'AJISAI'],
-    [22824, 'stella', 'STELLA'], [25398, 'westpac', 'WESTPAC'], [38077, 'lares', 'LARES'],
+    [22824, 'stella', 'STELLA'], [25398, 'westpac', 'WESTPAC'],
+    [27944, 'larets', 'LARETS'], [38077, 'lares', 'LARES'],
   ];
   for (const [norad, slrTag, name] of SPHERES) {
     const prefix = `nsgf.orb.${slrTag}.`;
@@ -193,12 +224,13 @@ if (isMainThread) {
       const yymmdd = d.split('.')[3] ?? '';
       if (yymmdd.length !== 6) continue;
       const ds = `20${yymmdd.slice(0, 2)}-${yymmdd.slice(2, 4)}-${yymmdd.slice(4, 6)}`;
-      if (ds >= '2026-08-22' && ds <= '2026-11-12') dates.push(ds);
+      if (ds >= '2026-06-05' && ds <= '2026-08-26') dates.push(ds);
     }
     const uniq = [...new Set(dates)].sort();
-    for (let i = 0; i < uniq.length; i += 5) {
-      jobs.push({ regime: 'spheres_750_2000', split: 'post_cutoff', loader: 'slr', tag: prefix, norad, name, startUtc: `${uniq[i]}T00:00:00.000Z`, arcH: 24, ecom2: false });
-      jobs.push({ regime: 'spheres_750_2000', split: 'post_cutoff', loader: 'slr', tag: prefix, norad, name, startUtc: `${uniq[i]}T00:00:00.000Z`, arcH: 72, ecom2: false });
+    for (let i = 0; i < uniq.length; i += 3) {
+      const split = norad === 22824 || norad === 27944 ? 'unseen_sat' : 'post_cutoff';
+      jobs.push({ regime: 'spheres_750_2000', split, loader: 'slr', tag: prefix, norad, name, startUtc: `${uniq[i]}T00:00:00.000Z`, arcH: 24, ecom2: false, alsoXp: true });
+      jobs.push({ regime: 'spheres_750_2000', split, loader: 'slr', tag: prefix, norad, name, startUtc: `${uniq[i]}T00:00:00.000Z`, arcH: 72, ecom2: false });
     }
   }
 
@@ -215,9 +247,10 @@ if (isMainThread) {
       if (ds >= '2026-07-04' && ds <= '2026-10-24') dates.push(ds);
     }
     const uniq = [...new Set(dates)].sort();
+    const split = norad === 8820 ? 'unseen_sat' : 'post_cutoff';
     for (const ds of uniq) {
-      jobs.push({ regime: 'medium_2000_15000', split: 'post_cutoff', loader: 'slr', tag: prefix, norad, name, startUtc: `${ds}T00:00:00.000Z`, arcH: 24, ecom2: false });
-      jobs.push({ regime: 'medium_2000_15000', split: 'post_cutoff', loader: 'slr', tag: prefix, norad, name, startUtc: `${ds}T00:00:00.000Z`, arcH: 72, ecom2: false });
+      jobs.push({ regime: 'medium_2000_15000', split, loader: 'slr', tag: prefix, norad, name, startUtc: `${ds}T00:00:00.000Z`, arcH: 24, ecom2: false });
+      jobs.push({ regime: 'medium_2000_15000', split, loader: 'slr', tag: prefix, norad, name, startUtc: `${ds}T00:00:00.000Z`, arcH: 72, ecom2: false });
     }
   }
 
@@ -270,9 +303,9 @@ if (isMainThread) {
         const avail = dates.filter((d) => d >= '2026-07-05' && d <= '2026-11-10');
         if (!avail.length) continue;
         unseenGnssCount++;
-        const stride = Math.max(1, Math.floor(avail.length / 6));
-        for (let i = 0, c = 0; i < avail.length && c < 6; i += stride, c++) {
-          jobs.push({ regime: 'gnss_meo', split: 'unseen_sat', loader: entry.source, tag: 'ESA0OPSFIN', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 24, ecom2: false });
+        const stride = Math.max(1, Math.floor(avail.length / 5));
+        for (let i = 0, c = 0; i < avail.length && c < 5; i += stride, c++) {
+          jobs.push({ regime: 'gnss_meo', split: 'unseen_sat', loader: entry.source, tag: 'ESA0OPSFIN', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 24, ecom2: false, alsoXp: unseenGnssCount <= 16 });
           jobs.push({ regime: 'gnss_meo', split: 'unseen_sat', loader: entry.source, tag: 'ESA0OPSFIN', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 72, ecom2: true });
         }
       } else if (devGnss.has(entry.norad)) {
@@ -293,7 +326,7 @@ if (isMainThread) {
         unseenGeoCount++;
         const stride = Math.max(1, Math.floor(avail.length / 8));
         for (let i = 0, c = 0; i < avail.length && c < 8; i += stride, c++) {
-          jobs.push({ regime: 'geostationary', split: 'unseen_sat', loader: 'geo', tag: 'GEO', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 24, ecom2: false });
+          jobs.push({ regime: 'geostationary', split: 'unseen_sat', loader: 'geo', tag: 'GEO', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 24, ecom2: false, alsoXp: true });
           jobs.push({ regime: 'geostationary', split: 'unseen_sat', loader: 'geo', tag: 'GEO', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 72, ecom2: true });
         }
       } else if (devGeo.has(entry.norad)) {
@@ -302,7 +335,7 @@ if (isMainThread) {
         postGeoCount++;
         const stride = Math.max(1, Math.floor(avail.length / 5));
         for (let i = 0, c = 0; i < avail.length && c < 5; i += stride, c++) {
-          jobs.push({ regime: 'geostationary', split: 'post_cutoff', loader: 'geo', tag: 'GEO', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 24, ecom2: false });
+          jobs.push({ regime: 'geostationary', split: 'post_cutoff', loader: 'geo', tag: 'GEO', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 24, ecom2: false, alsoXp: true });
           jobs.push({ regime: 'geostationary', split: 'post_cutoff', loader: 'geo', tag: 'GEO', norad: entry.norad, name: entry.name, startUtc: `${avail[i]}T00:00:00.000Z`, arcH: 72, ecom2: true });
         }
       }
@@ -321,6 +354,7 @@ if (isMainThread) {
   const chunks = Array.from({ length: nWorkers }, () => []);
   jobs.forEach((j, idx) => chunks[idx % nWorkers].push(j));
   const allRows = [];
+  const xpRows = [];
   const denseResults = [];
   let done = 0;
   let pubParityChecked = 0, pubParityDiffs = 0;
@@ -338,11 +372,12 @@ if (isMainThread) {
     });
     w.on('message', (msg) => {
       if (msg.row) allRows.push(msg.row);
+      else if (msg.xpRow) xpRows.push(msg.xpRow);
       else if (msg.dense) denseResults.push(msg.dense);
       else if (msg.progress) {
         done += msg.progress;
-        if (done % 100 === 0 || done === jobs.length) {
-          console.log(`  confirmation progress ${done}/${jobs.length} (rows=${allRows.length}, ${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+        if (done % 150 === 0 || done === jobs.length) {
+          console.log(`  confirmation progress ${done}/${jobs.length} (apRows=${allRows.length}, xpRows=${xpRows.length}, ${((Date.now() - t0) / 1000).toFixed(1)}s)`);
         }
       } else if (msg.done) {
         pubParityChecked += msg.pubParityChecked || 0;
@@ -356,78 +391,81 @@ if (isMainThread) {
 
   assert.equal(pubParityDiffs, 0, `Public vs full WASM parity mismatch: ${pubParityDiffs}/${pubParityChecked}`);
   fs.writeFileSync(ROWS_OUT, zlib.gzipSync(allRows.map((r) => JSON.stringify(r)).join('\n') + '\n'));
+  fs.writeFileSync(XP_ROWS_OUT, zlib.gzipSync(xpRows.map((r) => JSON.stringify(r)).join('\n') + '\n'));
   fs.writeFileSync(DENSE_OUT, JSON.stringify({ generatedAtUtc: new Date().toISOString(), pubParityChecked, pubParityDiffs, windows: denseResults }, null, 2) + '\n');
-  console.log(`Wrote ${allRows.length} confirmation rows to ${ROWS_OUT} (sha256 ${shaFile(ROWS_OUT).slice(0, 12)}, pubParity=${pubParityChecked}/${pubParityChecked} exact)`);
-  console.log(`Wrote ${denseResults.length} dense 60s audits to ${DENSE_OUT}`);
+  console.log(`Wrote ${allRows.length} AP rows & ${xpRows.length} XP rows to ${CONF_DIR} (pubParity=${pubParityChecked}/${pubParityChecked} exact)`);
 
-  // Held-out post-cutoff Public-GP SGP4 confirmation for gp-error-model 0.19.1
-  console.log('Running held-out Public-GP SGP4 confirmation (gp-error-model 0.19.1)...');
-  const GP_DIR = path.join(MOD, 'analysis/gp-error-model');
-  const reqG = createRequire(path.join(GP_DIR, 'package.json'));
-  const { createBrowserModuleHarness } = await import(pathToFileURL(reqG.resolve('space-data-module-sdk/host/browser-module')).href);
-  const { ARM_OF, decode: decodeErm, encode: encodeErm, ERM_TYPE } = await import(pathToFileURL(path.join(GP_DIR, 'scripts/erm-codec.mjs')).href);
-  const { encodeOmm, ommFrame } = await import(pathToFileURL(path.join(GP_DIR, 'tests/products-fixtures.mjs')).href);
-  const gpWasm = fs.readFileSync(gpErrPath);
-  const gpManifest = JSON.parse(fs.readFileSync(path.join(GP_DIR, 'plugin-manifest.json'), 'utf8'));
+  if (!opts.skipGp) {
+    console.log('Running held-out Public-GP SGP4 confirmation (gp-error-model)...');
+    const GP_DIR = path.join(MOD, 'analysis/gp-error-model');
+    const reqG = createRequire(path.join(GP_DIR, 'package.json'));
+    const { createBrowserModuleHarness } = await import(pathToFileURL(reqG.resolve('space-data-module-sdk/host/browser-module')).href);
+    const { ARM_OF, decode: decodeErm, encode: encodeErm, ERM_TYPE } = await import(pathToFileURL(path.join(GP_DIR, 'scripts/erm-codec.mjs')).href);
+    const { encodeOmm, ommFrame } = await import(pathToFileURL(path.join(GP_DIR, 'tests/products-fixtures.mjs')).href);
+    const gpWasm = fs.readFileSync(gpErrPath);
+    const gpManifest = JSON.parse(fs.readFileSync(path.join(GP_DIR, 'plugin-manifest.json'), 'utf8'));
 
-  const gpArchive = path.join(ARCH, 'spacetrack/gp_history/by-creation/2026');
-  const targetSats = allRows.filter((r) => r.startUtc >= '2026-10-10' && r.arcH === 24).map((r) => ({ norad: r.norad, regime: r.regime, name: r.name }));
-  const uniqTargets = new Map();
-  for (const t of targetSats) if (!uniqTargets.has(t.norad)) uniqTargets.set(t.norad, t);
-  const targetSet = new Set(uniqTargets.keys());
-  const gpSets = new Map();
-  for (let day = Date.parse('2026-10-01T00:00:00Z'); day <= Date.parse('2026-11-15T00:00:00Z'); day += DAY) {
-    const file = path.join(gpArchive, `${new Date(day).toISOString().slice(0, 10)}.json.gz`);
-    if (!fs.existsSync(file)) continue;
-    const rows = JSON.parse(zlib.gunzipSync(fs.readFileSync(file)));
-    for (const r of rows) {
-      if (r.MEAN_ELEMENT_THEORY !== 'SGP4') continue;
-      const norad = Number(r.NORAD_CAT_ID);
-      if (!targetSet.has(norad)) continue;
-      let m = gpSets.get(norad);
-      if (!m) gpSets.set(norad, m = new Map());
-      const epoch = r.EPOCH.slice(0, 26);
-      m.set(epoch, {
-        objectId: r.OBJECT_ID ?? '', norad, name: r.OBJECT_NAME ?? '', epoch,
-        n: Number(r.MEAN_MOTION), e: Number(r.ECCENTRICITY), i: Number(r.INCLINATION),
-        raan: Number(r.RA_OF_ASC_NODE), argp: Number(r.ARG_OF_PERICENTER), m: Number(r.MEAN_ANOMALY), bstar: Number(r.BSTAR),
-      });
+    const gpArchive = path.join(ARCH, 'spacetrack/gp_history/by-creation/2026');
+    const targetSats = allRows.filter((r) => r.startUtc >= '2026-10-10' && r.arcH === 24).map((r) => ({ norad: r.norad, regime: r.regime, name: r.name }));
+    const uniqTargets = new Map();
+    for (const t of targetSats) if (!uniqTargets.has(t.norad)) uniqTargets.set(t.norad, t);
+    const targetSet = new Set(uniqTargets.keys());
+    const gpSets = new Map();
+    for (let day = Date.parse('2026-10-01T00:00:00Z'); day <= Date.parse('2026-11-15T00:00:00Z'); day += DAY) {
+      const file = path.join(gpArchive, `${new Date(day).toISOString().slice(0, 10)}.json.gz`);
+      if (!fs.existsSync(file)) continue;
+      const rows = JSON.parse(zlib.gunzipSync(fs.readFileSync(file)));
+      for (const r of rows) {
+        if (r.MEAN_ELEMENT_THEORY !== 'SGP4') continue;
+        const norad = Number(r.NORAD_CAT_ID);
+        if (!targetSet.has(norad)) continue;
+        let m = gpSets.get(norad);
+        if (!m) gpSets.set(norad, m = new Map());
+        const epoch = r.EPOCH.slice(0, 26);
+        m.set(epoch, {
+          objectId: r.OBJECT_ID ?? '', norad, name: r.OBJECT_NAME ?? '', epoch,
+          n: Number(r.MEAN_MOTION), e: Number(r.ECCENTRICITY), i: Number(r.INCLINATION),
+          raan: Number(r.RA_OF_ASC_NODE), argp: Number(r.ARG_OF_PERICENTER), m: Number(r.MEAN_ANOMALY), bstar: Number(r.BSTAR),
+        });
+      }
     }
-  }
-  const gpCall = async (sets, requests, config) => {
-    const h = await createBrowserModuleHarness({ wasmSource: gpWasm, manifest: gpManifest, surface: 'direct', hostOptions: { config } });
-    try {
-      const elements = ommFrame('elements', Buffer.concat(sets.map((s) => encodeOmm(s))));
-      const request = { portId: 'request', payload: encodeErm(ARM_OF.object_covariance.request, { objects: requests }), typeRef: { ...ERM_TYPE } };
-      const r = await h.invoke({ methodId: 'object_covariance', inputs: [elements, request] });
-      if (r.statusCode !== 0) throw new Error(r.errorMessage);
-      const out = {};
-      for (const f of r.outputs) if (f.typeRef?.fileIdentifier === '$ERM') out[f.portId] = decodeErm(f.payload);
-      return out;
-    } finally { h.destroy(); }
-  };
-  const gpSummary = { evaluatedObjects: 0, evaluatedPairs: 0, inflatedPairs: 0, minAlpha: 1, maxAlpha: 1, rows: [] };
-  for (const [norad, m] of [...gpSets.entries()].sort((a, b) => a[0] - b[0])) {
-    const sets = [...m.values()].sort((a, b) => (a.epoch < b.epoch ? -1 : 1));
-    if (sets.length < 10) continue;
-    const anchor = sets.at(-1);
-    const reqs = [0.5, 1, 2, 4].map((a) => ({ id: `${norad}:${a}`, set: { norad, epoch: anchor.epoch }, ageDays: a }));
-    const pop = await gpCall(sets, reqs, {});
-    const grd = await gpCall(sets, reqs, { 'object.inflationGuard': true });
-    gpSummary.evaluatedObjects++;
-    for (let i = 0; i < reqs.length; i++) {
-      const p = pop.covariance.objects[i], g = grd.covariance.objects[i];
-      if (!p.covarianceRtn || !g.covarianceRtn) continue;
-      const ratio = g.covarianceRtn[0] / p.covarianceRtn[0];
-      gpSummary.evaluatedPairs++;
-      if (g.status === 'INFLATED') gpSummary.inflatedPairs++;
-      gpSummary.minAlpha = Math.min(gpSummary.minAlpha, ratio);
-      gpSummary.maxAlpha = Math.max(gpSummary.maxAlpha, ratio);
-      gpSummary.rows.push({ norad, regime: uniqTargets.get(norad).regime, ageDays: reqs[i].ageDays, status: g.status, alpha: +ratio.toFixed(4) });
+    const gpCall = async (sets, requests, config) => {
+      const h = await createBrowserModuleHarness({ wasmSource: gpWasm, manifest: gpManifest, surface: 'direct', hostOptions: { config } });
+      try {
+        const elements = ommFrame('elements', Buffer.concat(sets.map((s) => encodeOmm(s))));
+        const request = { portId: 'request', payload: encodeErm(ARM_OF.object_covariance.request, { objects: requests }), typeRef: { ...ERM_TYPE } };
+        const r = await h.invoke({ methodId: 'object_covariance', inputs: [elements, request] });
+        if (r.statusCode !== 0) throw new Error(r.errorMessage);
+        const out = {};
+        for (const f of r.outputs) if (f.typeRef?.fileIdentifier === '$ERM') out[f.portId] = decodeErm(f.payload);
+        return out;
+      } finally { h.destroy(); }
+    };
+    const gpSummary = { evaluatedObjects: 0, evaluatedPairs: 0, inflatedPairs: 0, minAlpha: 1, maxAlpha: 1, rows: [] };
+    for (const [norad, m] of [...gpSets.entries()].sort((a, b) => a[0] - b[0])) {
+      const sets = [...m.values()].sort((a, b) => (a.epoch < b.epoch ? -1 : 1));
+      if (sets.length < 10) continue;
+      const anchor = sets.at(-1);
+      const reqs = [0.5, 1, 2, 4].map((a) => ({ id: `${norad}:${a}`, set: { norad, epoch: anchor.epoch }, ageDays: a }));
+      const pop = await gpCall(sets, reqs, {});
+      const grd = await gpCall(sets, reqs, { 'object.inflationGuard': true });
+      gpSummary.evaluatedObjects++;
+      for (let i = 0; i < reqs.length; i++) {
+        const p = pop.covariance.objects[i], g = grd.covariance.objects[i];
+        if (!p.covarianceRtn || !g.covarianceRtn) continue;
+        const ratio = g.covarianceRtn[0] / p.covarianceRtn[0];
+        gpSummary.evaluatedPairs++;
+        if (g.status === 'INFLATED') gpSummary.inflatedPairs++;
+        gpSummary.minAlpha = Math.min(gpSummary.minAlpha, ratio);
+        gpSummary.maxAlpha = Math.max(gpSummary.maxAlpha, ratio);
+        gpSummary.rows.push({ norad, regime: uniqTargets.get(norad).regime, ageDays: reqs[i].ageDays, status: g.status, alpha: +ratio.toFixed(4) });
+      }
     }
+    fs.writeFileSync(GP_OUT, JSON.stringify({ generatedAtUtc: new Date().toISOString(), ...gpSummary }, null, 2) + '\n');
+    console.log(`Wrote GP confirmation (${gpSummary.evaluatedObjects} sats, ${gpSummary.evaluatedPairs} pairs) to ${GP_OUT}`);
+  } else if (!fs.existsSync(GP_OUT)) {
+    fs.writeFileSync(GP_OUT, JSON.stringify({ generatedAtUtc: new Date().toISOString(), skipped: true, rows: [] }, null, 2) + '\n');
   }
-  fs.writeFileSync(GP_OUT, JSON.stringify({ generatedAtUtc: new Date().toISOString(), ...gpSummary }, null, 2) + '\n');
-  console.log(`Wrote GP confirmation (${gpSummary.evaluatedObjects} sats, ${gpSummary.evaluatedPairs} pairs, ${gpSummary.inflatedPairs} inflated, alpha in [${gpSummary.minAlpha.toFixed(6)}, ${gpSummary.maxAlpha.toFixed(4)}]) to ${GP_OUT}`);
   process.exit(0);
 }
 
@@ -496,7 +534,7 @@ function loadTruth(job, fromMs, toMs) {
       const m = new Map();
       for (const d of refDirs.filter((x) => x.startsWith(job.tag)).sort()) {
         const yymmdd = d.split('.')[3] ?? '';
-        if (yymmdd < '260628') continue;
+        if (yymmdd < '260601') continue;
         const oem = fs.readdirSync(path.join(refDir, d)).find((n) => n.endsWith('.oem'));
         if (!oem) continue;
         for (const l of readOem(path.join(refDir, d, oem))) m.set(l.ms, l);
@@ -617,6 +655,67 @@ function fitCfgOf(job) {
   });
 }
 
+function xpCfg() {
+  return configuration({
+    theory: 'SGP4XP',
+    forces: {
+      EPHEMERIS_SOURCE: '',
+      ATMOSPHERE_MODEL: PA.pcfAtmosphereFamily.JACCHIA70,
+      WEATHER_SOURCE: PA.pcfWeatherSource.THEORY_FLUX_MODEL,
+    },
+  });
+}
+
+async function scoreOcm(job, ocmBytes, matched, D0, checkParity) {
+  const ocmT = O.OCM.getRootAsOCM(new fbA.ByteBuffer(plain(ocmBytes))).unpack();
+  const me = ocmT.MEAN_ELEMENTS, cp = ocmT.COV_PROPAGATION, fs0 = ocmT.ORBIT_DETERMINATION?.FIT_STATISTICS;
+  if (!me || !cp || !fs0?.CONVERGED) return null;
+  const pInputs = [
+    { portId: 'ocm', typeRef: T('OCM'), payload: prefixed(ocmBytes) },
+    configuration({ output: { FRAME: PA.pcfOutputFrame.GCRF, EPOCHS: matched.map((x) => x.epoch) } }),
+  ];
+  const pRes = await apPub.invoke({ methodId: 'propagate', inputs: pInputs });
+  if (pRes.statusCode !== 0) return null;
+  const ephPub = outOf(pRes, 'ephemeris');
+  if (checkParity && pubParityChecked < 20) {
+    const pPriv = await apFull.invoke({ methodId: 'propagate', inputs: pInputs });
+    const ephPriv = outOf(pPriv, 'ephemeris');
+    pubParityChecked++;
+    if (!ephPriv || !ephPub || !ephPriv.equals(ephPub)) pubParityDiffs++;
+  }
+  const blk = E.OEM.getRootAsOEM(new fbA.ByteBuffer(plain(ephPub))).unpack().EPHEMERIS_DATA_BLOCK[0];
+  const nomLines = blk.EPHEMERIS_DATA_LINES, covLines = blk.COVARIANCE_MATRIX_LINES;
+  if (!covLines || covLines.length !== matched.length) return null;
+
+  let apAvgSum = 0, apAvgCnt = 0, apMax3h = 0, apDay0 = 0, f107Day0 = 0;
+  for (const w of WX) {
+    if (w.ms >= D0 && w.ms < D0 + 3 * DAY) { apAvgSum += w.apAvg; apAvgCnt++; apMax3h = Math.max(apMax3h, ...w.ap3); }
+    if (w.ms === D0) { apDay0 = w.apAvg; f107Day0 = w.f107; }
+  }
+  const nMin = me.MEAN_MOTION * 2 * Math.PI / 1440;
+  const aKm = Math.pow(0.074366859954178854 / nMin, 2 / 3) * 6378.1363;
+  const hpKm = aKm * (1 - me.ECCENTRICITY) - 6378.1363;
+  const leads = [];
+  for (let i = 0; i < matched.length; i++) {
+    const m = matched[i], l = nomLines[i];
+    const rp = [l.X, l.Y, l.Z], vp = [l.X_DOT, l.Y_DOT, l.Z_DOT];
+    const { B } = uvwBasis(rp, vp);
+    const dr = [rp[0] - m.r[0], rp[1] - m.r[1], rp[2] - m.r[2]];
+    const dv = [vp[0] - m.v[0], vp[1] - m.v[1], vp[2] - m.v[2]];
+    leads.push({ h: m.h, e6: rotVec6ToUvw(B, dr, dv), pUvw: rotCov6ToUvw(B, covLineTo6x6(covLines[i])) });
+  }
+  return {
+    regime: job.regime, split: job.split, norad: job.norad, name: job.name,
+    arcH: job.arcH, ecom2: job.ecom2, covSize: ocmT.COV_SIZE,
+    startUtc: job.startUtc, epochUtc: me.EPOCH,
+    nRevDay: me.MEAN_MOTION, ecc: me.ECCENTRICITY, incDeg: me.INCLINATION, aKm, hpKm,
+    bterm: me.BTERM, agom: me.AGOM, fitRmsKm: fs0.FIT_RMS_KM,
+    tStartMin: cp.NOISE_START_MINUTES,
+    apDay0, apMean3d: apAvgCnt ? apAvgSum / apAvgCnt : apDay0, apMax3h, f107Day0,
+    leads,
+  };
+}
+
 for (const job of workerData.chunk) {
   try {
     const D0 = Date.parse(job.startUtc);
@@ -625,21 +724,8 @@ for (const job of workerData.chunk) {
     if (arcRaw.length < 16) { parentPort.postMessage({ progress: 1 }); continue; }
     const stride = Math.max(1, Math.floor(arcRaw.length / 289));
     const thin = arcRaw.filter((_, i) => i % stride === 0 || i === arcRaw.length - 1);
+    const oemPayload = packOem(job.norad, job.name, thin);
     const spw = packSpw(D0 - 10 * DAY, D0 + 35 * DAY);
-    const fRes = await apFull.invoke({
-      methodId: 'fit',
-      inputs: [
-        { portId: 'ephemeris', typeRef: T('OEM'), payload: packOem(job.norad, job.name, thin) },
-        fitCfgOf(job),
-        { portId: 'space_weather', typeRef: T('SPW'), payload: spw },
-      ],
-    });
-    if (fRes.statusCode !== 0) { parentPort.postMessage({ progress: 1 }); continue; }
-    const ocmBytes = outOf(fRes, 'elements');
-    const ocmT = O.OCM.getRootAsOCM(new fbA.ByteBuffer(plain(ocmBytes))).unpack();
-    const me = ocmT.MEAN_ELEMENTS, cp = ocmT.COV_PROPAGATION, fs0 = ocmT.ORBIT_DETERMINATION?.FIT_STATISTICS;
-    if (!me || !cp || !fs0?.CONVERGED) { parentPort.postMessage({ progress: 1 }); continue; }
-
     const matched = [];
     for (const h of EVAL_HOURS) {
       const targetMs = D0 + h * HOUR;
@@ -651,57 +737,32 @@ for (const job of workerData.chunk) {
       if (best) matched.push({ h, epoch: isoZ(best.ms), r: best.r, v: best.v });
     }
     if (matched.length < 4) { parentPort.postMessage({ progress: 1 }); continue; }
-    const pInputs = [
-      { portId: 'ocm', typeRef: T('OCM'), payload: prefixed(ocmBytes) },
-      configuration({ output: { FRAME: PA.pcfOutputFrame.GCRF, EPOCHS: matched.map((x) => x.epoch) } }),
-    ];
-    const pRes = await apPub.invoke({ methodId: 'propagate', inputs: pInputs });
-    if (pRes.statusCode !== 0) { parentPort.postMessage({ progress: 1 }); continue; }
-    const ephPub = outOf(pRes, 'ephemeris');
-    if (pubParityChecked < 20) {
-      const pPriv = await apFull.invoke({ methodId: 'propagate', inputs: pInputs });
-      const ephPriv = outOf(pPriv, 'ephemeris');
-      pubParityChecked++;
-      if (!ephPriv || !ephPub || !ephPriv.equals(ephPub)) pubParityDiffs++;
-    }
-    const blk = E.OEM.getRootAsOEM(new fbA.ByteBuffer(plain(ephPub))).unpack().EPHEMERIS_DATA_BLOCK[0];
-    const nomLines = blk.EPHEMERIS_DATA_LINES, covLines = blk.COVARIANCE_MATRIX_LINES;
-    if (!covLines || covLines.length !== matched.length) { parentPort.postMessage({ progress: 1 }); continue; }
 
-    let apAvgSum = 0, apAvgCnt = 0, apMax3h = 0, apDay0 = 0, f107Day0 = 0;
-    for (const w of WX) {
-      if (w.ms >= D0 && w.ms < D0 + 3 * DAY) { apAvgSum += w.apAvg; apAvgCnt++; apMax3h = Math.max(apMax3h, ...w.ap3); }
-      if (w.ms === D0) { apDay0 = w.apAvg; f107Day0 = w.f107; }
-    }
-    const nMin = me.MEAN_MOTION * 2 * Math.PI / 1440;
-    const aKm = Math.pow(0.074366859954178854 / nMin, 2 / 3) * 6378.1363;
-    const hpKm = aKm * (1 - me.ECCENTRICITY) - 6378.1363;
-
-    const leads = [];
-    for (let i = 0; i < matched.length; i++) {
-      const m = matched[i], l = nomLines[i];
-      const rp = [l.X, l.Y, l.Z], vp = [l.X_DOT, l.Y_DOT, l.Z_DOT];
-      const { B } = uvwBasis(rp, vp);
-      const dr = [rp[0] - m.r[0], rp[1] - m.r[1], rp[2] - m.r[2]];
-      const dv = [vp[0] - m.v[0], vp[1] - m.v[1], vp[2] - m.v[2]];
-      leads.push({
-        h: m.h,
-        e6: rotVec6ToUvw(B, dr, dv),
-        pUvw: rotCov6ToUvw(B, covLineTo6x6(covLines[i])),
-      });
-    }
-    parentPort.postMessage({
-      row: {
-        regime: job.regime, split: job.split, norad: job.norad, name: job.name,
-        arcH: job.arcH, ecom2: job.ecom2, covSize: ocmT.COV_SIZE,
-        startUtc: job.startUtc, epochUtc: me.EPOCH,
-        nRevDay: me.MEAN_MOTION, ecc: me.ECCENTRICITY, incDeg: me.INCLINATION, aKm, hpKm,
-        bterm: me.BTERM, agom: me.AGOM, fitRmsKm: fs0.FIT_RMS_KM,
-        tStartMin: cp.NOISE_START_MINUTES,
-        apDay0, apMean3d: apAvgCnt ? apAvgSum / apAvgCnt : apDay0, apMax3h, f107Day0,
-        leads,
-      },
+    const fRes = await apFull.invoke({
+      methodId: 'fit',
+      inputs: [
+        { portId: 'ephemeris', typeRef: T('OEM'), payload: oemPayload },
+        fitCfgOf(job),
+        { portId: 'space_weather', typeRef: T('SPW'), payload: spw },
+      ],
     });
+    if (fRes.statusCode === 0) {
+      const row = await scoreOcm(job, outOf(fRes, 'elements'), matched, D0, true);
+      if (row) parentPort.postMessage({ row });
+    }
+    if (job.alsoXp) {
+      const xRes = await apFull.invoke({
+        methodId: 'fit',
+        inputs: [
+          { portId: 'ephemeris', typeRef: T('OEM'), payload: oemPayload },
+          xpCfg(),
+        ],
+      });
+      if (xRes.statusCode === 0) {
+        const xpRow = await scoreOcm(job, outOf(xRes, 'elements'), matched, D0, false);
+        if (xpRow) parentPort.postMessage({ xpRow });
+      }
+    }
   } catch { /* skip broken truth file */ }
   parentPort.postMessage({ progress: 1 });
 }

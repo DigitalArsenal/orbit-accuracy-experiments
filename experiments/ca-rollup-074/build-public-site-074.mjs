@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Build unified SDN-AP 0.7.3 / catalog-builder 0.2.5 public-only-tests-0.7.3.{json,jsonl}
-// from runs/ca-rollup-073/public-vectors-073.jsonl + the exact 2,188-test membership/metadata
+// Build unified SDN-AP 0.7.4 / catalog-builder 0.2.6 public-only-tests-0.7.4.{json,jsonl}
+// from runs/ca-rollup-074/public-vectors-074.jsonl + the exact 2,188-test membership/metadata
 // of the canonical 8-group precise-orbit public-history benchmark.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -10,9 +10,9 @@ import { fileURLToPath } from 'node:url';
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
-const SITE_REF_JSONL = process.env.SDN_SITE_REF_JSONL || path.join(OAE, 'results/ca-rollup-073/public-only-tests-0.7.3.jsonl');
-const VEC_PATH = path.join(OAE, 'runs/ca-rollup-073/public-vectors-073.jsonl');
-const OUT_DIR = path.join(OAE, 'results/ca-rollup-073');
+const SITE_REF_JSONL = process.env.SDN_SITE_REF_JSONL || path.join(OAE, 'runs/ca-rollup-074/public-only-tests-ref.jsonl');
+const VEC_PATH = path.join(OAE, 'runs/ca-rollup-074/public-vectors-074.jsonl');
+const OUT_DIR = path.join(OAE, 'results/ca-rollup-074');
 const sha256 = (p) => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 const Z = 1.959963984540054;
@@ -77,7 +77,7 @@ function summarizeDay(rows, dayKey) {
   };
 }
 
-// Load 0.7.3 vectors keyed by norad|startDate
+// Load 0.7.4 vectors keyed by norad|startDate
 const vecMap = new Map();
 for (const line of fs.readFileSync(VEC_PATH, 'utf8').trim().split('\n')) {
   const r = JSON.parse(line);
@@ -95,7 +95,7 @@ for (const ref of refRows) {
     continue;
   }
   const v = vecMap.get(`${ref.noradId}|${ref.startUtc.slice(0, 10)}`);
-  if (!v) throw new Error(`Missing 0.7.3 vector for ${ref.groupKey} ${ref.noradId} ${ref.startUtc}`);
+  if (!v) throw new Error(`Missing 0.7.4 vector for ${ref.groupKey} ${ref.noradId} ${ref.startUtc}`);
   matched++;
   const days = {};
   for (const d of ['1', '2', '3', '4', '5']) {
@@ -103,7 +103,7 @@ for (const ref of refRows) {
     const vd = v.days?.[d];
     if (!vd) throw new Error(`Missing day ${d} for ${ref.noradId} ${ref.startUtc}`);
     days[d] = {
-      // Keep SGP4 public set identical to the site baseline where available, or fresh 0.7.3 scorer output (identical within <1 mm)
+      // Keep SGP4 public set identical to the site baseline where available, or fresh 0.7.4 scorer output (identical within <1 mm)
       sgp4PublicSetM: +(vd.rmsKm.S * 1000).toFixed(3),
       sgp4XpFromPublicSetsM: +(vd.rmsKm.X * 1000).toFixed(3),
       sdnApFromPublicSetsM: +(vd.rmsKm.O * 1000).toFixed(3),
@@ -158,8 +158,8 @@ const cbCtrl = path.join(MODULES, 'flows/catalog-builder/dist/flow/control/dist/
 
 const summary = {
   schema: 'sdn-ap-site-public-only-tests-1',
-  version: '0.7.3',
-  measurement: 'The public-sets-only measurement on SDN-AP 0.7.3 and catalog-builder 0.2.5: 2,188 tests (2,045 in aggregates), zero SGP4 fallbacks',
+  version: '0.7.4',
+  measurement: 'The public-sets-only measurement on SDN-AP 0.7.4 and catalog-builder 0.2.6: 2,188 tests (2,045 in aggregates), zero SGP4 fallbacks',
   writtenUtc: new Date().toISOString(),
   what: 'For objects with only public element sets: on each test (one satellite, one start time), the error against the satellite\'s precise orbit of (1) SGP4 flown from the newest public element set, (2) SGP4-XP made from the public element sets, (3) SDN-AP made from the public element sets by the catalog builder. All three start from the same public element sets issued before the start and nothing else.',
   inputs: 'Public element sets: every Space-Track set of the satellite created at or before the start and with its epoch before the start, created in the 21 days before the start (read from the local archive of Space-Track gp_history; nothing fetched). SGP4 flies the newest of them (none older than 3 days before the start). SDN-AP: the catalog builder is given those sets as its only orbit data, its clock at the start, and the space weather as it was issued at the start; it makes one record, the one the catalog would serve. SGP4-XP: the SGP4-XP set made from that record the way the whole-catalog SGP4-XP sets are made, so it also comes from the public sets alone.',
@@ -168,15 +168,15 @@ const summary = {
   accuracy: 'Counts are exact over these tests. Shares carry 95 % Wilson score intervals (z = 1.96), each test counted as independent; tests of one satellite at different start dates are not fully independent, so the intervals are narrower than a satellite-level resampling would give. The truth orbits are accurate to centimeters to decimeters (laser and navigation orbits), far below the kilometer limits counted here.',
   builds: {
     catalogBuilder: {
-      version: '0.2.5',
+      version: '0.2.6',
       controlSha256: sha256(cbCtrl),
       chainSha256: sha256(cbChain),
-      note: 'flows/catalog-builder 0.2.5 (causal weather-contrast guard + short-arc disturbed-ephemeris protection + all-regime empirical covariance, zero SGP4 fallbacks)',
+      note: 'flows/catalog-builder 0.2.6 (causal weather-contrast guard + short-arc disturbed-ephemeris protection + all-regime empirical covariance, zero SGP4 fallbacks)',
     },
     sdnApModuleFlown: {
-      version: '0.7.3',
+      version: '0.7.4',
       sha256: sha256(apWasm),
-      note: 'propagator/sdn-ap 0.7.3 signed isomorphic module; every AP and SGP4-XP record was flown on it',
+      note: 'propagator/sdn-ap 0.7.4 signed isomorphic module; every AP and SGP4-XP record was flown on it',
     },
   },
   controls: {
@@ -204,8 +204,8 @@ const summary = {
 };
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
-const jsonPath = path.join(OUT_DIR, 'public-only-tests-0.7.3.json');
-const jsonlPath = path.join(OUT_DIR, 'public-only-tests-0.7.3.jsonl');
+const jsonPath = path.join(OUT_DIR, 'public-only-tests-0.7.4.json');
+const jsonlPath = path.join(OUT_DIR, 'public-only-tests-0.7.4.jsonl');
 fs.writeFileSync(jsonPath, JSON.stringify(summary, null, 1) + '\n');
 fs.writeFileSync(jsonlPath, outRows.map((r) => JSON.stringify(r)).join('\n') + '\n');
 console.log(`WROTE ${jsonPath} & ${jsonlPath}`);

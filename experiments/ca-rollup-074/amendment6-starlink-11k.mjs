@@ -1,19 +1,19 @@
 #!/usr/bin/env node
-// Amendment 5 (#1128): Unified 0.7.3 / 0.2.5 Full-Constellation Starlink 7-Arm Suite
+// Amendment 6 (#1128): Unified 0.7.4 / 0.2.6 Full-Constellation Starlink 7-Arm Suite
 // Evaluates ALL 7 ARMS on the exact same ~11,195 Starlink satellites with strict pre-T0 causality:
 //   S:         Space-Track public GP (CREATION_DATE <= T0) flown on SGP4
 //   SupGP:     CelesTrak SupGP (125002Z.json.gz < T0) flown on SGP4
-//   Xp:        SGP4-XP built by catalog-builder 0.2.5 from 21-day Space-Track GP history (CREATION_DATE <= T0)
-//   Op:        SDN-AP 0.7.3 built by catalog-builder 0.2.5 from 21-day Space-Track GP history (CREATION_DATE <= T0)
-//   X:         SGP4-XP built by catalog-builder 0.2.5 from SpaceX T0 ephemeris
-//   O:         SDN-AP 0.7.3 built by catalog-builder 0.2.5 from SpaceX T0 ephemeris
+//   Xp:        SGP4-XP built by catalog-builder 0.2.6 from 21-day Space-Track GP history (CREATION_DATE <= T0)
+//   Op:        SDN-AP 0.7.4 built by catalog-builder 0.2.6 from 21-day Space-Track GP history (CREATION_DATE <= T0)
+//   X:         SGP4-XP built by catalog-builder 0.2.6 from SpaceX T0 ephemeris
+//   O:         SDN-AP 0.7.4 built by catalog-builder 0.2.6 from SpaceX T0 ephemeris
 //   SpaceX_T0: SpaceX's own T0 OCM forecast where defined (0-6 h, 6-10.5 h)
 // Scores against stitched strictly unseen next-day SpaceX OCM truth cycles (00-57Z + 08-57Z) over 0-24 h,
-// saving private per-sat signed 3-D/6-D RTN vectors to runs/ca-rollup-073/ and aggregate-only JSON to results/.
+// saving private per-sat signed 3-D/6-D RTN vectors to runs/ca-rollup-074/ and aggregate-only JSON to results/.
 //
 // Usage:
-//   SDN_MODULES_ROOT=... node amendment5-starlink-11k.mjs --cycle train --pre-freeze-train --workers 14
-//   SDN_MODULES_ROOT=... node amendment5-starlink-11k.mjs --cycle eval --workers 14
+//   SDN_MODULES_ROOT=... node amendment6-starlink-11k.mjs --cycle train --pre-freeze-train --workers 14
+//   SDN_MODULES_ROOT=... node amendment6-starlink-11k.mjs --cycle eval --workers 14
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -22,22 +22,22 @@ import { fileURLToPath } from 'node:url';
 import {
   DAY_MS, HOUR_MS, sha256File, nowUtc, isoNoZ, utcMs, dayStr,
   loadSdsAndSdk, gpJsonToOmm, buildCausalSpwRecords, signedRtnErrorKm, buildCatalogBatch,
-} from './amendment5-lib.mjs';
+} from './amendment6-lib.mjs';
 
 const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
-const CFG_PATH = fs.existsSync(path.join(path.dirname(SELF), 'amendment5-config.json'))
-  ? path.join(path.dirname(SELF), 'amendment5-config.json')
-  : path.join(OAE, 'experiments/ca-rollup-073/amendment5-config.json');
+const CFG_PATH = fs.existsSync(path.join(path.dirname(SELF), 'amendment6-config.json'))
+  ? path.join(path.dirname(SELF), 'amendment6-config.json')
+  : path.join(OAE, 'experiments/ca-rollup-074/amendment6-config.json');
 const CFG = JSON.parse(fs.readFileSync(CFG_PATH, 'utf8'));
 
 const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : d; };
 const has = (k) => process.argv.includes(k);
 
-const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-073');
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-073/amendment5-starlink-11k.json');
+const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-074');
+const OUT_PATH = path.join(OAE, 'results/ca-rollup-074/amendment6-starlink-11k.json');
 const BINS = [['0-6', 0, 6], ['6-12', 6, 12], ['12-18', 12, 18], ['18-24', 18, 24]];
 
 function signedRtn6Km(pState, tR, tV) {
@@ -66,9 +66,9 @@ function checkFrozenAndPins(cycleName, preFreezeTrain) {
     if (cycleName !== 'train') throw new Error('--pre-freeze-train is ONLY allowed for --cycle train!');
     return;
   }
-  if (!CFG.frozen || !CFG_PATH.endsWith('amendment5-config.json')) throw new Error('amendment5-config.json is not frozen');
-  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-073/AMENDMENT-5.md', 'experiments/ca-rollup-073/amendment5-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
-  if (dirty) throw new Error(`Amendment 5 registration dirty/uncommitted: ${dirty}`);
+  if (!CFG.frozen || !CFG_PATH.endsWith('amendment6-config.json')) throw new Error('amendment6-config.json is not frozen');
+  const dirty = execFileSync('git', ['status', '--porcelain', '--', 'experiments/ca-rollup-074/AMENDMENT-6.md', 'experiments/ca-rollup-074/amendment6-config.json'], { cwd: OAE, encoding: 'utf8' }).trim();
+  if (dirty) throw new Error(`Amendment 6 registration dirty/uncommitted: ${dirty}`);
   const apSha = sha256File(path.join(MODULES, 'propagator/sdn-ap/dist/isomorphic/module.wasm'));
   if (apSha !== CFG.modules.sdnAp.wasmSha256) throw new Error(`sdn-ap wasm mismatch: ${apSha}`);
   const chSha = sha256File(path.join(MODULES, 'flows/catalog-builder/dist/isomorphic/module.wasm'));
@@ -460,7 +460,7 @@ async function main() {
   const t0 = Date.now();
   const cycles = cycle === 'both' ? ['train', 'eval'] : [cycle];
   const existing = fs.existsSync(OUT_PATH) && !smoke && !preFreezeTrain ? JSON.parse(fs.readFileSync(OUT_PATH, 'utf8')) : {
-    schema: 'sdn-ap-amendment5-starlink-11k-1',
+    schema: 'sdn-ap-amendment6-starlink-11k-1',
     issue: CFG.issue,
     registrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: OAE, encoding: 'utf8' }).trim(),
     configSha256: sha256File(CFG_PATH),

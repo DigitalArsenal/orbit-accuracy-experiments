@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Item 5 (#1128 / #976): Live Whole-Catalog 3-Arm 5-Day Conjunction Assessment Screen (32,988 objects, 2026-11-24)
-// Screens all 3 arms through compiled analysis/conjunction-assessment 0.19.1 WASM + public propagator/sdn-ap 0.7.3 WASM:
+// Screens all 3 arms through compiled analysis/conjunction-assessment 0.19.1 WASM + public propagator/sdn-ap 0.7.4 WASM:
 //   - SGP4 arm: 32,988 public GP $OMM records (sgp4Sources + e14-s3-kc.erm Foster 2-D)
-//   - SDN-AP 0.7.3 arm: catalog-builder 0.2.5 + gp-error-model 0.19.1 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
-//   - SGP4-XP arm: catalog-builder 0.2.5 + gp-error-model 0.19.1 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
+//   - SDN-AP 0.7.4 arm: catalog-builder 0.2.6 + gp-error-model 0.19.2 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
+//   - SGP4-XP arm: catalog-builder 0.2.6 + gp-error-model 0.19.2 $OCM records -> sdnap_epochs_at (TEME) -> deg-12 Chebyshev $PPE/$PRW
 // Plus:
 //   - Exact Foster 2-D Pc via analysis/conjunction-assessment compute_pc with ESA DISCOS/SATCAT HBR and 10 m HBR
 //   - Pairwise arm overlap (SDN-AP vs SGP4, SDN-AP vs SGP4-XP, SGP4 vs SGP4-XP)
@@ -29,8 +29,8 @@ const MOD = arg('--modules', process.env.SDN_MODULES_ROOT || path.resolve(path.d
 const CA_DIR = path.join(MOD, 'analysis/conjunction-assessment');
 const AP_DIR = path.join(MOD, 'propagator/sdn-ap');
 const GP_MODEL_DIR = path.join(MOD, 'analysis/gp-error-model');
-const LIVE_DIR = arg('--live-dir', process.env.SDN_LIVE_CATALOG_DIR || path.resolve(path.dirname(SELF), '../../runs/ca-rollup-073/live-20261124'));
-const RESULTS_DIR = arg('--out-dir', path.resolve(path.dirname(SELF), '../../results/ca-rollup-073'));
+const LIVE_DIR = arg('--live-dir', process.env.SDN_LIVE_CATALOG_DIR || path.resolve(path.dirname(SELF), '../../runs/ca-rollup-074/live-20261124'));
+const RESULTS_DIR = arg('--out-dir', path.resolve(path.dirname(SELF), '../../results/ca-rollup-074'));
 const ARCHIVE = arg('--archive', process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive');
 const T0_ISO = '2026-11-24T17:00:00.000Z';
 const T0_MS = Date.parse(T0_ISO);
@@ -264,7 +264,7 @@ function buildPrwFramesForWindow({ arm, winStartMs, nSegs, segSec, statesByTime,
     const ppe = new PPE_MOD.PPET(
       [], null, 'EARTH', temeRfm, PPE_MOD.timingStandard.UTC,
       startIso, stopIso, PPE_MOD.polynomialBasisType.CHEBYSHEV,
-      recs, [], `sdn-ap-0.7.3-${arm}`, segSec, CHEB_M, null,
+      recs, [], `sdn-ap-0.7.4-${arm}`, segSec, CHEB_M, null,
     );
     const handle = idx + 1;
     sources.push(new CQR_MOD.CQRObjectSourceT(objectId, name, info.norad, null, handle));
@@ -497,7 +497,7 @@ async function runScreenWorker(arm, winIndices, outDir, smoke = false) {
     return;
   }
 
-  // AP or XP arm via public sdn-ap 0.7.3:
+  // AP or XP arm via public sdn-ap 0.7.4:
   //   - Fast orbits (~94% AP, 100% XP): evaluated via sdnap_epochs_at (0.008 ms/obj/epoch!)
   //   - Wide-branch eccentric AP orbits (~6% AP): loaded from pre-evaluated 5-day batch propagate() cache (110x faster!)
   //   - Full catalog loaded in a second epoch store (or same store) for exact TCA state + 6x6 TEME covariance -> compute_pc Foster 2-D
@@ -1105,7 +1105,7 @@ async function runParent(workers, smoke) {
   delete sanitizedBuildSummary.apBranches;
   const report = {
     schema: 'sdn-ap-live-3arm-ca-rollup-1',
-    version: '0.7.3',
+    version: '0.7.4',
     generatedUtc: new Date().toISOString(),
     t0: T0_ISO,
     screenDays: 5,
@@ -1142,7 +1142,7 @@ async function runParent(workers, smoke) {
     },
     totalWallMs: Date.now() - tStart,
   };
-  const outPath = path.join(RESULTS_DIR, 'live-ca-screen-0.7.3.json');
+  const outPath = path.join(RESULTS_DIR, 'live-ca-screen-0.7.4.json');
   fs.writeFileSync(outPath, JSON.stringify(report, null, 2) + '\n');
   console.log(`PHASE 6 COMPLETE -> ${outPath}`);
   console.log(JSON.stringify({
