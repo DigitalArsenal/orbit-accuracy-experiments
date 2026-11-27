@@ -1,0 +1,59 @@
+{
+  "id": "ca-socrates-comparison-075",
+  "frozen": true,
+  "registeredUtc": "2026-11-27T00:24:00Z",
+  "modules": {
+    "sdnAp": {
+      "version": "0.7.5",
+      "commit": "2a4022548",
+      "publicWasmSha256": "a3337aad678ccef996238d2a23aa08eaab1f3dede4a2904078303d732318be5d"
+    },
+    "catalogBuilder": {
+      "version": "0.2.7",
+      "commit": "2a4022548"
+    },
+    "conjunctionAssessment": {
+      "version": "0.19.3",
+      "commit": "67b57bf82",
+      "wasmSha256": "ebab8b970166063e5066b2037e0ef38b3cf6ef80743947ee21a7a9eef34b6beb"
+    }
+  },
+  "partA": {
+    "socratesCsv": "/opt/data/sdn-archive/ca-socrates-gp-parity/raw/socrates-20261029T210829Z/sort-minRange.csv",
+    "socratesCsvSha256": "054a65407d84169594c545038ede446836147c5eefce727b54bae60fc0f0e065",
+    "windowStartUtc": "2026-10-28T17:00:00Z",
+    "durationSeconds": 604800,
+    "thresholdM": 5000,
+    "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d",
+    "baselineRun": "ca-socrates-gp-parity-a2-screen-20261030T040914Z"
+  },
+  "partB1": {
+    "windowStartUtc": "2026-10-28T17:00:00Z",
+    "windowEndUtc": "2026-11-04T17:00:00Z",
+    "gpCutUtc": "2026-10-28T16:06:35Z",
+    "leadsDays": [1, 3, 5, 7],
+    "truthSources": [
+      "ESA0OPSFIN_2026301..2026308 (111 GNSS satellites, independent cm-level)",
+      "Copernicus Sentinel-1C (62261) & Sentinel-1D (66315) POEORB (independent cm-level)"
+    ],
+    "cdmPublicDays": ["2026-10-28", "2026-10-29", "2026-10-30", "2026-10-31", "2026-11-01", "2026-11-02", "2026-11-03", "2026-11-04"]
+  },
+  "partB2": {
+    "socratesCsvGz": "/opt/data/sdn-archive/hac/celestrak-socrates/2026/2026-11-21/sort-minRange.csv.gz",
+    "socratesRawSha256": "4813a37ede8d4fef3d84f45c6a22027d3368205ad74692b631b0c72a56364769",
+    "windowStartUtc": "2026-11-20T20:00:00Z",
+    "scoredEndUtc": "2026-11-25T20:00:00Z",
+    "gpCutUtc": "2026-11-20T19:26:40Z",
+    "supGpDir": "/opt/data/sdn-archive/hac/celestrak-supgp/2026/2026-11-20",
+    "spacexPreT0Cycle": "/opt/data/sdn-archive/operator-capture/cycles/2026-11-20T16-57-57-944Z",
+    "spacexTruthDisclosure": "SpaceX subsequent 8-hourly operator ephemerides (0-8 h freshness); operator self-consistency reference, NOT independent tracking.",
+    "independentTruthSource": "GFZ0OPSRAP / GFZ0MGXRAP GNSS rapid orbits (2026-11-20..25)",
+    "thresholdsKm": [1, 5],
+    "horizonsHours": [24, 72, 120],
+    "matchSeconds": 60,
+    "windowEdgeSeconds": 60,
+    "bootstrapReplicates": 500,
+    "bootstrapCluster": "primaryNoradId",
+    "rngSeed": "socrates-comparison-075-20261126"
+  }
+}
