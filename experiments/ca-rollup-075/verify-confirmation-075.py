@@ -16,6 +16,7 @@ import gzip
 import hashlib
 import json
 import math
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,7 +31,7 @@ XP_ROWS_PATH = CONF_DIR / 'conf_xp_rows.jsonl.gz'
 DENSE_PATH = CONF_DIR / 'conf_dense60s.json'
 GP_PATH = CONF_DIR / 'conf_gp_sgp4.json'
 SUMMARY_PATH = CONF_DIR / 'SUMMARY.json'
-OUT_SITE_JSON = OAE / 'results/ca-rollup-075/confirmation-0.7.5.json'
+OUT_SITE_JSON = Path(os.environ.get('SDN_OUT_SITE_JSON') or (OAE / 'results/ca-rollup-075/confirmation-0.7.5.json'))
 BURN_DIR = OAE / 'results/operator-theory/maneuver-flags'
 
 CHI2_3_95 = 7.814727903251179

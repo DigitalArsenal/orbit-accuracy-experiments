@@ -12,7 +12,8 @@ const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const SITE_REF_JSONL = process.env.SDN_SITE_REF_JSONL || path.join(OAE, 'runs/ca-rollup-075/public-only-tests-ref.jsonl');
 const VEC_PATH = path.join(OAE, 'runs/ca-rollup-075/public-vectors-075.jsonl');
-const OUT_DIR = path.join(OAE, 'results/ca-rollup-075');
+const OUT_DIR = process.env.SDN_OUT_DIR || path.join(OAE, 'results/ca-rollup-075');
+const OUT_SUFFIX = process.env.SDN_OUT_SUFFIX || '0.7.5';
 const sha256 = (p) => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 const Z = 1.959963984540054;
@@ -334,8 +335,8 @@ const summary = {
 };
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
-const jsonPath = path.join(OUT_DIR, 'public-only-tests-0.7.5.json');
-const jsonlPath = path.join(OUT_DIR, 'public-only-tests-0.7.5.jsonl');
+const jsonPath = path.join(OUT_DIR, `public-only-tests-${OUT_SUFFIX}.json`);
+const jsonlPath = path.join(OUT_DIR, `public-only-tests-${OUT_SUFFIX}.jsonl`);
 fs.writeFileSync(jsonPath, JSON.stringify(summary, null, 1) + '\n');
 fs.writeFileSync(jsonlPath, outRows.map((r) => JSON.stringify(r)).join('\n') + '\n');
 console.log(`WROTE ${jsonPath} & ${jsonlPath}`);

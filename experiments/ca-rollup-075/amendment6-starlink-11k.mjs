@@ -37,7 +37,7 @@ const arg = (k, d = null) => { const i = process.argv.indexOf(k); return i >= 0 
 const has = (k) => process.argv.includes(k);
 
 const RUNS_DIR = path.join(OAE, 'runs/ca-rollup-075');
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-075/amendment6-starlink-11k.json');
+const OUT_PATH = process.env.SDN_OUT_PATH || path.join(OAE, 'results/ca-rollup-075/amendment6-starlink-11k.json');
 const BINS = [['0-6', 0, 6], ['6-12', 6, 12], ['12-18', 12, 18], ['18-24', 18, 24]];
 
 function signedRtn6Km(pState, tR, tV) {

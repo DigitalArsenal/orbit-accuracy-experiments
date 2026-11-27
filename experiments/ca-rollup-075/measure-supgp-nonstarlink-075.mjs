@@ -19,7 +19,7 @@ const SELF = fileURLToPath(import.meta.url);
 const OAE = path.resolve(path.dirname(SELF), '../..');
 const MODULES = process.env.SDN_MODULES_ROOT || path.resolve(OAE, '../../main-packages/space-data-network-modules');
 const ARCHIVE = process.env.SDN_ARCHIVE_ROOT || '/opt/data/sdn-archive';
-const OUT_PATH = path.join(OAE, 'results/ca-rollup-075/supgp-comparison-0.7.5.json');
+const OUT_PATH = process.env.SDN_OUT_PATH || path.join(OAE, 'results/ca-rollup-075/supgp-comparison-0.7.5.json');
 
 const REF_DIR = path.join(ARCHIVE, 'reference-states/reference');
 const SUPGP_DIR = path.join(ARCHIVE, 'celestrak/supgp-host02');
