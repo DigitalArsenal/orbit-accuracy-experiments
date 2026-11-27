@@ -4,15 +4,15 @@
   "frozen": true,
   "registeredUtc": "2026-11-26T19:25:00Z",
   "modules": {
-    "commit": "004faef999500b6685f89499a023578f84720973",
+    "commit": "016c3c4275dd351493819ef14bc18d58d0202c2c",
     "sdnAp": {
-      "version": "0.7.5",
-      "wasmSha256": "a3337aad678ccef996238d2a23aa08eaab1f3dede4a2904078303d732318be5d",
-      "canonicalSha256": "ecdd51f814a1337c2c73ea7399e406d2bcd55dd07aafc2bdbc0fc9bf8d993208"
+      "version": "0.7.6",
+      "wasmSha256": "64064e67a64f0963a873692d6e309853e09e17ce7dcb00b8dc90a66dc64c5ce9",
+      "canonicalSha256": "381e12843678a690423998f240ecd94323cff09544c417625d7e885f92ac97a7"
     },
     "catalogBuilder": {
-      "version": "0.2.7",
-      "chainWasmSha256": "bd861ea681dc495164cecc712c36c8639ce314b7500705438f969e6f025c455c",
+      "version": "0.2.8",
+      "chainWasmSha256": "9699142bfef5f6abb84cb410e5bc45f1ad3a2ca665f761a4ddea9f6ba1c2b982",
       "controlWasmSha256": "8d5d22385bf0e7499d38a98907960ac7241b5f994353b946846b1f40994d8983"
     },
     "gpErrorModel": {
