@@ -7,12 +7,12 @@
     "commit": "016c3c4275dd351493819ef14bc18d58d0202c2c",
     "sdnAp": {
       "version": "0.7.6",
-      "wasmSha256": "64064e67a64f0963a873692d6e309853e09e17ce7dcb00b8dc90a66dc64c5ce9",
+      "wasmSha256": "9266a25bc163c7bc7d324a565f0641a726d533afced3084694cc029ee988c75d",
       "canonicalSha256": "381e12843678a690423998f240ecd94323cff09544c417625d7e885f92ac97a7"
     },
     "catalogBuilder": {
       "version": "0.2.8",
-      "chainWasmSha256": "9699142bfef5f6abb84cb410e5bc45f1ad3a2ca665f761a4ddea9f6ba1c2b982",
+      "chainWasmSha256": "35a63c470e8764148a5c942d4ed3920c7a677b91a42c93ebba7e956202f180c9",
       "controlWasmSha256": "8d5d22385bf0e7499d38a98907960ac7241b5f994353b946846b1f40994d8983"
     },
     "gpErrorModel": {
