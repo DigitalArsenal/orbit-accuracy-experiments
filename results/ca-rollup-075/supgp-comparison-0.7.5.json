@@ -1,0 +1,587 @@
+{
+  "schema": "sdn-ap-supgp-comparison-2",
+  "version": "0.7.5",
+  "catalogBuilderVersion": "0.2.7",
+  "generatedUtc": "2026-11-27T00:24:26Z",
+  "module": {
+    "version": "0.7.5",
+    "canonicalSha256": "ecdd51f814a1337c2c73ea7399e406d2bcd55dd07aafc2bdbc0fc9bf8d993208",
+    "signedBundleSha256": "a3337aad678ccef996238d2a23aa08eaab1f3dede4a2904078303d732318be5d"
+  },
+  "xpImplementation": "SGP4-XP inside signed propagator/sdn-ap 0.7.5 (same module as SDN-AP; public-GP XP built by catalog-builder 0.2.7)",
+  "causalityDisclosure": {
+    "publicGpAndSupGpArms": "causal (only Space-Track GP and CelesTrak SupGP published before cutoff T0 enter)",
+    "preciseOrbitArms": "retrospective (uses historical ESA0OPSFIN final orbits with state epoch <= T0; ESA final products publish ~10-14 days after epoch, so this arm measures propagator fidelity given precise orbit input rather than real-time operational availability)"
+  },
+  "what": "Comparison of CelesTrak Supplemental GP (SupGP, SGP4) beside Space-Track GP (SGP4), SGP4-XP and SDN-AP 0.7.5 from Space-Track GP history (causal), and SGP4-XP and SDN-AP 0.7.5 from historical ESA final orbits (retrospective) across GPS and GLONASS MEO satellites against later ESA0OPSFIN final orbits (2026-11-02..11). Day-1 fault rows (>100 km on all arms or >1,000 km public-GP identity faults) are excluded per pass condition 3.7 and listed in excludedFaults.",
+  "groups": {
+    "gps": {
+      "label": "GPS (MEO)",
+      "distinctSats": 32,
+      "cutoffDates": [
+        "2026-11-02",
+        "2026-11-05",
+        "2026-11-08",
+        "2026-11-11"
+      ],
+      "supGpFiles": [
+        {
+          "cutoffDate": "2026-11-02",
+          "supGpFile": "20261101T183323Z.json",
+          "issueUtc": "2026-11-01T18:33:23.000Z",
+          "sha256": "cfe8b9a0a3f912a07880a229c2809a7923410e4a480563ba40dd0d89dd042c0b"
+        },
+        {
+          "cutoffDate": "2026-11-05",
+          "supGpFile": "20261104T022001Z.json",
+          "issueUtc": "2026-11-04T02:20:01.000Z",
+          "sha256": "5da4f44b9e7f4f2bc8bdc52570d26e74159c1f9d358da44ad28606cc7b00624b"
+        },
+        {
+          "cutoffDate": "2026-11-08",
+          "supGpFile": "20261107T022021Z.json",
+          "issueUtc": "2026-11-07T02:20:21.000Z",
+          "sha256": "8ecf1c340e83f5f23c725e4a18319abc6f9949d88d6b91776d48d5a8e7055ef8"
+        },
+        {
+          "cutoffDate": "2026-11-11",
+          "supGpFile": "20261110T022002Z.json",
+          "issueUtc": "2026-11-10T02:20:02.000Z",
+          "sha256": "c6a03acbb4e9357bdcab4e6faa11cdb6cfc48263c72dae9eb750c2ff2d78e8f4"
+        }
+      ],
+      "excludedFaults": [
+        {
+          "noradId": 29601,
+          "objectName": "NAVSTAR 59 (USA 192)",
+          "cutoffDate": "2026-11-11",
+          "reason": "day1-fault-over-100km-all-sides",
+          "day1M": {
+            "sgp4SpaceTrack": 103809.54,
+            "sgp4CelestrakSupGp": 102524.53,
+            "sgp4XpFromPublicGp": 103555.52,
+            "sdnApFromPublicGp": 101519.88,
+            "sgp4XpFromPrecise": 101792.96,
+            "sdnApFromPrecise": 101840.21
+          }
+        }
+      ],
+      "days": {
+        "1": {
+          "tests": 127,
+          "distinctSats": 32,
+          "sgp4SpaceTrack": {
+            "n": 127,
+            "medianM": 1292.85,
+            "p95M": 3895.83,
+            "maxM": 180758.85
+          },
+          "sgp4CelestrakSupGp": {
+            "n": 127,
+            "medianM": 884.21,
+            "p95M": 2183.73,
+            "maxM": 2566.55
+          },
+          "sgp4XpFromPublicGp": {
+            "n": 127,
+            "medianM": 1148.31,
+            "p95M": 3761.85,
+            "maxM": 180458.95
+          },
+          "sdnApFromPublicGp": {
+            "n": 127,
+            "medianM": 501.39,
+            "p95M": 3762.21,
+            "maxM": 180448.1
+          },
+          "sgp4XpFromPrecise": {
+            "n": 127,
+            "medianM": 36.32,
+            "p95M": 52.89,
+            "maxM": 61.88
+          },
+          "sdnApFromPrecise": {
+            "n": 127,
+            "medianM": 1.47,
+            "p95M": 1.91,
+            "maxM": 2.12
+          },
+          "sdnApPublicCloserThanSpaceTrack": 110,
+          "sdnApPublicCloserThanXpPublic": 91,
+          "sdnApPublicCloserThanSupGp": 88,
+          "sdnApPreciseCloserThanSupGp": 127,
+          "sdnApPreciseCloserThanXpPrecise": 127,
+          "supGpCloserThanSpaceTrack": 77,
+          "perSatellite": {
+            "distinctSats": 32,
+            "sdnApPublicBetterThanSpaceTrack": 30,
+            "sdnApPublicBetterThanSupGp": 19,
+            "sdnApPublicWorseThanSpaceTrack": [
+              {
+                "noradId": 48859,
+                "objectName": "NAVSTAR 81 (USA 319)",
+                "stMedM": 715.86,
+                "apMedM": 753.5
+              },
+              {
+                "noradId": 55268,
+                "objectName": "NAVSTAR 82 (USA 343)",
+                "stMedM": 3779.13,
+                "apMedM": 3856.1
+              }
+            ]
+          }
+        },
+        "3": {
+          "tests": 127,
+          "distinctSats": 32,
+          "sgp4SpaceTrack": {
+            "n": 127,
+            "medianM": 1313.99,
+            "p95M": 4205.74,
+            "maxM": 235148.16
+          },
+          "sgp4CelestrakSupGp": {
+            "n": 127,
+            "medianM": 576,
+            "p95M": 1164.59,
+            "maxM": 1276.59
+          },
+          "sgp4XpFromPublicGp": {
+            "n": 127,
+            "medianM": 1173.98,
+            "p95M": 4304.34,
+            "maxM": 235374.75
+          },
+          "sdnApFromPublicGp": {
+            "n": 127,
+            "medianM": 686.94,
+            "p95M": 4310.91,
+            "maxM": 235388.45
+          },
+          "sgp4XpFromPrecise": {
+            "n": 127,
+            "medianM": 74.92,
+            "p95M": 139.65,
+            "maxM": 208.5
+          },
+          "sdnApFromPrecise": {
+            "n": 127,
+            "medianM": 2.15,
+            "p95M": 3.72,
+            "maxM": 10.03
+          },
+          "sdnApPublicCloserThanSpaceTrack": 107,
+          "sdnApPublicCloserThanXpPublic": 87,
+          "sdnApPublicCloserThanSupGp": 54,
+          "sdnApPreciseCloserThanSupGp": 127,
+          "sdnApPreciseCloserThanXpPrecise": 127,
+          "supGpCloserThanSpaceTrack": 113,
+          "perSatellite": {
+            "distinctSats": 32,
+            "sdnApPublicBetterThanSpaceTrack": 27,
+            "sdnApPublicBetterThanSupGp": 14,
+            "sdnApPublicWorseThanSpaceTrack": [
+              {
+                "noradId": 28190,
+                "objectName": "NAVSTAR 54 (USA 177)",
+                "stMedM": 622.75,
+                "apMedM": 713.06
+              },
+              {
+                "noradId": 40105,
+                "objectName": "NAVSTAR 71 (USA 256)",
+                "stMedM": 2999.65,
+                "apMedM": 3183.74
+              },
+              {
+                "noradId": 40294,
+                "objectName": "NAVSTAR 72 (USA 258)",
+                "stMedM": 2316.77,
+                "apMedM": 2804.64
+              },
+              {
+                "noradId": 44506,
+                "objectName": "NAVSTAR 78 (USA 293)",
+                "stMedM": 76396.47,
+                "apMedM": 76438.95
+              },
+              {
+                "noradId": 48859,
+                "objectName": "NAVSTAR 81 (USA 319)",
+                "stMedM": 1130.21,
+                "apMedM": 1153.17
+              }
+            ]
+          }
+        },
+        "5": {
+          "tests": 127,
+          "distinctSats": 32,
+          "sgp4SpaceTrack": {
+            "n": 127,
+            "medianM": 1400.74,
+            "p95M": 4817.3,
+            "maxM": 288964.27
+          },
+          "sgp4CelestrakSupGp": {
+            "n": 127,
+            "medianM": 704.44,
+            "p95M": 1253.36,
+            "maxM": 259468.37
+          },
+          "sgp4XpFromPublicGp": {
+            "n": 127,
+            "medianM": 1323.79,
+            "p95M": 5354.45,
+            "maxM": 290244.83
+          },
+          "sdnApFromPublicGp": {
+            "n": 127,
+            "medianM": 925.7,
+            "p95M": 5474.43,
+            "maxM": 290293.93
+          },
+          "sgp4XpFromPrecise": {
+            "n": 127,
+            "medianM": 123.57,
+            "p95M": 290.81,
+            "maxM": 258341.17
+          },
+          "sdnApFromPrecise": {
+            "n": 127,
+            "medianM": 3.84,
+            "p95M": 9.9,
+            "maxM": 258566.14
+          },
+          "sdnApPublicCloserThanSpaceTrack": 94,
+          "sdnApPublicCloserThanXpPublic": 81,
+          "sdnApPublicCloserThanSupGp": 44,
+          "sdnApPreciseCloserThanSupGp": 127,
+          "sdnApPreciseCloserThanXpPrecise": 126,
+          "supGpCloserThanSpaceTrack": 116,
+          "perSatellite": {
+            "distinctSats": 32,
+            "sdnApPublicBetterThanSpaceTrack": 23,
+            "sdnApPublicBetterThanSupGp": 10,
+            "sdnApPublicWorseThanSpaceTrack": [
+              {
+                "noradId": 28190,
+                "objectName": "NAVSTAR 54 (USA 177)",
+                "stMedM": 669.53,
+                "apMedM": 870.31
+              },
+              {
+                "noradId": 28474,
+                "objectName": "NAVSTAR 56 (USA 180)",
+                "stMedM": 1633.06,
+                "apMedM": 1707.91
+              },
+              {
+                "noradId": 29486,
+                "objectName": "NAVSTAR 58 (USA 190)",
+                "stMedM": 1623.07,
+                "apMedM": 1737.23
+              },
+              {
+                "noradId": 29601,
+                "objectName": "NAVSTAR 59 (USA 192)",
+                "stMedM": 1255.88,
+                "apMedM": 1726.25
+              },
+              {
+                "noradId": 38833,
+                "objectName": "NAVSTAR 67 (USA 239)",
+                "stMedM": 912.15,
+                "apMedM": 1417
+              },
+              {
+                "noradId": 40105,
+                "objectName": "NAVSTAR 71 (USA 256)",
+                "stMedM": 1746.88,
+                "apMedM": 3058.69
+              },
+              {
+                "noradId": 40294,
+                "objectName": "NAVSTAR 72 (USA 258)",
+                "stMedM": 1681.56,
+                "apMedM": 2739.81
+              },
+              {
+                "noradId": 44506,
+                "objectName": "NAVSTAR 78 (USA 293)",
+                "stMedM": 104011.11,
+                "apMedM": 104305.54
+              },
+              {
+                "noradId": 48859,
+                "objectName": "NAVSTAR 81 (USA 319)",
+                "stMedM": 1523.16,
+                "apMedM": 1598.91
+              }
+            ]
+          }
+        }
+      }
+    },
+    "glonass": {
+      "label": "GLONASS (MEO)",
+      "distinctSats": 20,
+      "cutoffDates": [
+        "2026-11-02",
+        "2026-11-05",
+        "2026-11-08",
+        "2026-11-11"
+      ],
+      "supGpFiles": [
+        {
+          "cutoffDate": "2026-11-02",
+          "supGpFile": "20261101T183329Z.json",
+          "issueUtc": "2026-11-01T18:33:29.000Z",
+          "sha256": "cc7b4f16e3401524cf3f34ee912216b9a7e15bd355abd1c6238506bf34e5fb40"
+        },
+        {
+          "cutoffDate": "2026-11-05",
+          "supGpFile": "20261104T112246Z.json",
+          "issueUtc": "2026-11-04T11:22:46.000Z",
+          "sha256": "8cb6adb96af8a096017c272a9fd61d5f0e8e1e060ebf38222ddffe5ce4bacd3c"
+        },
+        {
+          "cutoffDate": "2026-11-08",
+          "supGpFile": "20261107T112601Z.json",
+          "issueUtc": "2026-11-07T11:26:01.000Z",
+          "sha256": "d9960c285f0fde9112d3433049f35b72c97e0f520b28c2e3a1e851ff27dd7e6f"
+        },
+        {
+          "cutoffDate": "2026-11-11",
+          "supGpFile": "20261110T112907Z.json",
+          "issueUtc": "2026-11-10T11:29:07.000Z",
+          "sha256": "5370885e4d0c74bb4923dc62c841fc12c5f8b7203d099cabc786213c8f6b0733"
+        }
+      ],
+      "excludedFaults": [
+        {
+          "noradId": 100744,
+          "objectName": "OBJECT A",
+          "cutoffDate": "2026-11-11",
+          "reason": "day1-public-gp-identity-fault-over-1000km",
+          "day1M": {
+            "sgp4SpaceTrack": 6545790.92,
+            "sgp4CelestrakSupGp": 518.79,
+            "sgp4XpFromPublicGp": 6546504.36,
+            "sdnApFromPublicGp": 6546606.87,
+            "sgp4XpFromPrecise": 47.57,
+            "sdnApFromPrecise": 2.61
+          }
+        }
+      ],
+      "days": {
+        "1": {
+          "tests": 76,
+          "distinctSats": 20,
+          "sgp4SpaceTrack": {
+            "n": 76,
+            "medianM": 1496.21,
+            "p95M": 2520.85,
+            "maxM": 4002.95
+          },
+          "sgp4CelestrakSupGp": {
+            "n": 76,
+            "medianM": 492.01,
+            "p95M": 847.85,
+            "maxM": 897.48
+          },
+          "sgp4XpFromPublicGp": {
+            "n": 76,
+            "medianM": 1404.09,
+            "p95M": 2387.22,
+            "maxM": 4042.28
+          },
+          "sdnApFromPublicGp": {
+            "n": 76,
+            "medianM": 1232.03,
+            "p95M": 2022.68,
+            "maxM": 2776.24
+          },
+          "sgp4XpFromPrecise": {
+            "n": 76,
+            "medianM": 40.6,
+            "p95M": 54.46,
+            "maxM": 61.4
+          },
+          "sdnApFromPrecise": {
+            "n": 76,
+            "medianM": 2.32,
+            "p95M": 2.73,
+            "maxM": 2.91
+          },
+          "sdnApPublicCloserThanSpaceTrack": 63,
+          "sdnApPublicCloserThanXpPublic": 56,
+          "sdnApPublicCloserThanSupGp": 9,
+          "sdnApPreciseCloserThanSupGp": 76,
+          "sdnApPreciseCloserThanXpPrecise": 76,
+          "supGpCloserThanSpaceTrack": 76,
+          "perSatellite": {
+            "distinctSats": 20,
+            "sdnApPublicBetterThanSpaceTrack": 18,
+            "sdnApPublicBetterThanSupGp": 2,
+            "sdnApPublicWorseThanSpaceTrack": [
+              {
+                "noradId": 42939,
+                "objectName": "COSMOS 2522 (GLONASS)",
+                "stMedM": 1632,
+                "apMedM": 1693.39
+              },
+              {
+                "noradId": 46805,
+                "objectName": "COSMOS 2547 (GLONASS)",
+                "stMedM": 1068.36,
+                "apMedM": 1122.23
+              }
+            ]
+          }
+        },
+        "3": {
+          "tests": 76,
+          "distinctSats": 20,
+          "sgp4SpaceTrack": {
+            "n": 76,
+            "medianM": 1805.36,
+            "p95M": 3250.11,
+            "maxM": 4697.44
+          },
+          "sgp4CelestrakSupGp": {
+            "n": 76,
+            "medianM": 1005.37,
+            "p95M": 1660.97,
+            "maxM": 2082.5
+          },
+          "sgp4XpFromPublicGp": {
+            "n": 76,
+            "medianM": 1665.7,
+            "p95M": 3293.32,
+            "maxM": 5041.95
+          },
+          "sdnApFromPublicGp": {
+            "n": 76,
+            "medianM": 1414.83,
+            "p95M": 2674.44,
+            "maxM": 3402.26
+          },
+          "sgp4XpFromPrecise": {
+            "n": 76,
+            "medianM": 78.31,
+            "p95M": 112.53,
+            "maxM": 157.66
+          },
+          "sdnApFromPrecise": {
+            "n": 76,
+            "medianM": 4.33,
+            "p95M": 9.15,
+            "maxM": 10.43
+          },
+          "sdnApPublicCloserThanSpaceTrack": 61,
+          "sdnApPublicCloserThanXpPublic": 51,
+          "sdnApPublicCloserThanSupGp": 20,
+          "sdnApPreciseCloserThanSupGp": 76,
+          "sdnApPreciseCloserThanXpPrecise": 76,
+          "supGpCloserThanSpaceTrack": 66,
+          "perSatellite": {
+            "distinctSats": 20,
+            "sdnApPublicBetterThanSpaceTrack": 17,
+            "sdnApPublicBetterThanSupGp": 4,
+            "sdnApPublicWorseThanSpaceTrack": [
+              {
+                "noradId": 40315,
+                "objectName": "COSMOS 2501 (GLONASS)",
+                "stMedM": 1651.18,
+                "apMedM": 1655.28
+              },
+              {
+                "noradId": 43687,
+                "objectName": "COSMOS 2529 (GLONASS)",
+                "stMedM": 1618.45,
+                "apMedM": 1628.83
+              },
+              {
+                "noradId": 57517,
+                "objectName": "COSMOS 2569 (GLONASS)",
+                "stMedM": 753.28,
+                "apMedM": 795.64
+              }
+            ]
+          }
+        },
+        "5": {
+          "tests": 76,
+          "distinctSats": 20,
+          "sgp4SpaceTrack": {
+            "n": 76,
+            "medianM": 2463.36,
+            "p95M": 4185.77,
+            "maxM": 5160.85
+          },
+          "sgp4CelestrakSupGp": {
+            "n": 76,
+            "medianM": 1475.31,
+            "p95M": 2578.66,
+            "maxM": 3607.7
+          },
+          "sgp4XpFromPublicGp": {
+            "n": 76,
+            "medianM": 2079.52,
+            "p95M": 4241.66,
+            "maxM": 6277.39
+          },
+          "sdnApFromPublicGp": {
+            "n": 76,
+            "medianM": 1740.31,
+            "p95M": 3241.91,
+            "maxM": 4061.46
+          },
+          "sgp4XpFromPrecise": {
+            "n": 76,
+            "medianM": 118.3,
+            "p95M": 190.29,
+            "maxM": 274.42
+          },
+          "sdnApFromPrecise": {
+            "n": 76,
+            "medianM": 8,
+            "p95M": 20.13,
+            "maxM": 21.78
+          },
+          "sdnApPublicCloserThanSpaceTrack": 58,
+          "sdnApPublicCloserThanXpPublic": 51,
+          "sdnApPublicCloserThanSupGp": 28,
+          "sdnApPreciseCloserThanSupGp": 76,
+          "sdnApPreciseCloserThanXpPrecise": 76,
+          "supGpCloserThanSpaceTrack": 54,
+          "perSatellite": {
+            "distinctSats": 20,
+            "sdnApPublicBetterThanSpaceTrack": 18,
+            "sdnApPublicBetterThanSupGp": 8,
+            "sdnApPublicWorseThanSpaceTrack": [
+              {
+                "noradId": 41330,
+                "objectName": "COSMOS 2514 (GLONASS)",
+                "stMedM": 1002.02,
+                "apMedM": 1014.2
+              },
+              {
+                "noradId": 63130,
+                "objectName": "COSMOS 2584(GLONASS)",
+                "stMedM": 1534.16,
+                "apMedM": 1649.13
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "unmeasuredRegimes": {
+    "leoSpheresCpf": "not measured (nsgf/ilrsa sphere precise archives end 2026-08-26; supgp-host02/cpf starts 2026-11-01)",
+    "geoCommercial": "not measured (no public commercial GEO precise-orbit truth overlapping supgp-host02/intelsat,ses 2026-11-01..14)"
+  }
+}

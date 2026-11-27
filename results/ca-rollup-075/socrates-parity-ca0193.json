@@ -1,0 +1,129 @@
+{
+  "schema": "sdn-ap-socrates-parity-1",
+  "generatedUtc": "2026-11-27T02:06:56Z",
+  "module": {
+    "name": "analysis/conjunction-assessment",
+    "version": "0.19.3",
+    "wasmSha256": "ebab8b970166063e5066b2037e0ef38b3cf6ef80743947ee21a7a9eef34b6beb"
+  },
+  "socratesRun": {
+    "windowStartUtc": "2026-10-28T17:00:00Z",
+    "windowEndUtc": "2026-11-04T17:00:00Z",
+    "durationDays": 7,
+    "thresholdKm": 5,
+    "socratesRows": 193952,
+    "catalogObjects": 32815,
+    "activePrimaries": 16818,
+    "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d",
+    "editionsMatched": 24391,
+    "editionsTotal": 24391
+  },
+  "baselineDiffVs017": {
+    "baselineEvents": 958800,
+    "newEvents": 958800,
+    "paired": 958800,
+    "exactBitIdentical": 958800,
+    "onlyInBaseline": 0,
+    "onlyInNew": 0,
+    "maxDtSeconds": 0,
+    "maxDMissM": 0,
+    "maxDSpeedMS": 0
+  },
+  "recall": {
+    "primary": {
+      "below1km": {
+        "reference": 5395,
+        "found": 5395,
+        "misses": 0,
+        "recall": 1
+      },
+      "1to5km": {
+        "reference": 120682,
+        "found": 120682,
+        "misses": 0,
+        "recall": 1
+      },
+      "all": {
+        "reference": 126077,
+        "found": 126077,
+        "misses": 0,
+        "recall": 1
+      }
+    },
+    "numbered100000": {
+      "below1km": {
+        "reference": 4006,
+        "found": 4006,
+        "misses": 0,
+        "recall": 1
+      },
+      "1to5km": {
+        "reference": 63838,
+        "found": 63838,
+        "misses": 0,
+        "recall": 1
+      },
+      "all": {
+        "reference": 67844,
+        "found": 67844,
+        "misses": 0,
+        "recall": 1
+      }
+    },
+    "editionMismatch": {
+      "below1km": {
+        "reference": 0,
+        "found": 0,
+        "misses": 0,
+        "recall": null
+      },
+      "1to5km": {
+        "reference": 0,
+        "found": 0,
+        "misses": 0,
+        "recall": null
+      },
+      "all": {
+        "reference": 0,
+        "found": 0,
+        "misses": 0,
+        "recall": null
+      }
+    }
+  },
+  "boundaryEvents": {
+    "reference": 31,
+    "found": 31
+  },
+  "geometryPrimary": {
+    "matched": 126077,
+    "nlrvTcaMs": {
+      "n": 124873,
+      "median": 0.2414,
+      "p99": 0.4828,
+      "max": 2.1324
+    },
+    "missM": {
+      "n": 126077,
+      "median": 0.2501,
+      "p99": 0.49511,
+      "max": 0.50007
+    },
+    "speedMS": {
+      "n": 126077,
+      "median": 0.25071,
+      "p99": 0.49514,
+      "max": 0.5
+    },
+    "beyondTolerance": {
+      "nlrvTca10ms": 0,
+      "miss5m": 0,
+      "speed5ms": 0
+    }
+  },
+  "excludedPortObjects": 41,
+  "failedPairs": 0,
+  "extrasUnexplainedDisclosedInA3": 1146,
+  "verdict": "PASS",
+  "wallMinutes": 101.77
+}

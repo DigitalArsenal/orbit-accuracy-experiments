@@ -1,0 +1,2889 @@
+{
+  "schema": "sdn-ap-socrates-comparison-1",
+  "version": "0.7.5",
+  "generatedUtc": "2026-11-27T02:43:14Z",
+  "registration": {
+    "id": "ca-socrates-comparison-075",
+    "frozen": true,
+    "registeredUtc": "2026-11-27T00:24:00Z",
+    "modules": {
+      "sdnAp": {
+        "version": "0.7.5",
+        "commit": "2a4022548",
+        "publicWasmSha256": "a3337aad678ccef996238d2a23aa08eaab1f3dede4a2904078303d732318be5d"
+      },
+      "catalogBuilder": {
+        "version": "0.2.7",
+        "commit": "2a4022548"
+      },
+      "conjunctionAssessment": {
+        "version": "0.19.3",
+        "commit": "67b57bf82",
+        "wasmSha256": "ebab8b970166063e5066b2037e0ef38b3cf6ef80743947ee21a7a9eef34b6beb"
+      }
+    },
+    "partA": {
+      "socratesCsv": "/opt/data/sdn-archive/ca-socrates-gp-parity/raw/socrates-20261029T210829Z/sort-minRange.csv",
+      "socratesCsvSha256": "054a65407d84169594c545038ede446836147c5eefce727b54bae60fc0f0e065",
+      "windowStartUtc": "2026-10-28T17:00:00Z",
+      "durationSeconds": 604800,
+      "thresholdM": 5000,
+      "ommStreamSha256": "2842351b750191315ada50df1cc5424485e87a3ac9eeda828fcf4b70a8ef0d4d",
+      "baselineRun": "ca-socrates-gp-parity-a2-screen-20261030T040914Z"
+    },
+    "partB1": {
+      "windowStartUtc": "2026-10-28T17:00:00Z",
+      "windowEndUtc": "2026-11-04T17:00:00Z",
+      "gpCutUtc": "2026-10-28T16:06:35Z",
+      "leadsDays": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "truthSources": [
+        "ESA0OPSFIN_2026301..2026308 (111 GNSS satellites, independent cm-level)",
+        "Copernicus Sentinel-1C (62261) & Sentinel-1D (66315) POEORB (independent cm-level)"
+      ],
+      "cdmPublicDays": [
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01",
+        "2026-11-02",
+        "2026-11-03",
+        "2026-11-04"
+      ]
+    },
+    "partB2": {
+      "socratesCsvGz": "/opt/data/sdn-archive/hac/celestrak-socrates/2026/2026-11-22/sort-minRange.csv.gz",
+      "socratesRawSha256": "36366daae7a736670d5b8651770174239bfa23cbf6df84c5ec3355a67f9865ab",
+      "windowStartUtc": "2026-11-21T10:00:00Z",
+      "scoredEndUtc": "2026-11-26T10:00:00Z",
+      "gpCutUtc": "2026-11-21T08:56:21Z",
+      "supGpStarlinkGz": "/opt/data/sdn-archive/hac/celestrak-supgp/2026/2026-11-21/starlink/022001Z.json.gz",
+      "supGpStarlinkRawSha256": "08f1ebc68d9d8cdcd2ff897602479a9127c5691b59db23a88b9fa0708b40c25b",
+      "supGpGpsGz": "/opt/data/sdn-archive/hac/celestrak-supgp/2026/2026-11-21/gps/022001Z.json.gz",
+      "spacexPreT0Cycle": "/opt/data/sdn-archive/operator-capture/cycles/2026-11-21T08-57-57-947Z",
+      "spacexTruthDisclosure": "SpaceX subsequent 8-hourly operator ephemerides (0-8 h freshness); operator self-consistency reference, NOT independent tracking.",
+      "independentTruthSource": "GFZ0OPSRAP / GFZ0MGXRAP GNSS rapid orbits (2026-11-21..25)",
+      "thresholdsKm": [
+        1,
+        5
+      ],
+      "horizonsHours": [
+        24,
+        72,
+        120
+      ],
+      "matchSeconds": 60,
+      "windowEdgeSeconds": 60,
+      "bootstrapReplicates": 500,
+      "bootstrapCluster": "primaryNoradId",
+      "rngSeed": "socrates-comparison-075-20261126"
+    }
+  },
+  "partB1_20261028_independentTruth7d": {
+    "schema": "sdn-ap-socrates-part-b1-1",
+    "generatedUtc": "2026-11-27T00:31:31Z",
+    "windowStartUtc": "2026-10-28T17:00:00.000Z",
+    "windowEndUtc": "2026-11-04T17:00:00.000Z",
+    "gpCutUtc": "2026-10-28T16:06:35Z",
+    "socratesRows": 193952,
+    "gnss7Day": {
+      "distinctSats": 115,
+      "excludedFaults": [
+        {
+          "noradId": 40730,
+          "objectName": "NAVSTAR 74 (USA 262)",
+          "day1M": {
+            "sgp4": 261981.6,
+            "xp": 265555,
+            "ap": 265568.7
+          }
+        },
+        {
+          "noradId": 42738,
+          "objectName": "QZS-2",
+          "day1M": {
+            "sgp4": 1917373.8,
+            "xp": 1929803.2,
+            "ap": 1917909.8
+          }
+        }
+      ],
+      "byDay": {
+        "1": {
+          "satellites": 115,
+          "socratesGpSgp4": {
+            "n": 115,
+            "medianM": 1463.33,
+            "p95M": 3743.41,
+            "maxM": 14221.22,
+            "medianCi95M": [
+              1257.11,
+              1678.49
+            ]
+          },
+          "gpSgp4Xp": {
+            "n": 115,
+            "medianM": 1423.78,
+            "p95M": 3426.07,
+            "maxM": 13989.81,
+            "medianCi95M": [
+              1282.44,
+              1712.58
+            ]
+          },
+          "gpSdnAp": {
+            "n": 115,
+            "medianM": 835.76,
+            "p95M": 3044,
+            "maxM": 13980.36,
+            "medianCi95M": [
+              604.31,
+              1032.69
+            ]
+          },
+          "sdnApCloserThanSocratesSgp4": 89,
+          "sdnApCloserThanXp": 78
+        },
+        "3": {
+          "satellites": 115,
+          "socratesGpSgp4": {
+            "n": 115,
+            "medianM": 1456.15,
+            "p95M": 5774.26,
+            "maxM": 208347.94,
+            "medianCi95M": [
+              1215.95,
+              2175.42
+            ]
+          },
+          "gpSgp4Xp": {
+            "n": 115,
+            "medianM": 1604.86,
+            "p95M": 5375.5,
+            "maxM": 208674.77,
+            "medianCi95M": [
+              1286.46,
+              2184.48
+            ]
+          },
+          "gpSdnAp": {
+            "n": 115,
+            "medianM": 1005.96,
+            "p95M": 4372.26,
+            "maxM": 209393.56,
+            "medianCi95M": [
+              770.64,
+              1263.41
+            ]
+          },
+          "sdnApCloserThanSocratesSgp4": 81,
+          "sdnApCloserThanXp": 68
+        },
+        "5": {
+          "satellites": 115,
+          "socratesGpSgp4": {
+            "n": 115,
+            "medianM": 1885.05,
+            "p95M": 7659.79,
+            "maxM": 484395.48,
+            "medianCi95M": [
+              1544.23,
+              2887.21
+            ]
+          },
+          "gpSgp4Xp": {
+            "n": 115,
+            "medianM": 1736.79,
+            "p95M": 7403.36,
+            "maxM": 483657.46,
+            "medianCi95M": [
+              1463.82,
+              2563.55
+            ]
+          },
+          "gpSdnAp": {
+            "n": 115,
+            "medianM": 1247.31,
+            "p95M": 6117.25,
+            "maxM": 486344.47,
+            "medianCi95M": [
+              1032.7,
+              1631.5
+            ]
+          },
+          "sdnApCloserThanSocratesSgp4": 88,
+          "sdnApCloserThanXp": 76
+        },
+        "7": {
+          "satellites": 114,
+          "socratesGpSgp4": {
+            "n": 114,
+            "medianM": 2477.06,
+            "p95M": 9650.09,
+            "maxM": 765547.62,
+            "medianCi95M": [
+              2077.44,
+              3688.22
+            ]
+          },
+          "gpSgp4Xp": {
+            "n": 114,
+            "medianM": 2098.98,
+            "p95M": 9365.5,
+            "maxM": 763006.91,
+            "medianCi95M": [
+              1879.71,
+              3158.12
+            ]
+          },
+          "gpSdnAp": {
+            "n": 114,
+            "medianM": 1529.86,
+            "p95M": 7252.62,
+            "maxM": 767896.42,
+            "medianCi95M": [
+              1301.22,
+              2024.96
+            ]
+          },
+          "sdnApCloserThanSocratesSgp4": 93,
+          "sdnApCloserThanXp": 75
+        }
+      }
+    },
+    "sentinelDiagnosticUnder5Sats": {
+      "distinctSats": 2,
+      "note": "2 satellites (< 5-sat regime floor); reported as diagnostic only",
+      "byDay": {
+        "1": {
+          "satellites": 2,
+          "socratesGpSgp4": {
+            "n": 2,
+            "medianM": 761.13,
+            "p95M": 884.92,
+            "maxM": 898.67,
+            "medianCi95M": null
+          },
+          "gpSgp4Xp": {
+            "n": 2,
+            "medianM": 762.09,
+            "p95M": 889.09,
+            "maxM": 903.21,
+            "medianCi95M": null
+          },
+          "gpSdnAp": {
+            "n": 2,
+            "medianM": 384.29,
+            "p95M": 617.6,
+            "maxM": 643.53,
+            "medianCi95M": null
+          },
+          "sdnApCloserThanSocratesSgp4": 2,
+          "sdnApCloserThanXp": 2
+        },
+        "3": {
+          "satellites": 2,
+          "socratesGpSgp4": {
+            "n": 2,
+            "medianM": 1696.25,
+            "p95M": 2561.8,
+            "maxM": 2657.97,
+            "medianCi95M": null
+          },
+          "gpSgp4Xp": {
+            "n": 2,
+            "medianM": 1690.16,
+            "p95M": 2558.8,
+            "maxM": 2655.32,
+            "medianCi95M": null
+          },
+          "gpSdnAp": {
+            "n": 2,
+            "medianM": 1413.49,
+            "p95M": 2433.86,
+            "maxM": 2547.24,
+            "medianCi95M": null
+          },
+          "sdnApCloserThanSocratesSgp4": 2,
+          "sdnApCloserThanXp": 2
+        },
+        "5": {
+          "satellites": 2,
+          "socratesGpSgp4": {
+            "n": 2,
+            "medianM": 4732.67,
+            "p95M": 6755.14,
+            "maxM": 6979.85,
+            "medianCi95M": null
+          },
+          "gpSgp4Xp": {
+            "n": 2,
+            "medianM": 4742.17,
+            "p95M": 6766.96,
+            "maxM": 6991.94,
+            "medianCi95M": null
+          },
+          "gpSdnAp": {
+            "n": 2,
+            "medianM": 4650.37,
+            "p95M": 6829.11,
+            "maxM": 7071.2,
+            "medianCi95M": null
+          },
+          "sdnApCloserThanSocratesSgp4": 1,
+          "sdnApCloserThanXp": 1
+        },
+        "7": {
+          "satellites": 2,
+          "socratesGpSgp4": {
+            "n": 2,
+            "medianM": 7718.52,
+            "p95M": 10834.23,
+            "maxM": 11180.42,
+            "medianCi95M": null
+          },
+          "gpSgp4Xp": {
+            "n": 2,
+            "medianM": 7860.32,
+            "p95M": 10973.41,
+            "maxM": 11319.31,
+            "medianCi95M": null
+          },
+          "gpSdnAp": {
+            "n": 2,
+            "medianM": 8055.3,
+            "p95M": 11407.77,
+            "maxM": 11780.27,
+            "medianCi95M": null
+          },
+          "sdnApCloserThanSocratesSgp4": 0,
+          "sdnApCloserThanXp": 1
+        }
+      }
+    },
+    "sentinelSocratesTcaPrimaryPositionError": {
+      "socratesRowsTouchingSentinel1CD": 29,
+      "scoredRows": 22,
+      "socratesGpSgp4": {
+        "n": 22,
+        "medianM": 1896.52,
+        "p95M": 4702.6,
+        "maxM": 12247.36
+      },
+      "gpSgp4Xp": {
+        "n": 22,
+        "medianM": 1881.46,
+        "p95M": 4648.14,
+        "maxM": 12558.14
+      },
+      "gpSdnAp": {
+        "n": 22,
+        "medianM": 1732.98,
+        "p95M": 3604.75,
+        "maxM": 12469.49
+      },
+      "sdnApCloserThanSocratesSgp4": 11
+    },
+    "cdmPublicScopeAudit": {
+      "uniqueEventsInWindow": 112,
+      "eventsWithActivePayload": 1,
+      "eventsWithoutActivePayload": 111,
+      "eventsMatchingSocratesPair": 0,
+      "explanation": "Space-Track cdm_public publishes overwhelmingly non-active-payload (debris / rocket body / defunct) conjunctions because 18 SDS distributes active-payload CDMs privately to operators, whereas CelesTrak SOCRATES Plus screens only active payloads."
+    }
+  },
+  "partB2_20261122_scoredScreening5d": {
+    "schema": "sdn-ap-socrates-part-b2-1",
+    "generatedUtc": "2026-11-27T02:43:14Z",
+    "socratesRun": {
+      "day": "2026-11-22",
+      "windowStartUtc": "2026-11-21T10:00:00.000Z",
+      "scoredEndUtc": "2026-11-26T10:00:00.000Z",
+      "scoredDays": 5,
+      "gpCutUtc": "2026-11-21T08:56:21Z",
+      "totalSocratesRows7d": 191778,
+      "socratesStarlinkPairsInPop5d": 34336,
+      "populationRuleVerified": "34336/34336"
+    },
+    "population": {
+      "starlinksInBothPreSpaceXAndGp": 11204,
+      "supGpCoveredBeforeT0": 11204,
+      "supGpFileUtc": "2026-11-21T02:20:01Z",
+      "spacexPreT0CycleUtc": "2026-11-21T08:57:57Z",
+      "numberedGe100k": 606,
+      "nonOperationalLt100k": 259
+    },
+    "truthDisclosure": "Reference trajectories are stitched from SpaceX subsequent 8-hourly ephemerides (0-8 h freshness), screened directly by CA 0.19.3 independently of all candidate arms. This is operator ephemeris self-consistency, NOT independent laser/radar/GNSS tracking.",
+    "controlParityOn20261122": {
+      "socratesInterior5d": 34327,
+      "matchedByCa0193Sgp4Control": 34258,
+      "matchRate": 0.99799,
+      "missDiffMedianM": 0.322,
+      "missDiffP99M": 7.593
+    },
+    "cdmPublicAudit5d": {
+      "uniqueEventsIn5d": 82,
+      "matchingAnySocratesPair": 4
+    },
+    "scored": {
+      "socratesIncludedStarlinkPairs": {
+        "24h": {
+          "lt1km": {
+            "truthEvents": 15,
+            "truthEdgeExcluded": 0,
+            "clusters": 130,
+            "baselineArm": "socratesPublished",
+            "arms": {
+              "socratesPublished": {
+                "predicted": 62,
+                "hits": 0,
+                "misses": 15,
+                "falseWarnings": 62,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "sgp4Control": {
+                "predicted": 62,
+                "hits": 0,
+                "misses": 15,
+                "falseWarnings": 62,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 38,
+                "hits": 1,
+                "misses": 14,
+                "falseWarnings": 37,
+                "recall": 0.0667,
+                "recallCi95": [
+                  0,
+                  0.2075
+                ],
+                "precision": 0.0263,
+                "precisionCi95": [
+                  0,
+                  0.0874
+                ],
+                "f1": 0.0377,
+                "matchedMissErrMedianM": 164.5,
+                "matchedMissErrP95M": 164.5,
+                "recallDeltaPctPtsVsBaseline": 6.67,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  20.75
+                ],
+                "falseWarningCutPctVsBaseline": 40.32,
+                "falseWarningCutPctCi95": [
+                  5.33,
+                  63.27
+                ],
+                "missCutPctVsBaseline": 6.67
+              },
+              "gpSgp4Xp": {
+                "predicted": 81,
+                "hits": 0,
+                "misses": 15,
+                "falseWarnings": 81,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": -30.65,
+                "falseWarningCutPctCi95": [
+                  -55.02,
+                  -10.23
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "gpSdnAp": {
+                "predicted": 46,
+                "hits": 0,
+                "misses": 15,
+                "falseWarnings": 46,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 25.81,
+                "falseWarningCutPctCi95": [
+                  -11.71,
+                  51.43
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "spacexSgp4Xp": {
+                "predicted": 14,
+                "hits": 3,
+                "misses": 12,
+                "falseWarnings": 11,
+                "recall": 0.2,
+                "recallCi95": [
+                  0,
+                  0.4062
+                ],
+                "precision": 0.2143,
+                "precisionCi95": [
+                  0,
+                  0.6
+                ],
+                "f1": 0.2069,
+                "matchedMissErrMedianM": 50.6,
+                "matchedMissErrP95M": 181.7,
+                "recallDeltaPctPtsVsBaseline": 20,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  40.62
+                ],
+                "falseWarningCutPctVsBaseline": 82.26,
+                "falseWarningCutPctCi95": [
+                  61.37,
+                  96.29
+                ],
+                "missCutPctVsBaseline": 20
+              },
+              "spacexSdnAp": {
+                "predicted": 23,
+                "hits": 5,
+                "misses": 10,
+                "falseWarnings": 18,
+                "recall": 0.3333,
+                "recallCi95": [
+                  0.1111,
+                  0.5556
+                ],
+                "precision": 0.2174,
+                "precisionCi95": [
+                  0.0579,
+                  0.4229
+                ],
+                "f1": 0.2632,
+                "matchedMissErrMedianM": 53.3,
+                "matchedMissErrP95M": 64.7,
+                "recallDeltaPctPtsVsBaseline": 33.33,
+                "recallDeltaPctPtsCi95": [
+                  11.11,
+                  55.56
+                ],
+                "falseWarningCutPctVsBaseline": 70.97,
+                "falseWarningCutPctCi95": [
+                  51.02,
+                  86.18
+                ],
+                "missCutPctVsBaseline": 33.33
+              }
+            }
+          },
+          "lt5km": {
+            "truthEvents": 3144,
+            "truthEdgeExcluded": 2,
+            "clusters": 4831,
+            "baselineArm": "socratesPublished",
+            "arms": {
+              "socratesPublished": {
+                "predicted": 3899,
+                "hits": 481,
+                "misses": 2663,
+                "falseWarnings": 3418,
+                "recall": 0.153,
+                "recallCi95": [
+                  0.1367,
+                  0.1665
+                ],
+                "precision": 0.1234,
+                "precisionCi95": [
+                  0.1105,
+                  0.1353
+                ],
+                "f1": 0.1366,
+                "matchedMissErrMedianM": 509.1,
+                "matchedMissErrP95M": 2011.6,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "sgp4Control": {
+                "predicted": 3892,
+                "hits": 482,
+                "misses": 2662,
+                "falseWarnings": 3410,
+                "recall": 0.1533,
+                "recallCi95": [
+                  0.1371,
+                  0.167
+                ],
+                "precision": 0.1238,
+                "precisionCi95": [
+                  0.1109,
+                  0.1359
+                ],
+                "f1": 0.137,
+                "matchedMissErrMedianM": 506.4,
+                "matchedMissErrP95M": 2010.5,
+                "recallDeltaPctPtsVsBaseline": 0.03,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0.1
+                ],
+                "falseWarningCutPctVsBaseline": 0.23,
+                "falseWarningCutPctCi95": [
+                  0.03,
+                  0.47
+                ],
+                "missCutPctVsBaseline": 0.04
+              },
+              "supGpSgp4": {
+                "predicted": 3691,
+                "hits": 972,
+                "misses": 2172,
+                "falseWarnings": 2719,
+                "recall": 0.3092,
+                "recallCi95": [
+                  0.2907,
+                  0.3285
+                ],
+                "precision": 0.2633,
+                "precisionCi95": [
+                  0.2461,
+                  0.2818
+                ],
+                "f1": 0.2844,
+                "matchedMissErrMedianM": 357.1,
+                "matchedMissErrP95M": 1738.9,
+                "recallDeltaPctPtsVsBaseline": 15.62,
+                "recallDeltaPctPtsCi95": [
+                  13.59,
+                  17.77
+                ],
+                "falseWarningCutPctVsBaseline": 20.45,
+                "falseWarningCutPctCi95": [
+                  15.73,
+                  24.94
+                ],
+                "missCutPctVsBaseline": 18.44
+              },
+              "gpSgp4Xp": {
+                "predicted": 3969,
+                "hits": 473,
+                "misses": 2671,
+                "falseWarnings": 3496,
+                "recall": 0.1504,
+                "recallCi95": [
+                  0.1346,
+                  0.1642
+                ],
+                "precision": 0.1192,
+                "precisionCi95": [
+                  0.1072,
+                  0.1308
+                ],
+                "f1": 0.133,
+                "matchedMissErrMedianM": 486.6,
+                "matchedMissErrP95M": 1858.7,
+                "recallDeltaPctPtsVsBaseline": -0.26,
+                "recallDeltaPctPtsCi95": [
+                  -0.69,
+                  0.15
+                ],
+                "falseWarningCutPctVsBaseline": -2.28,
+                "falseWarningCutPctCi95": [
+                  -4.11,
+                  -0.63
+                ],
+                "missCutPctVsBaseline": -0.3
+              },
+              "gpSdnAp": {
+                "predicted": 3730,
+                "hits": 925,
+                "misses": 2219,
+                "falseWarnings": 2805,
+                "recall": 0.2942,
+                "recallCi95": [
+                  0.2751,
+                  0.3155
+                ],
+                "precision": 0.248,
+                "precisionCi95": [
+                  0.2312,
+                  0.2652
+                ],
+                "f1": 0.2691,
+                "matchedMissErrMedianM": 449,
+                "matchedMissErrP95M": 1914.8,
+                "recallDeltaPctPtsVsBaseline": 14.12,
+                "recallDeltaPctPtsCi95": [
+                  12.16,
+                  16.11
+                ],
+                "falseWarningCutPctVsBaseline": 17.93,
+                "falseWarningCutPctCi95": [
+                  13.1,
+                  22.5
+                ],
+                "missCutPctVsBaseline": 16.67
+              },
+              "spacexSgp4Xp": {
+                "predicted": 2575,
+                "hits": 1730,
+                "misses": 1414,
+                "falseWarnings": 845,
+                "recall": 0.5503,
+                "recallCi95": [
+                  0.5284,
+                  0.571
+                ],
+                "precision": 0.6718,
+                "precisionCi95": [
+                  0.6527,
+                  0.6932
+                ],
+                "f1": 0.605,
+                "matchedMissErrMedianM": 226.9,
+                "matchedMissErrP95M": 1287.8,
+                "recallDeltaPctPtsVsBaseline": 39.73,
+                "recallDeltaPctPtsCi95": [
+                  37.34,
+                  42.07
+                ],
+                "falseWarningCutPctVsBaseline": 75.28,
+                "falseWarningCutPctCi95": [
+                  73.07,
+                  77.54
+                ],
+                "missCutPctVsBaseline": 46.9
+              },
+              "spacexSdnAp": {
+                "predicted": 2994,
+                "hits": 2188,
+                "misses": 956,
+                "falseWarnings": 806,
+                "recall": 0.6959,
+                "recallCi95": [
+                  0.6748,
+                  0.7158
+                ],
+                "precision": 0.7308,
+                "precisionCi95": [
+                  0.7117,
+                  0.7496
+                ],
+                "f1": 0.7129,
+                "matchedMissErrMedianM": 128.8,
+                "matchedMissErrP95M": 1118.5,
+                "recallDeltaPctPtsVsBaseline": 54.29,
+                "recallDeltaPctPtsCi95": [
+                  52.21,
+                  56.53
+                ],
+                "falseWarningCutPctVsBaseline": 76.42,
+                "falseWarningCutPctCi95": [
+                  74.41,
+                  78.51
+                ],
+                "missCutPctVsBaseline": 64.1
+              }
+            }
+          }
+        },
+        "72h": {
+          "lt1km": {
+            "truthEvents": 52,
+            "truthEdgeExcluded": 0,
+            "clusters": 1407,
+            "baselineArm": "socratesPublished",
+            "arms": {
+              "socratesPublished": {
+                "predicted": 849,
+                "hits": 0,
+                "misses": 52,
+                "falseWarnings": 849,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "sgp4Control": {
+                "predicted": 845,
+                "hits": 0,
+                "misses": 52,
+                "falseWarnings": 845,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0.47,
+                "falseWarningCutPctCi95": [
+                  0.11,
+                  0.98
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 840,
+                "hits": 1,
+                "misses": 51,
+                "falseWarnings": 839,
+                "recall": 0.0192,
+                "recallCi95": [
+                  0,
+                  0.0551
+                ],
+                "precision": 0.0012,
+                "precisionCi95": [
+                  0,
+                  0.0036
+                ],
+                "f1": 0.0022,
+                "matchedMissErrMedianM": 164.5,
+                "matchedMissErrP95M": 164.5,
+                "recallDeltaPctPtsVsBaseline": 1.92,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  5.51
+                ],
+                "falseWarningCutPctVsBaseline": 1.18,
+                "falseWarningCutPctCi95": [
+                  -10.23,
+                  11.01
+                ],
+                "missCutPctVsBaseline": 1.92
+              },
+              "gpSgp4Xp": {
+                "predicted": 896,
+                "hits": 0,
+                "misses": 52,
+                "falseWarnings": 896,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": -5.54,
+                "falseWarningCutPctCi95": [
+                  -9.81,
+                  -1.38
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "gpSdnAp": {
+                "predicted": 340,
+                "hits": 1,
+                "misses": 51,
+                "falseWarnings": 339,
+                "recall": 0.0192,
+                "recallCi95": [
+                  0,
+                  0.0567
+                ],
+                "precision": 0.0029,
+                "precisionCi95": [
+                  0,
+                  0.0094
+                ],
+                "f1": 0.0051,
+                "matchedMissErrMedianM": 358.4,
+                "matchedMissErrP95M": 358.4,
+                "recallDeltaPctPtsVsBaseline": 1.92,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  5.67
+                ],
+                "falseWarningCutPctVsBaseline": 60.07,
+                "falseWarningCutPctCi95": [
+                  53.82,
+                  65.65
+                ],
+                "missCutPctVsBaseline": 1.92
+              },
+              "spacexSgp4Xp": {
+                "predicted": 307,
+                "hits": 4,
+                "misses": 48,
+                "falseWarnings": 303,
+                "recall": 0.0769,
+                "recallCi95": [
+                  0.0174,
+                  0.1508
+                ],
+                "precision": 0.013,
+                "precisionCi95": [
+                  0.0031,
+                  0.0269
+                ],
+                "f1": 0.0223,
+                "matchedMissErrMedianM": 35.6,
+                "matchedMissErrP95M": 174.4,
+                "recallDeltaPctPtsVsBaseline": 7.69,
+                "recallDeltaPctPtsCi95": [
+                  1.74,
+                  15.08
+                ],
+                "falseWarningCutPctVsBaseline": 64.31,
+                "falseWarningCutPctCi95": [
+                  58.41,
+                  69.15
+                ],
+                "missCutPctVsBaseline": 7.69
+              },
+              "spacexSdnAp": {
+                "predicted": 159,
+                "hits": 8,
+                "misses": 44,
+                "falseWarnings": 151,
+                "recall": 0.1538,
+                "recallCi95": [
+                  0.0618,
+                  0.2706
+                ],
+                "precision": 0.0503,
+                "precisionCi95": [
+                  0.0201,
+                  0.0885
+                ],
+                "f1": 0.0758,
+                "matchedMissErrMedianM": 58.4,
+                "matchedMissErrP95M": 204.7,
+                "recallDeltaPctPtsVsBaseline": 15.38,
+                "recallDeltaPctPtsCi95": [
+                  6.18,
+                  27.06
+                ],
+                "falseWarningCutPctVsBaseline": 82.21,
+                "falseWarningCutPctCi95": [
+                  78.08,
+                  86.69
+                ],
+                "missCutPctVsBaseline": 15.38
+              }
+            }
+          },
+          "lt5km": {
+            "truthEvents": 9283,
+            "truthEdgeExcluded": 1,
+            "clusters": 8199,
+            "baselineArm": "socratesPublished",
+            "arms": {
+              "socratesPublished": {
+                "predicted": 16546,
+                "hits": 806,
+                "misses": 8477,
+                "falseWarnings": 15740,
+                "recall": 0.0868,
+                "recallCi95": [
+                  0.0799,
+                  0.094
+                ],
+                "precision": 0.0487,
+                "precisionCi95": [
+                  0.0445,
+                  0.0534
+                ],
+                "f1": 0.0624,
+                "matchedMissErrMedianM": 491,
+                "matchedMissErrP95M": 2053.1,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "sgp4Control": {
+                "predicted": 16522,
+                "hits": 807,
+                "misses": 8476,
+                "falseWarnings": 15715,
+                "recall": 0.0869,
+                "recallCi95": [
+                  0.08,
+                  0.0941
+                ],
+                "precision": 0.0488,
+                "precisionCi95": [
+                  0.0446,
+                  0.0536
+                ],
+                "f1": 0.0625,
+                "matchedMissErrMedianM": 489.6,
+                "matchedMissErrP95M": 2050.2,
+                "recallDeltaPctPtsVsBaseline": 0.01,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0.03
+                ],
+                "falseWarningCutPctVsBaseline": 0.16,
+                "falseWarningCutPctCi95": [
+                  0.08,
+                  0.25
+                ],
+                "missCutPctVsBaseline": 0.01
+              },
+              "supGpSgp4": {
+                "predicted": 22125,
+                "hits": 1163,
+                "misses": 8120,
+                "falseWarnings": 20962,
+                "recall": 0.1253,
+                "recallCi95": [
+                  0.1171,
+                  0.1329
+                ],
+                "precision": 0.0526,
+                "precisionCi95": [
+                  0.0483,
+                  0.0569
+                ],
+                "f1": 0.0741,
+                "matchedMissErrMedianM": 390.2,
+                "matchedMissErrP95M": 1893.1,
+                "recallDeltaPctPtsVsBaseline": 3.85,
+                "recallDeltaPctPtsCi95": [
+                  2.87,
+                  4.88
+                ],
+                "falseWarningCutPctVsBaseline": -33.18,
+                "falseWarningCutPctCi95": [
+                  -38.55,
+                  -28.39
+                ],
+                "missCutPctVsBaseline": 4.21
+              },
+              "gpSgp4Xp": {
+                "predicted": 16544,
+                "hits": 799,
+                "misses": 8484,
+                "falseWarnings": 15745,
+                "recall": 0.0861,
+                "recallCi95": [
+                  0.0788,
+                  0.0934
+                ],
+                "precision": 0.0483,
+                "precisionCi95": [
+                  0.0441,
+                  0.053
+                ],
+                "f1": 0.0619,
+                "matchedMissErrMedianM": 479.3,
+                "matchedMissErrP95M": 2042.2,
+                "recallDeltaPctPtsVsBaseline": -0.07,
+                "recallDeltaPctPtsCi95": [
+                  -0.25,
+                  0.08
+                ],
+                "falseWarningCutPctVsBaseline": -0.03,
+                "falseWarningCutPctCi95": [
+                  -0.76,
+                  0.68
+                ],
+                "missCutPctVsBaseline": -0.08
+              },
+              "gpSdnAp": {
+                "predicted": 12478,
+                "hits": 2061,
+                "misses": 7222,
+                "falseWarnings": 10417,
+                "recall": 0.222,
+                "recallCi95": [
+                  0.2106,
+                  0.2325
+                ],
+                "precision": 0.1652,
+                "precisionCi95": [
+                  0.1563,
+                  0.1746
+                ],
+                "f1": 0.1894,
+                "matchedMissErrMedianM": 416.2,
+                "matchedMissErrP95M": 1897.3,
+                "recallDeltaPctPtsVsBaseline": 13.52,
+                "recallDeltaPctPtsCi95": [
+                  12.36,
+                  14.63
+                ],
+                "falseWarningCutPctVsBaseline": 33.82,
+                "falseWarningCutPctCi95": [
+                  31.16,
+                  36.4
+                ],
+                "missCutPctVsBaseline": 14.8
+              },
+              "spacexSgp4Xp": {
+                "predicted": 9122,
+                "hits": 2725,
+                "misses": 6558,
+                "falseWarnings": 6397,
+                "recall": 0.2935,
+                "recallCi95": [
+                  0.281,
+                  0.3067
+                ],
+                "precision": 0.2987,
+                "precisionCi95": [
+                  0.2851,
+                  0.3128
+                ],
+                "f1": 0.2961,
+                "matchedMissErrMedianM": 280,
+                "matchedMissErrP95M": 1695.9,
+                "recallDeltaPctPtsVsBaseline": 20.67,
+                "recallDeltaPctPtsCi95": [
+                  19.39,
+                  22.02
+                ],
+                "falseWarningCutPctVsBaseline": 59.36,
+                "falseWarningCutPctCi95": [
+                  57.11,
+                  61.34
+                ],
+                "missCutPctVsBaseline": 22.64
+              },
+              "spacexSdnAp": {
+                "predicted": 9336,
+                "hits": 3550,
+                "misses": 5733,
+                "falseWarnings": 5786,
+                "recall": 0.3824,
+                "recallCi95": [
+                  0.3698,
+                  0.3958
+                ],
+                "precision": 0.3802,
+                "precisionCi95": [
+                  0.3669,
+                  0.3936
+                ],
+                "f1": 0.3813,
+                "matchedMissErrMedianM": 173.4,
+                "matchedMissErrP95M": 1509.8,
+                "recallDeltaPctPtsVsBaseline": 29.56,
+                "recallDeltaPctPtsCi95": [
+                  28.25,
+                  30.95
+                ],
+                "falseWarningCutPctVsBaseline": 63.24,
+                "falseWarningCutPctCi95": [
+                  61.16,
+                  65.13
+                ],
+                "missCutPctVsBaseline": 32.37
+              }
+            }
+          }
+        },
+        "120h": {
+          "lt1km": {
+            "truthEvents": 92,
+            "truthEdgeExcluded": 0,
+            "clusters": 2977,
+            "baselineArm": "socratesPublished",
+            "arms": {
+              "socratesPublished": {
+                "predicted": 2189,
+                "hits": 0,
+                "misses": 92,
+                "falseWarnings": 2189,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "sgp4Control": {
+                "predicted": 2185,
+                "hits": 0,
+                "misses": 92,
+                "falseWarnings": 2185,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0.18,
+                "falseWarningCutPctCi95": [
+                  -0.13,
+                  0.46
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 2061,
+                "hits": 1,
+                "misses": 91,
+                "falseWarnings": 2060,
+                "recall": 0.0109,
+                "recallCi95": [
+                  0,
+                  0.0404
+                ],
+                "precision": 0.0005,
+                "precisionCi95": [
+                  0,
+                  0.0019
+                ],
+                "f1": 0.0009,
+                "matchedMissErrMedianM": 164.5,
+                "matchedMissErrP95M": 164.5,
+                "recallDeltaPctPtsVsBaseline": 1.09,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  4.04
+                ],
+                "falseWarningCutPctVsBaseline": 5.89,
+                "falseWarningCutPctCi95": [
+                  -0.96,
+                  11.78
+                ],
+                "missCutPctVsBaseline": 1.09
+              },
+              "gpSgp4Xp": {
+                "predicted": 2298,
+                "hits": 0,
+                "misses": 92,
+                "falseWarnings": 2298,
+                "recall": 0,
+                "recallCi95": [
+                  0,
+                  0
+                ],
+                "precision": 0,
+                "precisionCi95": [
+                  0,
+                  0
+                ],
+                "f1": 0,
+                "matchedMissErrMedianM": null,
+                "matchedMissErrP95M": null,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": -4.98,
+                "falseWarningCutPctCi95": [
+                  -8.1,
+                  -2.34
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "gpSdnAp": {
+                "predicted": 848,
+                "hits": 1,
+                "misses": 91,
+                "falseWarnings": 847,
+                "recall": 0.0109,
+                "recallCi95": [
+                  0,
+                  0.0339
+                ],
+                "precision": 0.0012,
+                "precisionCi95": [
+                  0,
+                  0.0041
+                ],
+                "f1": 0.0021,
+                "matchedMissErrMedianM": 358.4,
+                "matchedMissErrP95M": 358.4,
+                "recallDeltaPctPtsVsBaseline": 1.09,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  3.39
+                ],
+                "falseWarningCutPctVsBaseline": 61.31,
+                "falseWarningCutPctCi95": [
+                  56.56,
+                  65.65
+                ],
+                "missCutPctVsBaseline": 1.09
+              },
+              "spacexSgp4Xp": {
+                "predicted": 791,
+                "hits": 5,
+                "misses": 87,
+                "falseWarnings": 786,
+                "recall": 0.0543,
+                "recallCi95": [
+                  0.0123,
+                  0.1067
+                ],
+                "precision": 0.0063,
+                "precisionCi95": [
+                  0.0013,
+                  0.0121
+                ],
+                "f1": 0.0113,
+                "matchedMissErrMedianM": 50.6,
+                "matchedMissErrP95M": 468.5,
+                "recallDeltaPctPtsVsBaseline": 5.43,
+                "recallDeltaPctPtsCi95": [
+                  1.23,
+                  10.67
+                ],
+                "falseWarningCutPctVsBaseline": 64.09,
+                "falseWarningCutPctCi95": [
+                  60.23,
+                  67.68
+                ],
+                "missCutPctVsBaseline": 5.43
+              },
+              "spacexSdnAp": {
+                "predicted": 939,
+                "hits": 8,
+                "misses": 84,
+                "falseWarnings": 931,
+                "recall": 0.087,
+                "recallCi95": [
+                  0.0333,
+                  0.1532
+                ],
+                "precision": 0.0085,
+                "precisionCi95": [
+                  0.0031,
+                  0.0146
+                ],
+                "f1": 0.0155,
+                "matchedMissErrMedianM": 58.4,
+                "matchedMissErrP95M": 204.7,
+                "recallDeltaPctPtsVsBaseline": 8.7,
+                "recallDeltaPctPtsCi95": [
+                  3.33,
+                  15.32
+                ],
+                "falseWarningCutPctVsBaseline": 57.47,
+                "falseWarningCutPctCi95": [
+                  53.27,
+                  61.73
+                ],
+                "missCutPctVsBaseline": 8.7
+              }
+            }
+          },
+          "lt5km": {
+            "truthEvents": 15324,
+            "truthEdgeExcluded": 0,
+            "clusters": 9538,
+            "baselineArm": "socratesPublished",
+            "arms": {
+              "socratesPublished": {
+                "predicted": 34316,
+                "hits": 937,
+                "misses": 14387,
+                "falseWarnings": 33379,
+                "recall": 0.0611,
+                "recallCi95": [
+                  0.0557,
+                  0.0664
+                ],
+                "precision": 0.0273,
+                "precisionCi95": [
+                  0.0246,
+                  0.0301
+                ],
+                "f1": 0.0378,
+                "matchedMissErrMedianM": 494.1,
+                "matchedMissErrP95M": 2056.6,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "sgp4Control": {
+                "predicted": 34265,
+                "hits": 938,
+                "misses": 14386,
+                "falseWarnings": 33327,
+                "recall": 0.0612,
+                "recallCi95": [
+                  0.0557,
+                  0.0665
+                ],
+                "precision": 0.0274,
+                "precisionCi95": [
+                  0.0247,
+                  0.0301
+                ],
+                "f1": 0.0378,
+                "matchedMissErrMedianM": 494.1,
+                "matchedMissErrP95M": 2056.5,
+                "recallDeltaPctPtsVsBaseline": 0.01,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0.02
+                ],
+                "falseWarningCutPctVsBaseline": 0.16,
+                "falseWarningCutPctCi95": [
+                  0.11,
+                  0.21
+                ],
+                "missCutPctVsBaseline": 0.01
+              },
+              "supGpSgp4": {
+                "predicted": 49544,
+                "hits": 1202,
+                "misses": 14122,
+                "falseWarnings": 48342,
+                "recall": 0.0784,
+                "recallCi95": [
+                  0.073,
+                  0.0838
+                ],
+                "precision": 0.0243,
+                "precisionCi95": [
+                  0.0222,
+                  0.0264
+                ],
+                "f1": 0.0371,
+                "matchedMissErrMedianM": 390.7,
+                "matchedMissErrP95M": 1893.4,
+                "recallDeltaPctPtsVsBaseline": 1.73,
+                "recallDeltaPctPtsCi95": [
+                  1.03,
+                  2.4
+                ],
+                "falseWarningCutPctVsBaseline": -44.83,
+                "falseWarningCutPctCi95": [
+                  -49.64,
+                  -40.81
+                ],
+                "missCutPctVsBaseline": 1.84
+              },
+              "gpSgp4Xp": {
+                "predicted": 34298,
+                "hits": 934,
+                "misses": 14390,
+                "falseWarnings": 33364,
+                "recall": 0.061,
+                "recallCi95": [
+                  0.0552,
+                  0.0662
+                ],
+                "precision": 0.0272,
+                "precisionCi95": [
+                  0.0244,
+                  0.03
+                ],
+                "f1": 0.0376,
+                "matchedMissErrMedianM": 486,
+                "matchedMissErrP95M": 2042.7,
+                "recallDeltaPctPtsVsBaseline": -0.01,
+                "recallDeltaPctPtsCi95": [
+                  -0.13,
+                  0.1
+                ],
+                "falseWarningCutPctVsBaseline": 0.04,
+                "falseWarningCutPctCi95": [
+                  -0.55,
+                  0.64
+                ],
+                "missCutPctVsBaseline": -0.02
+              },
+              "gpSdnAp": {
+                "predicted": 23812,
+                "hits": 2816,
+                "misses": 12508,
+                "falseWarnings": 20996,
+                "recall": 0.1838,
+                "recallCi95": [
+                  0.1746,
+                  0.1932
+                ],
+                "precision": 0.1183,
+                "precisionCi95": [
+                  0.111,
+                  0.125
+                ],
+                "f1": 0.1439,
+                "matchedMissErrMedianM": 412.7,
+                "matchedMissErrP95M": 1856,
+                "recallDeltaPctPtsVsBaseline": 12.27,
+                "recallDeltaPctPtsCi95": [
+                  11.31,
+                  13.26
+                ],
+                "falseWarningCutPctVsBaseline": 37.1,
+                "falseWarningCutPctCi95": [
+                  34.67,
+                  39.45
+                ],
+                "missCutPctVsBaseline": 13.06
+              },
+              "spacexSgp4Xp": {
+                "predicted": 18552,
+                "hits": 3050,
+                "misses": 12274,
+                "falseWarnings": 15502,
+                "recall": 0.199,
+                "recallCi95": [
+                  0.19,
+                  0.2077
+                ],
+                "precision": 0.1644,
+                "precisionCi95": [
+                  0.1557,
+                  0.1736
+                ],
+                "f1": 0.1801,
+                "matchedMissErrMedianM": 286.5,
+                "matchedMissErrP95M": 1686.2,
+                "recallDeltaPctPtsVsBaseline": 13.79,
+                "recallDeltaPctPtsCi95": [
+                  12.83,
+                  14.73
+                ],
+                "falseWarningCutPctVsBaseline": 53.56,
+                "falseWarningCutPctCi95": [
+                  51.71,
+                  55.26
+                ],
+                "missCutPctVsBaseline": 14.69
+              },
+              "spacexSdnAp": {
+                "predicted": 19291,
+                "hits": 3903,
+                "misses": 11421,
+                "falseWarnings": 15388,
+                "recall": 0.2547,
+                "recallCi95": [
+                  0.2447,
+                  0.2626
+                ],
+                "precision": 0.2023,
+                "precisionCi95": [
+                  0.1927,
+                  0.2109
+                ],
+                "f1": 0.2255,
+                "matchedMissErrMedianM": 185.9,
+                "matchedMissErrP95M": 1563,
+                "recallDeltaPctPtsVsBaseline": 19.36,
+                "recallDeltaPctPtsCi95": [
+                  18.41,
+                  20.24
+                ],
+                "falseWarningCutPctVsBaseline": 53.9,
+                "falseWarningCutPctCi95": [
+                  51.99,
+                  55.66
+                ],
+                "missCutPctVsBaseline": 20.62
+              }
+            }
+          }
+        }
+      },
+      "allStarlinkPairs": {
+        "24h": {
+          "lt1km": {
+            "truthEvents": 137,
+            "truthEdgeExcluded": 0,
+            "clusters": 1665,
+            "baselineArm": "sgp4Control",
+            "arms": {
+              "sgp4Control": {
+                "predicted": 1237,
+                "hits": 4,
+                "misses": 133,
+                "falseWarnings": 1233,
+                "recall": 0.0292,
+                "recallCi95": [
+                  0.007,
+                  0.0562
+                ],
+                "precision": 0.0032,
+                "precisionCi95": [
+                  0.0008,
+                  0.0065
+                ],
+                "f1": 0.0058,
+                "matchedMissErrMedianM": 299.1,
+                "matchedMissErrP95M": 571.5,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 580,
+                "hits": 12,
+                "misses": 125,
+                "falseWarnings": 568,
+                "recall": 0.0876,
+                "recallCi95": [
+                  0.0385,
+                  0.1497
+                ],
+                "precision": 0.0207,
+                "precisionCi95": [
+                  0.0087,
+                  0.0363
+                ],
+                "f1": 0.0335,
+                "matchedMissErrMedianM": 200.5,
+                "matchedMissErrP95M": 635.2,
+                "recallDeltaPctPtsVsBaseline": 5.84,
+                "recallDeltaPctPtsCi95": [
+                  0.3,
+                  11.84
+                ],
+                "falseWarningCutPctVsBaseline": 53.93,
+                "falseWarningCutPctCi95": [
+                  48.22,
+                  58.91
+                ],
+                "missCutPctVsBaseline": 6.02
+              },
+              "gpSgp4Xp": {
+                "predicted": 1465,
+                "hits": 4,
+                "misses": 133,
+                "falseWarnings": 1461,
+                "recall": 0.0292,
+                "recallCi95": [
+                  0.007,
+                  0.0562
+                ],
+                "precision": 0.0027,
+                "precisionCi95": [
+                  0.0007,
+                  0.0056
+                ],
+                "f1": 0.005,
+                "matchedMissErrMedianM": 272.5,
+                "matchedMissErrP95M": 544.6,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": -18.49,
+                "falseWarningCutPctCi95": [
+                  -23.53,
+                  -13.76
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "gpSdnAp": {
+                "predicted": 705,
+                "hits": 7,
+                "misses": 130,
+                "falseWarnings": 698,
+                "recall": 0.0511,
+                "recallCi95": [
+                  0.0165,
+                  0.0924
+                ],
+                "precision": 0.0099,
+                "precisionCi95": [
+                  0.0029,
+                  0.0189
+                ],
+                "f1": 0.0166,
+                "matchedMissErrMedianM": 231.3,
+                "matchedMissErrP95M": 603.2,
+                "recallDeltaPctPtsVsBaseline": 2.19,
+                "recallDeltaPctPtsCi95": [
+                  -1.68,
+                  6.64
+                ],
+                "falseWarningCutPctVsBaseline": 43.39,
+                "falseWarningCutPctCi95": [
+                  37.09,
+                  48.7
+                ],
+                "missCutPctVsBaseline": 2.26
+              },
+              "spacexSgp4Xp": {
+                "predicted": 190,
+                "hits": 30,
+                "misses": 107,
+                "falseWarnings": 160,
+                "recall": 0.219,
+                "recallCi95": [
+                  0.1508,
+                  0.2877
+                ],
+                "precision": 0.1579,
+                "precisionCi95": [
+                  0.1077,
+                  0.2069
+                ],
+                "f1": 0.1835,
+                "matchedMissErrMedianM": 212.9,
+                "matchedMissErrP95M": 449,
+                "recallDeltaPctPtsVsBaseline": 18.98,
+                "recallDeltaPctPtsCi95": [
+                  11.74,
+                  26.17
+                ],
+                "falseWarningCutPctVsBaseline": 87.02,
+                "falseWarningCutPctCi95": [
+                  82.97,
+                  90.19
+                ],
+                "missCutPctVsBaseline": 19.55
+              },
+              "spacexSdnAp": {
+                "predicted": 189,
+                "hits": 48,
+                "misses": 89,
+                "falseWarnings": 141,
+                "recall": 0.3504,
+                "recallCi95": [
+                  0.2639,
+                  0.4374
+                ],
+                "precision": 0.254,
+                "precisionCi95": [
+                  0.1845,
+                  0.3235
+                ],
+                "f1": 0.2945,
+                "matchedMissErrMedianM": 92.3,
+                "matchedMissErrP95M": 334.2,
+                "recallDeltaPctPtsVsBaseline": 32.12,
+                "recallDeltaPctPtsCi95": [
+                  23.13,
+                  41.35
+                ],
+                "falseWarningCutPctVsBaseline": 88.56,
+                "falseWarningCutPctCi95": [
+                  85.47,
+                  91.23
+                ],
+                "missCutPctVsBaseline": 33.08
+              }
+            }
+          },
+          "lt5km": {
+            "truthEvents": 27013,
+            "truthEdgeExcluded": 26,
+            "clusters": 9057,
+            "baselineArm": "sgp4Control",
+            "arms": {
+              "sgp4Control": {
+                "predicted": 38078,
+                "hits": 5029,
+                "misses": 21984,
+                "falseWarnings": 33049,
+                "recall": 0.1862,
+                "recallCi95": [
+                  0.1794,
+                  0.1938
+                ],
+                "precision": 0.1321,
+                "precisionCi95": [
+                  0.1268,
+                  0.1384
+                ],
+                "f1": 0.1545,
+                "matchedMissErrMedianM": 525.9,
+                "matchedMissErrP95M": 1899.3,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 33473,
+                "hits": 8931,
+                "misses": 18082,
+                "falseWarnings": 24542,
+                "recall": 0.3306,
+                "recallCi95": [
+                  0.3231,
+                  0.3387
+                ],
+                "precision": 0.2668,
+                "precisionCi95": [
+                  0.259,
+                  0.2749
+                ],
+                "f1": 0.2953,
+                "matchedMissErrMedianM": 392.9,
+                "matchedMissErrP95M": 1753,
+                "recallDeltaPctPtsVsBaseline": 14.44,
+                "recallDeltaPctPtsCi95": [
+                  13.48,
+                  15.35
+                ],
+                "falseWarningCutPctVsBaseline": 25.74,
+                "falseWarningCutPctCi95": [
+                  23.91,
+                  27.46
+                ],
+                "missCutPctVsBaseline": 17.75
+              },
+              "gpSgp4Xp": {
+                "predicted": 39310,
+                "hits": 4824,
+                "misses": 22189,
+                "falseWarnings": 34486,
+                "recall": 0.1786,
+                "recallCi95": [
+                  0.1721,
+                  0.186
+                ],
+                "precision": 0.1227,
+                "precisionCi95": [
+                  0.1174,
+                  0.1288
+                ],
+                "f1": 0.1455,
+                "matchedMissErrMedianM": 531.1,
+                "matchedMissErrP95M": 1895.8,
+                "recallDeltaPctPtsVsBaseline": -0.76,
+                "recallDeltaPctPtsCi95": [
+                  -0.98,
+                  -0.52
+                ],
+                "falseWarningCutPctVsBaseline": -4.35,
+                "falseWarningCutPctCi95": [
+                  -5.25,
+                  -3.54
+                ],
+                "missCutPctVsBaseline": -0.93
+              },
+              "gpSdnAp": {
+                "predicted": 33306,
+                "hits": 7634,
+                "misses": 19379,
+                "falseWarnings": 25672,
+                "recall": 0.2826,
+                "recallCi95": [
+                  0.2728,
+                  0.2931
+                ],
+                "precision": 0.2292,
+                "precisionCi95": [
+                  0.2204,
+                  0.2385
+                ],
+                "f1": 0.2531,
+                "matchedMissErrMedianM": 455.2,
+                "matchedMissErrP95M": 1782,
+                "recallDeltaPctPtsVsBaseline": 9.64,
+                "recallDeltaPctPtsCi95": [
+                  8.69,
+                  10.54
+                ],
+                "falseWarningCutPctVsBaseline": 22.32,
+                "falseWarningCutPctCi95": [
+                  20.56,
+                  24.21
+                ],
+                "missCutPctVsBaseline": 11.85
+              },
+              "spacexSgp4Xp": {
+                "predicted": 24269,
+                "hits": 16103,
+                "misses": 10910,
+                "falseWarnings": 8166,
+                "recall": 0.5961,
+                "recallCi95": [
+                  0.5864,
+                  0.6071
+                ],
+                "precision": 0.6635,
+                "precisionCi95": [
+                  0.6525,
+                  0.6725
+                ],
+                "f1": 0.628,
+                "matchedMissErrMedianM": 250.4,
+                "matchedMissErrP95M": 1391.6,
+                "recallDeltaPctPtsVsBaseline": 40.99,
+                "recallDeltaPctPtsCi95": [
+                  40,
+                  42.02
+                ],
+                "falseWarningCutPctVsBaseline": 75.29,
+                "falseWarningCutPctCi95": [
+                  74.35,
+                  76.17
+                ],
+                "missCutPctVsBaseline": 50.37
+              },
+              "spacexSdnAp": {
+                "predicted": 26247,
+                "hits": 19658,
+                "misses": 7355,
+                "falseWarnings": 6589,
+                "recall": 0.7277,
+                "recallCi95": [
+                  0.7196,
+                  0.7366
+                ],
+                "precision": 0.749,
+                "precisionCi95": [
+                  0.7399,
+                  0.758
+                ],
+                "f1": 0.7382,
+                "matchedMissErrMedianM": 134.5,
+                "matchedMissErrP95M": 1147.9,
+                "recallDeltaPctPtsVsBaseline": 54.15,
+                "recallDeltaPctPtsCi95": [
+                  53.31,
+                  55.03
+                ],
+                "falseWarningCutPctVsBaseline": 80.06,
+                "falseWarningCutPctCi95": [
+                  79.22,
+                  80.87
+                ],
+                "missCutPctVsBaseline": 66.54
+              }
+            }
+          }
+        },
+        "72h": {
+          "lt1km": {
+            "truthEvents": 435,
+            "truthEdgeExcluded": 0,
+            "clusters": 7598,
+            "baselineArm": "sgp4Control",
+            "arms": {
+              "sgp4Control": {
+                "predicted": 16790,
+                "hits": 7,
+                "misses": 428,
+                "falseWarnings": 16783,
+                "recall": 0.0161,
+                "recallCi95": [
+                  0.0054,
+                  0.0286
+                ],
+                "precision": 0.0004,
+                "precisionCi95": [
+                  0.0001,
+                  0.0008
+                ],
+                "f1": 0.0008,
+                "matchedMissErrMedianM": 294.7,
+                "matchedMissErrP95M": 741,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 16044,
+                "hits": 14,
+                "misses": 421,
+                "falseWarnings": 16030,
+                "recall": 0.0322,
+                "recallCi95": [
+                  0.0155,
+                  0.0481
+                ],
+                "precision": 0.0009,
+                "precisionCi95": [
+                  0.0004,
+                  0.0014
+                ],
+                "f1": 0.0017,
+                "matchedMissErrMedianM": 204.9,
+                "matchedMissErrP95M": 651.1,
+                "recallDeltaPctPtsVsBaseline": 1.61,
+                "recallDeltaPctPtsCi95": [
+                  -0.46,
+                  3.57
+                ],
+                "falseWarningCutPctVsBaseline": 4.49,
+                "falseWarningCutPctCi95": [
+                  1.63,
+                  7.08
+                ],
+                "missCutPctVsBaseline": 1.64
+              },
+              "gpSgp4Xp": {
+                "predicted": 17448,
+                "hits": 6,
+                "misses": 429,
+                "falseWarnings": 17442,
+                "recall": 0.0138,
+                "recallCi95": [
+                  0.0044,
+                  0.0262
+                ],
+                "precision": 0.0003,
+                "precisionCi95": [
+                  0.0001,
+                  0.0006
+                ],
+                "f1": 0.0007,
+                "matchedMissErrMedianM": 272.5,
+                "matchedMissErrP95M": 577.5,
+                "recallDeltaPctPtsVsBaseline": -0.23,
+                "recallDeltaPctPtsCi95": [
+                  -0.76,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": -3.93,
+                "falseWarningCutPctCi95": [
+                  -4.92,
+                  -2.89
+                ],
+                "missCutPctVsBaseline": -0.23
+              },
+              "gpSdnAp": {
+                "predicted": 9450,
+                "hits": 12,
+                "misses": 423,
+                "falseWarnings": 9438,
+                "recall": 0.0276,
+                "recallCi95": [
+                  0.0096,
+                  0.0494
+                ],
+                "precision": 0.0013,
+                "precisionCi95": [
+                  0.0004,
+                  0.0024
+                ],
+                "f1": 0.0024,
+                "matchedMissErrMedianM": 163.8,
+                "matchedMissErrP95M": 602.9,
+                "recallDeltaPctPtsVsBaseline": 1.15,
+                "recallDeltaPctPtsCi95": [
+                  -0.93,
+                  3.41
+                ],
+                "falseWarningCutPctVsBaseline": 43.76,
+                "falseWarningCutPctCi95": [
+                  42.09,
+                  45.44
+                ],
+                "missCutPctVsBaseline": 1.17
+              },
+              "spacexSgp4Xp": {
+                "predicted": 6807,
+                "hits": 32,
+                "misses": 403,
+                "falseWarnings": 6775,
+                "recall": 0.0736,
+                "recallCi95": [
+                  0.0464,
+                  0.1006
+                ],
+                "precision": 0.0047,
+                "precisionCi95": [
+                  0.0028,
+                  0.007
+                ],
+                "f1": 0.0088,
+                "matchedMissErrMedianM": 201.6,
+                "matchedMissErrP95M": 448,
+                "recallDeltaPctPtsVsBaseline": 5.75,
+                "recallDeltaPctPtsCi95": [
+                  2.8,
+                  8.31
+                ],
+                "falseWarningCutPctVsBaseline": 59.63,
+                "falseWarningCutPctCi95": [
+                  58.01,
+                  61.12
+                ],
+                "missCutPctVsBaseline": 5.84
+              },
+              "spacexSdnAp": {
+                "predicted": 3530,
+                "hits": 60,
+                "misses": 375,
+                "falseWarnings": 3470,
+                "recall": 0.1379,
+                "recallCi95": [
+                  0.101,
+                  0.1805
+                ],
+                "precision": 0.017,
+                "precisionCi95": [
+                  0.0113,
+                  0.0236
+                ],
+                "f1": 0.0303,
+                "matchedMissErrMedianM": 104.1,
+                "matchedMissErrP95M": 383.5,
+                "recallDeltaPctPtsVsBaseline": 12.18,
+                "recallDeltaPctPtsCi95": [
+                  8.42,
+                  16.25
+                ],
+                "falseWarningCutPctVsBaseline": 79.32,
+                "falseWarningCutPctCi95": [
+                  78.26,
+                  80.41
+                ],
+                "missCutPctVsBaseline": 12.38
+              }
+            }
+          },
+          "lt5km": {
+            "truthEvents": 81206,
+            "truthEdgeExcluded": 24,
+            "clusters": 10536,
+            "baselineArm": "sgp4Control",
+            "arms": {
+              "sgp4Control": {
+                "predicted": 208892,
+                "hits": 8353,
+                "misses": 72853,
+                "falseWarnings": 200539,
+                "recall": 0.1029,
+                "recallCi95": [
+                  0.0993,
+                  0.1071
+                ],
+                "precision": 0.04,
+                "precisionCi95": [
+                  0.0379,
+                  0.0422
+                ],
+                "f1": 0.0576,
+                "matchedMissErrMedianM": 537.9,
+                "matchedMissErrP95M": 1909.5,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 250395,
+                "hits": 10969,
+                "misses": 70237,
+                "falseWarnings": 239426,
+                "recall": 0.1351,
+                "recallCi95": [
+                  0.1311,
+                  0.1394
+                ],
+                "precision": 0.0438,
+                "precisionCi95": [
+                  0.0418,
+                  0.046
+                ],
+                "f1": 0.0662,
+                "matchedMissErrMedianM": 419.6,
+                "matchedMissErrP95M": 1821.5,
+                "recallDeltaPctPtsVsBaseline": 3.22,
+                "recallDeltaPctPtsCi95": [
+                  2.71,
+                  3.67
+                ],
+                "falseWarningCutPctVsBaseline": -19.39,
+                "falseWarningCutPctCi95": [
+                  -21.06,
+                  -17.69
+                ],
+                "missCutPctVsBaseline": 3.59
+              },
+              "gpSgp4Xp": {
+                "predicted": 211594,
+                "hits": 8118,
+                "misses": 73088,
+                "falseWarnings": 203476,
+                "recall": 0.1,
+                "recallCi95": [
+                  0.0965,
+                  0.104
+                ],
+                "precision": 0.0384,
+                "precisionCi95": [
+                  0.0364,
+                  0.0404
+                ],
+                "f1": 0.0555,
+                "matchedMissErrMedianM": 538.1,
+                "matchedMissErrP95M": 1904.4,
+                "recallDeltaPctPtsVsBaseline": -0.29,
+                "recallDeltaPctPtsCi95": [
+                  -0.39,
+                  -0.2
+                ],
+                "falseWarningCutPctVsBaseline": -1.46,
+                "falseWarningCutPctCi95": [
+                  -1.73,
+                  -1.22
+                ],
+                "missCutPctVsBaseline": -0.32
+              },
+              "gpSdnAp": {
+                "predicted": 149864,
+                "hits": 16775,
+                "misses": 64431,
+                "falseWarnings": 133089,
+                "recall": 0.2066,
+                "recallCi95": [
+                  0.1999,
+                  0.2136
+                ],
+                "precision": 0.1119,
+                "precisionCi95": [
+                  0.1068,
+                  0.1168
+                ],
+                "f1": 0.1452,
+                "matchedMissErrMedianM": 457.1,
+                "matchedMissErrP95M": 1798.3,
+                "recallDeltaPctPtsVsBaseline": 10.37,
+                "recallDeltaPctPtsCi95": [
+                  9.7,
+                  11.04
+                ],
+                "falseWarningCutPctVsBaseline": 33.63,
+                "falseWarningCutPctCi95": [
+                  32.6,
+                  34.56
+                ],
+                "missCutPctVsBaseline": 11.56
+              },
+              "spacexSgp4Xp": {
+                "predicted": 110881,
+                "hits": 25467,
+                "misses": 55739,
+                "falseWarnings": 85414,
+                "recall": 0.3136,
+                "recallCi95": [
+                  0.3052,
+                  0.3217
+                ],
+                "precision": 0.2297,
+                "precisionCi95": [
+                  0.2222,
+                  0.2372
+                ],
+                "f1": 0.2652,
+                "matchedMissErrMedianM": 310.1,
+                "matchedMissErrP95M": 1617,
+                "recallDeltaPctPtsVsBaseline": 21.07,
+                "recallDeltaPctPtsCi95": [
+                  20.26,
+                  21.77
+                ],
+                "falseWarningCutPctVsBaseline": 57.41,
+                "falseWarningCutPctCi95": [
+                  56.42,
+                  58.32
+                ],
+                "missCutPctVsBaseline": 23.49
+              },
+              "spacexSdnAp": {
+                "predicted": 93762,
+                "hits": 33191,
+                "misses": 48015,
+                "falseWarnings": 60571,
+                "recall": 0.4087,
+                "recallCi95": [
+                  0.4008,
+                  0.4166
+                ],
+                "precision": 0.354,
+                "precisionCi95": [
+                  0.3458,
+                  0.362
+                ],
+                "f1": 0.3794,
+                "matchedMissErrMedianM": 194.6,
+                "matchedMissErrP95M": 1512.3,
+                "recallDeltaPctPtsVsBaseline": 30.58,
+                "recallDeltaPctPtsCi95": [
+                  29.84,
+                  31.33
+                ],
+                "falseWarningCutPctVsBaseline": 69.8,
+                "falseWarningCutPctCi95": [
+                  69.04,
+                  70.52
+                ],
+                "missCutPctVsBaseline": 34.09
+              }
+            }
+          }
+        },
+        "120h": {
+          "lt1km": {
+            "truthEvents": 707,
+            "truthEdgeExcluded": 0,
+            "clusters": 8924,
+            "baselineArm": "sgp4Control",
+            "arms": {
+              "sgp4Control": {
+                "predicted": 36528,
+                "hits": 7,
+                "misses": 700,
+                "falseWarnings": 36521,
+                "recall": 0.0099,
+                "recallCi95": [
+                  0.0039,
+                  0.0172
+                ],
+                "precision": 0.0002,
+                "precisionCi95": [
+                  0.0001,
+                  0.0003
+                ],
+                "f1": 0.0004,
+                "matchedMissErrMedianM": 294.7,
+                "matchedMissErrP95M": 741,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 32591,
+                "hits": 14,
+                "misses": 693,
+                "falseWarnings": 32577,
+                "recall": 0.0198,
+                "recallCi95": [
+                  0.0086,
+                  0.0302
+                ],
+                "precision": 0.0004,
+                "precisionCi95": [
+                  0.0002,
+                  0.0007
+                ],
+                "f1": 0.0008,
+                "matchedMissErrMedianM": 204.9,
+                "matchedMissErrP95M": 651.1,
+                "recallDeltaPctPtsVsBaseline": 0.99,
+                "recallDeltaPctPtsCi95": [
+                  -0.15,
+                  2.25
+                ],
+                "falseWarningCutPctVsBaseline": 10.8,
+                "falseWarningCutPctCi95": [
+                  8.99,
+                  12.44
+                ],
+                "missCutPctVsBaseline": 1
+              },
+              "gpSgp4Xp": {
+                "predicted": 37663,
+                "hits": 6,
+                "misses": 701,
+                "falseWarnings": 37657,
+                "recall": 0.0085,
+                "recallCi95": [
+                  0.0029,
+                  0.0153
+                ],
+                "precision": 0.0002,
+                "precisionCi95": [
+                  0.0001,
+                  0.0003
+                ],
+                "f1": 0.0003,
+                "matchedMissErrMedianM": 272.5,
+                "matchedMissErrP95M": 577.5,
+                "recallDeltaPctPtsVsBaseline": -0.14,
+                "recallDeltaPctPtsCi95": [
+                  -0.47,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": -3.11,
+                "falseWarningCutPctCi95": [
+                  -3.88,
+                  -2.39
+                ],
+                "missCutPctVsBaseline": -0.14
+              },
+              "gpSdnAp": {
+                "predicted": 21209,
+                "hits": 13,
+                "misses": 694,
+                "falseWarnings": 21196,
+                "recall": 0.0184,
+                "recallCi95": [
+                  0.0082,
+                  0.0303
+                ],
+                "precision": 0.0006,
+                "precisionCi95": [
+                  0.0003,
+                  0.0011
+                ],
+                "f1": 0.0012,
+                "matchedMissErrMedianM": 157.6,
+                "matchedMissErrP95M": 602.8,
+                "recallDeltaPctPtsVsBaseline": 0.85,
+                "recallDeltaPctPtsCi95": [
+                  -0.33,
+                  2.14
+                ],
+                "falseWarningCutPctVsBaseline": 41.96,
+                "falseWarningCutPctCi95": [
+                  40.54,
+                  43.15
+                ],
+                "missCutPctVsBaseline": 0.86
+              },
+              "spacexSgp4Xp": {
+                "predicted": 23179,
+                "hits": 33,
+                "misses": 674,
+                "falseWarnings": 23146,
+                "recall": 0.0467,
+                "recallCi95": [
+                  0.0306,
+                  0.0615
+                ],
+                "precision": 0.0014,
+                "precisionCi95": [
+                  0.0009,
+                  0.002
+                ],
+                "f1": 0.0028,
+                "matchedMissErrMedianM": 206.9,
+                "matchedMissErrP95M": 486.7,
+                "recallDeltaPctPtsVsBaseline": 3.68,
+                "recallDeltaPctPtsCi95": [
+                  1.92,
+                  5.31
+                ],
+                "falseWarningCutPctVsBaseline": 36.62,
+                "falseWarningCutPctCi95": [
+                  35.01,
+                  38.15
+                ],
+                "missCutPctVsBaseline": 3.71
+              },
+              "spacexSdnAp": {
+                "predicted": 20176,
+                "hits": 61,
+                "misses": 646,
+                "falseWarnings": 20115,
+                "recall": 0.0863,
+                "recallCi95": [
+                  0.065,
+                  0.1103
+                ],
+                "precision": 0.003,
+                "precisionCi95": [
+                  0.0021,
+                  0.0041
+                ],
+                "f1": 0.0058,
+                "matchedMissErrMedianM": 96.6,
+                "matchedMissErrP95M": 381.3,
+                "recallDeltaPctPtsVsBaseline": 7.64,
+                "recallDeltaPctPtsCi95": [
+                  5.48,
+                  10.08
+                ],
+                "falseWarningCutPctVsBaseline": 44.92,
+                "falseWarningCutPctCi95": [
+                  43.42,
+                  46.42
+                ],
+                "missCutPctVsBaseline": 7.71
+              }
+            }
+          },
+          "lt5km": {
+            "truthEvents": 134623,
+            "truthEdgeExcluded": 24,
+            "clusters": 10837,
+            "baselineArm": "sgp4Control",
+            "arms": {
+              "sgp4Control": {
+                "predicted": 435206,
+                "hits": 9679,
+                "misses": 124944,
+                "falseWarnings": 425527,
+                "recall": 0.0719,
+                "recallCi95": [
+                  0.069,
+                  0.0751
+                ],
+                "precision": 0.0222,
+                "precisionCi95": [
+                  0.0211,
+                  0.0235
+                ],
+                "f1": 0.034,
+                "matchedMissErrMedianM": 544.9,
+                "matchedMissErrP95M": 1915.9,
+                "recallDeltaPctPtsVsBaseline": 0,
+                "recallDeltaPctPtsCi95": [
+                  0,
+                  0
+                ],
+                "falseWarningCutPctVsBaseline": 0,
+                "falseWarningCutPctCi95": [
+                  0,
+                  0
+                ],
+                "missCutPctVsBaseline": 0
+              },
+              "supGpSgp4": {
+                "predicted": 547512,
+                "hits": 11382,
+                "misses": 123241,
+                "falseWarnings": 536130,
+                "recall": 0.0845,
+                "recallCi95": [
+                  0.0821,
+                  0.0871
+                ],
+                "precision": 0.0208,
+                "precisionCi95": [
+                  0.0197,
+                  0.0219
+                ],
+                "f1": 0.0334,
+                "matchedMissErrMedianM": 425,
+                "matchedMissErrP95M": 1838,
+                "recallDeltaPctPtsVsBaseline": 1.26,
+                "recallDeltaPctPtsCi95": [
+                  0.91,
+                  1.6
+                ],
+                "falseWarningCutPctVsBaseline": -25.99,
+                "falseWarningCutPctCi95": [
+                  -27.55,
+                  -24.57
+                ],
+                "missCutPctVsBaseline": 1.36
+              },
+              "gpSgp4Xp": {
+                "predicted": 437683,
+                "hits": 9471,
+                "misses": 125152,
+                "falseWarnings": 428212,
+                "recall": 0.0704,
+                "recallCi95": [
+                  0.0677,
+                  0.0735
+                ],
+                "precision": 0.0216,
+                "precisionCi95": [
+                  0.0205,
+                  0.0228
+                ],
+                "f1": 0.0331,
+                "matchedMissErrMedianM": 544.3,
+                "matchedMissErrP95M": 1908.3,
+                "recallDeltaPctPtsVsBaseline": -0.15,
+                "recallDeltaPctPtsCi95": [
+                  -0.21,
+                  -0.09
+                ],
+                "falseWarningCutPctVsBaseline": -0.63,
+                "falseWarningCutPctCi95": [
+                  -0.83,
+                  -0.42
+                ],
+                "missCutPctVsBaseline": -0.17
+              },
+              "gpSdnAp": {
+                "predicted": 299731,
+                "hits": 22830,
+                "misses": 111793,
+                "falseWarnings": 276901,
+                "recall": 0.1696,
+                "recallCi95": [
+                  0.1639,
+                  0.1757
+                ],
+                "precision": 0.0762,
+                "precisionCi95": [
+                  0.0728,
+                  0.0799
+                ],
+                "f1": 0.1051,
+                "matchedMissErrMedianM": 448.2,
+                "matchedMissErrP95M": 1781.8,
+                "recallDeltaPctPtsVsBaseline": 9.77,
+                "recallDeltaPctPtsCi95": [
+                  9.28,
+                  10.32
+                ],
+                "falseWarningCutPctVsBaseline": 34.93,
+                "falseWarningCutPctCi95": [
+                  34.02,
+                  35.84
+                ],
+                "missCutPctVsBaseline": 10.53
+              },
+              "spacexSgp4Xp": {
+                "predicted": 286747,
+                "hits": 28410,
+                "misses": 106213,
+                "falseWarnings": 258337,
+                "recall": 0.211,
+                "recallCi95": [
+                  0.2057,
+                  0.2169
+                ],
+                "precision": 0.0991,
+                "precisionCi95": [
+                  0.095,
+                  0.1028
+                ],
+                "f1": 0.1348,
+                "matchedMissErrMedianM": 324.5,
+                "matchedMissErrP95M": 1635,
+                "recallDeltaPctPtsVsBaseline": 13.91,
+                "recallDeltaPctPtsCi95": [
+                  13.36,
+                  14.42
+                ],
+                "falseWarningCutPctVsBaseline": 39.29,
+                "falseWarningCutPctCi95": [
+                  38.31,
+                  40.24
+                ],
+                "missCutPctVsBaseline": 14.99
+              },
+              "spacexSdnAp": {
+                "predicted": 236881,
+                "hits": 37053,
+                "misses": 97570,
+                "falseWarnings": 199828,
+                "recall": 0.2752,
+                "recallCi95": [
+                  0.2695,
+                  0.2815
+                ],
+                "precision": 0.1564,
+                "precisionCi95": [
+                  0.1512,
+                  0.1619
+                ],
+                "f1": 0.1995,
+                "matchedMissErrMedianM": 211,
+                "matchedMissErrP95M": 1558.1,
+                "recallDeltaPctPtsVsBaseline": 20.33,
+                "recallDeltaPctPtsCi95": [
+                  19.77,
+                  20.89
+                ],
+                "falseWarningCutPctVsBaseline": 53.04,
+                "falseWarningCutPctCi95": [
+                  52.28,
+                  53.89
+                ],
+                "missCutPctVsBaseline": 21.91
+              }
+            }
+          }
+        }
+      }
+    },
+    "wallMinutes": 27.21
+  }
+}

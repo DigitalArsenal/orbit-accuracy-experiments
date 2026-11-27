@@ -1,0 +1,115 @@
+{
+  "version": "0.7.5",
+  "date": "2026-11-26",
+  "module": {
+    "bytes": 1997023,
+    "sha256": "a3337aad678ccef996238d2a23aa08eaab1f3dede4a2904078303d732318be5d",
+    "canonicalSha256": "ecdd51f814a1337c2c73ea7399e406d2bcd55dd07aafc2bdbc0fc9bf8d993208",
+    "simd128": true,
+    "relaxedSimd": false
+  },
+  "prebuiltRows": {
+    "objects": 400,
+    "node": {
+      "prebuiltFirstFrameMs": 9.6,
+      "coldFirstFrameMs": 905.2,
+      "prebuiltSpeedup": 94.292,
+      "prebuiltIngestMs": 2.4,
+      "steadyFrameMs": 0.019,
+      "prebuiltDisplayMB": 20.97,
+      "coldDisplayMB": 29.36,
+      "rowsAdmitted": 400,
+      "rowsNotStored": 0
+    },
+    "chromium": {
+      "prebuiltFirstFrameMs": 20.5,
+      "coldSerialFirstFrameMs": 846.4,
+      "coldPool3FirstFrameMs": 248.1,
+      "prebuiltSpeedupSerial": 41.288,
+      "pool3Speedup": 3.412,
+      "prebuiltIngestMs": 6.7,
+      "steadyFrameMs": 0.022,
+      "prebuiltDisplayMB": 20.97,
+      "coldSerialDisplayMB": 29.36,
+      "coldPool3DisplayMB": 71.11,
+      "cappedFirstFrameMs": 7,
+      "cappedDisplayMB": 20.97,
+      "poolThreads": 3,
+      "rowsAdmitted": 400,
+      "rowsNotStored": 0,
+      "pageErrors": 0,
+      "failedAssets": 0
+    }
+  },
+  "scale100k": {
+    "objects": 100000,
+    "measuredNode": {
+      "objects": 100000,
+      "threads": 4,
+      "parts": 100,
+      "wireMB": 26.7,
+      "ingestMs": 129.9,
+      "fillMs": 15088,
+      "firstFrameMs": 15464.7,
+      "steadyFrameMs": 5.04,
+      "served": 99998,
+      "unserved": 2,
+      "statusCounts": {
+        "0": 99998,
+        "4": 2
+      },
+      "slabFull": 0,
+      "peakWasmMB": 262.38,
+      "cellUsedMB": 41.36,
+      "poolRefused": 0,
+      "poolDeferred": 0
+    },
+    "measuredChromium": {
+      "objects": 100000,
+      "threads": 3,
+      "ingestMs": 76.6,
+      "fillMs": 13333.3,
+      "firstFrameMs": 13439.3,
+      "steadyFrameMs": 4.67,
+      "served": 99998,
+      "unserved": 2,
+      "statusCounts": {
+        "0": 99998,
+        "4": 2
+      },
+      "slabFull": 0,
+      "peakWasmMB": 252.13,
+      "cellUsedMB": 41.36
+    },
+    "publicPeakMB": 262.38,
+    "publicCellMB": 41.36,
+    "publicUnserved": 2,
+    "estimatedFrom1200": {
+      "publicPeakMB": 103.3,
+      "publicCellMB": 62.7,
+      "eccDragPeakMB": 118.2,
+      "eccDragCellMB": 69.2,
+      "leo500PeakMB": 113.1,
+      "leo500CellMB": 68.3
+    }
+  },
+  "atmosphere": {
+    "orbits": 20,
+    "days": 7,
+    "elapsedMs": 89.8
+  },
+  "widePool": {
+    "workers": 4,
+    "speedup": 3.6,
+    "reserveMiB": 12,
+    "reservesHalved": 0,
+    "refused": 0,
+    "deferred": 0
+  },
+  "stability": {
+    "highEccOrbits": 50,
+    "highEccFailures": 0,
+    "fallbackChecks": 3166,
+    "maxNormalizedD2": 0.9987
+  }
+}
