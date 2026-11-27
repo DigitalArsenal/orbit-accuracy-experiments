@@ -1,0 +1,1070 @@
+{
+ "schema": "sdn-ap-site-allarms-xp-1",
+ "version": "0.7.5",
+ "measurement": "M3b",
+ "what": "Per 72 h row and day, on the exact forecasts where the public element set was flown and SDN-AP 0.7.5 (and where present, the numerical propagator) was scored: publicSetSgp4, sdnAp, numerical, sgp4Xp, and sgp4XpUssf.",
+ "rows": [
+  {
+   "row": "Low orbit, laser spheres",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 65,
+     "publicSetSgp4": {
+      "scored": 65,
+      "failed": 0,
+      "medianM": 453.82,
+      "p95M": 624.92
+     },
+     "sdnAp": {
+      "scored": 65,
+      "failed": 0,
+      "medianM": 12.26,
+      "p95M": 27.06
+     },
+     "numerical": {
+      "scored": 65,
+      "failed": 0,
+      "medianM": 1.62,
+      "p95M": 22.56
+     },
+     "sgp4Xp": {
+      "scored": 65,
+      "failed": 0,
+      "medianM": 489.74,
+      "p95M": 692.36,
+      "sdnApCloser": {
+       "tests": 65,
+       "sdnApCloser": 65
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 65,
+      "failed": 0,
+      "medianM": 482.62,
+      "p95M": 675.3,
+      "sdnApCloser": {
+       "tests": 65,
+       "sdnApCloser": 65
+      }
+     }
+    },
+    "3": {
+     "tests": 57,
+     "publicSetSgp4": {
+      "scored": 57,
+      "failed": 0,
+      "medianM": 540.28,
+      "p95M": 689.2
+     },
+     "sdnAp": {
+      "scored": 57,
+      "failed": 0,
+      "medianM": 29.29,
+      "p95M": 168.75
+     },
+     "numerical": {
+      "scored": 57,
+      "failed": 0,
+      "medianM": 9.52,
+      "p95M": 152.32
+     },
+     "sgp4Xp": {
+      "scored": 57,
+      "failed": 0,
+      "medianM": 621.89,
+      "p95M": 1855.06,
+      "sdnApCloser": {
+       "tests": 57,
+       "sdnApCloser": 57
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 57,
+      "failed": 0,
+      "medianM": 625.59,
+      "p95M": 1879.72,
+      "sdnApCloser": {
+       "tests": 57,
+       "sdnApCloser": 57
+      }
+     }
+    },
+    "5": {
+     "tests": 56,
+     "publicSetSgp4": {
+      "scored": 56,
+      "failed": 0,
+      "medianM": 625.86,
+      "p95M": 995.63
+     },
+     "sdnAp": {
+      "scored": 56,
+      "failed": 0,
+      "medianM": 65.26,
+      "p95M": 357.75
+     },
+     "numerical": {
+      "scored": 56,
+      "failed": 0,
+      "medianM": 19.48,
+      "p95M": 398.99
+     },
+     "sgp4Xp": {
+      "scored": 56,
+      "failed": 0,
+      "medianM": 896.3,
+      "p95M": 3269.48,
+      "sdnApCloser": {
+       "tests": 56,
+       "sdnApCloser": 56
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 56,
+      "failed": 0,
+      "medianM": 1009.41,
+      "p95M": 3238.31,
+      "sdnApCloser": {
+       "tests": 56,
+       "sdnApCloser": 56
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Low orbit, altimetry",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 135,
+     "publicSetSgp4": {
+      "scored": 135,
+      "failed": 0,
+      "medianM": 579.07,
+      "p95M": 1176.96
+     },
+     "sdnAp": {
+      "scored": 135,
+      "failed": 0,
+      "medianM": 15.68,
+      "p95M": 450.72
+     },
+     "numerical": {
+      "scored": 135,
+      "failed": 0,
+      "medianM": 5.55,
+      "p95M": 442
+     },
+     "sgp4Xp": {
+      "scored": 135,
+      "failed": 0,
+      "medianM": 586.97,
+      "p95M": 2554.63,
+      "sdnApCloser": {
+       "tests": 135,
+       "sdnApCloser": 134
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 135,
+      "failed": 0,
+      "medianM": 590.17,
+      "p95M": 2591.41,
+      "sdnApCloser": {
+       "tests": 135,
+       "sdnApCloser": 134
+      }
+     }
+    },
+    "3": {
+     "tests": 120,
+     "publicSetSgp4": {
+      "scored": 120,
+      "failed": 0,
+      "medianM": 661.28,
+      "p95M": 8033.81
+     },
+     "sdnAp": {
+      "scored": 120,
+      "failed": 0,
+      "medianM": 75.74,
+      "p95M": 5683.29
+     },
+     "numerical": {
+      "scored": 120,
+      "failed": 0,
+      "medianM": 70.69,
+      "p95M": 5663.16
+     },
+     "sgp4Xp": {
+      "scored": 120,
+      "failed": 0,
+      "medianM": 972.42,
+      "p95M": 7447.16,
+      "sdnApCloser": {
+       "tests": 120,
+       "sdnApCloser": 113
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 120,
+      "failed": 0,
+      "medianM": 990.77,
+      "p95M": 7597.32,
+      "sdnApCloser": {
+       "tests": 120,
+       "sdnApCloser": 114
+      }
+     }
+    },
+    "5": {
+     "tests": 111,
+     "publicSetSgp4": {
+      "scored": 111,
+      "failed": 0,
+      "medianM": 952,
+      "p95M": 16390.53
+     },
+     "sdnAp": {
+      "scored": 111,
+      "failed": 0,
+      "medianM": 240.91,
+      "p95M": 15215.39
+     },
+     "numerical": {
+      "scored": 111,
+      "failed": 0,
+      "medianM": 239.37,
+      "p95M": 15303.71
+     },
+     "sgp4Xp": {
+      "scored": 111,
+      "failed": 0,
+      "medianM": 1985.2,
+      "p95M": 16240.93,
+      "sdnApCloser": {
+       "tests": 111,
+       "sdnApCloser": 101
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 111,
+      "failed": 0,
+      "medianM": 1943.12,
+      "p95M": 16433.37,
+      "sdnApCloser": {
+       "tests": 111,
+       "sdnApCloser": 100
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Near 700 km",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 259,
+     "publicSetSgp4": {
+      "scored": 259,
+      "failed": 0,
+      "medianM": 733.92,
+      "p95M": 2181.42
+     },
+     "sdnAp": {
+      "scored": 259,
+      "failed": 0,
+      "medianM": 29.99,
+      "p95M": 743.3
+     },
+     "numerical": {
+      "scored": 259,
+      "failed": 0,
+      "medianM": 19.74,
+      "p95M": 742.12
+     },
+     "sgp4Xp": {
+      "scored": 259,
+      "failed": 0,
+      "medianM": 678.79,
+      "p95M": 1366.99,
+      "sdnApCloser": {
+       "tests": 259,
+       "sdnApCloser": 257
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 259,
+      "failed": 0,
+      "medianM": 688.48,
+      "p95M": 1403.67,
+      "sdnApCloser": {
+       "tests": 259,
+       "sdnApCloser": 256
+      }
+     }
+    },
+    "3": {
+     "tests": 258,
+     "publicSetSgp4": {
+      "scored": 258,
+      "failed": 0,
+      "medianM": 1332.8,
+      "p95M": 5648.27
+     },
+     "sdnAp": {
+      "scored": 258,
+      "failed": 0,
+      "medianM": 745.78,
+      "p95M": 3242.48
+     },
+     "numerical": {
+      "scored": 258,
+      "failed": 0,
+      "medianM": 700.37,
+      "p95M": 3247.3
+     },
+     "sgp4Xp": {
+      "scored": 258,
+      "failed": 0,
+      "medianM": 1337.88,
+      "p95M": 5966.13,
+      "sdnApCloser": {
+       "tests": 258,
+       "sdnApCloser": 203
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 258,
+      "failed": 0,
+      "medianM": 1351.58,
+      "p95M": 6030.79,
+      "sdnApCloser": {
+       "tests": 258,
+       "sdnApCloser": 211
+      }
+     }
+    },
+    "5": {
+     "tests": 257,
+     "publicSetSgp4": {
+      "scored": 257,
+      "failed": 0,
+      "medianM": 2446.56,
+      "p95M": 10828.2
+     },
+     "sdnAp": {
+      "scored": 257,
+      "failed": 0,
+      "medianM": 2407.14,
+      "p95M": 7657.25
+     },
+     "numerical": {
+      "scored": 257,
+      "failed": 0,
+      "medianM": 2159.58,
+      "p95M": 7666.47
+     },
+     "sgp4Xp": {
+      "scored": 257,
+      "failed": 0,
+      "medianM": 2525.57,
+      "p95M": 10504.47,
+      "sdnApCloser": {
+       "tests": 257,
+       "sdnApCloser": 158
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 257,
+      "failed": 0,
+      "medianM": 2694.33,
+      "p95M": 10747.58,
+      "sdnApCloser": {
+       "tests": 257,
+       "sdnApCloser": 164
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Strong drag, 2026",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 250,
+     "publicSetSgp4": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 776.45,
+      "p95M": 2622.76
+     },
+     "sdnAp": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 330.04,
+      "p95M": 2174.34
+     },
+     "numerical": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 330.63,
+      "p95M": 2171.38
+     },
+     "sgp4Xp": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 896.94,
+      "p95M": 2968.71,
+      "sdnApCloser": {
+       "tests": 250,
+       "sdnApCloser": 232
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 898.32,
+      "p95M": 2957.2,
+      "sdnApCloser": {
+       "tests": 250,
+       "sdnApCloser": 232
+      }
+     }
+    },
+    "3": {
+     "tests": 250,
+     "publicSetSgp4": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 3208.34,
+      "p95M": 16118.48
+     },
+     "sdnAp": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 2712.61,
+      "p95M": 15011.16
+     },
+     "numerical": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 2731.56,
+      "p95M": 14998.29
+     },
+     "sgp4Xp": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 3697.74,
+      "p95M": 19481.5,
+      "sdnApCloser": {
+       "tests": 250,
+       "sdnApCloser": 165
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 3811.6,
+      "p95M": 19373.07,
+      "sdnApCloser": {
+       "tests": 250,
+       "sdnApCloser": 164
+      }
+     }
+    },
+    "5": {
+     "tests": 250,
+     "publicSetSgp4": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 8843.8,
+      "p95M": 45345.01
+     },
+     "sdnAp": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 6626.8,
+      "p95M": 47430.88
+     },
+     "numerical": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 6689.13,
+      "p95M": 47337.99
+     },
+     "sgp4Xp": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 11151.4,
+      "p95M": 48888.51,
+      "sdnApCloser": {
+       "tests": 250,
+       "sdnApCloser": 163
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 250,
+      "failed": 0,
+      "medianM": 11252.9,
+      "p95M": 48704.88,
+      "sdnApCloser": {
+       "tests": 250,
+       "sdnApCloser": 162
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Laser geodetic",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 39,
+     "publicSetSgp4": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 636.28,
+      "p95M": 1533.32
+     },
+     "sdnAp": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 2.57,
+      "p95M": 4.7
+     },
+     "numerical": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 0.18,
+      "p95M": 0.33
+     },
+     "sgp4Xp": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 48.21,
+      "p95M": 143.65,
+      "sdnApCloser": {
+       "tests": 39,
+       "sdnApCloser": 39
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 54.93,
+      "p95M": 143.03,
+      "sdnApCloser": {
+       "tests": 39,
+       "sdnApCloser": 39
+      }
+     }
+    },
+    "3": {
+     "tests": 39,
+     "publicSetSgp4": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 766.69,
+      "p95M": 1206.98
+     },
+     "sdnAp": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 3.94,
+      "p95M": 9.13
+     },
+     "numerical": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 0.45,
+      "p95M": 1.31
+     },
+     "sgp4Xp": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 95.09,
+      "p95M": 166.36,
+      "sdnApCloser": {
+       "tests": 39,
+       "sdnApCloser": 39
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 93.97,
+      "p95M": 168.01,
+      "sdnApCloser": {
+       "tests": 39,
+       "sdnApCloser": 39
+      }
+     }
+    },
+    "5": {
+     "tests": 39,
+     "publicSetSgp4": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 575.5,
+      "p95M": 1161.71
+     },
+     "sdnAp": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 4.68,
+      "p95M": 16.36
+     },
+     "numerical": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 0.64,
+      "p95M": 2.94
+     },
+     "sgp4Xp": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 127.64,
+      "p95M": 202.2,
+      "sdnApCloser": {
+       "tests": 39,
+       "sdnApCloser": 39
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 39,
+      "failed": 0,
+      "medianM": 127.44,
+      "p95M": 204.78,
+      "sdnApCloser": {
+       "tests": 39,
+       "sdnApCloser": 39
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Medium Earth orbit",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 692,
+     "publicSetSgp4": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 1610.11,
+      "p95M": 4297.91
+     },
+     "sdnAp": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 1.66,
+      "p95M": 2.68
+     },
+     "numerical": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 0.18,
+      "p95M": 0.42
+     },
+     "sgp4Xp": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 39.34,
+      "p95M": 73.91,
+      "sdnApCloser": {
+       "tests": 692,
+       "sdnApCloser": 692
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 40.54,
+      "p95M": 73.04,
+      "sdnApCloser": {
+       "tests": 692,
+       "sdnApCloser": 692
+      }
+     }
+    },
+    "3": {
+     "tests": 692,
+     "publicSetSgp4": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 1725.99,
+      "p95M": 4511.25
+     },
+     "sdnAp": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 2.96,
+      "p95M": 9.24
+     },
+     "numerical": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 0.86,
+      "p95M": 2.58
+     },
+     "sgp4Xp": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 72.54,
+      "p95M": 154.11,
+      "sdnApCloser": {
+       "tests": 692,
+       "sdnApCloser": 692
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 73.56,
+      "p95M": 150.24,
+      "sdnApCloser": {
+       "tests": 692,
+       "sdnApCloser": 692
+      }
+     }
+    },
+    "5": {
+     "tests": 692,
+     "publicSetSgp4": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 1658.67,
+      "p95M": 5715.54
+     },
+     "sdnAp": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 6.14,
+      "p95M": 21.04
+     },
+     "numerical": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 2.38,
+      "p95M": 10.42
+     },
+     "sgp4Xp": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 109.87,
+      "p95M": 311.99,
+      "sdnApCloser": {
+       "tests": 692,
+       "sdnApCloser": 692
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 692,
+      "failed": 0,
+      "medianM": 112.03,
+      "p95M": 307.01,
+      "sdnApCloser": {
+       "tests": 692,
+       "sdnApCloser": 692
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Medium Earth orbit, Galileo (suite)",
+   "fitHours": 72,
+   "notMeasured": "the windows carry no catalog number in the table's window list"
+  },
+  {
+   "row": "Inclined geosynchronous",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 50,
+     "publicSetSgp4": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 2018.82,
+      "p95M": 8489.81
+     },
+     "sdnAp": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 1.35,
+      "p95M": 3.78
+     },
+     "numerical": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 0.35,
+      "p95M": 0.81
+     },
+     "sgp4Xp": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 40.82,
+      "p95M": 56.54,
+      "sdnApCloser": {
+       "tests": 50,
+       "sdnApCloser": 50
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 45.42,
+      "p95M": 71.47,
+      "sdnApCloser": {
+       "tests": 50,
+       "sdnApCloser": 50
+      }
+     }
+    },
+    "3": {
+     "tests": 50,
+     "publicSetSgp4": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 2271.05,
+      "p95M": 7753.23
+     },
+     "sdnAp": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 2.59,
+      "p95M": 4.54
+     },
+     "numerical": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 1.4,
+      "p95M": 2.7
+     },
+     "sgp4Xp": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 78.99,
+      "p95M": 132.01,
+      "sdnApCloser": {
+       "tests": 50,
+       "sdnApCloser": 50
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 50,
+      "failed": 0,
+      "medianM": 86.26,
+      "p95M": 135.12,
+      "sdnApCloser": {
+       "tests": 50,
+       "sdnApCloser": 50
+      }
+     }
+    },
+    "5": {
+     "tests": 49,
+     "publicSetSgp4": {
+      "scored": 49,
+      "failed": 0,
+      "medianM": 3779.75,
+      "p95M": 7846.88
+     },
+     "sdnAp": {
+      "scored": 49,
+      "failed": 0,
+      "medianM": 5.05,
+      "p95M": 9.74
+     },
+     "numerical": {
+      "scored": 49,
+      "failed": 0,
+      "medianM": 3.25,
+      "p95M": 7.56
+     },
+     "sgp4Xp": {
+      "scored": 49,
+      "failed": 0,
+      "medianM": 118.7,
+      "p95M": 239.62,
+      "sdnApCloser": {
+       "tests": 49,
+       "sdnApCloser": 49
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 49,
+      "failed": 0,
+      "medianM": 131.13,
+      "p95M": 223.66,
+      "sdnApCloser": {
+       "tests": 49,
+       "sdnApCloser": 49
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Geostationary",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 32,
+     "publicSetSgp4": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 1953.94,
+      "p95M": 2754.87
+     },
+     "sdnAp": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 2.43,
+      "p95M": 4.56
+     },
+     "numerical": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 2.05,
+      "p95M": 4.11
+     },
+     "sgp4Xp": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 30.52,
+      "p95M": 47.79,
+      "sdnApCloser": {
+       "tests": 32,
+       "sdnApCloser": 32
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 38.66,
+      "p95M": 61.28,
+      "sdnApCloser": {
+       "tests": 32,
+       "sdnApCloser": 32
+      }
+     }
+    },
+    "3": {
+     "tests": 30,
+     "publicSetSgp4": {
+      "scored": 30,
+      "failed": 0,
+      "medianM": 3222.03,
+      "p95M": 7320.28
+     },
+     "sdnAp": {
+      "scored": 30,
+      "failed": 0,
+      "medianM": 6.31,
+      "p95M": 4636.39
+     },
+     "numerical": {
+      "scored": 30,
+      "failed": 0,
+      "medianM": 5.96,
+      "p95M": 4634.84
+     },
+     "sgp4Xp": {
+      "scored": 30,
+      "failed": 0,
+      "medianM": 76.68,
+      "p95M": 4696.92,
+      "sdnApCloser": {
+       "tests": 30,
+       "sdnApCloser": 29
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 30,
+      "failed": 0,
+      "medianM": 89.01,
+      "p95M": 4729.86,
+      "sdnApCloser": {
+       "tests": 30,
+       "sdnApCloser": 29
+      }
+     }
+    },
+    "5": {
+     "tests": 32,
+     "publicSetSgp4": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 5714.35,
+      "p95M": 55851.04
+     },
+     "sdnAp": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 16.03,
+      "p95M": 57429.31
+     },
+     "numerical": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 20.31,
+      "p95M": 57429.29
+     },
+     "sgp4Xp": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 134.84,
+      "p95M": 57399.94,
+      "sdnApCloser": {
+       "tests": 32,
+       "sdnApCloser": 30
+      }
+     },
+     "sgp4XpUssf": {
+      "scored": 32,
+      "failed": 0,
+      "medianM": 157.05,
+      "p95M": 57397.42,
+      "sdnApCloser": {
+       "tests": 32,
+       "sdnApCloser": 30
+      }
+     }
+    }
+   }
+  },
+  {
+   "row": "Geostationary, commercial",
+   "fitHours": 72,
+   "notMeasured": "the windows carry no catalog number in the table's window list"
+  },
+  {
+   "row": "Highly elliptical",
+   "fitHours": 72,
+   "days": {
+    "1": {
+     "tests": 1
+    },
+    "3": {
+     "tests": 1
+    },
+    "5": {
+     "tests": 1
+    }
+   }
+  },
+  {
+   "row": "Highly elliptical, THEMIS and Chandra",
+   "fitHours": 72,
+   "notMeasured": "its windows date from before the archive's daily files"
+  }
+ ]
+}
