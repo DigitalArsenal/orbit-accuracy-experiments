@@ -4,16 +4,16 @@
   "frozen": true,
   "registeredUtc": "2026-11-26T19:25:00Z",
   "modules": {
-    "commit": "004faef999500b6685f89499a023578f84720973",
+    "commit": "016c3c4275dd351493819ef14bc18d58d0202c2c",
     "sdnAp": {
-      "version": "0.7.5",
-      "wasmSha256": "a3337aad678ccef996238d2a23aa08eaab1f3dede4a2904078303d732318be5d",
-      "canonicalSha256": "ecdd51f814a1337c2c73ea7399e406d2bcd55dd07aafc2bdbc0fc9bf8d993208"
+      "version": "0.7.6",
+      "wasmSha256": "ac38e7f3d6e9b2907d1d5385d91f616192cac0404831bbc38db340a5d0b3db8b",
+      "canonicalSha256": "007b4bc1272223d37349aa1abf86d364f46ec2a52050a6dd5a12c0ffd937ab54"
     },
     "catalogBuilder": {
-      "version": "0.2.7",
-      "chainWasmSha256": "bd861ea681dc495164cecc712c36c8639ce314b7500705438f969e6f025c455c",
-      "controlWasmSha256": "8d5d22385bf0e7499d38a98907960ac7241b5f994353b946846b1f40994d8983"
+      "version": "0.2.8",
+      "chainWasmSha256": "8758e68ea7eb4cc1f9744e3c6f8f03ad08d0d6ea729ad013b83bdac10817a2ba",
+      "controlWasmSha256": "12f144531fb4b199d9083dffb2c3559e187dad7c75ce38543191a3f167f3ff98"
     },
     "gpErrorModel": {
       "version": "0.19.3",

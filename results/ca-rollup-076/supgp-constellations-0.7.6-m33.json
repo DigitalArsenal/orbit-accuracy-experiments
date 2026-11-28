@@ -1,0 +1,216 @@
+{
+  "schema": "sdn-ap-supgp-constellations-1",
+  "generatedUtc": "2026-11-28T03:02:44Z",
+  "wallSec": 58.6,
+  "t0Utc": "2026-11-08T00:00:00Z",
+  "evalHorizonHours": 24,
+  "lookbackDays": 21,
+  "gitHead": "34cdcf442a1a5d5c16ff84271a3c7a52d15396a3",
+  "modulesGitHead": "93bc4f7b71e0d95e4b9adad5a657c5fdf88d955b",
+  "configSha256": "040207222ad892e6ce316666c38b2c40a1de5830e1c06bd92f8fb9be35229897",
+  "modules": {
+    "sdnAp": {
+      "version": "0.7.6",
+      "wasmSha256": "ac38e7f3d6e9b2907d1d5385d91f616192cac0404831bbc38db340a5d0b3db8b",
+      "canonicalSha256": "007b4bc1272223d37349aa1abf86d364f46ec2a52050a6dd5a12c0ffd937ab54"
+    },
+    "catalogBuilder": {
+      "version": "0.2.8",
+      "chainWasmSha256": "8758e68ea7eb4cc1f9744e3c6f8f03ad08d0d6ea729ad013b83bdac10817a2ba",
+      "controlWasmSha256": "12f144531fb4b199d9083dffb2c3559e187dad7c75ce38543191a3f167f3ff98",
+      "runtimeWasmSha256": "2a7d2d6e31abbd557b44245230c700e6ffa60d040fd6d4de48d1c7532a4bb8cd"
+    },
+    "gpErrorModel": {
+      "version": "0.19.3",
+      "wasmSha256": "8dd3b5fc41192777b1a98acf65728ea8203caa65412a944d70460049140df621"
+    },
+    "catalogComposer": {
+      "version": "0.8.0",
+      "wasmSha256": "52646c13a00959a4cf75533be2ad6920343fde6ea313b5c2638e63ac4e00fbc1"
+    }
+  },
+  "causalityDisclosure": "Strictly causal Space-Track GP + 21d GP history (CREATION_DATE <= T0, EPOCH <= T0) propagated forward ~24h and scored at the epoch of the earliest SupGP set published strictly > T0+24h. SupGP sets are SGP4 fits to operator ephemerides with finite fit RMS floor (0.23-0.30 km median in *.rms.txt), NOT independent POD truth.",
+  "causalityAudit": {
+    "filteredFutureCreated": 485,
+    "filteredFutureEpoch": 0,
+    "satellitesQueued": 490,
+    "workers": 12
+  },
+  "constellations": {
+    "kuiper": {
+      "constellation": "kuiper",
+      "satellitesScored": 391,
+      "supGpTruthFile": "20261109T022848Z.json",
+      "supGpTruthUtc": "2026-11-09T02:28:48.000Z",
+      "supGpTruthSha256": "00cad92d9d24502a51bb608703df29465951e5094a5dc8d191f9710540135805",
+      "supGpTruthRmsFile": "20261109T022848Z.rms.txt",
+      "supGpTruthRmsSha256": "b582e4a2642bf0d4b815556e7d64297da40db23b7d6218e54ff7447374472d28",
+      "supGpTruthFloorMedianRmsKm": 0.25,
+      "supGpTruthFloorP95RmsKm": 0.36,
+      "sgp4SpaceTrackVsSupGp": {
+        "n": 391,
+        "medianM": 13568.52,
+        "p95M": 54945.84,
+        "maxM": 1988396.73
+      },
+      "sgp4XpPublicVsSupGp": {
+        "n": 391,
+        "medianM": 8313.66,
+        "p95M": 52544.95,
+        "maxM": 1780343.88
+      },
+      "sdnApPublicVsSupGp": {
+        "n": 391,
+        "medianM": 8103.8,
+        "p95M": 50052.2,
+        "maxM": 1699890.21
+      },
+      "opCloserThanSpaceTrack": {
+        "count": 295,
+        "of": 391,
+        "share": 0.7545
+      },
+      "opCloserThanXp": {
+        "count": 250,
+        "of": 391,
+        "share": 0.6394
+      },
+      "branches": {
+        "A_sym48": 113,
+        "unknown": 270,
+        "H7": 2,
+        "H14": 5,
+        "A_thrust": 1
+      }
+    },
+    "iridium": {
+      "constellation": "iridium",
+      "satellitesScored": 80,
+      "supGpTruthFile": "20261109T052909Z.json",
+      "supGpTruthUtc": "2026-11-09T05:29:09.000Z",
+      "supGpTruthSha256": "8fe9f129282f7e5e66a73e26a483c716de1ca79891ac8a21c4da14b87e5cafa2",
+      "supGpTruthRmsFile": "20261109T052909Z.rms.txt",
+      "supGpTruthRmsSha256": "99154ec9ddcd1085244159f06bba888314c76b5e8cb67bd363f831a583fcd0ce",
+      "supGpTruthFloorMedianRmsKm": 0.3,
+      "supGpTruthFloorP95RmsKm": 0.31,
+      "sgp4SpaceTrackVsSupGp": {
+        "n": 80,
+        "medianM": 793.28,
+        "p95M": 3467.53,
+        "maxM": 4873.17
+      },
+      "sgp4XpPublicVsSupGp": {
+        "n": 80,
+        "medianM": 747.15,
+        "p95M": 3561.27,
+        "maxM": 4841.4
+      },
+      "sdnApPublicVsSupGp": {
+        "n": 80,
+        "medianM": 1007.83,
+        "p95M": 3567.43,
+        "maxM": 4600.99
+      },
+      "opCloserThanSpaceTrack": {
+        "count": 35,
+        "of": 80,
+        "share": 0.4375
+      },
+      "opCloserThanXp": {
+        "count": 36,
+        "of": 80,
+        "share": 0.45
+      },
+      "branches": {
+        "unknown": 60,
+        "A_sym48": 20
+      }
+    },
+    "orbcomm": {
+      "constellation": "orbcomm",
+      "satellitesScored": 6,
+      "supGpTruthFile": "20261109T173029Z.json",
+      "supGpTruthUtc": "2026-11-09T17:30:29.000Z",
+      "supGpTruthSha256": "359989ed65b16c5efa69547206a576911fef09dd6ddb10d67d37aa3558dcc8fe",
+      "supGpTruthRmsFile": "20261109T173029Z.rms.txt",
+      "supGpTruthRmsSha256": "1e76fd26c0657e965ad45b1710dbb6d1cf6cc7ec65d32f89ffd856efb9aa9f9e",
+      "supGpTruthFloorMedianRmsKm": 0.23,
+      "supGpTruthFloorP95RmsKm": 0.23,
+      "sgp4SpaceTrackVsSupGp": {
+        "n": 6,
+        "medianM": 751.55,
+        "p95M": 1138.91,
+        "maxM": 1181.8
+      },
+      "sgp4XpPublicVsSupGp": {
+        "n": 6,
+        "medianM": 761,
+        "p95M": 1165.37,
+        "maxM": 1217.01
+      },
+      "sdnApPublicVsSupGp": {
+        "n": 6,
+        "medianM": 851.86,
+        "p95M": 1179.04,
+        "maxM": 1191.63
+      },
+      "opCloserThanSpaceTrack": {
+        "count": 3,
+        "of": 6,
+        "share": 0.5
+      },
+      "opCloserThanXp": {
+        "count": 3,
+        "of": 6,
+        "share": 0.5
+      },
+      "branches": {
+        "unknown": 6
+      }
+    },
+    "ast": {
+      "constellation": "ast",
+      "satellitesScored": 13,
+      "supGpTruthFile": "20261109T023012Z.json",
+      "supGpTruthUtc": "2026-11-09T02:30:12.000Z",
+      "supGpTruthSha256": "d965b67839f3414252f2d710d151714190c546595e125feb549a15f1fdbabc19",
+      "supGpTruthRmsFile": "20261109T023012Z.rms.txt",
+      "supGpTruthRmsSha256": "6f6c4ad42a3031e8b022217b7062e8a4c41f7d5174fd141f511f0695d5c2e7d2",
+      "supGpTruthFloorMedianRmsKm": 0.26,
+      "supGpTruthFloorP95RmsKm": 0.28,
+      "sgp4SpaceTrackVsSupGp": {
+        "n": 13,
+        "medianM": 8321.94,
+        "p95M": 74374.38,
+        "maxM": 86739.08
+      },
+      "sgp4XpPublicVsSupGp": {
+        "n": 13,
+        "medianM": 8084.1,
+        "p95M": 74556.89,
+        "maxM": 87039.9
+      },
+      "sdnApPublicVsSupGp": {
+        "n": 13,
+        "medianM": 9199.72,
+        "p95M": 67766.39,
+        "maxM": 96397.27
+      },
+      "opCloserThanSpaceTrack": {
+        "count": 9,
+        "of": 13,
+        "share": 0.6923
+      },
+      "opCloserThanXp": {
+        "count": 9,
+        "of": 13,
+        "share": 0.6923
+      },
+      "branches": {
+        "H14": 7,
+        "unknown": 5,
+        "A_drag": 1
+      }
+    }
+  }
+}

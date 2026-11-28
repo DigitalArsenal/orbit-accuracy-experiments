@@ -1,0 +1,317 @@
+{
+  "schema": "sdn-ap-amendment6-starlink-11k-1",
+  "issue": "DigitalArsenal/spacedatanetwork-stack#1146",
+  "registrationCommit": "34cdcf442a1a5d5c16ff84271a3c7a52d15396a3",
+  "configSha256": "040207222ad892e6ce316666c38b2c40a1de5830e1c06bd92f8fb9be35229897",
+  "modules": {
+    "commit": "016c3c4275dd351493819ef14bc18d58d0202c2c",
+    "sdnAp": {
+      "version": "0.7.6",
+      "wasmSha256": "ac38e7f3d6e9b2907d1d5385d91f616192cac0404831bbc38db340a5d0b3db8b",
+      "canonicalSha256": "007b4bc1272223d37349aa1abf86d364f46ec2a52050a6dd5a12c0ffd937ab54"
+    },
+    "catalogBuilder": {
+      "version": "0.2.8",
+      "chainWasmSha256": "8758e68ea7eb4cc1f9744e3c6f8f03ad08d0d6ea729ad013b83bdac10817a2ba",
+      "controlWasmSha256": "12f144531fb4b199d9083dffb2c3559e187dad7c75ce38543191a3f167f3ff98"
+    },
+    "gpErrorModel": {
+      "version": "0.19.3",
+      "wasmSha256": "8dd3b5fc41192777b1a98acf65728ea8203caa65412a944d70460049140df621"
+    },
+    "conjunctionAssessment": {
+      "version": "0.19.2",
+      "wasmSha256": "304080226840f5fd065ff701b5ec6e5d4d722e5e6df4bc11256843f942c492ef"
+    }
+  },
+  "cycles": {
+    "eval": {
+      "cycleName": "eval",
+      "t0Utc": "2026-11-24T17:00:00Z",
+      "inputCycle": "2026-11-24T16-57-57-960Z",
+      "truthCycles": [
+        "2026-11-25T00-57-57-962Z",
+        "2026-11-25T08-57-57-963Z"
+      ],
+      "truthDisclosure": "Truth is SpaceX subsequent published ephemeris cycles (00-57Z and 08-57Z), not independent laser/GNSS tracking.",
+      "satellitesScoredAllArms": 11194,
+      "fallbacks": {
+        "O": 0,
+        "X": 0,
+        "Op": 0,
+        "Xp": 0
+      },
+      "prep": {
+        "histFilesRead": 446,
+        "avgHistPerSat": 51.91,
+        "filteredFutureGp": 15
+      },
+      "bins": {
+        "0-6": {
+          "satellites": 11194,
+          "spaceXT0Satellites": 3848,
+          "medianKm": {
+            "S": 13.9304,
+            "SupGP": 0.9634,
+            "Xp": 14.2298,
+            "Op": 5.0044,
+            "X": 0.4209,
+            "O": 0.0389,
+            "SpaceX_T0": 0.0406
+          },
+          "p90Km": {
+            "S": 71.2851,
+            "SupGP": 2.4007,
+            "Xp": 71.8397,
+            "Op": 44.0422,
+            "X": 0.7065,
+            "O": 0.1294,
+            "SpaceX_T0": 0.1303
+          },
+          "p95Km": {
+            "S": 101.8655,
+            "SupGP": 3.1669,
+            "Xp": 103.5111,
+            "Op": 84.7589,
+            "X": 0.9102,
+            "O": 0.1942,
+            "SpaceX_T0": 0.1933
+          },
+          "over1km": {
+            "S": 10493,
+            "SupGP": 5392,
+            "Xp": 10521,
+            "Op": 9846,
+            "X": 430,
+            "O": 114,
+            "SpaceX_T0": 38
+          },
+          "over5km": {
+            "S": 7877,
+            "SupGP": 241,
+            "Xp": 7943,
+            "Op": 5601,
+            "X": 67,
+            "O": 5,
+            "SpaceX_T0": 1
+          },
+          "over10km": {
+            "S": 6428,
+            "SupGP": 80,
+            "Xp": 6490,
+            "Op": 3446,
+            "X": 52,
+            "O": 1,
+            "SpaceX_T0": 0
+          },
+          "closerShare": {
+            "O_vs_S": 0.9995,
+            "O_vs_SupGP": 0.9937,
+            "O_vs_X": 0.9921,
+            "O_vs_Op": 0.9978,
+            "Op_vs_S": 0.687,
+            "Op_vs_Xp": 0.6984,
+            "SupGP_vs_S": 0.9108
+          }
+        },
+        "6-12": {
+          "satellites": 11194,
+          "spaceXT0Satellites": 4563,
+          "medianKm": {
+            "S": 18.0555,
+            "SupGP": 3.2764,
+            "Xp": 18.2725,
+            "Op": 5.2967,
+            "X": 0.4495,
+            "O": 0.0847,
+            "SpaceX_T0": 0.0861
+          },
+          "p90Km": {
+            "S": 93.8755,
+            "SupGP": 6.7436,
+            "Xp": 95.4859,
+            "Op": 60.6924,
+            "X": 0.7671,
+            "O": 0.2807,
+            "SpaceX_T0": 0.301
+          },
+          "p95Km": {
+            "S": 143.0062,
+            "SupGP": 9.0711,
+            "Xp": 143.5927,
+            "Op": 121.3085,
+            "X": 0.9932,
+            "O": 0.4201,
+            "SpaceX_T0": 0.4654
+          },
+          "over1km": {
+            "S": 10632,
+            "SupGP": 9857,
+            "Xp": 10667,
+            "Op": 9955,
+            "X": 552,
+            "O": 284,
+            "SpaceX_T0": 111
+          },
+          "over5km": {
+            "S": 8301,
+            "SupGP": 2458,
+            "Xp": 8383,
+            "Op": 5787,
+            "X": 126,
+            "O": 64,
+            "SpaceX_T0": 20
+          },
+          "over10km": {
+            "S": 6999,
+            "SupGP": 440,
+            "Xp": 7035,
+            "Op": 3674,
+            "X": 57,
+            "O": 9,
+            "SpaceX_T0": 2
+          },
+          "closerShare": {
+            "O_vs_S": 0.9972,
+            "O_vs_SupGP": 0.9912,
+            "O_vs_X": 0.9826,
+            "O_vs_Op": 0.9941,
+            "Op_vs_S": 0.7351,
+            "Op_vs_Xp": 0.7416,
+            "SupGP_vs_S": 0.8149
+          }
+        },
+        "12-18": {
+          "satellites": 11194,
+          "spaceXT0Satellites": 1191,
+          "medianKm": {
+            "S": 23.3989,
+            "SupGP": 6.9274,
+            "Xp": 23.5546,
+            "Op": 5.6078,
+            "X": 1.0431,
+            "O": 0.3074,
+            "SpaceX_T0": 0.1156
+          },
+          "p90Km": {
+            "S": 122.4514,
+            "SupGP": 14.8053,
+            "Xp": 124.1332,
+            "Op": 80.7038,
+            "X": 3.0272,
+            "O": 1.281,
+            "SpaceX_T0": 0.4954
+          },
+          "p95Km": {
+            "S": 230.8981,
+            "SupGP": 19.5823,
+            "Xp": 234.7881,
+            "Op": 204.1526,
+            "X": 4.1979,
+            "O": 2.2661,
+            "SpaceX_T0": 0.7505
+          },
+          "over1km": {
+            "S": 10712,
+            "SupGP": 10510,
+            "Xp": 10739,
+            "Op": 10075,
+            "X": 5832,
+            "O": 1545,
+            "SpaceX_T0": 37
+          },
+          "over5km": {
+            "S": 8663,
+            "SupGP": 7351,
+            "Xp": 8713,
+            "Op": 5975,
+            "X": 437,
+            "O": 266,
+            "SpaceX_T0": 8
+          },
+          "over10km": {
+            "S": 7468,
+            "SupGP": 3110,
+            "Xp": 7493,
+            "Op": 3878,
+            "X": 176,
+            "O": 116,
+            "SpaceX_T0": 2
+          },
+          "closerShare": {
+            "O_vs_S": 0.9887,
+            "O_vs_SupGP": 0.9739,
+            "O_vs_X": 0.9183,
+            "O_vs_Op": 0.9668,
+            "Op_vs_S": 0.7476,
+            "Op_vs_Xp": 0.7533,
+            "SupGP_vs_S": 0.7408
+          }
+        },
+        "18-24": {
+          "satellites": 11194,
+          "spaceXT0Satellites": 0,
+          "medianKm": {
+            "S": 29.4104,
+            "SupGP": 13.1424,
+            "Xp": 29.6009,
+            "Op": 6.0695,
+            "X": 1.7529,
+            "O": 0.9625
+          },
+          "p90Km": {
+            "S": 158.4659,
+            "SupGP": 27.3466,
+            "Xp": 160.9826,
+            "Op": 103.1643,
+            "X": 7.6564,
+            "O": 4.5174
+          },
+          "p95Km": {
+            "S": 333.9386,
+            "SupGP": 36.8276,
+            "Xp": 342.0773,
+            "Op": 309.3428,
+            "X": 11.0067,
+            "O": 7.9485
+          },
+          "over1km": {
+            "S": 10811,
+            "SupGP": 10860,
+            "Xp": 10822,
+            "Op": 10125,
+            "X": 7907,
+            "O": 5473
+          },
+          "over5km": {
+            "S": 8907,
+            "SupGP": 9241,
+            "Xp": 8957,
+            "Op": 6185,
+            "X": 1996,
+            "O": 976
+          },
+          "over10km": {
+            "S": 7842,
+            "SupGP": 7066,
+            "Xp": 7865,
+            "Op": 4070,
+            "X": 639,
+            "O": 433
+          },
+          "closerShare": {
+            "O_vs_S": 0.961,
+            "O_vs_SupGP": 0.9401,
+            "O_vs_X": 0.7301,
+            "O_vs_Op": 0.8666,
+            "Op_vs_S": 0.7466,
+            "Op_vs_Xp": 0.7511,
+            "SupGP_vs_S": 0.6763
+          }
+        }
+      }
+    }
+  },
+  "generatedUtc": "2026-11-28T03:01:41Z",
+  "wallSec": 0.4
+}
