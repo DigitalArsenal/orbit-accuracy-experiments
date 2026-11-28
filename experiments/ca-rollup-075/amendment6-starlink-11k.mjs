@@ -73,6 +73,8 @@ function checkFrozenAndPins(cycleName, preFreezeTrain) {
   if (apSha !== CFG.modules.sdnAp.wasmSha256) throw new Error(`sdn-ap wasm mismatch: ${apSha}`);
   const chSha = sha256File(path.join(MODULES, 'flows/catalog-builder/dist/isomorphic/module.wasm'));
   if (chSha !== CFG.modules.catalogBuilder.chainWasmSha256) throw new Error(`catalog-builder chain mismatch: ${chSha}`);
+  const ctSha = sha256File(path.join(MODULES, 'flows/catalog-builder/dist/flow/control/dist/isomorphic/module.wasm'));
+  if (ctSha !== CFG.modules.catalogBuilder.controlWasmSha256) throw new Error(`catalog-builder control mismatch: ${ctSha}`);
 }
 
 function prepareCycleCache(cycleName, workers, smoke) {
@@ -452,6 +454,13 @@ async function main() {
   const workers = Number(arg('--workers', '14'));
   const smoke = has('--smoke');
   const preFreezeTrain = has('--pre-freeze-train');
+  const aggregateOnly = has('--aggregate');
+  if (aggregateOnly && (smoke || preFreezeTrain)) {
+    throw new Error('--aggregate is not allowed with --smoke or --pre-freeze-train');
+  }
+  if (aggregateOnly && arg('--worker') !== null) {
+    throw new Error('--aggregate is not allowed with --worker');
+  }
   checkFrozenAndPins(cycle, preFreezeTrain);
   if (arg('--worker') !== null) {
     await runWorker(cycle, Number(arg('--worker')), workers, smoke);
@@ -459,23 +468,45 @@ async function main() {
   }
   const t0 = Date.now();
   const cycles = cycle === 'both' ? ['train', 'eval'] : [cycle];
-  const existing = fs.existsSync(OUT_PATH) && !smoke && !preFreezeTrain ? JSON.parse(fs.readFileSync(OUT_PATH, 'utf8')) : {
+  const registrationCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: OAE, encoding: 'utf8' }).trim();
+  const configSha256 = sha256File(CFG_PATH);
+  const prev = fs.existsSync(OUT_PATH) && !smoke && !preFreezeTrain
+    ? JSON.parse(fs.readFileSync(OUT_PATH, 'utf8'))
+    : null;
+  const samePinnedBuild = prev
+    && prev.configSha256 === configSha256
+    && JSON.stringify(prev.modules) === JSON.stringify(CFG.modules);
+  const existing = {
     schema: 'sdn-ap-amendment6-starlink-11k-1',
     issue: CFG.issue,
-    registrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: OAE, encoding: 'utf8' }).trim(),
-    configSha256: sha256File(CFG_PATH),
+    registrationCommit,
+    configSha256,
     modules: CFG.modules,
-    cycles: {},
+    cycles: samePinnedBuild && prev?.cycles ? prev.cycles : {},
   };
   for (const cyc of cycles) {
-    prepareCycleCache(cyc, workers, smoke);
-    await Promise.all(Array.from({ length: workers }, (_, w) => new Promise((resolve, reject) => {
-      const c = spawn('nice', ['-n', '10', process.execPath, '--max-old-space-size=4096', SELF,
-        '--cycle', cyc, '--worker', String(w), '--workers', String(workers),
-        ...(smoke ? ['--smoke'] : []), ...(preFreezeTrain ? ['--pre-freeze-train'] : [])],
-        { stdio: 'inherit', env: process.env });
-      c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`${cyc} worker ${w} exited ${code}`))));
-    })));
+    if (aggregateOnly) {
+      const cacheDir = path.join(RUNS_DIR, `sl-${cyc}`);
+      const metaPath = path.join(cacheDir, 'prep-meta.json');
+      if (!fs.existsSync(metaPath)) throw new Error(`[${cyc}] missing ${metaPath}`);
+      const prepMeta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+      if (prepMeta.workers !== workers || prepMeta.smoke) {
+        throw new Error(`[${cyc}] prep-meta mismatch: workers=${prepMeta.workers} smoke=${prepMeta.smoke} (expected workers=${workers}, smoke=false)`);
+      }
+      for (let w = 0; w < workers; w++) {
+        const rowPath = path.join(cacheDir, `rows-${w}.jsonl`);
+        if (!fs.existsSync(rowPath)) throw new Error(`[${cyc}] missing ${rowPath}`);
+      }
+    } else {
+      prepareCycleCache(cyc, workers, smoke);
+      await Promise.all(Array.from({ length: workers }, (_, w) => new Promise((resolve, reject) => {
+        const c = spawn('nice', ['-n', '10', process.execPath, '--max-old-space-size=4096', SELF,
+          '--cycle', cyc, '--worker', String(w), '--workers', String(workers),
+          ...(smoke ? ['--smoke'] : []), ...(preFreezeTrain ? ['--pre-freeze-train'] : [])],
+          { stdio: 'inherit', env: process.env });
+        c.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`${cyc} worker ${w} exited ${code}`))));
+      })));
+    }
     const agg = aggregateCycle(cyc, workers, smoke);
     if (smoke || preFreezeTrain) {
       console.log(`${preFreezeTrain ? 'PRE-FREEZE TRAIN' : 'SMOKE'} PASS:`, JSON.stringify(agg.bins, null, 2));

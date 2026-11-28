@@ -281,11 +281,13 @@ for (const d of ['1', '2', '3', '4', '5']) {
 const apWasm = path.join(MODULES, 'propagator/sdn-ap/dist/isomorphic/module.wasm');
 const cbChain = path.join(MODULES, 'flows/catalog-builder/dist/isomorphic/module.wasm');
 const cbCtrl = path.join(MODULES, 'flows/catalog-builder/dist/flow/control/dist/isomorphic/module.wasm');
+const apVersion = process.env.SDN_AP_VERSION || JSON.parse(fs.readFileSync(path.join(MODULES, 'propagator/sdn-ap/package.json'), 'utf8')).version;
+const cbVersion = process.env.SDN_CB_VERSION || JSON.parse(fs.readFileSync(path.join(MODULES, 'flows/catalog-builder/package.json'), 'utf8')).version;
 
 const summary = {
   schema: 'sdn-ap-site-public-only-tests-1',
-  version: '0.7.5',
-  measurement: 'The public-sets-only measurement on SDN-AP 0.7.5 and catalog-builder 0.2.7: 2,188 tests (2,045 in aggregates), zero SGP4 fallbacks',
+  version: apVersion,
+  measurement: `The public-sets-only measurement on SDN-AP ${apVersion} and catalog-builder ${cbVersion}: ${outRows.length.toLocaleString('en-US')} tests (${matched.toLocaleString('en-US')} in aggregates), zero SGP4 fallbacks`,
   writtenUtc: new Date().toISOString(),
   what: 'For objects with only public element sets: on each test (one satellite, one start time), the error against the satellite\'s precise orbit of (1) SGP4 flown from the newest public element set, (2) SGP4-XP made from the public element sets, (3) SDN-AP made from the public element sets by the catalog builder. All three start from the same public element sets issued before the start and nothing else.',
   inputs: 'Public element sets: every Space-Track set of the satellite created at or before the start and with its epoch before the start, created in the 21 days before the start (read from the local archive of Space-Track gp_history; nothing fetched). SGP4 flies the newest of them (none older than 3 days before the start). SDN-AP: the catalog builder is given those sets as its only orbit data, its clock at the start, and the space weather as it was issued at the start; it makes one record, the one the catalog would serve. SGP4-XP: the SGP4-XP set made from that record the way the whole-catalog SGP4-XP sets are made, so it also comes from the public sets alone.',
@@ -294,15 +296,15 @@ const summary = {
   accuracy: 'Counts are exact over these tests. Shares carry 95 % Wilson score intervals (z = 1.96), each test counted as independent; tests of one satellite at different start dates are not fully independent, so the intervals are narrower than a satellite-level resampling would give. The truth orbits are accurate to centimeters to decimeters (laser and navigation orbits), far below the kilometer limits counted here.',
   builds: {
     catalogBuilder: {
-      version: '0.2.7',
+      version: cbVersion,
       controlSha256: sha256(cbCtrl),
       chainSha256: sha256(cbChain),
-      note: 'flows/catalog-builder 0.2.7 (causal weather-contrast guard + short-arc disturbed-ephemeris protection + all-regime empirical covariance, zero SGP4 fallbacks)',
+      note: `flows/catalog-builder ${cbVersion} (causal weather-contrast guard + short-arc disturbed-ephemeris protection + all-regime empirical covariance, zero SGP4 fallbacks)`,
     },
     sdnApModuleFlown: {
-      version: '0.7.5',
+      version: apVersion,
       sha256: sha256(apWasm),
-      note: 'propagator/sdn-ap 0.7.5 signed isomorphic module; every AP and SGP4-XP record was flown on it',
+      note: `propagator/sdn-ap ${apVersion} signed isomorphic module; every AP and SGP4-XP record was flown on it`,
     },
   },
   controls: {
