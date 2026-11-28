@@ -12,8 +12,8 @@
     },
     "catalogBuilder": {
       "version": "0.2.8",
-      "chainWasmSha256": "28ae93915e04e193d991cdca87ab5fca6e4c9892b52af0fa2d9a2b52ccc21d0a",
-      "controlWasmSha256": "110c1b6f279361cee942c23e84af95afe01da009d6bafcb1b4a509adc73c5840"
+      "chainWasmSha256": "8758e68ea7eb4cc1f9744e3c6f8f03ad08d0d6ea729ad013b83bdac10817a2ba",
+      "controlWasmSha256": "12f144531fb4b199d9083dffb2c3559e187dad7c75ce38543191a3f167f3ff98"
     },
     "gpErrorModel": {
       "version": "0.19.3",
